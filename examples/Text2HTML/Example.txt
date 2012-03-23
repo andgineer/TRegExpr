@@ -1,0 +1,6 @@
+My name is Andrey Sorokin, I am software developer from Saint-Petersburg, Russia.
+
+I am working in digital-cash payment system for Internet project: http://www.paycash.ru, 
+www.cyphermint.com. 
+
+Please, feel free to contact me anso@mail.ru, anso@paycash.ru.
