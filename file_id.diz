@@ -1,0 +1,30 @@
+          TRegExpr
+          Delphi/Kylix/FreePascal library
+
+Easy to use and powerfull tool for
+sophisticated search and substitutioning
+and for template-based text checking
+(especially usefull for user input
+validation in DBMS and web projects).
+
+You can validate e-mail adresses, extract
+phone numbers or ZIP-codes from web-pages
+or documents, search for complex patterns
+in log files and all You can imagine!
+Rules (templates) can be changed without
+Your program recompilation!
+
+As a language for rules used subset of
+Perl's regular expressions (regexp).
+
+Full source codes included, pure Object
+Pascal. Thus, You need no DLL!
+
+Documentation in English, Russian, German, 
+Bulgarian, French and Spanish available at 
+TRegExpr home page http://anso.da.ru/ or
+http://anso.virtualave.net/
+
+          (c) 2004 Andrey V. Sorokin
+          mailto:anso@mail.ru
+          Saint Petersburg, Russia

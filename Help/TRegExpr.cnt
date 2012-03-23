@@ -1,0 +1,18 @@
+:BASE TRegExpr.hlp
+1 About=About@TRegExpr.hlp
+1 Legal issues=Disclaimer@TRegExpr.hlp
+1 What's New=Whats_New@TRegExpr.hlp
+1 Installation=Installation@TRegExpr.hlp
+1 Syntax of Regular Expressions=RegExp_Syntax@TRegExpr.hlp
+1 TRegExpr interface=TRegExpr_Interface@TRegExpr.hlp
+1 RegExp Studio=RegExpStudio@TRegExpr.hlp
+1 FAQ=FAQ@TRegExpr.hlp
+1 Author=Author@TRegExpr.hlp
+1 Demos
+2 Demos=Demos@TRegExpr.hlp
+2 Text2HTML=Text2Html@TRegExpr.hlp
+2 Unit HyperLinksDecorator=HyperLinksDecorator@TRegExpr.hlp
+1 Articles
+2 Usage illustrations=Articles@TRegExpr.hlp
+2 Text processing from bird's eye view=Article_Bird_Eye_View@TRegExpr.hlp
+2 MrDecorator=Article_MrDecorator@TRegExpr.hlp

@@ -1,0 +1,30 @@
+---------------------------------------------------------------
+     To do
+---------------------------------------------------------------
+
+-=- VCL-version of TRegExpr - for dummies ;) and TRegExprEdit
+ (replacement for TMaskEdit).
+
+-=- working with pascal-style string.
+ Now pascal-strings converted into PChar, so
+ you can't find r.e. in strings with #0 -chars.
+ (suggested by Pavel O).
+
+-=- put precalculated lengths into EXACTLY[CI] !
+
+-=- fInputString as string (suggested by Ralf Junker)
+
+-=- Add regstart optimization for case-insensitive mode ?
+ Or complitely remove because FirstCharSet is faster ?
+
+-=- "Russian Ranges" --> National ranges (use property WordChars ?
+ for ordering letters in ranges by its order in WirdsChars if modifier /r is On)
+
+-=- FirstCharSet as array [#0 .. #255] of REChar ?
+ (2x faster then set of REChar)
+
+-=- p-code optimization (remove BRANCH-to-EEND, COMMENT, BACK(?)
+ merge EXACTLY etc).
+
+-=- There are no special command for files (Johan Smit).
+
