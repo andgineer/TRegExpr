@@ -28,7 +28,7 @@ program TestRegExpr;
 
 
 uses
-   RegExpr;
+  RegExpr in '..\..\Src\RegExpr.pas';
 
 var
    r : TRegExpr;

@@ -1,0 +1,6 @@
+*.dcu
+*.res
+*.dproj
+*.identcache
+*.dproj.local
+urls.txt

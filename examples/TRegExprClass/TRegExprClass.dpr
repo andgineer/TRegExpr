@@ -3,7 +3,7 @@ program TRegExprClass;
 uses
   Forms,
   TRegExprClassMain in 'TRegExprClassMain.pas' {fmTRegExprClassMain},
-  RegExpr in '..\..\Source\RegExpr.pas';
+  RegExpr in '..\..\Src\RegExpr.pas';
 
 {$R *.RES}
 

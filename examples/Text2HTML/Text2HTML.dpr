@@ -3,7 +3,7 @@ program Text2HTML;
 uses
   Forms,
   Text2HTMLMain in 'Text2HTMLMain.pas' {fmText2HTMLMain},
-  HyperLinksDecorator in '..\..\Source\HyperLinksDecorator.pas';
+  HyperLinksDecorator in '..\..\Src\HyperLinksDecorator.pas';
 
 {$R *.RES}
 

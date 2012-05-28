@@ -3,7 +3,7 @@ program TRegExprRoutins;
 uses
   Forms,
   TRegExprRoutinesMain in 'TRegExprRoutinesMain.pas' {fmTRegExprRoutines},
-  RegExpr in '..\..\Source\RegExpr.pas';
+  RegExpr in '..\..\Src\RegExpr.pas';
 
 {$R *.RES}
 
