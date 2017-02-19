@@ -391,8 +391,8 @@ type
     property ModifierR : boolean index 2 read GetModifier write SetModifier;
     // Modifier /r - use r.e.syntax extended for russian,
     // (was property ExtSyntaxEnabled in previous versions)
-    // If true, then �-�  additional include russian letter '�',
-    // �-�  additional include '�', and �-� include all russian symbols.
+    //  If true, then а-я additional include russian letter 'ё',
+    //  А-Я additional include 'Ё', and а-Я include all russian symbols.
     // You have to turn it off if it may interfere with you national alphabet.
     // , initialized from RegExprModifierR
 
@@ -1559,17 +1559,17 @@ const
    #$418,#$419,#$41A,#$41B,#$41C,#$41D,#$41E,#$41F,
    #$420,#$421,#$422,#$423,#$424,#$425,#$426,#$427,
    #$428,#$429,#$42A,#$42B,#$42C,#$42D,#$42E,#$42F,#0);
- RusRangeLoLow = #$430{'�'};
- RusRangeLoHigh = #$44F{'�'};
- RusRangeHiLow = #$410{'�'};
- RusRangeHiHigh = #$42F{'�'};
+ RusRangeLoLow = #$430{'а'};
+ RusRangeLoHigh = #$44F{'я'};
+ RusRangeHiLow = #$410{'А'};
+ RusRangeHiHigh = #$42F{'Я'};
 {$ELSE}
- RusRangeLo = '��������������������������������';
- RusRangeHi = '�����Ũ��������������������������';
- RusRangeLoLow = '�';
- RusRangeLoHigh = '�';
- RusRangeHiLow = '�';
- RusRangeHiHigh = '�';
+    RusRangeLo = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
+    RusRangeHi = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+    RusRangeLoLow = 'а';
+    RusRangeLoHigh = 'я';
+    RusRangeHiLow = 'А';
+    RusRangeHiHigh = 'Я';
 {$ENDIF}
 
 function TRegExpr.CompileRegExpr (exp : PRegExprChar) : boolean;
@@ -3589,7 +3589,7 @@ procedure TRegExpr.SetInputString (const AInputString : RegExprString);
   fInputStart := PChar (fInputString);
   Len := length (fInputString);
   fInputEnd := PRegExprChar (integer (fInputStart) + Len); ??
-  !! startp/endp ��� ����� ����� ������ ������������ ?
+  !! startp/endp still dangerous to use ?
   }
  end; { of procedure TRegExpr.SetInputString
 --------------------------------------------------------------}
