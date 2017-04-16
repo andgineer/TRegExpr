@@ -2,16 +2,14 @@
 * English * Русский * Deutsch * Български * Français * Espaсol
 
 * English *
-Documentation are in Help\ folder, English, Russian, German, 
-Bulgarian, French and Spanish now available (if it's not included
-into this distribution package You can download it from TRegExpr 
-home page http://regexpstudio.com )
+TRegExpr documentation and regular expressions syntax help
+in English, Russian, German, Bulgarian, French and Spanish
+are available on http://regexpstudio.com
 
 * Russian *
-Документация размещена в каталоге Help\, имеются английская,
-русская, немецкая, болгарская, французская и испанская (если
-нужной нет в данном архиве, то можно получить на домашней
-страничке TRegExpr http://regexpstudio.com )
+Документация на библиотеку и описание синтаксиса регулярных
+выражений на английском, русском, немецком, болгарском,
+французском и испанском доступна на http://regexpstudio.com
 
 * German *
 Detaillierte Dokumentation über reguläre Ausdrücke und das
