@@ -3,4 +3,6 @@
 *.dproj
 *.identcache
 *.dproj.local
+*.exe
+*__history
 urls.txt

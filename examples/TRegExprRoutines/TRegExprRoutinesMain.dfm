@@ -1,9 +1,9 @@
 object fmTRegExprRoutines: TfmTRegExprRoutines
   Left = 223
   Top = 107
-  Width = 368
-  Height = 347
   Caption = 'fmTRegExprRoutines'
+  ClientHeight = 309
+  ClientWidth = 352
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -58,7 +58,6 @@ object fmTRegExprRoutines: TfmTRegExprRoutines
       Top = 40
       Width = 185
       Height = 21
-      ItemHeight = 13
       TabOrder = 0
       Text = '555-1234'
       Items.Strings = (
@@ -79,7 +78,6 @@ object fmTRegExprRoutines: TfmTRegExprRoutines
       Top = 104
       Width = 185
       Height = 21
-      ItemHeight = 13
       TabOrder = 2
       Text = 'Phone: 555-1234'
       Items.Strings = (
