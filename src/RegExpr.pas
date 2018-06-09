@@ -629,8 +629,15 @@ function RegExprSubExpressions (const ARegExpr : string;
 
 implementation
 
+{$IFDEF FPC}
+{$ELSE}
 uses
- Windows; // CharUpper/Lower
+{$IFDEF SYN_WIN32}
+    Windows; // CharUpper/Lower
+{$ELSE}
+    Libc; //Qt.pas from Borland does not expose char handling functions
+{$ENDIF}
+{$ENDIF}
 
 const
  TRegExprVersionMajor : integer = 0;
