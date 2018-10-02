@@ -1,5 +1,9 @@
 unit Text2HTMLMain;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 {
 
 Very simple utility, that helps publish plain text as HTML
@@ -12,7 +16,12 @@ Specially written as a demonstration of TRegExpr usage.
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+{$IFnDEF FPC}
+  Windows,
+{$ELSE}
+  LCLIntf, LCLType, LMessages,
+{$ENDIF}
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ComCtrls;
 
 type
@@ -42,7 +51,7 @@ var
 implementation
 
 uses HyperLinksDecorator;
-{$R *.DFM}
+{$R *.dfm}
 
 procedure TfmText2HTMLMain.btnConvertClick(Sender: TObject);
  var

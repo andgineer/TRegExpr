@@ -1,11 +1,19 @@
 program TRegExprRoutins;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 uses
+{$IFnDEF FPC}
+{$ELSE}
+  Interfaces,
+{$ENDIF}
   Forms,
   TRegExprRoutinesMain in 'TRegExprRoutinesMain.pas' {fmTRegExprRoutines},
   RegExpr in '..\..\Src\RegExpr.pas';
 
-{$R *.RES}
+{.$R *.RES}
 
 begin
   Application.Initialize;

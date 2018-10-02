@@ -1,5 +1,9 @@
 unit TRegExprRoutinesMain;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 {
   TRegExpr Demo-project
 
@@ -22,10 +26,18 @@ unit TRegExprRoutinesMain;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+{$IFnDEF FPC}
+  Windows,
+{$ELSE}
+  LCLIntf, LCLType, LMessages,
+{$ENDIF}
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons;
 
 type
+
+  { TfmTRegExprRoutines }
+
   TfmTRegExprRoutines = class(TForm)
     grpSearchOrValidate: TGroupBox;
     lblPhone: TLabel;
@@ -48,6 +60,8 @@ type
     procedure btnSearchPhoneClick(Sender: TObject);
     procedure btnValidatePhoneClick(Sender: TObject);
     procedure btnReplaceClick(Sender: TObject);
+    procedure lblPhoneClick(Sender: TObject);
+    procedure lblSearchPhoneResClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -61,7 +75,7 @@ implementation
 
 uses RegExpr;
 
-{$R *.DFM}
+{$R *.dfm}
 
 procedure TfmTRegExprRoutines.btnSearchPhoneClick(Sender: TObject);
 begin
@@ -107,6 +121,16 @@ end;
 procedure TfmTRegExprRoutines.btnReplaceClick(Sender: TObject);
 begin
   memReplaceRes.Text := ReplaceRegExpr(edSearchFor.Text, memSearchIn.Text, edReplaceWith.Text, True);
+end;
+
+procedure TfmTRegExprRoutines.lblPhoneClick(Sender: TObject);
+begin
+
+end;
+
+procedure TfmTRegExprRoutines.lblSearchPhoneResClick(Sender: TObject);
+begin
+
 end;
 
 end.

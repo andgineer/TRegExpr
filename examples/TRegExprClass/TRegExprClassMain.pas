@@ -1,5 +1,9 @@
 unit TRegExprClassMain;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 {
 
  Using TRegExpr class
@@ -10,7 +14,12 @@ unit TRegExprClassMain;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+{$IFnDEF FPC}
+  Windows,
+{$ELSE}
+  LCLIntf, LCLType, LMessages,
+{$ENDIF}
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ExtCtrls;
 
 type
@@ -39,7 +48,7 @@ var
 implementation
 
 uses RegExpr;
-{$R *.DFM}
+{$R *.dfm}
 
 // This simple function extracts all emails from input string
 // and places list of this emails into result string as CSV (comma separated values)

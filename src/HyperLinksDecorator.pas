@@ -1,6 +1,10 @@
 {$B-}
 unit HyperLinksDecorator;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 {
 
  Functions to 'decorate' hyper-links

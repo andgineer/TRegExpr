@@ -83,7 +83,7 @@
   get exception while calling Exec[Next], Substitute, Dump, etc if there
   are errors in Expression or other properties.
  -=- (+) Non-greedy style iterators (like '*?'), modifier /g.
-  Implemented with help from Matthew Winter and Filip Jirs·k
+  Implemented with help from Matthew Winter and Filip Jirs–±k
  -=- (+) /x modifier (eXtended syntax - allow formating r.e., see description
   in the help)
  -=- (+) Procedure Compile to [re]compile r.e. Usefull for GUI r.e. editors
@@ -273,7 +273,7 @@
  -=- added \s (AnySpace) and \S (NotSpace) meta-symbols
      - implemented by Stephan Klimek with minor fixes by AVS
  -=- added \f, \a and \b chars (translates into FF, BEL, BS)
- -=- removed meta-symbols 'ˆ' & '÷' - sorry for any inconvenients
+ -=- removed meta-symbols '—Ü' & '–¶' - sorry for any inconvenients
  -=- added Match property (== copy (InputStr, MatchPos [Idx], MatchLen [Idx]))
  -=- added extra parameter Offset to Exec method
      (thanks to Steve Mudford)
@@ -309,9 +309,9 @@
  -=- code slightly rewriten for pascal
  -=- now macro correct proceeded in ranges
  -=- r.e.ranges syntax extended for russian letters ranges:
-     ‡-ˇ - replaced with all small russian letters (Win1251)
-     ¿-ﬂ - replaced with all capital russian letters (Win1251)
-     ‡-ﬂ - replaced with all russian letters (Win1251)
+     –∞-—è - replaced with all small russian letters (Win1251)
+     –ê-–Ø - replaced with all capital russian letters (Win1251)
+     –∞-–Ø - replaced with all russian letters (Win1251)
  -=- added macro '\d' (opcode ANYDIGIT) - match any digit
  -=- added macro '\D' (opcode NOTDIGIT) - match not digit
  -=- added macro '\w' (opcode ANYLETTER) - match any english letter or '_'
