@@ -1,0 +1,17 @@
+unit RegularExpressionList;
+
+uses
+ RegularExpressionsXMLBind;
+
+interface
+
+
+
+type
+ IRegularExpressionType = interface(IXMLRegularExpressionType)
+  end;
+
+implementation
+
+end.
+ 
