@@ -1,15 +1,24 @@
-{$I REStudio_inc}
+{$I REStudio_inc.pas}
 unit FileViewer;
+
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+{$IFnDEF FPC}
+  Windows,
+{$ELSE}
+  LCLIntf, LCLType, LMessages,
+{$ENDIF}
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ComCtrls, ExtCtrls;
 
 type
   TfmFileViewer = class(TForm)
-    RichEdit1: TRichEdit;
+    RichEdit1: TMemo;
     pnlBottom: TPanel;
     btnRefresh: TSpeedButton;
     btnClose: TSpeedButton;
@@ -30,7 +39,7 @@ type
   end;
 
 implementation
-{$R *.DFM}
+{$R *.dfm}
 
 uses
  REStudioMain;

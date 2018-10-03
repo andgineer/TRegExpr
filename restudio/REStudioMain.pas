@@ -1,5 +1,9 @@
-{$I REStudio_inc}
+{$I REStudio_inc.pas}
 unit REStudioMain;
+
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
 
 {
  Main form of
@@ -15,19 +19,20 @@ unit REStudioMain;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+{$IFnDEF FPC}
+  Windows,
+{$ELSE}
+  LCLIntf, LCLType, LMessages,
+{$ENDIF}
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ComCtrls, ExtCtrls,
-  RegExpr, FileViewer, RETestCases,
-  RegularExpressionsXMLBind
+  RegExpr, FileViewer, RETestCases
   {$IFDEF UseProfiler}, StopWatch {$ENDIF};
 
 type
   TfmREDebuggerMain = class(TForm)
     btnClose: TBitBtn;
     grpRegExpr: TGroupBox;
-    OpenDialog1: TOpenDialog;
-    cbHelpLanguage: TComboBox;
-    btnHelp: TSpeedButton;
     lblWWW: TLabel;
     Bevel1: TBevel;
     PageControl1: TPageControl;
@@ -96,7 +101,6 @@ type
     procedure btnTestStringClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure btnFindRegExprInFileClick(Sender: TObject);
     procedure btnExecNextClick(Sender: TObject);
     procedure btnReplaceClick(Sender: TObject);
     procedure btnSplitClick(Sender: TObject);
@@ -119,7 +123,6 @@ type
       Shift: TShiftState);
     procedure cbSubStrsClick(Sender: TObject);
     procedure btnHelpClick(Sender: TObject);
-    procedure cbHelpLanguageClick(Sender: TObject);
     procedure chkModifierMClick(Sender: TObject);
     procedure lblWWWClick(Sender: TObject);
     procedure chkModifierXClick(Sender: TObject);
@@ -138,13 +141,12 @@ type
     procedure RegExprPosIsChanged;
     procedure SubexprSelected;
     procedure SubStringSelected;
-    procedure HelpLanguageSelected;
     procedure GoToRegExprHomePage;
     procedure UpdateModifiers;
    protected
     fHelpFolder : string;
     fShowOnce : boolean;
-    procedure AssignTestCase (ARegularExpression : IXMLRegularExpressionType);
+    //procedure AssignTestCase (ARegularExpression : string);
    public
     procedure HighlightREInFileViewer (AFileViewer : TfmFileViewer);
     property HelpFolder : string read fHelpFolder;
@@ -154,11 +156,15 @@ var
   fmREDebuggerMain: TfmREDebuggerMain;
 
 implementation
-{$R *.DFM}
+{$R *.dfm}
 
 uses
- ShellAPI, // ShellExecute
- PCode, RETestCasesFm, RegularExpressionList;
+{$IFnDEF FPC}
+  ShellAPI,
+{$ELSE}
+{$ENDIF}
+  windows,
+  PCode;
 
 const
  ProductHomePage = 'www.RegExpStudio.com';
@@ -173,31 +179,16 @@ procedure TfmREDebuggerMain.FormCreate(Sender: TObject);
   Caption := Format ('Regular expressions visual debugger (TRegExpr v. %d.%d)',
    [TRegExpr.VersionMajor, TRegExpr.VersionMinor]);
   {$IFDEF UseProfiler}
-  Caption := Caption + ', ' + IntToStr (Round (CPUClockKHz / 1000.0))
-   + ' MHz CPU assumed for time measurement';
+  if (CPUClockKHz > 0) then begin
+    Caption := Caption + ', ' + IntToStr (Round (CPUClockKHz / 1000.0))
+    + ' MHz CPU assumed for time measurement';
+  end;
   lblStopWatch.Visible := True;
   lblStopWatch.Caption := '';
   {$ENDIF}
   lblWWW.Hint := ProductHomePage;
 
   lblRegExprUnbalancedBrackets.Caption := '';
-
-  // select help file, first try existed non-English,
-  // if no one fuond, then English.
-  fHelpFolder := ExtractFilePath (Application.ExeName) + '..\Help\';
-
-  if FileExists (HelpFolder + 'RegExpRu.hlp')
-   then cbHelpLanguage.ItemIndex := 0
-  else if FileExists (HelpFolder + 'RegExpBG.hlp')
-   then cbHelpLanguage.ItemIndex := 2
-  else if FileExists (HelpFolder + 'RegExpG.hlp')
-   then cbHelpLanguage.ItemIndex := 3
-  else if FileExists (HelpFolder + 'RegExpF.hlp')
-   then cbHelpLanguage.ItemIndex := 4
-  else if FileExists (HelpFolder + 'RegExpS.hlp')
-   then cbHelpLanguage.ItemIndex := 5
-  else cbHelpLanguage.ItemIndex := 1;
-  HelpLanguageSelected;
 
   fShowOnce := false;
  end;
@@ -354,7 +345,7 @@ procedure TfmREDebuggerMain.HighlightREInFileViewer (AFileViewer : TfmFileViewer
     cbMatchs.Items.Clear;
 
     RichEdit1.SelectAll;
-    RichEdit1.SelAttributes.Color := clBlack;
+    RichEdit1.Color := clBlack;
 
     r.Expression := edRegExpr.Text;
     {$IFDEF UseProfiler}
@@ -371,7 +362,7 @@ procedure TfmREDebuggerMain.HighlightREInFileViewer (AFileViewer : TfmFileViewer
     {$IFDEF UseProfiler}
     sw.Start;
     {$ENDIF}
-    ExecRes := r.Exec (RichEdit1.Lines.Text);
+    ExecRes := r.Exec (RichEdit1.Text);
     {$IFDEF UseProfiler}
     sw.Stop;
     {$ENDIF}
@@ -384,7 +375,7 @@ procedure TfmREDebuggerMain.HighlightREInFileViewer (AFileViewer : TfmFileViewer
         TObject (r.MatchPos [0]));
        RichEdit1.SelStart := r.MatchPos [0] - 1;
        RichEdit1.SelLength := r.MatchLen [0];
-       RichEdit1.SelAttributes.Color := clRed;
+       RichEdit1.Color := clRed;
        {$IFDEF UseProfiler}
        sw.Start (False);
        {$ENDIF}
@@ -415,38 +406,6 @@ procedure TfmREDebuggerMain.HighlightREInFileViewer (AFileViewer : TfmFileViewer
      mb_IconExclamation or mb_Ok);
    end;
   end;
- end;
-
-procedure TfmREDebuggerMain.btnFindRegExprInFileClick(Sender: TObject);
- var
-  FV : TfmFileViewer;
- begin
-  if OpenDialog1.Execute then begin
-    FV := TfmFileViewer.Create (Application);
-    with FV do begin
-//      Caption := Caption + ' ' + OpenDialog1.FileName;
-      edFileName.Text := OpenDialog1.FileName;
-      RichEdit1.Lines.LoadFromFile (OpenDialog1.FileName);
-
-      // First check expression
-      try
-        r.Expression := edRegExpr.Text;
-        ProtectedCompilation;
-        except on E:ERegExpr do begin
-          // Don't create new viewer if expression with errors
-          FV.Close;
-          Application.MessageBox (
-          PChar ('Compilation error:'#$d#$a#$d#$a + E.Message),
-           'Error', mb_IconExclamation or mb_Ok);
-          EXIT;
-         end;
-       end;
-
-      Show;
-
-      HighlightREInFileViewer (FV);
-     end;
-   end;
  end;
 
 
@@ -512,7 +471,7 @@ procedure TfmREDebuggerMain.RegExprChanged (AShowErrorPos : boolean = false);
   n : integer;
   s : string;
  begin
-  n := RegExprSubExpressions (edRegExpr.Text, cbSubExprs.Items);
+  n := RegExprSubExpressions (edRegExpr.Text, cbSubExprs.Items, False);
   case n of //###0.942
     0: lblRegExprUnbalancedBrackets.Caption := ''; // No errors
    -1: lblRegExprUnbalancedBrackets.Caption := 'Not enough ")"';
@@ -649,29 +608,11 @@ procedure TfmREDebuggerMain.GoToRegExprHomePage;
  var
   zFileName, zParams, zDir: array [0 .. MAX_PATH] of Char;
  begin
-  ShellExecute (
-    Application.MainForm.Handle,
-    nil,
-    StrPCopy (zFileName, 'http://' + ProductHomePage),
-    StrPCopy (zParams, ''),
-    StrPCopy (zDir, ''), SW_SHOWNOACTIVATE);
- end;
-
-procedure TfmREDebuggerMain.HelpLanguageSelected;
- begin
-  case cbHelpLanguage.ItemIndex of
-    0: Application.HelpFile := HelpFolder + 'RegExpRu.hlp';
-    1: Application.HelpFile := HelpFolder + 'TRegExpr.hlp';
-    2: Application.HelpFile := HelpFolder + 'RegExpBG.hlp';
-    3: Application.HelpFile := HelpFolder + 'RegExpG.hlp';
-    4: Application.HelpFile := HelpFolder + 'RegExpF.hlp';
-    5: Application.HelpFile := HelpFolder + 'RegExpS.hlp';
-   end;
+  OpenURL(StrPCopy (zFileName, 'http://' + ProductHomePage)); { *Converted from ShellExecute* }
  end;
 
 procedure TfmREDebuggerMain.btnHelpClick(Sender: TObject);
  begin
-  HelpLanguageSelected;
   if not FileExists (Application.HelpFile) then begin
     case Application.MessageBox (
      PChar ('The help in language You''ve selected is not found'
@@ -692,57 +633,52 @@ procedure TfmREDebuggerMain.btnHelpClick(Sender: TObject);
   Application.HelpCommand (HELP_FINDER, 0);
  end;
 
-procedure TfmREDebuggerMain.cbHelpLanguageClick(Sender: TObject);
- begin
-  HelpLanguageSelected;
- end;
-
 procedure TfmREDebuggerMain.lblWWWClick(Sender: TObject);
  begin
   GoToRegExprHomePage;
  end;
 
-procedure TfmREDebuggerMain.AssignTestCase (ARegularExpression : IXMLRegularExpressionType);
- begin
-  if not Assigned (ARegularExpression) then begin
-    Application.MessageBox (
-     'R.e. test case is not loadeded!',
-     'No r.e. is selected', mb_IconExclamation or mb_Ok);
-
-    EXIT;
-
-   end;
-
-  with ARegularExpression do begin
-    edRegExpr.Text := Expression;
-    if TestCase.Count > 0 then
-     with TestCase [0] do begin
-  //    edInputString.Text := (TestCase [0].Subject as ISubjectType).Text;
-      if Substitution.Count > 0
-       then memSubstitutionTemplate.Text := Substitution [0].Template
-       else memSubstitutionTemplate.Text := '';
-      if Replace.Count > 0
-       then edReplaceString.Text := Replace [0].Template
-       else edReplaceString.Text := '';
-      // chkUseSubstitution.Checked := ;
-      r.ModifierStr := Modifiers;
-      UpdateModifiers;
-     end
-     else begin
-       edInputString.Text := '';
-       memSubstitutionTemplate.Text := '';
-       edReplaceString.Text := '';
-      end;
-   end;
- end;
+//procedure TfmREDebuggerMain.AssignTestCase (ARegularExpression : IXMLRegularExpressionType);
+// begin
+//  if not Assigned (ARegularExpression) then begin
+//    Application.MessageBox (
+//     'R.e. test case is not loadeded!',
+//     'No r.e. is selected', mb_IconExclamation or mb_Ok);
+//
+//    EXIT;
+//
+//   end;
+//
+//  with ARegularExpression do begin
+//    edRegExpr.Text := Expression;
+//    if TestCase.Count > 0 then
+//     with TestCase [0] do begin
+//  //    edInputString.Text := (TestCase [0].Subject as ISubjectType).Text;
+//      if Substitution.Count > 0
+//       then memSubstitutionTemplate.Text := Substitution [0].Template
+//       else memSubstitutionTemplate.Text := '';
+//      if Replace.Count > 0
+//       then edReplaceString.Text := Replace [0].Template
+//       else edReplaceString.Text := '';
+//      // chkUseSubstitution.Checked := ;
+//      r.ModifierStr := Modifiers;
+//      UpdateModifiers;
+//     end
+//     else begin
+//       edInputString.Text := '';
+//       memSubstitutionTemplate.Text := '';
+//       edReplaceString.Text := '';
+//      end;
+//   end;
+// end;
 
 procedure TfmREDebuggerMain.btnGetREClick(Sender: TObject);
  begin
-  with fmTestCases do begin
-    Caption := 'Select r.e. to load into debugger';
-    if ShowModal = mrYes
-     then AssignTestCase (RegularExpression);
-   end;
+  //with fmTestCases do begin
+  //  Caption := 'Select r.e. to load into debugger';
+  //  if ShowModal = mrYes
+  //   then AssignTestCase (RegularExpression);
+  // end;
 {
   with fmRETestCasesDlg do begin
     Caption := 'Select r.e. to load into debugger';
@@ -759,9 +695,9 @@ procedure TfmREDebuggerMain.FormShow(Sender: TObject);
 
   fShowOnce := True;
 
-  with fmTestCases do
-   if Assigned (RegularExpression)
-     then AssignTestCase (RegularExpression);
+//  with fmTestCases do
+//   if Assigned (RegularExpression)
+//     then AssignTestCase (RegularExpression);
 
   InputStringPosIsChanged;
  end;

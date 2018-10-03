@@ -15,7 +15,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ComCtrls, RETestCases, StdCtrls, Buttons,
   XMLIntf, XMLDoc,
-  RegularExpressionsXMLBind, ExtCtrls;
+  ExtCtrls;
 
 type
   TfmTestCases = class(TForm)
@@ -39,6 +39,9 @@ type
     lblSubject: TLabel;
     lblDescription: TLabel;
     edDescription: TEdit;
+    edComment: TEdit;
+    lblComment: TLabel;
+    memSubject: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure tvCasesDblClick(Sender: TObject);
     procedure tvCasesChange(Sender: TObject; Node: TTreeNode);
@@ -62,6 +65,41 @@ var
 
 implementation
 {$R *.DFM}
+
+function MakeTestSubject (ATestSubject : IXMLSubjectType) : WideString;
+ var
+  i, subjIdx, repCount : integer;
+  Stream : TFileStream;
+  substring : WideStirng;
+ begin
+  Result := '';
+  for subjIdx := 0 to ATestSubject.Count - 1 do begin
+    if ATestSubject.Substring [subjIdx].RepeatCount > 0
+     then repCount := ATestSubject.Substring [subjIdx].RepeatCount
+     else repCount := 1;
+    if (length (ATestSubject.FileName) > 0) then begin
+       if ATestSubject.Count > 0 then begin
+         Application.MessageBox (
+          PChar ('Test case subject specifies both file name'#$d#$a
+           + '("' + ATestSubject.FileName + '")'#$d#$a' and subject substrings!'),
+          'Test subject format error', mb_IconExclamation or mb_Ok);
+        end;
+       Stream := TFileStream.Create (ATestSubject.FileName, fmOpenRead or fmShareDenyWrite);
+       try
+          if Stream.Size > 0 then begin
+             SetString (substring, nil, Stream.Size);
+             Stream.Read (PChar (substring)^, Stream.Size);
+            end
+           else substring := '';
+         finally Stream.Free;
+        end;
+      end
+     else substring := ATestSubject.Substring [subjIdx].Text;
+
+    for i := 1 to repCount do
+     Result := Result + substring;
+   end;
+ end;
 
 procedure TfmTestCases.LoadREs (const AFileName : string);
  var
@@ -137,15 +175,18 @@ procedure TfmTestCases.RefreshDetailes;
   if not Assigned (tvCases.Selected) and (tvCases.Items.Count > 0)
    then tvCases.Selected := tvCases.Items [0];
   if Assigned (tvCases.Selected) then begin
-    RegularExpression := RegularExpressions [tvCases.Selected.Index];
+     RegularExpression := RegularExpressions [tvCases.Selected.Index];
 
-    grbDetails.Caption := Format (' %s ', [RegularExpression.Name]);
-    edREName.Text := RegularExpression.Name;
-    memRE.Text := RegularExpression.Expression;
-    edDescription.Text := RegularExpression.Description;
-    if RegularExpression.TestCase.Count > 0 then
-     with RegularExpression.TestCase [0] do begin
-       edModifiers.Text := Modifiers;
+     grbDetails.Caption := Format (' %s ', [RegularExpression.Name]);
+     edREName.Text := RegularExpression.Name;
+     memRE.Text := RegularExpression.Expression;
+     edDescription.Text := RegularExpression.Description;
+     edComment.Text := RegularExpression.Comment;
+     if RegularExpression.TestCase.Count > 0 then
+      with RegularExpression.TestCase [0] do begin
+        edModifiers.Text := Modifiers;
+        memSubject.Text := '';
+
 {       if Substitution.Count > 0
         then memSubstitutionTemplate.Text := Substitution [0].Template
         else memSubstitutionTemplate.Text := '';
@@ -153,13 +194,21 @@ procedure TfmTestCases.RefreshDetailes;
         then edReplaceString.Text := Replace [0].Template
         else edReplaceString.Text := '';
 }
-      end
-     else begin
+       end
+      else begin
 //       edInputString.Text := '';
 //       memSubstitutionTemplate.Text := '';
 //       edReplaceString.Text := '';
       end;
-   end;
+    end
+   else begin
+     grbDetails.Caption := '';
+     edREName.Text := '';
+     memRE.Text := '';
+     edDescription.Text := '';
+     edComment.Text := '';
+     memSubject.Text := '';
+    end;
 
   isChanged := False;
 

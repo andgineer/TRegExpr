@@ -1,13 +1,14 @@
 {$B-}
 unit RegularExpressionList;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 interface
 
-uses
- RegularExpressionsXMLBind;
-
 type
-  TSubjectType = class(TXMLSubjectType)
+  TSubjectType = class()
   protected
     function Get_Text: WideString;
   public

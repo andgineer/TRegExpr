@@ -11,6 +11,10 @@
 
 unit RegularExpressionsXMLBind;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 interface
 
 uses xmldom, XMLDoc, XMLIntf;

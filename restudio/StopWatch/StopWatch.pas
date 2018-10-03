@@ -9,6 +9,10 @@
 {$ENDIF}
 unit StopWatch;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 {
   StopWatch
    helper routines for precise time metering
@@ -44,8 +48,12 @@ unit StopWatch;
 interface
 
 uses
- Windows,
- Classes;
+{$IFnDEF FPC}
+  Windows,
+{$ELSE}
+  LCLIntf, LCLType, LMessages,
+{$ENDIF}
+  Classes;
 
 type
  TCycles = Int64;
@@ -54,8 +62,14 @@ type
 
  TStopWatch = class
    private
-    fCyclesElapsed : TCycles;
+
+    {$IFDEF FPC}
+    fStartCycle : TDateTime;
+    fCyclesElapsed : int64;
+    {$ELSE}
     fStartCycle : TCycles;
+    fCyclesElapsed : TCycles;
+    {$ENDIF}
     function GetMicroSecs : TTimeInterval;
     function GetMilliSecs : TTimeInterval;
     function GetTimeStr : string;
@@ -114,10 +128,12 @@ function SystemClockStep : DWORD;
 implementation
 
 uses
+ windows,
  SysUtils,
+ {$IFDEF FPC} DateUtils, {$ENDIF}
  MMSystem;
 
-const
+var
  StartStopDelayCycles : TCycles = 0;
 
 type
@@ -127,7 +143,11 @@ function GetCPUCycle: TCPUCycles;
 // Returns current processor cycle number
 // !! only for Intel Pentium and higher
  asm
+  {$IFDEF FPC}
+  rdtsc
+  {$ELSE}
   DB $0F,$31 // rdtsc
+  {$ENDIF}
  end; { of function GetCPUCycle
 --------------------------------------------------------------}
 
@@ -173,7 +193,7 @@ function CalculateSystemClockStep : DWORD;
  end; { of function CalculateSystemClockStep
 --------------------------------------------------------------}
 
-const
+var
  SavedSystemClockStep : DWORD = 0;
 function SystemClockStep : DWORD;
  begin
@@ -227,10 +247,10 @@ function CalculateCPUClockKHz;
       then SetThreadPriority (hThread, THREAD_PRIORITY_TIME_CRITICAL);
      Sleep (0); // we are trying to start from time slice start
      pt := GetCPUCycle;
-     tZ := timeGetTime div TickStep * TickStep + TickStep;
+     tZ := GetTickCount { *Converted from TimeGetTime* }div TickStep * TickStep + TickStep;
      REPEAT
       ACPUTick := GetCPUCycle;
-      ASystemTime := timeGetTime;
+      ASystemTime := GetTickCount; { *Converted from TimeGetTime* }
       if ASystemTime >= tZ
        then BREAK;
       pt := ACPUTick;
@@ -325,13 +345,21 @@ constructor TStopWatch.Create;
 
 function TStopWatch.GetMicroSecs;
  begin
+  {$IFDEF FPC}
+  Result := fCyclesElapsed * 1000;
+  {$ELSE}
   Result := fCyclesElapsed * 1000 div CPUClockKHz;
+  {$ENDIF}
  end; { of function TStopWatch.GetMicroSecs
 --------------------------------------------------------------}
 
 function TStopWatch.GetMilliSecs;
  begin
+  {$IFDEF FPC}
+  Result := fCyclesElapsed;
+  {$ELSE}
   Result := fCyclesElapsed div CPUClockKHz;
+  {$ENDIF}
  end; { of function TStopWatch.GetMilliSecs
 --------------------------------------------------------------}
 
@@ -362,14 +390,22 @@ procedure TStopWatch.Start;
  begin
   if AClear
    then fCyclesElapsed := 0;
+  {$IFDEF FPC}
+  fStartCycle := Now;
+  {$ELSE}
   fStartCycle := GetCPUCycle;
+  {$ENDIF}
  end; { of procedure TStopWatch.Start
 --------------------------------------------------------------}
 
 procedure TStopWatch.Stop;
  begin
+  {$IFDEF FPC}
+  fCyclesElapsed := fCyclesElapsed + MilliSecondsBetween(Now, fStartCycle);
+  {$ELSE}
   fCyclesElapsed := fCyclesElapsed +
    (GetCPUCycle - fStartCycle) - StartStopDelayCycles;
+  {$ENDIF}
  end; { of procedure TStopWatch.Stop
 --------------------------------------------------------------}
 
@@ -394,8 +430,9 @@ class procedure TStopWatch.Calibrate;
 --------------------------------------------------------------}
 
 initialization
-
+ {$IFnDEF FPC}
  TStopWatch.Calibrate;
+ {$ENDIF}
 
 end.
 

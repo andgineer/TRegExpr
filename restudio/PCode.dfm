@@ -1,0 +1,100 @@
+object fmPseudoCodeViewer: TfmPseudoCodeViewer
+  Left = 244
+  Top = 73
+  Width = 423
+  Height = 388
+  Caption = 'Regular expression pseudo-code viewer'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  Scaled = False
+  OnClose = FormClose
+  DesignSize = (
+    415
+    361
+  )
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 8
+    Top = 0
+    Width = 96
+    Height = 13
+    Caption = 'Regular expression :'
+    FocusControl = edSource
+  end
+  object Label2: TLabel
+    Left = 8
+    Top = 48
+    Width = 69
+    Height = 13
+    Caption = 'Pseudo code :'
+    FocusControl = Memo1
+  end
+  object Memo1: TMemo
+    Left = 8
+    Top = 64
+    Width = 401
+    Height = 249
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Color = clBtnFace
+    Lines.Strings = (
+      'Memo1'
+    )
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 1
+  end
+  object edSource: TEdit
+    Left = 8
+    Top = 16
+    Width = 401
+    Height = 21
+    Anchors = [akLeft, akTop, akRight]
+    Color = clBtnFace
+    ReadOnly = True
+    TabOrder = 0
+    Text = 'edSource'
+  end
+  object btnClose: TBitBtn
+    Left = 296
+    Top = 323
+    Width = 115
+    Height = 33
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = '&Close'
+    Default = True
+    ModalResult = 2
+    TabOrder = 2
+    Glyph.Data = {
+      76020000424D7602000000000000760000002800000040000000100000000100
+      0400000000000002000000000000000000001000000000000000000000000000
+      8000008000000080800080000000800080008080000080808000C0C0C0000000
+      FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00330000000000
+      033377777777777F3333330000000000033330000000000033333301BBBBBBBB
+      03337F333333337F33333301BBBBBBBB0333301111111110333333011BBBBBBB
+      03337F333333337F333333011BBBBBBB03333011111111103333330111BBBBBB
+      03337F333333337F3333330111BBBBBB033330111111111033333301110BBBBB
+      03337F333333337F33333301110BBBBB033330111111111033333301110BBBBB
+      03337F333333337F33333301110BBBBB033330111111111033333301110BBBBB
+      03337F3333333F7F33333301110BBBBB033330111111111033333301110BBBBB
+      03337F333333737F33333301110BBBBB0333301111111B1033333301110BBBBB
+      03337F333333337F33333301110BBBBB033330111111111033333301110BBBBB
+      03337F33FFFFF37F33333301110BBBBB03333011111111103333330111B0BBBB
+      03337F377777F37F3333330111B0BBBB03333011EEEEE11033333301110BBBBB
+      03337F37FFF7F37F33333301110BBBBB03333011EEEEE11033333301110BBBBB
+      03337F377777337F33333301110BBBBB03333011EEEEE11033333301E10BBBBB
+      03337F333333337F33333301E10BBBBB033330111111111033333301EE0BBBBB
+      03337FFFFFFFFF7F33333301EE0BBBBB03333011111111103333330000000000
+      0333777777777773333333000000000003333000000000003333
+    }
+    NumGlyphs = 4
+    Spacing = -1
+  end
+end
