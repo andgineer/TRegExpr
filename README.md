@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/masterandrey/TRegExpr.png)](https://travis-ci.org/masterandrey/TRegExpr)
 ### TRegExpr
 
 ### Delphi / Kylix / FreePascal(Lazarus) library for regular expressions.
