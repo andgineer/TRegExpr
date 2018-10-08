@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="10"/>
+    <BuildModes Active="Default"/>
+    <Units Count="5">
+      <Unit0>
+        <Filename Value="tregexpr_test.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="21"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="tregexpr_tests.pas"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="136"/>
+        <CursorPos X="20" Y="144"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="checks.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="19"/>
+        <UsageCount Value="10"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="C:\lazarus\lcl\lclintf.pas"/>
+        <UnitName Value="LCLIntf"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="67"/>
+        <UsageCount Value="10"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-fpcunit\src\fpcunit.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="716"/>
+        <CursorPos X="25" Y="736"/>
+        <UsageCount Value="10"/>
+      </Unit4>
+    </Units>
+    <JumpHistory Count="4" HistoryIndex="3">
+      <Position1>
+        <Filename Value="tregexpr_tests.pas"/>
+        <Caret Line="23" Column="16" TopLine="3"/>
+      </Position1>
+      <Position2>
+        <Filename Value="tregexpr_tests.pas"/>
+        <Caret Line="21" Column="39" TopLine="13"/>
+      </Position2>
+      <Position3>
+        <Filename Value="tregexpr_tests.pas"/>
+        <Caret Line="19" Column="19" TopLine="7"/>
+      </Position3>
+      <Position4>
+        <Filename Value="tregexpr_tests.pas"/>
+        <Caret Line="43" Column="23" TopLine="26"/>
+      </Position4>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>
