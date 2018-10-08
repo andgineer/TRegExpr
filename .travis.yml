@@ -1,6 +1,6 @@
 sudo: required
 dist: trusty
-install: ./travis-lazarus/.travis.install.py
+install: ./.travis-lazarus/.travis.install.py
 
 script:
   - lazbuild $LAZ_OPT test/tregexpr_test.lpi             # Build project
