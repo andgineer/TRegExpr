@@ -7,7 +7,7 @@ Pure Object Pascal!
 
 #### Documentation in English, Russian, German, Bulgarian, French and Spanish
 
-[regexpstudio.com](regexpstudio.com)
+[regexpstudio.com](http://regexpstudio.com)
 
 
 #### Source code fork
