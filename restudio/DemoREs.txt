@@ -1,0 +1,207 @@
+[Help]
+Name=
+Description=
+Comment=
+Expression=
+InputStringBeg=
+InputStringBody=
+InputStringEnd=
+InputStringBodyRepN=
+InputFileName=
+ModifierStr=
+SubstitutionTemplate=
+String4Replace=
+MatchList=
+
+[re_1]
+Group=Phone Numbers
+Name=LocalPhone
+Description=Local phone number
+Comment=
+Expression=\d{3}-?\d\d-?\d\d
+InputStringBody=The phone of AlkorSoft (project PayCash) is 329-4469 (St-Petersburg)
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=Great payment system! E-cash is real ! Phone $&, PayCash.
+String4Replace=$& (international +7 (812) $&)
+MatchList=45/52
+
+[re_2]
+Name=Phone
+Group=Phone Numbers
+Description=International phone number
+Comment=
+Expression=(\+\d *)?(\(\d+\) *)?(\d+(-\d*)*)
+InputStringBody=Long distance phone of AlkorSoft (PayCash) is +7(812) 329-44-69
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=If you call outside of Saint-Petersburg (zone code $1, city code $2), use $& for calling.
+String4Replace=$3
+MatchList=47/63, 47/48, 49/54, 55/63, 61/63
+
+[re_3]
+Name=ZIP_USA
+Group=ZIP Codes
+Description=ZIP code in USA
+Comment=
+Expression=^\d{5}(-\d{4})?$
+InputStringBody=90504-0000
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=ZIP: $&
+String4Replace=<ZIP>
+MatchList=
+
+[re_4]
+Name=SSN_USA
+Group=People IDs
+Description=Social Security in USA
+Comment=
+Expression=^\d{3}-\d{2}-\d{4}?$
+InputStringBody=555-55-5555
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=SSN: $&
+String4Replace=<SSN>
+MatchList=
+
+[re_5]
+Name=Price
+Group=Currency
+Description=Price in US$
+Comment=
+Expression=^\$\d+(\.\d\d)?$
+InputStringBody=$8.95
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=The price is $&
+String4Replace=<Price>
+MatchList=
+
+[re_6]
+Name=IPaddress
+Group=Internet
+Description=IP address
+Comment=
+Expression=^([1]?\d\d?|2[0-4]\d|25[0-5])\.([1]?\d\d?|2[0-4]\d|25[0-5])\.([1]?\d\d?|2[0-4]\d|25[0-5])$
+InputStringBody=195.38.255.7
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=The IP is $1.$2.$3.$4
+String4Replace=<IP>
+MatchList=
+
+[re_7]
+Name=Passport
+Group=People IDs
+Description=Russian passport
+Comment=
+Expression=([IVXCL]{3}-[‡-ﬂ][‡-ﬂ] *[Nπ]? *)?(\d{6})
+InputStringBody=The example of russian passport number: IVX-Ÿ¿ 123456
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=Number: $&
+String4Replace=Series:$1, Number:$2
+MatchList=41/53, 41/47, 48/53
+
+[re_8]
+Name=EMail
+Group=Internet
+Description=e-Mail address
+Comment=
+Expression=[_a-zA-Z\d\-\.]+@([_a-zA-Z\d\-]+(\.[_a-zA-Z\d\-]+)+)
+InputStringBody=My e-mails is anso@mail.ru and anso@paycash.ru
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=Please, all suggestions and bugreports mail to $& (Andrey Sorokin).
+String4Replace=<NoSPAM!>@$1
+MatchList=15/26, 20/26, 24/26
+
+[re_9]
+Name=IntegerNumber
+Group=General
+Description=Integer number
+Comment=
+Expression=# Remove '^' if something may precede number,%0A%0D# and '$' if something may follow%0A%0D^(?# BOL marker)[+\-]?\d+$(?# EOL marker)
+InputStringBody=Here is the number 123. Something after number.
+InputStringBodyRepN=0
+ModifierStr=x
+SubstitutionTemplate=The r.e. above expects only digits in the string,%0A%0D because simbols of start and end of string ('^' and '$').%0A%0DSo, you must remove all non digits symbols in%0A%0Dinput string or symbols '^' and '$' in r.e.
+String4Replace=<here was digit>
+
+[re_10]
+Name=RealNumber
+Group=General
+Description=Real number
+Comment=
+Expression=^[+\-]?\d+(\.\d+)?([eE][+\-]?\d+)?$
+InputStringBody=Remove this123.0e6and this
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=The r.e. above checks the start and end of string%0A%0D (symbols '^' and '$' in r.e.).%0A%0DSo, you must remove this symbols from r.e. or%0A%0D all symbols before and after real number in input string.
+String4Replace=<here was digit>
+
+[re_11]
+Name=URL
+Group=Internet
+Description=Internet URL
+Comment=
+Expression=(?i)                          # we need caseInsensitive mode%0A%0D(FTP|HTTP)://                 # protocol%0A%0D([_a-z\d\-]+(\.[_a-z\d\-]+)+) # TCP addr%0A%0D((/[ _a-z\d\-\\\.]+)+)*       # unix path
+InputStringBody=Welcome to my homepage http://anso.virtualave.net.%0A%0DE-cash http://www.paycash.ru or http://195.239.62.97/default.htm!
+InputStringBodyRepN=0
+ModifierStr=xis-m
+SubstitutionTemplate=The protocol is $1%0A%0Dthe address is $2%0A%0Dthe whole URL of our site is $&.
+String4Replace=$2
+MatchList=24/49, 24/27, 31/49, 46/49
+
+[re_12]
+Name=Peter
+Group=Tutorial
+Description=Admirable Saint-Petersburg
+Comment=
+Expression=# Place modifier (?i) before subexpression (move outside) and%0A%0D# the expression will match first occurence in example%0A%0D((?i)Saint-)?Petersburg
+InputStringBody=Welcome to petersburg! Saint-Petersburg is a wondeful city%0A%0D - look at photos on my homepage http://anso.da.ru
+InputStringBodyRepN=0
+ModifierStr=x-i
+SubstitutionTemplate=The name of city is $&.
+String4Replace=The City
+MatchList=24/49, 24/27, 31/49, 46/49
+
+[re_13]
+Name=RomanNumber
+Group=General
+Description=Roman number
+Comment=
+Expression=^(?i)M*(D?C{0,3}|C[DM])(L?X{0,3}|X[LC])(V?I{0,3}|I[VX])$
+InputStringBody=MCMXCIX
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=1999 is $& in roman numbers.
+String4Replace=<here was digits>
+MatchList=24/49, 24/27, 31/49, 46/49
+
+[re_14]
+Name=BackRef
+Group=Tutorial
+Description=Backreference (HTML parsing)
+Comment=
+Expression=(?i)<font size=(['"]?)([+-]?\d+)\1>
+InputStringBody=<font size="+1"> big </font> <font size=1> very small</font>
+InputStringBodyRepN=0
+ModifierStr=-x
+SubstitutionTemplate=font size = $2 (extracted from tag: "$&").
+String4Replace=<font size=7>
+MatchList=1/16, 12/12, 13/14
+
+[re_15]
+Name=NonGreedy
+Group=Tutorial
+Description=Non-greedy example
+Comment=
+Expression=<script([^>]*?)>(.*?)</script>
+InputStringBody=<script param1>Script1</script>%0A%0D<script param2>%0A%0D  Script2, will be merged with Script1%0A%0D  if replace "*?" with "*"!%0A%0D</script>
+InputStringBodyRepN=0
+ModifierStr=s-x
+SubstitutionTemplate=Script block:%0A%0D"$&"%0A%0D%0A%0DParams: "$1"%0A%0DBody: "$2"
+String4Replace=<!-- $& -- >
+MatchList=1/31, 8/14, 16/22
