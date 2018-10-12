@@ -41,16 +41,18 @@ procedure TRegExprTestCase.TestHookUp;
   procedure CheckReplace (AExpr, AText, ASubs, AExpected : string);
    var
       ActualResult: string;
+      c: char;
    begin
     ActualResult := ReplaceRegExpr(AExpr, AText, ASubs, True);
-    if (ActualResult <> AExpected) then begin
-      writeln ('Error. '#$d#$a'Expression "', AExpr, '"'#$d#$a,
-       'Input text "', AText, '"'#$d#$a,
-       'Pattern "', ASubs, '"'#$d#$a,
-       'Actual/expected results: ', ActualResult, ' / ', AExpected);
-      readln ();
-      halt (1);
-     end;
+    writeln ('Error. '#$d#$a'Expression "', AExpr, '"'#$d#$a,
+     'Input text "', AText, '"'#$d#$a,
+     'Pattern "', ASubs, '"'#$d#$a,
+     'Actual/expected results: ', ActualResult, ' / ', AExpected);
+    write('Actual result bytes: ');
+    for c in ActualResult do
+        write(IntToHex(ord(c), 2), ' ');
+    writeln;
+    AssertEquals(ActualResult, AExpected);
    end;
 
   begin
@@ -144,6 +146,14 @@ procedure TRegExprTestCase.TestHookUp;
      Check (1, 1, 4);
 
      CheckReplace('(\w*)', 'name.ext', '$1.new', 'name.new.new.ext.new.new');
+
+     r.Expression := '\r(\n)';
+     r.Exec (#$d#$a);
+     Check (1, 1, 2);
+
+     CheckReplace(#$d'('#$a')', 'word'#$d#$a, '$1', 'word'#$a);
+     CheckReplace('(word)', 'word', '\U$1\\r', 'WORD\r');
+     CheckReplace('(word)', 'word', '$1\n', 'word'#$d#$a);
 end;
 
 initialization
