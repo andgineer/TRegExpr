@@ -13,10 +13,8 @@ type
 
 var
   Application: TRegExprRunner;
-  ActualResult: string;
 
 begin
-  ActualResult := ReplaceRegExpr('\r(\n)', 'word'#$a#$d, '$2', True);
   Application := TRegExprRunner.Create(nil);
   Application.Initialize;
   Application.Run;

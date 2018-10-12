@@ -8,17 +8,17 @@
       <Unit0>
         <Filename Value="tregexpr_test.lpr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos Y="19"/>
+        <CursorPos Y="18"/>
         <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="tregexpr_tests.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="138"/>
-        <CursorPos X="50" Y="156"/>
+        <CursorPos X="20" Y="142"/>
         <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit1>
