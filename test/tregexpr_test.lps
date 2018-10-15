@@ -8,39 +8,39 @@
       <Unit0>
         <Filename Value="tregexpr_test.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos Y="18"/>
-        <UsageCount Value="25"/>
+        <CursorPos X="12" Y="15"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="tregexpr_tests.pas"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="138"/>
-        <CursorPos X="20" Y="142"/>
-        <UsageCount Value="25"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="132"/>
+        <CursorPos X="60" Y="157"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="checks.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="19"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit2>
       <Unit3>
         <Filename Value="C:\lazarus\lcl\lclintf.pas"/>
         <UnitName Value="LCLIntf"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="67"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit3>
       <Unit4>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-fpcunit\src\fpcunit.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="716"/>
         <CursorPos X="25" Y="736"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit4>
       <Unit5>
         <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\regexpr\src\regexpr.pas"/>
@@ -48,11 +48,11 @@
         <EditorIndex Value="2"/>
         <TopLine Value="3882"/>
         <CursorPos X="30" Y="3865"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="15"/>
         <Loaded Value="True"/>
       </Unit5>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="28">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
         <Filename Value="tregexpr_tests.pas"/>
         <Caret Line="51" Column="53" TopLine="39"/>
@@ -166,13 +166,9 @@
         <Caret Line="3812" Column="20" TopLine="3797"/>
       </Position28>
       <Position29>
-        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\regexpr\src\regexpr.pas"/>
-        <Caret Line="3816" Column="42" TopLine="3845"/>
+        <Filename Value="tregexpr_tests.pas"/>
+        <Caret Line="155" Column="61" TopLine="131"/>
       </Position29>
-      <Position30>
-        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\regexpr\src\regexpr.pas"/>
-        <Caret Line="3734" Column="45" TopLine="3722"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

@@ -154,6 +154,7 @@ procedure TRegExprTestCase.TestHookUp;
      CheckReplace(#$d'('#$a')', 'word'#$d#$a, '$1', 'word'#$a);
      CheckReplace('(word)', 'word', '\U$1\\r', 'WORD\r');
      CheckReplace('(word)', 'word', '$1\n', 'word'#$d#$a);
+     CheckReplace('\n', 'abc'#13#10'def', '\n', 'abc'#13#13#10'def');
 end;
 
 initialization
