@@ -76,6 +76,7 @@ interface
 {$IFNDEF UniCode} // the option applicable only for non-UniCode mode
  {$DEFINE UseSetOfChar} // Significant optimization by using set of char
 {$ENDIF}
+{$DEFINE UseOsLineEndOnReplace} // On Replace if replace-with has "\n", use System.LineEnding (#10 #13 or #13#10); else use #10
 {$IFDEF UseSetOfChar}
  {$DEFINE UseFirstCharSet} // Fast skip between matches for r.e. that starts with determined set of chars
 {$ENDIF}
@@ -262,6 +263,7 @@ type
     {$IFNDEF UniCode}
     fLineSeparatorsSet : set of REChar;
     {$ENDIF}
+    function IsDigit(AChar : PRegExprChar) : Boolean; inline;
 
     procedure InvalidateProgramm;
     // Mark programm as have to be [re]compiled
@@ -444,8 +446,8 @@ type
     // (AOffset=1 - first char of InputString)
 
     property InputString : RegExprString read GetInputString write SetInputString;
-    // returns current input string (from last Exec call or last assign
-    // to this property).
+    // returns current input string  -from last Exec call or last assign
+    // to this property.
     // Any assignment to this property clear Match* properties !
 
     function Substitute (const ATemplate : RegExprString) : RegExprString;
@@ -1050,7 +1052,7 @@ const
  reeMatchPrimCorruptedPointers = 1002;
  reeNoExpression = 1003;
  reeCorruptedProgram = 1004;
- reeNoInpitStringSpecified = 1005;
+ reeNoInputStringSpecified = 1005;
  reeOffsetMustBeGreaterThen0 = 1006;
  reeExecNextWithoutExec = 1007;
  reeGetInputStringWithoutInputString = 1008;
@@ -1094,7 +1096,7 @@ function TRegExpr.ErrorMsg (AErrorID : integer) : RegExprString;
     reeMatchPrimCorruptedPointers: Result := 'TRegExpr(exec): MatchPrim Corrupted Pointers';
     reeNoExpression: Result := 'TRegExpr(exec): Not Assigned Expression Property';
     reeCorruptedProgram: Result := 'TRegExpr(exec): Corrupted Program';
-    reeNoInpitStringSpecified: Result := 'TRegExpr(exec): No Input String Specified';
+    reeNoInputStringSpecified: Result := 'TRegExpr(exec): No Input String Specified';
     reeOffsetMustBeGreaterThen0: Result := 'TRegExpr(exec): Offset Must Be Greater Then 0';
     reeExecNextWithoutExec: Result := 'TRegExpr(exec): ExecNext Without Exec[Pos]';
     reeGetInputStringWithoutInputString: Result := 'TRegExpr(exec): GetInputString Without InputString';
@@ -1379,6 +1381,12 @@ procedure TRegExpr.SetModifier (AIndex : integer; ASet : boolean);
 {=============================================================}
 {==================== Compiler section =======================}
 {=============================================================}
+
+function TRegExpr.IsDigit(AChar: PRegExprChar): Boolean;
+begin
+  // Avoid Unicode char-> ansi char conversion in case of unicode regexp.
+  Result:=Ord(AChar^) in [Ord('0')..Ord('9')]
+end;
 
 procedure TRegExpr.InvalidateProgramm;
  begin
@@ -3430,7 +3438,7 @@ function TRegExpr.ExecPrim (AOffset: integer) : boolean;
 
   // Check InputString presence
   if not Assigned (fInputString) then begin
-    Error (reeNoInpitStringSpecified);
+    Error (reeNoInputStringSpecified);
     EXIT;
    end;
 
@@ -3658,14 +3666,20 @@ function TRegExpr.GetLinePairedSeparator : RegExprString;
 function TRegExpr.Substitute (const ATemplate : RegExprString) : RegExprString;
 // perform substitutions after a regexp match
 // completely rewritten in 0.929
- var
-  TemplateLen : integer;
+type
+  TSubstMode = (smodeNormal, smodeOneUpper, smodeOneLower, smodeAllUpper,
+                smodeAllLower);
+var
+  TemplateLen : PtrInt;
   TemplateBeg, TemplateEnd : PRegExprChar;
-  p, p0, ResultPtr : PRegExprChar;
-  ResultLen : integer;
-  n : integer;
+  p, p0, p1, ResultPtr : PRegExprChar;
+  ResultLen : PtrInt;
+  n : PtrInt;
   Ch : REChar;
- function ParseVarName (var APtr : PRegExprChar) : integer;
+  Mode: TSubstMode;
+  LineEnd: String = {$ifdef UseOsLineEndOnReplace} System.LineEnding {$else} Chr(10) {$endif};
+
+  function ParseVarName (var APtr : PRegExprChar) : PtrInt;
   // extract name of variable (digits, may be enclosed with
   // curly braces) from APtr^, uses TemplateEnd !!!
   const
@@ -3682,13 +3696,8 @@ function TRegExpr.Substitute (const ATemplate : RegExprString) : RegExprString;
    if (p < TemplateEnd) and (p^ = '&')
     then inc (p) // this is '$&' or '${&}'
     else
-     while (p < TemplateEnd) and
-      {$IFDEF UniCode} //###0.935
-      (ord (p^) < 256) and (char (p^) in Digits)
-      {$ELSE}
-      (p^ in Digits)
-      {$ENDIF}
-       do begin
+     while (p < TemplateEnd) and IsDigit(p) do
+       begin
        Result := Result * 10 + (ord (p^) - ord ('0')); //###0.939
        inc (p);
       end;
@@ -3700,12 +3709,13 @@ function TRegExpr.Substitute (const ATemplate : RegExprString) : RegExprString;
     then Result := -1; // no valid digits found or no right curly brace
    APtr := p;
   end;
- begin
+
+begin
   // Check programm and input string
   if not IsProgrammOk
    then EXIT;
   if not Assigned (fInputString) then begin
-    Error (reeNoInpitStringSpecified);
+    Error (reeNoInputStringSpecified);
     EXIT;
    end;
   // Prepare for working
@@ -3726,49 +3736,110 @@ function TRegExpr.Substitute (const ATemplate : RegExprString) : RegExprString;
      then n := ParseVarName (p)
      else n := -1;
     if n >= 0 then begin
-       if (n < NSUBEXP) and Assigned (startp [n]) and Assigned (endp [n])
+      if (n < NSUBEXP) and Assigned (startp [n]) and Assigned (endp [n])
         then inc (ResultLen, endp [n] - startp [n]);
+    end
+    else begin
+      if (Ch = EscChar) and (p < TemplateEnd) then begin // quoted or special char followed
+        Ch := p^;
+        inc (p);
+        case Ch of
+          'n' : inc(ResultLen, Length(LineEnd));
+          'u', 'l', 'U', 'L': {nothing};
+          else inc(ResultLen);
+        end;
       end
-     else begin
-       if (Ch = EscChar) and (p < TemplateEnd)
-        then inc (p); // quoted or special char followed
-       inc (ResultLen);
-      end;
-   end;
+      else
+        inc(ResultLen);
+    end;
+  end;
   // Get memory. We do it once and it significant speed up work !
   if ResultLen = 0 then begin
     Result := '';
     EXIT;
    end;
-  SetString (Result, nil, ResultLen);
+  //SetString (Result, nil, ResultLen);
+  SetLength(Result,ResultLen);
   // Fill Result
   ResultPtr := pointer (Result);
   p := TemplateBeg;
+  Mode := smodeNormal;
   while p < TemplateEnd do begin
     Ch := p^;
+    p0 := p;
     inc (p);
+    p1 := p;
     if Ch = '$'
      then n := ParseVarName (p)
      else n := -1;
-    if n >= 0 then begin
-       p0 := startp [n];
-       if (n < NSUBEXP) and Assigned (p0) and Assigned (endp [n]) then
-        while p0 < endp [n] do begin
-          ResultPtr^ := p0^;
-          inc (ResultPtr);
-          inc (p0);
-         end;
-      end
-     else begin
-       if (Ch = EscChar) and (p < TemplateEnd) then begin // quoted or special char followed
-         Ch := p^;
-         inc (p);
+    if (n >= 0) then begin
+      p0 := startp[n];
+      p1 := endp[n];
+      if (n >= NSUBEXP) or not Assigned (p0) or not Assigned (endp [n]) then
+        p1 := p0; // empty
+    end
+    else begin
+      if (Ch = EscChar) and (p < TemplateEnd) then begin // quoted or special char followed
+        Ch := p^;
+        inc (p);
+        case Ch of
+          'n' : begin
+              p0 := @LineEnd[1];
+              p1 := p0 + Length(LineEnd);
+            end;
+          'l' : begin
+              Mode := smodeOneLower;
+              p1 := p0;
+            end;
+          'L' : begin
+              Mode := smodeAllLower;
+              p1 := p0;
+            end;
+          'u' : begin
+              Mode := smodeOneUpper;
+              p1 := p0;
+            end;
+          'U' : begin
+              Mode := smodeAllUpper;
+              p1 := p0;
+            end;
+          else
+            begin
+              inc(p0);
+              inc(p1);
+            end;
         end;
-       ResultPtr^ := Ch;
-       inc (ResultPtr);
+      end
+    end;
+    if p0 < p1 then begin
+      while p0 < p1 do begin
+        case Mode of
+          smodeOneLower, smodeAllLower:
+            begin
+              Ch := p0^;
+              Ch := AnsiLowerCase(Ch)[1];
+              ResultPtr^ := Ch;
+              if Mode = smodeOneLower then
+                Mode := smodeNormal;
+            end;
+          smodeOneUpper, smodeAllUpper:
+            begin
+              Ch := p0^;
+              Ch := AnsiUpperCase(Ch)[1];
+              ResultPtr^ := Ch;
+              if Mode = smodeOneUpper then
+                Mode := smodeNormal;
+            end;
+          else
+            ResultPtr^ := p0^;
+        end;
+        inc (ResultPtr);
+        inc (p0);
       end;
-   end;
- end; { of function TRegExpr.Substitute
+      Mode := smodeNormal;
+    end;
+  end;
+end; { of function TRegExpr.Substitute
 --------------------------------------------------------------}
 
 procedure TRegExpr.Split (AInputStr : RegExprString; APieces : TStrings);
@@ -3931,7 +4002,9 @@ function TRegExpr.Dump : RegExprString;
         or (op = EXACTLY) or (op = EXACTLYCI) then begin
          // Literal string, where present.
          while s^ <> #0 do begin
-           Result := Result + s^;
+           if s^ < ' '
+            then Result := Result + '#' + IntToStr (Ord (s^))
+            else Result := Result + s^;
            inc (s);
           end;
          inc (s);
@@ -4044,4 +4117,3 @@ initialization
 
 {$ENDIF}
 end.
-
