@@ -3,7 +3,7 @@ program tregexpr_test;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, Interfaces, consoletestrunner, tregexpr_tests, RegExpr;
+  Classes, Interfaces, consoletestrunner, tregexpr_tests;
 
 type
 

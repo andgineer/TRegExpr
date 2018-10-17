@@ -76,7 +76,7 @@ interface
 {$IFNDEF UniCode} // the option applicable only for non-UniCode mode
  {$DEFINE UseSetOfChar} // Significant optimization by using set of char
 {$ENDIF}
-{$DEFINE UseOsLineEndOnReplace} // On Replace if replace-with has "\n", use System.LineEnding (#10 #13 or #13#10); else use #10
+// {$DEFINE UseOsLineEndOnReplace} // On Replace if replace-with has "\n", use System.LineEnding (#10 #13 or #13#10); else use #10
 {$IFDEF UseSetOfChar}
  {$DEFINE UseFirstCharSet} // Fast skip between matches for r.e. that starts with determined set of chars
 {$ENDIF}
@@ -319,6 +319,10 @@ type
 
     function ParsePiece (var flagp : integer) : PRegExprChar;
     // something followed by possible [*+?]
+
+    function HexDig (ch : REChar) : integer;
+
+    function UnQuoteChar (var APtr : PRegExprChar) : REChar;
 
     function ParseAtom (var flagp : integer) : PRegExprChar;
     // the lowest level
@@ -2038,6 +2042,71 @@ function TRegExpr.ParsePiece (var flagp : integer) : PRegExprChar;
  end; { of function TRegExpr.ParsePiece
 --------------------------------------------------------------}
 
+ function TRegExpr.HexDig (ch : REChar) : integer;
+  begin
+   Result := 0;
+   if (ch >= 'a') and (ch <= 'f')
+    then ch := REChar (ord (ch) - (ord ('a') - ord ('A')));
+   if (ch < '0') or (ch > 'F') or ((ch > '9') and (ch < 'A')) then begin
+     Error (reeBadHexDigit);
+     EXIT;
+    end;
+   Result := ord (ch) - ord ('0');
+   if ch >= 'A'
+    then Result := Result - (ord ('A') - ord ('9') - 1);
+  end;
+
+ function TRegExpr.UnQuoteChar (var APtr : PRegExprChar) : REChar; //###0.934
+  begin
+   case APtr^ of
+     't': Result := #$9;  // tab (HT/TAB)
+     'n': Result := #$a;  // newline (NL)
+     'r': Result := #$d;  // car.return (CR)
+     'f': Result := #$c;  // form feed (FF)
+     'a': Result := #$7;  // alarm (bell) (BEL)
+     'e': Result := #$1b; // escape (ESC)
+     'x': begin // hex char
+       Result := #0;
+       inc (APtr);
+       if APtr^ = #0 then begin
+         Error (reeNoHexCodeAfterBSlashX);
+         EXIT;
+        end;
+       if APtr^ = '{' then begin // \x{nnnn} //###0.936
+          REPEAT
+           inc (APtr);
+           if APtr^ = #0 then begin
+             Error (reeNoHexCodeAfterBSlashX);
+             EXIT;
+            end;
+           if APtr^ <> '}' then begin
+              if (Ord (Result)
+                  ShR (SizeOf (REChar) * 8 - 4)) and $F <> 0 then begin
+                Error (reeHexCodeAfterBSlashXTooBig);
+                EXIT;
+               end;
+              Result := REChar ((Ord (Result) ShL 4) or HexDig (APtr^));
+              // HexDig will cause Error if bad hex digit found
+             end
+            else BREAK;
+          UNTIL False;
+         end
+        else begin
+          Result := REChar (HexDig (APtr^));
+          // HexDig will cause Error if bad hex digit found
+          inc (APtr);
+          if APtr^ = #0 then begin
+            Error (reeNoHexCodeAfterBSlashX);
+            EXIT;
+           end;
+          Result := REChar ((Ord (Result) ShL 4) or HexDig (APtr^));
+          // HexDig will cause Error if bad hex digit found
+         end;
+      end;
+     else Result := APtr^;
+    end;
+  end;
+
 function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
 // the lowest level
 // Optimization:  gobbles an entire sequence of ordinary characters so that
@@ -2077,20 +2146,6 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
   begin
    for i := 1 to length (s)
     do EmitC (s [i]);
-  end;
-
- function HexDig (ch : REChar) : integer;
-  begin
-   Result := 0;
-   if (ch >= 'a') and (ch <= 'f')
-    then ch := REChar (ord (ch) - (ord ('a') - ord ('A')));
-   if (ch < '0') or (ch > 'F') or ((ch > '9') and (ch < 'A')) then begin
-     Error (reeBadHexDigit);
-     EXIT;
-    end;
-   Result := ord (ch) - ord ('0');
-   if ch >= 'A'
-    then Result := Result - (ord ('A') - ord ('9') - 1);
   end;
 
  function EmitRange (AOpCode : REChar) : PRegExprChar;
@@ -2202,56 +2257,6 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
     do EmitRangeC (s [i]);
   end;
 
- function UnQuoteChar (var APtr : PRegExprChar) : REChar; //###0.934
-  begin
-   case APtr^ of
-     't': Result := #$9;  // tab (HT/TAB)
-     'n': Result := #$a;  // newline (NL)
-     'r': Result := #$d;  // car.return (CR)
-     'f': Result := #$c;  // form feed (FF)
-     'a': Result := #$7;  // alarm (bell) (BEL)
-     'e': Result := #$1b; // escape (ESC)
-     'x': begin // hex char
-       Result := #0;
-       inc (APtr);
-       if APtr^ = #0 then begin
-         Error (reeNoHexCodeAfterBSlashX);
-         EXIT;
-        end;
-       if APtr^ = '{' then begin // \x{nnnn} //###0.936
-          REPEAT
-           inc (APtr);
-           if APtr^ = #0 then begin
-             Error (reeNoHexCodeAfterBSlashX);
-             EXIT;
-            end;
-           if APtr^ <> '}' then begin
-              if (Ord (Result)
-                  ShR (SizeOf (REChar) * 8 - 4)) and $F <> 0 then begin
-                Error (reeHexCodeAfterBSlashXTooBig);
-                EXIT;
-               end;
-              Result := REChar ((Ord (Result) ShL 4) or HexDig (APtr^));
-              // HexDig will cause Error if bad hex digit found
-             end
-            else BREAK;
-          UNTIL False;
-         end
-        else begin
-          Result := REChar (HexDig (APtr^));
-          // HexDig will cause Error if bad hex digit found
-          inc (APtr);
-          if APtr^ = #0 then begin
-            Error (reeNoHexCodeAfterBSlashX);
-            EXIT;
-           end;
-          Result := REChar ((Ord (Result) ShL 4) or HexDig (APtr^));
-          // HexDig will cause Error if bad hex digit found
-         end;
-      end;
-     else Result := APtr^;
-    end;
-  end;
 
  begin
   Result := nil;
@@ -3678,12 +3683,11 @@ var
   Ch : REChar;
   Mode: TSubstMode;
   LineEnd: String = {$ifdef UseOsLineEndOnReplace} System.LineEnding {$else} Chr(10) {$endif};
+  QuotedChar: REChar;
 
   function ParseVarName (var APtr : PRegExprChar) : PtrInt;
   // extract name of variable (digits, may be enclosed with
   // curly braces) from APtr^, uses TemplateEnd !!!
-  const
-   Digits = ['0' .. '9'];
   var
    p : PRegExprChar;
    Delimited : boolean;
@@ -3746,6 +3750,16 @@ begin
         case Ch of
           'n' : inc(ResultLen, Length(LineEnd));
           'u', 'l', 'U', 'L': {nothing};
+          'x': begin
+              inc(ResultLen);
+              if (p^ = '{') then begin // skip \x{....}
+                   while ((p^ <> '}') and (p < TemplateEnd)) do
+                     p := p + 1;
+                   p := p + 1;
+                  end
+                 else
+                   p := p + 2  // skip \x..
+            end;
           else inc(ResultLen);
         end;
       end
@@ -3786,6 +3800,13 @@ begin
           'n' : begin
               p0 := @LineEnd[1];
               p1 := p0 + Length(LineEnd);
+            end;
+          'x', 't', 'r', 'f', 'a', 'e': begin
+             p := p - 1;  // UnquoteChar expects the escaped char under the pointer
+             QuotedChar := UnquoteChar(p);
+             p := p + 1;  // Skip after last part of the escaped sequence - UnquoteChar stops on the last symbol of it
+             p0 := @QuotedChar;
+             p1 := p0 + 1;
             end;
           'l' : begin
               Mode := smodeOneLower;
@@ -3978,6 +3999,14 @@ function TRegExpr.Dump : RegExprString;
 {$IFDEF UseSetOfChar} //###0.929
   Ch : REChar;
 {$ENDIF}
+function PrintableChar(AChar: REChar): string; inline;
+  begin
+    if AChar < ' '
+     then Result := '#' + IntToStr (Ord (AChar))
+     else Result := AChar;
+  end;
+
+
  begin
   if not IsProgrammOk //###0.929
    then EXIT;
@@ -4002,9 +4031,7 @@ function TRegExpr.Dump : RegExprString;
         or (op = EXACTLY) or (op = EXACTLYCI) then begin
          // Literal string, where present.
          while s^ <> #0 do begin
-           if s^ < ' '
-            then Result := Result + '#' + IntToStr (Ord (s^))
-            else Result := Result + s^;
+           Result := Result + PrintableChar(s^);
            inc (s);
           end;
          inc (s);
@@ -4023,9 +4050,7 @@ function TRegExpr.Dump : RegExprString;
      if op = ANYOFFULLSET then begin
        for Ch := #0 to #255 do
         if Ch in PSetOfREChar (s)^ then
-         if Ch < ' '
-          then Result := Result + '#' + IntToStr (Ord (Ch)) //###0.936
-          else Result := Result + Ch;
+          Result := Result + PrintableChar(Ch);
        inc (s, SizeOf (TSetOfREChar));
       end;
      {$ENDIF}
