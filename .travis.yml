@@ -3,5 +3,5 @@ dist: trusty
 install: ./.travis-lazarus/.travis.install.py
 
 script:
-  - lazbuild $LAZ_OPT test/tregexpr_test.lpi             # Build project
-  - $LAZ_ENV test/bin/tregexpr_test --all --format=plain # Run testsuite
+  - lazbuild $LAZ_OPT test/testregexpr.lpi             # Build project
+  - $LAZ_ENV test/testregexpr --all --format=plain # Run testsuite
