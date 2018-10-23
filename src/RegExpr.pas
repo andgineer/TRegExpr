@@ -2906,13 +2906,13 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
   nextch : REChar;
   BracesMin, BracesMax : PtrInt; // we use integer instead of TREBracesArg for better support */+
   {$IFDEF ComplexBraces}
-  SavedLoopStack : TloopStack; // :(( very bad for recursion
+  SavedLoopStack : TLoopStack; // :(( very bad for recursion
   SavedLoopStackIdx : integer; //###0.925
   {$ENDIF}
  begin
   Result := false;
   scan := prog;
-  SavedLoopStack:=Default(TLoopStack);
+  FillChar(SavedLoopStack[0], length(SavedLoopStack), 0);
   while scan <> nil do begin
      len := PRENextOff (AlignToPtr(scan + 1))^; //###0.932 inlined regnext
      if len = 0
