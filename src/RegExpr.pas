@@ -1,4 +1,4 @@
-unit RegExpr;
+﻿unit RegExpr;
 
 {
      TRegExpr class library
@@ -49,7 +49,9 @@ unit RegExpr;
 interface
 
 {off $DEFINE DebugSynRegExpr}
+{$IFDEF FPC}
 {$DEFINE UnicodeWordDetection}
+{$ENDIF}
 
 // ======== Determine compiler
 {$IFDEF VER80} Sorry, TRegExpr is for 32-bits Delphi only. Delphi 1 is not supported (and whos really care today?!). {$ENDIF}
@@ -119,6 +121,11 @@ interface
 uses
  Classes,  // TStrings in Split method
  SysUtils; // Exception
+
+{$IFNDEF FPC}
+const
+  LOW_SURROGATE_BEGIN = Word($DC00);
+{$ENDIF}
 
 type
 {$IFNDEF FPC}
@@ -717,7 +724,7 @@ uses
 {$ENDIF}
 {$ELSE}
 uses
-{$IFDEF SYN_WIN32}
+{$IFDEF WIN32}
     Windows; // CharUpper/Lower
 {$ELSE}
     Libc; //Qt.pas from Borland does not expose char handling functions
@@ -1486,7 +1493,7 @@ end;
 {$ENDIF}
 
 
-function TRegExpr.IsWordChar(AChar: REChar): Boolean; inline;
+function TRegExpr.IsWordChar(AChar: REChar): Boolean; {$IFDEF FPC}inline;{$ENDIF}
 begin
   Result := Pos(AChar, fWordChars)>0;
   {$IFDEF UnicodeWordDetection}
@@ -2948,7 +2955,7 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
  begin
   Result := false;
   scan := prog;
-  FillChar(SavedLoopStack[0], length(SavedLoopStack), 0);
+  FillChar(SavedLoopStack[1], length(SavedLoopStack), 0);
   while scan <> nil do begin
      len := PRENextOff (AlignToPtr(scan + 1))^; //###0.932 inlined regnext
      if len = 0

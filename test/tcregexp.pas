@@ -1,6 +1,8 @@
 unit tcregexp;
 
+{$IFDEF FPC}
 {$mode objfpc}{$H+}
+{$ENDIF}
 
 { $DEFINE DUMPTESTS} //define this to dump a
 
@@ -13,7 +15,12 @@ unit tcregexp;
 interface
 
 uses
-  Classes, SysUtils, fpcunit, testregistry, regexpr in '../src/RegExpr.pas';
+{$IFDEF FPC}
+fpcunit, testregistry,
+{$ELSE}
+TestFramework,
+{$ENDIF}
+  Classes, SysUtils, regexpr {$IFDEF FPC}in '../src/RegExpr.pas'{$ENDIF};
 
 type
 
@@ -21,14 +28,16 @@ type
 
   TTestRegexpr= class(TTestCase)
   private
-    FRE: TRegExpr;
+    RE: TRegExpr;
   protected
     class function PrintableString(AString: string): string;
     Procedure RunRETest(aIndex : Integer);
     procedure CompileRE(AExpression: string);
-    procedure SetUp; override;
-    procedure TearDown; override;
-    Property RE : TRegExpr read FRE;
+    procedure IsNotNull(ArrorMessage: string; AObjectToCheck: TObject);
+    procedure IsTrue(ArrorMessage: string; AConditionToCheck: boolean);
+    procedure IsFalse(ArrorMessage: string; AConditionToCheck: boolean);
+    procedure AreEqual(ArrorMessage: string; s1,s2: string); overload;
+    procedure AreEqual(ArrorMessage: string; i1,i2: integer); overload;
   published
     procedure TestEmpty;
     {$IFDEF OverMeth}
@@ -267,11 +276,51 @@ const
     )
   );
 
+procedure TTestRegexpr.IsFalse(ArrorMessage: string; AConditionToCheck: boolean);
+begin
+  IsTrue(ArrorMessage, not AConditionToCheck)
+end;
+
+procedure TTestRegexpr.IsTrue(ArrorMessage: string; AConditionToCheck: boolean);
+begin
+  {$IFDEF FPC}
+  AssertTrue(ArrorMessage, AConditionToCheck);
+  {$ELSE}
+  CheckTrue(AConditionToCheck, ArrorMessage)
+  {$ENDIF}
+end;
+
+procedure TTestRegexpr.IsNotNull(ArrorMessage: string; AObjectToCheck: TObject);
+begin
+  {$IFDEF FPC}
+  AssertNotNull(ArrorMessage, AObjectToCheck);
+  {$ELSE}
+  CheckNotNull(AObjectToCheck, ArrorMessage)
+  {$ENDIF}
+end;
+
+procedure TTestRegexpr.AreEqual(ArrorMessage: string; s1,s2: string);
+begin
+  {$IFDEF FPC}
+  AssertEquals(ArrorMessage, s1,s2);
+  {$ELSE}
+  CheckEquals(s1,s2, ArrorMessage)
+  {$ENDIF}
+end;
+
+procedure TTestRegexpr.AreEqual(ArrorMessage: string; i1,i2: integer);
+begin
+  {$IFDEF FPC}
+  AssertEquals(ArrorMessage, i1,i2);
+  {$ELSE}
+  CheckEquals(i1,i2, ArrorMessage)
+  {$ENDIF}
+end;
 
 procedure TTestRegexpr.TestEmpty;
 begin
-  AssertNotNull('Have RE',RE);
-  AssertFalse('UseOsLineEndOnReplace correcly set', RE.UseOsLineEndOnReplace);
+  CompileRE('1'); // just to create RE object
+  IsFalse('UseOsLineEndOnReplace correctly set', RE.UseOsLineEndOnReplace);
 end;
 
 {$IFDEF OverMeth}
@@ -438,6 +487,10 @@ end;
 
 procedure TTestRegexpr.CompileRE(AExpression: string);
 begin
+  if (RE = Nil) then begin
+    RE := TRegExpr.Create;
+    RE.UseOsLineEndOnReplace:=False;
+  end;
   RE.Expression:=AExpression;
   RE.Compile;
 {$IFDEF DUMPTESTS}
@@ -467,31 +520,20 @@ begin
   if (T.SubstitutionText <> '') then
     begin
     act:=RE.Replace(T.InputText,T.SubstitutionText,True);
-    AssertEquals('Replace failed', PrintableString(T.ExpectedResult),PrintableString(Act))
+    AreEqual('Replace failed', PrintableString(T.ExpectedResult),PrintableString(Act))
     end
   else
     begin
     RE.Exec(T.inputText);
-    AssertEquals('Search position',T.MatchStart,RE.MatchPos[0]);
-    AssertEquals('Matched text',PrintableString(T.ExpectedResult),PrintableString(RE.Match[0]));
+    AreEqual('Search position',T.MatchStart,RE.MatchPos[0]);
+    AreEqual('Matched text',PrintableString(T.ExpectedResult),PrintableString(RE.Match[0]));
     end;
-end;
-
-procedure TTestRegexpr.SetUp;
-begin
-  Inherited;
-  FRE := TRegExpr.Create;
-  FRE.UseOsLineEndOnReplace:=False;
-end;
-
-procedure TTestRegexpr.TearDown;
-begin
-  FreeAndNil(FRE);
-  Inherited;
 end;
 
 initialization
 
+{$IFDEF FPC}
   RegisterTest(TTestRegexpr);
+{$ENDIF}
 end.
 
