@@ -11,7 +11,7 @@
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="tcregexp.pp"/>
+        <Filename Value="tcregexp.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="13" Y="18"/>
@@ -40,14 +40,14 @@
         <Filename Value="testregexpr.pp"/>
       </Position1>
       <Position2>
-        <Filename Value="tcregexp.pp"/>
+        <Filename Value="tcregexp.pas"/>
       </Position2>
       <Position3>
-        <Filename Value="tcregexp.pp"/>
+        <Filename Value="tcregexp.pas"/>
         <Caret Line="10" Column="68"/>
       </Position3>
       <Position4>
-        <Filename Value="tcregexp.pp"/>
+        <Filename Value="tcregexp.pas"/>
         <Caret Line="18" Column="13"/>
       </Position4>
     </JumpHistory>

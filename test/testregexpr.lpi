@@ -31,7 +31,7 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="tcregexp.pp"/>
+        <Filename Value="tcregexp.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit1>
     </Units>

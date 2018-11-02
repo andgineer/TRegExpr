@@ -662,8 +662,23 @@ procedure SplitRegExpr (const ARegExpr, AInputStr : RegExprString; APieces : TSt
 //   'BLOCK( test1)', 'def "$1" value "$2"')
 //   will return:  def "$1" value "$2"
 function ReplaceRegExpr (const ARegExpr, AInputStr, AReplaceStr : RegExprString;
-      AUseSubstitution : boolean{$IFDEF DefParam}= False{$ENDIF}) : RegExprString; //###0.947
+      AUseSubstitution : boolean{$IFDEF DefParam}= False{$ENDIF}) : RegExprString; {$IFDEF OverMeth}overload; //###0.947
 
+// Alternate form allowing to set more parameters.
+
+Type
+  TRegexReplaceOption = (rroModifierI,
+                         rroModifierR,
+                         rroModifierS,
+                         rroModifierG,
+                         rroModifierM,
+                         rroModifierX,
+                         rroUseSubstitution,
+                         rroUseOsLineEnd);
+  TRegexReplaceOptions = Set of TRegexReplaceOption;
+
+function ReplaceRegExpr (const ARegExpr, AInputStr, AReplaceStr : RegExprString; Options :TRegexReplaceOptions) : RegExprString; overload;
+{$ENDIF}
 // Replace all metachars with its safe representation,
 // for example 'abc$cd.(' converts into 'abc\$cd\.\('
 // This function useful for r.e. autogeneration from
@@ -784,6 +799,27 @@ begin
    end;
 end; { of function ReplaceRegExpr
 --------------------------------------------------------------}
+{$IFDEF OverMeth}
+function ReplaceRegExpr (const ARegExpr, AInputStr, AReplaceStr : RegExprString; Options :TRegexReplaceOptions) : RegExprString; overload;
+
+begin
+ with TRegExpr.Create do
+   try
+     ModifierI:=(rroModifierI in Options);
+     ModifierR:=(rroModifierR in Options);
+     ModifierS:=(rroModifierS in Options);
+     ModifierG:=(rroModifierG in Options);
+     ModifierM:=(rroModifierM in Options);
+     ModifierX:=(rroModifierX in Options);
+     // Set this after the above, if the regex contains modifiers, they will be applied.
+     Expression := ARegExpr;
+     UseOsLineEndOnReplace:=(rroUseOsLineEnd in Options);
+     Result := Replace (AInputStr, AReplaceStr, rroUseSubstitution in options);
+   finally
+     Free;
+   end;
+end;
+{$ENDIF}
 
 function QuoteRegExprMetaChars (const AStr : RegExprString) : RegExprString;
  const

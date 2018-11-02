@@ -4,6 +4,12 @@ unit tcregexp;
 
 { $DEFINE DUMPTESTS} //define this to dump a
 
+{$IFDEF VER130} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D5
+{$IFDEF VER140} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D6
+{$IFDEF VER150} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
+{$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
+
 interface
 
 uses
@@ -19,11 +25,15 @@ type
   protected
     class function PrintableString(AString: string): string;
     Procedure RunRETest(aIndex : Integer);
+    procedure CompileRE(AExpression: string);
     procedure SetUp; override;
     procedure TearDown; override;
     Property RE : TRegExpr read FRE;
   published
     procedure TestEmpty;
+    {$IFDEF OverMeth}
+    procedure TestReplaceOverload;
+    {$ENDIF}
     Procedure RunTest1;
     Procedure RunTest2;
     Procedure RunTest3;
@@ -70,31 +80,36 @@ const
     expression: '\nd';
     inputText: 'abc'#13#10'def';
     substitutionText: '\n\x{10}\r\\';
-    expectedResult: 'abc'#13#10#16#13'\ef'
+    expectedResult: 'abc'#13#10#16#13'\ef';
+    MatchStart: 0
     ),
     (
     expression: '(\w*)';
     inputText: 'name.ext';
     substitutionText: '$1.new';
-    expectedResult: 'name.new.new.ext.new.new'
+    expectedResult: 'name.new.new.ext.new.new';
+    MatchStart: 0
     ),
     (
     expression: #$d'('#$a')';
     inputText: 'word'#$d#$a;
     substitutionText: '$1';
-    expectedResult: 'word'#$a
+    expectedResult: 'word'#$a;
+    MatchStart: 0
     ),
     (
     expression: '(word)';
     inputText: 'word';
     substitutionText: '\U$1\\r';
-    expectedResult: 'WORD\r'
+    expectedResult: 'WORD\r';
+    MatchStart: 0
     ),
     (
     expression: '(word)';
     inputText: 'word';
     substitutionText: '$1\n';
-    expectedResult: 'word'#$a
+    expectedResult: 'word'#$a;
+    MatchStart: 0
     ),
     (
     expression: '[A-Z]';
@@ -259,6 +274,19 @@ begin
   AssertFalse('UseOsLineEndOnReplace correcly set', RE.UseOsLineEndOnReplace);
 end;
 
+{$IFDEF OverMeth}
+procedure TTestRegexpr.TestReplaceOverload;
+
+var
+  act : String;
+
+begin
+    CompileRE('A\r(\n)'); // just to print compiled re - it will be recompiled below
+    act:=ReplaceRegExpr('A\r(\n)', 'a'#$d#$a, '\n', [rroModifierI, rroUseSubstitution]);
+    AssertEquals('Replace failed', PrintableString(#$a), PrintableString(Act))
+end;
+{$ENDIF}
+
 procedure TTestRegexpr.RunTest1;
 begin
   RunRETest(1);
@@ -408,6 +436,21 @@ begin
       Result := Result + ch;
 end;
 
+procedure TTestRegexpr.CompileRE(AExpression: string);
+begin
+  RE.Expression:=AExpression;
+  RE.Compile;
+{$IFDEF DUMPTESTS}
+  writeln('  Modifiers "', RE.ModifierStr, '"');
+  writeln('  Regular expression: ', T.Expression,' ,');
+  writeln('  compiled into p-code: ');
+  writeln('  ', RE.Dump);
+  writeln('  Input text: "', PrintableString(T.inputText), '"');
+  if (T.substitutionText <> '')  then
+    Writeln('  Substitution text: "', PrintableString(T.substitutionText), '"');
+{$ENDIF}
+end;
+
 procedure TTestRegexpr.RunRETest(aIndex: Integer);
 
 
@@ -417,18 +460,10 @@ var
 
 begin
   T:=testCases[aIndex];
-  RE.Expression:=T.Expression;
-  RE.Compile;
 {$IFDEF DUMPTESTS}
   Writeln('Test: ',TestName);
-  writeln('  Modifiers "', RE.ModifierStr, '"');
-  writeln('  Regular expression: ', T.Expression,' ,');
-  writeln('  compiled into p-code: ');
-  writeln('  ',RE.Dump);
-  writeln('  Input text: "', PrintableString(T.inputText), '"');
-  if (T.substitutionText <> '')  then
-    Writeln('  Substitution text: "', PrintableString(T.substitutionText), '"');
 {$ENDIF}
+  CompileRE(T.Expression);
   if (T.SubstitutionText <> '') then
     begin
     act:=RE.Replace(T.InputText,T.SubstitutionText,True);
