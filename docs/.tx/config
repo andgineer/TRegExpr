@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[tregexpr._build_gettext_index]
+file_filter = locale/<lang>/LC_MESSAGES/index.po
+source_file = _build/gettext/index.pot
+source_lang = en
+type = PO
+

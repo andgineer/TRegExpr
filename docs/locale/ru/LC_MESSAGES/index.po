@@ -1,0 +1,221 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, Andrey Sorokin
+# This file is distributed under the same license as the TRegExpr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Andrey Sorokin <filbert@yandex.ru>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: TRegExpr 0.952\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-25 14:25+0300\n"
+"PO-Revision-Date: 2019-04-25 09:51+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
+"Language-Team: Russian (https://www.transifex.com/masterAndrey/teams/98461/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: ../../index.md:1
+msgid "TRegExpr library implements regular expressions in pure Delphi."
+msgstr "Библиотека TRegExpr реализует регулярные выражения на чистом Delphi."
+
+#: ../../index.md:3
+msgid ""
+"<a href=\"https://github.com/masterandrey/TRegExpr\" class=\"btn btn-primary"
+" btn-lg\" role=\"button\">Github repo</a>"
+msgstr ""
+"<a href=\"https://github.com/masterandrey/TRegExpr\" class=\"btn btn-primary"
+" btn-lg\" role=\"button\">Github</a>"
+
+#: ../../index.md:5
+msgid ""
+"Now it's included into [Lazarus (Free "
+"Pascal)](http://wiki.freepascal.org/Regexpr)."
+msgstr ""
+"Сейчас библиотека входит в состав [Lazarus / Free "
+"Pascal](http://wiki.freepascal.org/Regexpr)."
+
+#: ../../index.md:7
+msgid ""
+"TRegExpr is easy to use and powerfull tool for sophisticated search and "
+"substitutioning and for template-based text checking (especially usefull for"
+" user input validation in DBMS and web projects)."
+msgstr ""
+"TRegExpr - это простой в использовании и мощный инструмент для сложного "
+"поиска и подстановки, а также для проверки текста на основе шаблонов "
+"(особенно полезен для проверки пользовательского ввода в СУБД и веб-"
+"проектах)."
+
+#: ../../index.md:10
+msgid ""
+"You can validate e-mail adresses, extract phone numbers or ZIP-codes from "
+"web-pages or documents, search for complex patterns in log files and all You"
+" can imagine! Rules (templates) can be changed without Your program "
+"recompilation!"
+msgstr ""
+"Вы можете проверять адреса электронной почты, извлекать телефонные номера "
+"или почтовые индексы с веб-страниц или документов, искать сложные шаблоны в "
+"файлах журналов и все, что можете себе представить! Правила (шаблоны) могут "
+"быть изменены без перекомпиляции Вашей программы!"
+
+#: ../../index.md:13
+msgid ""
+"As a language for rules used subset of Perl's [regular "
+"expressions](/regexp_syntax) (regexp)."
+msgstr ""
+"В качестве языка для правил используется подмножество [регулярных выражений]"
+" Perl (/ regexp_syntax) (regexp)."
+
+#: ../../index.md:15
+msgid ""
+"Full source code included, pure Object Pascal. Thus, You need no DLL! The "
+"library source code is compatible with Delphi 2-7, Borland C++ Builder 3-6, "
+"Kylix, FreePascal (if You see any incompatibility problems, please. drop the"
+" bug-report to [author](/about))."
+msgstr ""
+"Полный исходный код включен, чистый Object Pascal. Таким образом, вам не "
+"нужно DLL! Исходный код библиотеки совместим с Delphi 2-7, Borland C ++ "
+"Builder 3-6, Kylix, FreePascal (если вы видите какие-либо проблемы "
+"несовместимости, пожалуйста, отправьте отчет об ошибке в [author] (/ "
+"about))."
+
+#: ../../index.md:20
+msgid ""
+"Documentation in English, Russian, German, Bulgarian, French and Spanish "
+"available at TRegExpr <a "
+"href=\"http://regexpstudio.com/tregexpr/TRegExpr.html\" "
+"target=\"_blank\">home page</a>"
+msgstr ""
+"Документация на английском, русском, немецком, болгарском, французском и "
+"испанском языках доступна на <a "
+"href=\"http://regexpstudio.com/tregexpr/TRegExpr.html\" "
+"target=\"_blank\">домашней странице</a> TRegExpr"
+
+#: ../../index.md:23
+msgid ""
+"Installation is very simple, the implementation encapsulated completely into"
+" class [TRegExpr](/tregexpr_interface/)."
+msgstr ""
+"Установка очень проста, реализация полностью заключена в классе [TRegExpr] "
+"(/ tregexpr_interface /)."
+
+#: ../../index.md:26
+msgid ""
+"[Demos "
+"projects](https://github.com/masterandrey/TRegExpr/tree/master/examples) and"
+" [usage "
+"articles](http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html)"
+" illustrate simplicity and power of text processing with the library."
+msgstr ""
+"[Демонстрационные проекты] "
+"(https://github.com/masterandrey/TRegExpr/tree/master/examples) и [статьи об"
+" использовании] "
+"(http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html) "
+"иллюстрируют простоту и мощь обработка текста с библиотекой."
+
+#: ../../index.md:30
+msgid ""
+"If You need Unicode (so called 'WideString' in Delphi) - see [How to use "
+"unicode](tregexpr_interface#unicode)."
+msgstr ""
+"Если вам нужен Unicode (так называемый &#39;WideString&#39; в Delphi) - см. "
+"[Как использовать Unicode] (tregexpr_interface # unicode)."
+
+#: ../../index.md:33
+msgid "### Gratitudes"
+msgstr "### Благодарности"
+
+#: ../../index.md:35
+msgid ""
+"Many features suggested and a lot of bugs founded (and even fixed) by "
+"TRegExpr's contributors."
+msgstr ""
+"Предложено множество функций и множество ошибок, основанных (и даже "
+"исправленных) авторами TRegExpr."
+
+#: ../../index.md:38
+msgid ""
+"I cannot list here all of them (actually I kept listing only on very early "
+"stage of development), but I do appreciate all"
+msgstr ""
+"Я не могу перечислить здесь все из них (на самом деле я продолжал "
+"перечислять только на очень ранней стадии разработки), но я ценю все"
+
+#: ../../index.md:41
+msgid ""
+"bug-reports, features suggestions and questions that I am receiving from "
+"You."
+msgstr ""
+"отчеты об ошибках, предложения функций и вопросы, которые я получаю от Вас."
+
+#: ../../index.md:45
+msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
+msgstr ""
+"Guido Muehlwitz - обнаружена и исправлена ошибка в обработке больших строк"
+
+#: ../../index.md:46
+msgid ""
+"Stephan Klimek - testing in CPPB and suggesting/implementing many features"
+msgstr ""
+"Стефан Климек - тестирование в CPPB и предложение / реализация многих "
+"функций"
+
+#: ../../index.md:47
+msgid "Steve Mudford - implemented Offset parameter"
+msgstr "Стив Мадфорд - реализован параметр Offset"
+
+#: ../../index.md:48
+msgid ""
+"Martin Baur ([www.mindpower.com](http://www.mindpower.com)) - German help, "
+"usefull suggetions"
+msgstr ""
+"Мартин Баур ([www.mindpower.com] (http://www.mindpower.com)) - немецкая "
+"помощь, полезные предложения"
+
+#: ../../index.md:49
+msgid "Yury Finkel - implemented UniCode support, found and fixed some bugs"
+msgstr ""
+"Юрий Финкель - реализовал поддержку UniCode, нашел и исправил некоторые "
+"ошибки"
+
+#: ../../index.md:50
+msgid "Ralf Junker - Implemented some features, many optimization suggestions"
+msgstr ""
+"Ральф Юнкер - Реализованы некоторые функции, много предложений по "
+"оптимизации"
+
+#: ../../index.md:51
+msgid "Simeon Lilov - Bulgarian help"
+msgstr "Симеон Лилов - болгарская помощь"
+
+#: ../../index.md:52
+msgid ""
+"Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
+msgstr ""
+"Филип Джирсбк и Мэтью Винтер - помогите в реализации не жадного режима"
+
+#: ../../index.md:53
+msgid "Kit Eason many examples for introduction help section"
+msgstr "Kit Eason много примеров для введения раздела справки"
+
+#: ../../index.md:54
+msgid "Juergen Schroth - bug hunting and usefull suggestions"
+msgstr "Юрген Шрот - поиск ошибок и полезные предложения"
+
+#: ../../index.md:55
+msgid "Martin Ledoux - French help"
+msgstr "Мартин Леду - французская помощь"
+
+#: ../../index.md:56
+msgid "Diego Calp, Argentina -Spanish help"
+msgstr "Диего Кальп, Аргентина - Испанская помощь"
+
+#: ../../index.md:58
+msgid "And many others - for big work in bug hunting!"
+msgstr "И многие другие - за большую работу по поиску жуков!"
