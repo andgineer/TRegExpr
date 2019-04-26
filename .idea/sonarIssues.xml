@@ -43,6 +43,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/index.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/ru_RU/LC_MESSAGES/index.po">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/make.bat">
           <value>
             <set />
@@ -63,7 +73,77 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../bombard/docs/.tx/config">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../bombard/docs/_build/html/index.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../bombard/docs/campaign.rst">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../bombard/docs/conf.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../bombard/docs/create_translation.sh">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../bombard/docs/index.rst">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../bombard/docs/push_docs.sh">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../bombard/docs/quickstart/bootstrap.rst">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/api/swagger.yaml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/server/controllers/models/project.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/server/controllers/projects/create.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/server/controllers/projects/list.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/server/db/models/project.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/tests/test_emailing.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/tests/test_project_create.py">
           <value>
             <set />
           </value>

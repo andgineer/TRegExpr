@@ -5,6 +5,6 @@
 tx pull --all
 
 # local build to check
-sphinx-build -b html -D language=ru . _build/html/ru
+sphinx-build -b html -D language=ru_RU . _build/html/ru
 google-chrome _build/html/ru/index.html
 
