@@ -1,0 +1,190 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, Andrey Sorokin
+# This file is distributed under the same license as the TRegExpr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: TRegExpr 0.952\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-26 14:21+0300\n"
+"PO-Revision-Date: 2019-04-25 09:51+0000\n"
+"Language-Team: French (France) (https://www.transifex.com/masterAndrey/teams/98461/fr_FR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+# cc0d24142d514d4a83784199e601ccd1
+#: ../../index.md:1
+msgid "TRegExpr library implements regular expressions in pure Delphi."
+msgstr ""
+
+# 8e1c6041ce894ceb872baa21e3aeece3
+#: ../../index.md:3
+msgid ""
+"<a href=\"https://github.com/masterandrey/TRegExpr\" class=\"btn btn-primary"
+" btn-lg\" role=\"button\">Github repo</a>"
+msgstr ""
+
+# 20410e73cf444b7495e7dd236bfff397
+#: ../../index.md:5
+msgid "Now it's included into Lazarus (Free Pascal)."
+msgstr ""
+
+# 57929c8115c34146ba8d53c86b73e99e
+#: ../../index.md:7
+msgid ""
+"TRegExpr is easy to use and powerfull tool for sophisticated search and "
+"substitutioning and for template-based text checking (especially usefull for"
+" user input validation in DBMS and web projects)."
+msgstr ""
+
+# ddca2022171f445a9bcae654ef4b362f
+#: ../../index.md:10
+msgid ""
+"You can validate e-mail adresses, extract phone numbers or ZIP-codes from "
+"web-pages or documents, search for complex patterns in log files and all You"
+" can imagine! Rules (templates) can be changed without Your program "
+"recompilation!"
+msgstr ""
+
+# 99f28c3c5af44dd8a94a620a6ccd66dc
+#: ../../index.md:13
+msgid ""
+"As a language for rules used subset of Perl's regular expressions (regexp)."
+msgstr ""
+
+# e150b343a62742188fe84f150594374b
+#: ../../index.md:15
+msgid ""
+"Full source code included, pure Object Pascal. Thus, You need no DLL! The "
+"library source code is compatible with Delphi 2-7, Borland C++ Builder 3-6, "
+"Kylix, FreePascal (if You see any incompatibility problems, please. drop the"
+" bug-report to author)."
+msgstr ""
+
+# 99734a13f9e446a1a94eb74edb4fb386
+#: ../../index.md:20
+msgid ""
+"Documentation in English, Russian, German, Bulgarian, French and Spanish "
+"available at TRegExpr <a "
+"href=\"http://regexpstudio.com/tregexpr/TRegExpr.html\" "
+"target=\"_blank\">home page</a>"
+msgstr ""
+
+# 4b444357588046d080d9dc32d9c68b8e
+#: ../../index.md:23
+msgid ""
+"Installation is very simple, the implementation encapsulated completely into"
+" class TRegExpr."
+msgstr ""
+
+# 9402615246f140c89b59177b6f1f3f58
+#: ../../index.md:26
+msgid ""
+"Demos projects and usage articles illustrate simplicity and power of text "
+"processing with the library."
+msgstr ""
+
+# e7b685d3c5ed4990b3ad17e4ce087843
+#: ../../index.md:30
+msgid ""
+"If You need Unicode (so called 'WideString' in Delphi) - see How to use "
+"unicode."
+msgstr ""
+
+# c556ccaa4805402ab0801fa2785c7456
+#: ../../index.md:33
+msgid "Gratitudes"
+msgstr ""
+
+# 268cc5e6c2da457ba50fc853fb103794
+#: ../../index.md:35
+msgid ""
+"Many features suggested and a lot of bugs founded (and even fixed) by "
+"TRegExpr's contributors."
+msgstr ""
+
+# f8a253a51b1a4256ab036389ba988261
+#: ../../index.md:38
+msgid ""
+"I cannot list here all of them (actually I kept listing only on very early "
+"stage of development), but I do appreciate all"
+msgstr ""
+
+# 123461751eb6418198f16285d79d7767
+#: ../../index.md:41
+msgid ""
+"bug-reports, features suggestions and questions that I am receiving from "
+"You."
+msgstr ""
+
+# 05c43ef077b446859f0d05b0b92edef0
+#: ../../index.md:45
+msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
+msgstr ""
+
+# 06dad95060b04bf2be1ff27e0c2abff2
+#: ../../index.md:46
+msgid ""
+"Stephan Klimek - testing in CPPB and suggesting/implementing many features"
+msgstr ""
+
+# 2080a3d065de4827916dbbc174872814
+#: ../../index.md:47
+msgid "Steve Mudford - implemented Offset parameter"
+msgstr ""
+
+# 48a3902a5577426bb7877d8a15c743c4
+#: ../../index.md:48
+msgid "Martin Baur (www.mindpower.com) - German help, usefull suggetions"
+msgstr ""
+
+# d402718ba09b49ffb284a26bc9e31d57
+#: ../../index.md:49
+msgid "Yury Finkel - implemented UniCode support, found and fixed some bugs"
+msgstr ""
+
+# 28f0838389bf40bd8588b75e3c2cb818
+#: ../../index.md:50
+msgid "Ralf Junker - Implemented some features, many optimization suggestions"
+msgstr ""
+
+# d3324e4f8cfb4e1aacd8ed294617e2da
+#: ../../index.md:51
+msgid "Simeon Lilov - Bulgarian help"
+msgstr ""
+
+# 35fbb7141a5346a4a884f660743d53dd
+#: ../../index.md:52
+msgid ""
+"Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
+msgstr ""
+
+# 2fee3a31c1dd4a12931d90c5dbaf38c1
+#: ../../index.md:53
+msgid "Kit Eason many examples for introduction help section"
+msgstr ""
+
+# baed1255c1c143b399d67758295109a4
+#: ../../index.md:54
+msgid "Juergen Schroth - bug hunting and usefull suggestions"
+msgstr ""
+
+# 9f1031b4f6224dc99622a7c0a665c6e6
+#: ../../index.md:55
+msgid "Martin Ledoux - French help"
+msgstr ""
+
+# 5bbca14a5c8045c0b0a16afd0ad75612
+#: ../../index.md:56
+msgid "Diego Calp, Argentina -Spanish help"
+msgstr ""
+
+# 0b4c8a3e570f4e9180b7b28c6a6afa14
+#: ../../index.md:58
+msgid "And many others - for big work in bug hunting!"
+msgstr ""
