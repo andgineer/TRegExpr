@@ -1,0 +1,861 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, Andrey Sorokin
+# This file is distributed under the same license as the TRegExpr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Andrey Sorokin <filbert@yandex.ru>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: TRegExpr 0.952\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-27 20:26+0300\n"
+"PO-Revision-Date: 2019-04-27 17:26+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
+"Language-Team: French (France) (https://www.transifex.com/masterAndrey/teams/98461/fr_FR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+# 4e5929435d734b0bbd0a5e2e0dfcbdf3
+#: ../../regexp_syntax.rst:2
+msgid "Important note"
+msgstr "Note importante"
+
+# f70fa158f8f64a0fbe20821418e453f8
+#: ../../regexp_syntax.rst:4
+msgid ""
+"Below is the description of regular expressions implemented in freeware "
+"library `TRegExpr <http://regexpstudio.com>`__. The library was widely used "
+"in many free and commertial software products."
+msgstr ""
+"Ci-dessous se trouve la description des expressions rationnelles "
+"implémentées dans la bibliothèque du freeware `TRegExpr "
+"<http://regexpstudio.com> `__. La bibliothèque était largement utilisée dans"
+" de nombreux logiciels gratuits et commerciaux."
+
+# f59a7e2d99ed41ae82b74577fa88af4c
+#: ../../regexp_syntax.rst:9
+msgid "Introduction"
+msgstr "introduction"
+
+# e191b913c401454488eb03cc6430f60d
+#: ../../regexp_syntax.rst:11
+msgid ""
+"Regular Expressions are a widely-used method of specifying patterns of text "
+"to search for. Special metacharacters allow You to specify, for instance, "
+"that a particular string You are looking for occurs at the beginning or end "
+"of a line, or contains n recurrences of a certain character."
+msgstr ""
+"Les expressions régulières sont une méthode largement utilisée pour "
+"spécifier des modèles de texte à rechercher. Des métacaractères spéciaux "
+"vous permettent de spécifier, par exemple, qu&#39;une chaîne particulière "
+"que vous recherchez se produit au début ou à la fin d&#39;une ligne ou "
+"contient n récurrences d&#39;un caractère donné."
+
+# fb98a7524b9f41eeab892bd8344e627b
+#: ../../regexp_syntax.rst:17
+msgid ""
+"Regular expressions look ugly for novices, but really they are very simple "
+"(well, usually simple ;) ), handly and powerfull tool."
+msgstr ""
+"Les expressions régulières ont l&#39;air moche pour les novices, mais en "
+"réalité elles sont très simples (enfin, généralement simples;)), pratiques "
+"et puissantes."
+
+# c990b4abbf904ff9bbae2944ce7f96b8
+#: ../../regexp_syntax.rst:20
+msgid ""
+"I recommend You to play with regular expressions using Windows `REStudio "
+"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__"
+" - it’ll help You to uderstand main conceptions. Moreover, there are many "
+"predefined examples with comments included into repository of R.e. visual "
+"debugger."
+msgstr ""
+"Je vous recommande de jouer avec des expressions régulières en utilisant "
+"Windows `REStudio "
+"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>"
+" `__ - Cela vous aidera à comprendre les principales conceptions. De plus, "
+"il existe de nombreux exemples prédéfinis avec des commentaires inclus dans "
+"le référentiel du débogueur visuel Re."
+
+# 252b8a6700654de29747aa19cd60e2a6
+#: ../../regexp_syntax.rst:26
+msgid "Let’s start our learning trip!"
+msgstr "Commençons notre voyage d&#39;apprentissage!"
+
+# 4ea6c0e1bfa2455794c9fcea646235e6
+#: ../../regexp_syntax.rst:29
+msgid "Simple matches"
+msgstr "Matchs simples"
+
+# c5d316b3cc6a4b4abebb54fcf2e6006a
+#: ../../regexp_syntax.rst:31
+msgid ""
+"Any single character matches itself, unless it is a metacharacter with a "
+"special meaning described below."
+msgstr ""
+"Tout caractère unique correspond à lui-même, sauf s’il s’agit d’un "
+"métacaractère ayant une signification particulière décrite ci-dessous."
+
+# 7a42dd79705641f0b9765b1b3d3f3f12
+#: ../../regexp_syntax.rst:34
+msgid ""
+"A series of characters matches that series of characters in the target "
+"string, so the pattern ``bluh`` would match ``bluh`` in the target string. "
+"Quite simple, eh ?"
+msgstr ""
+"Une série de caractères correspond à cette série de caractères dans la "
+"chaîne cible. Le modèle `` bluh`` correspond donc à `` bluh`` dans la chaîne"
+" cible. Assez simple, hein?"
+
+# f93880dfbfc5450d96eca74a70d59bc1
+#: ../../regexp_syntax.rst:38
+msgid ""
+"You can cause characters that normally function as metacharacters or escape "
+"sequences to be interpreted literally by ‘escaping’ them by preceding them "
+"with a backslash ``\\``, for instance: metacharacter ``^`` match beginning "
+"of string, but ``\\^`` match character ``^``, ``\\\\`` match ``\\`` and so "
+"on."
+msgstr ""
+"Vous pouvez faire en sorte que les caractères qui fonctionnent normalement "
+"comme métacaractères ou séquences d&#39;échappement soient littéralement "
+"interprétés en les &quot;échappant&quot; en les précédant d&#39;une barre "
+"oblique inversée `` \\ ``, par exemple: métacaractère `` ^ `` correspond au "
+"début de chaîne, mais `` \\ ^ `` match match `` ^ ``, `` \\\\ `` match `` \\"
+" `` et ainsi de suite."
+
+# 315f24cf90ef413e9f9c28c3bd2a9d09
+# ddde720794ee4dc9a70d558b0c89b02e
+# 453e611690e64701b95cfecabd23e660
+# 43254f60ac264bd980998c3b1c8c19d2
+# c5a529bb746b47828265927b2bc307dd
+# aa1e6c2ed53640ae99ee7d606bcb73d2
+# 5299948d8e75419fab9aaac2d9bb653a
+# f7341e71a6e4418c9659747f22427c94
+# 6adf892d82a0473697b4dd8d2f55b935
+# c30869e3fa2743e7a46f42efbc5ae347
+# 80a859c2d50047298fed7f7c84f5346c
+#: ../../regexp_syntax.rst:45 ../../regexp_syntax.rst:82
+#: ../../regexp_syntax.rst:101 ../../regexp_syntax.rst:118
+#: ../../regexp_syntax.rst:151 ../../regexp_syntax.rst:231
+#: ../../regexp_syntax.rst:293 ../../regexp_syntax.rst:342
+#: ../../regexp_syntax.rst:367 ../../regexp_syntax.rst:383
+#: ../../regexp_syntax.rst:488
+msgid "Examples:"
+msgstr "Exemples:"
+
+# 0cab32ead0d64b65ab97ee0b9bdfc83d
+#: ../../regexp_syntax.rst:53
+msgid "Note for C++ Builder users"
+msgstr "Note pour les utilisateurs de C ++ Builder"
+
+# 72675db9a7d648b090bd9a65bc03a504
+#: ../../regexp_syntax.rst:55
+msgid ""
+"Please, read in FAQ answer on question `Why many r.e. work wrong in Borland "
+"C++ Builder? <faq.html#cppbescchar>`__"
+msgstr ""
+"Veuillez lire la FAQ dans la réponse à la question `Pourquoi beaucoup de "
+"problèmes fonctionnent-ils mal dans Borland C ++ Builder? "
+"<faq.html#cppbescchar> `__"
+
+# 55e370c749bb49cf9832463f0cee7887
+#: ../../regexp_syntax.rst:59
+msgid "Escape sequences"
+msgstr "Séquences d&#39;échappement"
+
+# 9241a32e8c4f4aee871edb912e0955f0
+#: ../../regexp_syntax.rst:61
+msgid ""
+"Characters may be specified using a escape sequences syntax much like that "
+"used in C and Perl: ``\\n`` matches a newline, ``\\t`` a tab, etc. More "
+"generally, ``\\xnn``, where nn is a string of hexadecimal digits, matches "
+"the character whose ASCII value is nn. If You need wide (Unicode) character "
+"code, You can use ``\\x{nnnn}``, where ``nnnn`` - one or more hexadecimal "
+"digits."
+msgstr ""
+"Les caractères peuvent être spécifiés en utilisant une syntaxe de séquence "
+"d&#39;échappement similaire à celle utilisée dans C et Perl: `` \\ n`` "
+"correspond à une nouvelle ligne, `` \\ t`` un onglet, etc. Plus "
+"généralement, `` \\ xnn``, où nn est une chaîne de chiffres hexadécimaux, "
+"correspondant au caractère dont la valeur ASCII est nn. Si vous avez besoin "
+"d&#39;un code de caractère large (Unicode), vous pouvez utiliser `` \\ x "
+"{nnnn}} ``, où `` nnnn`` - un ou plusieurs chiffres hexadécimaux."
+
+# 3e32eb6ac6144c4d80b075e8ad5e44fd
+#: ../../regexp_syntax.rst:90
+msgid "Character classes"
+msgstr "Cours de caractère"
+
+# 99c4b0cfb5f9447a93c55e281d2426ed
+#: ../../regexp_syntax.rst:92
+msgid ""
+"You can specify a character class, by enclosing a list of characters in "
+"``[]``, which will match any one character from the list."
+msgstr ""
+"Vous pouvez spécifier une classe de caractères en incluant une liste de "
+"caractères dans `` [] ``, qui correspondra à n&#39;importe quel caractère de"
+" la liste."
+
+# a39f8e8ec20d4a9cad93f2828b7a7a8f
+#: ../../regexp_syntax.rst:95
+msgid ""
+"If the first character after the ``[`` is ``^``, the class matches any "
+"character not in the list."
+msgstr ""
+"Si le premier caractère après le `` [`` est `` ^ ``, la classe correspond à "
+"tout caractère ne figurant pas dans la liste."
+
+# 55e948458d154686bc68edd9693db16e
+#: ../../regexp_syntax.rst:108
+msgid ""
+"Within a list, the ``-`` character is used to specify a range, so that a-z "
+"represents all characters between ``a`` and ``z``, inclusive."
+msgstr ""
+"Dans une liste, le caractère `` -`` est utilisé pour spécifier une plage, de"
+" sorte que z représente tous les caractères compris entre `` a`` et `` z``, "
+"inclus."
+
+# 60942a70eff042b1b4b607b0df0d70d2
+#: ../../regexp_syntax.rst:111
+msgid ""
+"If You want ``-`` itself to be a member of a class, put it at the start or "
+"end of the list, or escape it with a backslash. If You want ``]`` you may "
+"place it at the start of list or escape it with a backslash."
+msgstr ""
+"Si vous voulez que `` -`` soit lui-même membre d&#39;une classe, mettez-la "
+"au début ou à la fin de la liste ou échappez-la avec une barre oblique "
+"inverse. Si vous voulez ``] `` vous pouvez le placer en début de liste ou "
+"l&#39;échapper avec une barre oblique inverse."
+
+# a07329be340945ea8edd4cd5d258b969
+#: ../../regexp_syntax.rst:131
+msgid "Metacharacters"
+msgstr "Métacaractères"
+
+# c95fa60048ed4d64a00309f5404470c4
+#: ../../regexp_syntax.rst:133
+msgid ""
+"Metacharacters are special characters which are the essence of Regular "
+"Expressions. There are different types of metacharacters, described below."
+msgstr ""
+"Les métacaractères sont des caractères spéciaux qui constituent "
+"l&#39;essence des expressions régulières. Il existe différents types de "
+"métacaractères, décrits ci-dessous."
+
+# 213b04c3d85244cab2561440188fd166
+#: ../../regexp_syntax.rst:160
+msgid ""
+"The ``^`` metacharacter by default is only guaranteed to match at the "
+"beginning of the input string/text, the ``$`` metacharacter only at the end."
+" Embedded line separators will not be matched by ``^`` or ``$``."
+msgstr ""
+"Le métacaractère `` ^ `` par défaut est uniquement garanti au début de la "
+"chaîne / du texte en entrée, le métacaractère `` $ `` seulement à la fin. "
+"Les séparateurs de lignes incorporés ne seront pas mis en correspondance "
+"avec `` ^ `` ou `` $ ``."
+
+# ed87bfa235224adf9fa9830b2477711f
+#: ../../regexp_syntax.rst:164
+msgid ""
+"You may, however, wish to treat a string as a multi-line buffer, such that "
+"the ``^`` will match after any line separator within the string, and ``$`` "
+"will match before any line separator. You can do this by switching On the "
+"`modifier /m <regexp_syntax.html#modifier_m>`__."
+msgstr ""
+"Cependant, vous pouvez souhaiter traiter une chaîne comme un tampon multi-"
+"ligne, de telle sorte que `` ^ `` corresponde après tout séparateur de ligne"
+" dans la chaîne, et `` $ `` corresponde avant tout séparateur de ligne. Vous"
+" pouvez le faire en activant le modificateur `/ m "
+"<regexp_syntax.html#modifier_m> `__."
+
+# fa6af706326b4f4ebdb8921bd79369cd
+#: ../../regexp_syntax.rst:169
+msgid ""
+"The ``\\A`` and ``\\Z`` are just like ``^`` and ``$``, except that they "
+"won’t match multiple times when the `modifier /m "
+"<regexp_syntax.html#modifier_m>`__ is used, while ``^`` and ``$`` will match"
+" at every internal line separator."
+msgstr ""
+"Le `` \\ A`` et le `` \\ Z`` sont juste comme `` ^ `` et `` $ ``, sauf "
+"qu&#39;ils ne correspondront pas plusieurs fois quand le modificateur `/ m "
+"<regexp_syntax.html#modifier_m> `__ est utilisé, alors que` `^` `et` `$` "
+"`correspondront à chaque séparateur de ligne interne."
+
+# 870ba883c46d4caa8479873e139518bc
+#: ../../regexp_syntax.rst:174
+msgid ""
+"The ``.`` metacharacter by default matches any character, but if You switch "
+"Off the `modifier /s <regexp_syntax.html#modifier_s>`__, then ``.`` won’t "
+"match embedded line separators."
+msgstr ""
+"Le métacaractère `` .`` correspond par défaut à n&#39;importe quel "
+"caractère, mais si vous désactivez le modificateur `/ s "
+"<regexp_syntax.html#modifier_s> `__, alors` `.`` ne correspondra pas aux "
+"séparateurs de lignes incorporés."
+
+# 24b7172cc99045a68054dfd2623da3fc
+#: ../../regexp_syntax.rst:178
+msgid ""
+"TRegExpr works with line separators as recommended at `www.unicode.org "
+"<http://www.unicode.org/unicode/reports/tr18/>`__:"
+msgstr ""
+"TRegExpr fonctionne avec des séparateurs de lignes comme recommandé sur le "
+"site `www.unicode.org <http://www.unicode.org/unicode/reports/tr18/> `__:"
+
+# 3bd8d69e73764aed8af762c1866a0514
+#: ../../regexp_syntax.rst:181
+msgid ""
+"``^`` is at the beginning of a input string, and, if `modifier /m "
+"<regexp_syntax.html#modifier_m>`__ is On, also immediately following any "
+"occurrence of ``\\x0D\\x0A`` or ``\\x0A`` or ``\\x0D`` (if You are using "
+"`Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr, then also"
+" ``\\x2028`` or  ``\\x2029`` or ``\\x0B`` or ``\\x0C`` or ``\\x85``). Note "
+"that there is no empty line within the sequence ``\\x0D\\x0A``."
+msgstr ""
+"`` ^ `` est au début d&#39;une chaîne d&#39;entrée, et, si `modificateur / m"
+" <regexp_syntax.html#modifier_m> `__ est activé, immédiatement après toute "
+"occurrence de` `\\ x0D \\ x0A`` ou` `\\ x0A`` ou` `\\ x0D`` (si vous "
+"utilisez` la version Unicode <tregexpr_interface.html#unicode> `__ de "
+"TRegExpr, puis aussi` `\\ x2028`` ou` `\\ x2029`` ou` `\\ x0B`` ou` `\\ "
+"x0C`` ou` `\\ x85``). Notez qu&#39;il n&#39;y a pas de ligne vide dans la "
+"séquence `` \\ \\ x0D \\ x0A``."
+
+# 2789416bbbad462186fbef55328265d1
+#: ../../regexp_syntax.rst:188
+msgid ""
+"``$`` is at the end of a input string, and, if `modifier /m "
+"<regexp_syntax.html#modifier_m>`__ is On, also immediately preceding any "
+"occurrence of  ``\\x0D\\x0A`` or ``\\x0A`` or ``\\x0D`` (if You are using "
+"`Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr, then also"
+" ``\\x2028`` or  ``\\x2029`` or ``\\x0B`` or ``\\x0C`` or ``\\x85``). Note "
+"that there is no empty line within the sequence ``\\x0D\\x0A``."
+msgstr ""
+"`` $ `` est à la fin d&#39;une chaîne d&#39;entrée, et, si `modificateur / m"
+" <regexp_syntax.html#modifier_m> `__ est activé, précédant immédiatement "
+"toute occurrence de` \\ x0D \\ x0A`` ou `` \\ x0A`` ou `` \\ x0D`` (si vous "
+"utilisez la version Unicode <tregexpr_interface.html#unicode> `__ de "
+"TRegExpr, puis aussi` `\\ x2028`` ou` `\\ x2029`` ou` `\\ x0B`` ou` `\\ "
+"x0C`` ou` `\\ x85``). Notez qu&#39;il n&#39;y a pas de ligne vide dans la "
+"séquence `` \\ \\ x0D \\ x0A``."
+
+# ede57b818ab74d3e967cda0c170d5a32
+#: ../../regexp_syntax.rst:196
+msgid ""
+"``.`` matchs any character, but if You switch Off `modifier /s "
+"<regexp_syntax.html#modifier_s>`__ then ``.`` doesn’t match ``\\x0D\\x0A`` "
+"and ``\\x0A`` and ``\\x0D`` (if You are using `Unicode version "
+"<tregexpr_interface.html#unicode>`__ of TRegExpr, then also ``\\x2028`` and"
+"  ``\\x2029`` and ``\\x0B`` and ``\\x0C`` and ``\\x85``)."
+msgstr ""
+"`` .`` correspond à n&#39;importe quel caractère, mais si vous désactivez "
+"`modificateur / s <regexp_syntax.html#modifier_s> `__ then` `.`` ne "
+"correspond pas à` `\\ x0D \\ x0A`` et` `\\ x0A`` et` `\\ x0D`` (si vous "
+"utilisez` la version Unicode <tregexpr_interface.html#unicode> `__ de "
+"TRegExpr, puis aussi` `\\ x2028`` et` `\\ x2029`` et` `\\ x0B`` et` `\\ "
+"x0C`` et` `\\ x85``)."
+
+# f81e8471526e433dac99ecba23596cec
+#: ../../regexp_syntax.rst:202
+msgid ""
+"Note that ``^.*$`` (an empty line pattern) doesnot match the empty string "
+"within the sequence ``\\x0D\\x0A``, but matchs the empty string within the "
+"sequence ``\\x0A\\x0D``."
+msgstr ""
+"Notez que `` ^. * $ `` (Un motif de ligne vide) ne correspond pas à la "
+"chaîne vide de la séquence `` \\ x0D \\ x0A``, mais correspond à la chaîne "
+"vide de la séquence `` \\ x0A \\ x0D``."
+
+# 34f4cb335eb246e78555c6de9e183ea5
+#: ../../regexp_syntax.rst:206
+msgid ""
+"Multiline processing can be easely tuned for Your own purpose with help of "
+"TRegExpr properties `LineSeparators "
+"<tregexpr_interface.html#lineseparators>`__ and `LinePairedSeparator "
+"<tregexpr_interface.html#linepairedseparator>`__, You can use only Unix "
+"style separators ``\\n`` or only DOS/Windows style ``\\r\\n`` or mix them "
+"together (as described above and used by default) or define Your own line "
+"separators!"
+msgstr ""
+"Le traitement multiligne peut être facilement ajusté à votre convenance à "
+"l’aide des propriétés TRegExpr `LineSeparators "
+"<tregexpr_interface.html#lineseparators> `__ et` LinePairedSeparator "
+"<tregexpr_interface.html#linepairedseparator> `__, Vous pouvez utiliser "
+"uniquement des séparateurs de style Unix` `\\ \\ n`` ou uniquement le style "
+"DOS / Windows` `\\ r \\ n`` ou les mélanger (comme décrit ci-dessus et "
+"utilisés par défaut) ou définir vos propres séparateurs de ligne!"
+
+# bca0e713201a45c991139a31d2b216da
+#: ../../regexp_syntax.rst:215
+msgid "Metacharacters - predefined classes"
+msgstr "Métacaractères - classes prédéfinies"
+
+# 44495071157f415bbf138800e2a5beb0
+#: ../../regexp_syntax.rst:226
+msgid "You may use ``\\w``, ``\\d`` and ``\\s`` within custom character classes."
+msgstr ""
+"Vous pouvez utiliser `` \\ w``, `` \\ d`` et `` \\ s`` dans les classes de "
+"caractères personnalisés."
+
+# 6bea053f0752406687c4726fa59f70fb
+#: ../../regexp_syntax.rst:238
+msgid ""
+"TRegExpr uses properties `SpaceChars "
+"<tregexpr_interface.html#tregexpr.spacechars>`__ and `WordChars "
+"<tregexpr_interface.html#tregexpr.wordchars>`__ to define character classes "
+"``\\w``, ``\\W``, ``\\s``, ``\\S``, so You can easely redefine it."
+msgstr ""
+"TRegExpr utilise les propriétés `SpaceChars "
+"<tregexpr_interface.html#tregexpr.spacechars> `__ et` WordChars "
+"<tregexpr_interface.html#tregexpr.wordchars> `__ pour définir les classes de"
+" caractères` `\\ w``,` `\\ W``,` `\\ s``,` `\\ S``, afin que vous puissiez "
+"facilement le redéfinir."
+
+# 81e3066e722f4adfb9bb68c941260b11
+#: ../../regexp_syntax.rst:245
+msgid "Metacharacters - word boundaries"
+msgstr "Métacaractères - limites de mots"
+
+# d74e1b5ab0794b27875247d4588aed0b
+#: ../../regexp_syntax.rst:252
+msgid ""
+"A word boundary (``\\b``) is a spot between two characters that has a "
+"``\\w`` on one side of it and a ``\\W`` on the other side of it (in either "
+"order), counting the imaginary characters off the beginning and end of the "
+"string as matching a ``\\W``."
+msgstr ""
+"Une limite de mot (`` \\ b``) est un espace entre deux caractères qui ont un"
+" `` \\ w`` d&#39;un côté et un `` \\ W`` de l&#39;autre (dans l&#39;un ou "
+"l&#39;autre ordre) , en comptant les caractères imaginaires du début et de "
+"la fin de la chaîne comme correspondant à un `` \\ W``."
+
+# 7fe5ead7b1c5449f95adcd7e972c5af6
+#: ../../regexp_syntax.rst:258
+msgid "Metacharacters - iterators"
+msgstr "Métacaractères - itérateurs"
+
+# 04acda6d45cc4d9fb1bcd696cae8e926
+#: ../../regexp_syntax.rst:260
+msgid ""
+"Any item of a regular expression may be followed by another type of "
+"metacharacters - iterators. Using this metacharacters You can specify number"
+" of occurences of previous character, metacharacter or subexpression."
+msgstr ""
+"Tout élément d&#39;une expression régulière peut être suivi d&#39;un autre "
+"type de métacaractères: les itérateurs. Utilisation de ces métacaractères "
+"Vous pouvez spécifier le nombre d&#39;occurrences du caractère, "
+"métacaractère ou sous-expression précédent."
+
+# 8d5a003f7b7240d6b01621a810bfb030
+#: ../../regexp_syntax.rst:280
+msgid ""
+"So, digits in curly brackets of the form ``{n,m}``, specify the minimum "
+"number of times to match the item n and the maximum ``m``. The form ``{n}`` "
+"is equivalent to ``{n,n}`` and matches exactly ``n`` times. The form "
+"``{n,}`` matches ``n`` or more times. There is no limit to the size of ``n``"
+" or ``m``, but large numbers will chew up more memory and slow down r.e. "
+"execution."
+msgstr ""
+"Ainsi, les chiffres entre accolades de la forme `` {n, m} ``, spécifient le "
+"nombre minimum de fois pour correspondre à l&#39;élément n et le maximum `` "
+"m``. La forme `` {n} `` est équivalente à `` {n, n} `` et correspond "
+"exactement à `` n`` fois. Le formulaire `` {n,} `` correspond à `` n`` ou "
+"plusieurs fois. Il n&#39;y a pas de limite à la taille de `` n`` ou `` m``, "
+"mais des nombres importants vont gaspiller plus de mémoire et ralentir la "
+"ré-exécution."
+
+# 13f1f9fee226460bbcdc883a5737304a
+#: ../../regexp_syntax.rst:287
+msgid ""
+"If a curly bracket occurs in any other context, it is treated as a regular "
+"character."
+msgstr ""
+"Si une accolade apparaît dans un autre contexte, elle est traitée comme un "
+"caractère normal."
+
+# 3aa74bd3a1224b1cbbd9405d32430854
+#: ../../regexp_syntax.rst:304
+msgid ""
+"A little explanation about “greediness”. “Greedy” takes as many as possible,"
+" “non-greedy” takes as few as possible. For example, ``b+`` and ``b*`` "
+"applied to string ``abbbbc`` return ``bbbb``, ``b+?`` returns ``b``, ``b*?``"
+" returns empty string, ``b{2,3}?`` returns ``bb``, ``b{2,3}`` returns "
+"``bbb``."
+msgstr ""
+"Une petite explication sur &quot;la gourmandise&quot;. &quot;Gourmand&quot; "
+"en prend le plus possible, &quot;non-gourmand&quot; le moins possible. Par "
+"exemple, «b +» et «b *» sont appliqués à la chaîne «abbbbc`` return` "
+"`bbbb``,` `b +?` `Renvoie` `b``,` `b *?` ` retourne une chaîne vide, `` b "
+"{2,3}? `` retourne `` bb``, `` b {2,3} `` renvoie `` bbb``."
+
+# b66beb64fd70451399aefc3097936d11
+#: ../../regexp_syntax.rst:310
+msgid ""
+"You can switch all iterators into “non-greedy” mode (see the `modifier /g "
+"<regexp_syntax.html#modifier_g>`__)."
+msgstr ""
+"Vous pouvez basculer tous les itérateurs en mode “non gourmand” (voir le "
+"`modificateur / g <regexp_syntax.html#modifier_g> `__)."
+
+# d93b2586f3864904850c6176b1cf66df
+#: ../../regexp_syntax.rst:314
+msgid "Metacharacters - alternatives"
+msgstr "Métacaractères - alternatives"
+
+# 4ab43a2c82ca4645bba942b595d4fe7b
+#: ../../regexp_syntax.rst:316
+msgid ""
+"You can specify a series of alternatives for a pattern using ``|`` to "
+"separate them, so that fee|fie|foe will match any of ``fee``, ``fie``, or "
+"``foe`` in the target string (as would ``f(e|i|o)e``). The first alternative"
+" includes everything from the last pattern delimiter (``(``, ``[``, or the "
+"beginning of the pattern) up to the first ``|``, and the last alternative "
+"contains everything from the last ``|`` to the next pattern delimiter. For "
+"this reason, it’s common practice to include alternatives in parentheses, to"
+" minimize confusion about where they start and end."
+msgstr ""
+"Vous pouvez spécifier une série d&#39;alternatives pour un motif en "
+"utilisant `` | `` pour les séparer, de sorte que fee | fie | foe corresponde"
+" à l&#39;un des `` fee``, `` fie`` ou `` foe`` dans la chaîne cible (comme "
+"le ferait `` f (e | i | o) e``). La première alternative comprend tout, du "
+"dernier délimiteur de motif (`` (``, `` `` ``, ou le début du motif) "
+"jusqu&#39;au premier `` | ``, et la dernière alternative contient tout du "
+"dernier ` `|` `vers le prochain délimiteur de motifs. Pour cette raison, il "
+"est courant d&#39;inclure des alternatives entre parenthèses, afin de "
+"réduire les risques de confusion quant à leur point de départ et leur fin."
+
+# c47974e8be394b3a96ae5fbde7bc6d85
+#: ../../regexp_syntax.rst:326
+msgid ""
+"Alternatives are tried from left to right, so the first alternative found "
+"for which the entire expression matches, is the one that is chosen. This "
+"means that alternatives are not necessarily greedy. For example: when "
+"matching foo|foot against ``barefoot``, only the ``foo`` part will match, as"
+" that is the first alternative tried, and it successfully matches the target"
+" string. (This might not seem important, but it is important when you are "
+"capturing matched text using parentheses.)"
+msgstr ""
+"Les alternatives sont essayées de gauche à droite. La première alternative à"
+" laquelle correspond toute l&#39;expression est donc celle qui est choisie. "
+"Cela signifie que les alternatives ne sont pas nécessairement gourmandes. "
+"Par exemple: lors de la comparaison de foo | foot avec `` barefoot``, seule "
+"la partie `` foo`` correspond, car il s&#39;agit de la première alternative "
+"essayée et correspond avec succès à la chaîne cible. (Cela peut ne pas "
+"sembler important, mais cela est important lorsque vous capturez du texte "
+"correspondant à l&#39;aide de parenthèses.)"
+
+# 7b0db3f69a174600bf34bfe25b261511
+#: ../../regexp_syntax.rst:335
+msgid ""
+"Also remember that ``|`` is interpreted as a literal within square brackets,"
+" so if You write ``[fee|fie|foe]`` You’re really only matching ``[feio|]``."
+msgstr ""
+"Rappelez-vous également que `` | `` est interprété comme un littéral entre "
+"crochets, donc si vous écrivez `[[fee | fie | foe]` `vous ne faites en "
+"réalité que correspondre à` `[feio |]` `."
+
+# 36eede421b6a4e968f8462f2efadd46c
+#: ../../regexp_syntax.rst:344
+msgid "foo(bar|foo) matchs strings ‘foobar’ or ‘foofoo’."
+msgstr ""
+"foo (bar | foo) correspond aux cordes &#39;foobar&#39; ou &#39;foofoo&#39;."
+
+# aa6e3c22db524b60846b1fa6ea87b986
+#: ../../regexp_syntax.rst:347
+msgid "Metacharacters - subexpressions"
+msgstr "Métacaractères - sous-expressions"
+
+# 52c6047525cb405a8224e9cea120506d
+#: ../../regexp_syntax.rst:349
+msgid ""
+"The bracketing construct ``( ... )`` may also be used for define r.e. "
+"subexpressions (after parsing You can find subexpression positions, lengths "
+"and actual values in MatchPos, MatchLen and `Match "
+"<tregexpr_interface.html#tregexpr.match>`__ properties of TRegExpr, and "
+"substitute it in template strings by `TRegExpr.Substitute "
+"<tregexpr_interface.html#tregexpr.substitute>`__)."
+msgstr ""
+"La construction de bracketing `` (...) `` peut également être utilisée pour "
+"définir des sous-expressions (après l&#39;analyse, vous pouvez trouver des "
+"positions, des longueurs et des valeurs réelles de sous-expression dans "
+"MatchPos, MatchLen et `Match <tregexpr_interface.html#tregexpr.match> `__ "
+"propriétés de TRegExpr et les substituer dans les chaînes de modèle par` "
+"TRegExpr.Substitute <tregexpr_interface.html#tregexpr.substitute> `__)."
+
+# 3ad9d40bb6e44a82b47121d71ca31d07
+#: ../../regexp_syntax.rst:356
+msgid ""
+"Subexpressions are numbered based on the left to right order of their "
+"opening parenthesis."
+msgstr ""
+"Les sous-expressions sont numérotées en fonction de l&#39;ordre de gauche à "
+"droite de leur parenthèse d&#39;ouverture."
+
+# 62e9e88af070460883b9f0a5b68accf9
+#: ../../regexp_syntax.rst:359
+msgid ""
+"First subexpression has number ``1`` (whole r.e. match has number ``0`` - "
+"You can substitute it in `TRegExpr.Substitute "
+"<tregexpr_interface.html#tregexpr.substitute>`__ as ``$0`` or ``$&``)."
+msgstr ""
+"La première sous-expression a le numéro `` 1`` (toute la correspondance a le"
+" numéro `` 0`` - vous pouvez la remplacer par `TRegExpr.Substitute "
+"<tregexpr_interface.html#tregexpr.substitute> `__ comme` `$ 0`` ou` `$ "
+"&amp;` `)."
+
+# c415bc4601b04642876e944afe04a932
+#: ../../regexp_syntax.rst:375
+msgid "Metacharacters - backreferences"
+msgstr "Métacaractères - références arrière"
+
+# 6b83dd2925a94284a63aaa9cf83558b4
+#: ../../regexp_syntax.rst:377
+msgid ""
+"Metacharacters ``\\1`` through ``\\9`` are interpreted as backreferences. "
+"``\\<n>`` matches previously matched subexpression ``#<n>``."
+msgstr ""
+"Les métacaractères `` \\ 1`` à `` \\ 9`` sont interprétés comme des "
+"références arrières. `` \\ <n> `` correspond à la sous-expression "
+"précédemment appariée `` # <n> ``."
+
+# acc26861fb344313bdecdff6f626fae3
+#: ../../regexp_syntax.rst:390
+msgid ""
+"``(['\"]?)(\\d+)\\1`` matchs ``\"13\"`` (in double quotes), or ``'4'`` (in "
+"single quotes) or ``77`` (without quotes) etc"
+msgstr ""
+"`` ((&#39;&#39;]]?) (\\ d +) \\ 1`` correspond `` &quot;13&quot; `(entre "
+"guillemets doubles), ou` `&#39;&#39; 4&#39;`` (entre guillemets simples) ou`"
+" `77`` (sans guillemets) etc."
+
+# 10d44507f07642ffad564d91080daaf5
+#: ../../regexp_syntax.rst:394
+msgid "Modifiers"
+msgstr "Modificateurs"
+
+# 0c63b470addc4ff29d3efc2f94fb91d5
+#: ../../regexp_syntax.rst:396
+msgid "Modifiers are for changing behaviour of TRegExpr."
+msgstr "Les modificateurs servent à changer le comportement de TRegExpr."
+
+# f42fac798a424605a6da99f290cff531
+#: ../../regexp_syntax.rst:398
+msgid "There are many ways to set up modifiers."
+msgstr "Il y a plusieurs façons de configurer des modificateurs."
+
+# 03e59023c9184d39a7431d9800f66b6a
+#: ../../regexp_syntax.rst:400
+msgid ""
+"Any of these modifiers may be embedded within the regular expression itself "
+"using the `(?…) <regexp_syntax.html#inline_modifiers>`__ construct."
+msgstr ""
+"Chacun de ces modificateurs peut être intégré à l’expression régulière elle-"
+"même à l’aide de la commande `(?…) <regexp_syntax.html#inline_modifiers> `__"
+" construire."
+
+# 9abd0acbc64f4ff4b1d750fa74a6b286
+#: ../../regexp_syntax.rst:404
+msgid ""
+"Also, You can assign to appropriate TRegExpr properties (`ModifierX "
+"<tregexpr_interface.html#tregexpr.modifier_x>`__ for example to change /x, "
+"or ModifierStr to change all modifiers together). The default values for new"
+" instances of TRegExpr object defined in `global variables "
+"<#modifier_defs>`__, for example global variable RegExprModifierX defines "
+"value of new TRegExpr instance ModifierX property."
+msgstr ""
+"Vous pouvez également affecter aux propriétés TRegExpr appropriées "
+"(`ModifierX <tregexpr_interface.html#tregexpr.modifier_x> `__ par exemple "
+"pour changer / x, ou ModifierStr pour changer tous les modificateurs "
+"ensemble). Les valeurs par défaut pour les nouvelles instances d&#39;objet "
+"TRegExpr définies dans `variables globales &lt;#modifier_defs&gt;` __, par "
+"exemple, la variable globale RegExprModifierX définit la valeur de la "
+"nouvelle propriété ModifierX d&#39;instance TRegExpr."
+
+# 23e63b9c72ac45c5990ae90b32703a53
+#: ../../regexp_syntax.rst:412
+msgid "### i"
+msgstr "### je"
+
+# 336d3504dd62438cbbf9e16a5f2b5f16
+#: ../../regexp_syntax.rst:414
+msgid ""
+"Do case-insensitive pattern matching (using installed in you system locale "
+"settings), see also `InvertCase <tregexpr_interface.html#invertcase>`__."
+msgstr ""
+"Faites une correspondance de modèle sans tenir compte de la casse (en "
+"utilisant installé dans les paramètres régionaux de votre système), voir "
+"aussi `InvertCase <tregexpr_interface.html#invertcase> `__."
+
+# 973396b706db4d608878d8e3c0d3e070
+#: ../../regexp_syntax.rst:418
+msgid "### m"
+msgstr "### m"
+
+# ae46910d6aeb417d91171cb96808a329
+#: ../../regexp_syntax.rst:420
+msgid ""
+"Treat string as multiple lines. That is, change ``^`` and ``$`` from "
+"matching at only the very start or end of the string to the start or end of "
+"any line anywhere within the string, see also `Line separators "
+"<tregexpr_interface.html#line_separators>`__."
+msgstr ""
+"Traiter la chaîne comme plusieurs lignes. Autrement dit, changez `` ^ `` et "
+"`` $ `` de la correspondance au tout début ou à la fin de la chaîne au début"
+" ou à la fin d&#39;une ligne n&#39;importe où dans la chaîne, voir aussi "
+"`Séparateurs de lignes <tregexpr_interface.html#line_separators> `__."
+
+# 6ac79173e7194d87ae6f7f2575e41e7a
+#: ../../regexp_syntax.rst:425
+msgid "### s"
+msgstr "### s"
+
+# 7ff99496b53b4de8bb3f965560c7c840
+#: ../../regexp_syntax.rst:427
+msgid ""
+"Treat string as single line. That is, change ``.`` to match any character "
+"whatsoever, even a line separators (see also `Line separators "
+"<tregexpr_interface.html#line_separators>`__), which it normally would not "
+"match."
+msgstr ""
+"Traiter la chaîne comme une seule ligne. Autrement dit, changez `` .`` pour "
+"faire correspondre n&#39;importe quel caractère, même un séparateur de ligne"
+" (voir aussi `Séparateurs de ligne <tregexpr_interface.html#line_separators>"
+" `__), auquel il ne correspond normalement pas."
+
+# 13c9b693f190489596c8dc510e2e4e90
+#: ../../regexp_syntax.rst:432
+msgid "### g"
+msgstr "### g"
+
+# b482af902d594489a5d615c34239b1f0
+#: ../../regexp_syntax.rst:434
+msgid ""
+"Non standard modifier. Switching it Off You’ll switch all following "
+"operators into non-greedy mode (by default this modifier is On). So, if "
+"modifier ``/g`` is Off then ``+`` works as ``+?``, ``\\*`` as ``\\*?`` and "
+"so on"
+msgstr ""
+"Modificateur non standard. Désactivation de la fonction Vous commuterez tous"
+" les opérateurs suivants en mode non-gourmand (par défaut, ce modificateur "
+"est activé). Donc, si le modificateur `` / g`` est désactivé alors `` + + "
+"`fonctionne comme` `+?` `,` `\\ *` `Comme` `\\ &#39;? \\` `Et ainsi de suite"
+
+# 1b7fe8d2c6674960878b97725cbe44a2
+#: ../../regexp_syntax.rst:439
+msgid "### x"
+msgstr "### X"
+
+# ab35a0a2b23949748b43104e68246a98
+#: ../../regexp_syntax.rst:441
+msgid ""
+"Extend your pattern’s legibility by permitting whitespace and comments (see "
+"explanation below)."
+msgstr ""
+"Augmentez la lisibilité de votre modèle en permettant des espaces et des "
+"commentaires (voir l&#39;explication ci-dessous)."
+
+# 61e8f0b5d8ff4b90b700f5e55c961b7c
+#: ../../regexp_syntax.rst:444
+msgid "### r"
+msgstr "### r"
+
+# d99041e46b0245dfbf138db8515d378b
+#: ../../regexp_syntax.rst:446
+msgid ""
+"Non-standard modifier. If is set then range а-я additional include russian "
+"letter ``ё``, ``А-Я``  additional include ``Ё``, and ``а-Я`` include all "
+"russian symbols."
+msgstr ""
+"Modificateur non standard. Si est défini, la plage a-я comprend également la"
+" lettre russe `` ё``, `` А-Я``, inclut également `` Ё``, et `` а-Я`` inclut "
+"tous les symboles russes."
+
+# 9c0bf373099043a3a000067626f7fd73
+#: ../../regexp_syntax.rst:450
+msgid ""
+"Sorry for foreign users, but it’s set by default. If you want switch if off "
+"by default - set false to global variable `RegExprModifierR "
+"<#modifier_defs>`__."
+msgstr ""
+"Désolé pour les utilisateurs étrangers, mais c&#39;est défini par défaut. Si"
+" vous voulez désactiver si désactivé par défaut, affectez la valeur false à "
+"la variable globale `RegExprModifierR &lt;#modifier_defs&gt;` __."
+
+# 3c377316934041718ac686f39bdf75dc
+#: ../../regexp_syntax.rst:454
+msgid ""
+"The `modifier /x <regexp_syntax.html#modifier_x>`__ itself needs a little "
+"more explanation. It tells the TRegExpr to ignore whitespace that is neither"
+" backslashed nor within a character class. You can use this to break up your"
+" regular expression into (slightly) more readable parts. The ``#`` character"
+" is also treated as a metacharacter introducing a comment, for example:"
+msgstr ""
+"Le modificateur / x <regexp_syntax.html#modifier_x> `__ lui-même a besoin "
+"d&#39;un peu plus d&#39;explications. Il demande à TRegExpr d&#39;ignorer "
+"les espaces qui ne sont ni antislash ni dans une classe de caractères. Vous "
+"pouvez l&#39;utiliser pour diviser votre expression régulière en parties "
+"(légèrement) plus lisibles. Le caractère `` # `` est également traité comme "
+"un métacaractère introduisant un commentaire, par exemple:"
+
+# 37e93e770a8f4e238ece39fad50a3eae
+#: ../../regexp_syntax.rst:469
+msgid ""
+"This also means that if you want real whitespace or ``#`` characters in the "
+"pattern (outside a character class, where they are unaffected by ``/x``), "
+"that you’ll either have to escape them or encode them using octal or hex "
+"escapes. Taken together, these features go a long way towards making regular"
+" expressions text more readable."
+msgstr ""
+"Cela signifie également que si vous voulez de vrais espaces ou des "
+"caractères `#` `dans le motif (en dehors d&#39;une classe de caractères, où "
+"ils ne sont pas affectés par` `/ x``), vous devrez soit les échapper soit "
+"les encoder. en utilisant des échappements octaux ou hexagonaux. Prises "
+"ensemble, ces fonctionnalités permettent de rendre le texte des expressions "
+"régulières plus lisible."
+
+# aa64c2f338a04b289fe78d3cfa633298
+#: ../../regexp_syntax.rst:476
+msgid "Perl extensions"
+msgstr "Extensions Perl"
+
+# a9b874f64bfd435892ffbcc7a97df1a0
+#: ../../regexp_syntax.rst:481
+msgid ""
+"You may use it into r.e. for modifying modifiers by the fly. If this "
+"construction inlined into subexpression, then it effects only into this "
+"subexpression"
+msgstr ""
+"Vous pouvez l&#39;utiliser pour modifier les modificateurs à la volée. Si "
+"cette construction est insérée dans une sous-expression, alors elle n’agit "
+"que dans cette sous-expression"
+
+# 53b90f25371d42e8a3ef2f3433b16fd0
+#: ../../regexp_syntax.rst:498
+msgid "(?#text)"
+msgstr "(?#texte)"
+
+# 02ed8d39191842edbf00cc22d3f634e0
+#: ../../regexp_syntax.rst:500
+msgid ""
+"A comment, the text is ignored. Note that TRegExpr closes the comment as "
+"soon as it sees a ``)``, so there is no way to put a literal ``)`` in the "
+"comment."
+msgstr ""
+"Un commentaire, le texte est ignoré. Notez que TRegExpr ferme le commentaire"
+" dès qu&#39;il voit un `` `` `, il n&#39;y a donc aucun moyen de mettre un "
+"littéral` `)` `dans le commentaire."
+
+# 92033bf22124478a99083d06a522aca6
+#: ../../regexp_syntax.rst:504
+msgid ""
+"Just now don’t forget to read the `FAQ <faq.html>`__ (expecially ‘non-"
+"greediness’ optimization `question <faq.html#nongreedyoptimization>`__)."
+msgstr ""
+"En ce moment, n&#39;oubliez pas de lire la `FAQ <faq.html> `__ (spécialement"
+" &#39;question d&#39;optimisation&#39; non-gourmandise &#39; "
+"<faq.html#nongreedyoptimization> `__)."

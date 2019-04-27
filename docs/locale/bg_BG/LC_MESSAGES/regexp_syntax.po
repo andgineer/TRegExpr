@@ -1,0 +1,837 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, Andrey Sorokin
+# This file is distributed under the same license as the TRegExpr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Andrey Sorokin <filbert@yandex.ru>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: TRegExpr 0.952\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-27 20:26+0300\n"
+"PO-Revision-Date: 2019-04-27 17:26+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
+"Language-Team: Bulgarian (Bulgaria) (https://www.transifex.com/masterAndrey/teams/98461/bg_BG/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: bg_BG\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# 4e5929435d734b0bbd0a5e2e0dfcbdf3
+#: ../../regexp_syntax.rst:2
+msgid "Important note"
+msgstr "Важна забележка"
+
+# f70fa158f8f64a0fbe20821418e453f8
+#: ../../regexp_syntax.rst:4
+msgid ""
+"Below is the description of regular expressions implemented in freeware "
+"library `TRegExpr <http://regexpstudio.com>`__. The library was widely used "
+"in many free and commertial software products."
+msgstr ""
+"По-долу е описанието на регулярните изрази, внедрени в безплатната "
+"библиотека `TRegExpr <http://regexpstudio.com> `__. Библиотеката е широко "
+"използвана в много безплатни и комерсиални софтуерни продукти."
+
+# f59a7e2d99ed41ae82b74577fa88af4c
+#: ../../regexp_syntax.rst:9
+msgid "Introduction"
+msgstr "Въведение"
+
+# e191b913c401454488eb03cc6430f60d
+#: ../../regexp_syntax.rst:11
+msgid ""
+"Regular Expressions are a widely-used method of specifying patterns of text "
+"to search for. Special metacharacters allow You to specify, for instance, "
+"that a particular string You are looking for occurs at the beginning or end "
+"of a line, or contains n recurrences of a certain character."
+msgstr ""
+"Регулярните изрази са широко използван метод за определяне на шаблони за "
+"търсене на текст. Специални метасимволи Ви позволяват да укажете, например, "
+"че определен низ, който търсите, се появява в началото или в края на ред или"
+" съдържа n повторения от определен символ."
+
+# fb98a7524b9f41eeab892bd8344e627b
+#: ../../regexp_syntax.rst:17
+msgid ""
+"Regular expressions look ugly for novices, but really they are very simple "
+"(well, usually simple ;) ), handly and powerfull tool."
+msgstr ""
+"Редовните изрази изглеждат грозни за начинаещи, но всъщност те са много "
+"прости (добре, обикновено прости;)), ръчно и мощно средство."
+
+# c990b4abbf904ff9bbae2944ce7f96b8
+#: ../../regexp_syntax.rst:20
+msgid ""
+"I recommend You to play with regular expressions using Windows `REStudio "
+"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__"
+" - it’ll help You to uderstand main conceptions. Moreover, there are many "
+"predefined examples with comments included into repository of R.e. visual "
+"debugger."
+msgstr ""
+"Препоръчвам Ви да играете с регулярни изрази с помощта на "
+"&quot;REStudio&quot; на Windows "
+"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>"
+" `__ - ще ви помогне да разберете основните концепции. Освен това има много "
+"предварително дефинирани примери с коментари, включени в хранилището на Re "
+"Visual debugger."
+
+# 252b8a6700654de29747aa19cd60e2a6
+#: ../../regexp_syntax.rst:26
+msgid "Let’s start our learning trip!"
+msgstr "Нека да започнем нашето пътуване!"
+
+# 4ea6c0e1bfa2455794c9fcea646235e6
+#: ../../regexp_syntax.rst:29
+msgid "Simple matches"
+msgstr "Обикновено съвпадение"
+
+# c5d316b3cc6a4b4abebb54fcf2e6006a
+#: ../../regexp_syntax.rst:31
+msgid ""
+"Any single character matches itself, unless it is a metacharacter with a "
+"special meaning described below."
+msgstr ""
+"Всеки един символ съвпада сам, освен ако не е метасимвол със специално "
+"значение, описано по-долу."
+
+# 7a42dd79705641f0b9765b1b3d3f3f12
+#: ../../regexp_syntax.rst:34
+msgid ""
+"A series of characters matches that series of characters in the target "
+"string, so the pattern ``bluh`` would match ``bluh`` in the target string. "
+"Quite simple, eh ?"
+msgstr ""
+"Поредица от символи съвпада с тази серия от знаци в целевия низ, така че "
+"шаблонът `` bluh`` ще съответства на `` bluh`` в целевия низ. Съвсем просто,"
+" нали?"
+
+# f93880dfbfc5450d96eca74a70d59bc1
+#: ../../regexp_syntax.rst:38
+msgid ""
+"You can cause characters that normally function as metacharacters or escape "
+"sequences to be interpreted literally by ‘escaping’ them by preceding them "
+"with a backslash ``\\``, for instance: metacharacter ``^`` match beginning "
+"of string, but ``\\^`` match character ``^``, ``\\\\`` match ``\\`` and so "
+"on."
+msgstr ""
+"Можете да накарате символи, които нормално функционират като метасимволи или"
+" изходни последователности, да бъдат интерпретирани буквално чрез "
+"&quot;избягването им&quot;, като ги предхождат с обратна наклонена черта `` "
+"``, например: metacharacter `` ^ `` съвпадат с началото на низ, но `` `` `` "
+"`` `` `` `` `` `` `` `` `` `` `` `` `` `` `` `` ``, `` `` `` ``, `` `` `` ``"
+" ``, `` `` ``."
+
+# 315f24cf90ef413e9f9c28c3bd2a9d09
+# ddde720794ee4dc9a70d558b0c89b02e
+# 453e611690e64701b95cfecabd23e660
+# 43254f60ac264bd980998c3b1c8c19d2
+# c5a529bb746b47828265927b2bc307dd
+# aa1e6c2ed53640ae99ee7d606bcb73d2
+# 5299948d8e75419fab9aaac2d9bb653a
+# f7341e71a6e4418c9659747f22427c94
+# 6adf892d82a0473697b4dd8d2f55b935
+# c30869e3fa2743e7a46f42efbc5ae347
+# 80a859c2d50047298fed7f7c84f5346c
+#: ../../regexp_syntax.rst:45 ../../regexp_syntax.rst:82
+#: ../../regexp_syntax.rst:101 ../../regexp_syntax.rst:118
+#: ../../regexp_syntax.rst:151 ../../regexp_syntax.rst:231
+#: ../../regexp_syntax.rst:293 ../../regexp_syntax.rst:342
+#: ../../regexp_syntax.rst:367 ../../regexp_syntax.rst:383
+#: ../../regexp_syntax.rst:488
+msgid "Examples:"
+msgstr "Примери:"
+
+# 0cab32ead0d64b65ab97ee0b9bdfc83d
+#: ../../regexp_syntax.rst:53
+msgid "Note for C++ Builder users"
+msgstr "Забележка за потребителите на C ++ Builder"
+
+# 72675db9a7d648b090bd9a65bc03a504
+#: ../../regexp_syntax.rst:55
+msgid ""
+"Please, read in FAQ answer on question `Why many r.e. work wrong in Borland "
+"C++ Builder? <faq.html#cppbescchar>`__"
+msgstr ""
+"Моля, прочетете в отговора на въпросите Често задавани въпроси &quot;Защо "
+"много от тях работят погрешно в Borland C ++ Builder? <faq.html#cppbescchar>"
+" `__"
+
+# 55e370c749bb49cf9832463f0cee7887
+#: ../../regexp_syntax.rst:59
+msgid "Escape sequences"
+msgstr "Ескейп последователности"
+
+# 9241a32e8c4f4aee871edb912e0955f0
+#: ../../regexp_syntax.rst:61
+msgid ""
+"Characters may be specified using a escape sequences syntax much like that "
+"used in C and Perl: ``\\n`` matches a newline, ``\\t`` a tab, etc. More "
+"generally, ``\\xnn``, where nn is a string of hexadecimal digits, matches "
+"the character whose ASCII value is nn. If You need wide (Unicode) character "
+"code, You can use ``\\x{nnnn}``, where ``nnnn`` - one or more hexadecimal "
+"digits."
+msgstr ""
+"Символи могат да бъдат зададени с помощта на синтаксис за бягство на "
+"последователности, много подобен на този, използван в C и Perl: `` n`` "
+"съвпада с нов ред, `` `раздела и т.н. nn е низ от шестнадесетични цифри, "
+"съвпадащ със символа, чиято ASCII стойност е nn. Ако имате нужда от широк "
+"(Unicode) код на знака, можете да използвате `` {nnnn} ``, където `` nnnn`` "
+"- една или повече шестнадесетични цифри."
+
+# 3e32eb6ac6144c4d80b075e8ad5e44fd
+#: ../../regexp_syntax.rst:90
+msgid "Character classes"
+msgstr "Класове на знаците"
+
+# 99c4b0cfb5f9447a93c55e281d2426ed
+#: ../../regexp_syntax.rst:92
+msgid ""
+"You can specify a character class, by enclosing a list of characters in "
+"``[]``, which will match any one character from the list."
+msgstr ""
+"Можете да укажете клас на символи, като включите списък от символи в `` [] "
+"``, който ще съответства на всеки един символ от списъка."
+
+# a39f8e8ec20d4a9cad93f2828b7a7a8f
+#: ../../regexp_syntax.rst:95
+msgid ""
+"If the first character after the ``[`` is ``^``, the class matches any "
+"character not in the list."
+msgstr ""
+"Ако първият символ след `` [`` е `` ``, класа съответства на всеки знак, "
+"който не е в списъка."
+
+# 55e948458d154686bc68edd9693db16e
+#: ../../regexp_syntax.rst:108
+msgid ""
+"Within a list, the ``-`` character is used to specify a range, so that a-z "
+"represents all characters between ``a`` and ``z``, inclusive."
+msgstr ""
+"В рамките на списъка символът `` -`` се използва за задаване на диапазон, "
+"така че az да представя всички символи между `` а`` и `` ``, включително."
+
+# 60942a70eff042b1b4b607b0df0d70d2
+#: ../../regexp_syntax.rst:111
+msgid ""
+"If You want ``-`` itself to be a member of a class, put it at the start or "
+"end of the list, or escape it with a backslash. If You want ``]`` you may "
+"place it at the start of list or escape it with a backslash."
+msgstr ""
+"Ако искате ```` сам да бъде член на класа, поставете го в началото или в "
+"края на списъка, или го избягвайте с обратна наклонена черта. Ако искате ``]"
+" `` можете да го поставите в началото на списъка или да го избягате с "
+"обратна наклонена черта."
+
+# a07329be340945ea8edd4cd5d258b969
+#: ../../regexp_syntax.rst:131
+msgid "Metacharacters"
+msgstr "метасимволи"
+
+# c95fa60048ed4d64a00309f5404470c4
+#: ../../regexp_syntax.rst:133
+msgid ""
+"Metacharacters are special characters which are the essence of Regular "
+"Expressions. There are different types of metacharacters, described below."
+msgstr ""
+"Метасимволите са специални символи, които са същността на регулярните "
+"изрази. Има различни типове метасимволи, описани по-долу."
+
+# 213b04c3d85244cab2561440188fd166
+#: ../../regexp_syntax.rst:160
+msgid ""
+"The ``^`` metacharacter by default is only guaranteed to match at the "
+"beginning of the input string/text, the ``$`` metacharacter only at the end."
+" Embedded line separators will not be matched by ``^`` or ``$``."
+msgstr ""
+"Метасимволът `` ^ `` по подразбиране е гарантиран само в началото на входния"
+" низ / текст, `` $ `` метакарта само в края. Вградените разделители на "
+"редове няма да бъдат съвпадащи с `` ^ `` или `` $ ``."
+
+# ed87bfa235224adf9fa9830b2477711f
+#: ../../regexp_syntax.rst:164
+msgid ""
+"You may, however, wish to treat a string as a multi-line buffer, such that "
+"the ``^`` will match after any line separator within the string, and ``$`` "
+"will match before any line separator. You can do this by switching On the "
+"`modifier /m <regexp_syntax.html#modifier_m>`__."
+msgstr ""
+"Може обаче да пожелаете да третирате низ като многоредов буфер, така че `` "
+"`` ще съвпадне след всеки разделител в низ, и `` $ `` ще съвпадне преди "
+"всеки разделител. Можете да направите това чрез включване на модификатора `m"
+" <regexp_syntax.html#modifier_m> `__."
+
+# fa6af706326b4f4ebdb8921bd79369cd
+#: ../../regexp_syntax.rst:169
+msgid ""
+"The ``\\A`` and ``\\Z`` are just like ``^`` and ``$``, except that they "
+"won’t match multiple times when the `modifier /m "
+"<regexp_syntax.html#modifier_m>`__ is used, while ``^`` and ``$`` will match"
+" at every internal line separator."
+msgstr ""
+"`` `` И `` `` са точно като `` `` и `` $ ``, с изключение на това, че няма "
+"да отговарят на няколко пъти, когато `модификаторът / м "
+"<regexp_syntax.html#modifier_m> `__ се използва, докато` `` `и` `$` `ще "
+"съответстват на всеки вътрешен разделител."
+
+# 870ba883c46d4caa8479873e139518bc
+#: ../../regexp_syntax.rst:174
+msgid ""
+"The ``.`` metacharacter by default matches any character, but if You switch "
+"Off the `modifier /s <regexp_syntax.html#modifier_s>`__, then ``.`` won’t "
+"match embedded line separators."
+msgstr ""
+"Метасимволът &quot;.` `По подразбиране съвпада с всеки символ, но ако "
+"изключите модификатора` s <regexp_syntax.html#modifier_s> `__, то` `` `няма "
+"да съответства на вградените разделители на линии."
+
+# 24b7172cc99045a68054dfd2623da3fc
+#: ../../regexp_syntax.rst:178
+msgid ""
+"TRegExpr works with line separators as recommended at `www.unicode.org "
+"<http://www.unicode.org/unicode/reports/tr18/>`__:"
+msgstr ""
+"TRegExpr работи с линейни разделители, както се препоръчва на адрес "
+"www.unicode.org <http://www.unicode.org/unicode/reports/tr18/> `__:"
+
+# 3bd8d69e73764aed8af762c1866a0514
+#: ../../regexp_syntax.rst:181
+msgid ""
+"``^`` is at the beginning of a input string, and, if `modifier /m "
+"<regexp_syntax.html#modifier_m>`__ is On, also immediately following any "
+"occurrence of ``\\x0D\\x0A`` or ``\\x0A`` or ``\\x0D`` (if You are using "
+"`Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr, then also"
+" ``\\x2028`` or  ``\\x2029`` or ``\\x0B`` or ``\\x0C`` or ``\\x85``). Note "
+"that there is no empty line within the sequence ``\\x0D\\x0A``."
+msgstr ""
+"`` `` е в началото на входния низ и, ако е модификатор / m "
+"<regexp_syntax.html#modifier_m> `__ е Включено, също непосредствено след "
+"всяка поява на&quot; x0D0A &quot;или` `0A`` или` `0D`` (ако използвате` "
+"Unicode версията <tregexpr_interface.html#unicode> `__ на TRegExpr, след "
+"това също` `2028`` или` `2029`` или` `0B`` или` `0C`` или` `85``). "
+"Забележете, че няма празна линия в последователността &quot;x0D0A&quot;."
+
+# 2789416bbbad462186fbef55328265d1
+#: ../../regexp_syntax.rst:188
+msgid ""
+"``$`` is at the end of a input string, and, if `modifier /m "
+"<regexp_syntax.html#modifier_m>`__ is On, also immediately preceding any "
+"occurrence of  ``\\x0D\\x0A`` or ``\\x0A`` or ``\\x0D`` (if You are using "
+"`Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr, then also"
+" ``\\x2028`` or  ``\\x2029`` or ``\\x0B`` or ``\\x0C`` or ``\\x85``). Note "
+"that there is no empty line within the sequence ``\\x0D\\x0A``."
+msgstr ""
+"`` $ `` е в края на входния низ и, ако е модификатор / m "
+"<regexp_syntax.html#modifier_m> `__ е включено, също непосредствено преди "
+"всяка поява на` `0D x0A`` или` `0А`` или` `0D`` (ако използвате` Unicode "
+"версия` <tregexpr_interface.html#unicode> `__ на TRegExpr, след това също` "
+"`2028`` или` `2029`` или` `0B`` или` `0C`` или` `85``). Забележете, че няма "
+"празна линия в последователността &quot;x0D0A&quot;."
+
+# ede57b818ab74d3e967cda0c170d5a32
+#: ../../regexp_syntax.rst:196
+msgid ""
+"``.`` matchs any character, but if You switch Off `modifier /s "
+"<regexp_syntax.html#modifier_s>`__ then ``.`` doesn’t match ``\\x0D\\x0A`` "
+"and ``\\x0A`` and ``\\x0D`` (if You are using `Unicode version "
+"<tregexpr_interface.html#unicode>`__ of TRegExpr, then also ``\\x2028`` and"
+"  ``\\x2029`` and ``\\x0B`` and ``\\x0C`` and ``\\x85``)."
+msgstr ""
+"`` `` съответства на всеки символ, но ако изключите `модификатор / и "
+"<regexp_syntax.html#modifier_s> `__, тогава` `` `не съответства на` `x0D0A``"
+" и` `0A`` и` `0D`` (ако използвате` Unicode версия \\ t "
+"<tregexpr_interface.html#unicode> `__ на TRegExpr, след това също` `2028`` "
+"и` `2029`` и` `0B`` и` `0C`` и` `85``)."
+
+# f81e8471526e433dac99ecba23596cec
+#: ../../regexp_syntax.rst:202
+msgid ""
+"Note that ``^.*$`` (an empty line pattern) doesnot match the empty string "
+"within the sequence ``\\x0D\\x0A``, but matchs the empty string within the "
+"sequence ``\\x0A\\x0D``."
+msgstr ""
+"Забележете, че &quot;^. * $` `(Празен шаблон на линия) не съвпада с празния "
+"низ в последователността&quot; x0D0A &quot;, но съвпада с празния низ в "
+"последователността&quot; x0A x0D &quot;."
+
+# 34f4cb335eb246e78555c6de9e183ea5
+#: ../../regexp_syntax.rst:206
+msgid ""
+"Multiline processing can be easely tuned for Your own purpose with help of "
+"TRegExpr properties `LineSeparators "
+"<tregexpr_interface.html#lineseparators>`__ and `LinePairedSeparator "
+"<tregexpr_interface.html#linepairedseparator>`__, You can use only Unix "
+"style separators ``\\n`` or only DOS/Windows style ``\\r\\n`` or mix them "
+"together (as described above and used by default) or define Your own line "
+"separators!"
+msgstr ""
+"Многолинейната обработка може лесно да бъде настроена за ваша собствена цел "
+"с помощта на свойствата на TRegExpr ® LineSeparators "
+"<tregexpr_interface.html#lineseparators> `__ и` LinePairedSeparator "
+"<tregexpr_interface.html#linepairedseparator> `__, Можете да използвате само"
+" разделители на стил на Unix` `n`` или само стил DOS / Windows` `r`` или да "
+"ги смесвате заедно (както е описано по-горе и използвано по подразбиране) "
+"или да дефинирате Вашите собствени разделители на линии!"
+
+# bca0e713201a45c991139a31d2b216da
+#: ../../regexp_syntax.rst:215
+msgid "Metacharacters - predefined classes"
+msgstr "Метасимволи - предварително дефинирани класове"
+
+# 44495071157f415bbf138800e2a5beb0
+#: ../../regexp_syntax.rst:226
+msgid "You may use ``\\w``, ``\\d`` and ``\\s`` within custom character classes."
+msgstr ""
+"Можете да използвате `` w``, `` d`` и `` `` в рамките на персонализираните "
+"класове от символи."
+
+# 6bea053f0752406687c4726fa59f70fb
+#: ../../regexp_syntax.rst:238
+msgid ""
+"TRegExpr uses properties `SpaceChars "
+"<tregexpr_interface.html#tregexpr.spacechars>`__ and `WordChars "
+"<tregexpr_interface.html#tregexpr.wordchars>`__ to define character classes "
+"``\\w``, ``\\W``, ``\\s``, ``\\S``, so You can easely redefine it."
+msgstr ""
+"TRegExpr използва свойства `SpaceChars "
+"<tregexpr_interface.html#tregexpr.spacechars> `__ и` WordChars "
+"<tregexpr_interface.html#tregexpr.wordchars> `__, за да се определят "
+"класовете от символи` `w``,` `` `` `` `` `` ``, `` ``, така че можете лесно "
+"да ги предефинирате."
+
+# 81e3066e722f4adfb9bb68c941260b11
+#: ../../regexp_syntax.rst:245
+msgid "Metacharacters - word boundaries"
+msgstr "Метасимволи - граници на думи"
+
+# d74e1b5ab0794b27875247d4588aed0b
+#: ../../regexp_syntax.rst:252
+msgid ""
+"A word boundary (``\\b``) is a spot between two characters that has a "
+"``\\w`` on one side of it and a ``\\W`` on the other side of it (in either "
+"order), counting the imaginary characters off the beginning and end of the "
+"string as matching a ``\\W``."
+msgstr ""
+"Думата граница (`` b``) е място между два знака, което има `` `` `от едната "
+"страна на него и` `` `` от другата страна (в двата реда) преброяване на "
+"въображаемите символи в началото и в края на низ като съвпадение на `` W``."
+
+# 7fe5ead7b1c5449f95adcd7e972c5af6
+#: ../../regexp_syntax.rst:258
+msgid "Metacharacters - iterators"
+msgstr "Метасимволи - итератори"
+
+# 04acda6d45cc4d9fb1bcd696cae8e926
+#: ../../regexp_syntax.rst:260
+msgid ""
+"Any item of a regular expression may be followed by another type of "
+"metacharacters - iterators. Using this metacharacters You can specify number"
+" of occurences of previous character, metacharacter or subexpression."
+msgstr ""
+"Всеки елемент от нормален израз може да бъде последван от друг тип "
+"метасимволи - итератори. Използвайки този метасимвол Можете да укажете броя "
+"на случаите с предишен символ, метасимвол или подекспресия."
+
+# 8d5a003f7b7240d6b01621a810bfb030
+#: ../../regexp_syntax.rst:280
+msgid ""
+"So, digits in curly brackets of the form ``{n,m}``, specify the minimum "
+"number of times to match the item n and the maximum ``m``. The form ``{n}`` "
+"is equivalent to ``{n,n}`` and matches exactly ``n`` times. The form "
+"``{n,}`` matches ``n`` or more times. There is no limit to the size of ``n``"
+" or ``m``, but large numbers will chew up more memory and slow down r.e. "
+"execution."
+msgstr ""
+"Така, цифрите в къдрави скоби във формата `` {n, m} ``, указват минималния "
+"брой пъти, за да съвпаднат позицията n и максималната `` m``. Формата `` {n}"
+" `` е еквивалентна на `` {n, n} `` и отговаря точно на `` n`` пъти. Формата "
+"`` {n,} `` съвпада с `` n`` или повече пъти. Няма ограничение за размера на "
+"`` n`` или `` m``, но големите числа ще дъвчат повече памет и ще забавят "
+"повторното изпълнение."
+
+# 13f1f9fee226460bbcdc883a5737304a
+#: ../../regexp_syntax.rst:287
+msgid ""
+"If a curly bracket occurs in any other context, it is treated as a regular "
+"character."
+msgstr ""
+"Ако фигурна скоба се появява във всеки друг контекст, тя се третира като "
+"редовен символ."
+
+# 3aa74bd3a1224b1cbbd9405d32430854
+#: ../../regexp_syntax.rst:304
+msgid ""
+"A little explanation about “greediness”. “Greedy” takes as many as possible,"
+" “non-greedy” takes as few as possible. For example, ``b+`` and ``b*`` "
+"applied to string ``abbbbc`` return ``bbbb``, ``b+?`` returns ``b``, ``b*?``"
+" returns empty string, ``b{2,3}?`` returns ``bb``, ``b{2,3}`` returns "
+"``bbb``."
+msgstr ""
+"Малко обяснение за „алчността“. „Алчният“ отнема колкото се може повече, "
+"„не-алчен“ отнема възможно най-малко. Например, `` b + `` и `` b * `` се "
+"прилагат към низ `` abbbbc`` връщане `` bbbb``, `` b +? `` Връща `` b``, `` "
+"b *? `` връща празен низ, `` b {2,3}? `` връща `` bb``, `` b {2,3} `` връща "
+"`` bbb``."
+
+# b66beb64fd70451399aefc3097936d11
+#: ../../regexp_syntax.rst:310
+msgid ""
+"You can switch all iterators into “non-greedy” mode (see the `modifier /g "
+"<regexp_syntax.html#modifier_g>`__)."
+msgstr ""
+"Можете да превключите всички итератори в режим “не-алчен” (вижте "
+"`модификатор / g <regexp_syntax.html#modifier_g> `__)."
+
+# d93b2586f3864904850c6176b1cf66df
+#: ../../regexp_syntax.rst:314
+msgid "Metacharacters - alternatives"
+msgstr "Метасимволи - алтернативи"
+
+# 4ab43a2c82ca4645bba942b595d4fe7b
+#: ../../regexp_syntax.rst:316
+msgid ""
+"You can specify a series of alternatives for a pattern using ``|`` to "
+"separate them, so that fee|fie|foe will match any of ``fee``, ``fie``, or "
+"``foe`` in the target string (as would ``f(e|i|o)e``). The first alternative"
+" includes everything from the last pattern delimiter (``(``, ``[``, or the "
+"beginning of the pattern) up to the first ``|``, and the last alternative "
+"contains everything from the last ``|`` to the next pattern delimiter. For "
+"this reason, it’s common practice to include alternatives in parentheses, to"
+" minimize confusion about where they start and end."
+msgstr ""
+"Можете да зададете серия от алтернативи за модел, използвайки `` | ``, за да"
+" ги разделите, така че таксата | fie | foe ще съответства на `` такса "
+"&#39;&#39;, `` fie``, или `` foe`` в целевия низ (както би бил `` f (e | i |"
+" o) e``)). Първата алтернатива включва всичко - от последния разделител на "
+"шаблона (`` (``, `` [``, или началото на шаблона] до първия `` | ``, а "
+"последната алтернатива съдържа всичко от последното ``; &quot;|` `към "
+"следващия разделител на шаблона. Поради тази причина е обичайна практика да "
+"се включват алтернативи в скоби, за да се сведе до минимум объркването за "
+"това къде те започват и завършват."
+
+# c47974e8be394b3a96ae5fbde7bc6d85
+#: ../../regexp_syntax.rst:326
+msgid ""
+"Alternatives are tried from left to right, so the first alternative found "
+"for which the entire expression matches, is the one that is chosen. This "
+"means that alternatives are not necessarily greedy. For example: when "
+"matching foo|foot against ``barefoot``, only the ``foo`` part will match, as"
+" that is the first alternative tried, and it successfully matches the target"
+" string. (This might not seem important, but it is important when you are "
+"capturing matched text using parentheses.)"
+msgstr ""
+"Алтернативите се изпробват отляво надясно, така че първата намерена "
+"алтернатива, за която съвпада целия израз, е избраната. Това означава, че "
+"алтернативите не са непременно алчни. Например: при съвпадение на foo | foot"
+" с `` бос &#39;&#39;, само `` foo`` частта ще съвпадне, тъй като това е "
+"първата изпробвана алтернатива и успешно съвпада с целевия низ. (Това може "
+"да не изглежда важно, но е важно, когато записвате съответстващ текст с "
+"помощта на скоби.)"
+
+# 7b0db3f69a174600bf34bfe25b261511
+#: ../../regexp_syntax.rst:335
+msgid ""
+"Also remember that ``|`` is interpreted as a literal within square brackets,"
+" so if You write ``[fee|fie|foe]`` You’re really only matching ``[feio|]``."
+msgstr ""
+"Също така не забравяйте, че `` | `` се интерпретира като буквален в "
+"квадратни скоби, така че ако напишете `` [такса | fie | foe] `` Вие наистина"
+" съвпадате само с `` [feio |] ``."
+
+# 36eede421b6a4e968f8462f2efadd46c
+#: ../../regexp_syntax.rst:344
+msgid "foo(bar|foo) matchs strings ‘foobar’ or ‘foofoo’."
+msgstr "foo (bar | foo) съвпада с &#39;foobar&#39; или &#39;foofoo&#39;."
+
+# aa6e3c22db524b60846b1fa6ea87b986
+#: ../../regexp_syntax.rst:347
+msgid "Metacharacters - subexpressions"
+msgstr "Метасимволи - подекспресии"
+
+# 52c6047525cb405a8224e9cea120506d
+#: ../../regexp_syntax.rst:349
+msgid ""
+"The bracketing construct ``( ... )`` may also be used for define r.e. "
+"subexpressions (after parsing You can find subexpression positions, lengths "
+"and actual values in MatchPos, MatchLen and `Match "
+"<tregexpr_interface.html#tregexpr.match>`__ properties of TRegExpr, and "
+"substitute it in template strings by `TRegExpr.Substitute "
+"<tregexpr_interface.html#tregexpr.substitute>`__)."
+msgstr ""
+"Конструкцията за bracketing `` (...) `` може също да се използва за "
+"дефиниране на повторни изповядвания (след парсиране Можете да намерите "
+"позициите, дължините и действителните стойности на субекспресия в MatchPos, "
+"MatchLen и `Match <tregexpr_interface.html#tregexpr.match> `__ свойства на "
+"TRegExpr, и да го замени в низове на шаблони от` TRegExpr.Substitute "
+"<tregexpr_interface.html#tregexpr.substitute> `__)."
+
+# 3ad9d40bb6e44a82b47121d71ca31d07
+#: ../../regexp_syntax.rst:356
+msgid ""
+"Subexpressions are numbered based on the left to right order of their "
+"opening parenthesis."
+msgstr ""
+"Подекспресиите се номерират въз основа на реда от ляво на дясно в тяхната "
+"отваряща се скоба."
+
+# 62e9e88af070460883b9f0a5b68accf9
+#: ../../regexp_syntax.rst:359
+msgid ""
+"First subexpression has number ``1`` (whole r.e. match has number ``0`` - "
+"You can substitute it in `TRegExpr.Substitute "
+"<tregexpr_interface.html#tregexpr.substitute>`__ as ``$0`` or ``$&``)."
+msgstr ""
+"Първата субекспресия има номер &quot;1&quot; (цялото повторно съвпадение има"
+" номер &quot;0&quot; - можете да го замените в `TRegExpr.Substitute "
+"<tregexpr_interface.html#tregexpr.substitute> `__ като` `$ 0`` или` `$ "
+"&amp;` `)."
+
+# c415bc4601b04642876e944afe04a932
+#: ../../regexp_syntax.rst:375
+msgid "Metacharacters - backreferences"
+msgstr "Метасимволи - backreferences"
+
+# 6b83dd2925a94284a63aaa9cf83558b4
+#: ../../regexp_syntax.rst:377
+msgid ""
+"Metacharacters ``\\1`` through ``\\9`` are interpreted as backreferences. "
+"``\\<n>`` matches previously matched subexpression ``#<n>``."
+msgstr ""
+"Метасимволите `` 1`` до `` `` се тълкуват като обратни връзки. `` \\ <n> `` "
+"съответства на предварително съвпадаща подекспресия `` # <n> ``."
+
+# acc26861fb344313bdecdff6f626fae3
+#: ../../regexp_syntax.rst:390
+msgid ""
+"``(['\"]?)(\\d+)\\1`` matchs ``\"13\"`` (in double quotes), or ``'4'`` (in "
+"single quotes) or ``77`` (without quotes) etc"
+msgstr ""
+"&quot;(&quot; [? “)?) (d +) 1`` съответства на&quot; 13 &quot;(в двойни "
+"кавички), или&quot; 4 &quot;(в единични кавички) или&quot; 77 &quot; (без "
+"кавички) и т.н."
+
+# 10d44507f07642ffad564d91080daaf5
+#: ../../regexp_syntax.rst:394
+msgid "Modifiers"
+msgstr "Модификатори"
+
+# 0c63b470addc4ff29d3efc2f94fb91d5
+#: ../../regexp_syntax.rst:396
+msgid "Modifiers are for changing behaviour of TRegExpr."
+msgstr "Модификаторите са за промяна на поведението на TRegExpr."
+
+# f42fac798a424605a6da99f290cff531
+#: ../../regexp_syntax.rst:398
+msgid "There are many ways to set up modifiers."
+msgstr "Има много начини да настроите модификатори."
+
+# 03e59023c9184d39a7431d9800f66b6a
+#: ../../regexp_syntax.rst:400
+msgid ""
+"Any of these modifiers may be embedded within the regular expression itself "
+"using the `(?…) <regexp_syntax.html#inline_modifiers>`__ construct."
+msgstr ""
+"Всеки от тези модификатори може да бъде вграден в самия регулярен израз, "
+"използвайки `(?…) <regexp_syntax.html#inline_modifiers> `__ construct."
+
+# 9abd0acbc64f4ff4b1d750fa74a6b286
+#: ../../regexp_syntax.rst:404
+msgid ""
+"Also, You can assign to appropriate TRegExpr properties (`ModifierX "
+"<tregexpr_interface.html#tregexpr.modifier_x>`__ for example to change /x, "
+"or ModifierStr to change all modifiers together). The default values for new"
+" instances of TRegExpr object defined in `global variables "
+"<#modifier_defs>`__, for example global variable RegExprModifierX defines "
+"value of new TRegExpr instance ModifierX property."
+msgstr ""
+"Също така, можете да присвоите на подходящи свойства на TRegExpr (`ModifierX"
+" <tregexpr_interface.html#tregexpr.modifier_x> `__ например за промяна / x, "
+"или ModifierStr за смяна на всички модификатори заедно). Стойностите по "
+"подразбиране за нови инстанции на TRegExpr обект, дефинирани в "
+"&quot;глобални променливи &lt;#modifier_defs&gt;` __, например глобална "
+"променлива RegExprModifierX, определя стойността на новото свойство."
+
+# 23e63b9c72ac45c5990ae90b32703a53
+#: ../../regexp_syntax.rst:412
+msgid "### i"
+msgstr "### i"
+
+# 336d3504dd62438cbbf9e16a5f2b5f16
+#: ../../regexp_syntax.rst:414
+msgid ""
+"Do case-insensitive pattern matching (using installed in you system locale "
+"settings), see also `InvertCase <tregexpr_interface.html#invertcase>`__."
+msgstr ""
+"Отбележете съвпадение на нечувствителни към регистъра модели (използвайки "
+"инсталирани във вашите системни локални настройки), вижте също `InvertCase "
+"<tregexpr_interface.html#invertcase> `__."
+
+# 973396b706db4d608878d8e3c0d3e070
+#: ../../regexp_syntax.rst:418
+msgid "### m"
+msgstr "### m"
+
+# ae46910d6aeb417d91171cb96808a329
+#: ../../regexp_syntax.rst:420
+msgid ""
+"Treat string as multiple lines. That is, change ``^`` and ``$`` from "
+"matching at only the very start or end of the string to the start or end of "
+"any line anywhere within the string, see also `Line separators "
+"<tregexpr_interface.html#line_separators>`__."
+msgstr ""
+"Третирайте низ като няколко реда. Тоест, променете `` ^ `` и `` $ `` от "
+"съвпадение само в самото начало или край на низ към началото или края на "
+"всеки ред, където и да е в низ, вижте също `Разделители на линии &#39; "
+"<tregexpr_interface.html#line_separators> `__."
+
+# 6ac79173e7194d87ae6f7f2575e41e7a
+#: ../../regexp_syntax.rst:425
+msgid "### s"
+msgstr "### с"
+
+# 7ff99496b53b4de8bb3f965560c7c840
+#: ../../regexp_syntax.rst:427
+msgid ""
+"Treat string as single line. That is, change ``.`` to match any character "
+"whatsoever, even a line separators (see also `Line separators "
+"<tregexpr_interface.html#line_separators>`__), which it normally would not "
+"match."
+msgstr ""
+"Третирайте низ като един ред. Тоест, променете `` ``, за да съответства на "
+"всеки знак, дори на разделители на редове (вижте също `Разделители на линии "
+"<tregexpr_interface.html#line_separators> `__), които обикновено не биха "
+"съответствали."
+
+# 13c9b693f190489596c8dc510e2e4e90
+#: ../../regexp_syntax.rst:432
+msgid "### g"
+msgstr "### g"
+
+# b482af902d594489a5d615c34239b1f0
+#: ../../regexp_syntax.rst:434
+msgid ""
+"Non standard modifier. Switching it Off You’ll switch all following "
+"operators into non-greedy mode (by default this modifier is On). So, if "
+"modifier ``/g`` is Off then ``+`` works as ``+?``, ``\\*`` as ``\\*?`` and "
+"so on"
+msgstr ""
+"Нестандартен модификатор. Изключване Можете да превключите всички следващи "
+"оператори в не-алчен режим (по подразбиране този модификатор е Вкл.). Така "
+"че, ако модификаторът `` / g`` е изключен, то `` + `` работи като `` +? ``, "
+"`` `` `` `` `` И т.н."
+
+# 1b7fe8d2c6674960878b97725cbe44a2
+#: ../../regexp_syntax.rst:439
+msgid "### x"
+msgstr "### х"
+
+# ab35a0a2b23949748b43104e68246a98
+#: ../../regexp_syntax.rst:441
+msgid ""
+"Extend your pattern’s legibility by permitting whitespace and comments (see "
+"explanation below)."
+msgstr ""
+"Разширете четливостта на вашия модел, като позволите празно пространство и "
+"коментари (вж. Обяснението по-долу)."
+
+# 61e8f0b5d8ff4b90b700f5e55c961b7c
+#: ../../regexp_syntax.rst:444
+msgid "### r"
+msgstr "### r"
+
+# d99041e46b0245dfbf138db8515d378b
+#: ../../regexp_syntax.rst:446
+msgid ""
+"Non-standard modifier. If is set then range а-я additional include russian "
+"letter ``ё``, ``А-Я``  additional include ``Ё``, and ``а-Я`` include all "
+"russian symbols."
+msgstr ""
+"Нестандартно модификатор. Ако е зададен тогава диапазон а-я допълнително "
+"включва руската буква `` ё``, `` А-Я`` допълнително включва `` Ё``, а `` "
+"а-Я`` включва всички руски символи."
+
+# 9c0bf373099043a3a000067626f7fd73
+#: ../../regexp_syntax.rst:450
+msgid ""
+"Sorry for foreign users, but it’s set by default. If you want switch if off "
+"by default - set false to global variable `RegExprModifierR "
+"<#modifier_defs>`__."
+msgstr ""
+"Съжаляваме за чуждестранни потребители, но е зададен по подразбиране. Ако "
+"искате да превключите ако е изключено по подразбиране - задайте false към "
+"глобалната променлива `RegExprModifierR &lt;#modifier_defs&gt;` __."
+
+# 3c377316934041718ac686f39bdf75dc
+#: ../../regexp_syntax.rst:454
+msgid ""
+"The `modifier /x <regexp_syntax.html#modifier_x>`__ itself needs a little "
+"more explanation. It tells the TRegExpr to ignore whitespace that is neither"
+" backslashed nor within a character class. You can use this to break up your"
+" regular expression into (slightly) more readable parts. The ``#`` character"
+" is also treated as a metacharacter introducing a comment, for example:"
+msgstr ""
+"Модификаторът `x <regexp_syntax.html#modifier_x> `__ се нуждае от малко "
+"повече обяснения. Той казва на TRegExpr да игнорира празно пространство, "
+"което не е нито обратно, нито в клас знаци. Можете да използвате това, за да"
+" разделите регулярния си израз в (леко) по-четливи части. Символът `` # "
+"`&#39;също се третира като метасимвол, въвеждащ коментар, например:"
+
+# 37e93e770a8f4e238ece39fad50a3eae
+#: ../../regexp_syntax.rst:469
+msgid ""
+"This also means that if you want real whitespace or ``#`` characters in the "
+"pattern (outside a character class, where they are unaffected by ``/x``), "
+"that you’ll either have to escape them or encode them using octal or hex "
+"escapes. Taken together, these features go a long way towards making regular"
+" expressions text more readable."
+msgstr ""
+"Това също така означава, че ако искате реални пробели или `` # `` символи в "
+"шаблона (извън клас знаци, където те не са засегнати от `` / x``), или ще "
+"трябва да ги избягвате или да ги кодирате използвайки осмична или "
+"шестнадесетична бягства. Взети заедно, тези характеристики правят дълъг път "
+"към правилния текст на регулярните изрази."
+
+# aa64c2f338a04b289fe78d3cfa633298
+#: ../../regexp_syntax.rst:476
+msgid "Perl extensions"
+msgstr "Perl разширения"
+
+# a9b874f64bfd435892ffbcc7a97df1a0
+#: ../../regexp_syntax.rst:481
+msgid ""
+"You may use it into r.e. for modifying modifiers by the fly. If this "
+"construction inlined into subexpression, then it effects only into this "
+"subexpression"
+msgstr ""
+"Можете да го използвате за повторно модифициране на модификаторите от "
+"мухата. Ако тази конструкция е вдъхновена в субекспресия, тогава тя се "
+"отразява само на тази субекспресия"
+
+# 53b90f25371d42e8a3ef2f3433b16fd0
+#: ../../regexp_syntax.rst:498
+msgid "(?#text)"
+msgstr "(?#текст)"
+
+# 02ed8d39191842edbf00cc22d3f634e0
+#: ../../regexp_syntax.rst:500
+msgid ""
+"A comment, the text is ignored. Note that TRegExpr closes the comment as "
+"soon as it sees a ``)``, so there is no way to put a literal ``)`` in the "
+"comment."
+msgstr ""
+"Коментар, текстът се игнорира. Имайте предвид, че TRegExpr затваря коментара"
+" веднага щом види ``) ``, така че няма начин да сложи литерала ``) `` в "
+"коментара."
+
+# 92033bf22124478a99083d06a522aca6
+#: ../../regexp_syntax.rst:504
+msgid ""
+"Just now don’t forget to read the `FAQ <faq.html>`__ (expecially ‘non-"
+"greediness’ optimization `question <faq.html#nongreedyoptimization>`__)."
+msgstr ""
+"Точно сега не забравяйте да прочетете `FAQ <faq.html> `__ (въпросът за "
+"оптимизацията не е алчност) <faq.html#nongreedyoptimization> `__)."

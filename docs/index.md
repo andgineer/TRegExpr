@@ -1,3 +1,11 @@
+---
+layout: index
+lang: en
+ref: index
+title:
+permalink: /en/index.html
+---
+
 TRegExpr library implements regular expressions in pure Delphi.
 
 <a href="https://github.com/masterandrey/TRegExpr" class="btn btn-primary btn-lg" role="button">Github repo</a>

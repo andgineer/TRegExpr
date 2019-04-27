@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-26 14:21+0300\n"
+"POT-Creation-Date: 2019-04-27 20:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,143 +16,148 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../index.md:1
+#: ../../index.rst:1
 # cc0d24142d514d4a83784199e601ccd1
 msgid "TRegExpr library implements regular expressions in pure Delphi."
 msgstr ""
 
-#: ../../index.md:3
-# 8e1c6041ce894ceb872baa21e3aeece3
-msgid "<a href=\"https://github.com/masterandrey/TRegExpr\" class=\"btn btn-primary btn-lg\" role=\"button\">Github repo</a>"
+#: ../../index.rst:3
+# 864ce07c449948d9bd6486b38f2d51a2
+msgid "Github repo"
 msgstr ""
 
-#: ../../index.md:5
-# 20410e73cf444b7495e7dd236bfff397
-msgid "Now it's included into Lazarus (Free Pascal)."
+#: ../../index.rst:5
+# c301b407f2234b75a0f563475a880707
+msgid "Now it’s included into `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`__."
 msgstr ""
 
-#: ../../index.md:7
+#: ../../index.rst:8
 # 57929c8115c34146ba8d53c86b73e99e
 msgid "TRegExpr is easy to use and powerfull tool for sophisticated search and substitutioning and for template-based text checking (especially usefull for user input validation in DBMS and web projects)."
 msgstr ""
 
-#: ../../index.md:10
+#: ../../index.rst:12
 # ddca2022171f445a9bcae654ef4b362f
 msgid "You can validate e-mail adresses, extract phone numbers or ZIP-codes from web-pages or documents, search for complex patterns in log files and all You can imagine! Rules (templates) can be changed without Your program recompilation!"
 msgstr ""
 
-#: ../../index.md:13
+#: ../../index.rst:17
 # 99f28c3c5af44dd8a94a620a6ccd66dc
-msgid "As a language for rules used subset of Perl's regular expressions (regexp)."
+msgid "As a language for rules used subset of Perl’s `regular expressions </regexp_syntax>`__ (regexp)."
 msgstr ""
 
-#: ../../index.md:15
+#: ../../index.rst:20
 # e150b343a62742188fe84f150594374b
-msgid "Full source code included, pure Object Pascal. Thus, You need no DLL! The library source code is compatible with Delphi 2-7, Borland C++ Builder 3-6, Kylix, FreePascal (if You see any incompatibility problems, please. drop the bug-report to author)."
+msgid "Full source code included, pure Object Pascal. Thus, You need no DLL! The library source code is compatible with Delphi 2-7, Borland C++ Builder 3-6, Kylix, FreePascal (if You see any incompatibility problems, please. drop the bug-report to `author </about>`__)."
 msgstr ""
 
-#: ../../index.md:20
+#: ../../index.rst:25
 # 99734a13f9e446a1a94eb74edb4fb386
-msgid "Documentation in English, Russian, German, Bulgarian, French and Spanish available at TRegExpr <a href=\"http://regexpstudio.com/tregexpr/TRegExpr.html\" target=\"_blank\">home page</a>"
+msgid "Documentation in English, Russian, German, Bulgarian, French and Spanish available at TRegExpr home page"
 msgstr ""
 
-#: ../../index.md:23
+#: ../../index.rst:28
 # 4b444357588046d080d9dc32d9c68b8e
-msgid "Installation is very simple, the implementation encapsulated completely into class TRegExpr."
+msgid "Installation is very simple, the implementation encapsulated completely into class `TRegExpr </tregexpr_interface/>`__."
 msgstr ""
 
-#: ../../index.md:26
-# 9402615246f140c89b59177b6f1f3f58
-msgid "Demos projects and usage articles illustrate simplicity and power of text processing with the library."
+#: ../../index.rst:31
+# 604a644712bf457d89f53469bf0dea7e
+msgid "`Demos projects <https://github.com/masterandrey/TRegExpr/tree/master/examples>`__ and `usage articles <http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__ illustrate simplicity and power of text processing with the library."
 msgstr ""
 
-#: ../../index.md:30
+#: ../../index.rst:37
 # e7b685d3c5ed4990b3ad17e4ce087843
-msgid "If You need Unicode (so called 'WideString' in Delphi) - see How to use unicode."
+msgid "If You need Unicode (so called ‘WideString’ in Delphi) - see `How to use unicode <tregexpr_interface#unicode>`__."
 msgstr ""
 
-#: ../../index.md:33
+#: ../../index.rst:41
 # c556ccaa4805402ab0801fa2785c7456
 msgid "Gratitudes"
 msgstr ""
 
-#: ../../index.md:35
+#: ../../index.rst:43
 # 268cc5e6c2da457ba50fc853fb103794
-msgid "Many features suggested and a lot of bugs founded (and even fixed) by TRegExpr's contributors."
+msgid "Many features suggested and a lot of bugs founded (and even fixed) by TRegExpr’s contributors."
 msgstr ""
 
-#: ../../index.md:38
+#: ../../index.rst:46
 # f8a253a51b1a4256ab036389ba988261
 msgid "I cannot list here all of them (actually I kept listing only on very early stage of development), but I do appreciate all"
 msgstr ""
 
-#: ../../index.md:41
+#: ../../index.rst:49
 # 123461751eb6418198f16285d79d7767
 msgid "bug-reports, features suggestions and questions that I am receiving from You."
 msgstr ""
 
-#: ../../index.md:45
+#: ../../index.rst:52
 # 05c43ef077b446859f0d05b0b92edef0
 msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
 msgstr ""
 
-#: ../../index.md:46
+#: ../../index.rst:53
 # 06dad95060b04bf2be1ff27e0c2abff2
 msgid "Stephan Klimek - testing in CPPB and suggesting/implementing many features"
 msgstr ""
 
-#: ../../index.md:47
+#: ../../index.rst:55
 # 2080a3d065de4827916dbbc174872814
 msgid "Steve Mudford - implemented Offset parameter"
 msgstr ""
 
-#: ../../index.md:48
+#: ../../index.rst:56
 # 48a3902a5577426bb7877d8a15c743c4
-msgid "Martin Baur (www.mindpower.com) - German help, usefull suggetions"
+msgid "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German help, usefull suggetions"
 msgstr ""
 
-#: ../../index.md:49
+#: ../../index.rst:58
 # d402718ba09b49ffb284a26bc9e31d57
 msgid "Yury Finkel - implemented UniCode support, found and fixed some bugs"
 msgstr ""
 
-#: ../../index.md:50
+#: ../../index.rst:59
 # 28f0838389bf40bd8588b75e3c2cb818
 msgid "Ralf Junker - Implemented some features, many optimization suggestions"
 msgstr ""
 
-#: ../../index.md:51
+#: ../../index.rst:61
 # d3324e4f8cfb4e1aacd8ed294617e2da
 msgid "Simeon Lilov - Bulgarian help"
 msgstr ""
 
-#: ../../index.md:52
+#: ../../index.rst:62
 # 35fbb7141a5346a4a884f660743d53dd
 msgid "Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
 msgstr ""
 
-#: ../../index.md:53
+#: ../../index.rst:64
 # 2fee3a31c1dd4a12931d90c5dbaf38c1
 msgid "Kit Eason many examples for introduction help section"
 msgstr ""
 
-#: ../../index.md:54
+#: ../../index.rst:65
 # baed1255c1c143b399d67758295109a4
 msgid "Juergen Schroth - bug hunting and usefull suggestions"
 msgstr ""
 
-#: ../../index.md:55
+#: ../../index.rst:66
 # 9f1031b4f6224dc99622a7c0a665c6e6
 msgid "Martin Ledoux - French help"
 msgstr ""
 
-#: ../../index.md:56
+#: ../../index.rst:67
 # 5bbca14a5c8045c0b0a16afd0ad75612
 msgid "Diego Calp, Argentina -Spanish help"
 msgstr ""
 
-#: ../../index.md:58
+#: ../../index.rst:69
 # 0b4c8a3e570f4e9180b7b28c6a6afa14
 msgid "And many others - for big work in bug hunting!"
+msgstr ""
+
+#: ../../index.rst:72
+# a2ac7709ea0344e5931a96f336a6bb2e
+msgid "Documentation"
 msgstr ""
 
