@@ -8,7 +8,7 @@ Pure Object Pascal!
 
 #### Documentation in English, Russian, German, Bulgarian, French and Spanish
 
-[regexpstudio.com](http://regexpstudio.com)
+[regexpr.masterandrey.com](http://regexpr.masterandrey.com/en/latest/)
 
 
 #### Source code fork
