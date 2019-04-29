@@ -13,7 +13,7 @@ Expression
 Regular expression.
 
 For optimization, TRegExpr will automatically compiles it into ‘P-code’
-(You can see it with help of Dump method) and stores in internal
+(you can see it with help of Dump method) and stores in internal
 structures. Real [re]compilation occures only when it really needed -
 while calling Exec[Next], Substitute, Dump, etc and only if Expression
 or other P-code affected properties was changed after last
@@ -101,7 +101,7 @@ but it’s more simpler !
 Raises exception if used without preceeding successful call to Exec\*
 (Exec, ExecPos, ExecNext).
 
-So You always must use something like
+So you always must use something like
 
 ::
 
@@ -216,7 +216,7 @@ Internally calls Exec[Next]
 
 Overloaded version and ReplaceEx operate with call-back function,
 
-so You can implement really complex functionality.
+so you can implement really complex functionality.
 
 SubExprMatchCount
 ^^^^^^^^^^^^^^^^^
@@ -330,8 +330,8 @@ RegExprLinePairedSeparator global constant)
 see also `about line
 separators <regexp_syntax.html#syntax_line_separators>`__
 
-For example, if You need Unix-style behaviour, assign LineSeparators :=
-#\ :math:`a (newline character) and LinePairedSeparator := '' (empty string), if You want to accept as line separators only `\x0D\x0A` but not `\x0D` or `\x0A` alone, then assign `LineSeparators := ''` (empty string) and `LinePairedSeparator := #`\ d#$a`.
+For example, if you need Unix-style behaviour, assign LineSeparators :=
+#\ :math:`a (newline character) and LinePairedSeparator := '' (empty string), if you want to accept as line separators only `\x0D\x0A` but not `\x0D` or `\x0A` alone, then assign `LineSeparators := ''` (empty string) and `LinePairedSeparator := #`\ d#$a`.
 
 By default ‘mixed’ mode is used (defined in
 RegExprLine[Paired]Separator[s] global constants):
@@ -370,7 +370,7 @@ Global constants
 EscChar = ‘\\’;  // ‘Escape’-char (‘\\’ in common r.e.) used for
 escaping metachars (\w, \\d etc).
 
- // it’s may be usefull to redefine it if You are using C++ Builder - to
+ // it’s may be usefull to redefine it if you are using C++ Builder - to
 avoide ugly constructions
 
  // like ‘\\\w+\\\\\\w+\\.\\w+’ - just define EscChar=‘/’ and use
@@ -501,7 +501,7 @@ exist!
 AExtendedSyntax - must be True if modifier /x will be On while using the
 r.e.
 
-Usefull for GUI editors of r.e. etc (You can find example of using in
+Usefull for GUI editors of r.e. etc (you can find example of using in
 `TestRExp.dpr <#regexpstudio.html>`__ project)
 
 Result code        Meaning

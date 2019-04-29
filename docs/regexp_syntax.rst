@@ -9,17 +9,17 @@ Introduction
 ------------
 
 Regular Expressions are a widely-used method of specifying patterns of
-text to search for. Special metacharacters allow You to specify, for
-instance, that a particular string You are looking for occurs at the
+text to search for. Special metacharacters allow you to specify, for
+instance, that a particular string you are looking for occurs at the
 beginning or end of a line, or contains n recurrences of a certain
 character.
 
 Regular expressions look ugly for novices, but really they are very
 simple (well, usually simple ;) ), handly and powerfull tool.
 
-I recommend You to play with regular expressions using Windows
+I recommend you to play with regular expressions using Windows
 `REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__
-- it’ll help You to uderstand main conceptions. Moreover, there are many
+- it’ll help you to uderstand main conceptions. Moreover, there are many
 predefined examples with comments included into repository of R.e.
 visual debugger.
 
@@ -61,8 +61,8 @@ Escape sequences
 Characters may be specified using a escape sequences syntax much like
 that used in C and Perl: ``\n`` matches a newline, ``\t`` a tab, etc.
 More generally, ``\xnn``, where nn is a string of hexadecimal digits,
-matches the character whose ASCII value is nn. If You need wide
-(Unicode) character code, You can use ``\x{nnnn}``, where ``nnnn`` - one
+matches the character whose ASCII value is nn. If you need wide
+(Unicode) character code, you can use ``\x{nnnn}``, where ``nnnn`` - one
 or more hexadecimal digits.
 
 ::
@@ -108,8 +108,8 @@ Examples:
 Within a list, the ``-`` character is used to specify a range, so that
 a-z represents all characters between ``a`` and ``z``, inclusive.
 
-If You want ``-`` itself to be a member of a class, put it at the start
-or end of the list, or escape it with a backslash. If You want ``]`` you
+If you want ``-`` itself to be a member of a class, put it at the start
+or end of the list, or escape it with a backslash. If you want ``]`` you
 may place it at the start of list or escape it with a backslash.
 
 .. _examples-3:
@@ -163,7 +163,7 @@ end. Embedded line separators will not be matched by ``^`` or ``$``.
 
 You may, however, wish to treat a string as a multi-line buffer, such
 that the ``^`` will match after any line separator within the string,
-and ``$`` will match before any line separator. You can do this by
+and ``$`` will match before any line separator. you can do this by
 switching On the `modifier /m <regexp_syntax.html#modifier_m>`__.
 
 The ``\A`` and ``\Z`` are just like ``^`` and ``$``, except that they
@@ -171,7 +171,7 @@ won’t match multiple times when the `modifier
 /m <regexp_syntax.html#modifier_m>`__ is used, while ``^`` and ``$``
 will match at every internal line separator.
 
-The ``.`` metacharacter by default matches any character, but if You
+The ``.`` metacharacter by default matches any character, but if you
 switch Off the `modifier /s <regexp_syntax.html#modifier_s>`__, then
 ``.`` won’t match embedded line separators.
 
@@ -180,22 +180,22 @@ TRegExpr works with line separators as recommended at
 
 ``^`` is at the beginning of a input string, and, if `modifier
 /m <regexp_syntax.html#modifier_m>`__ is On, also immediately following
-any occurrence of ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if You are using
+any occurrence of ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if you are using
 `Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr, then
 also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or ``\x85``).
 Note that there is no empty line within the sequence ``\x0D\x0A``.
 
 ``$`` is at the end of a input string, and, if `modifier
 /m <regexp_syntax.html#modifier_m>`__ is On, also immediately preceding
-any occurrence of  ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if You are
+any occurrence of  ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if you are
 using `Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr,
 then also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or
 ``\x85``). Note that there is no empty line within the sequence
 ``\x0D\x0A``.
 
-``.`` matchs any character, but if You switch Off `modifier
+``.`` matchs any character, but if you switch Off `modifier
 /s <regexp_syntax.html#modifier_s>`__ then ``.`` doesn’t match
-``\x0D\x0A`` and ``\x0A`` and ``\x0D`` (if You are using `Unicode
+``\x0D\x0A`` and ``\x0A`` and ``\x0D`` (if you are using `Unicode
 version <tregexpr_interface.html#unicode>`__ of TRegExpr, then also
 ``\x2028`` and  ``\x2029`` and ``\x0B`` and ``\x0C`` and ``\x85``).
 
@@ -203,13 +203,13 @@ Note that ``^.*$`` (an empty line pattern) doesnot match the empty
 string within the sequence ``\x0D\x0A``, but matchs the empty string
 within the sequence ``\x0A\x0D``.
 
-Multiline processing can be easely tuned for Your own purpose with help
+Multiline processing can be easely tuned for your own purpose with help
 of TRegExpr properties
 `LineSeparators <tregexpr_interface.html#lineseparators>`__ and
 `LinePairedSeparator <tregexpr_interface.html#linepairedseparator>`__,
-You can use only Unix style separators ``\n`` or only DOS/Windows style
+you can use only Unix style separators ``\n`` or only DOS/Windows style
 ``\r\n`` or mix them together (as described above and used by default)
-or define Your own line separators!
+or define your own line separators!
 
 Metacharacters - predefined classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -238,7 +238,7 @@ Examples:
 TRegExpr uses properties
 `SpaceChars <tregexpr_interface.html#tregexpr.spacechars>`__ and
 `WordChars <tregexpr_interface.html#tregexpr.wordchars>`__ to define
-character classes ``\w``, ``\W``, ``\s``, ``\S``, so You can easely
+character classes ``\w``, ``\W``, ``\s``, ``\S``, so you can easely
 redefine it.
 
 Metacharacters - word boundaries
@@ -258,7 +258,7 @@ Metacharacters - iterators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Any item of a regular expression may be followed by another type of
-metacharacters - iterators. Using this metacharacters You can specify
+metacharacters - iterators. Using this metacharacters you can specify
 number of occurences of previous character, metacharacter or
 subexpression.
 
@@ -333,7 +333,7 @@ but it is important when you are capturing matched text using
 parentheses.)
 
 Also remember that ``|`` is interpreted as a literal within square
-brackets, so if You write ``[fee|fie|foe]`` You’re really only matching
+brackets, so if you write ``[fee|fie|foe]`` you’re really only matching
 ``[feio|]``.
 
 .. _examples-7:
@@ -347,7 +347,7 @@ Metacharacters - subexpressions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The bracketing construct ``( ... )`` may also be used for define r.e.
-subexpressions (after parsing You can find subexpression positions,
+subexpressions (after parsing you can find subexpression positions,
 lengths and actual values in MatchPos, MatchLen and
 `Match <tregexpr_interface.html#tregexpr.match>`__ properties of
 TRegExpr, and substitute it in template strings by
@@ -357,7 +357,7 @@ Subexpressions are numbered based on the left to right order of their
 opening parenthesis.
 
 First subexpression has number ``1`` (whole r.e. match has number ``0``
-- You can substitute it in
+- you can substitute it in
 `TRegExpr.Substitute <tregexpr_interface.html#tregexpr.substitute>`__ as
 ``$0`` or ``$&``).
 
@@ -401,7 +401,7 @@ Any of these modifiers may be embedded within the regular expression
 itself using the `(?…) <regexp_syntax.html#inline_modifiers>`__
 construct.
 
-Also, You can assign to appropriate TRegExpr properties
+Also, you can assign to appropriate TRegExpr properties
 (`ModifierX <tregexpr_interface.html#tregexpr.modifier_x>`__ for example
 to change /x, or ModifierStr to change all modifiers together). The
 default values for new instances of TRegExpr object defined in `global
@@ -431,7 +431,7 @@ normally would not match.
 
  ### g
 
-Non standard modifier. Switching it Off You’ll switch all following
+Non standard modifier. Switching it Off you’ll switch all following
 operators into non-greedy mode (by default this modifier is On). So, if
 modifier ``/g`` is Off then ``+`` works as ``+?``, ``\*`` as ``\*?`` and
 so on
@@ -453,7 +453,7 @@ off by default - set false to global variable
 
 The `modifier /x <regexp_syntax.html#modifier_x>`__ itself needs a
 little more explanation. It tells the TRegExpr to ignore whitespace that
-is neither backslashed nor within a character class. You can use this to
+is neither backslashed nor within a character class. you can use this to
 break up your regular expression into (slightly) more readable parts.
 The ``#`` character is also treated as a metacharacter introducing a
 comment, for example:
@@ -462,7 +462,7 @@ comment, for example:
 
     (
     (abc) \# comment 1
-      |   \# You can use spaces to format r.e. - TRegExpr ignores it
+      |   \# you can use spaces to format r.e. - TRegExpr ignores it
     (efg) \# comment 2
     )
 

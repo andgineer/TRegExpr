@@ -9,7 +9,7 @@ Please, note that there are localized demos available (with comments in
 source code on national languages).
 
 This localized versions distributed in localized full TRegExpr packages,
-and in separate localized documentation packages (when You unpack this
+and in separate localized documentation packages (when you unpack this
 documentation package in TRegExpr directory the localized demos
 overwrite English ones).
 
@@ -25,7 +25,7 @@ Demos\Text2HTML
 
 see `description <#text2html.html>`__
 
-If You don't familiar with regular expression, please, take a look at
+If you don't familiar with regular expression, please, take a look at
 the `r.e.syntax <regexp_syntax.html>`__ topic.
 
 TRegExpr interface described in `TRegExpr
@@ -74,8 +74,8 @@ function DecorateURLs
  
 
 Finds and replaces hyper links like 'http://...' or 'ftp://..' as well
-as links without protocol, but start with 'www.' If You want to decorate
-emails as well, You have to use function
+as links without protocol, but start with 'www.' If you want to decorate
+emails as well, you have to use function
 `DecorateEMails <#hyperlinksdecorator.html#decorateemails>`__ instead.
 
  

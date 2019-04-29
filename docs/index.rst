@@ -1,25 +1,26 @@
+Introduction
+~~~~~~~~~~~~
+
 TRegExpr library implements regular expressions in pure Delphi.
 
-Github repo
+- TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_
+- `Version without Lazarus integration <https://github.com/masterandrey/TRegExpr>`_
 
-Now it’s included into `Lazarus (Free
-Pascal) <http://wiki.freepascal.org/Regexpr>`__.
+TRegExpr is easy to use and powerful tool for sophisticated search and
+substitution and for template-based text check (especially useful
+for user input validation in input forms).
 
-TRegExpr is easy to use and powerfull tool for sophisticated search and
-substitutioning and for template-based text checking (especially usefull
-for user input validation in DBMS and web projects).
-
-You can validate e-mail adresses, extract phone numbers or ZIP-codes
+You can validate e-mail address, extract phone numbers or ZIP-codes
 from web-pages or documents, search for complex patterns in log files
-and all You can imagine! Rules (templates) can be changed without Your
+and all you can imagine! Rules (templates) can be changed without your
 program recompilation!
 
 As a language for rules used subset of Perl’s `regular
 expressions </regexp_syntax>`__ (regexp).
 
-Full source code included, pure Object Pascal. Thus, You need no DLL!
+Full source code included, pure Object Pascal. Thus, you need no DLL!
 The library source code is compatible with Delphi 2-7, Borland C++
-Builder 3-6, Kylix, FreePascal (if You see any incompatibility problems,
+Builder 3-6, Kylix, FreePascal (if you see any incompatibility problems,
 please. drop the bug-report to `author </about>`__).
 
 Documentation in English, Russian, German, Bulgarian, French and Spanish
@@ -34,7 +35,7 @@ and `usage
 articles <http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__
 illustrate simplicity and power of text processing with the library.
 
-If You need Unicode (so called ‘WideString’ in Delphi) - see `How to use
+If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use
 unicode <tregexpr_interface#unicode>`__.
 
 Gratitudes
@@ -47,7 +48,7 @@ I cannot list here all of them (actually I kept listing only on very
 early stage of development), but I do appreciate all
 
 bug-reports, features suggestions and questions that I am receiving from
-You.
+you.
 
 -  Guido Muehlwitz - found and fixed ugly bug in big string processing
 -  Stephan Klimek - testing in CPPB and suggesting/implementing many
