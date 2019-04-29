@@ -7,47 +7,49 @@ TRegExpr library implements regular expressions in pure Delphi.
 - `GitHub version <https://github.com/masterandrey/TRegExpr>`_
 
 TRegExpr is easy to use and powerful tool for sophisticated search and
-substitution and for template-based text check (especially useful
-for user input validation in input forms).
+substitution and for template-based text check.
 
-You can validate e-mail address, extract phone numbers or ZIP-codes
-from web-pages or documents, search for complex patterns in log files
-and all you can imagine! Rules (templates) can be changed without your
-program recompilation!
+It is especially useful for user input validation in input forms - to
+validate e-mail addresses and so on.
+
+Also you can extract phone numbers, ZIP-codes etc from web-pages or documents,
+search for complex patterns in log files and all you can imagine.
+Rules (templates) can be changed without your
+program recompilation.
 
 As a language for rules used subset of Perl’s `regular
-expressions </regexp_syntax>`__ (regexp).
+expressions <regexp_syntax.html>`__ (regexp).
 
 Full source code included, pure Object Pascal. Thus, you need no DLL!
 The library source code is compatible with Delphi 2-7, Borland C++
-Builder 3-6,FreePascal.
+Builder 3-6, FreePascal.
 
-If you see any incompatibility problems,
-please `create the bug <https://github.com/masterandrey/TRegExpr/issues>`_.
+Reviews
+~~~~~~~
 
-`Documentation <https://regexpr.masterandrey.com/en/latest/>`_ is available
-in English and Russian.
+`How good the library was met <https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html>`_.
 
-There are also old translations to German, Bulgarian, French and Spanish.
-If you want to help to update the translation please `contact me <https://github.com/masterandrey>`_.
-New translation is based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
-and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_.
-All this translations are already machine-translated and need only proof-reading
-and may be some copy-pasting from old translations.
+Quick start
+~~~~~~~~~~~
 
-To use the library just add to you project `the sources <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
-and use the class `TRegExpr </tregexpr_interface/>`_ .
+To use the library just add `the sources <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
+to you project and use the class `TRegExpr <tregexpr_interface.html>`_.
 
 `Demo projects <https://github.com/masterandrey/TRegExpr/tree/master/examples>`__
 and `usage blog post <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__
-illustrate simplicity and power of text processing with the library.
+illustrate the simplicity and power of text processing with the library.
 
 If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use
-unicode <tregexpr_interface#unicode>`__.
+unicode <tregexpr_interface.html#unicode>`__.
 
+Feedback
+~~~~~~~~
 
-Gratitudes
-~~~~~~~~~~
+If you see any problems,
+please `create the bug <https://github.com/masterandrey/TRegExpr/issues>`_.
+
+Gratitude
+~~~~~~~~~
 
 Many features suggested and a lot of bugs founded (and even fixed) by
 TRegExpr’s contributors.
@@ -77,13 +79,24 @@ you.
 And many others - for hard work in bug hunting!
 
 Documentation
--------------
+~~~~~~~~~~~~~
+
+`Documentation <https://regexpr.masterandrey.com/en/latest/>`_ is available
+in English and Russian.
+
+There are also old translations to German, Bulgarian, French and Spanish.
+If you want to help to update the translation please `contact me <https://github.com/masterandrey>`_.
+New translation is based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
+and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_.
+All this translations are already machine-translated and need only proof-reading
+and may be some copy-pasting from old translations.
+
 
 .. toctree::
    :glob:
    :maxdepth: 2
 
-   regexp_syntax.rst
-   tregexpr_interface.rst
+   regexp_syntax
+   tregexpr_interface
    faq
    demos
