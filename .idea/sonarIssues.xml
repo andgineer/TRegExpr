@@ -8,12 +8,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/README.md">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/.tx/config">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/docs/Makefile">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/_build/gettext/index.pot">
           <value>
             <set />
           </value>
@@ -43,7 +53,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/index.rst">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/init_tx.sh">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/bg_BG/LC_MESSAGES/index.po">
           <value>
             <set />
           </value>
