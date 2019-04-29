@@ -1,5 +1,26 @@
-First of all I recommend You to read `article with usage
-illustrations <http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__.
+Demos
+=====
+
+Introduction
+------------
+
+If you don't familiar with regular expression, please, take a look at
+the `r.e.syntax <regexp_syntax.html>`__.
+
+TRegExpr interface described in `TRegExpr
+interface <tregexpr_interface.html>`__.
+
+Some of demo-projects use extended VCL properties which exists only in
+Delphi 4 or higher. While compiling in Delphi 3 or Delphi 2 you'll
+receive some error messages about unknown properties. You may ignore it
+- this properties is needed only for resizing and justification of
+components then form change it's size.
+
+Windows compiled
+----------------
+
+First of all I recommend You to read `Text processing from bird's eye
+view <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__.
 
 Ready to run Windows application
 `REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__
@@ -13,161 +34,63 @@ and in separate localized documentation packages (when you unpack this
 documentation package in TRegExpr directory the localized demos
 overwrite English ones).
 
-Demos\TRegExprRoutines
-
-very simple examples, see comments inside the unit
-
-Demos\TRegExprClass
-
-slightly more complex examples, see comments inside the unit
-
-Demos\Text2HTML
-
-see `description <#text2html.html>`__
-
-If you don't familiar with regular expression, please, take a look at
-the `r.e.syntax <regexp_syntax.html>`__ topic.
-
-TRegExpr interface described in `TRegExpr
-interface <tregexpr_interface.html>`__.
-
-Note
-
-Some of demo-projects use extended VCL properties which exists only in
-Delphi 4 or higher. While compiling in Delphi 3 or Delphi 2 you'll
-receive some error messages about unknown properties. You may ignore it
-- this properties is needed only for resizing and justification of
-components then form change it's size.
-
 Text2HTML
-=========
+---------
 
-Very simple utility, that helps publish plain text as HTML
+`Text2HTML sources <https://github.com/masterandrey/TRegExpr/tree/master/examples/Text2HTML>`_
 
-Uses unit `HyperLinksDecorator <#hyperlinksdecorator.html>`__ that is
-based on TRegExpr.
+Publish plain text as HTML
 
+Uses unit `HyperLinksDecorator <https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__
+that is based on TRegExpr.
  
+This unit contains functions to decorate hyper-links.
 
-Specially written as a demonstration of TRegExpr usage.
-
+For example, replaces ``www.masterAndrey.com`` with
+``<a href="http://www.masterAndrey.com">www.masterAndrey.com</a>``
+or ``anso@mail.ru`` with ``<a href="mailto:filbert@yandex.ru">filbert@yandex.ru</a>``.
  
+.. code-block:: pascal
 
-Unit HyperLinksDecorator
-========================
+    function DecorateURLs (
+        const AText : string;
+        AFlags : TDecorateURLsFlagSet = [durlAddr, durlPath]
+    ) : string;
 
-`DecorateURLs <#hyperlinksdecorator.html#decorateurls>`__   `DecorateEMails <#hyperlinksdecorator.html#decorateemails>`__
-=========================================================================================================================
+    type
+    TDecorateURLsFlags = (
+        durlProto, durlAddr, durlPort, durlPath, durlBMark, durlParam);
 
-This unit contains functions to decorate hyper-links (see
-`Text2Html <#text2html.html>`__ demo-project for usage example).
+    TDecorateURLsFlagSet = set of TDecorateURLsFlags;
 
- 
+    function DecorateEMails (const AText : string) : string;  
 
-For example, replaces 'www.RegExpStudio.com' with 'www.RegExpStudio.com'
-or 'anso@mail.ru' with 'anso@mail.ru'.
+========= ====================================================
+  Value   Meaning
+========= ====================================================
+durlProto Protocol (like ``ftp://`` or ``http://``)
+durlAddr  TCP address or domain name (like ``masterAndrey.com``)
+durlPort  Port number if specified (like ``:8080``)
+durlPath  Path to document (like ``index.html``)
+durlBMark Book mark (like ``#mark``)
+durlParam URL params (like ``?ID=2&User=13``)
+========= ====================================================
 
- 
+Returns input text ``AText`` with decorated hyper links.
 
-function DecorateURLs
+``AFlags`` describes, which parts of hyper-link must be included into
+visible part of the link.
 
- 
+For example, if `AFlags` is ``[durlAddr]`` then hyper link
+``www.masterAndrey.com/contacts.htm`` will be decorated as
+``<a href="www.masterAndrey.com/contacts.htm">www.masterAndrey.com</a>``.
 
-Finds and replaces hyper links like 'http://...' or 'ftp://..' as well
-as links without protocol, but start with 'www.' If you want to decorate
-emails as well, you have to use function
-`DecorateEMails <#hyperlinksdecorator.html#decorateemails>`__ instead.
+`TRegExprRoutines <https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>`_
+----------------------------------------------------------------------------------------------------
 
- 
+Very simple examples, see comments inside the unit
 
-function DecorateURLs (const AText : string; AFlags :
-TDecorateURLsFlagSet = [durlAddr, durlPath]) : string;
+`TRegExprClass <https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>`_
+----------------------------------------------------------------------------------------------
 
- 
-
-Description
-
- 
-
-Returns input text AText with decorated hyper links.
-
- 
-
-AFlags describes, which parts of hyper-link must be included into
-VISIBLE part of the link:
-
-For example, if [durlAddr] then hyper link
-'www.RegExpStudio.com/contacts.htm' will be decorated as
-'www.RegExpStudio.com'
-
- 
-
-type
-
-TDecorateURLsFlags = (durlProto, durlAddr, durlPort, durlPath,
-durlBMark, durlParam);
-
-TDecorateURLsFlagSet = set of TDecorateURLsFlags;
-
- 
-
-Description
-
- 
-
-These are the possible values:
-
- 
-
-Value                Meaning
-
---------------
-
-durlProto        Protocol (like 'ftp://' or 'http://')
-
-durlAddr        TCP address or domain name (like 'RegExpStudio.com')
-
-durlPort                Port number if specified (like ':8080')
-
-durlPath        Path to document (like 'index.html')
-
-durlBMark        Book mark (like '#mark')
-
-durlParam        URL params (like '?ID=2&User=13')
-
- 
-
- 
-
- 
-
- 
-
-function DecorateEMails
-
- 
-
-Replaces all syntax correct e-mails with 'ADDR'. For example, replaces
-'anso@mail.ru' with 'anso@mail.ru'.
-
- 
-
-function DecorateEMails (const AText : string) : string;
-
- 
-
-Description
-
- 
-
-Returns input text AText with decorated e-mails
-
- 
-
-Usage illustrations
-===================
-
-•\ `Text processing from bird's eye
-view <#article_bird_eye_view.html>`__
-
-•\ `MrDecorator <#article_mrdecorator.html>`__
+Slightly more complex examples, see comments inside the unit

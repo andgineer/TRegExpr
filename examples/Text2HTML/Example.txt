@@ -1,5 +1,5 @@
 My name is Andrey Sorokin, I am software developer from Saint-Petersburg, Russia.
 
-I am working in digital-cash payment system for Internet project: http://money.yandex.ru.
+My github page: https://github.com/masterandrey.
 
-Please, feel free to contact me anso@mail.ru.
+Please, feel free to contact me filbert@yandex.ru.

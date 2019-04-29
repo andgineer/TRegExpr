@@ -1,3 +1,6 @@
+FAQ
+===
+
 I found a terrible bug: TRegExpr raises Access Violation exception!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -6,26 +9,24 @@ I found a terrible bug: TRegExpr raises Access Violation exception!
 You must create the object before usage. So, after you declared
 something like:
 
-::
+.. code-block:: pascal
 
     r : TRegExpr
 
 do not forget to create the object instance:
 
-::
+.. code-block:: pascal
 
     r := TRegExpr.Create. 
 
 How can I use TRegExpr with Borland C++ Builder?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I have a problem since no header file (.h or .hpp) is available.
-
-.. _a.-1:
+I have a problem since no header file (``.h`` or ``.hpp``) is available.
 
 **Answer**
 
--  Add RegExpr.pas to bcb project.
+-  Add ``RegExpr.pas`` to ``bcb`` project.
 -  Compile project. This generates the header file RegExpr.hpp.
 -  Now one can write code which uses the RegExpr unit.
 -  Don`t forget to add  #include “RegExpr.hpp” where needed.
@@ -34,8 +35,6 @@ I have a problem since no header file (.h or .hpp) is available.
 
 Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in Borland C++ Builder?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. _a.-2:
 
 **Answer**
 
@@ -50,8 +49,6 @@ Why does TRegExpr return more then one line?
 
 For example, r.e. ``<font .\*>`` returns the first ``<font``, then the
 rest of the file including last ``</html>``.
-
-.. _a.-3:
 
 **Answer**
 
@@ -69,8 +66,6 @@ Why does TRegExpr return more then I expect?
 For example r.e. ``<p>(.+)</p>`` applyed to string ``<p>a</p><p>b</p>``
 returns ``a</p><p>b`` but not ``a`` as I expected.
 
-.. _a.-4:
-
 **Answer**
 
 By default all operators works in ``greedy`` mode, so they match as more
@@ -83,8 +78,6 @@ TRegExpr properties or constractions like ``?(-g)`` in r.e.).
 
 How to parse sources like HTML with help of TRegExpr
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. _a.-5:
 
 **Answer**
 
@@ -104,8 +97,6 @@ of time.
 Is there a way to get multiple matchs of a pattern on TRegExpr?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. _a.-6:
-
 **Answer**
 
 You can make loop and iterate match by match with ExecNext method.
@@ -120,8 +111,6 @@ implementation. or at the examples in
 
 I am checking user input. Why does TRegExpr return ``True`` for wrong input strings?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. _a.-7:
 
 **Answer**
 
@@ -138,8 +127,6 @@ Why does non-greedy iterators sometimes work as in greedy mode?
 For example, the r.e. ``a+?,b+?`` applied to string ``aaa,bbb`` matches
 ``aaa,b``, but should it not match ``a,b`` because of non-greediness of
 first iterator?
-
-.. _a.-8:
 
 **Answer**
 
