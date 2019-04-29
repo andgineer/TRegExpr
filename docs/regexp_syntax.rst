@@ -112,11 +112,10 @@ You may use ``\w``, ``\d`` and ``\s`` within `user character classes <User Chara
      foob[\w\s]r matchs strings like 'foobar', 'foob r', 'foobbr' and so on but not 'foob1r', 'foob=r' and so on
 
 TRegExpr uses properties
-`SpaceChars <tregexpr_interface.html#SpaceChars>`_ and
-`WordChars <tregexpr_interface.html#tregexpr.wordchars>`__ to define
+`SpaceChars <tregexpr_interface.html#spacechars>`_ and
+`WordChars <tregexpr_interface.html#wordchars>`_ to define
 character classes ``\w``, ``\W``, ``\s``, ``\S``, so you can easely
 redefine it.
-
 
 Metacharacters
 --------------
@@ -150,29 +149,32 @@ end. Embedded line separators will not be matched by ``^`` or ``$``.
 You may, however, wish to treat a string as a multi-line text, such
 that the ``^`` will match after any line separator within the string,
 and ``$`` will match before any line separator. You can do this by
-switching ``On`` the `modifier /m <regexp_syntax.html#modifier_m>`__.
+switching ``On`` the `modifier /m <#m>`_.
 
 The ``\A`` and ``\Z`` are just like ``^`` and ``$``, except that they
 won’t match multiple times when the `modifier
-/m <regexp_syntax.html#modifier_m>`__ is used, while ``^`` and ``$``
+/m <#m>`_ is used, while ``^`` and ``$``
 will match at every internal line separator.
 
 The ``.`` metacharacter by default matches any character, but if you
-switch Off the `modifier /s <regexp_syntax.html#modifier_s>`__, then
+switch Off the `modifier /s <#s>`_, then
 ``.`` won’t match embedded line separators.
+
+Tech details
+^^^^^^^^^^^^
 
 TRegExpr works with line separators as recommended at
 `www.unicode.org <http://www.unicode.org/unicode/reports/tr18/>`__:
 
 ``^`` is at the beginning of a input string, and, if `modifier
-/m <regexp_syntax.html#modifier_m>`__ is On, also immediately following
+/m <#m>`_ is On, also immediately following
 any occurrence of ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if you are using
 `Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr, then
 also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or ``\x85``).
 Note that there is no empty line within the sequence ``\x0D\x0A``.
 
 ``$`` is at the end of a input string, and, if `modifier
-/m <regexp_syntax.html#modifier_m>`__ is On, also immediately preceding
+/m <#m>`_ is On, also immediately preceding
 any occurrence of  ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if you are
 using `Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr,
 then also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or
@@ -180,7 +182,7 @@ then also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or
 ``\x0D\x0A``.
 
 ``.`` matchs any character, but if you switch Off `modifier
-/s <regexp_syntax.html#modifier_s>`__ then ``.`` doesn’t match
+/s <#s>`_ then ``.`` doesn’t match
 ``\x0D\x0A`` and ``\x0A`` and ``\x0D`` (if you are using `Unicode
 version <tregexpr_interface.html#unicode>`__ of TRegExpr, then also
 ``\x2028`` and  ``\x2029`` and ``\x0B`` and ``\x0C`` and ``\x85``).
@@ -191,8 +193,8 @@ within the sequence ``\x0A\x0D``.
 
 Multiline processing can be easely tuned for your own purpose with help
 of TRegExpr properties
-`LineSeparators <tregexpr_interface.html#lineseparators>`__ and
-`LinePairedSeparator <tregexpr_interface.html#linepairedseparator>`__,
+`LineSeparators <tregexpr_interface.html#lineseparators>`_ and
+`LinePairedSeparator <tregexpr_interface.html#linepairedseparator>`_,
 you can use only Unix style separators ``\n`` or only DOS/Windows style
 ``\r\n`` or mix them together (as described above and used by default)
 or define your own line separators!
@@ -259,13 +261,13 @@ possible, “non-greedy” takes as few as possible. For example, ``b+`` and
 ``b{2,3}`` returns ``bbb``.
 
 You can switch all iterators into “non-greedy” mode (see the `modifier
-/g <regexp_syntax.html#modifier_g>`__).
+/g <#g>`_).
 
 Alternatives
 ~~~~~~~~~~~~
 
 You can specify a series of alternatives for a pattern using ``|`` to
-separate them, so that fee|fie|foe will match any of ``fee``, ``fie``,
+separate them, so that ``fee|fie|foe`` will match any of ``fee``, ``fie``,
 or ``foe`` in the target string (as would ``f(e|i|o)e``). The first
 alternative includes everything from the last pattern delimiter (``(``,
 ``[``, or the beginning of the pattern) up to the first ``|``, and the
@@ -297,16 +299,16 @@ Subexpressions
 The bracketing construct ``( ... )`` may also be used for define r.e.
 subexpressions (after parsing you can find subexpression positions,
 lengths and actual values in MatchPos, MatchLen and
-`Match <tregexpr_interface.html#tregexpr.match>`__ properties of
+`Match <tregexpr_interface.html#match>`_ properties of
 TRegExpr, and substitute it in template strings by
-`TRegExpr.Substitute <tregexpr_interface.html#tregexpr.substitute>`__).
+`TRegExpr.Substitute <tregexpr_interface.html#substitute>`_).
 
 Subexpressions are numbered based on the left to right order of their
 opening parenthesis.
 
 First subexpression has number ``1`` (whole r.e. match has number ``0``
 - you can substitute it in
-`TRegExpr.Substitute <tregexpr_interface.html#tregexpr.substitute>`__ as
+`TRegExpr.Substitute <tregexpr_interface.html#substitute>`_ as
 ``$0`` or ``$&``).
 
 ::
@@ -336,14 +338,14 @@ Modifiers are for changing behaviour of ``TRegExpr``.
 There are two ways to set up modifiers:
 
 1)
-Embed within the regular expression using the `(?…) <regexp_syntax.html#inline_modifiers>`__
-construct.
+Embed within the regular expression using
+the `(?imsxr-imsxr) <#inlinemodifiers>`_.
 
 2)
 Assign to appropriate ``TRegExpr`` property
-(`Modifier* <tregexpr_interface.html#tregexpr.modifier_x>`__. The
+(`Modifier* <tregexpr_interface.html#modifierstr>`__. The
 default values for new instances of TRegExpr object defined in `global
-variables <tregexpr_interface.html>`__. For example global variable
+variables <tregexpr_interface.html#global-constants>`_. For example global variable
 ``RegExprModifierX`` defines default value for ``ModifierX`` property.
 
 i
@@ -360,7 +362,7 @@ Treat string as multiple lines. So ``^`` and ``$`` matches the start or end
 of any line anywhere within the string.
 
 See also `Line
-separators <tregexpr_interface.html#line_separators>`__.
+separators <tregexpr_interface.html#lineseparators>`_.
 
 s
 ~
@@ -369,7 +371,7 @@ Treat string as single line. So ``.`` matches any
 character whatsoever, even a line separators.
 
 See also `Line
-separators <tregexpr_interface.html#line_separators>`__, which it
+separators <tregexpr_interface.html#lineseparators>`_, which it
 normally would not match.
 
 g
@@ -412,10 +414,12 @@ includes all russian symbols.
 
 The modifier is set `On` by default. If you want switch if
 ``off`` by default - set false to global variable
-`RegExprModifierR <#modifier_defs>`__.
+`RegExprModifierR <tregexpr_interface.html#regexprmodifierr>`_.
 
 Perl extensions
 ---------------
+
+.. _inlinemodifiers:
 
 (?imsxr-imsxr)
 ~~~~~~~~~~~~~~
@@ -438,6 +442,6 @@ A comment, the text is ignored. Note that TRegExpr closes the comment as
 soon as it sees a ``)``, so there is no way to put a literal ``)`` in
 the comment.
 
-Just now don’t forget to read the `FAQ <faq.html>`__ (expecially
+Just now don’t forget to read the `FAQ <faq.html>`_ (expecially
 ‘non-greediness’ optimization
-`question <faq.html#nongreedyoptimization>`__).
+`question <faq.html#nongreedyoptimization>`_).

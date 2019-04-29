@@ -123,6 +123,8 @@ wrong user inputs like ``12345`` or ``any letters 1234``.
 You have to check from line start to line end to ensure there are no
 anything else around: ``^\d{4,4}$``.
 
+.. _nongreedyoptimization:
+
 Why does non-greedy iterators sometimes work as in greedy mode?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

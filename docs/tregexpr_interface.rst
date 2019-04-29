@@ -54,8 +54,7 @@ ModifierS
 ~~~~~~~~~
 
 `Modifier /s <regexp_syntax.html#modifier_s>`__ - ‘.’ works as any char
-(else doesn’t match
-`LineSeparators <tregexpr_interface.html#lineseparators>`__ and
+(else doesn’t match LineSeparators_ and
 `LinePairedSeparator <tregexpr_interface.html#linepairedseparator>`__),
 initialized with `RegExprModifierS <#modifier_defs>`__ value.
 
@@ -172,41 +171,30 @@ Split
 
 Split AInputStr into APieces by r.e. occurencies
 
-Internally calls ``Exec[Next]``
+Internally calls Exec_ / ExecNext_
 
-::
+Replace, ReplaceEx
+~~~~~~~~~~~~~~~~~~
 
-    function Replace (AInputStr : RegExprString; const AReplaceStr : RegExprString;
-      AUseSubstitution : boolean = False) : RegExprString;
+Returns the string with r.e. occurencies replaced by the replace string.
 
-    function Replace (AInputStr : RegExprString;
-      AReplaceFunc : TRegExprReplaceFunction) : RegExprString;
-
-    function ReplaceEx (AInputStr : RegExprString;
-      AReplaceFunc : TRegExprReplaceFunction)  : RegExprString;
-
-Returns AInputStr with r.e. occurencies replaced by AReplaceStr
-
-If AUseSubstitution is true, then AReplaceStr will be used
-
+If ``AUseSubstitution`` is true, then ``AReplaceStr`` will be used
 as template for Substitution methods.
-
-For example:
 
 ::
 
     Expression := '({-i}block|var)\\s\*\\(\\s\*(\[^ \]\*)\\s\*\\)\\s\*';
     Replace ('BLOCK( test1)', 'def "$1" value "$2"', True);
 
-  will return:  def ‘BLOCK’ value ‘test1’
+    will return:  def ‘BLOCK’ value ‘test1’
 
 ::
 
     Replace ('BLOCK( test1)', 'def "$1" value "$2"', False)
 
-  will return:  def “$1” value “$2”
+    will return:  def “$1” value “$2”
 
-Internally calls Exec[Next]
+Internally calls Exec_ / ExecNext_
 
 Overloaded version and ReplaceEx operate with call-back function,
 
@@ -215,16 +203,14 @@ so you can implement really complex functionality.
 SubExprMatchCount
 ~~~~~~~~~~~~~~~~~
 
-Number of subexpressions has been found in last Exec\* call.
+Number of subexpressions has been found in last Exec_ / ExecNext_ call.
 
 If there are no subexpr. but whole expr was found (Exec\* returned
-True), then SubExprMatchCount=0, if no subexpressions nor whole r.e.
-found (Exec\* returned false) then SubExprMatchCount=-1.
+True), then ``SubExprMatchCount=0``, if no subexpressions nor whole r.e.
+found (Exec_ / ExecNext_ returned false) then ``SubExprMatchCount=-1``.
 
 Note, that some subexpr. may be not found and for such subexpr.
-MathPos=MatchLen=-1 and Match=’’.
-
-For example:
+``MathPos=MatchLen=-1`` and ``Match=’’``.
 
 ::
 
@@ -239,7 +225,6 @@ For example:
 
     Exec ('7') - return False: SubExprMatchCount=-1
 
-. 
 
 MatchPos
 ~~~~~~~~
@@ -264,54 +249,48 @@ input string.
 Match
 ~~~~~
 
-::
-
-    == copy (InputString, MatchPos [Idx], MatchLen [Idx])
-
-Returns ’’ if in r.e. no such subexpr. or this subexpr. not found in
-input string.
+Returns ``’’`` if in r.e. no such subexpression or this subexpression
+was not found in the input string.
 
 LastError
 ~~~~~~~~~
 
-Returns ID of last error, 0 if no errors (unusable if Error method
-raises exception) and clear internal status into 0 (no errors).
+Returns ``ID`` of last error, ``0`` if no errors (unusable if ``Error`` method
+raises exception) and clear internal status into ``0`` (no errors).
 
 ErrorMsg
 ~~~~~~~~
 
-Returns Error message for error with ID = AErrorID.
+Returns ``Error`` message for error with ``ID = AErrorID``.
 
-::
-
-    property CompilerErrorPos : integer; // ReadOnly
+CompilerErrorPos
+~~~~~~~~~~~~~~~~
 
 Returns pos in r.e. there compiler stopped.
 
-Usefull for error diagnostics
+Useful for error diagnostics
 
 SpaceChars
 ~~~~~~~~~~
 
-Contains chars, treated as \\s (initially filled with RegExprSpaceChars
+Contains chars, treated as ``\s`` (initially filled with RegExprSpaceChars_
 global constant)
 
 WordChars
 ~~~~~~~~~
 
-Contains chars, treated as \\w (initially filled with RegExprWordChars
+Contains chars, treated as ``\w`` (initially filled with RegExprWordChars_
 global constant)
 
- 
 
 LineSeparators
 ~~~~~~~~~~~~~~
 
 line separators (like ``\n`` in Unix), initially filled with
-RegExprLineSeparators global constant)
+RegExprLineSeparators_ global constant)
 
 see also `about line
-separators <regexp_syntax.html#syntax_line_separators>`__
+separators <regexp_syntax.html#line-separators>`__
 
 LinePairedSeparator
 ~~~~~~~~~~~~~~~~~~~
@@ -322,10 +301,14 @@ must contain exactly two chars or no chars at all, initially filled with
 RegExprLinePairedSeparator global constant)
 
 see also `about line
-separators <regexp_syntax.html#syntax_line_separators>`__
+separators <regexp_syntax.html#line-separators>`__
 
-For example, if you need Unix-style behaviour, assign LineSeparators :=
-#\ :math:`a (newline character) and LinePairedSeparator := '' (empty string), if you want to accept as line separators only `\x0D\x0A` but not `\x0D` or `\x0A` alone, then assign `LineSeparators := ''` (empty string) and `LinePairedSeparator := #`\ d#$a`.
+For example, if you need Unix-style behaviour, assign
+``LineSeparators := #$a`` and ``LinePairedSeparator := ''`` (empty string).
+
+If you want to accept as line separators only ``\x0D\x0A`` but not ``\x0D``
+or ``\x0A`` alone, then assign ``LineSeparators := ''`` (empty string) and
+``LinePairedSeparator := #$d#$a``.
 
 By default ‘mixed’ mode is used (defined in
 RegExprLine[Paired]Separator[s] global constants):
@@ -350,7 +333,7 @@ default)
 Compile
 ~~~~~~~
 
-[Re]compile r.e. Usefull for example for GUI r.e. editors (to check all
+[Re]compile r.e. Useful for example for GUI r.e. editors (to check all
 properties validity).
 
 Dump
@@ -361,127 +344,118 @@ dump a compiled regexp in vaguely comprehensible form
 Global constants
 ----------------
 
-EscChar = ‘\\’;  // ‘Escape’-char (‘\\’ in common r.e.) used for
-escaping metachars (\w, \\d etc).
+EscChar
+~~~~~~~
 
- // it’s may be usefull to redefine it if you are using C++ Builder - to
-avoide ugly constructions
+Escape-char, by default ``\``.
 
- // like ‘\\\w+\\\\\\w+\\.\\w+’ - just define EscChar=‘/’ and use
-‘/w+\/w+/./w+’
+RegExprModifierI
+~~~~~~~~~~~~~~~~
 
-  Modifiers default values:
+`Modifier i <regexp_syntax.html#i>`_ default value
 
-::
+RegExprModifierR
+~~~~~~~~~~~~~~~~
 
-    RegExprModifierI : boolean = False;                // TRegExpr.ModifierI
-    RegExprModifierR : boolean = True;                // TRegExpr.ModifierR
-    RegExprModifierS : boolean = True;                // TRegExpr.ModifierS
-    RegExprModifierG : boolean = True;                // TRegExpr.ModifierG
-    RegExprModifierM : boolean = False;                //TRegExpr.ModifierM
-    RegExprModifierX : boolean = False;                //TRegExpr.ModifierX
+`Modifier r <regexp_syntax.html#r>`_ default value
 
+RegExprModifierS
+~~~~~~~~~~~~~~~~
+
+`Modifier s <regexp_syntax.html#s>`_ default value
+
+RegExprModifierG
+~~~~~~~~~~~~~~~~
+
+`Modifier g <regexp_syntax.html#g>`_ default value
+
+RegExprModifierM
+~~~~~~~~~~~~~~~~
+
+`Modifier m <regexp_syntax.html#m>`_ default value
+
+RegExprModifierX
+~~~~~~~~~~~~~~~~
+
+`Modifier x <regexp_syntax.html#x>`_ default value
+
+RegExprSpaceChars
+~~~~~~~~~~~~~~~~~
+
+Default for SpaceChars_ property
  
 
-RegExprSpaceChars : RegExprString =
-‘’#\ :math:`9\#`\ A#\ :math:`D\#`\ C;
+RegExprWordChars
+~~~~~~~~~~~~~~~~
 
- // default for SpaceChars property
-
- 
-
-RegExprWordChars : RegExprString =
-
-   ‘0123456789’
-
- + ‘abcdefghijklmnopqrstuvwxyz’
-
- + ‘ABCDEFGHIJKLMNOPQRSTUVWXYZ\_’;
-
- // default value for WordChars property
+Default value for WordChars_ property
 
  
+RegExprLineSeparators
+~~~~~~~~~~~~~~~~~~~~~
 
-RegExprLineSeparators : RegExprString =
+Default value for LineSeparators_ property
 
- 
-#\ :math:`d\#`\ a{\ :math:`IFDEF UniCode}\#`\ b#$c#$2028#$2029#\ :math:`85{`\ ENDIF};
+RegExprLinePairedSeparator
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- // default value for LineSeparators property
+Default value for LinePairedSeparator_ property
 
-RegExprLinePairedSeparator : RegExprString =
 
-  #\ :math:`d\#`\ a;
+RegExprInvertCaseFunction
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
- // default value for LinePairedSeparator property
-
- 
-
-RegExprInvertCaseFunction : TRegExprInvertCaseFunction =
-TRegExpr.InvertCaseFunction;
-
-// default for InvertCase property
+Default for InvertCase_ property
 
 Global functions
 ----------------
 
-::
+ExecRegExpr
+~~~~~~~~~~~
 
-    function ExecRegExpr (const ARegExpr, AInputStr : string) : boolean;
+true if the string matches the regular expression
 
-true if string AInputString match regular expression ARegExpr
+SplitRegExpr
+~~~~~~~~~~~~
 
-! will raise exeption if syntax errors in ARegExpr
+Splits the string by r.e. occurencies
 
-::
+ReplaceRegExpr
+~~~~~~~~~~~~~~
 
-    procedure SplitRegExpr (const ARegExpr, AInputStr : string; APieces : TStrings);
+Returns the string with r.e. occurencies replaced by the ``AReplaceStr``.
 
-Split AInputStr into APieces by r.e. ARegExpr occurencies
-
-::
-
-    function ReplaceRegExpr (const ARegExpr, AInputStr, AReplaceStr : string;
-      AUseSubstitution : boolean = False) : string;
-
-Returns AInputStr with r.e. occurencies replaced by AReplaceStr.
-
-If AUseSubstitution is true, then AReplaceStr will be used as template
-for Substitution methods.
-
-For example:
+If ``AUseSubstitution` is true, then ``AReplaceStr`` will be used as template
+for ``Substitution methods``.
 
 ::
 
     ReplaceRegExpr ('({-i}block|var)\\s\*\\(\\s\*(\[^ \]\*)\\s\*\\)\\s\*',
       'BLOCK( test1)', 'def "$1" value "$2"', True)
 
-will return:  def ‘BLOCK’ value ‘test1’
+    return  def ‘BLOCK’ value ‘test1’
 
 ::
 
     ReplaceRegExpr ('({-i}block|var)\\s\*\\(\\s\*(\[^ \]\*)\\s\*\\)\\s\*',
       'BLOCK( test1)', 'def "$1" value "$2"')
 
- will return:  def “$1” value “$2”
+    return  def “$1” value “$2”
 
-::
-
-    function QuoteRegExprMetaChars (const AStr : string) : string;
+QuoteRegExprMetaChars
+~~~~~~~~~~~~~~~~~~~~~
 
 Replace all metachars with its safe representation, for example
-‘abc\ :math:`cd.(' converts into 'abc\\`\ cd\.\(’
+``abc'cd.(`` converts into ``abc\'cd\.\(``
 
 This function usefull for r.e. autogeneration from user input
 
-::
+RegExprSubExpressions
+~~~~~~~~~~~~~~~~~~~~~
 
-    function RegExprSubExpressions (const ARegExpr : string;
-      ASubExprs : TStrings; AExtendedSyntax : boolean = False) : integer;
+Makes list of subexpressions found in ``ARegExpr``
 
-Makes list of subexpressions found in ARegExpr r.e.
-
-In ASubExps every item represent subexpression, from first to last, in
+In ``ASubExps`` every item represent subexpression, from first to last, in
 format:
 
  String - subexpression text (without ‘()’)
@@ -492,29 +466,22 @@ exists! (first position is 1)
  high word of Object - length, including starting ‘(’ and ending ‘)’ if
 exist!
 
-AExtendedSyntax - must be True if modifier /x will be On while using the
-r.e.
+``AExtendedSyntax`` - must be ``True`` if modifier ``/x`` will be ``On`` while
+using the r.e.
 
 Usefull for GUI editors of r.e. etc (you can find example of using in
 `TestRExp.dpr <#regexpstudio.html>`__ project)
 
-Result code        Meaning
+=========== =======
+Result code Meaning
+=========== =======
+0           Success. No unbalanced brackets was found
+-1          there are not enough closing brackets ``)``
+-(n+1)      at position n was found opening ``[`` without corresponding closing ``]``
+n           at position n was found closing bracket ``)`` without corresponding opening ``(``
+=========== ======= 
 
---------------
-
-0                Success. No unbalanced brackets was found;
-
--1                there are not enough closing brackets ‘)’;
-
--(n+1)                at position n was found opening ‘[’ without
-corresponding closing ‘]’;
-
-n                at position n was found closing bracket ‘)’ without
-corresponding opening ‘(’.
-
- 
-
-If Result <> 0, then ASubExprs can contain empty items or illegal ones
+If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal ones
 
 Exception type
 --------------
@@ -531,7 +498,8 @@ Default error handler of TRegExpr raise exception:
        CompilerErrorPos : integer; // Position in r.e. where compilation error occured
      end;
 
- ### How to use Unicode
+Unicode
+-------
 
 TRegExpr now supports UniCode, but it works very slow :(
 
