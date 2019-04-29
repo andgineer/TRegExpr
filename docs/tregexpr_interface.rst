@@ -470,7 +470,7 @@ exist!
 using the r.e.
 
 Usefull for GUI editors of r.e. etc (you can find example of using in
-`REStudioMain.pas <https://github.com/masterandrey/TRegExpr/blob/master/restudio/REStudioMain.pas>`_)
+`REStudioMain.pas <https://github.com/masterandrey/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMain.pas#L474>`_)
 
 =========== =======
 Result code Meaning
