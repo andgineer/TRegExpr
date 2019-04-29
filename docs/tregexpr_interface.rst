@@ -470,7 +470,7 @@ exist!
 using the r.e.
 
 Usefull for GUI editors of r.e. etc (you can find example of using in
-`TestRExp.dpr <#regexpstudio.html>`__ project)
+`REStudioMain.pas <https://github.com/masterandrey/TRegExpr/blob/master/restudio/REStudioMain.pas>`_)
 
 =========== =======
 Result code Meaning
