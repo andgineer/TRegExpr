@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Download translation results from transiflex to locale/
+# Download translation results from transifex to locale/
 #
 tx pull --all
 
