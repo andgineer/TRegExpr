@@ -1,9 +1,6 @@
-Important note
---------------
+Regular expressions
+===================
 
-Below is the description of regular expressions implemented in freeware
-library `TRegExpr <http://regexpstudio.com>`__. The library was widely
-used in many free and commertial software products.
 
 Introduction
 ------------
@@ -11,121 +8,115 @@ Introduction
 Regular Expressions are a widely-used method of specifying patterns of
 text to search for. Special metacharacters allow you to specify, for
 instance, that a particular string you are looking for occurs at the
-beginning or end of a line, or contains n recurrences of a certain
-character.
-
-Regular expressions look ugly for novices, but really they are very
-simple (well, usually simple ;) ), handly and powerfull tool.
+beginning or at the end of a line, or contains ``n`` recurrences of a certain
+symbol.
 
 I recommend you to play with regular expressions using Windows
 `REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__
-- it’ll help you to uderstand main conceptions. Moreover, there are many
-predefined examples with comments included into repository of R.e.
-visual debugger.
+- it’ll help you to uderstand main conceptions.
 
-Let’s start our learning trip!
+Below is complete regular expressions cheat sheet just on one page.
 
 Simple matches
 --------------
 
-Any single character matches itself, unless it is a metacharacter with a
-special meaning described below.
+Any single character matches itself.
 
 A series of characters matches that series of characters in the target
 string, so the pattern ``bluh`` would match ``bluh`` in the target
-string. Quite simple, eh ?
-
-You can cause characters that normally function as metacharacters or
-escape sequences to be interpreted literally by ‘escaping’ them by
-preceding them with a backslash ``\``, for instance: metacharacter ``^``
-match beginning of string, but ``\^`` match character ``^``, ``\\``
-match ``\`` and so on.
-
-Examples:
-^^^^^^^^^
+string.
 
 ::
 
-     foobar         matchs string 'foobar'
-     \^FooBarPtr     matchs '^FooBarPtr'
+     foobar         matches string 'foobar'
 
-Note for C++ Builder users
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Please, read in FAQ answer on question `Why many r.e. work wrong in
-Borland C++ Builder? <faq.html#cppbescchar>`__
-
-Escape sequences
-----------------
-
-Characters may be specified using a escape sequences syntax much like
-that used in C and Perl: ``\n`` matches a newline, ``\t`` a tab, etc.
-More generally, ``\xnn``, where nn is a string of hexadecimal digits,
-matches the character whose ASCII value is nn. If you need wide
-(Unicode) character code, you can use ``\x{nnnn}``, where ``nnnn`` - one
-or more hexadecimal digits.
+If you want to use some symbol with special meaning (see below) as plain
+symbol you have to "escape" it with backslash ``\``:
 
 ::
 
-     \xnn     char with hex code nn
-     \x{nnnn} char with hex code nnnn (one byte for plain text and two bytes for Unicode
-     \t       tab (HT/TAB), same as \x09
-     \n       newline (NL), same as \x0a
-     \r       car.return (CR), same as \x0d
-     \f       form feed (FF), same as \x0c
-     \a       alarm (bell) (BEL), same as \x07
-     \e       escape (ESC), same as \x1b
+     \^FooBarPtr     matches '^FooBarPtr'
 
-.. _examples-1:
+Non-Printable Characters
+------------------------
 
-Examples:
-^^^^^^^^^
+============ ============================================================================================
+``\xnn``     matches character with hex code ``nn``
+``\x{nnnn}`` matches character with hex code ``nnnn`` (one byte for plain text and two bytes for Unicode)
+============ ============================================================================================
 
 ::
 
      foo\x20bar   matchs 'foo bar' (note space in the middle)
-     \tfoobar     matchs 'foobar' predefined by tab
+     \tfoobar     matchs 'foobar' preceded by TAB
 
-Character classes
------------------
+There are a number of predefined non-printable character classes
+just like in ``C`` language:
 
-You can specify a character class, by enclosing a list of characters in
-``[]``, which will match any one character from the list.
+======== ==========================================================================
+``\t``   tab (HT/TAB), same as ``\x09``
+``\n``   newline (NL), same as ``\x0a``
+``\r``   car.return (CR), same as ``\x0d``
+``\f``   form feed (FF), same as ``\x0c``
+``\a``   alarm (BEL), same as ``\x07``
+``\e``   escape (ESC), same as ``\x1b``
+======== ==========================================================================
+
+User Character Classes
+----------------------
+
+You can specify character class, by enclosing a list of characters in
+``[]``. This class will match any **one** character listed inside ``[]``.
 
 If the first character after the ``[`` is ``^``, the class matches any
-character not in the list.
-
-.. _examples-2:
-
-Examples:
-^^^^^^^^^
+character **but** characters listed in the class.
 
 ::
 
      foob[aeiou]r   finds strings 'foobar', 'foober' etc. but not 'foobbr', 'foobcr' etc.
-     foob[^aeiou]r find strings 'foobbr', 'foobcr' etc. but not 'foobar', 'foober' etc.
+     foob[^aeiou]r  find strings 'foobbr', 'foobcr' etc. but not 'foobar', 'foober' etc.
 
 Within a list, the ``-`` character is used to specify a range, so that
-a-z represents all characters between ``a`` and ``z``, inclusive.
+``a-z`` represents all characters between ``a`` and ``z``, inclusive.
 
 If you want ``-`` itself to be a member of a class, put it at the start
 or end of the list, or escape it with a backslash. If you want ``]`` you
 may place it at the start of list or escape it with a backslash.
 
-.. _examples-3:
-
-Examples:
-^^^^^^^^^
-
 ::
 
      [-az]     matchs 'a', 'z' and '-'
      [az-]     matchs 'a', 'z' and '-'
-     [a\-z]     matchs 'a', 'z' and '-'
-     [a-z]     matchs all twenty six small characters from 'a' to 'z'
+     [a\-z]    matchs 'a', 'z' and '-'
+     [a-z]     matchs all characters from 'a' to 'z'
      [\n-\x0D] matchs any of #10,#11,#12,#13.
-     [\d-t]     matchs any digit, '-' or 't'.
-     []-a]     matchs any char from ']'..'a'.
+     []-a]     matchs any char in ']'..'a'.
+
+Predefined Character classes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+======     =========================================
+``\w``     an alphanumeric character (including "_")
+``\W``     a nonalphanumeric
+``\d``     a numeric character
+``\D``     a non-numeric
+``\s``     any space (same as [ \t\n\r\f])
+``\S``     a non space
+======     =========================================
+
+You may use ``\w``, ``\d`` and ``\s`` within `user character classes <User Character Classes_>`_.
+
+::
+
+     foob\dr     matchs strings like 'foob1r', ''foob6r' and so on but not 'foobar', 'foobbr' and so on
+     foob[\w\s]r matchs strings like 'foobar', 'foob r', 'foobbr' and so on but not 'foob1r', 'foob=r' and so on
+
+TRegExpr uses properties
+`SpaceChars <tregexpr_interface.html#SpaceChars>`_ and
+`WordChars <tregexpr_interface.html#tregexpr.wordchars>`__ to define
+character classes ``\w``, ``\W``, ``\s``, ``\S``, so you can easely
+redefine it.
+
 
 Metacharacters
 --------------
@@ -134,26 +125,21 @@ Metacharacters are special characters which are the essence of Regular
 Expressions. There are different types of metacharacters, described
 below.
 
-Metacharacters - line separators
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Line separators
+~~~~~~~~~~~~~~~
+
+======  =====================
+``^``   start of line
+``$``   end of line
+``\A``  start of text
+``\Z``  end of text
+``.``   any character in line
+======  =====================
 
 ::
 
-     ^     start of line
-     $     end of line
-     \A     start of text
-     \Z     end of text
-     .     any character in line
-
-.. _examples-4:
-
-Examples:
-^^^^^^^^^
-
-::
-
-     ^foobar     matchs string 'foobar' only if it's at the beginning of line
-     foobar$     matchs string 'foobar' only if it's at the end of line
+     ^foobar    matchs string 'foobar' only if it's at the beginning of line
+     foobar$    matchs string 'foobar' only if it's at the end of line
      ^foobar$   matchs string 'foobar' only if it's the only string in line
      foob.r     matchs strings like 'foobar', 'foobbr', 'foob1r' and so on
 
@@ -161,10 +147,10 @@ The ``^`` metacharacter by default is only guaranteed to match at the
 beginning of the input string/text, the ``$`` metacharacter only at the
 end. Embedded line separators will not be matched by ``^`` or ``$``.
 
-You may, however, wish to treat a string as a multi-line buffer, such
+You may, however, wish to treat a string as a multi-line text, such
 that the ``^`` will match after any line separator within the string,
-and ``$`` will match before any line separator. you can do this by
-switching On the `modifier /m <regexp_syntax.html#modifier_m>`__.
+and ``$`` will match before any line separator. You can do this by
+switching ``On`` the `modifier /m <regexp_syntax.html#modifier_m>`__.
 
 The ``\A`` and ``\Z`` are just like ``^`` and ``$``, except that they
 won’t match multiple times when the `modifier
@@ -199,7 +185,7 @@ then also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or
 version <tregexpr_interface.html#unicode>`__ of TRegExpr, then also
 ``\x2028`` and  ``\x2029`` and ``\x0B`` and ``\x0C`` and ``\x85``).
 
-Note that ``^.*$`` (an empty line pattern) doesnot match the empty
+Note that ``^.*$`` (an empty line pattern) does not match the empty
 string within the sequence ``\x0D\x0A``, but matchs the empty string
 within the sequence ``\x0A\x0D``.
 
@@ -211,38 +197,8 @@ you can use only Unix style separators ``\n`` or only DOS/Windows style
 ``\r\n`` or mix them together (as described above and used by default)
 or define your own line separators!
 
-Metacharacters - predefined classes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-::
-
-     \w     an alphanumeric character (including "_")
-     \W     a nonalphanumeric
-     \d     a numeric character
-     \D     a non-numeric
-     \s     any space (same as [ \t\n\r\f])
-     \S     a non space
-
-You may use ``\w``, ``\d`` and ``\s`` within custom character classes.
-
-.. _examples-5:
-
-Examples:
-^^^^^^^^^
-
-::
-
-     foob\dr     matchs strings like 'foob1r', ''foob6r' and so on but not 'foobar', 'foobbr' and so on
-     foob[\w\s]r matchs strings like 'foobar', 'foob r', 'foobbr' and so on but not 'foob1r', 'foob=r' and so on
-
-TRegExpr uses properties
-`SpaceChars <tregexpr_interface.html#tregexpr.spacechars>`__ and
-`WordChars <tregexpr_interface.html#tregexpr.wordchars>`__ to define
-character classes ``\w``, ``\W``, ``\s``, ``\S``, so you can easely
-redefine it.
-
-Metacharacters - word boundaries
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Word boundaries
+~~~~~~~~~~~~~~~
 
 ::
 
@@ -254,8 +210,8 @@ A word boundary (``\b``) is a spot between two characters that has a
 order), counting the imaginary characters off the beginning and end of
 the string as matching a ``\W``.
 
-Metacharacters - iterators
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Iterators
+~~~~~~~~~
 
 Any item of a regular expression may be followed by another type of
 metacharacters - iterators. Using this metacharacters you can specify
@@ -264,17 +220,17 @@ subexpression.
 
 ::
 
-     *     zero or more ("greedy"), similar to {0,}
-     +   one or more ("greedy"), similar to {1,}
-     ?   zero or one ("greedy"), similar to {0,1}
-     {n}   exactly n times ("greedy")
+     *      zero or more ("greedy"), similar to {0,}
+     +      one or more ("greedy"), similar to {1,}
+     ?      zero or one ("greedy"), similar to {0,1}
+     {n}    exactly n times ("greedy")
      {n,}   at least n times ("greedy")
-     {n,m} at least n but not more than m times ("greedy")
+     {n,m}  at least n but not more than m times ("greedy")
      *?     zero or more ("non-greedy"), similar to {0,}?
      +?     one or more ("non-greedy"), similar to {1,}?
      ??     zero or one ("non-greedy"), similar to {0,1}?
      {n}?   exactly n times ("non-greedy")
-     {n,}? at least n times ("non-greedy")
+     {n,}?  at least n times ("non-greedy")
      {n,m}? at least n but not more than m times ("non-greedy")
 
 So, digits in curly brackets of the form ``{n,m}``, specify the minimum
@@ -287,19 +243,14 @@ down r.e. execution.
 If a curly bracket occurs in any other context, it is treated as a
 regular character.
 
-.. _examples-6:
-
-Examples:
-^^^^^^^^^
-
 ::
 
-     foob.*r     matchs strings like 'foobar',  'foobalkjdflkj9r' and 'foobr'
-     foob.+r     matchs strings like 'foobar', 'foobalkjdflkj9r' but not 'foobr'
-     foob.?r     matchs strings like 'foobar', 'foobbr' and 'foobr' but not 'foobalkj9r'
-     fooba{2}r   matchs the string 'foobaar'
-     fooba{2,}r matchs strings like 'foobaar', 'foobaaar', 'foobaaaar' etc.
-     fooba{2,3}r matchs strings like 'foobaar', or 'foobaaar'  but not 'foobaaaar'
+     foob.*r     matches strings like 'foobar',  'foobalkjdflkj9r' and 'foobr'
+     foob.+r     matches strings like 'foobar', 'foobalkjdflkj9r' but not 'foobr'
+     foob.?r     matches strings like 'foobar', 'foobbr' and 'foobr' but not 'foobalkj9r'
+     fooba{2}r   matches the string 'foobaar'
+     fooba{2,}r  matches strings like 'foobaar', 'foobaaar', 'foobaaaar' etc.
+     fooba{2,3}r matches strings like 'foobaar', or 'foobaaar'  but not 'foobaaaar'
 
 A little explanation about “greediness”. “Greedy” takes as many as
 possible, “non-greedy” takes as few as possible. For example, ``b+`` and
@@ -310,8 +261,8 @@ possible, “non-greedy” takes as few as possible. For example, ``b+`` and
 You can switch all iterators into “non-greedy” mode (see the `modifier
 /g <regexp_syntax.html#modifier_g>`__).
 
-Metacharacters - alternatives
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alternatives
+~~~~~~~~~~~~
 
 You can specify a series of alternatives for a pattern using ``|`` to
 separate them, so that fee|fie|foe will match any of ``fee``, ``fie``,
@@ -336,15 +287,12 @@ Also remember that ``|`` is interpreted as a literal within square
 brackets, so if you write ``[fee|fie|foe]`` you’re really only matching
 ``[feio|]``.
 
-.. _examples-7:
+::
 
-Examples:
-^^^^^^^^^
+    foo(bar|foo) matchs strings ‘foobar’ or ‘foofoo’.
 
- foo(bar|foo) matchs strings ‘foobar’ or ‘foofoo’.
-
-Metacharacters - subexpressions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Subexpressions
+~~~~~~~~~~~~~~
 
 The bracketing construct ``( ... )`` may also be used for define r.e.
 subexpressions (after parsing you can find subexpression positions,
@@ -361,30 +309,20 @@ First subexpression has number ``1`` (whole r.e. match has number ``0``
 `TRegExpr.Substitute <tregexpr_interface.html#tregexpr.substitute>`__ as
 ``$0`` or ``$&``).
 
-.. _examples-8:
-
-Examples:
-^^^^^^^^^
-
 ::
 
      (foobar){8,10} matchs strings which contain 8, 9 or 10 instances of the 'foobar'
      foob(\[0-9\]|a+)r matchs 'foob0r', 'foob1r' , 'foobar', 'foobaar', 'foobaar' etc.
 
-Metacharacters - backreferences
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Backreferences
+~~~~~~~~~~~~~~
 
 Metacharacters ``\1`` through ``\9`` are interpreted as backreferences.
-``\<n>`` matches previously matched subexpression ``#<n>``.
-
-.. _examples-9:
-
-Examples:
-^^^^^^^^^
+``\n`` matches previously matched subexpression ``#n``.
 
 ::
 
-     (.)\1+         matchs 'aaaa' and 'cc'.
+     (.)\1+        matchs 'aaaa' and 'cc'.
      (.+)\1+       also match 'abab' and '123123'
 
  ``(['"]?)(\d+)\1`` matchs ``"13"`` (in double quotes), or ``'4'`` (in
@@ -393,70 +331,64 @@ single quotes) or ``77`` (without quotes) etc
 Modifiers
 ---------
 
-Modifiers are for changing behaviour of TRegExpr.
+Modifiers are for changing behaviour of ``TRegExpr``.
 
-There are many ways to set up modifiers.
+There are two ways to set up modifiers:
 
-Any of these modifiers may be embedded within the regular expression
-itself using the `(?…) <regexp_syntax.html#inline_modifiers>`__
+1)
+Embed within the regular expression using the `(?…) <regexp_syntax.html#inline_modifiers>`__
 construct.
 
-Also, you can assign to appropriate TRegExpr properties
-(`ModifierX <tregexpr_interface.html#tregexpr.modifier_x>`__ for example
-to change /x, or ModifierStr to change all modifiers together). The
+2)
+Assign to appropriate ``TRegExpr`` property
+(`Modifier* <tregexpr_interface.html#tregexpr.modifier_x>`__. The
 default values for new instances of TRegExpr object defined in `global
-variables <#modifier_defs>`__, for example global variable
-RegExprModifierX defines value of new TRegExpr instance ModifierX
-property.
+variables <tregexpr_interface.html>`__. For example global variable
+``RegExprModifierX`` defines default value for ``ModifierX`` property.
 
-  ### i
+i
+~
 
-Do case-insensitive pattern matching (using installed in you system
+Case-insensitive pattern matching (using installed in you system
 locale settings), see also
 `InvertCase <tregexpr_interface.html#invertcase>`__.
 
- ### m
+m
+~
 
-Treat string as multiple lines. That is, change ``^`` and ``$`` from
-matching at only the very start or end of the string to the start or end
-of any line anywhere within the string, see also `Line
+Treat string as multiple lines. So ``^`` and ``$`` matches the start or end
+of any line anywhere within the string.
+
+See also `Line
 separators <tregexpr_interface.html#line_separators>`__.
 
- ### s
+s
+~
 
-Treat string as single line. That is, change ``.`` to match any
-character whatsoever, even a line separators (see also `Line
-separators <tregexpr_interface.html#line_separators>`__), which it
+Treat string as single line. So ``.`` matches any
+character whatsoever, even a line separators.
+
+See also `Line
+separators <tregexpr_interface.html#line_separators>`__, which it
 normally would not match.
 
- ### g
+g
+~
 
 Non standard modifier. Switching it Off you’ll switch all following
 operators into non-greedy mode (by default this modifier is On). So, if
 modifier ``/g`` is Off then ``+`` works as ``+?``, ``\*`` as ``\*?`` and
 so on
 
- ### x
+x
+~
 
-Extend your pattern’s legibility by permitting whitespace and comments
-(see explanation below).
+Tells the ``TRegExpr`` to ignore whitespace that
+is neither backslashed nor within a character class. You can use this to
+break up your regular expression into more readable parts.
 
- ### r
-
-Non-standard modifier. If is set then range а-я additional include
-russian letter ``ё``, ``А-Я``  additional include ``Ё``, and ``а-Я``
-include all russian symbols.
-
-Sorry for foreign users, but it’s set by default. If you want switch if
-off by default - set false to global variable
-`RegExprModifierR <#modifier_defs>`__.
-
-The `modifier /x <regexp_syntax.html#modifier_x>`__ itself needs a
-little more explanation. It tells the TRegExpr to ignore whitespace that
-is neither backslashed nor within a character class. you can use this to
-break up your regular expression into (slightly) more readable parts.
 The ``#`` character is also treated as a metacharacter introducing a
-comment, for example:
+comment.
 
 ::
 
@@ -468,9 +400,19 @@ comment, for example:
 
 This also means that if you want real whitespace or ``#`` characters in
 the pattern (outside a character class, where they are unaffected by
-``/x``), that you’ll either have to escape them or encode them using
-octal or hex escapes. Taken together, these features go a long way
-towards making regular expressions text more readable.
+``/x``), you’ll either have to escape them or encode them using
+octal or hex escapes.
+
+r
+~
+
+Non-standard modifier. If is set then range ``а-я`` includes
+also ``ё``. And ``А-Я`` includes also ``Ё``. And ``а-Я``
+includes all russian symbols.
+
+The modifier is set `On` by default. If you want switch if
+``off`` by default - set false to global variable
+`RegExprModifierR <#modifier_defs>`__.
 
 Perl extensions
 ---------------
@@ -482,17 +424,12 @@ You may use it into r.e. for modifying modifiers by the fly. If this
 construction inlined into subexpression, then it effects only into this
 subexpression
 
-.. _examples-10:
-
-Examples:
-^^^^^^^^^
-
 ::
 
      (?i)Saint-Petersburg       matchs 'Saint-petersburg' and 'Saint-Petersburg'
-     (?i)Saint-(?-i)Petersburg matchs 'Saint-Petersburg' but not 'Saint-petersburg'
-     (?i)(Saint-)?Petersburg   matchs 'Saint-petersburg' and 'saint-petersburg'
-     ((?i)Saint-)?Petersburg   matchs 'saint-Petersburg', but not 'saint-petersburg'
+     (?i)Saint-(?-i)Petersburg  matchs 'Saint-Petersburg' but not 'Saint-petersburg'
+     (?i)(Saint-)?Petersburg    matchs 'Saint-petersburg' and 'saint-petersburg'
+     ((?i)Saint-)?Petersburg    matchs 'saint-Petersburg', but not 'saint-petersburg'
 
 (?#text)
 ~~~~~~~~

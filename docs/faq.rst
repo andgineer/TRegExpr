@@ -27,8 +27,8 @@ I have a problem since no header file (``.h`` or ``.hpp``) is available.
 **Answer**
 
 -  Add ``RegExpr.pas`` to ``bcb`` project.
--  Compile project. This generates the header file RegExpr.hpp.
--  Now one can write code which uses the RegExpr unit.
+-  Compile project. This generates the header file ``RegExpr.hpp``.
+-  Now you can write code which uses the ``RegExpr`` unit.
 -  Don't forget to add  ``#include “RegExpr.hpp”`` where needed.
 -  Don't forget to replace all ``\`` in regular expressions with ``\\``
    or redefined `EscChar <tregexpr_interface.html#escchar>`__ const.
@@ -60,7 +60,7 @@ For backward compatibility, `modifier
 Switch it Off and ``.`` will match any but `Line
 separators <regexp_syntax.html#syntax_line_separators>`__ - exactly as you wish.
 
-BTW I suggest ``<font ([^\n>]*)>``, in Match[1] will be the URL.
+BTW I suggest ``<font ([^\n>]*)>``, in ``Match[1]`` will be the URL.
 
 Why does TRegExpr return more then I expect?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -108,6 +108,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/regexp_syntax.rst">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/tregexpr_interface.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/tregexpr_interface.rst">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/examples/Text2HTML/Example.txt">
           <value>
             <set />

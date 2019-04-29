@@ -1,14 +1,17 @@
-Public methods and properties of TRegExpr class
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TRegExpr interface
+==================
+
+TRegExpr class
+--------------
 
 VersionMajor, VersionMinor
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Return major and minor version, for example, for v. 0.944 VersionMajor =
 0 and VersionMinor = 944
 
 Expression
-^^^^^^^^^^
+~~~~~~~~~~
 
 Regular expression.
 
@@ -23,7 +26,7 @@ If any errors while [re]compilation occures, Error method is called (by
 default Error raises exception - see below)
 
 ModifierStr
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 Set/get default values of
 `r.e.modifiers <regexp_syntax.html#about_modifiers>`__. Format of the
@@ -35,17 +38,20 @@ unchanged others.
 If you try to set unsupported modifier, Error will be called (by defaul
 Error raises exception ERegExpr).
 
-  #### ModifierI
+ModifierI
+~~~~~~~~~
 
 Modifier /i - (“caseinsensitive”), initialized with
 `RegExprModifierI <#modifier_defs>`__ value.
 
-  #### ModifierR
+ModifierR
+~~~~~~~~~
 
 Modifier /r - (“Russian.syntax extensions), initialized with
 `RegExprModifierR <#modifier_defs>`__ value.
 
-  #### ModifierS
+ModifierS
+~~~~~~~~~
 
 `Modifier /s <regexp_syntax.html#modifier_s>`__ - ‘.’ works as any char
 (else doesn’t match
@@ -53,7 +59,8 @@ Modifier /r - (“Russian.syntax extensions), initialized with
 `LinePairedSeparator <tregexpr_interface.html#linepairedseparator>`__),
 initialized with `RegExprModifierS <#modifier_defs>`__ value.
 
-  #### ModifierG
+ModifierG
+~~~~~~~~~
 
 `Modifier /g <regexp_syntax.html#modifier_g>`__ Switching off modifier
 /g switchs all operators in non-greedy style, so if ModifierG = False,
@@ -61,20 +68,21 @@ then all ‘\*’ works as ‘\*?’, all ‘+’ as ‘+?’ and so on, initial
 with `RegExprModifierG <#modifier_defs>`__ value.
 
 ModifierM
-^^^^^^^^^
+~~~~~~~~~
 
 `Modifier /m <regexp_syntax.html#modifier_m>`__ Treat string as multiple
 lines. That is, change \`^‘and \`$’ from matching at only the very start
 or end of the string to the start or end of any line anywhere within the
 string, initialized with `RegExprModifierM <#modifier_defs>`__ value.
 
-  #### ModifierX
+ModifierX
+~~~~~~~~~
 
 `Modifier /x <regexp_syntax.html#modifier_x>`__ - (“eXtended syntax”),
 initialized with `RegExprModifierX <#modifier_defs>`__ value.
 
 Exec
-^^^^
+~~~~
 
 match a programm against a string AInputString
 
@@ -85,7 +93,7 @@ For Delphi 5 and higher available overloaded versions:
 without parameter already assigned to InputString property value
 
 ExecNext
-^^^^^^^^
+~~~~~~~~
 
 Find next match:
 
@@ -110,7 +118,7 @@ So you always must use something like
 .
 
 ExecPos
-^^^^^^^
+~~~~~~~
 
 finds match for InputString starting from AOffset position
 
@@ -119,7 +127,7 @@ finds match for InputString starting from AOffset position
     AOffset=1 - first char of InputString
 
 InputString
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 returns current input string (from last Exec call or last assign to this
 property).
@@ -127,7 +135,7 @@ property).
 Any assignment to this property clear ``Match*`` properties !
 
 Substitute
-^^^^^^^^^^
+~~~~~~~~~~
 
 Returns ATemplate with ``$&`` or ``$0`` replaced by whole r.e. occurence
 and ``$n`` replaced by occurence of subexpression number ``n``.
@@ -136,27 +144,15 @@ If you want place into template raw ``$`` or ``\\``, use prefix ``\\``.
 
 Special symbols:
 
-+-----------------------------------+-----------------------------------+
-| symbol                            | replaced with                     |
-+===================================+===================================+
-| \\\\                              | just \\                           |
-+-----------------------------------+-----------------------------------+
-| :raw-latex:`\n`                   | #\ :math:`d#`\ a                  |
-|                                   | (:raw-latex:`\r`:raw-latex:`\n `a |
-|                                   | s                                 |
-|                                   | end of line in Windows)           |
-+-----------------------------------+-----------------------------------+
-| :raw-latex:`\l`                   | lowcase one next char             |
-+-----------------------------------+-----------------------------------+
-| :raw-latex:`\L`                   | lowercase all chars after that    |
-+-----------------------------------+-----------------------------------+
-| :raw-latex:`\u |` uppcase one     |                                   |
-| next char                         |                                   |
-+-----------------------------------+-----------------------------------+
-| :raw-latex:`\U`                   | uppercase all chars after that    |
-+-----------------------------------+-----------------------------------+
-
-Example:
+====== ===============================
+symbol replaced with
+``\\`` ``\``
+``\n`` ``\r\n`` end of line in Windows
+``\l`` lowcase one next char
+``\L`` lowercase all chars after that
+``\u`` uppcase one next char
+``\U`` uppercase all chars after that
+====== ===============================
 
 ::
 
@@ -166,15 +162,13 @@ Example:
 If you want to place raw digit after ‘$n’ you must delimit n with curly
 braces ``{}``.
 
-Example:
-
 ::
 
      'a$12bc' -> 'a<Match[12]>bc'
      'a${1}2bc' -> 'a<Match[1]>2bc'.
 
 Split
-^^^^^
+~~~~~
 
 Split AInputStr into APieces by r.e. occurencies
 
@@ -219,7 +213,7 @@ Overloaded version and ReplaceEx operate with call-back function,
 so you can implement really complex functionality.
 
 SubExprMatchCount
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 Number of subexpressions has been found in last Exec\* call.
 
@@ -248,7 +242,7 @@ For example:
 . 
 
 MatchPos
-^^^^^^^^
+~~~~~~~~
 
 pos of entrance subexpr. ``#Idx`` into tested in last ``Exec*`` string.
 First subexpr. have ``Idx=1``, last - ``MatchCount``, whole r.e. have
@@ -258,7 +252,7 @@ Returns ``-1`` if in r.e. no such subexpr. or this subexpr. not found in
 input string.
 
 MatchLen
-^^^^^^^^
+~~~~~~~~
 
 len of entrance subexpr. ``#Idx`` r.e. into tested in last ``Exec*``
 string. First subexpr. have ``Idx=1``, last - MatchCount, whole r.e.
@@ -268,7 +262,7 @@ Returns -1 if in r.e. no such subexpr. or this subexpr. not found in
 input string.
 
 Match
-^^^^^
+~~~~~
 
 ::
 
@@ -278,13 +272,13 @@ Returns ’’ if in r.e. no such subexpr. or this subexpr. not found in
 input string.
 
 LastError
-^^^^^^^^^
+~~~~~~~~~
 
 Returns ID of last error, 0 if no errors (unusable if Error method
 raises exception) and clear internal status into 0 (no errors).
 
 ErrorMsg
-^^^^^^^^
+~~~~~~~~
 
 Returns Error message for error with ID = AErrorID.
 
@@ -297,13 +291,13 @@ Returns pos in r.e. there compiler stopped.
 Usefull for error diagnostics
 
 SpaceChars
-^^^^^^^^^^
+~~~~~~~~~~
 
 Contains chars, treated as \\s (initially filled with RegExprSpaceChars
 global constant)
 
 WordChars
-^^^^^^^^^
+~~~~~~~~~
 
 Contains chars, treated as \\w (initially filled with RegExprWordChars
 global constant)
@@ -311,7 +305,7 @@ global constant)
  
 
 LineSeparators
-^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~
 
 line separators (like ``\n`` in Unix), initially filled with
 RegExprLineSeparators global constant)
@@ -320,7 +314,7 @@ see also `about line
 separators <regexp_syntax.html#syntax_line_separators>`__
 
 LinePairedSeparator
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~
 
 paired line separator (like ``\r\n`` in DOS and Windows).
 
@@ -345,7 +339,7 @@ Behaviour of this mode is detailed described in the `syntax
 section <regexp_syntax.html#syntax_line_separators>`__.
 
 InvertCase
-^^^^^^^^^^
+~~~~~~~~~~
 
 Set this property if you want to override case-insensitive
 functionality.
@@ -354,18 +348,18 @@ Create set it to RegExprInvertCaseFunction (InvertCaseFunction by
 default)
 
 Compile
-^^^^^^^
+~~~~~~~
 
 [Re]compile r.e. Usefull for example for GUI r.e. editors (to check all
 properties validity).
 
 Dump
-^^^^
+~~~~
 
 dump a compiled regexp in vaguely comprehensible form
 
 Global constants
-~~~~~~~~~~~~~~~~
+----------------
 
 EscChar = ‘\\’;  // ‘Escape’-char (‘\\’ in common r.e.) used for
 escaping metachars (\w, \\d etc).
@@ -428,8 +422,8 @@ TRegExpr.InvertCaseFunction;
 
 // default for InvertCase property
 
-Usefull global functions
-~~~~~~~~~~~~~~~~~~~~~~~~
+Global functions
+----------------
 
 ::
 
@@ -523,7 +517,7 @@ corresponding opening ‘(’.
 If Result <> 0, then ASubExprs can contain empty items or illegal ones
 
 Exception type
-~~~~~~~~~~~~~~
+--------------
 
 Default error handler of TRegExpr raise exception:
 
