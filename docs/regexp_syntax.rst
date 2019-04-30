@@ -302,7 +302,7 @@ brackets, so if you write ``[fee|fie|foe]`` you’re really only matching
 Subexpressions
 ~~~~~~~~~~~~~~
 
-The brackets ``( ... )`` may also be used for define regular expression
+The brackets ``( ... )`` may also be used to define regular expression
 subexpressions.
 
 Subexpression positions, lengths and actual values will be in
@@ -311,7 +311,7 @@ Subexpression positions, lengths and actual values will be in
 `Match <tregexpr_interface.html#match>`_.
 
 You can substitute them with
-`TRegExpr.Substitute <tregexpr_interface.html#substitute>`_).
+`Substitute <tregexpr_interface.html#substitute>`_).
 
 Subexpressions are numbered from left to right by their
 opening parenthesis (including nested subexpressions).
