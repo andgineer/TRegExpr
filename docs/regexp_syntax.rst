@@ -1,7 +1,6 @@
 Regular expressions
 ===================
 
-
 Introduction
 ------------
 

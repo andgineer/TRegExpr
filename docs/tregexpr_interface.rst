@@ -1,5 +1,14 @@
-TRegExpr interface
-==================
+TRegExpr
+========
+
+Implements `regular expressions <regexp_syntax.html>`_ in pure pascal.
+
+To use it just copy `source code <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
+into your project.
+
+The library had already included in
+`Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project so you do not need
+to copy anything if you use `Lazarus <https://www.lazarus-ide.org/>`_.
 
 TRegExpr class
 --------------
