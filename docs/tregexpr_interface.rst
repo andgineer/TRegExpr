@@ -133,7 +133,7 @@ Substitute
 Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular expression
 and ``$n`` replaced by occurence of subexpression number ``n``.
 
-If you want place into template just character ``$`` or ``\``, use prefix ``\``.
+To place into template characters ``$`` or ``\``, use prefix ``\``, like ``\\`` or ``\$``.
 
 ====== ===============================
 symbol description
@@ -141,7 +141,6 @@ symbol description
 ``$&'' whole regular expression match
 ``$0'' whole regular expression match
 ``$n'' regular subexpression ``n`` match
-``\\`` ``\``
 ``\n`` in Windows replaced with ``\r\n``
 ``\l`` lowcase one next char
 ``\L`` lowercase all chars after that
