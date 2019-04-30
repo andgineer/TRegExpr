@@ -20,7 +20,7 @@ For optimization, TRegExpr will automatically compiles it into ``P-code``
 structures.
 
 Regular expresion is re-compiled only if you call Exec_, ExecNext_,
-Substitute_, Dump_, etc and only if Expression_
+Substitute_, Dump_, etc. And only if Expression_
 was changed after last compilation.
 
 In case of any errors in compilation, ``Error`` method is called (by
@@ -84,18 +84,15 @@ initialized with `RegExprModifierX <#modifier_defs>`__ value.
 Exec
 ~~~~
 
-match a programm against a string AInputString
+Match the regular expression against ``AInputString``.
 
-!!! Exec store AInputString into InputString property
-
-For Delphi 5 and higher available overloaded versions:
-
-without parameter already assigned to InputString property value
+Available overloaded ``Exec`` version without ``AInputString`` - it uses ``AInputString``
+from previous call.
 
 ExecNext
 ~~~~~~~~
 
-Find next match:
+Find next match.
 
 Without parameter works the same as
 
@@ -104,10 +101,8 @@ Without parameter works the same as
     if MatchLen \[0\] = 0 then ExecPos (MatchPos \[0\] + 1)
       else ExecPos (MatchPos \[0\] + MatchLen \[0\]);
 
-but it’s more simpler !
-
-Raises exception if used without preceeding successful call to Exec\*
-(Exec, ExecPos, ExecNext).
+Raises exception if used without preceeding successful call to
+Exec_, ExecPos_ or ExecNext_.
 
 So you always must use something like
 
@@ -115,12 +110,10 @@ So you always must use something like
 
     if Exec (InputString) then repeat { proceed results} until not ExecNext;
 
-.
-
 ExecPos
 ~~~~~~~
 
-finds match for InputString starting from AOffset position
+Finds match for ``InputString`` starting from ``AOffset`` position
 
 ::
 
@@ -129,25 +122,27 @@ finds match for InputString starting from AOffset position
 InputString
 ~~~~~~~~~~~
 
-returns current input string (from last Exec call or last assign to this
+Returns current input string (from last Exec_ call or last assign to this
 property).
 
-Any assignment to this property clear ``Match*`` properties !
+Any assignment to this property clears Match_, MatchPos_ and MatchLen_.
 
 Substitute
 ~~~~~~~~~~
 
-Returns ATemplate with ``$&`` or ``$0`` replaced by whole r.e. occurence
+Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular expression
 and ``$n`` replaced by occurence of subexpression number ``n``.
 
-If you want place into template raw ``$`` or ``\\``, use prefix ``\\``.
-
-Special symbols:
+If you want place into template just character ``$`` or ``\``, use prefix ``\``.
 
 ====== ===============================
-symbol replaced with
+symbol description
+====== ===============================
+``$&'' whole regular expression match
+``$0'' whole regular expression match
+``$n'' regular subexpression ``n`` match
 ``\\`` ``\``
-``\n`` ``\r\n`` end of line in Windows
+``\n`` in Windows replaced with ``\r\n``
 ``\l`` lowcase one next char
 ``\L`` lowercase all chars after that
 ``\u`` uppcase one next char
@@ -159,7 +154,7 @@ symbol replaced with
      '1\$ is $2\\rub\\' -> '1$ is <Match[2]>\rub\'
      '\U$1\\r' transforms into '<Match[1] in uppercase>\r'
 
-If you want to place raw digit after ‘$n’ you must delimit n with curly
+If you want to place raw digit after ‘$n’ you must delimit ``n`` with curly
 braces ``{}``.
 
 ::
@@ -328,19 +323,18 @@ InvertCase
 Set this property if you want to override case-insensitive
 functionality.
 
-Create set it to RegExprInvertCaseFunction (InvertCaseFunction by
-default)
-
 Compile
 ~~~~~~~
 
-[Re]compile r.e. Useful for example for GUI r.e. editors (to check all
-properties validity).
+Compiles regular expression.
+
+Useful for example for GUI regular expressions editors - to check regular expression
+without using it.
 
 Dump
 ~~~~
 
-dump a compiled regexp in vaguely comprehensible form
+Show ``P-code`` (compiled regular expression) as human-readable string.
 
 Global constants
 ----------------
