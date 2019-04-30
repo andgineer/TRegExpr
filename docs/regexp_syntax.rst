@@ -5,17 +5,15 @@ Regular expressions
 Introduction
 ------------
 
-Regular Expressions are a widely-used method of specifying patterns of
-text to search for. Special metacharacters allow you to specify, for
-instance, that a particular string you are looking for occurs at the
-beginning or at the end of a line, or contains ``n`` recurrences of a certain
-symbol.
+Regular expressions are a handy way to specify patterns of
+text.
 
-I recommend you to play with regular expressions using Windows
-`REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__
-- it’ll help you to uderstand main conceptions.
+So you can validate user input, search for some patterns like
+emails of phone numbers on web pages or in some documents and so on.
 
 Below is complete regular expressions cheat sheet just on one page.
+This is regular expressions that are implemented for example in
+`TRegExpr <tregexpr_interface.html>`_.
 
 Simple matches
 --------------
@@ -377,10 +375,14 @@ normally would not match.
 g
 ~
 
-Non standard modifier. Switching it Off you’ll switch all following
-operators into non-greedy mode (by default this modifier is On). So, if
-modifier ``/g`` is Off then ``+`` works as ``+?``, ``\*`` as ``\*?`` and
-so on
+Non standard modifier.
+
+Switching it ``Off`` you’ll switch all following
+operators into non-greedy mode. So, if
+modifier ``/g`` is ``Off`` then ``+`` works as ``+?``, ``\*`` as ``\*?`` and
+so on.
+
+By default this modifier is ``On``.
 
 x
 ~
@@ -408,13 +410,13 @@ octal or hex escapes.
 r
 ~
 
-Non-standard modifier. If is set then range ``а-я`` includes
+Non-standard modifier.
+
+If is set then range ``а-я`` includes
 also ``ё``. And ``А-Я`` includes also ``Ё``. And ``а-Я``
 includes all russian symbols.
 
-The modifier is set `On` by default. If you want switch if
-``off`` by default - set false to global variable
-`RegExprModifierR <tregexpr_interface.html#regexprmodifierr>`_.
+The modifier is set `On` by default.
 
 Perl extensions
 ---------------
@@ -445,3 +447,11 @@ the comment.
 Just now don’t forget to read the `FAQ <faq.html>`_ (expecially
 ‘non-greediness’ optimization
 `question <faq.html#nongreedyoptimization>`_).
+
+Play ground
+-----------
+
+You can play with regular expressions using Windows
+`REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`_.
+
+

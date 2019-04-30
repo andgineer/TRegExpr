@@ -3,7 +3,7 @@ Introduction
 
 TRegExpr library implements `regular
 expressions <regexp_syntax.html>`_ in pure Delphi.
-TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_.
+TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project.
 
 TRegExpr is easy to use and powerful tool for sophisticated search and
 substitution and for template-based text check.
@@ -16,7 +16,7 @@ search for complex patterns in log files and all you can imagine.
 Rules (templates) can be changed without your
 program recompilation.
 
-The library source code is compatible with Delphi 2-7, Borland C++
+The library can be compiled by Delphi 2-7, Borland C++
 Builder 3-6, FreePascal.
 
 Reviews
@@ -30,7 +30,7 @@ Quick start
 To use the library just add `the sources <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
 to you project and use the class `TRegExpr <tregexpr_interface.html>`_.
 
-`Demo projects <https://github.com/masterandrey/TRegExpr/tree/master/examples>`__
+`Demo projects <demos.html>`__
 and `usage blog post <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__
 illustrate the simplicity and power of text processing with the library.
 
@@ -57,23 +57,22 @@ Documentation
 
 Translations
 ~~~~~~~~~~~~
-
-`Documentation <https://regexpr.masterandrey.com/en/latest/>`_ is available
-in English and Russian.
+The documentation is available in English and
+`Russian <https://regexpr.masterandrey.com/ru/latest/>`_.
 
 There are also old translations to German, Bulgarian, French and Spanish.
-If you want to help to update the translation please `contact me <https://github.com/masterandrey>`_.
-New translation is based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
+If you want to help to update this old translations please `contact me <https://github.com/masterandrey>`_.
+New translations are based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
 and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_.
-All this translations are already machine-translated and need only proof-reading
+They are already machine-translated and need only proof-reading
 and may be some copy-pasting from old translations.
 
 Source code
 ~~~~~~~~~~~
 Pure Object Pascal.
 
-- `FPC fork (GitHub mirror of the SubVersion) <https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_
 - `Original version <https://github.com/masterandrey/TRegExpr>`_
+- `FreePascal fork (GitHub mirror of the SubVersion) <https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_
 
 Gratitude
 ~~~~~~~~~
@@ -81,8 +80,7 @@ Gratitude
 Many features suggested and a lot of bugs founded (and even fixed) by
 TRegExpr’s contributors.
 
-I cannot list here all of them (actually I kept listing only on very
-early stage of development), but I do appreciate all bug-reports,
+I cannot list here all of them, but I do appreciate all bug-reports,
 features suggestions and questions that I am receiving from
 you.
 
@@ -102,6 +100,3 @@ you.
 -  Juergen Schroth - bug hunting and useful suggestions
 -  Martin Ledoux - French translation
 -  Diego Calp, Argentina - Spanish translation
-
-And many others - for hard work in bug hunting!
-

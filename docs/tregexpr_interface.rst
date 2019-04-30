@@ -15,28 +15,29 @@ Expression
 
 Regular expression.
 
-For optimization, TRegExpr will automatically compiles it into ‘P-code’
-(you can see it with help of Dump method) and stores in internal
-structures. Real [re]compilation occures only when it really needed -
-while calling Exec[Next], Substitute, Dump, etc and only if Expression
-or other P-code affected properties was changed after last
-[re]compilation.
+For optimization, TRegExpr will automatically compiles it into ``P-code``
+(you can see it with help of Dump_ method) and stores in internal
+structures.
 
-If any errors while [re]compilation occures, Error method is called (by
-default Error raises exception - see below)
+Regular expresion is re-compiled only if you call Exec_, ExecNext_,
+Substitute_, Dump_, etc and only if Expression_
+was changed after last compilation.
+
+In case of any errors in compilation, ``Error`` method is called (by
+default ``Error`` raises exception ERegExpr_)
 
 ModifierStr
 ~~~~~~~~~~~
 
-Set/get default values of
-`r.e.modifiers <regexp_syntax.html#about_modifiers>`__. Format of the
-string is similar as in
-`(?ismx-ismx) <regexp_syntax.html#inline_modifiers>`__. For example
-ModifierStr := ‘i-x’ will switch on modifier /i, switch off /x and leave
-unchanged others.
+Set or get default values of
+`r.e.modifiers <regexp_syntax.html#modifiers>`__.
 
-If you try to set unsupported modifier, Error will be called (by defaul
-Error raises exception ERegExpr).
+Format of the string is similar as in
+`(?ismx-ismx) <regexp_syntax.html#inlinemodifiers>`__. For example
+``ModifierStr := ‘i-x’`` will switch on modifier `/i <regexp_syntax.html#i>`_,
+switch off `/x <regexp_syntax.html#x>`_ and leave unchanged others.
+
+If you try to set unsupported modifier, ``Error`` will be called.
 
 ModifierI
 ~~~~~~~~~
@@ -47,7 +48,7 @@ Modifier /i - (“caseinsensitive”), initialized with
 ModifierR
 ~~~~~~~~~
 
-Modifier /r - (“Russian.syntax extensions), initialized with
+Modifier /r - (“Russian syntax extensions), initialized with
 `RegExprModifierR <#modifier_defs>`__ value.
 
 ModifierS
@@ -483,12 +484,8 @@ n           at position n was found closing bracket ``)`` without correspon
 
 If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal ones
 
-Exception type
---------------
-
-Default error handler of TRegExpr raise exception:
-
- 
+ERegExpr
+--------
 
 ::
 
