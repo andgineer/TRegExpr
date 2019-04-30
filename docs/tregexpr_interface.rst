@@ -417,7 +417,8 @@ Splits the string by r.e. occurencies
 ReplaceRegExpr
 ~~~~~~~~~~~~~~
 
-Returns the string with r.e. occurencies replaced by the ``AReplaceStr``.
+Returns the string with regular expressions replaced by the ``AReplaceStr``.
+See also Substitute_.
 
 If ``AUseSubstitution` is true, then ``AReplaceStr`` will be used as template
 for ``Substitution methods``.
@@ -435,6 +436,24 @@ for ``Substitution methods``.
       'BLOCK( test1)', 'def "$1" value "$2"')
 
     return  def “$1” value “$2”
+
+Version with options
+^^^^^^^^^^^^^^^^^^^^
+
+With ``Options`` you control ``\n`` behaviour (if ``rroUseOsLineEnd`` then ``\n`` is
+replaced with ``\n\r`` in Windows and ``\n`` in Linux). And so on.
+
+.. code-block:: pascal
+
+    Type
+      TRegexReplaceOption = (rroModifierI,
+                             rroModifierR,
+                             rroModifierS,
+                             rroModifierG,
+                             rroModifierM,
+                             rroModifierX,
+                             rroUseSubstitution,
+                             rroUseOsLineEnd);
 
 QuoteRegExprMetaChars
 ~~~~~~~~~~~~~~~~~~~~~
