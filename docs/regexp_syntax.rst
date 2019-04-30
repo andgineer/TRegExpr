@@ -71,8 +71,8 @@ character **but** characters listed in the class.
 
 ::
 
-     foob[aeiou]r   finds strings 'foobar', 'foober' etc. but not 'foobbr', 'foobcr' etc.
-     foob[^aeiou]r  find strings 'foobbr', 'foobcr' etc. but not 'foobar', 'foober' etc.
+     foob[aeiou]r   finds strings 'foobar', 'foober' etc but not 'foobbr', 'foobcr' etc
+     foob[^aeiou]r  find strings 'foobbr', 'foobcr' etc but not 'foobar', 'foober' etc
 
 Within a list, the ``-`` character is used to specify a range, so that
 ``a-z`` represents all characters between ``a`` and ``z``, inclusive.
@@ -88,7 +88,6 @@ may place it at the start of list or escape it with a backslash.
      [a\-z]    matchs 'a', 'z' and '-'
      [a-z]     matchs all characters from 'a' to 'z'
      [\n-\x0D] matchs any of #10,#11,#12,#13.
-     []-a]     matchs any char in ']'..'a'.
 
 Predefined Character classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -140,22 +139,21 @@ Line separators
      ^foobar$   matchs string 'foobar' only if it's the only string in line
      foob.r     matchs strings like 'foobar', 'foobbr', 'foob1r' and so on
 
-The ``^`` metacharacter by default is only guaranteed to match at the
-beginning of the input string/text, the ``$`` metacharacter only at the
-end. Embedded line separators will not be matched by ``^`` or ``$``.
+The ``^`` metacharacter by default is matchthe
+beginning of the input string, the ``$`` at the
+end.
 
-You may, however, wish to treat a string as a multi-line text, such
-that the ``^`` will match after any line separator within the string,
+You may, however, wish to treat a string as a multi-line text,
+so ``^`` will match after any line separator within the string,
 and ``$`` will match before any line separator. You can do this by
 switching ``On`` the `modifier /m <#m>`_.
 
 The ``\A`` and ``\Z`` are just like ``^`` and ``$``, except that they
 won’t match multiple times when the `modifier
-/m <#m>`_ is used, while ``^`` and ``$``
-will match at every internal line separator.
+/m <#m>`_ is used.
 
 The ``.`` metacharacter by default matches any character, but if you
-switch Off the `modifier /s <#s>`_, then
+switch ``Off`` the `modifier /s <#s>`_, then
 ``.`` won’t match embedded line separators.
 
 Tech details
@@ -205,7 +203,7 @@ Word boundaries
      \b     Match a word boundary
      \B     Match a non-(word boundary)
 
-A word boundary (``\b``) is a spot between two characters that has a
+A word boundary ``\b`` is a spot between two characters that has a
 ``\w`` on one side of it and a ``\W`` on the other side of it (in either
 order), counting the imaginary characters off the beginning and end of
 the string as matching a ``\W``.
@@ -213,30 +211,32 @@ the string as matching a ``\W``.
 Iterators
 ~~~~~~~~~
 
-Any item of a regular expression may be followed by another type of
-metacharacters - iterators. Using this metacharacters you can specify
-number of occurences of previous character, metacharacter or
-subexpression.
+Any item of a regular expression may be followed by iterator.
+Iterator specify number of repetition of the item.
 
 ::
 
-     *      zero or more ("greedy"), similar to {0,}
-     +      one or more ("greedy"), similar to {1,}
-     ?      zero or one ("greedy"), similar to {0,1}
-     {n}    exactly n times ("greedy")
-     {n,}   at least n times ("greedy")
-     {n,m}  at least n but not more than m times ("greedy")
-     *?     zero or more ("non-greedy"), similar to {0,}?
-     +?     one or more ("non-greedy"), similar to {1,}?
-     ??     zero or one ("non-greedy"), similar to {0,1}?
-     {n}?   exactly n times ("non-greedy")
-     {n,}?  at least n times ("non-greedy")
-     {n,m}? at least n but not more than m times ("non-greedy")
+     {n}    exactly n times
+     {n,}   at least n times
+     {n,m}  at least n but not more than m times
+     *      zero or more, similar to {0,}
+     +      one or more, similar to {1,}
+     ?      zero or one, similar to {0,1}
+     {n}?   exactly n times, "non-greedy"
+     {n,}?  at least n times, "non-greedy"
+     {n,m}? at least n but not more than m times, "non-greedy"
+     *?     zero or more, "non-greedy", similar to {0,}?
+     +?     one or more, "non-greedy", similar to {1,}?
+     ??     zero or one, "non-greedy", similar to {0,1}?
 
-So, digits in curly brackets of the form ``{n,m}``, specify the minimum
-number of times to match the item n and the maximum ``m``. The form
-``{n}`` is equivalent to ``{n,n}`` and matches exactly ``n`` times. The
-form ``{n,}`` matches ``n`` or more times. There is no limit to the size
+So, digits in curly brackets ``{n,m}``, specify the minimum
+number of times to match ``n`` and the maximum ``m``.
+
+The ``{n}`` is equivalent to ``{n,n}`` and matches exactly ``n`` times.
+
+The ``{n,}`` matches ``n`` or more times.
+
+There is no limit to the size
 of ``n`` or ``m``, but large numbers will chew up more memory and slow
 down r.e. execution.
 
@@ -245,43 +245,51 @@ regular character.
 
 ::
 
-     foob.*r     matches strings like 'foobar',  'foobalkjdflkj9r' and 'foobr'
-     foob.+r     matches strings like 'foobar', 'foobalkjdflkj9r' but not 'foobr'
-     foob.?r     matches strings like 'foobar', 'foobbr' and 'foobr' but not 'foobalkj9r'
-     fooba{2}r   matches the string 'foobaar'
-     fooba{2,}r  matches strings like 'foobaar', 'foobaaar', 'foobaaaar' etc.
-     fooba{2,3}r matches strings like 'foobaar', or 'foobaaar'  but not 'foobaaaar'
+     foob.*r        matches strings like 'foobar',  'foobalkjdflkj9r' and 'foobr'
+     foob.+r        matches strings like 'foobar', 'foobalkjdflkj9r' but not 'foobr'
+     foob.?r        matches strings like 'foobar', 'foobbr' and 'foobr' but not 'foobalkj9r'
+     fooba{2}r      matches the string 'foobaar'
+     fooba{2,}r     matches strings like 'foobaar', 'foobaaar', 'foobaaaar' etc.
+     fooba{2,3}r    matches strings like 'foobaar', or 'foobaaar'  but not 'foobaaaar'
+     (foobar){8,10} matchs strings which contain 8, 9 or 10 instances of the 'foobar'
 
-A little explanation about “greediness”. “Greedy” takes as many as
-possible, “non-greedy” takes as few as possible. For example, ``b+`` and
-``b*`` applied to string ``abbbbc`` return ``bbbb``, ``b+?`` returns
-``b``, ``b*?`` returns empty string, ``b{2,3}?`` returns ``bb``,
-``b{2,3}`` returns ``bbb``.
+Greediness
+~~~~~~~~~~
 
-You can switch all iterators into “non-greedy” mode (see the `modifier
-/g <#g>`_).
+“Greedy” (default) mode takes as many as possible, “non-greedy” takes as few as possible.
+
+For example, ``b+`` applied to string ``abbbbc`` returns ``bbbb``.
+
+``b+?`` returns ``b``, ``b*?`` returns empty string.
+
+``b{2,3}?`` returns ``bb``, ``b{2,3}`` returns ``bbb``.
+
+You can switch all iterators into “non-greedy” mode (`modifier /g <#g>`_).
 
 Alternatives
 ~~~~~~~~~~~~
 
-You can specify a series of alternatives for a pattern using ``|`` to
-separate them, so that ``fee|fie|foe`` will match any of ``fee``, ``fie``,
-or ``foe`` in the target string (as would ``f(e|i|o)e``). The first
-alternative includes everything from the last pattern delimiter (``(``,
+Series of alternatives are separated by ``|``.
+
+So ``fee|fie|foe`` will match any of ``fee``, ``fie``,
+or ``foe`` in the target string (as would ``f(e|i|o)e``).
+
+The first alternative includes everything from the last pattern delimiter (``(``,
 ``[``, or the beginning of the pattern) up to the first ``|``, and the
 last alternative contains everything from the last ``|`` to the next
-pattern delimiter. For this reason, it’s common practice to include
+pattern delimiter.
+
+Sounds a little complicated, so it’s common practice to include
 alternatives in parentheses, to minimize confusion about where they
 start and end.
 
 Alternatives are tried from left to right, so the first alternative
 found for which the entire expression matches, is the one that is
-chosen. This means that alternatives are not necessarily greedy. For
-example: when matching foo|foot against ``barefoot``, only the ``foo``
-part will match, as that is the first alternative tried, and it
-successfully matches the target string. (This might not seem important,
-but it is important when you are capturing matched text using
-parentheses.)
+chosen.
+
+This means that alternatives are not necessarily ``greedy``. For
+example, regular expression ``foo|foot`` in string ``barefoot`` will match ``foo``.
+Just a first alternative that's match.
 
 Also remember that ``|`` is interpreted as a literal within square
 brackets, so if you write ``[fee|fie|foe]`` you’re really only matching
@@ -294,31 +302,31 @@ brackets, so if you write ``[fee|fie|foe]`` you’re really only matching
 Subexpressions
 ~~~~~~~~~~~~~~
 
-The bracketing construct ``( ... )`` may also be used for define r.e.
-subexpressions (after parsing you can find subexpression positions,
-lengths and actual values in MatchPos, MatchLen and
-`Match <tregexpr_interface.html#match>`_ properties of
-TRegExpr, and substitute it in template strings by
+The brackets ``( ... )`` may also be used for define regular expression
+subexpressions.
+
+Subexpression positions, lengths and actual values will be in
+`MatchPos <tregexpr_interface.html#matchpos>`_,
+`MatchLen <tregexpr_interface.html#matchlen>`_ and
+`Match <tregexpr_interface.html#match>`_.
+
+You can substitute them with
 `TRegExpr.Substitute <tregexpr_interface.html#substitute>`_).
 
-Subexpressions are numbered based on the left to right order of their
-opening parenthesis.
+Subexpressions are numbered from left to right by their
+opening parenthesis (including nested subexpressions).
 
-First subexpression has number ``1`` (whole r.e. match has number ``0``
-- you can substitute it in
-`TRegExpr.Substitute <tregexpr_interface.html#substitute>`_ as
-``$0`` or ``$&``).
+First subexpression has number ``1``. Whole regular expression match has number ``0``.
 
 ::
 
-     (foobar){8,10} matchs strings which contain 8, 9 or 10 instances of the 'foobar'
-     foob(\[0-9\]|a+)r matchs 'foob0r', 'foob1r' , 'foobar', 'foobaar', 'foobaar' etc.
+     (foo(bar))  in string 'foobar' subexpression 1 match 'foobar', 2 - 'bar' and 0 - 'foobar'
 
 Backreferences
 ~~~~~~~~~~~~~~
 
 Metacharacters ``\1`` through ``\9`` are interpreted as backreferences.
-``\n`` matches previously matched subexpression ``#n``.
+``\n`` matches previously matched subexpression ``n``.
 
 ::
 
