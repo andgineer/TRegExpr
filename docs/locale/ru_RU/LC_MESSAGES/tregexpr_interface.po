@@ -144,11 +144,10 @@ msgid ""
 "<tregexpr_interface.html#linepairedseparator>`__), initialized with "
 "`RegExprModifierS <#modifier_defs>`__ value."
 msgstr ""
-"`Модификатор / ы <regexp_syntax.html#modifier_s> `__ - &#39;.&#39; работает "
-"как любой символ (иначе не соответствует `LineSeparators "
-"<tregexpr_interface.html#lineseparators> `__ и` LinePairedSeparator "
-"<tregexpr_interface.html#linepairedseparator> `__), инициализируется "
-"значением` RegExprModifierS &lt;#modifier_defs&gt; `__."
+"`Модификатор /s <regexp_syntax.html#modifier_s>`_ с ним ``.`` работает как "
+"любой символ (но не соответствует `LineSeparators "
+"<tregexpr_interface.html#lineseparators>`_ и `LinePairedSeparator "
+"<tregexpr_interface.html#linepairedseparator>`_)."
 
 # 4e4e7d94836b448082e6b1463c686b21
 #: ../../tregexpr_interface.rst:56

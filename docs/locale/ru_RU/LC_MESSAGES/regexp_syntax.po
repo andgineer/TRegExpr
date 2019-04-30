@@ -104,7 +104,7 @@ msgstr "сопоставляет символ с шестнадцатеричн�
 # 7ee9b9bd43d44fb6bd2e026f52835b55
 #: ../../regexp_syntax.rst:42
 msgid "``\\x{nnnn}``"
-msgstr "`` \\x{nnnn}``"
+msgstr "``\\x{nnnn}``"
 
 # 09bc67c754b44f25b97eb15da0de1a74
 #: ../../regexp_syntax.rst:42
@@ -286,7 +286,7 @@ msgstr "любой пробел (то же что ``[\\t\\n\\r\\f]``)"
 # 7b24d1db46c24e79a04470c3ceea3b47
 #: ../../regexp_syntax.rst:100
 msgid "``\\S``"
-msgstr "`` \\ S``"
+msgstr "``\\S``"
 
 # fd2c99fff08a4149b14a050a894c343b
 #: ../../regexp_syntax.rst:100
@@ -299,8 +299,8 @@ msgid ""
 "You may use ``\\w``, ``\\d`` and ``\\s`` within `user character classes "
 "<User Character Classes_>`_."
 msgstr ""
-"Вы можете использовать ``\\w``, ``\\d`` и ``\\s`` в пользовательских классах"
-"  <User Character Classes_>`_."
+"Вы можете использовать ``\\w``, ``\\d`` и ``\\s`` в `пользовательских "
+"классах  <User Character Classes_>`_."
 
 # d84da8fe3de54d88b778c24674827ef5
 #: ../../regexp_syntax.rst:110

@@ -193,6 +193,11 @@
             <set />
           </value>
         </entry>
+        <entry key="/work/compbiovis/backend/smoke_test.sh">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/work/compbiovis/backend/tests/test_emailing.py">
           <value>
             <set />

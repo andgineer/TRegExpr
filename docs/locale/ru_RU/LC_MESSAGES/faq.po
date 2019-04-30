@@ -108,8 +108,8 @@ msgid ""
 "Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in "
 "Borland C++ Builder?"
 msgstr ""
-"Почему многие из них (в том числе из справки и демонстрации TRegExpr) "
-"работают неправильно в Borland C ++ Builder?"
+"Почему многие примеры (включая примеры из документации) работают неправильно"
+" в Borland C ++ Builder?"
 
 # 0f73f257d9514302b0957d8a0e7a541f
 #: ../../faq.rst:41
@@ -139,8 +139,8 @@ msgid ""
 "For example, r.e. ``<font .\\*>`` returns the first ``<font``, then the rest"
 " of the file including last ``</html>``."
 msgstr ""
-"Например, re ``<font .\\*>`` возвращает первый ``</font> <font``, then the "
-"rest of the file including last ``</html> <font .\\*>``.</html>"
+"Например, регулярное выражение ``<font .\\*>`` возвращает первый же "
+"``<font``, далее весь последующий текст до финального``</html>``."
 
 # e0575b3e984b464db5c9c891fae78696
 #: ../../faq.rst:57
@@ -148,8 +148,8 @@ msgid ""
 "For backward compatibility, `modifier /s <regexp_syntax.html#modifier_s>`__ "
 "is ``On`` by default."
 msgstr ""
-"Для обратной совместимости `модификатор /s <regexp_syntax.html#modifier_s> "
-"`__ по умолчанию` `Вкл``."
+"Для обратной совместимости `модификатор /s <regexp_syntax.html#modifier_s>`_"
+" по умолчанию ``Вкл``."
 
 # b46cbeccc5b0433f9702d6e28f98b4fe
 #: ../../faq.rst:60
