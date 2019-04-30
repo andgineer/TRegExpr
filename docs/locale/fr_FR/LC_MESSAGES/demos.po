@@ -1,39 +1,93 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2019, Andrey Sorokin
 # This file is distributed under the same license as the TRegExpr package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-27 20:26+0300\n"
+"POT-Creation-Date: 2019-04-30 13:00+0300\n"
 "PO-Revision-Date: 2019-04-27 17:26+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: French (France) (https://www.transifex.com/masterAndrey/teams/98461/fr_FR/)\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language-Team: French (France) "
+"(https://www.transifex.com/masterAndrey/teams/98461/fr_FR/)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
 
-# 3d88dfc7cf1745ac936985c537383f73
-#: ../../demos.rst:1
-msgid ""
-"First of all I recommend You to read `article with usage illustrations "
-"<http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__."
+# 2fadc11ecbd54460a3823d1547fbe621
+#: ../../demos.rst:2
+msgid "Demos"
 msgstr ""
-"Tout d&#39;abord, je vous recommande de lire `article avec des illustrations"
-" d&#39;utilisation "
-"<http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html> "
-"`__."
 
-# 19e04c2855034e2da0d032ce97d8daef
-#: ../../demos.rst:4
+# 2aa631e200964d8abfbad9f2879d6391
+#: ../../demos.rst:5
+msgid "Introduction"
+msgstr ""
+
+# 7cc6e6b293a64db3bb28cb8ce9414279
+#: ../../demos.rst:7
+#, fuzzy
+msgid ""
+"If you don't familiar with regular expression, please, take a look at the"
+" `r.e.syntax <regexp_syntax.html>`__."
+msgstr ""
+"Si vous n’êtes pas familier avec l’expression régulière, jetez un coup "
+"d’œil à la `resyntax <regexp_syntax.html> `__ sujet."
+
+# e589bc53260e4531b820764aa1b60158
+#: ../../demos.rst:10
+msgid ""
+"TRegExpr interface described in `TRegExpr interface "
+"<tregexpr_interface.html>`__."
+msgstr ""
+"Interface TRegExpr décrite dans la section `Interface TRegExpr "
+"<tregexpr_interface.html> `__."
+
+# 18835e85b0c04e1db071e3f0de8298a7
+#: ../../demos.rst:13
+msgid ""
+"Some of demo-projects use extended VCL properties which exists only in "
+"Delphi 4 or higher. While compiling in Delphi 3 or Delphi 2 you'll "
+"receive some error messages about unknown properties. You may ignore it -"
+" this properties is needed only for resizing and justification of "
+"components then form change it's size."
+msgstr ""
+"Certains projets de démonstration utilisent des propriétés VCL étendues "
+"qui n&#39;existent que dans Delphi 4 ou une version ultérieure. Lors de "
+"la compilation dans Delphi 3 ou Delphi 2, vous recevrez des messages "
+"d&#39;erreur concernant des propriétés inconnues. Vous pouvez "
+"l&#39;ignorer - ces propriétés ne sont nécessaires que pour le "
+"redimensionnement et la justification des composants, puis la "
+"modification de sa taille."
+
+# 8d24a36796b74734a37bd541ec1d87f8
+#: ../../demos.rst:20
+msgid "Windows compiled"
+msgstr ""
+
+# e4bbb420c6c14fbb92c3361555883f13
+#: ../../demos.rst:22
+#, fuzzy
+msgid ""
+"First of all I recommend You to read `Text processing from bird's eye "
+"view "
+"<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__."
+msgstr ""
+"Tout d&#39;abord, je vous recommande de lire `article avec des "
+"illustrations d&#39;utilisation "
+"<http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>"
+" `__."
+
+# 4698b4d9b8874a9280511358e0836d9e
+#: ../../demos.rst:25
 msgid ""
 "Ready to run Windows application `REStudio "
 "<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__"
@@ -43,8 +97,8 @@ msgstr ""
 "<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>"
 " `__ pour apprendre et déboguer les expressions régulières."
 
-# fc73e57e381b442c8f36f0cda21e304e
-#: ../../demos.rst:8
+# 0fc3078244cc46c9973bab3a10234449
+#: ../../demos.rst:29
 msgid ""
 "Please, note that there are localized demos available (with comments in "
 "source code on national languages)."
@@ -52,310 +106,364 @@ msgstr ""
 "Veuillez noter que des démos localisées sont disponibles (avec des "
 "commentaires en code source dans les langues nationales)."
 
-# ae410cefef0c47df9a9b4fdaaf0d0e08
-#: ../../demos.rst:11
+# 935ae2b7de464856b4254cb25ff81bbe
+#: ../../demos.rst:32
+#, fuzzy
 msgid ""
-"This localized versions distributed in localized full TRegExpr packages, and"
-" in separate localized documentation packages (when You unpack this "
-"documentation package in TRegExpr directory the localized demos overwrite "
-"English ones)."
+"This localized versions distributed in localized full TRegExpr packages, "
+"and in separate localized documentation packages (when you unpack this "
+"documentation package in TRegExpr directory the localized demos overwrite"
+" English ones)."
 msgstr ""
-"Ces versions localisées sont distribuées dans des packages TRegExpr complets"
-" localisés et dans des packages de documentation localisés distincts "
-"(lorsque vous décompressez ce package de documentation dans le répertoire "
-"TRegExpr, les démonstrations localisées remplacent celles en anglais)."
+"Ces versions localisées sont distribuées dans des packages TRegExpr "
+"complets localisés et dans des packages de documentation localisés "
+"distincts (lorsque vous décompressez ce package de documentation dans le "
+"répertoire TRegExpr, les démonstrations localisées remplacent celles en "
+"anglais)."
 
-# 44a0b156234d45819fbbbaeef3b5570b
-#: ../../demos.rst:16
-msgid "Demos\\TRegExprRoutines"
-msgstr "Démos \\ TRegExprRoutines"
-
-# 64b3450332934ae6b2181e3d04022fea
-#: ../../demos.rst:18
-msgid "very simple examples, see comments inside the unit"
-msgstr ""
-"exemples très simples, voir les commentaires à l&#39;intérieur de "
-"l&#39;unité"
-
-# 46abfbe911a146eea55beb6c6afe6830
-#: ../../demos.rst:20
-msgid "Demos\\TRegExprClass"
-msgstr "Démos \\ TRegExprClass"
-
-# 56993d7a10d746e08c7c712cec5c7274
-#: ../../demos.rst:22
-msgid "slightly more complex examples, see comments inside the unit"
-msgstr ""
-"exemples un peu plus complexes, voir les commentaires à l&#39;intérieur de "
-"l&#39;unité"
-
-# afaf950f4f4e46ccbe2d249cf608f664
-#: ../../demos.rst:24
-msgid "Demos\\Text2HTML"
-msgstr "Démos \\ Text2HTML"
-
-# b7c6de1b80924060b29f2a5bc3ca4a74
-#: ../../demos.rst:26
-msgid "see `description <#text2html.html>`__"
-msgstr "voir `description &lt;# text2html.html&gt;` __"
-
-# b64ac94696c64fea92662c7fe439b817
-#: ../../demos.rst:28
-msgid ""
-"If You don't familiar with regular expression, please, take a look at the "
-"`r.e.syntax <regexp_syntax.html>`__ topic."
-msgstr ""
-"Si vous n’êtes pas familier avec l’expression régulière, jetez un coup d’œil"
-" à la `resyntax <regexp_syntax.html> `__ sujet."
-
-# 781500ac2b09419a9cb5595076f7de14
-#: ../../demos.rst:31
-msgid ""
-"TRegExpr interface described in `TRegExpr interface "
-"<tregexpr_interface.html>`__."
-msgstr ""
-"Interface TRegExpr décrite dans la section `Interface TRegExpr "
-"<tregexpr_interface.html> `__."
-
-# 15765e1d81ba47ada002e3824061fa4b
-#: ../../demos.rst:34
-msgid "Note"
-msgstr "Remarque"
-
-# 76682c66dd994062b735943a14f040f4
-#: ../../demos.rst:36
-msgid ""
-"Some of demo-projects use extended VCL properties which exists only in "
-"Delphi 4 or higher. While compiling in Delphi 3 or Delphi 2 you'll receive "
-"some error messages about unknown properties. You may ignore it - this "
-"properties is needed only for resizing and justification of components then "
-"form change it's size."
-msgstr ""
-"Certains projets de démonstration utilisent des propriétés VCL étendues qui "
-"n&#39;existent que dans Delphi 4 ou une version ultérieure. Lors de la "
-"compilation dans Delphi 3 ou Delphi 2, vous recevrez des messages "
-"d&#39;erreur concernant des propriétés inconnues. Vous pouvez l&#39;ignorer "
-"- ces propriétés ne sont nécessaires que pour le redimensionnement et la "
-"justification des composants, puis la modification de sa taille."
-
-# 8fc9996e05c345aa9e7e31bb9c67299f
-#: ../../demos.rst:43
+# b472ecb2c8754ca9b7c888cb01b44282
+#: ../../demos.rst:38
 msgid "Text2HTML"
 msgstr "Text2HTML"
 
-# d245d943d424493686194ed4c34496a4
-#: ../../demos.rst:45
-msgid "Very simple utility, that helps publish plain text as HTML"
+# 7365229f0b0542f2a8066af196ad1dc9
+#: ../../demos.rst:40
+msgid ""
+"`Text2HTML sources "
+"<https://github.com/masterandrey/TRegExpr/tree/master/examples/Text2HTML>`_"
 msgstr ""
-"Utilitaire très simple, qui permet de publier du texte brut au format HTML"
 
-# b70823b4052e4b2d98ddc1e4f6643b1a
+# 4aa08cf23bf54dd3b075710fb6c0119a
+#: ../../demos.rst:42
+msgid "Publish plain text as HTML"
+msgstr ""
+
+# 33ea5ef328fd4b39955a6630a3d32433
+#: ../../demos.rst:44
+#, fuzzy
+msgid ""
+"Uses unit `HyperLinksDecorator "
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__"
+" that is based on TRegExpr."
+msgstr ""
+"Utilise l&#39;unité `HyperLinksDecorator &lt;# "
+"hyperlinksdecorator.html&gt;` __ qui est basée sur TRegExpr."
+
+# da5ee7ea7903461ebca73309c8f35baa
 #: ../../demos.rst:47
-msgid ""
-"Uses unit `HyperLinksDecorator <#hyperlinksdecorator.html>`__ that is based "
-"on TRegExpr."
+msgid "This unit contains functions to decorate hyper-links."
 msgstr ""
-"Utilise l&#39;unité `HyperLinksDecorator &lt;# hyperlinksdecorator.html&gt;`"
-" __ qui est basée sur TRegExpr."
 
-# fc45e9ddd78b43b9beddc64e427d3428
-#: ../../demos.rst:52
-msgid "Specially written as a demonstration of TRegExpr usage."
-msgstr "Spécialement écrit comme démonstration de l’utilisation de TRegExpr."
-
-# c49d45fc524b43caaf3ca1be69e66dd8
-#: ../../demos.rst:57
-msgid "Unit HyperLinksDecorator"
-msgstr "Unité HyperLinksDecorator"
-
-# 48602ac66cfc4b33833ee98347ff519d
-#: ../../demos.rst:60
+# 57b7a3653c0f4039b8e89db4ac8944f0
+#: ../../demos.rst:49
 msgid ""
-"`DecorateURLs <#hyperlinksdecorator.html#decorateurls>`__   `DecorateEMails "
-"<#hyperlinksdecorator.html#decorateemails>`__"
+"For example, replaces ``www.masterAndrey.com`` with ``<a "
+"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a>`` or "
+"``anso@mail.ru`` with ``<a "
+"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 msgstr ""
-"`DecorateURLs &lt;# hyperlinksdecorator.html # decorateurls&gt;` __ "
-"`DecorateEMails &lt;# hyperlinksdecorator.html # decorateemails&gt;` __"
 
-# 05aba83ebedf4ca2a568a2341a9a5202
-#: ../../demos.rst:62
-msgid ""
-"This unit contains functions to decorate hyper-links (see `Text2Html "
-"<#text2html.html>`__ demo-project for usage example)."
+# afd80a7d967e461fbcb420406de377b2
+#: ../../demos.rst:69
+msgid "Value"
 msgstr ""
-"Cette unité contient des fonctions permettant de décorer des hyperliens "
-"(voir `Text2Html &lt;# text2html.html&gt;` __ -pro demo-project pour un "
-"exemple d&#39;utilisation)."
 
-# d095a9a1938f475ab2d11e5354b53383
-#: ../../demos.rst:67
-msgid ""
-"For example, replaces 'www.RegExpStudio.com' with 'www.RegExpStudio.com' or "
-"'anso@mail.ru' with 'anso@mail.ru'."
+# fcb629be8b804228b02b82f9d05c042b
+#: ../../demos.rst:69
+msgid "Meaning"
 msgstr ""
-"Par exemple, remplace &quot;www.RegExpStudio.com&quot; par "
-"&quot;www.RegExpStudio.com&quot; ou &quot;anso@mail.ru&quot; par "
-"&quot;anso@mail.ru&quot;."
 
-# aef4a6effdcd4d30b36c393a1dbb655b
+# 2c26a1c881224c86ae092f9233f16333
+#: ../../demos.rst:71
+msgid "durlProto"
+msgstr ""
+
+# 61b6760faa724e90a11d59132be8d98d
+#: ../../demos.rst:71
+#, fuzzy
+msgid "Protocol (like ``ftp://`` or ``http://``)"
+msgstr "Protocole durlProto (comme &#39;ftp: //&#39; ou &#39;http: //&#39;)"
+
+# 7bd9dc2a4ce04856843a5d277fdfb72f
 #: ../../demos.rst:72
-msgid "function DecorateURLs"
-msgstr "fonction DecorateURLs"
+msgid "durlAddr"
+msgstr ""
 
-# 24ef042463d040cf81377f17c9cc66f5
+# e07404de7485465ea635a82a9725c239
+#: ../../demos.rst:72
+#, fuzzy
+msgid "TCP address or domain name (like ``masterAndrey.com``)"
+msgstr "Adresse TCP ou nom de domaine durlAddr (comme &#39;RegExpStudio.com&#39;)"
+
+# b8bd54e29ab54789a6a36d936bd54032
+#: ../../demos.rst:73
+msgid "durlPort"
+msgstr ""
+
+# e7ea4ae3382a472b955a5f7fafa6ff89
+#: ../../demos.rst:73
+#, fuzzy
+msgid "Port number if specified (like ``:8080``)"
+msgstr "Numéro de port durlPort si spécifié (comme &#39;: 8080&#39;)"
+
+# 729141aed55949a5b0e90e713d39edd0
+#: ../../demos.rst:74
+msgid "durlPath"
+msgstr ""
+
+# 92b7487cf825402dae2f87420c20d4f4
+#: ../../demos.rst:74
+#, fuzzy
+msgid "Path to document (like ``index.html``)"
+msgstr "durlPath Chemin d&#39;accès au document (comme &#39;index.html&#39;)"
+
+# d41efb3d315f4767911d3420c3e4932c
+#: ../../demos.rst:75
+msgid "durlBMark"
+msgstr ""
+
+# 62a061c18ad04221852618527a04cc90
+#: ../../demos.rst:75
+#, fuzzy
+msgid "Book mark (like ``#mark``)"
+msgstr "DurlBMark Marque-page (comme &#39;#mark&#39;)"
+
+# ec2cf65547df4c9b8c06575674dfbf8d
 #: ../../demos.rst:76
-msgid ""
-"Finds and replaces hyper links like 'http://...' or 'ftp://..' as well as "
-"links without protocol, but start with 'www.' If You want to decorate emails"
-" as well, You have to use function `DecorateEMails "
-"<#hyperlinksdecorator.html#decorateemails>`__ instead."
+msgid "durlParam"
 msgstr ""
-"Recherche et remplace les hyperliens tels que &quot;http: // ...&quot; ou "
-"&quot;ftp: // ..&quot;, ainsi que les liens sans protocole, mais commence "
-"par &quot;www.&quot; Si vous souhaitez également décorer des emails, vous "
-"devez utiliser la fonction `DecorateEMails &lt;# hyperlinksdecorator.html # "
-"decorateemails&gt;` __ à la place."
 
-# b215d5dc898747c7915231ada6984f87
-#: ../../demos.rst:83
-msgid ""
-"function DecorateURLs (const AText : string; AFlags : TDecorateURLsFlagSet ="
-" [durlAddr, durlPath]) : string;"
-msgstr ""
-"function DecorateURLs (const AText: string; AFlags: TDecorateURLsFlagSet = "
-"[durlAddr, durlPath]): string;"
+# 1413c7baccff41659fe3a1141c62c16e
+#: ../../demos.rst:76
+#, fuzzy
+msgid "URL params (like ``?ID=2&User=13``)"
+msgstr "durlParam paramètres d&#39;URL (comme &#39;? ID = 2 &amp; User = 13&#39;)"
 
-# 422a158d26cc4ef996b5630676a49138
-# 422a158d26cc4ef996b5630676a49138
-# 422a158d26cc4ef996b5630676a49138
-#: ../../demos.rst:88 ../../demos.rst:114 ../../demos.rst:159
-msgid "Description"
-msgstr "La description"
-
-# 1e585d008e2b4b52844d261128e19247
-#: ../../demos.rst:92
-msgid "Returns input text AText with decorated hyper links."
+# c79425b7bdfb4c469ba7490a795b4a44
+#: ../../demos.rst:79
+#, fuzzy
+msgid "Returns input text ``AText`` with decorated hyper links."
 msgstr "Renvoie le texte saisi AText avec des hyperliens décorés."
 
-# 53146f3c277d4690a1ea7d4c9be78788
-#: ../../demos.rst:96
+# 0c396ec2a8db4d13b675b9bdc789b478
+#: ../../demos.rst:81
+#, fuzzy
 msgid ""
-"AFlags describes, which parts of hyper-link must be included into VISIBLE "
-"part of the link:"
+"``AFlags`` describes, which parts of hyper-link must be included into "
+"visible part of the link."
 msgstr ""
-"AFlags décrit quelles parties de l&#39;hyperlien doivent être incluses dans "
-"la partie visible du lien:"
+"AFlags décrit quelles parties de l&#39;hyperlien doivent être incluses "
+"dans la partie visible du lien:"
 
-# 453215c1947c415387c3120121703b18
-#: ../../demos.rst:99
+# f82595fc7c2b4b78b0228fd5e5bd5f02
+#: ../../demos.rst:84
+#, fuzzy
 msgid ""
-"For example, if [durlAddr] then hyper link "
-"'www.RegExpStudio.com/contacts.htm' will be decorated as "
-"'www.RegExpStudio.com'"
+"For example, if `AFlags` is ``[durlAddr]`` then hyper link "
+"``www.masterAndrey.com/contacts.htm`` will be decorated as ``<a "
+"href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com</a>``."
 msgstr ""
 "Par exemple, si [durlAddr], le lien hypertexte "
 "&#39;www.RegExpStudio.com/contacts.htm&#39; sera décoré comme suit: "
 "&#39;www.RegExpStudio.com&#39;"
 
+# 15c989d568fd42939391e16b9dd770ad
+#: ../../demos.rst:89
+msgid ""
+"`TRegExprRoutines "
+"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>`_"
+msgstr ""
+
+# 05c4c86785f34bfe9ea16c41614cd1c4
+#: ../../demos.rst:91
+#, fuzzy
+msgid "Very simple examples, see comments inside the unit"
+msgstr ""
+"exemples très simples, voir les commentaires à l&#39;intérieur de "
+"l&#39;unité"
+
+# e79010c2568242c39edb01acc0129df2
+#: ../../demos.rst:94
+msgid ""
+"`TRegExprClass "
+"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>`_"
+msgstr ""
+
+# 837cc91fa21a4ee784ccdda384cd2626
+#: ../../demos.rst:96
+#, fuzzy
+msgid "Slightly more complex examples, see comments inside the unit"
+msgstr ""
+"exemples un peu plus complexes, voir les commentaires à l&#39;intérieur "
+"de l&#39;unité"
+
+# 44a0b156234d45819fbbbaeef3b5570b
+#~ msgid "Demos\\TRegExprRoutines"
+#~ msgstr "Démos \\ TRegExprRoutines"
+
+# 46abfbe911a146eea55beb6c6afe6830
+#~ msgid "Demos\\TRegExprClass"
+#~ msgstr "Démos \\ TRegExprClass"
+
+# afaf950f4f4e46ccbe2d249cf608f664
+#~ msgid "Demos\\Text2HTML"
+#~ msgstr "Démos \\ Text2HTML"
+
+# b7c6de1b80924060b29f2a5bc3ca4a74
+#~ msgid "see `description <#text2html.html>`__"
+#~ msgstr "voir `description &lt;# text2html.html&gt;` __"
+
+# 15765e1d81ba47ada002e3824061fa4b
+#~ msgid "Note"
+#~ msgstr "Remarque"
+
+# d245d943d424493686194ed4c34496a4
+#~ msgid "Very simple utility, that helps publish plain text as HTML"
+#~ msgstr ""
+#~ "Utilitaire très simple, qui permet de"
+#~ " publier du texte brut au format "
+#~ "HTML"
+
+# fc45e9ddd78b43b9beddc64e427d3428
+#~ msgid "Specially written as a demonstration of TRegExpr usage."
+#~ msgstr "Spécialement écrit comme démonstration de l’utilisation de TRegExpr."
+
+# c49d45fc524b43caaf3ca1be69e66dd8
+#~ msgid "Unit HyperLinksDecorator"
+#~ msgstr "Unité HyperLinksDecorator"
+
+# 48602ac66cfc4b33833ee98347ff519d
+#~ msgid ""
+#~ "`DecorateURLs <#hyperlinksdecorator.html#decorateurls>`__   "
+#~ "`DecorateEMails <#hyperlinksdecorator.html#decorateemails>`__"
+#~ msgstr ""
+#~ "`DecorateURLs &lt;# hyperlinksdecorator.html # "
+#~ "decorateurls&gt;` __ `DecorateEMails &lt;# "
+#~ "hyperlinksdecorator.html # decorateemails&gt;` __"
+
+# 05aba83ebedf4ca2a568a2341a9a5202
+#~ msgid ""
+#~ "This unit contains functions to decorate"
+#~ " hyper-links (see `Text2Html "
+#~ "<#text2html.html>`__ demo-project for usage"
+#~ " example)."
+#~ msgstr ""
+#~ "Cette unité contient des fonctions "
+#~ "permettant de décorer des hyperliens "
+#~ "(voir `Text2Html &lt;# text2html.html&gt;` __"
+#~ " -pro demo-project pour un exemple"
+#~ " d&#39;utilisation)."
+
+# d095a9a1938f475ab2d11e5354b53383
+#~ msgid ""
+#~ "For example, replaces 'www.RegExpStudio.com' "
+#~ "with 'www.RegExpStudio.com' or 'anso@mail.ru' "
+#~ "with 'anso@mail.ru'."
+#~ msgstr ""
+#~ "Par exemple, remplace "
+#~ "&quot;www.RegExpStudio.com&quot; par "
+#~ "&quot;www.RegExpStudio.com&quot; ou "
+#~ "&quot;anso@mail.ru&quot; par &quot;anso@mail.ru&quot;."
+
+# aef4a6effdcd4d30b36c393a1dbb655b
+#~ msgid "function DecorateURLs"
+#~ msgstr "fonction DecorateURLs"
+
+# 24ef042463d040cf81377f17c9cc66f5
+#~ msgid ""
+#~ "Finds and replaces hyper links like "
+#~ "'http://...' or 'ftp://..' as well as"
+#~ " links without protocol, but start "
+#~ "with 'www.' If You want to "
+#~ "decorate emails as well, You have "
+#~ "to use function `DecorateEMails "
+#~ "<#hyperlinksdecorator.html#decorateemails>`__ instead."
+#~ msgstr ""
+#~ "Recherche et remplace les hyperliens "
+#~ "tels que &quot;http: // ...&quot; ou "
+#~ "&quot;ftp: // ..&quot;, ainsi que les"
+#~ " liens sans protocole, mais commence "
+#~ "par &quot;www.&quot; Si vous souhaitez "
+#~ "également décorer des emails, vous devez"
+#~ " utiliser la fonction `DecorateEMails &lt;#"
+#~ " hyperlinksdecorator.html # decorateemails&gt;` "
+#~ "__ à la place."
+
+# b215d5dc898747c7915231ada6984f87
+#~ msgid ""
+#~ "function DecorateURLs (const AText : "
+#~ "string; AFlags : TDecorateURLsFlagSet = "
+#~ "[durlAddr, durlPath]) : string;"
+#~ msgstr ""
+#~ "function DecorateURLs (const AText: string;"
+#~ " AFlags: TDecorateURLsFlagSet = [durlAddr, "
+#~ "durlPath]): string;"
+
+# 422a158d26cc4ef996b5630676a49138
+#~ msgid "Description"
+#~ msgstr "La description"
+
 # 94a99c083b5a4c219be40c0c6f4cccbd
-#: ../../demos.rst:105
-msgid "type"
-msgstr "type"
+#~ msgid "type"
+#~ msgstr "type"
 
 # 5a2063fb2c9540489b25d303e7299b75
-#: ../../demos.rst:107
-msgid ""
-"TDecorateURLsFlags = (durlProto, durlAddr, durlPort, durlPath, durlBMark, "
-"durlParam);"
-msgstr ""
-"TDecorateURLsFlags = (durlProto, durlAddr, durlPort, durlPath, durlBMark, "
-"durlParam);"
+#~ msgid ""
+#~ "TDecorateURLsFlags = (durlProto, durlAddr, "
+#~ "durlPort, durlPath, durlBMark, durlParam);"
+#~ msgstr ""
+#~ "TDecorateURLsFlags = (durlProto, durlAddr, "
+#~ "durlPort, durlPath, durlBMark, durlParam);"
 
 # 6eb29cf188024b1db0cb72688533250d
-#: ../../demos.rst:110
-msgid "TDecorateURLsFlagSet = set of TDecorateURLsFlags;"
-msgstr "TDecorateURLsFlagSet = ensemble de TDecorateURLsFlags;"
+#~ msgid "TDecorateURLsFlagSet = set of TDecorateURLsFlags;"
+#~ msgstr "TDecorateURLsFlagSet = ensemble de TDecorateURLsFlags;"
 
 # e0345679304349928831e5f45b1a9fc2
-#: ../../demos.rst:118
-msgid "These are the possible values:"
-msgstr "Ce sont les valeurs possibles:"
+#~ msgid "These are the possible values:"
+#~ msgstr "Ce sont les valeurs possibles:"
 
 # 7883fb7877c743339da2174a664aaf3b
-#: ../../demos.rst:122
-msgid "Value                Meaning"
-msgstr "Valeur Signification"
-
-# 5bddd595dac94f56bd54cd150d9c225f
-#: ../../demos.rst:126
-msgid "durlProto        Protocol (like 'ftp://' or 'http://')"
-msgstr "Protocole durlProto (comme &#39;ftp: //&#39; ou &#39;http: //&#39;)"
-
-# a81e22d400854c3193b27f6bbf10b2b5
-#: ../../demos.rst:128
-msgid "durlAddr        TCP address or domain name (like 'RegExpStudio.com')"
-msgstr ""
-"Adresse TCP ou nom de domaine durlAddr (comme &#39;RegExpStudio.com&#39;)"
-
-# 04b6958157e24b45a96e69f374adb649
-#: ../../demos.rst:130
-msgid "durlPort                Port number if specified (like ':8080')"
-msgstr "Numéro de port durlPort si spécifié (comme &#39;: 8080&#39;)"
-
-# 255eaf568f8a4bd0a93ce63f4a707e46
-#: ../../demos.rst:132
-msgid "durlPath        Path to document (like 'index.html')"
-msgstr "durlPath Chemin d&#39;accès au document (comme &#39;index.html&#39;)"
-
-# 7b41e034a591462eae31b2e0ac33dd9b
-#: ../../demos.rst:134
-msgid "durlBMark        Book mark (like '#mark')"
-msgstr "DurlBMark Marque-page (comme &#39;#mark&#39;)"
-
-# b3bdc84ac490487db1eac2e7a322a425
-#: ../../demos.rst:136
-msgid "durlParam        URL params (like '?ID=2&User=13')"
-msgstr ""
-"durlParam paramètres d&#39;URL (comme &#39;? ID = 2 &amp; User = 13&#39;)"
+#~ msgid "Value                Meaning"
+#~ msgstr "Valeur Signification"
 
 # 8f3e0d73009d45db9633ad9df02222d6
-#: ../../demos.rst:146
-msgid "function DecorateEMails"
-msgstr "fonction DécorerEMails"
+#~ msgid "function DecorateEMails"
+#~ msgstr "fonction DécorerEMails"
 
 # ecbbc63739114562a2ad834e188ceaf6
-#: ../../demos.rst:150
-msgid ""
-"Replaces all syntax correct e-mails with 'ADDR'. For example, replaces "
-"'anso@mail.ru' with 'anso@mail.ru'."
-msgstr ""
-"Remplace tous les courriels dont la syntaxe est correcte par «ADDR». Par "
-"exemple, remplace &#39;anso@mail.ru&#39; par &#39;anso@mail.ru&#39;."
+#~ msgid ""
+#~ "Replaces all syntax correct e-mails with"
+#~ " 'ADDR'. For example, replaces "
+#~ "'anso@mail.ru' with 'anso@mail.ru'."
+#~ msgstr ""
+#~ "Remplace tous les courriels dont la "
+#~ "syntaxe est correcte par «ADDR». Par "
+#~ "exemple, remplace &#39;anso@mail.ru&#39; par "
+#~ "&#39;anso@mail.ru&#39;."
 
 # 73c02a7b698e47f6a3f436033b24521b
-#: ../../demos.rst:155
-msgid "function DecorateEMails (const AText : string) : string;"
-msgstr "fonction DecorateEMails (const AText: chaîne): chaîne;"
+#~ msgid "function DecorateEMails (const AText : string) : string;"
+#~ msgstr "fonction DecorateEMails (const AText: chaîne): chaîne;"
 
 # fbe5b2dcce2e49d195c2b9d183bf77b3
-#: ../../demos.rst:163
-msgid "Returns input text AText with decorated e-mails"
-msgstr "Renvoie le texte saisi AText avec les e-mails décorés"
+#~ msgid "Returns input text AText with decorated e-mails"
+#~ msgstr "Renvoie le texte saisi AText avec les e-mails décorés"
 
 # aed8b089a3644efa9fc52c35a7255360
-#: ../../demos.rst:168
-msgid "Usage illustrations"
-msgstr "Illustrations d&#39;utilisation"
+#~ msgid "Usage illustrations"
+#~ msgstr "Illustrations d&#39;utilisation"
 
 # cf50cac1d49c4177952ed42ff79680ab
-#: ../../demos.rst:170
-msgid ""
-"•\\ `Text processing from bird's eye view <#article_bird_eye_view.html>`__"
-msgstr ""
-"• \\ `Traitement de texte depuis la vue à vol d&#39;oiseau &lt;# "
-"article_bird_eye_view.html&gt;` __"
+#~ msgid ""
+#~ "•\\ `Text processing from bird's eye "
+#~ "view <#article_bird_eye_view.html>`__"
+#~ msgstr ""
+#~ "• \\ `Traitement de texte depuis "
+#~ "la vue à vol d&#39;oiseau &lt;# "
+#~ "article_bird_eye_view.html&gt;` __"
 
 # d3e065c619814fe88f4b84ee9fef3176
-#: ../../demos.rst:173
-msgid "•\\ `MrDecorator <#article_mrdecorator.html>`__"
-msgstr "• \\ `MrDecorator &lt;# article_mrdecorator.html&gt;` __"
+#~ msgid "•\\ `MrDecorator <#article_mrdecorator.html>`__"
+#~ msgstr "• \\ `MrDecorator &lt;# article_mrdecorator.html&gt;` __"
+

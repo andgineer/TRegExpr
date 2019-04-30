@@ -61,7 +61,7 @@ msgstr "Несколько снимков моей жизни"
 # 5e4712e5c920464e91c88ee2ab6f9ec1
 #: ../../about.rst:18
 msgid "1995 year. 3 years **before** captain rank."
-msgstr "1995 год. 3 года ** до ** звание капитана"
+msgstr "1995 год. 3 года **до** звание капитана"
 
 # 3bfb78fde7d8448abc8dc3b6ebcb2ab7
 #: ../../about.rst:23
@@ -112,7 +112,7 @@ msgstr "2003 год"
 # dcd7146435414ab3a2adeb8d031b2474
 #: ../../about.rst:47
 msgid "And how I supposed to reach the ground?!"
-msgstr "И как мне дойти до земли ?!"
+msgstr "И как мне спуститься?!"
 
 # a86b87dc70c343a3a9036ef6e73a4630
 #: ../../about.rst:49

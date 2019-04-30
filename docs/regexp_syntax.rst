@@ -386,7 +386,7 @@ Non standard modifier.
 
 Switching it ``Off`` you’ll switch all following
 operators into non-greedy mode. So, if
-modifier ``/g`` is ``Off`` then ``+`` works as ``+?``, ``\*`` as ``\*?`` and
+modifier ``/g`` is ``Off`` then ``+`` works as ``+?``, ``*`` as ``*?`` and
 so on.
 
 By default this modifier is ``On``.

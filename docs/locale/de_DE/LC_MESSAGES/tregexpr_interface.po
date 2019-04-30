@@ -37,8 +37,8 @@ msgid ""
 "Return major and minor version, for example, for v. 0.944 VersionMajor = 0 "
 "and VersionMinor = 944"
 msgstr ""
-"Geben Sie die Haupt- und Nebenversion zurück, z. B. für Version 0.944 "
-"VersionMajor = 0 und VersionMinor = 944"
+"Geben Sie major und minor version zurück, z. B. für v. 0.944 VersionMajor = "
+"0 und VersionMinor = 944"
 
 # 3b87f7ed03184b6f9c2e476695fb6d4e
 #: ../../tregexpr_interface.rst:11
@@ -130,8 +130,8 @@ msgid ""
 "Modifier /r - (“Russian.syntax extensions), initialized with "
 "`RegExprModifierR <#modifier_defs>`__ value."
 msgstr ""
-"Modifier / r - (&quot;Russian.syntax-Erweiterungen)&quot;, initialisiert mit"
-" RegExprModifierR &lt;#modifier_defs&gt; `__ value"
+"Modifier / r - (“Russian.syntax-Erweiterungen”), initialisiert mit "
+"RegExprModifierR &lt;#modifier_defs&gt; `__ value."
 
 # c4afba24b1694195b73682bca046d3cc
 #: ../../tregexpr_interface.rst:48
@@ -169,8 +169,8 @@ msgstr ""
 "`Modifikator / g <regexp_syntax.html#modifier_g> `__ Durch das Ausschalten "
 "des Modifizierers / g werden alle Operatoren auf nicht gierige Weise "
 "umgeschaltet. Wenn also ModifierG = False ist, funktionieren alle &#39;\\ "
-"*&#39; als &#39;\\ *?&#39;, Alle &#39;+&#39; als &#39;+?&#39; und so weiter,"
-" initialisiert mit RegExprModifierG &lt;#modifier_defs&gt; `__ value."
+"*&#39; wie &#39;\\ *?&#39; und so weiter, initialisiert mit RegExprModifierG"
+" &lt;#modifier_defs&gt; `__ value."
 
 # 6b11592d599b41639e6a382873774fef
 #: ../../tregexpr_interface.rst:64
@@ -633,7 +633,7 @@ msgid ""
 "global constant)"
 msgstr ""
 "Enthält Zeichen, die als \\\\ w behandelt werden (anfänglich mit der "
-"globalen Konstante RegExprWordChars gefüllt)."
+"globalen Konstante RegExprWordChars gefüllt)"
 
 # 832fb2c0deee4cf99766ff082faeaeb8
 #: ../../tregexpr_interface.rst:314
@@ -667,7 +667,7 @@ msgstr "LinePairedSeparator"
 # e8176773c26b440bb92dbd5c56310534
 #: ../../tregexpr_interface.rst:325
 msgid "paired line separator (like ``\\r\\n`` in DOS and Windows)."
-msgstr "gepaartes Trennzeichen (wie `` \\ r \\ n`` in DOS und Windows)"
+msgstr "gepaartes Trennzeichen (wie `` \\ r \\ n`` in DOS und Windows)."
 
 # bc2c9ee8de5a4a63af38106176bbb5ee
 #: ../../tregexpr_interface.rst:327
@@ -1010,7 +1010,7 @@ msgid ""
 "corresponding closing ‘]’;"
 msgstr ""
 "- (n + 1) an Position n wurde gefunden, indem &#39;[&#39; ohne entsprechende"
-" Schließung &#39;]&#39; geöffnet wurde"
+" Schließung &#39;]&#39; geöffnet wurde;"
 
 # 3079369ec39043b189be4a13dc27b641
 #: ../../tregexpr_interface.rst:518

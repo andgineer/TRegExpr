@@ -180,7 +180,7 @@ msgid ""
 "<#text2html.html>`__ demo-project for usage example)."
 msgstr ""
 "Этот модуль содержит функции для оформления гиперссылок (см. Пример "
-"демонстрационного проекта `Text2Html &lt;# text2html.html&gt;` __)"
+"демонстрационного проекта `Text2Html &lt;# text2html.html&gt;` __)."
 
 # d095a9a1938f475ab2d11e5354b53383
 #: ../../demos.rst:67
@@ -188,7 +188,7 @@ msgid ""
 "For example, replaces 'www.RegExpStudio.com' with 'www.RegExpStudio.com' or "
 "'anso@mail.ru' with 'anso@mail.ru'."
 msgstr ""
-"Например, замените «www.RegExpStudio.com» на «www.RegExpStudio.com» или "
+"Например, заменить «www.RegExpStudio.com» на «www.RegExpStudio.com» или "
 "«anso@mail.ru» на «anso@mail.ru»."
 
 # aef4a6effdcd4d30b36c393a1dbb655b

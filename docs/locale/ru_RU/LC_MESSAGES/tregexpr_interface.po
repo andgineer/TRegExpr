@@ -36,9 +36,7 @@ msgstr "VersionMajor, VersionMinor"
 msgid ""
 "Return major and minor version, for example, for v. 0.944 VersionMajor = 0 "
 "and VersionMinor = 944"
-msgstr ""
-"Возврат основной и вспомогательной версии, например, для версии 0.944 "
-"VersionMajor = 0 и VersionMinor = 944"
+msgstr "Вернуть мажорную и минорную версию, например, для версии 0.944"
 
 # 3b87f7ed03184b6f9c2e476695fb6d4e
 #: ../../tregexpr_interface.rst:11
@@ -72,7 +70,7 @@ msgid ""
 "If any errors while [re]compilation occures, Error method is called (by "
 "default Error raises exception - see below)"
 msgstr ""
-"Если во время компиляции [re] возникают ошибки, вызывается метод Error (по "
+"Если во время компиляции возникают ошибки, вызывается метод Error (по "
 "умолчанию Error вызывает исключение - см. Ниже)"
 
 # 2969099386174c748d0791918299fdf1
@@ -311,7 +309,7 @@ msgid ""
 " ``$n`` replaced by occurence of subexpression number ``n``."
 msgstr ""
 "Возвращает ATemplate с `` $ &amp; `` или `` $ 0``, замененным целым "
-"повторением, а `` $ n`` заменяется появлением числа подвыражения `` n``."
+"повторением, а `` $ n`` заменяется вхождением числа подвыражения `` n``."
 
 # 1a124dc1807847d2a3b2ccfb67bdea79
 #: ../../tregexpr_interface.rst:135
@@ -491,7 +489,7 @@ msgid ""
 msgstr ""
 "Если нет субэкспр. но был найден весь expr (Exec \\ * вернул True), затем "
 "SubExprMatchCount = 0, если ни подвыражений, ни целых повторно не найдено "
-"(Exec \\ * вернул false), тогда SubExprMatchCount = -1."
+"(Exec \\ * вернул false), SubExprMatchCount = -1."
 
 # e4bbc9a91ae54355b57236830d27ce9b
 #: ../../tregexpr_interface.rst:230
@@ -744,7 +742,7 @@ msgstr ""
 # 7fdfff2b315741a7acaafdee59300964
 #: ../../tregexpr_interface.rst:363
 msgid "Dump"
-msgstr "свалка"
+msgstr "Dump"
 
 # 7848de3b175f4b159ca5f51fb03d04f0
 #: ../../tregexpr_interface.rst:365
@@ -958,8 +956,8 @@ msgid ""
 "high word of Object - length, including starting ‘(’ and ending ‘)’ if "
 "exist!"
 msgstr ""
-"старшее слово Object - длина, включая начало &#39;(&#39; и окончание "
-"&#39;)&#39;, если существует!"
+"старшее слово Object - длина, включая начало ((и окончание)), если "
+"существует!"
 
 # 89348b6fdf4a4551adaf3e3f4d982592
 #: ../../tregexpr_interface.rst:501
@@ -1026,7 +1024,7 @@ msgstr "Тип исключения"
 # 1391212f1a0647589d553c74c13ee135
 #: ../../tregexpr_interface.rst:528
 msgid "Default error handler of TRegExpr raise exception:"
-msgstr "Обработчик ошибок по умолчанию TRegExpr возбудить исключение:"
+msgstr "Обработчик ошибок по умолчанию TRegExpr возбудит исключение:"
 
 # 24fdfbb1951e4cdfa36afed014562f23
 #: ../../tregexpr_interface.rst:542

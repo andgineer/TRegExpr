@@ -167,9 +167,9 @@ msgid ""
 msgstr ""
 "&quot;Модификатор / g <regexp_syntax.html#modifier_g> `__ Изключване на "
 "модификатора / g превключва всички оператори в алчен стил, така че ако "
-"ModifierG = False, то всички &#39;&#39; &#39;&#39; работят като &#39;*? и "
-"т.н., инициализирани с `RegExprModifierG &lt;#modifier_defs&gt;` __ "
-"стойност."
+"ModifierG = False, то всички &#39;&#39; &#39;&#39; работят като "
+"&#39;*?&#39;, Всички &#39;+&#39; като &#39;+?&#39; и т.н., инициализирани с "
+"`RegExprModifierG &lt;#modifier_defs&gt;` __ стойност."
 
 # 6b11592d599b41639e6a382873774fef
 #: ../../tregexpr_interface.rst:64
@@ -256,7 +256,7 @@ msgid ""
 "(Exec, ExecPos, ExecNext)."
 msgstr ""
 "Повдига изключение, ако се използва без предишното успешно извикване на Exec"
-" * (Exec, ExecPos, ExecNext)."
+" (Exec, ExecPos, ExecNext)."
 
 # 79c2d03a4f444c67b91d3120988b7b3d
 #: ../../tregexpr_interface.rst:104
@@ -496,7 +496,7 @@ msgid ""
 "Note, that some subexpr. may be not found and for such subexpr. "
 "MathPos=MatchLen=-1 and Match=’’."
 msgstr ""
-"Имайте предвид, че някои субекспре. може да не бъде намерен и за такъв "
+"Имайте предвид, че някои субекспр. може да не бъде намерен и за такъв "
 "subexpr. MathPos = MatchLen = -1 и Match = &#39;&#39;."
 
 # dd71c5db2f0a40859cacc939618fa857
@@ -620,8 +620,8 @@ msgid ""
 "Contains chars, treated as \\\\w (initially filled with RegExprWordChars "
 "global constant)"
 msgstr ""
-"Съдържа символи, третирани като .w (първоначално запълнени с глобална "
-"константа RegExprWordChars)"
+"Съдържа символи, третирани като \\ _ w (първоначално запълнени с глобална "
+"константа RegExprWordChars) \\ t"
 
 # 832fb2c0deee4cf99766ff082faeaeb8
 #: ../../tregexpr_interface.rst:314
@@ -757,7 +757,7 @@ msgid ""
 "escaping metachars (\\w, \\\\d etc)."
 msgstr ""
 "EscChar = &#39;\\ t // &#39;Escape&#39;-char (&#39; &#39;общо re&#39;), "
-"използван за избягване на метачари (w,"
+"използван за избягване на метачари (w, \\ t"
 
 # 66630ddaf88d4ebc82ab8e8d9a6f4281
 #: ../../tregexpr_interface.rst:373
@@ -964,9 +964,7 @@ msgstr ""
 msgid ""
 "Usefull for GUI editors of r.e. etc (You can find example of using in "
 "`TestRExp.dpr <#regexpstudio.html>`__ project)"
-msgstr ""
-"Полезно за редакторите на GUI на т.н. (Можете да намерите пример за "
-"използване в `TestRExp.dpr &lt;# regexpstudio.html&gt;` __ project)"
+msgstr "Полезно за редакторите на GUI на re и т.н."
 
 # 7d41e79d3f474e20aa36aec3c5d7007d
 #: ../../tregexpr_interface.rst:507
@@ -1040,5 +1038,5 @@ msgid ""
 "Remove ``.`` in ``{.$DEFINE UniCode}`` in regexpr.pas. After that all "
 "strings will be treated as WideString."
 msgstr ""
-"Премахнете `` .`` в `` {$ DEFINE UniCode} `` в regexpr.pas. След това всички"
-" низове ще се третират като WideString."
+"Премахнете `` .`` в `` {. $ DEFINE UniCode} `` в regexpr.pas. След това "
+"всички низове ще се третират като WideString."

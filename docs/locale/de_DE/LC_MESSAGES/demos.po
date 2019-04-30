@@ -27,8 +27,7 @@ msgid ""
 "First of all I recommend You to read `article with usage illustrations "
 "<http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__."
 msgstr ""
-"Zunächst einmal empfehle ich Ihnen, Artikel mit Verwendungsabbildungen zu "
-"lesen "
+"Als Erstes empfehle ich Ihnen, Artikel mit Verwendungsabbildungen zu lesen "
 "<http://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html> "
 "__."
 
@@ -131,7 +130,7 @@ msgstr ""
 "Delphi 4 oder höher vorhanden sind. Beim Kompilieren in Delphi 3 oder Delphi"
 " 2 erhalten Sie Fehlermeldungen zu unbekannten Eigenschaften. Sie können es "
 "ignorieren - diese Eigenschaften werden nur für die Größenänderung und "
-"Ausrichtung von Komponenten benötigt."
+"Ausrichtung von Komponenten benötigt, um die Größe des Formulars zu ändern."
 
 # 8fc9996e05c345aa9e7e31bb9c67299f
 #: ../../demos.rst:43
@@ -180,7 +179,7 @@ msgid ""
 "<#text2html.html>`__ demo-project for usage example)."
 msgstr ""
 "Diese Unit enthält Funktionen zum Verzieren von Hyperlinks (siehe Beispiel "
-"für Text2Html &lt;# text2html.html&gt; `__ Demo-Projekt)."
+"für Text2Html &lt;# text2html.html&gt; `__-Demo-Projekt)."
 
 # d095a9a1938f475ab2d11e5354b53383
 #: ../../demos.rst:67
@@ -248,9 +247,9 @@ msgid ""
 "'www.RegExpStudio.com/contacts.htm' will be decorated as "
 "'www.RegExpStudio.com'"
 msgstr ""
-"Wenn zum Beispiel [durlAddr], wird der Hyperlink "
+"Wenn beispielsweise [durlAddr] der Hyperlink "
 "&quot;www.RegExpStudio.com/contacts.htm&quot; als "
-"&quot;www.RegExpStudio.com&quot; gekennzeichnet."
+"&quot;www.RegExpStudio.com&quot; gekennzeichnet ist"
 
 # 94a99c083b5a4c219be40c0c6f4cccbd
 #: ../../demos.rst:105

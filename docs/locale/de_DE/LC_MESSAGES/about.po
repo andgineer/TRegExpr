@@ -42,7 +42,7 @@ msgstr ""
 "Im Februar 1994 beendete ich mein Studium an der St. Petersburger "
 "Elektrotechnischen Universität &quot;LETI&quot;. "
 "<http://www.eltech.ru/en/university> Es war ein 6-jähriges Studium, aber in "
-"Russland gab es keine Bachelor- / Master-Abschlüsse, nur „Hochschulbildung“."
+"Russland gab es keine Bachelor- / Master-Abschlüsse, nur „High Education“."
 
 # 3324241bf9844766a430a324aacadbce
 #: ../../about.rst:11
