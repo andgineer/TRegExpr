@@ -1,10 +1,9 @@
 Introduction
 ~~~~~~~~~~~~
 
-TRegExpr library implements regular expressions in pure Delphi.
-
-- TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ - `GitHub mirror of the FPC SubVersion  <https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_
-- `GitHub version <https://github.com/masterandrey/TRegExpr>`_
+TRegExpr library implements `regular
+expressions <regexp_syntax.html>`_ in pure Delphi.
+TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_.
 
 TRegExpr is easy to use and powerful tool for sophisticated search and
 substitution and for template-based text check.
@@ -17,10 +16,6 @@ search for complex patterns in log files and all you can imagine.
 Rules (templates) can be changed without your
 program recompilation.
 
-As a language for rules used subset of Perl’s `regular
-expressions <regexp_syntax.html>`__ (regexp).
-
-Full source code included, pure Object Pascal. Thus, you need no DLL!
 The library source code is compatible with Delphi 2-7, Borland C++
 Builder 3-6, FreePascal.
 
@@ -47,6 +42,38 @@ Feedback
 
 If you see any problems,
 please `create the bug <https://github.com/masterandrey/TRegExpr/issues>`_.
+
+Documentation
+~~~~~~~~~~~~~
+
+.. toctree::
+   :glob:
+   :maxdepth: 2
+
+   regexp_syntax
+   tregexpr_interface
+   faq
+   demos
+
+Translations
+~~~~~~~~~~~~
+
+`Documentation <https://regexpr.masterandrey.com/en/latest/>`_ is available
+in English and Russian.
+
+There are also old translations to German, Bulgarian, French and Spanish.
+If you want to help to update the translation please `contact me <https://github.com/masterandrey>`_.
+New translation is based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
+and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_.
+All this translations are already machine-translated and need only proof-reading
+and may be some copy-pasting from old translations.
+
+Source code
+~~~~~~~~~~~
+Pure Object Pascal.
+
+- `FPC fork (GitHub mirror of the SubVersion) <https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_
+- `Original version <https://github.com/masterandrey/TRegExpr>`_
 
 Gratitude
 ~~~~~~~~~
@@ -78,25 +105,3 @@ you.
 
 And many others - for hard work in bug hunting!
 
-Documentation
-~~~~~~~~~~~~~
-
-`Documentation <https://regexpr.masterandrey.com/en/latest/>`_ is available
-in English and Russian.
-
-There are also old translations to German, Bulgarian, French and Spanish.
-If you want to help to update the translation please `contact me <https://github.com/masterandrey>`_.
-New translation is based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
-and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_.
-All this translations are already machine-translated and need only proof-reading
-and may be some copy-pasting from old translations.
-
-
-.. toctree::
-   :glob:
-   :maxdepth: 2
-
-   regexp_syntax
-   tregexpr_interface
-   faq
-   demos
