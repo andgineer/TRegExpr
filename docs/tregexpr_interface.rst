@@ -89,6 +89,9 @@ Match the regular expression against ``AInputString``.
 Available overloaded ``Exec`` version without ``AInputString`` - it uses ``AInputString``
 from previous call.
 
+See also global function ExecRegExpr_ that you can use without explicit ``TRegExpr``
+object creation.
+
 ExecNext
 ~~~~~~~~
 
@@ -168,6 +171,11 @@ Split AInputStr into APieces by r.e. occurencies
 
 Internally calls Exec_ / ExecNext_
 
+See also global function SplitRegExpr_ that you can use without explicit ``TRegExpr``
+object creation.
+
+.. _Replace:
+
 Replace, ReplaceEx
 ~~~~~~~~~~~~~~~~~~
 
@@ -191,9 +199,11 @@ as template for Substitution methods.
 
 Internally calls Exec_ / ExecNext_
 
-Overloaded version and ReplaceEx operate with call-back function,
-
+Overloaded version and ``ReplaceEx`` operate with call-back function,
 so you can implement really complex functionality.
+
+See also global function ReplaceRegExpr_ that you can use without explicit ``TRegExpr``
+object creation.
 
 SubExprMatchCount
 ~~~~~~~~~~~~~~~~~
@@ -404,21 +414,27 @@ Default for InvertCase_ property
 Global functions
 ----------------
 
+All this functionality is available as methods of ``TRegExpr``, but with global functions
+you do not need to create ``TReExpr`` instance so your code would be more simple if
+you just need one function.
+
 ExecRegExpr
 ~~~~~~~~~~~
 
-true if the string matches the regular expression
+true if the string matches the regular expression.
+Just as Exec_ in ``TRegExpr``.
 
 SplitRegExpr
 ~~~~~~~~~~~~
 
-Splits the string by r.e. occurencies
+Splits the string by regular expressions.
+See also Split_ if you prefer to create ``TRegExpr`` instance explicitly.
 
 ReplaceRegExpr
 ~~~~~~~~~~~~~~
 
 Returns the string with regular expressions replaced by the ``AReplaceStr``.
-See also Substitute_.
+See also Replace_ if you prefer to create TRegExpr instance explicitly.
 
 If ``AUseSubstitution` is true, then ``AReplaceStr`` will be used as template
 for ``Substitution methods``.
