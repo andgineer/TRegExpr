@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-30 13:00+0300\n"
-"PO-Revision-Date: 2019-04-25 09:51+0000\n"
+"POT-Creation-Date: 2019-05-01 10:09+0300\n"
+"PO-Revision-Date: 2019-05-01 09:21+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: Bulgarian (Bulgaria) (https://www.transifex.com/masterAndrey/teams/98461/bg_BG/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Библиотеката TRegExpr реализира &quot;регулярни изрази&quot; "
 "<regexp_syntax.html> в чист Делфи. TRegExpr е част от `Lazarus (Free Pascal)"
-" <http://wiki.freepascal.org/Regexpr> `_ проект."
+" <http://wiki.freepascal.org/Regexpr>`_ проект."
 
 # 57929c8115c34146ba8d53c86b73e99e
 #: ../../index.rst:8
@@ -88,7 +88,7 @@ msgid ""
 "<https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html>`_."
 msgstr ""
 "- Колко хубава беше библиотеката "
-"<https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html> `_."
+"<https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html>`_."
 
 # dfa2788a71244850a2527e38817dfbaa
 #: ../../index.rst:28
@@ -103,8 +103,8 @@ msgid ""
 "you project and use the class `TRegExpr <tregexpr_interface.html>`_."
 msgstr ""
 "За да използвате библиотеката, просто добавете `източниците "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas> `_ за"
-" да проектирате и използвате класа` TRegExpr <tregexpr_interface.html> `_."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ за "
+"да проектирате и използвате класа` TRegExpr <tregexpr_interface.html>`_."
 
 # 604a644712bf457d89f53469bf0dea7e
 #: ../../index.rst:33
@@ -113,9 +113,9 @@ msgid ""
 "<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__"
 " illustrate the simplicity and power of text processing with the library."
 msgstr ""
-"`Демо проекти <demos.html> `__ and` публикация в блога "
-"<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>"
-" `__ илюстрират простотата и силата на обработката на текст с библиотеката."
+"`Демо проекти <demos.html>`__ and` публикация в блога "
+"<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__"
+" илюстрират простотата и силата на обработката на текст с библиотеката."
 
 # e7b685d3c5ed4990b3ad17e4ce087843
 #: ../../index.rst:37
@@ -124,7 +124,7 @@ msgid ""
 "unicode <tregexpr_interface.html#unicode>`__."
 msgstr ""
 "Ако имате нужда от Unicode (т.нар. &quot;WideString&quot; в Delphi) - вижте "
-"`Как да използваме Unicode <tregexpr_interface.html#unicode> `__."
+"`Как да използваме Unicode <tregexpr_interface.html#unicode>`__."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:41
@@ -138,7 +138,7 @@ msgid ""
 "<https://github.com/masterandrey/TRegExpr/issues>`_."
 msgstr ""
 "Ако видите някакви проблеми, моля създайте бъг "
-"<https://github.com/masterandrey/TRegExpr/issues> `_."
+"<https://github.com/masterandrey/TRegExpr/issues>`_."
 
 # a2ac7709ea0344e5931a96f336a6bb2e
 #: ../../index.rst:47
@@ -157,7 +157,7 @@ msgid ""
 "<https://regexpr.masterandrey.com/ru/latest/>`_."
 msgstr ""
 "Документацията е на английски и руски "
-"<https://regexpr.masterandrey.com/ru/latest/> `_."
+"<https://regexpr.masterandrey.com/ru/latest/>`_."
 
 # cb48bcda21e84448a807a9f10263f558
 #: ../../index.rst:63
@@ -173,8 +173,8 @@ msgid ""
 msgstr ""
 "Има и стари преводи на немски, български, френски и испански. Ако искате да "
 "помогнете да актуализирате старите преводи, моля свържете се с мен "
-"<https://github.com/masterandrey> `_. Новите преводи са базирани на `GetText"
-" <https://en.wikipedia.org/wiki/Gettext> `_ и може да се редактира с` "
+"<https://github.com/masterandrey>`_. Новите преводи са базирани на `GetText "
+"<https://en.wikipedia.org/wiki/Gettext>`_ и може да се редактира с` "
 "transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/> "
 "`_. Те вече са преведени машинно и се нуждаят само от корекционно четене и "
 "може да са копиране от стари преводи."
@@ -192,7 +192,7 @@ msgstr "Чист обект Pascal."
 # b852f83bed1e4efe8de4bebf09c8ac3c
 #: ../../index.rst:74
 msgid "`Original version <https://github.com/masterandrey/TRegExpr>`_"
-msgstr "`Оригинална версия <https://github.com/masterandrey/TRegExpr> `_"
+msgstr "`Оригинална версия <https://github.com/masterandrey/TRegExpr>`_"
 
 # 4d7ba7e04b4e479fbb3fb94377ddaa2f
 #: ../../index.rst:75
@@ -201,8 +201,7 @@ msgid ""
 "<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
 msgstr ""
 "`FreePascal вилица (GitHub огледало на SubVersion) "
-"<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>"
-" `_"
+"<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
 
 # c556ccaa4805402ab0801fa2785c7456
 #: ../../index.rst:78
@@ -252,8 +251,8 @@ msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
 "translation, usefull suggestions"
 msgstr ""
-"Мартин Баур (&quot;www.mindpower.com.&quot; <http://www.mindpower.com> `__) "
-"- немски превод, полезни предложения"
+"Мартин Баур (&quot;www.mindpower.com.&quot; <http://www.mindpower.com>`__) -"
+" немски превод, полезни предложения"
 
 # d402718ba09b49ffb284a26bc9e31d57
 #: ../../index.rst:93

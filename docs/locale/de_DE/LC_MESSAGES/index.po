@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-30 13:00+0300\n"
-"PO-Revision-Date: 2019-04-25 09:51+0000\n"
+"POT-Creation-Date: 2019-05-01 10:09+0300\n"
+"PO-Revision-Date: 2019-05-01 09:21+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: German (Germany) (https://www.transifex.com/masterAndrey/teams/98461/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -34,8 +34,8 @@ msgid ""
 "<http://wiki.freepascal.org/Regexpr>`_ project."
 msgstr ""
 "Die TRegExpr-Bibliothek implementiert `reguläre Ausdrücke "
-"<regexp_syntax.html> _ in reinem Delphi. TRegExpr ist ein Teil von `Lazarus "
-"(Free Pascal) <http://wiki.freepascal.org/Regexpr> `_ Projekt."
+"<regexp_syntax.html>`_ in reinem Delphi. TRegExpr ist ein Teil von `Lazarus "
+"(Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ Projekt."
 
 # 57929c8115c34146ba8d53c86b73e99e
 #: ../../index.rst:8
@@ -88,7 +88,7 @@ msgid ""
 "<https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html>`_."
 msgstr ""
 "`Wie gut war die Bibliothek getroffen? "
-"<https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html> `_."
+"<https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html>`_."
 
 # dfa2788a71244850a2527e38817dfbaa
 #: ../../index.rst:28
@@ -103,9 +103,9 @@ msgid ""
 "you project and use the class `TRegExpr <tregexpr_interface.html>`_."
 msgstr ""
 "Um die Bibliothek zu verwenden, fügen Sie einfach die Quellen hinzu "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas> _ für"
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ für"
 " Ihr Projekt und verwenden Sie die Klasse `TRegExpr "
-"<tregexpr_interface.html> `_."
+"<tregexpr_interface.html>`_."
 
 # 604a644712bf457d89f53469bf0dea7e
 #: ../../index.rst:33
@@ -114,7 +114,7 @@ msgid ""
 "<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__"
 " illustrate the simplicity and power of text processing with the library."
 msgstr ""
-"`Demo-Projekte <demos.html> __ und `Blogbeitrag zur Verwendung "
+"`Demo-Projekte <demos.html>`__ und `Blogbeitrag zur Verwendung "
 "<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>"
 " __ veranschaulicht die Einfachheit und Leistungsfähigkeit der "
 "Textverarbeitung mit der Bibliothek."
@@ -126,7 +126,7 @@ msgid ""
 "unicode <tregexpr_interface.html#unicode>`__."
 msgstr ""
 "Wenn Sie Unicode benötigen (in Delphi als &#39;WideString&#39; bezeichnet) -"
-" siehe `So verwenden Sie Unicode <tregexpr_interface.html#unicode> __."
+" siehe `So verwenden Sie Unicode <tregexpr_interface.html#unicode>`__."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:41
@@ -140,7 +140,7 @@ msgid ""
 "<https://github.com/masterandrey/TRegExpr/issues>`_."
 msgstr ""
 "Wenn Sie Probleme sehen, erstellen Sie den Fehler "
-"<https://github.com/masterandrey/TRegExpr/issues> `_."
+"<https://github.com/masterandrey/TRegExpr/issues>`_."
 
 # a2ac7709ea0344e5931a96f336a6bb2e
 #: ../../index.rst:47
@@ -159,7 +159,7 @@ msgid ""
 "<https://regexpr.masterandrey.com/ru/latest/>`_."
 msgstr ""
 "Die Dokumentation ist in Englisch und Russisch verfügbar "
-"<https://regexpr.masterandrey.com/ru/latest/> `_."
+"<https://regexpr.masterandrey.com/ru/latest/>`_."
 
 # cb48bcda21e84448a807a9f10263f558
 #: ../../index.rst:63
@@ -176,10 +176,10 @@ msgstr ""
 "Es gibt auch alte Übersetzungen in Deutsch, Bulgarisch, Französisch und "
 "Spanisch. Wenn Sie bei der Aktualisierung dieser alten Übersetzungen "
 "mithelfen möchten, kontaktieren Sie mich bitte "
-"<https://github.com/masterandrey> `_. Neue Übersetzungen basieren auf "
-"GetText <https://en.wikipedia.org/wiki/Gettext> `_ und kann mit` "
-"transifex.com bearbeitet werden "
-"<https://www.transifex.com/masterAndrey/tregexpr/dashboard/> `_. Sie sind "
+"<https://github.com/masterandrey>`_. Neue Übersetzungen basieren auf GetText"
+" <https://en.wikipedia.org/wiki/Gettext>`_ und kann mit` transifex.com "
+"bearbeitet werden "
+"<https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_. Sie sind "
 "bereits maschinell übersetzt und müssen nur korrigiert werden. "
 "Möglicherweise werden auch alte Übersetzungen kopiert."
 
@@ -196,7 +196,7 @@ msgstr "Pure Object Pascal."
 # b852f83bed1e4efe8de4bebf09c8ac3c
 #: ../../index.rst:74
 msgid "`Original version <https://github.com/masterandrey/TRegExpr>`_"
-msgstr "`Originalversion <https://github.com/masterandrey/TRegExpr> _"
+msgstr "`Originalversion <https://github.com/masterandrey/TRegExpr>`_"
 
 # 4d7ba7e04b4e479fbb3fb94377ddaa2f
 #: ../../index.rst:75
@@ -257,7 +257,7 @@ msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
 "translation, usefull suggestions"
 msgstr ""
-"Martin Baur (www.mindpower.com) <http://www.mindpower.com> `__) - deutsche "
+"Martin Baur (www.mindpower.com) <http://www.mindpower.com>`__) - deutsche "
 "Übersetzung, nützliche Vorschläge"
 
 # d402718ba09b49ffb284a26bc9e31d57

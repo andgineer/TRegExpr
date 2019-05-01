@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-30 13:00+0300\n"
-"PO-Revision-Date: 2019-04-25 09:51+0000\n"
+"POT-Creation-Date: 2019-05-01 10:09+0300\n"
+"PO-Revision-Date: 2019-05-01 09:21+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/masterAndrey/teams/98461/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -251,7 +251,7 @@ msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
 "translation, usefull suggestions"
 msgstr ""
-"Мартин Баур (`www.mindpower.com <http://www.mindpower.com> `__) - немецкий "
+"Мартин Баур (`www.mindpower.com <http://www.mindpower.com>`__) - немецкий "
 "перевод, полезные предложения"
 
 # d402718ba09b49ffb284a26bc9e31d57
@@ -287,7 +287,7 @@ msgstr "Kit Eason много примеров для документации"
 # baed1255c1c143b399d67758295109a4
 #: ../../index.rst:100
 msgid "Juergen Schroth - bug hunting and useful suggestions"
-msgstr "Юрген Шрот - поиск ошибок и полезные советы"
+msgstr "Juergen Schroth - поиск ошибок и полезные советы"
 
 # 9f1031b4f6224dc99622a7c0a665c6e6
 #: ../../index.rst:101

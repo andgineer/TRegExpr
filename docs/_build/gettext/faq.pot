@@ -1,0 +1,244 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, Andrey Sorokin
+# This file is distributed under the same license as the TRegExpr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: TRegExpr 0.952\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-01 10:09+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../faq.rst:2
+# cf1fdea7e27f4b6b9e33211b59fc1c64
+msgid "FAQ"
+msgstr ""
+
+#: ../../faq.rst:5
+# d6fc760c6fc94d9a899a479298b4c3dc
+msgid "I found a terrible bug: TRegExpr raises Access Violation exception!"
+msgstr ""
+
+#: ../../faq.rst:7
+#: ../../faq.rst:27
+#: ../../faq.rst:39
+#: ../../faq.rst:55
+#: ../../faq.rst:71
+#: ../../faq.rst:84
+#: ../../faq.rst:104
+#: ../../faq.rst:115
+#: ../../faq.rst:135
+# 40da4f3424204e0f9f5560fb3c87b10a
+# 3833e9a61eba4b809278c359680e17ca
+# 5a47e00001fb4510bd56b96c8ae2de48
+# 063d88b9d1924eb3833098263231246a
+# ac33582fb29a41d182d1d5a37f804714
+# 7943cbe2de2f4a578f118eb36182d84c
+# e2ff87750895422bbacd133047904d32
+# 736edb290b65410a8c8b1774a344c60d
+# 4de8457af7c741fea504b9c213198f59
+msgid "**Answer**"
+msgstr ""
+
+#: ../../faq.rst:9
+# 42f037ad3d0d4c54b07a7dca4f7e1779
+msgid "You must create the object before usage. So, after you declared something like:"
+msgstr ""
+
+#: ../../faq.rst:16
+# e865298e59094744b6eb09fa43db311b
+msgid "do not forget to create the object instance:"
+msgstr ""
+
+#: ../../faq.rst:23
+# 781bb73b9cd34896bd61ea052d2869ea
+msgid "How can I use TRegExpr with Borland C++ Builder?"
+msgstr ""
+
+#: ../../faq.rst:25
+# 252a4182e2ca41febf89678337efb6c2
+msgid "I have a problem since no header file (``.h`` or ``.hpp``) is available."
+msgstr ""
+
+#: ../../faq.rst:29
+# c17bbf36186946eb9b60c1c609ec12ec
+msgid "Add ``RegExpr.pas`` to ``bcb`` project."
+msgstr ""
+
+#: ../../faq.rst:30
+# 7b1b72640e2c46c7a5ae52e5dc598b7d
+msgid "Compile project. This generates the header file ``RegExpr.hpp``."
+msgstr ""
+
+#: ../../faq.rst:31
+# 16ee016a9fa547d7b412bd44ea526e44
+msgid "Now you can write code which uses the ``RegExpr`` unit."
+msgstr ""
+
+#: ../../faq.rst:32
+# 92c071830b604493a9b0982e4c690f0d
+msgid "Don't forget to add  ``#include “RegExpr.hpp”`` where needed."
+msgstr ""
+
+#: ../../faq.rst:33
+# a14b93d760474e5f83f70bb9479d161b
+msgid "Don't forget to replace all ``\\`` in regular expressions with ``\\\\`` or redefined `EscChar <tregexpr_interface.html#escchar>`__ const."
+msgstr ""
+
+#: ../../faq.rst:37
+# 6c8450146f0841d1a013cff6b32e8dcc
+msgid "Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in Borland C++ Builder?"
+msgstr ""
+
+#: ../../faq.rst:41
+# 86691c4364694b7a8784006481ec491e
+msgid "The hint is in the previous question ;) Symbol ``\\`` has special meaning in ``C++``, so you have to ``escape`` it (as described in previous answer). But if you don't like r.e. like ``\\\\w+\\\\\\\\w+\\\\.\\\\w+`` you can redefine the constant ``EscChar`` (in ``RegExpr.pas``). For example ``EscChar = \"/\"``. Then you can write ``/w+/w+/./w+``, looks unusual but more readable."
+msgstr ""
+
+#: ../../faq.rst:50
+# 836b9a07a857496c8570a92e1ff86f73
+msgid "Why does TRegExpr return more then one line?"
+msgstr ""
+
+#: ../../faq.rst:52
+# 27f1d5918d444c55b07292a55a65fd49
+msgid "For example, r.e. ``<font .\\*>`` returns the first ``<font``, then the rest of the file including last ``</html>``."
+msgstr ""
+
+#: ../../faq.rst:57
+# 2456e655103c4b788ccb1bf90ed3772b
+msgid "For backward compatibility, `modifier /s <regexp_syntax.html#modifier_s>`__ is ``On`` by default."
+msgstr ""
+
+#: ../../faq.rst:60
+# 74667df4efa94c54bb5fa7140be21392
+msgid "Switch it Off and ``.`` will match any but `Line separators <regexp_syntax.html#syntax_line_separators>`__ - exactly as you wish."
+msgstr ""
+
+#: ../../faq.rst:63
+# b31d50bb744f40ae9282e43a1967fad6
+msgid "BTW I suggest ``<font ([^\\n>]*)>``, in ``Match[1]`` will be the URL."
+msgstr ""
+
+#: ../../faq.rst:66
+# 65c336793c8746af86f7916910aa1bd4
+msgid "Why does TRegExpr return more then I expect?"
+msgstr ""
+
+#: ../../faq.rst:68
+# d751c0f0d0e7458d905073d0ca772bee
+msgid "For example r.e. ``<p>(.+)</p>`` applyed to string ``<p>a</p><p>b</p>`` returns ``a</p><p>b`` but not ``a`` as I expected."
+msgstr ""
+
+#: ../../faq.rst:73
+# 2e19907717ae4932b951c9e57b2bbd5a
+msgid "By default all operators works in ``greedy`` mode, so they match as more as it possible."
+msgstr ""
+
+#: ../../faq.rst:76
+# aff79b8422d0482f8c03a4f9e3e5c2f6
+msgid "If you want ``non-greedy`` mode you can use ``non-greedy`` operators like ``+?`` and so on or switch all operators into ``non-greedy`` mode with help of modifier ``g`` (use appropriate TRegExpr properties or operator ``?(-g)`` in r.e.)."
+msgstr ""
+
+#: ../../faq.rst:82
+# 98b9a7d955c94ac699086ed6b50c59e2
+msgid "How to parse sources like HTML with help of TRegExpr"
+msgstr ""
+
+#: ../../faq.rst:86
+# 84b05a8a734c400f84412a496820942a
+msgid "Sorry folks, but it's nearly impossible!"
+msgstr ""
+
+#: ../../faq.rst:88
+# 8d6e67a8dc71482fab61baec80f05bb3
+msgid "Of course, you can easily use TRegExpr for extracting some information from HTML, as shown in my examples, but if you want accurate parsing you have to use real parser, not r.e."
+msgstr ""
+
+#: ../../faq.rst:92
+# 6c0a493a04494f7aae37970898a379f4
+msgid "You can read full explanation in Tom Christiansen and Nathan Torkington ``Perl Cookbook``, for example."
+msgstr ""
+
+#: ../../faq.rst:95
+# ed36cb64ef9248de884cbb0c9a7d08f9
+msgid "In short - there are many structures that can be easy parsed by real parser but cannot at all by r.e., and real parser is much faster to do the parsing, because r.e. doesn't simply scan input stream, it performs optimization search that can take a lot of time."
+msgstr ""
+
+#: ../../faq.rst:102
+# ab01e6cbba074618b1022ffead0efc80
+msgid "Is there a way to get multiple matches of a pattern on TRegExpr?"
+msgstr ""
+
+#: ../../faq.rst:106
+# fe91a4bc0fd4447489141747ee0ea224
+msgid "You can iterate matches with ExecNext method."
+msgstr ""
+
+#: ../../faq.rst:108
+# 641d4fc669be4c9aa475918aa91126ed
+msgid "If you want some example, please take a look at ``TRegExpr.Replace`` method implementation or at the examples for `HyperLinksDecorator <demos.html>`_"
+msgstr ""
+
+#: ../../faq.rst:113
+# 9a455417a3d044c9b984ae73dcc64ace
+msgid "I am checking user input. Why does TRegExpr return ``True`` for wrong input strings?"
+msgstr ""
+
+#: ../../faq.rst:117
+# e7dd38f412234006aefa108dc8555b35
+msgid "In many cases TRegExpr users forget that regular expression is for **search** in input string."
+msgstr ""
+
+#: ../../faq.rst:120
+# 84c50dddfedc418ca4e5de33a2388527
+msgid "So, for example if you use ``\\d{4,4}`` expression, you will get success for wrong user inputs like ``12345`` or ``any letters 1234``."
+msgstr ""
+
+#: ../../faq.rst:123
+# 555ace2776ff491baccc6bc35a2574b3
+msgid "You have to check from line start to line end to ensure there are no anything else around: ``^\\d{4,4}$``."
+msgstr ""
+
+#: ../../faq.rst:129
+# 3c901ebacebb4af69e073edc07332ecd
+msgid "Why does non-greedy iterators sometimes work as in greedy mode?"
+msgstr ""
+
+#: ../../faq.rst:131
+# 360da2fcf4f04302a1ec1b9557fad598
+msgid "For example, the r.e. ``a+?,b+?`` applied to string ``aaa,bbb`` matches ``aaa,b``, but should it not match ``a,b`` because of non-greediness of first iterator?"
+msgstr ""
+
+#: ../../faq.rst:137
+# fc89dddf135b42ac956db2e8891af351
+msgid "This is because of TRegExpr way to work. In fact many others r.e. engines work exactly the same: they performe only ``simple`` search optimization, and do not try to do the best optimization."
+msgstr ""
+
+#: ../../faq.rst:141
+# ef8b9a54e25e4fa9a9ae7ab5904a4b17
+msgid "In some cases it's bad, but in common it's rather advantage then limitation, because of performance and predictability reasons."
+msgstr ""
+
+#: ../../faq.rst:144
+# 947ff8c1afe940479c8fd0c41677ae41
+msgid "The main rule - r.e. first of all try to match from current place and only if that's completely impossible move forward by one char and try again from next position in the text."
+msgstr ""
+
+#: ../../faq.rst:148
+# 7c46172a4c3b4941b63c368dc1b2a948
+msgid "So, if you use ``a,b+?`` it'll match ``a,b``. In case of ``a+?,b+?`` it's now not recommended (we add non-greedy modifyer) but still possible to match more then one ``a``, so TRegExpr will do it."
+msgstr ""
+
+#: ../../faq.rst:152
+# 41feed27e8ad405faa9ea1e4b0c8d18f
+msgid "TRegExpr like Perl's or Unix's r.e. doesn't attempt to move forward and check - would it will be \"better\" match. Fisrt of all, just because there is no way to say it's more or less good match."
+msgstr ""
+
