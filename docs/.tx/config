@@ -19,12 +19,6 @@ source_file = _build/gettext/regexp_syntax.pot
 source_lang = en
 type = PO
 
-[tregexpr._build_gettext_about]
-file_filter = locale/<lang>/LC_MESSAGES/about.po
-source_file = _build/gettext/about.pot
-source_lang = en
-type = PO
-
 [tregexpr._build_gettext_tregexpr_interface]
 file_filter = locale/<lang>/LC_MESSAGES/tregexpr_interface.po
 source_file = _build/gettext/tregexpr_interface.pot
