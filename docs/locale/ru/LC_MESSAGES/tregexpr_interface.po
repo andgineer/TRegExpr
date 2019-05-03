@@ -69,12 +69,13 @@ msgstr "VersionMajor, VersionMinor"
 msgid ""
 "Return major and minor version, for example, for v. 0.944 VersionMajor = 0 "
 "and VersionMinor = 944"
-msgstr "Вернуть мажорную и минорную версию, например, для версии 0.944"
+msgstr "Мажорная и минорная версии, например, для версии 0.944 ``VersionMajor = 0`` "
+"и ``VersionMinor = 944``"
 
 # 3b87f7ed03184b6f9c2e476695fb6d4e
 #: ../../tregexpr_interface.rst:23
 msgid "Expression"
-msgstr "выражение"
+msgstr "Expression"
 
 # 10513606c64e4bc18213195c16bd42ef
 #: ../../tregexpr_interface.rst:25
@@ -124,7 +125,7 @@ msgid ""
 "<regexp_syntax.html#modifiers>`__."
 msgstr ""
 "Установить или получить значения по умолчанию для `modifiers "
-"<regexp_syntax.html#modifiers>`__."
+"<#regexprmodifieri>`__."
 
 # fa008158a6d44c9db760a127b72f156d
 #: ../../tregexpr_interface.rst:44
@@ -158,7 +159,7 @@ msgid ""
 "<#modifier_defs>`__ value."
 msgstr ""
 "Модификатор / i - («caseinsensitive»), инициализируется значением "
-"`RegExprModifierI <#modifier_defs>`__."
+"`RegExprModifierI <#regexprmodifieri>`__."
 
 # 6b11592d599b41639e6a382873774fef
 #: ../../tregexpr_interface.rst:58
@@ -172,7 +173,7 @@ msgid ""
 "`RegExprModifierR <#modifier_defs>`__ value."
 msgstr ""
 "Модификатор / r - («Расширения русского синтаксиса»), инициализируется "
-"значением `RegExprModifierR <#modifier_defs>` __."
+"значением `RegExprModifierR <#regexprmodifierr>` __."
 
 # 6b11592d599b41639e6a382873774fef
 #: ../../tregexpr_interface.rst:64
@@ -190,7 +191,7 @@ msgstr ""
 "`Модификатор /s <regexp_syntax.html#s>`__ - &#39;.&#39; работает "
 "как любой символ (иначе не соответствует LineSeparators_ и "
 "`LinePairedSeparator <tregexpr_interface.html#linepairedseparator>`__), "
-"инициализируется значением `RegExprModifierS <#modifier_defs>`__."
+"инициализируется значением `RegExprModifierS <#regexprmodifiers>`__."
 
 # 6b11592d599b41639e6a382873774fef
 #: ../../tregexpr_interface.rst:72
@@ -209,7 +210,7 @@ msgstr ""
 "модификатора ``/g`` переключает все операторы в не жадном стиле, поэтому "
 "если ``ModifierG = False``, то все ``\\*`` работают как ``\\*?``, Все ``+`` "
 "как ``+?`` и так далее, инициализируется значением `RegExprModifierG "
-"<#modifier_defs>`__."
+"<##regexprmodifierg>`__."
 
 # 6b11592d599b41639e6a382873774fef
 #: ../../tregexpr_interface.rst:80
@@ -228,7 +229,7 @@ msgstr ""
 "несколько строк. Таким образом, измените \\ `^ &#39;и \\` $&#39; с "
 "соответствия только в самом начале или конце строки на начало или конец "
 "любой строки в любом месте строки, инициализированной значением "
-"`RegExprModifierM <#modifier_defs>`__."
+"`RegExprModifierM <#regexprmodifierm>`__."
 
 # 6b11592d599b41639e6a382873774fef
 #: ../../tregexpr_interface.rst:88
@@ -243,7 +244,7 @@ msgid ""
 msgstr ""
 "`Модификатор /х <regexp_syntax.html#modifier_x>`__ - («расширенный "
 "синтаксис»), инициализируется значением `RegExprModifierX "
-"<#modifier_defs>`__."
+"<#regexprmodifierx>`__."
 
 # c89eaeb8e18640ba9aa4cd9eb921eb4f
 #: ../../tregexpr_interface.rst:94
@@ -787,7 +788,7 @@ msgstr ""
 # 9365c456402b46478c5298d1c32b6c70
 #: ../../tregexpr_interface.rst:345
 msgid "Compile"
-msgstr "компилировать"
+msgstr "Compile"
 
 # 10513606c64e4bc18213195c16bd42ef
 #: ../../tregexpr_interface.rst:347
