@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 09:48+0300\n"
-"PO-Revision-Date: 2019-04-27 17:26+0000\n"
+"POT-Creation-Date: 2019-05-03 20:19+0300\n"
+"PO-Revision-Date: 2019-05-03 15:51+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Russian (Russia) "
+"Language-Team: Russian "
 "(https://www.transifex.com/masterAndrey/teams/98461/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -254,8 +254,9 @@ msgstr "не буквенно-цифровой"
 
 # df57a92f15a7409db120efc7d552a3bc
 #: ../../regexp_syntax.rst:97
+#, fuzzy
 msgid "``\\d``"
-msgstr "``\\d``"
+msgstr "``\\\\d``"
 
 # 9e00e94893a64322bd643ea880763cff
 #: ../../regexp_syntax.rst:97
@@ -294,11 +295,12 @@ msgstr "не пробел"
 
 # 44495071157f415bbf138800e2a5beb0
 #: ../../regexp_syntax.rst:103
+#, fuzzy
 msgid ""
 "You may use ``\\w``, ``\\d`` and ``\\s`` within `user character classes "
 "<User Character Classes_>`_."
 msgstr ""
-"Вы можете использовать ``\\w``, ``\\d`` и ``\\s`` в `пользовательских "
+"Вы можете использовать ``\\w``, ``\\\\d`` и ``\\s`` в `пользовательских "
 "классах  <User Character Classes_>`_."
 
 # 6bea053f0752406687c4726fa59f70fb
@@ -471,8 +473,8 @@ msgid ""
 msgstr ""
 "``$`` это конец строки, но с `модификатор /m <#m>`_ также совпадет с "
 "``\\x0D\\x0A`` или ``\\ x0A`` или ``\\x0D`` (если вы используете `Unicode"
-" <tregexpr_interface.html#unicode>`_, также ``\\ x2028`` или ``\\x2029``"
-" или ``\\x0B`` или ``\\x0C`` или ``\\x85``). Обратите внимание, что в "
+" <tregexpr_interface.html#unicode>`_, также ``\\ x2028`` или ``\\x2029`` "
+"или ``\\x0B`` или ``\\x0C`` или ``\\x85``). Обратите внимание, что в "
 "последовательности ``\\x0D\\x0A`` нет пустой строки."
 
 # ede57b818ab74d3e967cda0c170d5a32
@@ -485,10 +487,10 @@ msgid ""
 "``\\x0C`` and ``\\x85``)."
 msgstr ""
 "``.`` соответствует любому символу, но если вы выключите `modifier /s "
-"<#s>`_, то ``.`` не будет соответствовать ``\x0D\x0A`` и ``"
-"\x0A`` ``\x0D`` (если вы используете `версию Unicode "
-"<tregexpr_interface.html#unicode>`__ TRegExpr, затем также ``\x2028`` "
-"и ``\x2029`` и ``\x0B`` и `\x0C`` и ``\x85``)."
+"<#s>`_, то ``.`` не будет соответствовать ``\\x0D\\x0A`` и ``\\x0A`` "
+"``\\x0D`` (если вы используете `версию Unicode "
+"<tregexpr_interface.html#unicode>`__ TRegExpr, затем также ``\\x2028`` и "
+"``\\x2029`` и ``\\x0B`` и `\\x0C`` и ``\\x85``)."
 
 # f81e8471526e433dac99ecba23596cec
 #: ../../regexp_syntax.rst:185
@@ -770,10 +772,10 @@ msgstr ""
 # acc26861fb344313bdecdff6f626fae3
 #: ../../regexp_syntax.rst:335
 msgid ""
-"``(['\"]?)(\d+)\1`` matchs ``\"13\"`` (in double quotes), or ``'4'`` "
+"``(['\"]?)(\\d+)\\1`` matchs ``\"13\"`` (in double quotes), or ``'4'`` "
 "(in single quotes) or ``77`` (without quotes) etc"
 msgstr ""
-"``(['\"]?)(\d+)\1`` соответствует ``\"13\"`` (в двойных кавычках) или "
+"``(['\"]?)(\\d+)\\1`` соответствует ``\"13\"`` (в двойных кавычках) или "
 "``'4'`` (в одинарных кавычках) или ``77`` (без кавычек) и т. д."
 
 # 10d44507f07642ffad564d91080daaf5
@@ -809,12 +811,12 @@ msgid ""
 "<tregexpr_interface.html#global-constants>`_. For example global variable"
 " ``RegExprModifierX`` defines default value for ``ModifierX`` property."
 msgstr ""
-"2) Назначить соответствующее свойство `` TRegExpr`` (`Модификатор * "
-"<tregexpr_interface.html#modifierstr>`__. Значения по умолчанию для "
-"новых экземпляров объекта TRegExpr, определенных в `глобальных переменных"
-" <tregexpr_interface.html#global-constants>`_. Например, глобальная "
-"переменная `` RegExprModifierX`` определяет значение по умолчанию для "
-"свойства `` ModifierX``."
+"2) Назначить соответствующее свойство ``TRegExpr`` (`Модификатор * "
+"<tregexpr_interface.html#modifierstr>`__. Значения по умолчанию для новых"
+" экземпляров объекта TRegExpr, определенных в `глобальных переменных "
+"<tregexpr_interface.html#global-constants>`_. Например, глобальная "
+"переменная ``RegExprModifierX`` определяет значение по умолчанию для "
+"свойства ``ModifierX``."
 
 # 4a462047eaf94227b65ffd9f4b2c6899
 #: ../../regexp_syntax.rst:357
@@ -887,15 +889,14 @@ msgstr "Нестандартный модификатор."
 
 # b482af902d594489a5d615c34239b1f0
 #: ../../regexp_syntax.rst:387
-#, fuzzy
 msgid ""
 "Switching it ``Off`` you’ll switch all following operators into non-"
 "greedy mode. So, if modifier ``/g`` is ``Off`` then ``+`` works as "
 "``+?``, ``*`` as ``*?`` and so on."
 msgstr ""
-"Выключив его, вы переключите все последующие операторы в не жадный режим."
-" Если модификатор ``/g`` выключен, то ``+`` работает как ``+? ``, `` *`` "
-"как ``*?`` и так далее."
+"Выключив его ``Off``, вы переключите все последующие операторы в не "
+"жадный режим. Итак, если модификатор ``/g`` имеет значение ``Off``, то "
+"``+``работает как ``+?``, ``*`` Как ``*?`` И так далее."
 
 # 1377c54e69dd405b81e388fc341c6045
 #: ../../regexp_syntax.rst:392
@@ -954,8 +955,8 @@ msgid ""
 "If is set then range ``а-я`` includes also ``ё``. And ``А-Я`` includes "
 "also ``Ё``. And ``а-Я`` includes all russian symbols."
 msgstr ""
-"Если установлено, то диапазон ``а-я`` включает в себя также ``ё``. И ``"
-"А-Я`` включает в себя также ``Ё``. А ``а-я`` включает в себя все "
+"Если установлено, то диапазон ``а-я`` включает в себя также ``ё``. И "
+"``А-Я`` включает в себя также ``Ё``. А ``а-я`` включает в себя все "
 "русские символы."
 
 # e673894b7b1e4e048b259d2ff1c2e991

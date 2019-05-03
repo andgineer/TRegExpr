@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 10:09+0300\n"
+"POT-Creation-Date: 2019-05-03 20:19+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -528,7 +528,7 @@ msgstr ""
 
 #: ../../regexp_syntax.rst:335
 # acc26861fb344313bdecdff6f626fae3
-msgid "``(['\"]?)(\d+)\1`` matchs ``\"13\"`` (in double quotes), or ``'4'`` (in single quotes) or ``77`` (without quotes) etc"
+msgid "``(['\"]?)(\\d+)\\1`` matchs ``\"13\"`` (in double quotes), or ``'4'`` (in single quotes) or ``77`` (without quotes) etc"
 msgstr ""
 
 #: ../../regexp_syntax.rst:339

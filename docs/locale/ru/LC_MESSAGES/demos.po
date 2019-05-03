@@ -12,9 +12,9 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-01 10:09+0300\n"
-"PO-Revision-Date: 2019-05-01 09:26+0000\n"
+"PO-Revision-Date: 2019-05-03 15:51+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Russian (Russia) (https://www.transifex.com/masterAndrey/teams/98461/ru/)\n"
+"Language-Team: Russian (https://www.transifex.com/masterAndrey/teams/98461/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -137,11 +137,14 @@ msgid ""
 "<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__"
 " that is based on TRegExpr."
 msgstr ""
+"Использует блок `HyperLinksDecorator "
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>"
+"`__, основанный на TRegExpr."
 
 # 1e585d008e2b4b52844d261128e19247
 #: ../../demos.rst:47
 msgid "This unit contains functions to decorate hyper-links."
-msgstr ""
+msgstr "Этот блок содержит функции для оформления гиперссылок."
 
 # 7152dc5e125c44c893a1daeb02f955d0
 #: ../../demos.rst:49
@@ -151,81 +154,85 @@ msgid ""
 "``anso@mail.ru`` with ``<a "
 "href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 msgstr ""
+"Например, замените ``www.masterAndrey.com`` на `` <a "
+"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` или `` anso"
+" @ mail.ru`` на `` <a "
+"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a> ``."
 
 # 92616dd287884554b817420670c50161
 #: ../../demos.rst:69
 msgid "Value"
-msgstr ""
+msgstr "Значение"
 
 # 9c59e91ce3f74bf2be4f20b8e72a74ea
 #: ../../demos.rst:69
 msgid "Meaning"
-msgstr ""
+msgstr "Имея в виду"
 
 # 0f8f57a41a634c3f84c8ace30ab62f11
 #: ../../demos.rst:71
 msgid "durlProto"
-msgstr ""
+msgstr "durlProto"
 
 # 5bddd595dac94f56bd54cd150d9c225f
 #: ../../demos.rst:71
 msgid "Protocol (like ``ftp://`` or ``http://``)"
-msgstr ""
+msgstr "Протокол (например, `` ftp: // `` или `` http: // ``)"
 
 # 0d6a10421e1b44d8afc34e4b027b655c
 #: ../../demos.rst:72
 msgid "durlAddr"
-msgstr ""
+msgstr "durlAddr"
 
 # a81e22d400854c3193b27f6bbf10b2b5
 #: ../../demos.rst:72
 msgid "TCP address or domain name (like ``masterAndrey.com``)"
-msgstr ""
+msgstr "TCP-адрес или доменное имя (например, ``masterAndrey.com``)"
 
 # 50239aa9595f4f989f40dc2c7bedff87
 #: ../../demos.rst:73
 msgid "durlPort"
-msgstr ""
+msgstr "durlPort"
 
 # 04b6958157e24b45a96e69f374adb649
 #: ../../demos.rst:73
 msgid "Port number if specified (like ``:8080``)"
-msgstr ""
+msgstr "Номер порта, если указан (например, ``: 8080``)"
 
 # b2962c0e4e7c47f9956026d3aef25892
 #: ../../demos.rst:74
 msgid "durlPath"
-msgstr ""
+msgstr "durlPath"
 
 # 255eaf568f8a4bd0a93ce63f4a707e46
 #: ../../demos.rst:74
 msgid "Path to document (like ``index.html``)"
-msgstr ""
+msgstr "Путь к документу (например, ``index.html``)"
 
 # c7cef5ff47b143f18739a8a7c10c0cab
 #: ../../demos.rst:75
 msgid "durlBMark"
-msgstr ""
+msgstr "durlBMark"
 
 # 7b41e034a591462eae31b2e0ac33dd9b
 #: ../../demos.rst:75
 msgid "Book mark (like ``#mark``)"
-msgstr ""
+msgstr "Закладка (например, `` # mark``)"
 
 # 30b0d3ee0e254a84918b59959a1c9fbe
 #: ../../demos.rst:76
 msgid "durlParam"
-msgstr ""
+msgstr "durlParam"
 
 # b3bdc84ac490487db1eac2e7a322a425
 #: ../../demos.rst:76
 msgid "URL params (like ``?ID=2&User=13``)"
-msgstr ""
+msgstr "Параметры URL (например, ``? ID = 2 &amp; User = 13``)"
 
 # 1e585d008e2b4b52844d261128e19247
 #: ../../demos.rst:79
 msgid "Returns input text ``AText`` with decorated hyper links."
-msgstr ""
+msgstr "Возвращает введенный текст ``AText`` с оформленными гиперссылками."
 
 # 53146f3c277d4690a1ea7d4c9be78788
 #: ../../demos.rst:81
@@ -233,6 +240,8 @@ msgid ""
 "``AFlags`` describes, which parts of hyper-link must be included into "
 "visible part of the link."
 msgstr ""
+"``AFlags`` описывает, какие части гиперссылки должны быть включены в "
+"видимую часть ссылки."
 
 # 8a9151bca867444096cb6fd675d91897
 #: ../../demos.rst:84
@@ -241,6 +250,10 @@ msgid ""
 "``www.masterAndrey.com/contacts.htm`` will be decorated as ``<a "
 "href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com</a>``."
 msgstr ""
+"Например, если `AFlags` равно` `[durlAddr]` `, то гиперссылка` "
+"`www.masterAndrey.com / contacts.htm`` будет оформлена <a "
+"href=\"www.masterAndrey.com/contacts.htm\">как`</a> ` <a "
+"href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com`</a> `."
 
 # 19e04c2855034e2da0d032ce97d8daef
 #: ../../demos.rst:89
@@ -248,11 +261,14 @@ msgid ""
 "`TRegExprRoutines "
 "<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>`_"
 msgstr ""
+"`TRegExprRoutines "
+"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>"
+"`_"
 
 # 64b3450332934ae6b2181e3d04022fea
 #: ../../demos.rst:91
 msgid "Very simple examples, see comments inside the unit"
-msgstr ""
+msgstr "Очень простые примеры, см. Комментарии внутри блока"
 
 # 19e04c2855034e2da0d032ce97d8daef
 #: ../../demos.rst:94
@@ -260,8 +276,11 @@ msgid ""
 "`TRegExprClass "
 "<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>`_"
 msgstr ""
+"`TRegExprClass "
+"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>"
+"`_"
 
 # 56993d7a10d746e08c7c712cec5c7274
 #: ../../demos.rst:96
 msgid "Slightly more complex examples, see comments inside the unit"
-msgstr ""
+msgstr "Чуть более сложные примеры, см. Комментарии внутри блока"
