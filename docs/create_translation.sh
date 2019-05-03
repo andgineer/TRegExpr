@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# (Re)create po file for translation in locale/ru_RU
+# (Re)create po file for translation in locale/
 #
 
 # 1st create pot in _build/gettext
@@ -8,7 +8,7 @@ make gettext
 
 # now create po-files with sphinx-intl
 sudo pip3 install sphinx-intl python-levenshtein
-sphinx-intl update -p _build/gettext -l ru_RU -l es_ES -l bg_BG -l de_DE -l fr_FR
+sphinx-intl update -p _build/gettext -l ru -l es_ES -l bg_BG -l de_DE -l fr_FR
 
 # map transifex to po-file
 TRANSIFEX_PROJECT=tregexpr
