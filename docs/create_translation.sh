@@ -8,7 +8,7 @@ make gettext
 
 # now create po-files with sphinx-intl
 sudo pip3 install sphinx-intl python-levenshtein
-sphinx-intl update -p _build/gettext -l ru -l es_ES -l bg_BG -l de_DE -l fr_FR
+sphinx-intl update -p _build/gettext -l ru -l es -l bg -l de -l fr
 
 # map transifex to po-file
 TRANSIFEX_PROJECT=tregexpr

@@ -14,11 +14,11 @@ msgstr ""
 "POT-Creation-Date: 2019-05-01 10:09+0300\n"
 "PO-Revision-Date: 2019-05-01 09:26+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Spanish (Spain) (https://www.transifex.com/masterAndrey/teams/98461/es_ES/)\n"
+"Language-Team: Bulgarian (Bulgaria) (https://www.transifex.com/masterAndrey/teams/98461/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_ES\n"
+"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # 3123f93a15554569abef24250ec73e62
@@ -44,7 +44,7 @@ msgid ""
 "TRegExpr interface described in `TRegExpr interface "
 "<tregexpr_interface.html>`__."
 msgstr ""
-"Interfaz TRegExpr descrita en la interfaz `TRegExpr "
+"Интерфейсът TRegExpr, описан в интерфейс `TRegExpr "
 "<tregexpr_interface.html>`__."
 
 # 76682c66dd994062b735943a14f040f4
@@ -56,11 +56,11 @@ msgid ""
 "properties is needed only for resizing and justification of components then "
 "form change it's size."
 msgstr ""
-"Algunos de los proyectos de demostración usan propiedades VCL extendidas que"
-" existen solo en Delphi 4 o superior. Mientras compila en Delphi 3 o Delphi "
-"2, recibirá algunos mensajes de error sobre propiedades desconocidas. Puede "
-"ignorarlo: estas propiedades solo son necesarias para cambiar el tamaño y la"
-" justificación de los componentes y, a continuación, modificar su tamaño."
+"Някои от демо-проектите използват разширени свойства на VCL, които "
+"съществуват само в Delphi 4 или по-висока. Докато компилирате в Delphi 3 или"
+" Delphi 2, ще получите съобщения за грешки за неизвестни свойства. Можете да"
+" го игнорирате - тези свойства са нужни само за преоразмеряване и обосновка "
+"на компонентите, след което формата променя размера."
 
 # 24b2d41450ce4085b31a47b8e3640bec
 #: ../../demos.rst:20
@@ -81,9 +81,9 @@ msgid ""
 "<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__"
 " to learn and debug regular expressions."
 msgstr ""
-"Listo para ejecutar la aplicación de Windows `REStudio "
+"Готови ли сте да стартирате Windows приложението &quot;REStudio&quot; "
 "<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__"
-" para aprender y depurar expresiones regulares."
+" за изучаване и отстраняване на грешки на регулярни изрази."
 
 # fc73e57e381b442c8f36f0cda21e304e
 #: ../../demos.rst:29
@@ -91,8 +91,8 @@ msgid ""
 "Please, note that there are localized demos available (with comments in "
 "source code on national languages)."
 msgstr ""
-"Tenga en cuenta que hay demostraciones localizadas disponibles (con "
-"comentarios en código fuente en idiomas nacionales)."
+"Моля, имайте предвид, че има налични локализирани демонстрации (с коментари "
+"в изходния код на националните езици)."
 
 # ae410cefef0c47df9a9b4fdaaf0d0e08
 #: ../../demos.rst:32
