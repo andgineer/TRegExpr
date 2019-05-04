@@ -404,14 +404,15 @@ is neither backslashed nor within a character class. You can use this to
 break up your regular expression into more readable parts.
 
 The ``#`` character is also treated as a metacharacter introducing a
-comment.
+comment. Notice that you can use empty lines to format regular expression for
+better readability:
 
 .. code-block:: text
 
     (
-    (abc) \# comment 1
-      |   \# you can use spaces to format r.e. - TRegExpr ignores it
-    (efg) \# comment 2
+    (abc) # comment 1
+    #
+    (efg) # comment 2
     )
 
 This also means that if you want real whitespace or ``#`` characters in

@@ -110,8 +110,9 @@ Without parameter works the same as
 
 ::
 
-    if MatchLen \[0\] = 0 then ExecPos (MatchPos \[0\] + 1)
-      else ExecPos (MatchPos \[0\] + MatchLen \[0\]);
+    if MatchLen [0] = 0
+      then ExecPos (MatchPos [0] + 1)
+      else ExecPos (MatchPos [0] + MatchLen [0]);
 
 Raises exception if used without preceeding successful call to
 Exec_, ExecPos_ or ExecNext_.
@@ -120,7 +121,11 @@ So you always must use something like
 
 ::
 
-    if Exec (InputString) then repeat { proceed results} until not ExecNext;
+    if Exec (InputString)
+      then
+        repeat
+          { proceed results}
+        until not ExecNext;
 
 ExecPos
 ~~~~~~~
@@ -129,7 +134,7 @@ Finds match for ``InputString`` starting from ``AOffset`` position
 
 ::
 
-    AOffset=1 - first char of InputString
+    AOffset = 1 // first char of InputString
 
 InputString
 ~~~~~~~~~~~
@@ -190,21 +195,21 @@ Replace, ReplaceEx
 
 Returns the string with r.e. occurencies replaced by the replace string.
 
-If ``AUseSubstitution`` is true, then ``AReplaceStr`` will be used
-as template for Substitution methods.
+If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will
+be used as template for Substitution methods.
 
 ::
 
-    Expression := '({-i}block|var)\\s\*\\(\\s\*(\[^ \]\*)\\s\*\\)\\s\*';
+    Expression := '((?i)block|var)\s*(\s*\([^ ]*\)\s*)\s*';
     Replace ('BLOCK( test1)', 'def "$1" value "$2"', True);
 
-    will return:  def ‘BLOCK’ value ‘test1’
+Returns ``def "BLOCK" value "test1"``
 
 ::
 
     Replace ('BLOCK( test1)', 'def "$1" value "$2"', False)
 
-    will return:  def “$1” value “$2”
+Returns ``def "$1" value "$2"``
 
 Internally calls Exec_ / ExecNext_
 
@@ -445,22 +450,31 @@ ReplaceRegExpr
 Returns the string with regular expressions replaced by the ``AReplaceStr``.
 See also Replace_ if you prefer to create TRegExpr instance explicitly.
 
-If ``AUseSubstitution` is true, then ``AReplaceStr`` will be used as template
-for ``Substitution methods``.
+If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will
+be used as template for ``Substitution methods``:
 
 ::
 
-    ReplaceRegExpr ('({-i}block|var)\\s\*\\(\\s\*(\[^ \]\*)\\s\*\\)\\s\*',
-      'BLOCK( test1)', 'def "$1" value "$2"', True)
+    ReplaceRegExpr (
+      '((?i)block|var)\s*(\s*\([^ ]*\)\s*)\s*',
+      'BLOCK(test1)',
+      'def "$1" value "$2"',
+      True
+    )
 
-    return  def ‘BLOCK’ value ‘test1’
+Returns  ``def 'BLOCK' value 'test1'``
+
+But this one (note there is no last parameter):
 
 ::
 
-    ReplaceRegExpr ('({-i}block|var)\\s\*\\(\\s\*(\[^ \]\*)\\s\*\\)\\s\*',
-      'BLOCK( test1)', 'def "$1" value "$2"')
+    ReplaceRegExpr (
+      '((?i)block|var)\s*(\s*\([^ ]*\)\s*)\s*',
+      'BLOCK(test1)',
+      'def "$1" value "$2"'
+    )
 
-    return  def “$1” value “$2”
+Returns ``def "$1" value "$2"``
 
 Version with options
 ^^^^^^^^^^^^^^^^^^^^
