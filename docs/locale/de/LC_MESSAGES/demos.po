@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 10:09+0300\n"
-"PO-Revision-Date: 2019-05-03 15:51+0000\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"PO-Revision-Date: 2019-05-04 03:11+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: German (https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
 "MIME-Version: 1.0\n"
@@ -35,19 +35,18 @@ msgstr "Einführung"
 #: ../../demos.rst:7
 msgid ""
 "If you don't familiar with regular expression, please, take a look at the "
-"`r.e.syntax <regexp_syntax.html>`__."
+"`r.e.syntax <regular_expressions.html>`__."
 msgstr ""
 "Wenn Sie sich mit dem regulären Ausdruck nicht auskennen, werfen Sie einen "
-"Blick auf die Resyntax <regexp_syntax.html> __."
+"Blick auf die Resyntax <regular_expressions.html> __."
 
 # 781500ac2b09419a9cb5595076f7de14
 #: ../../demos.rst:10
 msgid ""
-"TRegExpr interface described in `TRegExpr interface "
-"<tregexpr_interface.html>`__."
+"TRegExpr interface described in `TRegExpr interface <tregexpr.html>`__."
 msgstr ""
 "TRegExpr-Schnittstelle, beschrieben in `TRegExpr-Schnittstelle "
-"<tregexpr_interface.html>`__."
+"<tregexpr.html>`__."
 
 # 76682c66dd994062b735943a14f040f4
 #: ../../demos.rst:13
@@ -140,8 +139,8 @@ msgid ""
 " that is based on TRegExpr."
 msgstr ""
 "Verwendet die Einheit `HyperLinksDecorator "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>"
-"`__, das auf TRegExpr basiert."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__,"
+" das auf TRegExpr basiert."
 
 # 1e585d008e2b4b52844d261128e19247
 #: ../../demos.rst:47

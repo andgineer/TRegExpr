@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 10:09+0300\n"
-"PO-Revision-Date: 2019-05-03 15:51+0000\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"PO-Revision-Date: 2019-05-04 03:10+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: German (https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
 "MIME-Version: 1.0\n"
@@ -72,8 +72,8 @@ msgstr "Wie kann ich TRegExpr mit Borland C ++ Builder verwenden?"
 msgid ""
 "I have a problem since no header file (``.h`` or ``.hpp``) is available."
 msgstr ""
-"Ich habe ein Problem, da keine Header-Datei (``.h`` oder ``.hpp``) "
-"verfügbar ist."
+"Ich habe ein Problem, da keine Header-Datei (``.h`` oder ``.hpp``) verfügbar"
+" ist."
 
 # c17bbf36186946eb9b60c1c609ec12ec
 #: ../../faq.rst:29
@@ -84,8 +84,7 @@ msgstr "Fügen Sie ``RegExpr.pas`` zu ``bcb`` hinzu."
 #: ../../faq.rst:30
 msgid "Compile project. This generates the header file ``RegExpr.hpp``."
 msgstr ""
-"Projekt kompilieren Dadurch wird die Header-Datei ``RegExpr.hpp`` "
-"generiert."
+"Projekt kompilieren Dadurch wird die Header-Datei ``RegExpr.hpp`` generiert."
 
 # 16ee016a9fa547d7b412bd44ea526e44
 #: ../../faq.rst:31
@@ -103,11 +102,10 @@ msgstr ""
 #: ../../faq.rst:33
 msgid ""
 "Don't forget to replace all ``\\`` in regular expressions with ``\\\\`` or "
-"redefined `EscChar <tregexpr_interface.html#escchar>`__ const."
+"redefined `EscChar <tregexpr.html#escchar>`__ const."
 msgstr ""
 "Vergessen Sie nicht, alle `` \\ `` in regulären Ausdrücken durch `` \\\\ `` "
-"oder neu definierte `EscChar zu ersetzen <tregexpr_interface.html#escchar> "
-"__ const."
+"oder neu definierte `EscChar zu ersetzen <tregexpr.html#escchar> __ const."
 
 # 6c8450146f0841d1a013cff6b32e8dcc
 #: ../../faq.rst:37
@@ -129,12 +127,12 @@ msgid ""
 "more readable."
 msgstr ""
 "Der Hinweis ist in der vorherigen Frage;) Das Symbol `` \\ `` hat eine "
-"besondere Bedeutung in `` C ++ ``, also müssen Sie es ``entkommen`` (wie in"
-" der vorherigen Antwort beschrieben). Wenn Sie nicht gerne `` \\\\ w + "
+"besondere Bedeutung in `` C ++ ``, also müssen Sie es ``entkommen`` (wie in "
+"der vorherigen Antwort beschrieben). Wenn Sie nicht gerne `` \\\\ w + "
 "\\\\\\\\ w + \\\\. \\\\ w + `` mögen, können Sie die Konstante ``EscChar`` "
-"(in ``RegExpr.pas``) neu definieren. Zum Beispiel `` EscChar = "
-"&quot;/&quot; ``. Dann können Sie `` / w + / w + /. / W + `` schreiben, "
-"sieht ungewöhnlich aus, ist aber lesbarer."
+"(in ``RegExpr.pas``) neu definieren. Zum Beispiel `` EscChar = &quot;/&quot;"
+" ``. Dann können Sie `` / w + / w + /. / W + `` schreiben, sieht "
+"ungewöhnlich aus, ist aber lesbarer."
 
 # 836b9a07a857496c8570a92e1ff86f73
 #: ../../faq.rst:50
@@ -153,21 +151,21 @@ msgstr ""
 # 2456e655103c4b788ccb1bf90ed3772b
 #: ../../faq.rst:57
 msgid ""
-"For backward compatibility, `modifier /s <regexp_syntax.html#modifier_s>`__ "
-"is ``On`` by default."
+"For backward compatibility, `modifier /s "
+"<regular_expressions.html#modifier_s>`__ is ``On`` by default."
 msgstr ""
-"Für Rückwärtskompatibilität `Modifier / s <regexp_syntax.html#modifier_s> "
-"`__ ist standardmäßig` `Ein``."
+"Für Rückwärtskompatibilität `Modifier / s "
+"<regular_expressions.html#modifier_s> `__ ist standardmäßig` `Ein``."
 
 # 74667df4efa94c54bb5fa7140be21392
 #: ../../faq.rst:60
 msgid ""
 "Switch it Off and ``.`` will match any but `Line separators "
-"<regexp_syntax.html#syntax_line_separators>`__ - exactly as you wish."
+"<regular_expressions.html#syntax_line_separators>`__ - exactly as you wish."
 msgstr ""
 "Schalten Sie es aus und ``.`` passt zu allen anderen als "
-"&#39;Trennzeichen&#39; <regexp_syntax.html#syntax_line_separators> __ - "
-"genau wie Sie es wünschen."
+"&#39;Trennzeichen&#39; <regular_expressions.html#syntax_line_separators> __ "
+"- genau wie Sie es wünschen."
 
 # b31d50bb744f40ae9282e43a1967fad6
 #: ../../faq.rst:63
@@ -197,8 +195,8 @@ msgid ""
 "By default all operators works in ``greedy`` mode, so they match as more as "
 "it possible."
 msgstr ""
-"Standardmäßig arbeiten alle Operatoren im ``gierigen`` Modus, so dass sie "
-"so weit wie möglich zusammenpassen."
+"Standardmäßig arbeiten alle Operatoren im ``gierigen`` Modus, so dass sie so"
+" weit wie möglich zusammenpassen."
 
 # aff79b8422d0482f8c03a4f9e3e5c2f6
 #: ../../faq.rst:76

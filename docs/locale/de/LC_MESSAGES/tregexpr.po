@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 10:09+0300\n"
-"PO-Revision-Date: 2019-05-03 15:51+0000\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"PO-Revision-Date: 2019-05-04 03:11+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: German (https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
 "MIME-Version: 1.0\n"
@@ -21,30 +21,32 @@ msgstr ""
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# 019c03b289a14eb3b8fb3b539866990b
-#: ../../tregexpr_interface.rst:2
+# 38c540a453ae4959b81179309d71fad2
+#: ../../tregexpr.rst:2
 msgid "TRegExpr"
 msgstr "TRegExpr"
 
-# dbe80987d60a42698ad46a30b6f7f523
-#: ../../tregexpr_interface.rst:4
-msgid "Implements `regular expressions <regexp_syntax.html>`_ in pure pascal."
+# a578073c5638461b900121e0fcd4f88d
+#: ../../tregexpr.rst:4
+msgid ""
+"Implements `regular expressions <regular_expressions.html>`_ in pure pascal."
 msgstr ""
-"Implementiert `reguläre Ausdrücke <regexp_syntax.html> in reinem Pascal."
+"Implementiert `reguläre Ausdrücke <regular_expressions.html> in reinem "
+"Pascal."
 
-# 6bb78f8c757242f2bf273925bd0c5a17
-#: ../../tregexpr_interface.rst:6
+# 5e623a73afae41c688b18834dc47b966
+#: ../../tregexpr.rst:6
 msgid ""
 "To use it just copy `source code "
 "<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
 "into your project."
 msgstr ""
 "Um es zu benutzen, kopiere einfach `Quellcode "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ in"
-" dein Projekt."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ in "
+"dein Projekt."
 
-# 7d1b411c244d4fe39826a5c8728bcf4d
-#: ../../tregexpr_interface.rst:9
+# 0c059da7ea744524a21dca4c03eb5e08
+#: ../../tregexpr.rst:9
 msgid ""
 "The library had already included in `Lazarus (Free Pascal) "
 "<http://wiki.freepascal.org/Regexpr>`_ project so you do not need to copy "
@@ -54,18 +56,18 @@ msgstr ""
 "<http://wiki.freepascal.org/Regexpr> Wenn Sie `Lazarus verwenden, müssen Sie"
 " nichts kopieren <https://www.lazarus-ide.org/>`_."
 
-# 3891df7909ce4baf9df099a2053508bf
-#: ../../tregexpr_interface.rst:14
+# dad2ce27a76a493999ee1dd0810dce84
+#: ../../tregexpr.rst:14
 msgid "TRegExpr class"
 msgstr "TRegExpr-Klasse"
 
-# 7e4e67279ba146aca5b9d96fdc6aa31f
-#: ../../tregexpr_interface.rst:17
+# f98e72ac285e4fd3af6a40cd9dfeb110
+#: ../../tregexpr.rst:17
 msgid "VersionMajor, VersionMinor"
 msgstr "VersionMajor, VersionMinor"
 
-# dcab4d138a1647c2b1dc0f0e8ea5f31f
-#: ../../tregexpr_interface.rst:19
+# c7de356b46a449f9aa6a4e4f8f6ced23
+#: ../../tregexpr.rst:19
 msgid ""
 "Return major and minor version, for example, for v. 0.944 VersionMajor = 0 "
 "and VersionMinor = 944"
@@ -73,18 +75,18 @@ msgstr ""
 "Geben Sie major und minor version zurück, z. B. für v. 0.944 VersionMajor = "
 "0 und VersionMinor = 944"
 
-# 3b87f7ed03184b6f9c2e476695fb6d4e
-#: ../../tregexpr_interface.rst:23
+# 2a85e836d4e442a1b305660c3d54d7bf
+#: ../../tregexpr.rst:23
 msgid "Expression"
 msgstr "Ausdruck"
 
-# 10513606c64e4bc18213195c16bd42ef
-#: ../../tregexpr_interface.rst:25
+# 499be78f84734798bc8573020a1a2e9e
+#: ../../tregexpr.rst:25
 msgid "Regular expression."
 msgstr "Regulären Ausdruck."
 
-# 2db270d8a30045fb88010d31588440ff
-#: ../../tregexpr_interface.rst:27
+# 02e15e8e7fa34ba298e31659e54e4603
+#: ../../tregexpr.rst:27
 msgid ""
 "For optimization, TRegExpr will automatically compiles it into ``P-code`` "
 "(you can see it with help of Dump_ method) and stores in internal "
@@ -94,8 +96,8 @@ msgstr ""
 "zusammenstellen (Sie können es mit Hilfe der Dump_-Methode sehen) und in "
 "internen Strukturen ablegen."
 
-# 79d60a4d46974de8ae015f321249bcf0
-#: ../../tregexpr_interface.rst:31
+# 3139f80e8050479c865cd7cba0466c84
+#: ../../tregexpr.rst:31
 msgid ""
 "Regular expresion is re-compiled only if you call Exec_, ExecNext_, "
 "Substitute_, Dump_, etc. And only if Expression_ was changed after last "
@@ -104,8 +106,8 @@ msgstr ""
 "Reguläre Ausdrücke werden nur dann erneut kompiliert, wenn Sie Exec_, "
 "ExecNext_, Substitute_, Dump_ usw. aufrufen."
 
-# e54700b2f8a34ba3875f3fbcc75a3246
-#: ../../tregexpr_interface.rst:35
+# 06a068eb78bf456c915006f3b3fd050f
+#: ../../tregexpr.rst:35
 msgid ""
 "In case of any errors in compilation, ``Error`` method is called (by default"
 " ``Error`` raises exception ERegExpr_)"
@@ -113,47 +115,48 @@ msgstr ""
 "Bei Fehlern beim Kompilieren wird die ``Error``-Methode aufgerufen "
 "(standardmäßig ``Error`` löst die Ausnahme ERegExpr_ aus)"
 
-# 2969099386174c748d0791918299fdf1
-#: ../../tregexpr_interface.rst:39
+# 215faa741d804fa28e1ab58140732d42
+#: ../../tregexpr.rst:39
 msgid "ModifierStr"
 msgstr "ModifierStr"
 
-# 9995de2a460047dbb0b571236d3f3a57
-#: ../../tregexpr_interface.rst:41
+# 99655fa0026c45faac10cbabc4fe8116
+#: ../../tregexpr.rst:41
 msgid ""
 "Set or get default values of `r.e.modifiers "
-"<regexp_syntax.html#modifiers>`__."
+"<regular_expressions.html#modifiers>`__."
 msgstr ""
 "Legen Sie die Standardwerte für `r.e.modifiers fest "
-"<regexp_syntax.html#modifiers> __."
+"<regular_expressions.html#modifiers> __."
 
-# fa008158a6d44c9db760a127b72f156d
-#: ../../tregexpr_interface.rst:44
+# fd969ed7b04f470c9ebb28f3578036ba
+#: ../../tregexpr.rst:44
 msgid ""
 "Format of the string is similar as in `(?ismx-ismx) "
-"<regexp_syntax.html#inlinemodifiers>`__. For example ``ModifierStr := "
-"‘i-x’`` will switch on modifier `/i <regexp_syntax.html#i>`_, switch off `/x"
-" <regexp_syntax.html#x>`_ and leave unchanged others."
+"<regular_expressions.html#inlinemodifiers>`__. For example ``ModifierStr := "
+"‘i-x’`` will switch on modifier `/i <regular_expressions.html#i>`_, switch "
+"off `/x <regular_expressions.html#x>`_ and leave unchanged others."
 msgstr ""
 "Das Format der Zeichenfolge ist ähnlich wie in `(? Ismx-ismx). "
-"<regexp_syntax.html#inlinemodifiers> __. Zum Beispiel ``ModifierStr: = "
-"&#39;i-x``` schaltet den Modifikator `/ i ein <regexp_syntax.html#i>`_, "
-"schalten Sie`/x aus <regexp_syntax.html#x> und lassen andere unverändert."
+"<regular_expressions.html#inlinemodifiers> __. Zum Beispiel ``ModifierStr: ="
+" &#39;i-x``` schaltet den Modifikator `/ i ein "
+"<regular_expressions.html#i>`_, schalten Sie`/x aus "
+"<regular_expressions.html#x> und lassen andere unverändert."
 
-# cce32af71ece4c7e9951379f05137727
-#: ../../tregexpr_interface.rst:49
+# 46f882f302864c8397addb697a2c7237
+#: ../../tregexpr.rst:49
 msgid "If you try to set unsupported modifier, ``Error`` will be called."
 msgstr ""
 "Wenn Sie versuchen, einen nicht unterstützten Modifikator einzustellen, wird"
 " ``Error`` aufgerufen."
 
-# 6b11592d599b41639e6a382873774fef
-#: ../../tregexpr_interface.rst:52
+# 5b0008685c3d416a8f51fdf5ca9c9b39
+#: ../../tregexpr.rst:52
 msgid "ModifierI"
 msgstr "ModifierI"
 
-# e9d5d77d20d64cc394f30b854e05fdce
-#: ../../tregexpr_interface.rst:54
+# 1cc3aeb4b9c84922bce6e44943444f27
+#: ../../tregexpr.rst:54
 msgid ""
 "Modifier /i - (“caseinsensitive”), initialized with `RegExprModifierI "
 "<#modifier_defs>`__ value."
@@ -161,13 +164,13 @@ msgstr ""
 "Modifier / i - (&quot;caseinsensitive&quot;), initialisiert mit "
 "RegExprModifierI <#modifier_defs>`__ value."
 
-# 6b11592d599b41639e6a382873774fef
-#: ../../tregexpr_interface.rst:58
+# 2f0047d555c14a3e8de98a7d8eb8ac50
+#: ../../tregexpr.rst:58
 msgid "ModifierR"
 msgstr "ModifierR"
 
-# 60bf5d3c50994c81bb344bb5960b3dfc
-#: ../../tregexpr_interface.rst:60
+# 839992bf0afb4ad192d60defd641dcc7
+#: ../../tregexpr.rst:60
 msgid ""
 "Modifier /r - (“Russian syntax extensions), initialized with "
 "`RegExprModifierR <#modifier_defs>`__ value."
@@ -175,98 +178,98 @@ msgstr ""
 "Modifier / r - („Russische Syntaxerweiterungen), initialisiert mit` "
 "RegExprModifierR &lt;#modifier_defs>`__ value."
 
-# 6b11592d599b41639e6a382873774fef
-#: ../../tregexpr_interface.rst:64
+# e97c822721e74e1786b072722729f780
+#: ../../tregexpr.rst:64
 msgid "ModifierS"
 msgstr "ModifierS"
 
-# 1644a2a8312f4e6db2fa1efc7531d841
-#: ../../tregexpr_interface.rst:66
+# 7e90fecea9044eb0a4eda50a5a897ea6
+#: ../../tregexpr.rst:66
 msgid ""
-"`Modifier /s <regexp_syntax.html#modifier_s>`__ - ‘.’ works as any char "
-"(else doesn’t match LineSeparators_ and `LinePairedSeparator "
-"<tregexpr_interface.html#linepairedseparator>`__), initialized with "
-"`RegExprModifierS <#modifier_defs>`__ value."
+"`Modifier /s <regular_expressions.html#modifier_s>`__ - ‘.’ works as any "
+"char (else doesn’t match LineSeparators_ and `LinePairedSeparator "
+"<tregexpr.html#linepairedseparator>`__), initialized with `RegExprModifierS "
+"<#modifier_defs>`__ value."
 msgstr ""
-"`Modifier / s <regexp_syntax.html#modifier_s> &quot;__ -&quot;. funktioniert"
-" wie ein beliebiges Zeichen (sonst passen LineSeparators_ und "
-"LinePairedSeparator nicht zusammen) "
-"<tregexpr_interface.html#linepairedseparator>`__), initialisiert mit` "
-"RegExprModifierS &lt;#modifier_defs>`__ value."
+"`Modifier / s <regular_expressions.html#modifier_s> &quot;__ -&quot;. "
+"funktioniert wie ein beliebiges Zeichen (sonst passen LineSeparators_ und "
+"LinePairedSeparator nicht zusammen) <tregexpr.html#linepairedseparator>`__),"
+" initialisiert mit` RegExprModifierS &lt;#modifier_defs>`__ value."
 
-# 6b11592d599b41639e6a382873774fef
-#: ../../tregexpr_interface.rst:72
+# 87ea32c8b21941b3a74914a398b7cc41
+#: ../../tregexpr.rst:72
 msgid "ModifierG"
 msgstr "ModifierG"
 
-# 0836050caf914337a1a015ec84763150
-#: ../../tregexpr_interface.rst:74
+# 921c292e3c624de386f93d17a030775f
+#: ../../tregexpr.rst:74
 msgid ""
-"`Modifier /g <regexp_syntax.html#modifier_g>`__ Switching off modifier /g "
-"switchs all operators in non-greedy style, so if ModifierG = False, then all"
-" ‘\\*’ works as ‘\\*?’, all ‘+’ as ‘+?’ and so on, initialized with "
+"`Modifier /g <regular_expressions.html#modifier_g>`__ Switching off modifier"
+" /g switchs all operators in non-greedy style, so if ModifierG = False, then"
+" all ‘\\*’ works as ‘\\*?’, all ‘+’ as ‘+?’ and so on, initialized with "
 "`RegExprModifierG <#modifier_defs>`__ value."
 msgstr ""
-"`Modifikator / g <regexp_syntax.html#modifier_g>`__ Durch das Ausschalten "
-"des Modifizierers / g werden alle Operatoren auf nicht gierige Weise "
-"umgeschaltet. Wenn also ModifierG = False ist, funktionieren alle &#39;\\ "
-"*&#39; wie &#39;\\ *?&#39; und so weiter, initialisiert mit RegExprModifierG"
-" <#modifier_defs>`__ value."
+"`Modifikator / g <regular_expressions.html#modifier_g>`__ Durch das "
+"Ausschalten des Modifizierers / g werden alle Operatoren auf nicht gierige "
+"Weise umgeschaltet. Wenn also ModifierG = False ist, funktionieren alle "
+"&#39;\\ *&#39; wie &#39;\\ *?&#39; und so weiter, initialisiert mit "
+"RegExprModifierG <#modifier_defs>`__ value."
 
-# 6b11592d599b41639e6a382873774fef
-#: ../../tregexpr_interface.rst:80
+# d7509d9e72944d2ab7322ced7035c95c
+#: ../../tregexpr.rst:80
 msgid "ModifierM"
 msgstr "ModifierM"
 
-# 8950831366bc44528d9513196b49a7d4
-#: ../../tregexpr_interface.rst:82
+# 30f823a12e4e4947b6f49855e7fc810e
+#: ../../tregexpr.rst:82
 msgid ""
-"`Modifier /m <regexp_syntax.html#modifier_m>`__ Treat string as multiple "
-"lines. That is, change \\`^‘and \\`$’ from matching at only the very start "
-"or end of the string to the start or end of any line anywhere within the "
-"string, initialized with `RegExprModifierM <#modifier_defs>`__ value."
+"`Modifier /m <regular_expressions.html#modifier_m>`__ Treat string as "
+"multiple lines. That is, change \\`^‘and \\`$’ from matching at only the "
+"very start or end of the string to the start or end of any line anywhere "
+"within the string, initialized with `RegExprModifierM <#modifier_defs>`__ "
+"value."
 msgstr ""
-"`Modifikator / m <regexp_syntax.html#modifier_m>`__ String als mehrzeilig "
-"behandeln. Ändern Sie also \\ `^ &#39;und \\` $&#39; von der Übereinstimmung"
-" nur am Anfang oder Ende des Strings bis zum Anfang oder Ende einer "
-"beliebigen Zeile innerhalb des Strings, initialisiert mit `RegExprModifierM "
-"<#modifier_defs>`__ value."
+"`Modifikator / m <regular_expressions.html#modifier_m>`__ String als "
+"mehrzeilig behandeln. Ändern Sie also \\ `^ &#39;und \\` $&#39; von der "
+"Übereinstimmung nur am Anfang oder Ende des Strings bis zum Anfang oder Ende"
+" einer beliebigen Zeile innerhalb des Strings, initialisiert mit "
+"`RegExprModifierM <#modifier_defs>`__ value."
 
-# 6b11592d599b41639e6a382873774fef
-#: ../../tregexpr_interface.rst:88
+# c908bfb9a90d4362bf669175cde389cb
+#: ../../tregexpr.rst:88
 msgid "ModifierX"
 msgstr "ModifierX"
 
-# 0b7a83a800734de4aadcdd0a34da420d
-#: ../../tregexpr_interface.rst:90
+# cc6e17a6d80e432b829fe0b6326f7a87
+#: ../../tregexpr.rst:90
 msgid ""
-"`Modifier /x <regexp_syntax.html#modifier_x>`__ - (“eXtended syntax”), "
-"initialized with `RegExprModifierX <#modifier_defs>`__ value."
+"`Modifier /x <regular_expressions.html#modifier_x>`__ - (“eXtended syntax”),"
+" initialized with `RegExprModifierX <#modifier_defs>`__ value."
 msgstr ""
-"`Modifikator / x <regexp_syntax.html#modifier_x>`__ - (“ eXtended Syntax ”),"
-" initialisiert mit` RegExprModifierX <#modifier_defs>`__ value."
+"`Modifikator / x <regular_expressions.html#modifier_x>`__ - (“ eXtended "
+"Syntax ”), initialisiert mit` RegExprModifierX <#modifier_defs>`__ value."
 
-# c89eaeb8e18640ba9aa4cd9eb921eb4f
-#: ../../tregexpr_interface.rst:94
+# 0e704456c23e48f69ccdf14802505d25
+#: ../../tregexpr.rst:94
 msgid "Exec"
 msgstr "Exec"
 
-# 766fcded36b44bfa84f5eb07d5402770
-#: ../../tregexpr_interface.rst:96
+# c75c32e6d732466a89f6d6b7571e09fe
+#: ../../tregexpr.rst:96
 msgid "Match the regular expression against ``AInputString``."
 msgstr "Vergleichen Sie den regulären Ausdruck mit ``AInputString``."
 
-# 7fff6068e3f74d3da06c3405e582ed93
-#: ../../tregexpr_interface.rst:98
+# 3140a065cf914827aafd54fc0ad5a940
+#: ../../tregexpr.rst:98
 msgid ""
 "Available overloaded ``Exec`` version without ``AInputString`` - it uses "
 "``AInputString`` from previous call."
 msgstr ""
-"Verfügbare überladene ``Exec``-Version ohne ``AInputString`` - es "
-"verwendet ``AInputString`` aus dem vorherigen Aufruf."
+"Verfügbare überladene ``Exec``-Version ohne ``AInputString`` - es verwendet "
+"``AInputString`` aus dem vorherigen Aufruf."
 
-# 8a9cce3aab1d439483acd29cd42b1193
-#: ../../tregexpr_interface.rst:101
+# 566f3fb352474b34844dfa979a8e454b
+#: ../../tregexpr.rst:101
 msgid ""
 "See also global function ExecRegExpr_ that you can use without explicit "
 "``TRegExpr`` object creation."
@@ -274,23 +277,23 @@ msgstr ""
 "Siehe auch die globale Funktion ExecRegExpr_, die Sie ohne explizite `` "
 "TRegExpr``-Objekterstellung verwenden können."
 
-# 019c03b289a14eb3b8fb3b539866990b
-#: ../../tregexpr_interface.rst:105
+# 901418a6698f44f897e08a572bff77ce
+#: ../../tregexpr.rst:105
 msgid "ExecNext"
 msgstr "ExecNext"
 
-# 56d16a4c9cbb45179eccda50db3ba082
-#: ../../tregexpr_interface.rst:107
+# 7e6c90e9d304410d941046679fa81975
+#: ../../tregexpr.rst:107
 msgid "Find next match."
 msgstr "Nächstes Spiel finden"
 
-# 199f693817b04a5b8b19b54b8d40bf5a
-#: ../../tregexpr_interface.rst:109
+# 3692f197c5a9492598fb524452a29e49
+#: ../../tregexpr.rst:109
 msgid "Without parameter works the same as"
 msgstr "Ohne Parameter funktioniert das Gleiche wie"
 
-# f6a9d65e07794e76b168ea551e6dd507
-#: ../../tregexpr_interface.rst:116
+# a925f1db28104a15bc3a4af88cf87295
+#: ../../tregexpr.rst:116
 msgid ""
 "Raises exception if used without preceeding successful call to Exec_, "
 "ExecPos_ or ExecNext_."
@@ -298,28 +301,28 @@ msgstr ""
 "Löst eine Ausnahme aus, wenn sie ohne vorherigen Aufruf von Exec_, ExecPos_ "
 "oder ExecNext_ verwendet wird."
 
-# 79c2d03a4f444c67b91d3120988b7b3d
-#: ../../tregexpr_interface.rst:119
+# 0e849c7e466844a2b3c5b4b0579748a8
+#: ../../tregexpr.rst:119
 msgid "So you always must use something like"
 msgstr "Du musst also sowas immer verwenden"
 
-# 9f79fcddb4fb41de993d57f55b445052
-#: ../../tregexpr_interface.rst:126
+# accdc15bd2414c67959ca91416523513
+#: ../../tregexpr.rst:126
 msgid "ExecPos"
 msgstr "ExecPos"
 
-# 2940677575d940d78e280dd542739481
-#: ../../tregexpr_interface.rst:128
+# 1172f9ed94d841d8846cf65a3c6ecd11
+#: ../../tregexpr.rst:128
 msgid "Finds match for ``InputString`` starting from ``AOffset`` position"
 msgstr "Sucht nach ``InputString`` ab ``AOffset``"
 
-# 61599a0602f648a6bc5a3e2c9f678d0e
-#: ../../tregexpr_interface.rst:135
+# 6fbc46c569d0493294875a3236143bab
+#: ../../tregexpr.rst:135
 msgid "InputString"
 msgstr "InputString"
 
-# eaa231f6151e40819c5336a1a8aac564
-#: ../../tregexpr_interface.rst:137
+# df00a5840a8d4505bc9b7f529721be25
+#: ../../tregexpr.rst:137
 msgid ""
 "Returns current input string (from last Exec_ call or last assign to this "
 "property)."
@@ -327,123 +330,123 @@ msgstr ""
 "Gibt die aktuelle Eingabezeichenfolge zurück (vom letzten Exec_-Aufruf oder "
 "der letzten Zuweisung an diese Eigenschaft)."
 
-# 4cfbf5e06de543ef927712c84cb2bef8
-#: ../../tregexpr_interface.rst:140
+# 91170fb5c01946fab9f13c46aa639c3b
+#: ../../tregexpr.rst:140
 msgid ""
 "Any assignment to this property clears Match_, MatchPos_ and MatchLen_."
 msgstr ""
 "Jede Zuweisung zu dieser Eigenschaft löscht Match_, MatchPos_ und MatchLen_."
 
-# 920c92b853694981b4b1cc409acefe70
-#: ../../tregexpr_interface.rst:143
+# 4c92cf154cce41c1bc65dae09f0f4bb1
+#: ../../tregexpr.rst:143
 msgid "Substitute"
 msgstr "Ersatz"
 
-# 6381709267dd4511a570b52accbe34e9
-#: ../../tregexpr_interface.rst:145
+# a28509e7090645779c4c3e10fea38822
+#: ../../tregexpr.rst:145
 msgid ""
 "Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular "
 "expression and ``$n`` replaced by occurence of subexpression number ``n``."
 msgstr ""
-"Gibt ``ATemplate`` zurück, wobei `` $ &amp; `` oder ``$0`` durch den "
-"ganzen regulären Ausdruck ersetzt werden und `` $ n`` durch das Auftreten "
-"der Unterausdrucknummer ``n`` ersetzt wird."
+"Gibt ``ATemplate`` zurück, wobei `` $ &amp; `` oder ``$0`` durch den ganzen "
+"regulären Ausdruck ersetzt werden und `` $ n`` durch das Auftreten der "
+"Unterausdrucknummer ``n`` ersetzt wird."
 
-# 1a124dc1807847d2a3b2ccfb67bdea79
-#: ../../tregexpr_interface.rst:148
+# a19c2993b6c043f4b02483215c240fd4
+#: ../../tregexpr.rst:148
 msgid ""
 "To place into template characters ``$`` or ``\\``, use prefix ``\\``, like "
 "``\\\\`` or ``\\$``."
 msgstr "Verwenden Sie das Präfix `` \\ `` wie `` \\\\ `` oder `` \\ $ ``."
 
-# 6e6b66f0f5ba481a97c5d856d7d200ce
-#: ../../tregexpr_interface.rst:151
+# 99e6f70b4645433e97923e39ef6ad443
+#: ../../tregexpr.rst:151
 msgid "symbol"
 msgstr "Symbol"
 
-# 616e49c66dc24cd0a28c65e91f8c4459
-#: ../../tregexpr_interface.rst:151
+# 97eb5bdc52ca4dc0aeee00fa4a5f3fca
+#: ../../tregexpr.rst:151
 msgid "description"
 msgstr "Beschreibung"
 
-# 9f2a219d61c6467681c8b0ce87aeb717
-#: ../../tregexpr_interface.rst:153
+# 615804c63e6b4a138a7e80271d62082b
+#: ../../tregexpr.rst:153
 msgid "``$&``"
 msgstr "`` $ &amp; ``"
 
-# c3d10739e2314a7f90ea5929c3c4db0a
-# a1fad4a567184f6587c26027521a5408
-#: ../../tregexpr_interface.rst:153 ../../tregexpr_interface.rst:154
+# 17a7b341d6fc4c588328b20b1178acc9
+# 46b34e362e314e1290ffb8f808dcc911
+#: ../../tregexpr.rst:153 ../../tregexpr.rst:154
 msgid "whole regular expression match"
 msgstr "ganze Übereinstimmung des regulären Ausdrucks"
 
-# 9f2a219d61c6467681c8b0ce87aeb717
-#: ../../tregexpr_interface.rst:154
+# a3e3160f96b24395bca4abc248cd7440
+#: ../../tregexpr.rst:154
 msgid "``$0``"
 msgstr "``$0``"
 
-# 58758e1a20e74e3997c6cbc19346080a
-#: ../../tregexpr_interface.rst:155
+# a5dfe79bc6b140288a4f978913b56882
+#: ../../tregexpr.rst:155
 msgid "``$n``"
 msgstr "`` $ n``"
 
-# f2acda348649440fae4fef22ae2cabec
-#: ../../tregexpr_interface.rst:155
+# f6ec6276f6c04d37b7a5c59d75e44e1a
+#: ../../tregexpr.rst:155
 msgid "regular subexpression ``n`` match"
 msgstr "regulärer Unterausdruck ``n``"
 
-# 58758e1a20e74e3997c6cbc19346080a
-#: ../../tregexpr_interface.rst:156
+# da45d7a572fc45c5a75830f634ccaffe
+#: ../../tregexpr.rst:156
 msgid "``\\n``"
 msgstr "``\\n``"
 
-# c019af3670094d88b1406ca91408d9fe
-#: ../../tregexpr_interface.rst:156
+# c5d2f29db0554b6ca55b962d007563f8
+#: ../../tregexpr.rst:156
 msgid "in Windows replaced with ``\\r\\n``"
 msgstr "in Windows durch `` \\ r \\ n`` ersetzt"
 
-# 8ed90c6ade184fcca4a017b54873d44e
-#: ../../tregexpr_interface.rst:157
+# 444bc4fbd8d94e69a1ba5d21cb1b608e
+#: ../../tregexpr.rst:157
 msgid "``\\l``"
 msgstr "``\\l``"
 
-# 170bab0af4b840ee9f096683d06b7545
-#: ../../tregexpr_interface.rst:157
+# f421e47b47f1465e8398852df7add6f6
+#: ../../tregexpr.rst:157
 msgid "lowcase one next char"
 msgstr "Kleinbuchstabe ein nächstes Zeichen"
 
-# 1b969122ef30476a96a5d3f37cb92cb4
-#: ../../tregexpr_interface.rst:158
+# 90a248a24b89440aa6d2d6382eafa59a
+#: ../../tregexpr.rst:158
 msgid "``\\L``"
 msgstr "``\\L``"
 
-# 36b7b4eecec349f18b3938f6921eeccf
-#: ../../tregexpr_interface.rst:158
+# fa162dff7fef49d4818821f75e11a756
+#: ../../tregexpr.rst:158
 msgid "lowercase all chars after that"
 msgstr "Kleinbuchstaben alle Zeichen danach"
 
-# b3730b9d3f31472ab3878c692626b054
-#: ../../tregexpr_interface.rst:159
+# 580297e5d8d046ef803101fa26f27806
+#: ../../tregexpr.rst:159
 msgid "``\\u``"
 msgstr "``\\u``"
 
-# 170bab0af4b840ee9f096683d06b7545
-#: ../../tregexpr_interface.rst:159
+# 0c5839e9c83e474b8717694c4e34b9d6
+#: ../../tregexpr.rst:159
 msgid "uppcase one next char"
 msgstr "ein weiteres Zeichen"
 
-# 6910bfcb802a47099ef7a2b166344af0
-#: ../../tregexpr_interface.rst:160
+# 00b318b2fbcb4c62ab6f9fdb11a0e5d1
+#: ../../tregexpr.rst:160
 msgid "``\\U``"
 msgstr "``\\U``"
 
-# 4f094642b31a4fffba8cbcebe7b8fb86
-#: ../../tregexpr_interface.rst:160
+# 7ffb31af33cb4582ba42b64a3a683043
+#: ../../tregexpr.rst:160
 msgid "uppercase all chars after that"
 msgstr "Großbuchstaben alle Zeichen danach"
 
-# 0953f28b40fe4fddbe0723b4dda21bde
-#: ../../tregexpr_interface.rst:168
+# 4b85168153b84479a80bb8202b1dfbcf
+#: ../../tregexpr.rst:168
 msgid ""
 "If you want to place raw digit after ‘$n’ you must delimit ``n`` with curly "
 "braces ``{}``."
@@ -451,24 +454,24 @@ msgstr ""
 "Wenn Sie eine rohe Ziffer nach &#39;$ n&#39; setzen möchten, müssen Sie `` "
 "n`` mit geschweiften Klammern `` {} `` abgrenzen."
 
-# c2e5093cb76046cd84dfff165597a9ff
-#: ../../tregexpr_interface.rst:177
+# 9285f4f0589c4df88ed9a1b9d25cc774
+#: ../../tregexpr.rst:177
 msgid "Split"
 msgstr "Teilt"
 
-# 88fb95217fd64c12a8d467f4d39014a5
-#: ../../tregexpr_interface.rst:179
+# 471e9a74ee6f4427adfbcb9831c7ad5b
+#: ../../tregexpr.rst:179
 msgid "Split AInputStr into APieces by r.e. occurencies"
 msgstr "Trennen Sie AInputStr nach Wiederholungen in APieces"
 
-# 38b7dae1bffa42a4bd3261f733cd78df
-# 38b7dae1bffa42a4bd3261f733cd78df
-#: ../../tregexpr_interface.rst:181 ../../tregexpr_interface.rst:209
+# b322778a78174b19a1ec867d734b92fe
+# b0a1edfe9f524f7f8c03fe2a849936be
+#: ../../tregexpr.rst:181 ../../tregexpr.rst:209
 msgid "Internally calls Exec_ / ExecNext_"
 msgstr "Ruft intern Exec_ / ExecNext_ auf"
 
-# 9fd90d7e3c89425fa2290f76443ca6a4
-#: ../../tregexpr_interface.rst:183
+# 0d64e7cd9fc344a5b7d389ec5306d7f0
+#: ../../tregexpr.rst:183
 msgid ""
 "See also global function SplitRegExpr_ that you can use without explicit "
 "``TRegExpr`` object creation."
@@ -476,21 +479,21 @@ msgstr ""
 "Siehe auch die globale Funktion SplitRegExpr_, die Sie ohne explizite `` "
 "TRegExpr``-Objekterstellung verwenden können."
 
-# 6939e384cf464ca29927ad1a650b90ce
-#: ../../tregexpr_interface.rst:189
+# 40886178c28345688eeab68c4ca19f58
+#: ../../tregexpr.rst:189
 msgid "Replace, ReplaceEx"
 msgstr "Ersetzen, ErsetzenEx"
 
-# 52dcca021bbe4387a8219016d4d9cc80
-#: ../../tregexpr_interface.rst:191
+# 09523f19b3134cd0a900969dbc980445
+#: ../../tregexpr.rst:191
 msgid ""
 "Returns the string with r.e. occurencies replaced by the replace string."
 msgstr ""
 "Gibt die Zeichenfolge mit erneuten Vorkommen durch die "
 "Ersetzungszeichenfolge zurück."
 
-# 8fcc0c600b524f2bb646f319e3f71d24
-#: ../../tregexpr_interface.rst:193
+# 2253e3011c6f4789b9c96651014918ff
+#: ../../tregexpr.rst:193
 msgid ""
 "If ``AUseSubstitution`` is true, then ``AReplaceStr`` will be used as "
 "template for Substitution methods."
@@ -498,18 +501,18 @@ msgstr ""
 "Wenn &quot;AUseSubstitution&quot; wahr ist, wird &quot;AReplaceStr&quot; als"
 " Vorlage für Substitutionsmethoden verwendet."
 
-# 6cc3697acfba48219eb14b922b2d92f8
-#: ../../tregexpr_interface.rst:201
+# 19c18b1de0f140e6b54eb9b509ffb64b
+#: ../../tregexpr.rst:201
 msgid "will return:  def ‘BLOCK’ value ‘test1’"
 msgstr "gibt zurück: def &#39;BLOCK&#39; Wert &#39;test1&#39;"
 
-# 167c4e455d3f4bd4b1998fbc95c66fec
-#: ../../tregexpr_interface.rst:207
+# 468582f17cf44aa99caf539ca7906a57
+#: ../../tregexpr.rst:207
 msgid "will return:  def “$1” value “$2”"
 msgstr "gibt zurück: def &quot;$ 1&quot; Wert &quot;$ 2&quot;"
 
-# d9aec043189c4c59961629be5b903758
-#: ../../tregexpr_interface.rst:211
+# 217cf585377e4a5a87cd0d665e3ef7e9
+#: ../../tregexpr.rst:211
 msgid ""
 "Overloaded version and ``ReplaceEx`` operate with call-back function, so you"
 " can implement really complex functionality."
@@ -517,8 +520,8 @@ msgstr ""
 "Die überladene Version und ``ReplaceEx`` arbeiten mit der Rückruffunktion, "
 "sodass Sie sehr komplexe Funktionen implementieren können."
 
-# 1acab06bc815402ca5921f1b5b5c6007
-#: ../../tregexpr_interface.rst:214
+# 3e40efdfe68a447a865227806a4c7649
+#: ../../tregexpr.rst:214
 msgid ""
 "See also global function ReplaceRegExpr_ that you can use without explicit "
 "``TRegExpr`` object creation."
@@ -526,21 +529,21 @@ msgstr ""
 "Siehe auch die globale Funktion ReplaceRegExpr_, die Sie ohne explizite `` "
 "TRegExpr``-Objekterstellung verwenden können."
 
-# 9e22b3a516994b56843667800aee98d0
-#: ../../tregexpr_interface.rst:218
+# bc9f9ad63fa947458f625b6264d75cda
+#: ../../tregexpr.rst:218
 msgid "SubExprMatchCount"
 msgstr "SubExprMatchCount"
 
-# 953de034d9a4499780e17fbecd172f60
-#: ../../tregexpr_interface.rst:220
+# d5ba0e249bdd4d8da0cfa8cfdeabbe6f
+#: ../../tregexpr.rst:220
 msgid ""
 "Number of subexpressions has been found in last Exec_ / ExecNext_ call."
 msgstr ""
 "Die Anzahl der Unterausdrücke wurde im letzten Exec_ / ExecNext_-Aufruf "
 "gefunden."
 
-# 7b14cfe512aa413b9527703130bb3b4f
-#: ../../tregexpr_interface.rst:222
+# d72f338a23914f4da1e709843b857975
+#: ../../tregexpr.rst:222
 msgid ""
 "If there are no subexpr. but whole expr was found (Exec\\* returned True), "
 "then ``SubExprMatchCount=0``, if no subexpressions nor whole r.e. found "
@@ -551,8 +554,8 @@ msgstr ""
 "0``, wenn weder Unterausdrücke noch ganze gefunden wurden (Exec_ / ExecNext_"
 " hat false zurückgegeben), dann `` SubExprMatchCount = -1``"
 
-# e4bbc9a91ae54355b57236830d27ce9b
-#: ../../tregexpr_interface.rst:226
+# 2767db19f2ce40f78b7da4cb1b8153c2
+#: ../../tregexpr.rst:226
 msgid ""
 "Note, that some subexpr. may be not found and for such subexpr. "
 "``MathPos=MatchLen=-1`` and ``Match=’’``."
@@ -561,13 +564,13 @@ msgstr ""
 " einen solchen Unterausdruck. `` MathPos = MatchLen = -1`` und `` Match = "
 "&#39;&#39; ``."
 
-# dd71c5db2f0a40859cacc939618fa857
-#: ../../tregexpr_interface.rst:244
+# d6446a058569424690d3f8bfbd469117
+#: ../../tregexpr.rst:244
 msgid "MatchPos"
 msgstr "MatchPos"
 
-# 262a34d5a3754afeafefebf807e0af53
-#: ../../tregexpr_interface.rst:246
+# e0784531b3c640539018d95c97165d23
+#: ../../tregexpr.rst:246
 msgid ""
 "pos of entrance subexpr. ``#Idx`` into tested in last ``Exec*`` string. "
 "First subexpr. have ``Idx=1``, last - ``MatchCount``, whole r.e. have "
@@ -577,22 +580,22 @@ msgstr ""
 "Zeichenfolge getestet. Erster Unterausdruck habe `` Idx = 1``, zuletzt - `` "
 "MatchCount``, ganze hat `` Idx = 0``."
 
-# 6f6934c114c64e46884825d97f50b8ca
-#: ../../tregexpr_interface.rst:250
+# a66ed6de99ff46099378eedabcf77813
+#: ../../tregexpr.rst:250
 msgid ""
 "Returns ``-1`` if in r.e. no such subexpr. or this subexpr. not found in "
 "input string."
 msgstr ""
-"Gibt ``-1`` zurück, wenn kein solcher Subexpr vorliegt. oder dieser "
-"subexpr. nicht in Eingabezeichenfolge gefunden."
+"Gibt ``-1`` zurück, wenn kein solcher Subexpr vorliegt. oder dieser subexpr."
+" nicht in Eingabezeichenfolge gefunden."
 
-# 481773e2a3bc4e4ba3635a0e568ddbb9
-#: ../../tregexpr_interface.rst:254
+# 04f50017d5d444659d11747e8362b1df
+#: ../../tregexpr.rst:254
 msgid "MatchLen"
 msgstr "MatchLen"
 
-# cd12bab0ec244d168fa5c53ade52ed04
-#: ../../tregexpr_interface.rst:256
+# 8e884ab088554170b70d0b9d2692c809
+#: ../../tregexpr.rst:256
 msgid ""
 "len of entrance subexpr. ``#Idx`` r.e. into tested in last ``Exec*`` string."
 " First subexpr. have ``Idx=1``, last - MatchCount, whole r.e. have "
@@ -602,8 +605,8 @@ msgstr ""
 "Zeichenfolge getestet. Erster Unterausdruck habe `` Idx = 1``, letzte - "
 "MatchCount, ganze hat `` Idx = 0``."
 
-# cfe07ba67fd8478ca63eb18688300d57
-#: ../../tregexpr_interface.rst:260
+# bbba58adb0954e1e88c524d9bb34160b
+#: ../../tregexpr.rst:260
 msgid ""
 "Returns -1 if in r.e. no such subexpr. or this subexpr. not found in input "
 "string."
@@ -611,13 +614,13 @@ msgstr ""
 "Gibt -1 zurück, wenn kein solcher Unterausdruck vorhanden ist. oder dieser "
 "subexpr. nicht in Eingabezeichenfolge gefunden."
 
-# e51f178e765349578c4ddb43f975cf5f
-#: ../../tregexpr_interface.rst:264
+# da753df4c443438b8abe57a911637416
+#: ../../tregexpr.rst:264
 msgid "Match"
 msgstr "Spiel"
 
-# 6f6934c114c64e46884825d97f50b8ca
-#: ../../tregexpr_interface.rst:266
+# 02a23874f30c452da792eda482fd62e9
+#: ../../tregexpr.rst:266
 msgid ""
 "Returns ``’’`` if in r.e. no such subexpression or this subexpression was "
 "not found in the input string."
@@ -625,55 +628,54 @@ msgstr ""
 "Gibt `` &#39;&#39; `` zurück, wenn in der Eingabezeichenfolge kein solcher "
 "Unterausdruck oder dieser Unterausdruck gefunden wurde."
 
-# 4b519db833664991b6fe5419cead8660
-#: ../../tregexpr_interface.rst:270
+# 89ec4afadd974ba188387c67bc86f14f
+#: ../../tregexpr.rst:270
 msgid "LastError"
 msgstr "LastError"
 
-# 0c2b128ff7cb452090685a5c8f417051
-#: ../../tregexpr_interface.rst:272
+# 5adfd6f2bf3d4083a7fd8d5af8db4cd8
+#: ../../tregexpr.rst:272
 msgid ""
 "Returns ``ID`` of last error, ``0`` if no errors (unusable if ``Error`` "
 "method raises exception) and clear internal status into ``0`` (no errors)."
 msgstr ""
-"Gibt ``ID`` des letzten Fehlers zurück, ``0``, wenn keine Fehler vorliegen"
-" (unbrauchbar, wenn die &#39;Fehler&#39;-Methode eine Ausnahmebedingung "
+"Gibt ``ID`` des letzten Fehlers zurück, ``0``, wenn keine Fehler vorliegen "
+"(unbrauchbar, wenn die &#39;Fehler&#39;-Methode eine Ausnahmebedingung "
 "auslöst) und den internen Status in ``0`` löschen (keine Fehler)."
 
-# 2cc9c2638680485cbb11da10ffd88107
-#: ../../tregexpr_interface.rst:276
+# 8902c40fabf34dadbaaca281acc2207e
+#: ../../tregexpr.rst:276
 msgid "ErrorMsg"
 msgstr "ErrorMsg"
 
-# 12b35c134af94f678ddb2e3729e04713
-#: ../../tregexpr_interface.rst:278
+# f0dcf06301844649adfbadb8d8a8d6d4
+#: ../../tregexpr.rst:278
 msgid "Returns ``Error`` message for error with ``ID = AErrorID``."
 msgstr ""
-"Gibt die ``Error``-Nachricht für einen Fehler mit `` ID = AErrorID`` "
-"zurück."
+"Gibt die ``Error``-Nachricht für einen Fehler mit `` ID = AErrorID`` zurück."
 
-# 911a08d8bb1e4fc9a6107ef84df2cc6e
-#: ../../tregexpr_interface.rst:281
+# 6e49cd6c15b84f38ba4e22529accdaf7
+#: ../../tregexpr.rst:281
 msgid "CompilerErrorPos"
 msgstr "CompilerErrorPos"
 
-# 48d9636bc4dd46b38e7f7a18a7d9aede
-#: ../../tregexpr_interface.rst:283
+# 73e266fea1294fdea0be2ce8a84d81a1
+#: ../../tregexpr.rst:283
 msgid "Returns pos in r.e. there compiler stopped."
 msgstr "Gibt pos in re zurück, wo der Compiler gestoppt wurde."
 
-# b6dfea44884b411daf33fad0009d4aa7
-#: ../../tregexpr_interface.rst:285
+# 68a43b758c6948a18e6701b8fb00812e
+#: ../../tregexpr.rst:285
 msgid "Useful for error diagnostics"
 msgstr "Nützlich für die Fehlerdiagnose"
 
-# e8d5b5ecacbd4af18aa156f8a84c6e74
-#: ../../tregexpr_interface.rst:288
+# 18c8e71b482b4b13aff769194f90df6c
+#: ../../tregexpr.rst:288
 msgid "SpaceChars"
 msgstr "SpaceChars"
 
-# 31cc7ec810cd417987baab73e7acc7d2
-#: ../../tregexpr_interface.rst:290
+# 6c1028cadcb44c92b5d9b529824d72ff
+#: ../../tregexpr.rst:290
 msgid ""
 "Contains chars, treated as ``\\s`` (initially filled with RegExprSpaceChars_"
 " global constant)"
@@ -681,13 +683,13 @@ msgstr ""
 "Enthält Zeichen, die als `` \\ s`` behandelt werden (anfänglich mit der "
 "globalen Konstante RegExprSpaceChars_ gefüllt)"
 
-# 53cf848dc7914a8eb008bc836e18a844
-#: ../../tregexpr_interface.rst:294
+# 8cf870efcd0d4c7a8b0cc93e84516465
+#: ../../tregexpr.rst:294
 msgid "WordChars"
 msgstr "WordChars"
 
-# b9607c02a4b6444b9917d99816e1855e
-#: ../../tregexpr_interface.rst:296
+# a270f810074240d9b63651ad4c4a8a17
+#: ../../tregexpr.rst:296
 msgid ""
 "Contains chars, treated as ``\\w`` (initially filled with RegExprWordChars_ "
 "global constant)"
@@ -695,13 +697,13 @@ msgstr ""
 "Enthält Zeichen, die als `` \\ w`` behandelt werden (anfänglich mit der "
 "globalen Konstante RegExprWordChars_ gefüllt)"
 
-# 832fb2c0deee4cf99766ff082faeaeb8
-#: ../../tregexpr_interface.rst:301
+# 6a97370bdeab422bb5ae0c9b3a036f97
+#: ../../tregexpr.rst:301
 msgid "LineSeparators"
 msgstr "LineSeparators"
 
-# 140176899d014196a1a2f3c799ea9aa0
-#: ../../tregexpr_interface.rst:303
+# f24790b4283644b8b544d7e2a5da684a
+#: ../../tregexpr.rst:303
 msgid ""
 "line separators (like ``\\n`` in Unix), initially filled with "
 "RegExprLineSeparators_ global constant)"
@@ -709,26 +711,28 @@ msgstr ""
 "Zeilentrennzeichen (wie ``\\n`` in Unix), anfänglich gefüllt mit "
 "RegExprLineSeparators_ (globale Konstante)"
 
-# dbe80987d60a42698ad46a30b6f7f523
-# dbe80987d60a42698ad46a30b6f7f523
-#: ../../tregexpr_interface.rst:306 ../../tregexpr_interface.rst:317
+# 9a2790f4b35b46dd8d067f2601a11d2e
+# 3eb664c3654b4fbb96761a585b9068a7
+#: ../../tregexpr.rst:306 ../../tregexpr.rst:317
 msgid ""
-"see also `about line separators <regexp_syntax.html#line-separators>`__"
+"see also `about line separators <regular_expressions.html#line-"
+"separators>`__"
 msgstr ""
-"Siehe auch `über Zeilentrennzeichen <regexp_syntax.html#line-separators> __"
+"Siehe auch `über Zeilentrennzeichen <regular_expressions.html#line-"
+"separators> __"
 
-# bdcc1b8e1c144b1bb4282c303a2b38ef
-#: ../../tregexpr_interface.rst:310
+# 365d71bfb73645d8ac1dc3bc69bebba2
+#: ../../tregexpr.rst:310
 msgid "LinePairedSeparator"
 msgstr "LinePairedSeparator"
 
-# e8176773c26b440bb92dbd5c56310534
-#: ../../tregexpr_interface.rst:312
+# 0858c0e771ff4062a02f4f60e60b319c
+#: ../../tregexpr.rst:312
 msgid "paired line separator (like ``\\r\\n`` in DOS and Windows)."
 msgstr "gepaartes Trennzeichen (wie `` \\ r \\ n`` in DOS und Windows)."
 
-# bc2c9ee8de5a4a63af38106176bbb5ee
-#: ../../tregexpr_interface.rst:314
+# 908fba08a9e14d618d0639c8a52414ec
+#: ../../tregexpr.rst:314
 msgid ""
 "must contain exactly two chars or no chars at all, initially filled with "
 "RegExprLinePairedSeparator global constant)"
@@ -736,8 +740,8 @@ msgstr ""
 "muss genau zwei Zeichen oder keine Zeichen enthalten, die anfangs mit der "
 "globalen Konstante RegExprLinePairedSeparator gefüllt sind."
 
-# 73b65b1656d74912bfb86a57fb975151
-#: ../../tregexpr_interface.rst:320
+# d5fcd4a7ae984f41954575a890a13689
+#: ../../tregexpr.rst:320
 msgid ""
 "For example, if you need Unix-style behaviour, assign ``LineSeparators := "
 "#$a`` and ``LinePairedSeparator := ''`` (empty string)."
@@ -746,8 +750,8 @@ msgstr ""
 "LineSeparators: = # $ a`` und `` LinePairedSeparator: = &#39;&#39; `` (leere"
 " Zeichenfolge) zu."
 
-# 73b65b1656d74912bfb86a57fb975151
-#: ../../tregexpr_interface.rst:323
+# c3211083e90a4a39a944ec1bc4b36deb
+#: ../../tregexpr.rst:323
 msgid ""
 "If you want to accept as line separators only ``\\x0D\\x0A`` but not "
 "``\\x0D`` or ``\\x0A`` alone, then assign ``LineSeparators := ''`` (empty "
@@ -758,8 +762,8 @@ msgstr ""
 "&#39;&#39;` `(leere Zeichenfolge) und `` LinePairedSeparator: = # $ d # $ "
 "a``."
 
-# 6bd98a96b31c40f4b2b585ccdb58938a
-#: ../../tregexpr_interface.rst:327
+# e9b5de25fffd431483ee4bf0e87e2c9e
+#: ../../tregexpr.rst:327
 msgid ""
 "By default ‘mixed’ mode is used (defined in RegExprLine[Paired]Separator[s] "
 "global constants):"
@@ -767,40 +771,40 @@ msgstr ""
 "Standardmäßig wird der gemischte Modus verwendet (definiert in RegExprLine "
 "[Paired] Separator [s] globale Konstanten):"
 
-# 9995de2a460047dbb0b571236d3f3a57
-#: ../../tregexpr_interface.rst:335
+# d8be7f9e6d1d4bb482ae504c9a589919
+#: ../../tregexpr.rst:335
 msgid ""
 "Behaviour of this mode is detailed described in the `syntax section "
-"<regexp_syntax.html#syntax_line_separators>`__."
+"<regular_expressions.html#syntax_line_separators>`__."
 msgstr ""
 "Das Verhalten dieses Modus wird im Abschnitt `` Syntax &#39;detailliert "
-"beschrieben <regexp_syntax.html#syntax_line_separators>`__."
+"beschrieben <regular_expressions.html#syntax_line_separators>`__."
 
-# 7ed10ced03ef41009fd0a194b0a99038
-#: ../../tregexpr_interface.rst:339
+# c9a5033ddf894b9da56c691eb013541f
+#: ../../tregexpr.rst:339
 msgid "InvertCase"
 msgstr "InvertCase"
 
-# c05af12b236348ebab92101cae4038bb
-#: ../../tregexpr_interface.rst:341
+# 695956b458584ac29fd3a42ac17e9671
+#: ../../tregexpr.rst:341
 msgid ""
 "Set this property if you want to override case-insensitive functionality."
 msgstr ""
 "Legen Sie diese Eigenschaft fest, wenn Sie die Funktionalität ohne "
 "Berücksichtigung der Groß- und Kleinschreibung außer Kraft setzen möchten."
 
-# 9365c456402b46478c5298d1c32b6c70
-#: ../../tregexpr_interface.rst:345
+# e3afaecd54dd4fb3b652545a4477e036
+#: ../../tregexpr.rst:345
 msgid "Compile"
 msgstr "Kompilieren"
 
-# 10513606c64e4bc18213195c16bd42ef
-#: ../../tregexpr_interface.rst:347
+# d44c9ef8b2a74f4c855c33ee7671d119
+#: ../../tregexpr.rst:347
 msgid "Compiles regular expression."
 msgstr "Kompiliert regulären Ausdruck."
 
-# d6339efcdd2a4f619cdc489615eef3f0
-#: ../../tregexpr_interface.rst:349
+# 9772176176724152abcfa01ce5275d48
+#: ../../tregexpr.rst:349
 msgid ""
 "Useful for example for GUI regular expressions editors - to check regular "
 "expression without using it."
@@ -808,168 +812,167 @@ msgstr ""
 "Nützlich zum Beispiel für GUI-Editoren für reguläre Ausdrücke, um reguläre "
 "Ausdrücke zu überprüfen, ohne ihn zu verwenden."
 
-# 7fdfff2b315741a7acaafdee59300964
-#: ../../tregexpr_interface.rst:353
+# a3e43476373a48978533b7dd6819d647
+#: ../../tregexpr.rst:353
 msgid "Dump"
 msgstr "Dump"
 
-# 90605b946df544518227de9e31dcd500
-#: ../../tregexpr_interface.rst:355
+# a80b2e57d8cb464d8ea2e4a12fa4fbe7
+#: ../../tregexpr.rst:355
 msgid ""
 "Show ``P-code`` (compiled regular expression) as human-readable string."
 msgstr ""
 "Zeigen Sie ``P-Code`` (kompilierter regulärer Ausdruck) als vom Menschen "
 "lesbare Zeichenfolge."
 
-# 040c065ce04e4804b53173a58d42b66b
-#: ../../tregexpr_interface.rst:358
+# 9f264ffc0a2b4738b7670ee5ad10a703
+#: ../../tregexpr.rst:358
 msgid "Global constants"
 msgstr "Globale Konstanten"
 
-# e8d5b5ecacbd4af18aa156f8a84c6e74
-#: ../../tregexpr_interface.rst:361
+# 27406b79d7294fc281b4b1e526b94aa5
+#: ../../tregexpr.rst:361
 msgid "EscChar"
 msgstr "EscChar"
 
-# 8bed722399634436badebe475e495183
-#: ../../tregexpr_interface.rst:363
+# 125f2a4e7a824ac8bc65b2b761482b42
+#: ../../tregexpr.rst:363
 msgid "Escape-char, by default ``\\``."
 msgstr "Escape-char, standardmäßig `` \\ ``."
 
-# 62130ee141814eb0807fc38c101382ac
-#: ../../tregexpr_interface.rst:366
+# b694219c815443b39f3e092d12171dba
+#: ../../tregexpr.rst:366
 msgid "RegExprModifierI"
 msgstr "RegExprModifierI"
 
-# dbe80987d60a42698ad46a30b6f7f523
-#: ../../tregexpr_interface.rst:368
-msgid "`Modifier i <regexp_syntax.html#i>`_ default value"
-msgstr "Modifier i <regexp_syntax.html#i> _ Standardwert"
+# 088ef484a7bd4a65a20b1d88022ce0d0
+#: ../../tregexpr.rst:368
+msgid "`Modifier i <regular_expressions.html#i>`_ default value"
+msgstr "Modifier i <regular_expressions.html#i> _ Standardwert"
 
-# a54d1095fd3940408b9db506570aed9e
-#: ../../tregexpr_interface.rst:371
+# aa9c039a53d74df59987ae3abed1ce18
+#: ../../tregexpr.rst:371
 msgid "RegExprModifierR"
 msgstr "RegExprModifierR"
 
-# dbe80987d60a42698ad46a30b6f7f523
-#: ../../tregexpr_interface.rst:373
-msgid "`Modifier r <regexp_syntax.html#r>`_ default value"
-msgstr "Modifier r <regexp_syntax.html#r> _ Standardwert"
+# 217317d65eee4edd9e01483cd49a0d83
+#: ../../tregexpr.rst:373
+msgid "`Modifier r <regular_expressions.html#r>`_ default value"
+msgstr "Modifier r <regular_expressions.html#r> _ Standardwert"
 
-# c4afba24b1694195b73682bca046d3cc
-#: ../../tregexpr_interface.rst:376
+# 45cda2c7f6ca40c0ab899663a0f65f05
+#: ../../tregexpr.rst:376
 msgid "RegExprModifierS"
 msgstr "RegExprModifierS"
 
-# dbe80987d60a42698ad46a30b6f7f523
-#: ../../tregexpr_interface.rst:378
-msgid "`Modifier s <regexp_syntax.html#s>`_ default value"
-msgstr "`Modifier s <regexp_syntax.html#s> _ Standardwert"
+# 59b7ae2c56fa49f5801c1d3af277f8e8
+#: ../../tregexpr.rst:378
+msgid "`Modifier s <regular_expressions.html#s>`_ default value"
+msgstr "`Modifier s <regular_expressions.html#s> _ Standardwert"
 
-# 4e4e7d94836b448082e6b1463c686b21
-#: ../../tregexpr_interface.rst:381
+# 58bc3091060d4399a02951ec97630f33
+#: ../../tregexpr.rst:381
 msgid "RegExprModifierG"
 msgstr "RegExprModifierG"
 
-# dbe80987d60a42698ad46a30b6f7f523
-#: ../../tregexpr_interface.rst:383
-msgid "`Modifier g <regexp_syntax.html#g>`_ default value"
-msgstr "`Modifikator g <regexp_syntax.html#g> _ Standardwert"
+# da0b49d2a3d74b32988134b30e573819
+#: ../../tregexpr.rst:383
+msgid "`Modifier g <regular_expressions.html#g>`_ default value"
+msgstr "`Modifikator g <regular_expressions.html#g> _ Standardwert"
 
-# 62130ee141814eb0807fc38c101382ac
-#: ../../tregexpr_interface.rst:386
+# 0d2a949eb6a340399449ebacb03097ac
+#: ../../tregexpr.rst:386
 msgid "RegExprModifierM"
 msgstr "RegExprModifierM"
 
-# dbe80987d60a42698ad46a30b6f7f523
-#: ../../tregexpr_interface.rst:388
-msgid "`Modifier m <regexp_syntax.html#m>`_ default value"
-msgstr "Modifier m <regexp_syntax.html#m> _ Standardwert"
+# 60489a8dd5f24d2ba28233c0a1458f2d
+#: ../../tregexpr.rst:388
+msgid "`Modifier m <regular_expressions.html#m>`_ default value"
+msgstr "Modifier m <regular_expressions.html#m> _ Standardwert"
 
-# b8e7328cfb4048ebb3768c8e4464d01e
-#: ../../tregexpr_interface.rst:391
+# aeb6c43c45a84a549d44b4de741fe653
+#: ../../tregexpr.rst:391
 msgid "RegExprModifierX"
 msgstr "RegExprModifierX"
 
-# dbe80987d60a42698ad46a30b6f7f523
-#: ../../tregexpr_interface.rst:393
-msgid "`Modifier x <regexp_syntax.html#x>`_ default value"
-msgstr "`Modifikator x <regexp_syntax.html#x> _ Standardwert"
+# b491af4c78b94bc18fc874d59524b7a1
+#: ../../tregexpr.rst:393
+msgid "`Modifier x <regular_expressions.html#x>`_ default value"
+msgstr "`Modifikator x <regular_expressions.html#x> _ Standardwert"
 
-# 1c4f69e4e7454805bb5ffdd790b9ee71
-#: ../../tregexpr_interface.rst:396
+# ad707065285c43e18a9477e6ede04d9b
+#: ../../tregexpr.rst:396
 msgid "RegExprSpaceChars"
 msgstr "RegExprSpaceChars"
 
-# 1f87e9ae84c1412ba9f177977146d4b9
-#: ../../tregexpr_interface.rst:398
+# d97ac5ca4291439d9990079ff07d9b1b
+#: ../../tregexpr.rst:398
 msgid "Default for SpaceChars_ property"
 msgstr "Standardwert für die SpaceChars_-Eigenschaft"
 
-# 22223de5c817423f8a657c121078de45
-#: ../../tregexpr_interface.rst:402
+# 4aa0deda29784187946dd010c02c5aec
+#: ../../tregexpr.rst:402
 msgid "RegExprWordChars"
 msgstr "RegExprWordChars"
 
-# cb26c5dbff6246a4bde11c638c73775b
-#: ../../tregexpr_interface.rst:404
+# e31a20227b1f463f8eb30a51a63d9b12
+#: ../../tregexpr.rst:404
 msgid "Default value for WordChars_ property"
 msgstr "Standardwert für die Eigenschaft WordChars_"
 
-# 4322cf130977418fa081103235e27d1f
-#: ../../tregexpr_interface.rst:408
+# 587f145f49a743a7ac74d65b58a7d6d4
+#: ../../tregexpr.rst:408
 msgid "RegExprLineSeparators"
 msgstr "RegExprLineSeparators"
 
-# 5da2eda21ce344a88cce1872ff97b95b
-#: ../../tregexpr_interface.rst:410
+# 02f6f3bc3f3240999252663ffb1946ba
+#: ../../tregexpr.rst:410
 msgid "Default value for LineSeparators_ property"
 msgstr "Standardwert für die LineSeparators_-Eigenschaft"
 
-# bdcc1b8e1c144b1bb4282c303a2b38ef
-#: ../../tregexpr_interface.rst:413
+# f11ef3231f4a4f7c976633edcbf6cdde
+#: ../../tregexpr.rst:413
 msgid "RegExprLinePairedSeparator"
 msgstr "RegExprLinePairedSeparator"
 
-# 0e40e5a44b124936b4034d30210d7628
-#: ../../tregexpr_interface.rst:415
+# 845c9e7f55954551b55b737424a5aa70
+#: ../../tregexpr.rst:415
 msgid "Default value for LinePairedSeparator_ property"
 msgstr "Standardwert für die LinePairedSeparator_-Eigenschaft"
 
-# 4322cf130977418fa081103235e27d1f
-#: ../../tregexpr_interface.rst:419
+# ad093a53ba3d4944a8d9921577e5b6e3
+#: ../../tregexpr.rst:419
 msgid "RegExprInvertCaseFunction"
 msgstr "RegExprInvertCaseFunction"
 
-# 40579c95877841879600722b56be4938
-#: ../../tregexpr_interface.rst:421
+# 39bb61941e1b44c1b2df720ff7b38904
+#: ../../tregexpr.rst:421
 msgid "Default for InvertCase_ property"
 msgstr "Standard für die Eigenschaft InvertCase_"
 
-# bf488982ce1e4ab4858bf4733f418a3e
-#: ../../tregexpr_interface.rst:424
+# 0539fbf94edd40388db5e2100343c4c5
+#: ../../tregexpr.rst:424
 msgid "Global functions"
 msgstr "Globale Funktionen"
 
-# e654bf13c7eb490794b5af5671234d39
-#: ../../tregexpr_interface.rst:426
+# ff352fde8a094be0b82e9b5e15427f0c
+#: ../../tregexpr.rst:426
 msgid ""
 "All this functionality is available as methods of ``TRegExpr``, but with "
 "global functions you do not need to create ``TReExpr`` instance so your code"
 " would be more simple if you just need one function."
 msgstr ""
 "Alle diese Funktionen stehen als Methoden von ``TRegExpr`` zur Verfügung, "
-"aber mit globalen Funktionen müssen Sie keine ``TReExpr``-Instanz "
-"erstellen, sodass Ihr Code einfacher wäre, wenn Sie nur eine Funktion "
-"benötigen."
+"aber mit globalen Funktionen müssen Sie keine ``TReExpr``-Instanz erstellen,"
+" sodass Ihr Code einfacher wäre, wenn Sie nur eine Funktion benötigen."
 
-# 019c03b289a14eb3b8fb3b539866990b
-#: ../../tregexpr_interface.rst:431
+# 976f67edefab42f3ac9f276d20a8a6bf
+#: ../../tregexpr.rst:431
 msgid "ExecRegExpr"
 msgstr "ExecRegExpr"
 
-# cbb5cadbb9ba401bbf5d4cce1301a75a
-#: ../../tregexpr_interface.rst:433
+# 379c9c62941e4aaba9f5033fbe5164ec
+#: ../../tregexpr.rst:433
 msgid ""
 "true if the string matches the regular expression. Just as Exec_ in "
 "``TRegExpr``."
@@ -977,13 +980,13 @@ msgstr ""
 "true, wenn die Zeichenfolge mit dem regulären Ausdruck übereinstimmt. So wie"
 " Exec_ in ``TRegExpr``."
 
-# 300398c785754e2e8a5e793fa433f652
-#: ../../tregexpr_interface.rst:437
+# 8ebb3f82d0ed4174b953a0d49c6e3225
+#: ../../tregexpr.rst:437
 msgid "SplitRegExpr"
 msgstr "SplitRegExpr"
 
-# ef836edef3be485e9e1926a3eb0a6aa8
-#: ../../tregexpr_interface.rst:439
+# 50b241d388564b3897942fe14045c6a4
+#: ../../tregexpr.rst:439
 msgid ""
 "Splits the string by regular expressions. See also Split_ if you prefer to "
 "create ``TRegExpr`` instance explicitly."
@@ -991,13 +994,13 @@ msgstr ""
 "Teilt den String mit regulären Ausdrücken. Siehe auch Split_, wenn Sie die "
 "``TRegExpr``-Instanz explizit erstellen möchten."
 
-# b2c9fe065dc64fbcbb963eca2e8073cd
-#: ../../tregexpr_interface.rst:443
+# 848d75458db94f55aa25dc110c38dab1
+#: ../../tregexpr.rst:443
 msgid "ReplaceRegExpr"
 msgstr "ReplaceRegExpr"
 
-# 19eb12f3350c43c69688bdda563a454c
-#: ../../tregexpr_interface.rst:445
+# 3446fdd5d12849ca9d526b4ac3599206
+#: ../../tregexpr.rst:445
 msgid ""
 "Returns the string with regular expressions replaced by the ``AReplaceStr``."
 " See also Replace_ if you prefer to create TRegExpr instance explicitly."
@@ -1006,8 +1009,8 @@ msgstr ""
 "ersetzt werden. Siehe auch Replace_, wenn Sie es vorziehen, die TRegExpr-"
 "Instanz explizit zu erstellen."
 
-# 8fcc0c600b524f2bb646f319e3f71d24
-#: ../../tregexpr_interface.rst:448
+# 1b6dc7fa59294b0ba3653468f5cee2d4
+#: ../../tregexpr.rst:448
 msgid ""
 "If ``AUseSubstitution` is true, then ``AReplaceStr`` will be used as "
 "template for ``Substitution methods``."
@@ -1015,13 +1018,13 @@ msgstr ""
 "Wenn &quot;AUseSubstitution&quot; wahr ist, wird &quot;AReplaceStr&quot; als"
 " Vorlage für &quot;Substitutionsmethoden&quot; verwendet."
 
-# 7e4e67279ba146aca5b9d96fdc6aa31f
-#: ../../tregexpr_interface.rst:466
+# 154956e5a5684cfe8fe738b50f2e623e
+#: ../../tregexpr.rst:466
 msgid "Version with options"
 msgstr "Version mit Optionen"
 
-# a27e4405289b49a19ad2cd7bdd0a8252
-#: ../../tregexpr_interface.rst:468
+# cfbcd8a386864fed94530caa92931339
+#: ../../tregexpr.rst:468
 msgid ""
 "With ``Options`` you control ``\\n`` behaviour (if ``rroUseOsLineEnd`` then "
 "``\\n`` is replaced with ``\\n\\r`` in Windows and ``\\n`` in Linux). And so"
@@ -1031,13 +1034,13 @@ msgstr ""
 "`rroUseOsLineEnd``` dann in` `\\ n`` durch` `\\ n \\ r`` ersetzt wird und` "
 "`\\ n`` in Linux). Und so weiter."
 
-# 6b0dde81c18a441faf4dd21a3ce6aa6f
-#: ../../tregexpr_interface.rst:484
+# 1ed790106086420dbcb76422bd55ca5d
+#: ../../tregexpr.rst:484
 msgid "QuoteRegExprMetaChars"
 msgstr "QuoteRegExprMetaChars"
 
-# 20425eb3effb4e438b53dea3616e032d
-#: ../../tregexpr_interface.rst:486
+# a32c441895684121977d60f0fbd6db0c
+#: ../../tregexpr.rst:486
 msgid ""
 "Replace all metachars with its safe representation, for example ``abc'cd.(``"
 " converts into ``abc\\'cd\\.\\(``"
@@ -1045,39 +1048,39 @@ msgstr ""
 "Ersetzen Sie alle Metachars durch ihre sichere Darstellung, zum Beispiel `` "
 "abc&#39;cd. (`` Konvertiert in `` abc \\ &#39;cd \\. \\ (``.)"
 
-# 598671f865eb4bd0868f137d8bf9841c
-#: ../../tregexpr_interface.rst:489
+# 77d383900a7c4f6588708ac87a1d30f8
+#: ../../tregexpr.rst:489
 msgid "This function usefull for r.e. autogeneration from user input"
 msgstr ""
 "Diese Funktion ist nützlich für die erneute Generierung von Benutzereingaben"
 
-# 10513606c64e4bc18213195c16bd42ef
-#: ../../tregexpr_interface.rst:492
+# a5c9b2e21be44d4783cc11c309b5113c
+#: ../../tregexpr.rst:492
 msgid "RegExprSubExpressions"
 msgstr "RegExprSubExpressions"
 
-# f2acda348649440fae4fef22ae2cabec
-#: ../../tregexpr_interface.rst:494
+# bb18fa14624b49f89e7e635017d65415
+#: ../../tregexpr.rst:494
 msgid "Makes list of subexpressions found in ``ARegExpr``"
 msgstr ""
 "Erstellt eine Liste der Unterausdrücke, die in ``ARegExpr`` gefunden werden"
 
-# 99e51abb53a14a86b552a236139753ab
-#: ../../tregexpr_interface.rst:496
+# f5fe823d6b9d44c19a4656fccfb94ec7
+#: ../../tregexpr.rst:496
 msgid ""
 "In ``ASubExps`` every item represent subexpression, from first to last, in "
 "format:"
 msgstr ""
-"In ``ASubExps`` repräsentiert jedes Element einen ersten Ausdruck vom "
-"ersten bis zum letzten Format im Format:"
+"In ``ASubExps`` repräsentiert jedes Element einen ersten Ausdruck vom ersten"
+" bis zum letzten Format im Format:"
 
-# 79ed3e0853284d8c9c3d3ea33f2b4246
-#: ../../tregexpr_interface.rst:499
+# 691fb061827f4c34a92dacde681dc4d5
+#: ../../tregexpr.rst:499
 msgid "String - subexpression text (without ‘()’)"
 msgstr "String - Unterausdruck (ohne &#39;()&#39;)"
 
-# a4d0884e4a984f2d812f09344e6fb1ae
-#: ../../tregexpr_interface.rst:501
+# fd9c0421e94f42a2b7c1a24d60b09c3d
+#: ../../tregexpr.rst:501
 msgid ""
 "low word of Object - starting position in ARegExpr, including ‘(’ if exists!"
 " (first position is 1)"
@@ -1085,8 +1088,8 @@ msgstr ""
 "Low word of Object - Startposition in ARegExpr, einschließlich &#39;(&#39; "
 "falls vorhanden! (erste Position ist 1)"
 
-# a5d03922a2bd4cdd822b5854f6b741dd
-#: ../../tregexpr_interface.rst:504
+# 36c9774b5f4543b2a3f11b8d3ebed089
+#: ../../tregexpr.rst:504
 msgid ""
 "high word of Object - length, including starting ‘(’ and ending ‘)’ if "
 "exist!"
@@ -1094,17 +1097,17 @@ msgstr ""
 "hohes Wort der Objektlänge, einschließlich &quot;(&quot; und "
 "&quot;Endung&quot;) &quot;falls vorhanden!"
 
-# 89348b6fdf4a4551adaf3e3f4d982592
-#: ../../tregexpr_interface.rst:507
+# 2e1c0fd57150421c9f7fb6dfadd66141
+#: ../../tregexpr.rst:507
 msgid ""
 "``AExtendedSyntax`` - must be ``True`` if modifier ``/x`` will be ``On`` "
 "while using the r.e."
 msgstr ""
-"``AExtendedSyntax`` - muss ``True`` sein, wenn der ``/x`` `` `` `ein "
-"ist, während der re verwendet wird"
+"``AExtendedSyntax`` - muss ``True`` sein, wenn der ``/x`` `` `` `ein ist, "
+"während der re verwendet wird"
 
-# 50dfcb50e92a47359db601c16526549a
-#: ../../tregexpr_interface.rst:510
+# e124e12c0b9748088e423f0cb5c53c37
+#: ../../tregexpr.rst:510
 msgid ""
 "Usefull for GUI editors of r.e. etc (you can find example of using in "
 "`REStudioMain.pas "
@@ -1115,56 +1118,56 @@ msgstr ""
 "<https://github.com/masterandrey/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMain.pas#L474>"
 " _)"
 
-# 7d41e79d3f474e20aa36aec3c5d7007d
-#: ../../tregexpr_interface.rst:514
+# 3f20b5860f984ad8b65858dad109f7b3
+#: ../../tregexpr.rst:514
 msgid "Result code"
 msgstr "Ergebniscode"
 
-# d0f61620c2f44d8da1005fb26d8afe70
-#: ../../tregexpr_interface.rst:514
+# d1575d03df594bb5a1f5259d9bde1f96
+#: ../../tregexpr.rst:514
 msgid "Meaning"
 msgstr "Bedeutung"
 
-# 0357fa94285344dd9172eebdfe69964e
-#: ../../tregexpr_interface.rst:516
+# 4f0a93de521a470f8ccd3bc06efde5d9
+#: ../../tregexpr.rst:516
 msgid "0"
 msgstr "0"
 
-# 0cc8c311d7ad4dd694fa76db366f4715
-#: ../../tregexpr_interface.rst:516
+# e31c68543c174722ab7814aa70c21d42
+#: ../../tregexpr.rst:516
 msgid "Success. No unbalanced brackets was found"
 msgstr "Erfolg. Es wurden keine unausgeglichenen Klammern gefunden"
 
-# 0e08231926c1421aa871044ad93801c0
-#: ../../tregexpr_interface.rst:517
+# d5330ee8b4de4800b73f912aee5f0687
+#: ../../tregexpr.rst:517
 msgid "-1"
 msgstr "-1"
 
-# 0b59fad4b6544857bc6e2d3113cd3b26
-#: ../../tregexpr_interface.rst:517
+# 61091b3b25774e2cbebe3ab73c70c459
+#: ../../tregexpr.rst:517
 msgid "there are not enough closing brackets ``)``"
 msgstr "Es gibt nicht genug schließende Klammern ``) ``"
 
-# 1f12da617a7d41a9bbf12c0ac7b85dd4
-#: ../../tregexpr_interface.rst:518
+# 27190c0c3dfd4d35b17fe9b37fc76a4c
+#: ../../tregexpr.rst:518
 msgid "-(n+1)"
 msgstr "- (n + 1)"
 
-# 83cf9ed1a96a4816bf531f7bf9b4a416
-#: ../../tregexpr_interface.rst:518
+# 1a26203a8657400c9d453af26cd933de
+#: ../../tregexpr.rst:518
 msgid ""
 "at position n was found opening ``[`` without corresponding closing ``]``"
 msgstr ""
 "An Position n wurde das Öffnen von ``[`` ohne entsprechende Schließung ``] "
 "`` gefunden"
 
-# 8754298fa0c14a629956ef78555a6adc
-#: ../../tregexpr_interface.rst:519
+# 6c205095ee8d4373983f802772b82aca
+#: ../../tregexpr.rst:519
 msgid "n"
 msgstr "n"
 
-# 3079369ec39043b189be4a13dc27b641
-#: ../../tregexpr_interface.rst:519
+# 7b8a44df14a44204b77878f26f7f7f79
+#: ../../tregexpr.rst:519
 msgid ""
 "at position n was found closing bracket ``)`` without corresponding opening "
 "``(``"
@@ -1172,43 +1175,43 @@ msgstr ""
 "In Position n wurde das Schließen der Klammer ``) `` ohne entsprechende "
 "Öffnung ``(``) gefunden"
 
-# 94fced6d5cdc4382af5697cc6a115e7f
-#: ../../tregexpr_interface.rst:522
+# 5ccc5e356eda4954a316c17918906fa4
+#: ../../tregexpr.rst:522
 msgid ""
 "If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal "
 "ones"
 msgstr ""
-"Wenn `` Result <> 0`` ```ASubExprs`` kann leere oder illegale "
-"Elemente enthalten"
+"Wenn `` Result <> 0`` ```ASubExprs`` kann leere oder illegale Elemente "
+"enthalten"
 
-# 019c03b289a14eb3b8fb3b539866990b
-#: ../../tregexpr_interface.rst:525
+# aed94ac85d94421eaa743168b7ac3892
+#: ../../tregexpr.rst:525
 msgid "ERegExpr"
 msgstr "ERegExpr"
 
-# f0799f6092264be8a108ef108148fcd9
-#: ../../tregexpr_interface.rst:536
+# 5acc362ed76e4abebb386b53cb17ec25
+#: ../../tregexpr.rst:536
 msgid "Unicode"
 msgstr "Unicode"
 
-# 24fdfbb1951e4cdfa36afed014562f23
-#: ../../tregexpr_interface.rst:538
+# a7d589b8a607447db3b94266e7a63009
+#: ../../tregexpr.rst:538
 msgid "TRegExpr now supports UniCode, but it works very slow :("
 msgstr "TRegExpr unterstützt jetzt UniCode, funktioniert aber sehr langsam :("
 
-# be686e6f002843e094bab1ccd52ac414
-#: ../../tregexpr_interface.rst:540
+# 84722658884048a78b46f8fc469e9bd7
+#: ../../tregexpr.rst:540
 msgid "Who want to optimize it ? ;)"
 msgstr "Wer möchte das optimieren? ;)"
 
-# 10403ec2e6354b5fa3831f713f3bf529
-#: ../../tregexpr_interface.rst:542
+# 428fc56a60244ed9bd7e21fe079b4450
+#: ../../tregexpr.rst:542
 msgid "Use it only if you really need Unicode support !"
 msgstr ""
 "Verwenden Sie es nur, wenn Sie wirklich Unicode-Unterstützung benötigen!"
 
-# bd4e3ddcfc384ae5bee2fead3959ea2d
-#: ../../tregexpr_interface.rst:544
+# c44517be82fc44adbe4f598a2e67cff1
+#: ../../tregexpr.rst:544
 msgid ""
 "Remove ``.`` in ``{.$DEFINE UniCode}`` in regexpr.pas. After that all "
 "strings will be treated as WideString."

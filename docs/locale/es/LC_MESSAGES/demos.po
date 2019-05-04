@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 10:09+0300\n"
-"PO-Revision-Date: 2019-05-03 15:51+0000\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"PO-Revision-Date: 2019-05-04 03:11+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/masterAndrey/teams/98461/es/)\n"
 "MIME-Version: 1.0\n"
@@ -35,19 +35,17 @@ msgstr "Introducción"
 #: ../../demos.rst:7
 msgid ""
 "If you don't familiar with regular expression, please, take a look at the "
-"`r.e.syntax <regexp_syntax.html>`__."
+"`r.e.syntax <regular_expressions.html>`__."
 msgstr ""
 "Si no está familiarizado con la expresión regular, por favor, eche un "
-"vistazo a la &#39;sintaxis&#39; <regexp_syntax.html>`__."
+"vistazo a la &#39;sintaxis&#39; <regular_expressions.html>`__."
 
 # 781500ac2b09419a9cb5595076f7de14
 #: ../../demos.rst:10
 msgid ""
-"TRegExpr interface described in `TRegExpr interface "
-"<tregexpr_interface.html>`__."
+"TRegExpr interface described in `TRegExpr interface <tregexpr.html>`__."
 msgstr ""
-"Interfaz TRegExpr descrita en la interfaz `TRegExpr "
-"<tregexpr_interface.html>`__."
+"Interfaz TRegExpr descrita en la interfaz `TRegExpr <tregexpr.html>`__."
 
 # 76682c66dd994062b735943a14f040f4
 #: ../../demos.rst:13
@@ -77,8 +75,7 @@ msgid ""
 msgstr ""
 "En primer lugar, recomiendo que lea `Procesamiento de texto a vista de "
 "pájaro "
-"<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>"
-"`__."
+"<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__."
 
 # 19e04c2855034e2da0d032ce97d8daef
 #: ../../demos.rst:25
@@ -140,8 +137,8 @@ msgid ""
 " that is based on TRegExpr."
 msgstr ""
 "Usa la unidad `HyperLinksDecorator "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>"
-"`__ que se basa en TRegExpr."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__"
+" que se basa en TRegExpr."
 
 # 1e585d008e2b4b52844d261128e19247
 #: ../../demos.rst:47
@@ -242,8 +239,8 @@ msgid ""
 "``AFlags`` describes, which parts of hyper-link must be included into "
 "visible part of the link."
 msgstr ""
-"``AFlags`` describe qué partes del hipervínculo deben incluirse en la parte"
-" visible del enlace."
+"``AFlags`` describe qué partes del hipervínculo deben incluirse en la parte "
+"visible del enlace."
 
 # 8a9151bca867444096cb6fd675d91897
 #: ../../demos.rst:84
@@ -264,8 +261,7 @@ msgid ""
 "<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>`_"
 msgstr ""
 "`TRegExprRoutines "
-"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>"
-"`_"
+"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>`_"
 
 # 64b3450332934ae6b2181e3d04022fea
 #: ../../demos.rst:91
@@ -279,8 +275,7 @@ msgid ""
 "<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>`_"
 msgstr ""
 "`TRegExprClass "
-"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>"
-"`_"
+"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>`_"
 
 # 56993d7a10d746e08c7c712cec5c7274
 #: ../../demos.rst:96

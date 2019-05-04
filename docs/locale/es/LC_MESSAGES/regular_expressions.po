@@ -1,0 +1,1025 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, Andrey Sorokin
+# This file is distributed under the same license as the TRegExpr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Andrey Sorokin <filbert@yandex.ru>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: TRegExpr 0.952\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"PO-Revision-Date: 2019-05-04 03:10+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/masterAndrey/teams/98461/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# f31d49f9e1da427886b0f062a7129019
+#: ../../regular_expressions.rst:2
+msgid "Regular expressions"
+msgstr "Expresiones regulares"
+
+# 8dfeea7a48b748ccb251c6b79c7bbde6
+#: ../../regular_expressions.rst:5
+msgid "Introduction"
+msgstr "Introducción"
+
+# c539fa8fe4d44399835566cc43838186
+#: ../../regular_expressions.rst:7
+msgid "Regular expressions are a handy way to specify patterns of text."
+msgstr ""
+"Las expresiones regulares son una forma práctica de especificar patrones de "
+"texto."
+
+# 0a805f8678c04a80993edbbc482c4c80
+#: ../../regular_expressions.rst:10
+msgid ""
+"So you can validate user input, search for some patterns like emails of "
+"phone numbers on web pages or in some documents and so on."
+msgstr ""
+"Por lo tanto, puede validar la entrada del usuario, buscar algunos patrones "
+"como correos electrónicos de números de teléfono en páginas web o en algunos"
+" documentos, etc."
+
+# 11368f3398e64ed4b9a63cd2df9d2237
+#: ../../regular_expressions.rst:13
+msgid ""
+"Below is complete regular expressions cheat sheet just on one page. This is "
+"regular expressions that are implemented for example in `TRegExpr "
+"<tregexpr.html>`_."
+msgstr ""
+"A continuación se muestra una hoja de trucos de expresiones regulares "
+"completa en una sola página. Estas son expresiones regulares que se "
+"implementan, por ejemplo, en `TRegExpr <tregexpr.html>`_."
+
+# cbcf30bb80f24f27b5aaa33c3568efba
+#: ../../regular_expressions.rst:18
+msgid "Simple matches"
+msgstr "Partidos simples"
+
+# 1a85f7fea3964090b7fc47fe009b0c8d
+#: ../../regular_expressions.rst:20
+msgid "Any single character matches itself."
+msgstr "Cualquier carácter individual coincide solo."
+
+# c0259faae4264ac1aaacba2eec964206
+#: ../../regular_expressions.rst:22
+msgid ""
+"A series of characters matches that series of characters in the target "
+"string, so the pattern ``bluh`` would match ``bluh`` in the target string."
+msgstr ""
+"Una serie de caracteres coincide con esa serie de caracteres en la cadena de"
+" destino, por lo que el patrón ``bluh`` coincidiría con ``bluh`` en la "
+"cadena de destino."
+
+# fee64123b3974456bedcd497899243fa
+#: ../../regular_expressions.rst:30
+msgid ""
+"If you want to use some symbol with special meaning (see below) as plain "
+"symbol you have to \"escape\" it with backslash ``\\``:"
+msgstr ""
+"Si desea usar algún símbolo con un significado especial (vea a continuación)"
+" como símbolo simple, debe &quot;escapar&quot; con una barra invertida `` \\"
+" ``:"
+
+# cacc0626b0184a8f875d44798062217b
+#: ../../regular_expressions.rst:38
+msgid "Non-Printable Characters"
+msgstr "Caracteres no imprimibles"
+
+# d5e1f1a550524c0e89709a1e146cfe1a
+#: ../../regular_expressions.rst:41
+msgid "``\\xnn``"
+msgstr "`` \\ xnn``"
+
+# 4fdf9b0b732a450fa919d6410c299b23
+#: ../../regular_expressions.rst:41
+msgid "matches character with hex code ``nn``"
+msgstr "empareja el carácter con el código hexadecimal ``nn``"
+
+# 015bea8c472c43478a5d63e30c8442e5
+#: ../../regular_expressions.rst:42
+msgid "``\\x{nnnn}``"
+msgstr "`` \\ x {nnnn} ``"
+
+# 254d7e5c962144578714f269163415f5
+#: ../../regular_expressions.rst:42
+msgid ""
+"matches character with hex code ``nnnn`` (one byte for plain text and two "
+"bytes for Unicode)"
+msgstr ""
+"hace coincidir el carácter con el código hexadecimal ``nnnn`` (un byte para "
+"texto sin formato y dos bytes para Unicode)"
+
+# 394de011985d41cfacc8d5776ff08281
+#: ../../regular_expressions.rst:50
+msgid ""
+"There are a number of predefined non-printable character classes just like "
+"in ``C`` language:"
+msgstr ""
+"Hay una serie de clases de caracteres no imprimibles predefinidas, como en "
+"el lenguaje ``C``:"
+
+# 549416904cd74c13bd00f44cca2431ac
+#: ../../regular_expressions.rst:54
+msgid "``\\t``"
+msgstr "`` \\ t``"
+
+# 73125ec06ea84790ba22bb4f71870b25
+#: ../../regular_expressions.rst:54
+msgid "tab (HT/TAB), same as ``\\x09``"
+msgstr "pestaña (HT / TAB), igual que `` \\ x09``"
+
+# 7fd80b15c29c44c09b9704816c1a9623
+#: ../../regular_expressions.rst:55
+msgid "``\\n``"
+msgstr "``\\n``"
+
+# 46dcd8a844ef4d6abed5ec6f329d2541
+#: ../../regular_expressions.rst:55
+msgid "newline (NL), same as ``\\x0a``"
+msgstr "nueva línea (NL), igual que `` \\ x0a``"
+
+# 5a488030c74e44e8826073692a77f9c2
+#: ../../regular_expressions.rst:56
+msgid "``\\r``"
+msgstr "`` \\ r``"
+
+# 33886a4bdab74b5a8e4c68537233774a
+#: ../../regular_expressions.rst:56
+msgid "car.return (CR), same as ``\\x0d``"
+msgstr "car.return (CR), igual que `` \\ x0d``"
+
+# 0d0408cf750a42f5904fc08e3c184b78
+#: ../../regular_expressions.rst:57
+msgid "``\\f``"
+msgstr "`` \\ f``"
+
+# c7a3c432397740d1b50061d45535a317
+#: ../../regular_expressions.rst:57
+msgid "form feed (FF), same as ``\\x0c``"
+msgstr "form feed (FF), igual que `` \\ x0c``"
+
+# 2144e962544c4ea09f23a8fac385df07
+#: ../../regular_expressions.rst:58
+msgid "``\\a``"
+msgstr "`` \\ a``"
+
+# 89f09ace43094c50b730bd891fadcdbf
+#: ../../regular_expressions.rst:58
+msgid "alarm (BEL), same as ``\\x07``"
+msgstr "alarma (BEL), igual que `` \\ x07``"
+
+# d609430f324a473f9e28f68cf0d0d263
+#: ../../regular_expressions.rst:59
+msgid "``\\e``"
+msgstr "`` \\ e``"
+
+# 435697a7291a4f3fa8d7c10ae217d1fc
+#: ../../regular_expressions.rst:59
+msgid "escape (ESC), same as ``\\x1b``"
+msgstr "escape (ESC), igual que `` \\ x1b``"
+
+# c20cb33b6ae1493f9038d2611cb571c7
+#: ../../regular_expressions.rst:63
+msgid "User Character Classes"
+msgstr "Clases de caracteres del usuario"
+
+# 1790b54569be4679a2909c2bedf1b3b5
+#: ../../regular_expressions.rst:65
+msgid ""
+"You can specify character class, by enclosing a list of characters in "
+"``[]``. This class will match any **one** character listed inside ``[]``."
+msgstr ""
+"Puede especificar la clase de caracteres, adjuntando una lista de caracteres"
+" en `` [] ``. Esta clase coincidirá con cualquier ** uno ** carácter listado"
+" dentro de `` [] ``."
+
+# 10b7c7a5060f4e19ae386f638eb30acb
+#: ../../regular_expressions.rst:68
+msgid ""
+"If the first character after the ``[`` is ``^``, the class matches any "
+"character **but** characters listed in the class."
+msgstr ""
+"Si el primer carácter después del ``[`` es `` ^ ``, la clase coincide con "
+"cualquier carácter ** pero ** los caracteres listados en la clase."
+
+# 489b5dfb11e442bfa9ac160703d8f5b4
+#: ../../regular_expressions.rst:76
+msgid ""
+"Within a list, the ``-`` character is used to specify a range, so that "
+"``a-z`` represents all characters between ``a`` and ``z``, inclusive."
+msgstr ""
+"Dentro de una lista, el carácter ``-`` se usa para especificar un rango, de "
+"modo que ``az`` representa todos los caracteres entre ``a`` y ``z``, "
+"inclusive."
+
+# 307a6c501bf04aaca82c0b435fb04d1d
+#: ../../regular_expressions.rst:79
+msgid ""
+"If you want ``-`` itself to be a member of a class, put it at the start or "
+"end of the list, or escape it with a backslash. If you want ``]`` you may "
+"place it at the start of list or escape it with a backslash."
+msgstr ""
+"Si desea que ``-`` sea un miembro de una clase, póngalo al principio o al "
+"final de la lista, o escúchelo con una barra invertida. Si desea ``] `` "
+"puede colocarlo al comienzo de la lista o escapar con una barra invertida."
+
+# fba5be6ecf3443a08a94f9a3d9bb56eb
+#: ../../regular_expressions.rst:92
+msgid "Predefined Character classes"
+msgstr "Clases de personajes predefinidas"
+
+# 81c82efc1ed3482683b5b693539271b4
+#: ../../regular_expressions.rst:95
+msgid "``\\w``"
+msgstr "`` \\ w``"
+
+# 7013ab0d756b42489d52c7ebdb9179e0
+#: ../../regular_expressions.rst:95
+msgid "an alphanumeric character (including \"_\")"
+msgstr "un carácter alfanumérico (incluyendo &quot;_&quot;)"
+
+# 8ef1f9a1f4c84f3cb1dd36647c52ee7e
+#: ../../regular_expressions.rst:96
+msgid "``\\W``"
+msgstr "`` \\ W``"
+
+# 2ebed1a340fe4e71a605643cdf0c6bea
+#: ../../regular_expressions.rst:96
+msgid "a nonalphanumeric"
+msgstr "un no alfanumérico"
+
+# 46b7d80f33eb4181bb42e4c36b1c575a
+#: ../../regular_expressions.rst:97
+msgid "``\\d``"
+msgstr ""
+
+# cd184b317fe44f5c8bc90faf2ff38482
+#: ../../regular_expressions.rst:97
+msgid "a numeric character"
+msgstr "un caracter numérico"
+
+# b05afcd0b23b492c8684a233d000dcaa
+#: ../../regular_expressions.rst:98
+msgid "``\\D``"
+msgstr "`` \\ D``"
+
+# 5e5606c3c057494f82703e06fc80d761
+#: ../../regular_expressions.rst:98
+msgid "a non-numeric"
+msgstr "un no numérico"
+
+# c514858363dc4b8f96f62aa987c2e2e3
+#: ../../regular_expressions.rst:99
+msgid "``\\s``"
+msgstr "`` \\ s``"
+
+# a5742539a5e2465aa42ebaeeae2eb180
+#: ../../regular_expressions.rst:99
+msgid "any space (same as [ \\t\\n\\r\\f])"
+msgstr "cualquier espacio (igual que [\\ t \\ n \\ r \\ f])"
+
+# 868026bfce6543d1b0f00341f427b66c
+#: ../../regular_expressions.rst:100
+msgid "``\\S``"
+msgstr "`` \\ S``"
+
+# ac0d5e5a5a7a4c07a2d8071ffdd5bb70
+#: ../../regular_expressions.rst:100
+msgid "a non space"
+msgstr "un no espacio"
+
+# 714b08c429d44c62a9620a407ba3dfb7
+#: ../../regular_expressions.rst:103
+msgid ""
+"You may use ``\\w``, ``\\d`` and ``\\s`` within `user character classes "
+"<User Character Classes_>`_."
+msgstr ""
+
+# 71bf614d96fb4d20b1af029bbdc2ace5
+#: ../../regular_expressions.rst:110
+msgid ""
+"TRegExpr uses properties `SpaceChars <tregexpr.html#spacechars>`_ and "
+"`WordChars <tregexpr.html#wordchars>`_ to define character classes ``\\w``, "
+"``\\W``, ``\\s``, ``\\S``, so you can easely redefine it."
+msgstr ""
+"TRegExpr usa propiedades `SpaceChars <tregexpr.html#spacechars>`_ y` "
+"WordChars <tregexpr.html#wordchars>`_ para definir las clases de caracteres`"
+" `\\ w``,` `\\ W``,` `\\ s``,` `\\ S``, para que puedas redefinirlo "
+"fácilmente."
+
+# 6b971f651c4b4b07820e06ee5ecd27e0
+#: ../../regular_expressions.rst:117
+msgid "Metacharacters"
+msgstr "Metacaracteres"
+
+# 5dc0901125b94066a3afdef8de3f94f2
+#: ../../regular_expressions.rst:119
+msgid ""
+"Metacharacters are special characters which are the essence of Regular "
+"Expressions. There are different types of metacharacters, described below."
+msgstr ""
+"Los metacaracteres son caracteres especiales que son la esencia de las "
+"expresiones regulares. Hay diferentes tipos de metacaracteres, que se "
+"describen a continuación."
+
+# 2809ca1b1b7b42abb9fe170b6c9db295
+#: ../../regular_expressions.rst:124
+msgid "Line separators"
+msgstr "Separadores de linea"
+
+# 133cddbc84d641518aa8f52c01a2b4ee
+#: ../../regular_expressions.rst:127
+msgid "``^``"
+msgstr "`` ^ ``"
+
+# 6eae323c3cbb40419c82b8cf33735b7e
+#: ../../regular_expressions.rst:127
+msgid "start of line"
+msgstr "comienzo de linea"
+
+# 88b1997c4f8344fe8fc31206deb548ed
+#: ../../regular_expressions.rst:128
+msgid "``$``"
+msgstr "`` $ ``"
+
+# 335d1b6f303e4322959cd21caa380037
+#: ../../regular_expressions.rst:128
+msgid "end of line"
+msgstr "fin de la línea"
+
+# 2a95cb8a872f4701a5a7250a673bec49
+#: ../../regular_expressions.rst:129
+msgid "``\\A``"
+msgstr "`` \\ A``"
+
+# 0c58c7d0caa84ae9b4a5c96e635e616a
+#: ../../regular_expressions.rst:129
+msgid "start of text"
+msgstr "comienzo del texto"
+
+# a45c35366ff8427bb89bdfcd6c08ba71
+#: ../../regular_expressions.rst:130
+msgid "``\\Z``"
+msgstr "`` \\ Z``"
+
+# b0e79b137f2448ee8b6627c530b22bde
+#: ../../regular_expressions.rst:130
+msgid "end of text"
+msgstr "fin del texto"
+
+# 5106dad3e38a4b94bc1ab34af7b6c844
+#: ../../regular_expressions.rst:131
+msgid "``.``"
+msgstr "``.``"
+
+# 3999c57cd9574dac85a81cc63767508b
+#: ../../regular_expressions.rst:131
+msgid "any character in line"
+msgstr "cualquier caracter en linea"
+
+# 1dc1cb9a1e0d4f1a9dbb9d1ba7cbac4c
+#: ../../regular_expressions.rst:141
+msgid ""
+"The ``^`` metacharacter by default is matchthe beginning of the input "
+"string, the ``$`` at the end."
+msgstr ""
+"El metacarácter `` ^ `` por defecto coincide con el principio de la cadena "
+"de entrada, el `` $ `` al final."
+
+# a9af5da35fd4481f99af58c14c8fedd2
+#: ../../regular_expressions.rst:145
+msgid ""
+"You may, however, wish to treat a string as a multi-line text, so ``^`` will"
+" match after any line separator within the string, and ``$`` will match "
+"before any line separator. You can do this by switching ``On`` the `modifier"
+" /m <#m>`_."
+msgstr ""
+"Sin embargo, es posible que desee tratar una cadena como un texto de varias "
+"líneas, por lo que `` ^ `` coincidirá después de cualquier separador de "
+"línea dentro de la cadena, y `` $ `` coincidirá antes de cualquier separador"
+" de línea. Puedes hacer esto cambiando ``On`` el `modificador / m <#m>`_."
+
+# 18cf7bd6c41c4f85ad13795e0c1cd582
+#: ../../regular_expressions.rst:150
+msgid ""
+"The ``\\A`` and ``\\Z`` are just like ``^`` and ``$``, except that they "
+"won’t match multiple times when the `modifier /m <#m>`_ is used."
+msgstr ""
+"`` \\ A`` y `` \\ Z`` son como `` ^ `` y `` $ ``, excepto que no coincidirán"
+" varias veces cuando el `modificador / m <#m>`_ se utiliza"
+
+# 190cf85bc1414a1cb61207bc434d1c97
+#: ../../regular_expressions.rst:154
+msgid ""
+"The ``.`` metacharacter by default matches any character, but if you switch "
+"``Off`` the `modifier /s <#s>`_, then ``.`` won’t match embedded line "
+"separators."
+msgstr ""
+"El metacarácter ``.`` por defecto coincide con cualquier carácter, pero si "
+"cambia ``Off`` el `modificador / s <#s>`_, entonces ``.`` no coincidirá con "
+"los separadores de línea incrustados."
+
+# 66021d1790154bcd9301a33da8ad5f1f
+#: ../../regular_expressions.rst:159
+msgid "Tech details"
+msgstr "Detalles tecnicos"
+
+# b0f4bfb8364d4c95b5940a57a68a41aa
+#: ../../regular_expressions.rst:161
+msgid ""
+"TRegExpr works with line separators as recommended at `www.unicode.org "
+"<http://www.unicode.org/unicode/reports/tr18/>`__:"
+msgstr ""
+"TRegExpr trabaja con separadores de línea como se recomienda en "
+"`www.unicode.org <http://www.unicode.org/unicode/reports/tr18/>`__:"
+
+# 90584bda9f6d44b3852533a01edcdac6
+#: ../../regular_expressions.rst:164
+msgid ""
+"``^`` is at the beginning of a input string, and, if `modifier /m <#m>`_ is "
+"On, also immediately following any occurrence of ``\\x0D\\x0A`` or ``\\x0A``"
+" or ``\\x0D`` (if you are using `Unicode version <tregexpr.html#unicode>`__ "
+"of TRegExpr, then also ``\\x2028`` or  ``\\x2029`` or ``\\x0B`` or ``\\x0C``"
+" or ``\\x85``). Note that there is no empty line within the sequence "
+"``\\x0D\\x0A``."
+msgstr ""
+"`` ^ `` está al principio de una cadena de entrada y, si `modifier / m "
+"<#m>`_ está Activado, también inmediatamente después de que aparezca `` \\ "
+"x0D \\ x0A`` o `` \\ x0A` `o` `\\ x0D`` (si está utilizando la versión` "
+"Unicode <tregexpr.html#unicode>`__ de TRegExpr, entonces también` `\\ "
+"x2028`` o` `\\ x2029`` o` `\\ x0B`` o` `\\ x0C`` o` `\\ x85``). Tenga en "
+"cuenta que no hay una línea vacía dentro de la secuencia `` \\ x0D \\ x0A``."
+
+# 837ef3f83b844bc782409f17741f4b77
+#: ../../regular_expressions.rst:171
+msgid ""
+"``$`` is at the end of a input string, and, if `modifier /m <#m>`_ is On, "
+"also immediately preceding any occurrence of  ``\\x0D\\x0A`` or ``\\x0A`` or"
+" ``\\x0D`` (if you are using `Unicode version <tregexpr.html#unicode>`__ of "
+"TRegExpr, then also ``\\x2028`` or  ``\\x2029`` or ``\\x0B`` or ``\\x0C`` or"
+" ``\\x85``). Note that there is no empty line within the sequence "
+"``\\x0D\\x0A``."
+msgstr ""
+"`` $ `` está al final de una cadena de entrada y, si `modifier / m <#m>`_ "
+"está Activado, también precede inmediatamente a cualquier aparición de `` \\"
+" x0D \\ x0A`` o `` \\ x0A` `o` `\\ x0D`` (si está utilizando la versión` "
+"Unicode <tregexpr.html#unicode>`__ de TRegExpr, entonces también` `\\ "
+"x2028`` o` `\\ x2029`` o` `\\ x0B`` o` `\\ x0C`` o` `\\ x85``). Tenga en "
+"cuenta que no hay una línea vacía dentro de la secuencia `` \\ x0D \\ x0A``."
+
+# e60601d8933c40dd9a84cefd99219b86
+#: ../../regular_expressions.rst:179
+msgid ""
+"``.`` matchs any character, but if you switch Off `modifier /s <#s>`_ then "
+"``.`` doesn’t match ``\\x0D\\x0A`` and ``\\x0A`` and ``\\x0D`` (if you are "
+"using `Unicode version <tregexpr.html#unicode>`__ of TRegExpr, then also "
+"``\\x2028`` and  ``\\x2029`` and ``\\x0B`` and ``\\x0C`` and ``\\x85``)."
+msgstr ""
+"``.`` coincide con cualquier carácter, pero si desactiva `modifier / s "
+"<#s>`_, entonces ``.`` no coincide con `` \\ x0D \\ x0A`` y `` \\ x0A`` y ``"
+" \\ x0D`` (si está utilizando la versión `Unicode <tregexpr.html#unicode>`__"
+" de TRegExpr, entonces también` `\\ x2028`` y` `\\ x2029`` y` `\\ x0B`` y` "
+"`\\ x0C`` y` `\\ x85``)."
+
+# 93b076c78657416da0429f8180e79005
+#: ../../regular_expressions.rst:185
+msgid ""
+"Note that ``^.*$`` (an empty line pattern) does not match the empty string "
+"within the sequence ``\\x0D\\x0A``, but matchs the empty string within the "
+"sequence ``\\x0A\\x0D``."
+msgstr ""
+"Tenga en cuenta que `` ^. * $ `` (Un patrón de línea vacío) no coincide con "
+"la cadena vacía dentro de la secuencia `` \\ x0D \\ x0A``, pero coincide con"
+" la cadena vacía dentro de la secuencia `` \\ x0A \\ x0D`` ."
+
+# 31b83138b2ac421cab1cf7c41f8db5e4
+#: ../../regular_expressions.rst:189
+msgid ""
+"Multiline processing can be easely tuned for your own purpose with help of "
+"TRegExpr properties `LineSeparators <tregexpr.html#lineseparators>`_ and "
+"`LinePairedSeparator <tregexpr.html#linepairedseparator>`_, you can use only"
+" Unix style separators ``\\n`` or only DOS/Windows style ``\\r\\n`` or mix "
+"them together (as described above and used by default) or define your own "
+"line separators!"
+msgstr ""
+"El procesamiento multilínea se puede ajustar fácilmente para su propio "
+"propósito con la ayuda de las propiedades TRegExpr `LineSeparators "
+"<tregexpr.html#lineseparators>`_ y` LinePairedSeparator "
+"<tregexpr.html#linepairedseparator>`_, puede usar solo los separadores de "
+"estilo Unix` `\\ n`` o solo el estilo de DOS / Windows` `\\ r \\ n`` o "
+"mezclarlos (como se describió anteriormente y se usa de manera "
+"predeterminada) o definir sus propios separadores de línea."
+
+# 5d62589014db4360a29e8d5b5991c71a
+#: ../../regular_expressions.rst:198
+msgid "Word boundaries"
+msgstr "Límites de palabras"
+
+# 0d88e4bff70d480cb39ee78c53000f6a
+#: ../../regular_expressions.rst:205
+msgid ""
+"A word boundary ``\\b`` is a spot between two characters that has a ``\\w`` "
+"on one side of it and a ``\\W`` on the other side of it (in either order), "
+"counting the imaginary characters off the beginning and end of the string as"
+" matching a ``\\W``."
+msgstr ""
+"Un límite de palabra `` \\ b`` es un punto entre dos caracteres que tiene un"
+" `` \\ w`` en un lado y un `` \\ W` en el otro lado (en cualquier orden), "
+"contando los caracteres imaginarios del principio y final de la cadena "
+"coinciden con un `` \\ W``."
+
+# abc1e7606a9445b2b4a9304be0da0f5a
+#: ../../regular_expressions.rst:211
+msgid "Iterators"
+msgstr "Iteradores"
+
+# 92dcead47a694f28b6083b522ac7a0bb
+#: ../../regular_expressions.rst:213
+msgid ""
+"Any item of a regular expression may be followed by iterator. Iterator "
+"specify number of repetition of the item."
+msgstr ""
+"Cualquier elemento de una expresión regular puede ir seguido de un iterador."
+" Iterador especifica el número de repetición del elemento."
+
+# 910195d121904f26ae4b894ee372d37f
+#: ../../regular_expressions.rst:231
+msgid ""
+"So, digits in curly brackets ``{n,m}``, specify the minimum number of times "
+"to match ``n`` and the maximum ``m``."
+msgstr ""
+"Entonces, los dígitos entre paréntesis `` {n, m} ``, especifique el número "
+"mínimo de veces para que coincida con ``n`` y el máximo ``m``."
+
+# a7290b67a4d64a2a9c2bd6e14712ea8c
+#: ../../regular_expressions.rst:234
+msgid ""
+"The ``{n}`` is equivalent to ``{n,n}`` and matches exactly ``n`` times."
+msgstr ""
+"El `` {n} `` es equivalente a `` {n, n} `` y coincide exactamente con los "
+"tiempos ``n``."
+
+# bb5f6a9d093442ae9d58edce577ee941
+#: ../../regular_expressions.rst:236
+msgid "The ``{n,}`` matches ``n`` or more times."
+msgstr "El `` {n,} `` coincide con ``n`` o más veces."
+
+# 9d5f5d05ecaa4c00a869ae39106f33ab
+#: ../../regular_expressions.rst:238
+msgid ""
+"There is no limit to the size of ``n`` or ``m``, but large numbers will chew"
+" up more memory and slow down r.e. execution."
+msgstr ""
+"No hay límite para el tamaño de ``n`` o ``m``, pero los números grandes "
+"consumirán más memoria y ralentizarán la ejecución."
+
+# 7c5322dc99e44b998d59017aaee0f1c0
+#: ../../regular_expressions.rst:242
+msgid ""
+"If a curly bracket occurs in any other context, it is treated as a regular "
+"character."
+msgstr ""
+"Si aparece un corchete en cualquier otro contexto, se trata como un carácter"
+" regular."
+
+# 2bbf0836657c4eb284f83c948895b769
+#: ../../regular_expressions.rst:256
+msgid "Greediness"
+msgstr "Codicia"
+
+# 2d03b857084a49daac794b94c0871191
+#: ../../regular_expressions.rst:258
+msgid ""
+"“Greedy” (default) mode takes as many as possible, “non-greedy” takes as few"
+" as possible."
+msgstr ""
+"El modo &quot;Greedy&quot; (predeterminado) toma la mayor cantidad posible, "
+"&quot;non-greedy&quot; toma la menor cantidad posible."
+
+# 4f7b9612ec8149d0b4589cbb7baedf9c
+#: ../../regular_expressions.rst:260
+msgid "For example, ``b+`` applied to string ``abbbbc`` returns ``bbbb``."
+msgstr ""
+"Por ejemplo, `` b + `` aplicado a la cadena ``abbbbc`` devuelve ``bbbb``."
+
+# e9d95013efc14f8682b739017c361ab7
+#: ../../regular_expressions.rst:262
+msgid "``b+?`` returns ``b``, ``b*?`` returns empty string."
+msgstr "`` b +? `` devuelve ``b``, `` b *? `` devuelve una cadena vacía."
+
+# 8c31e533c8d047e98d739d4e48ca4781
+#: ../../regular_expressions.rst:264
+msgid "``b{2,3}?`` returns ``bb``, ``b{2,3}`` returns ``bbb``."
+msgstr "`` b {2,3}? `` devuelve ``bb``, `` b {2,3} `` devuelve ``bbb``."
+
+# b75a530867b34b489bbbe7fc74fdc80f
+#: ../../regular_expressions.rst:266
+msgid ""
+"You can switch all iterators into “non-greedy” mode (`modifier /g <#g>`_)."
+msgstr ""
+"Puede cambiar todos los iteradores al modo &quot;no codicioso&quot; "
+"(`modificador / g <#g>`_)."
+
+# ab3bdbb94bb6469191f478813e89b04b
+#: ../../regular_expressions.rst:269
+msgid "Alternatives"
+msgstr "Alternativas"
+
+# 8bc09de4d5704a16baec581934c1e0a7
+#: ../../regular_expressions.rst:271
+msgid "Series of alternatives are separated by ``|``."
+msgstr "Las series de alternativas están separadas por `` | ``."
+
+# 60408ed9823347e6a3ff93a941fc4200
+#: ../../regular_expressions.rst:273
+msgid ""
+"So ``fee|fie|foe`` will match any of ``fee``, ``fie``, or ``foe`` in the "
+"target string (as would ``f(e|i|o)e``)."
+msgstr ""
+"Entonces `` fee | fie | foe`` coincidirá con cualquiera de ``fee``, `` "
+"fie``, o ``foe`` en la cadena objetivo (como lo haría `` f (e | i | o) e "
+"``)."
+
+# 35903aec98f8406f96a653a1019c655d
+#: ../../regular_expressions.rst:276
+msgid ""
+"The first alternative includes everything from the last pattern delimiter "
+"(``(``, ``[``, or the beginning of the pattern) up to the first ``|``, and "
+"the last alternative contains everything from the last ``|`` to the next "
+"pattern delimiter."
+msgstr ""
+"La primera alternativa incluye todo, desde el último delimitador de patrón "
+"(``(``, ``[``, o el comienzo del patrón) hasta el primer `` | ``, y la "
+"última alternativa contiene todo desde el último ` `|` `al siguiente "
+"delimitador de patrón."
+
+# 94bd0177c798411db724cef9c4b8b07e
+#: ../../regular_expressions.rst:281
+msgid ""
+"Sounds a little complicated, so it’s common practice to include alternatives"
+" in parentheses, to minimize confusion about where they start and end."
+msgstr ""
+"Suena un poco complicado, por lo que es una práctica común incluir "
+"alternativas entre paréntesis, para minimizar la confusión acerca de dónde "
+"comienzan y terminan."
+
+# 765cbac5974a43cf94f4e4ea3f1dbefe
+#: ../../regular_expressions.rst:285
+msgid ""
+"Alternatives are tried from left to right, so the first alternative found "
+"for which the entire expression matches, is the one that is chosen."
+msgstr ""
+"Las alternativas se prueban de izquierda a derecha, por lo que la primera "
+"alternativa encontrada para la cual concuerda la expresión completa es la "
+"elegida."
+
+# 35d608d1b83243678f1f146331f691d5
+#: ../../regular_expressions.rst:289
+msgid ""
+"This means that alternatives are not necessarily ``greedy``. For example, "
+"regular expression ``foo|foot`` in string ``barefoot`` will match ``foo``. "
+"Just a first alternative that's match."
+msgstr ""
+"Esto significa que las alternativas no son necesariamente "
+"&quot;codiciosas&quot;. Por ejemplo, la expresión regular `` foo | foot`` en"
+" la cadena ``barefoot`` coincidirá con ``foo``. Solo una primera alternativa"
+" que coincida."
+
+# 58753005ac70406b8cbfc9813dd137f1
+#: ../../regular_expressions.rst:293
+msgid ""
+"Also remember that ``|`` is interpreted as a literal within square brackets,"
+" so if you write ``[fee|fie|foe]`` you’re really only matching ``[feio|]``."
+msgstr ""
+"También recuerda que `` | `` se interpreta como un literal entre corchetes, "
+"así que si escribes `` [fee | fie | foe] `` en realidad solo estás haciendo "
+"coincidir `` [feio |] ``."
+
+# a2ee50c135544aebb6d248b50364e68c
+#: ../../regular_expressions.rst:302
+msgid "Subexpressions"
+msgstr "Subexpresiones"
+
+# 88cd160f76144971b10a09e47208330f
+#: ../../regular_expressions.rst:304
+msgid ""
+"The brackets ``( ... )`` may also be used to define regular expression "
+"subexpressions."
+msgstr ""
+"Los corchetes `` (...) `` también se pueden usar para definir subexpresiones"
+" de expresiones regulares."
+
+# d779382e16b142c7996bd29ad1f25a41
+#: ../../regular_expressions.rst:307
+msgid ""
+"Subexpression positions, lengths and actual values will be in `MatchPos "
+"<tregexpr.html#matchpos>`_, `MatchLen <tregexpr.html#matchlen>`_ and `Match "
+"<tregexpr.html#match>`_."
+msgstr ""
+"Las posiciones de subexpresión, longitudes y valores reales estarán en "
+"`MatchPos <tregexpr.html#matchpos>`_,` MatchLen <tregexpr.html#matchlen>`_ "
+"y` partido <tregexpr.html#match>`_."
+
+# 98aad30f8c874f4d96497883b2c05de3
+#: ../../regular_expressions.rst:312
+msgid ""
+"You can substitute them with `Substitute <tregexpr.html#substitute>`_)."
+msgstr "Puedes sustituirlos por `Sustituto <tregexpr.html#substitute>`_)."
+
+# 88f7d59969924433b79eb389a28c3f3a
+#: ../../regular_expressions.rst:315
+msgid ""
+"Subexpressions are numbered from left to right by their opening parenthesis "
+"(including nested subexpressions)."
+msgstr ""
+"Las subexpresiones se numeran de izquierda a derecha por su paréntesis de "
+"apertura (incluidas las subexpresiones anidadas)."
+
+# 5d1e876aca5a42b3a5c905294b0d4f30
+#: ../../regular_expressions.rst:318
+msgid ""
+"First subexpression has number ``1``. Whole regular expression match has "
+"number ``0``."
+msgstr ""
+"La primera subexpresión tiene el número ``1``. La concordancia de "
+"expresiones regulares tiene el número ``0``."
+
+# 4199e4d2fb894d8e9798d0809a20d014
+#: ../../regular_expressions.rst:325
+msgid "Backreferences"
+msgstr "Referencias"
+
+# f73b5bc9f71348ddbf5c0a1d3add678d
+#: ../../regular_expressions.rst:327
+msgid ""
+"Metacharacters ``\\1`` through ``\\9`` are interpreted as backreferences. "
+"``\\n`` matches previously matched subexpression ``n``."
+msgstr ""
+"Los metacaracteres `` \\ 1`` a través de `` \\ 9`` se interpretan como "
+"referencias inversas. ``\\n`` coincide con la subexpresión previamente "
+"coincidente ``n``."
+
+# 8ad064575fc5452dbcb34c49a17a6644
+#: ../../regular_expressions.rst:335
+msgid ""
+"``(['\"]?)(\\d+)\\1`` matchs ``\"13\"`` (in double quotes), or ``'4'`` (in "
+"single quotes) or ``77`` (without quotes) etc"
+msgstr ""
+"`` ([&#39;&quot;]?) (\\ d +) \\ 1`` coincide con` `&quot; 13 &quot;` `(entre"
+" comillas dobles), o` `&#39; 4&#39;`` (entre comillas simples) o` `77`` (sin"
+" comillas) etc"
+
+# 02d142c965894d04ad425cb5b80f2c74
+#: ../../regular_expressions.rst:339
+msgid "Modifiers"
+msgstr "Modificadores"
+
+# 1c324cac0f7f43ac9febdabba7d0d13e
+#: ../../regular_expressions.rst:341
+msgid "Modifiers are for changing behaviour of ``TRegExpr``."
+msgstr "Los modificadores son para cambiar el comportamiento de ``TRegExpr``."
+
+# de20bef65e6a48e7b26275d34659aa31
+#: ../../regular_expressions.rst:343
+msgid "There are two ways to set up modifiers:"
+msgstr "Hay dos formas de configurar modificadores:"
+
+# c849b94a48f1468890383d24bfce78d8
+#: ../../regular_expressions.rst:345
+msgid ""
+"1) Embed within the regular expression using the `(?imsxr-imsxr) "
+"<#inlinemodifiers>`_."
+msgstr ""
+"1) Incrustar dentro de la expresión regular usando el `(? Imsxr-imsxr) "
+"<#inlinemodifiers>`_."
+
+# 51abbd7f8fa548c5aee664cd229cee5f
+#: ../../regular_expressions.rst:349
+msgid ""
+"2) Assign to appropriate ``TRegExpr`` property (`Modifier* "
+"<tregexpr.html#modifierstr>`__. The default values for new instances of "
+"TRegExpr object defined in `global variables <tregexpr.html#global-"
+"constants>`_. For example global variable ``RegExprModifierX`` defines "
+"default value for ``ModifierX`` property."
+msgstr ""
+"2) Asignar a la propiedad ``TRegExpr`` apropiada (`Modificador * "
+"<tregexpr.html#modifierstr>`__. Los valores predeterminados para las nuevas "
+"instancias del objeto TRegExpr definidos en `variables globales "
+"<tregexpr.html#global-constants>`_. Por ejemplo, la variable global "
+"``RegExprModifierX`` define el valor predeterminado para la propiedad "
+"``ModifierX``."
+
+# 658fa774748b4eb4b6a8c8d13225d41c
+#: ../../regular_expressions.rst:357
+msgid "i"
+msgstr "yo"
+
+# 98ca1bfa3ade48e9b48370bf833d3038
+#: ../../regular_expressions.rst:359
+msgid ""
+"Case-insensitive pattern matching (using installed in you system locale "
+"settings), see also `InvertCase <tregexpr.html#invertcase>`__."
+msgstr ""
+"Coincidencia de patrones que no distingue entre mayúsculas y minúsculas "
+"(utilizando la configuración local del sistema), consulte también "
+"`InvertCase <tregexpr.html#invertcase>`__."
+
+# 8c6552152ed14a6c89204ba719421f7e
+#: ../../regular_expressions.rst:364
+msgid "m"
+msgstr "metro"
+
+# d67bb943db2e4f289a450d9e264a648d
+#: ../../regular_expressions.rst:366
+msgid ""
+"Treat string as multiple lines. So ``^`` and ``$`` matches the start or end "
+"of any line anywhere within the string."
+msgstr ""
+"Trate la cuerda como líneas múltiples. Entonces `` ^ `` y `` $ `` coinciden "
+"con el inicio o final de cualquier línea en cualquier lugar dentro de la "
+"cadena."
+
+# 8df5e36f4d764bf4baa3510aa7e7bb5b
+#: ../../regular_expressions.rst:369
+msgid "See also `Line separators <tregexpr.html#lineseparators>`_."
+msgstr "Véase también `separadores de línea <tregexpr.html#lineseparators>`_."
+
+# b5a4e31774d74e488c16d59342b3dd65
+#: ../../regular_expressions.rst:373
+msgid "s"
+msgstr "s"
+
+# ed5996a987034509a2e8bed9c3c5bc1f
+#: ../../regular_expressions.rst:375
+msgid ""
+"Treat string as single line. So ``.`` matches any character whatsoever, even"
+" a line separators."
+msgstr ""
+"Trate la cuerda como una sola línea Entonces ``.`` coincide con cualquier "
+"carácter, incluso con separadores de línea."
+
+# 1f2de8cfdfbe48928d402710337d6bc3
+#: ../../regular_expressions.rst:378
+msgid ""
+"See also `Line separators <tregexpr.html#lineseparators>`_, which it "
+"normally would not match."
+msgstr ""
+"Véase también `separadores de línea <tregexpr.html#lineseparators>`_, que "
+"normalmente no coincidiría."
+
+# 3c94923472004c2d806fa489e640b39b
+#: ../../regular_expressions.rst:383
+msgid "g"
+msgstr "sol"
+
+# 5ee6007b9e6b465fa27eb5bb78b8bfcb
+#: ../../regular_expressions.rst:385
+msgid "Non standard modifier."
+msgstr "Modificador no estándar."
+
+# 8b265c8b7f434059947206a124dc56b7
+#: ../../regular_expressions.rst:387
+msgid ""
+"Switching it ``Off`` you’ll switch all following operators into non-greedy "
+"mode. So, if modifier ``/g`` is ``Off`` then ``+`` works as ``+?``, ``*`` as"
+" ``*?`` and so on."
+msgstr ""
+"Si lo desactiva ``Off``, cambiará a todos los siguientes operadores al modo "
+"no codicioso. Entonces, si el modificador `` / g`` es ``Off`` entonces `` + "
+"`` funciona como `` +? ``, `` * `` Como `` *? `` Y así sucesivamente."
+
+# 5d8c651a8a4f434ebe1a86cb9e1ee0ce
+#: ../../regular_expressions.rst:392
+msgid "By default this modifier is ``On``."
+msgstr "Por defecto este modificador es ``On``."
+
+# 5bb1660aa4424b27bec614a5df92707e
+#: ../../regular_expressions.rst:395
+msgid "x"
+msgstr "X"
+
+# 350c4f235796471690e3ca02b8ee6209
+#: ../../regular_expressions.rst:397
+msgid ""
+"Tells the ``TRegExpr`` to ignore whitespace that is neither backslashed nor "
+"within a character class. You can use this to break up your regular "
+"expression into more readable parts."
+msgstr ""
+"Le dice a ``TRegExpr`` que ignore los espacios en blanco que no están "
+"recortados ni dentro de una clase de caracteres. Puede usar esto para "
+"dividir su expresión regular en partes más legibles."
+
+# fc52051b48c64903a99bb77fe7f41a8c
+#: ../../regular_expressions.rst:401
+msgid ""
+"The ``#`` character is also treated as a metacharacter introducing a "
+"comment."
+msgstr ""
+"El carácter `` # `` también se trata como un metacarácter que introduce un "
+"comentario."
+
+# e11d6600b3d84f2e90fe379a97f59f81
+#: ../../regular_expressions.rst:412
+msgid ""
+"This also means that if you want real whitespace or ``#`` characters in the "
+"pattern (outside a character class, where they are unaffected by ``/x``), "
+"you’ll either have to escape them or encode them using octal or hex escapes."
+msgstr ""
+"Esto también significa que si desea que haya espacios en blanco reales o "
+"caracteres `` # `` en el patrón (fuera de una clase de caracteres, donde no "
+"estén afectados por ``/x``), tendrá que escapar de ellos o codificarlos "
+"usando Escape octal o hexadecimal."
+
+# 87999f93cd8541edad24318c8a8c1d6e
+#: ../../regular_expressions.rst:418
+msgid "r"
+msgstr "r"
+
+# 691c90cdaa104665932c9761880f3886
+#: ../../regular_expressions.rst:420
+msgid "Non-standard modifier."
+msgstr "Modificador no estándar."
+
+# 4a95dd3effe94447a264eeb6a48ae4fd
+#: ../../regular_expressions.rst:422
+msgid ""
+"If is set then range ``а-я`` includes also ``ё``. And ``А-Я`` includes also "
+"``Ё``. And ``а-Я`` includes all russian symbols."
+msgstr ""
+"Si se establece, el rango ``а-я`` también incluye ``ё``. Y ``А-Я`` también "
+"incluye ``Ё``. Y ``а-Я`` incluye todos los símbolos rusos."
+
+# 3bde32e7b560483894d2f7a00f8998ac
+#: ../../regular_expressions.rst:426
+msgid "The modifier is set `On` by default."
+msgstr "El modificador se establece `On` por defecto."
+
+# 1e1c198d34c74bf0a3cace2afe193dfe
+#: ../../regular_expressions.rst:429
+msgid "Perl extensions"
+msgstr "Extensiones perl"
+
+# 0d4fdd32e16440a7bccd47e1e3487eea
+#: ../../regular_expressions.rst:434
+msgid "(?imsxr-imsxr)"
+msgstr "(? imsxr-imsxr)"
+
+# 7c5f487d99924c979f9f89c09ad3664e
+#: ../../regular_expressions.rst:436
+msgid ""
+"You may use it into r.e. for modifying modifiers by the fly. If this "
+"construction inlined into subexpression, then it effects only into this "
+"subexpression"
+msgstr ""
+"Puedes usarlo para re modificar modificadores por la marcha. Si esta "
+"construcción está en línea en una subexpresión, entonces solo afecta a esta "
+"subexpresión"
+
+# e8b0c74ca7a249859ab0a4f9633bef75
+#: ../../regular_expressions.rst:448
+msgid "(?#text)"
+msgstr "(?#texto)"
+
+# f62315cc990843cfa29c51e0dd36aca7
+#: ../../regular_expressions.rst:450
+msgid ""
+"A comment, the text is ignored. Note that TRegExpr closes the comment as "
+"soon as it sees a ``)``, so there is no way to put a literal ``)`` in the "
+"comment."
+msgstr ""
+"Un comentario, el texto se ignora. Tenga en cuenta que TRegExpr cierra el "
+"comentario tan pronto como ve un ``) ``, por lo que no hay manera de poner "
+"un ``) `literal en el comentario."
+
+# 3226312fbfa04306b9ee97f11fbe2191
+#: ../../regular_expressions.rst:454
+msgid ""
+"Just now don’t forget to read the `FAQ <faq.html>`_ (expecially ‘non-"
+"greediness’ optimization `question <faq.html#nongreedyoptimization>`_)."
+msgstr ""
+"Ahora mismo no te olvides de leer las `Preguntas frecuentes <faq.html>`_ "
+"(especialmente la pregunta de la optimización &#39;no avaricia&#39; "
+"<faq.html#nongreedyoptimization>`_)."
+
+# 380591c9f4f042a6921db57df6213abb
+#: ../../regular_expressions.rst:459
+msgid "Play ground"
+msgstr "Patio de recreo"
+
+# a950872816364b0c9bafdc431c9c2676
+#: ../../regular_expressions.rst:461
+msgid ""
+"You can play with regular expressions using Windows `REStudio "
+"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`_."
+msgstr ""
+"Puedes jugar con expresiones regulares usando Windows `REStudio "
+"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`_."

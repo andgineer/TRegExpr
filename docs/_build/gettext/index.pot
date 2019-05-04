@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-03 20:47+0300\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: ../../index.rst:4
 # dfa40637f5e84c8280470a89b89cb583
-msgid "TRegExpr library implements `regular expressions <regexp_syntax.html>`_ in pure Delphi. TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project."
+msgid "TRegExpr library implements `regular expressions <regular_expressions.html>`_ in pure Delphi. TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project."
 msgstr ""
 
 #: ../../index.rst:8
@@ -63,7 +63,7 @@ msgstr ""
 
 #: ../../index.rst:30
 # 8825857f9bf247d9906c37896e2aafef
-msgid "To use the library just add `the sources <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ to you project and use the class `TRegExpr <tregexpr_interface.html>`_."
+msgid "To use the library just add `the sources <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ to you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 
 #: ../../index.rst:33
@@ -73,7 +73,7 @@ msgstr ""
 
 #: ../../index.rst:37
 # e7b685d3c5ed4990b3ad17e4ce087843
-msgid "If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use unicode <tregexpr_interface.html#unicode>`__."
+msgid "If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use unicode <tregexpr.html#unicode>`__."
 msgstr ""
 
 #: ../../index.rst:41

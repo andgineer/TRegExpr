@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 10:09+0300\n"
-"PO-Revision-Date: 2019-05-03 15:51+0000\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"PO-Revision-Date: 2019-05-04 03:11+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: French (https://www.transifex.com/masterAndrey/teams/98461/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -29,13 +29,13 @@ msgstr "introduction"
 # dfa40637f5e84c8280470a89b89cb583
 #: ../../index.rst:4
 msgid ""
-"TRegExpr library implements `regular expressions <regexp_syntax.html>`_ in "
-"pure Delphi. TRegExpr is part of `Lazarus (Free Pascal) "
-"<http://wiki.freepascal.org/Regexpr>`_ project."
+"TRegExpr library implements `regular expressions "
+"<regular_expressions.html>`_ in pure Delphi. TRegExpr is part of `Lazarus "
+"(Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project."
 msgstr ""
 "La bibliothèque TRegExpr implémente des expressions régulières "
-"<regexp_syntax.html>`_ en pur Delphi. TRegExpr fait partie de `Lazarus (Free"
-" Pascal) <http://wiki.freepascal.org/Regexpr>`_ projet."
+"<regular_expressions.html>`_ en pur Delphi. TRegExpr fait partie de `Lazarus"
+" (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ projet."
 
 # 57929c8115c34146ba8d53c86b73e99e
 #: ../../index.rst:8
@@ -102,11 +102,11 @@ msgstr "Démarrage rapide"
 msgid ""
 "To use the library just add `the sources "
 "<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
-"you project and use the class `TRegExpr <tregexpr_interface.html>`_."
+"you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 "Pour utiliser la bibliothèque, ajoutez simplement `les sources "
 "<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
-"vous projetez et utilisez la classe` TRegExpr <tregexpr_interface.html>`_."
+"vous projetez et utilisez la classe` TRegExpr <tregexpr.html>`_."
 
 # 604a644712bf457d89f53469bf0dea7e
 #: ../../index.rst:33
@@ -124,11 +124,11 @@ msgstr ""
 #: ../../index.rst:37
 msgid ""
 "If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use "
-"unicode <tregexpr_interface.html#unicode>`__."
+"unicode <tregexpr.html#unicode>`__."
 msgstr ""
 "Si vous avez besoin de l’Unicode (appelé «WideString» dans Delphi), "
 "reportez-vous à la section Comment utiliser Unicode. "
-"<tregexpr_interface.html#unicode>`__."
+"<tregexpr.html#unicode>`__."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:41

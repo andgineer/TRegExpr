@@ -12,7 +12,7 @@ emails of phone numbers on web pages or in some documents and so on.
 
 Below is complete regular expressions cheat sheet just on one page.
 This is regular expressions that are implemented for example in
-`TRegExpr <tregexpr_interface.html>`_.
+`TRegExpr <tregexpr.html>`_.
 
 Simple matches
 --------------
@@ -108,8 +108,8 @@ You may use ``\w``, ``\d`` and ``\s`` within `user character classes <User Chara
      foob[\w\s]r matchs strings like 'foobar', 'foob r', 'foobbr' and so on but not 'foob1r', 'foob=r' and so on
 
 TRegExpr uses properties
-`SpaceChars <tregexpr_interface.html#spacechars>`_ and
-`WordChars <tregexpr_interface.html#wordchars>`_ to define
+`SpaceChars <tregexpr.html#spacechars>`_ and
+`WordChars <tregexpr.html#wordchars>`_ to define
 character classes ``\w``, ``\W``, ``\s``, ``\S``, so you can easely
 redefine it.
 
@@ -164,14 +164,14 @@ TRegExpr works with line separators as recommended at
 ``^`` is at the beginning of a input string, and, if `modifier
 /m <#m>`_ is On, also immediately following
 any occurrence of ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if you are using
-`Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr, then
+`Unicode version <tregexpr.html#unicode>`__ of TRegExpr, then
 also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or ``\x85``).
 Note that there is no empty line within the sequence ``\x0D\x0A``.
 
 ``$`` is at the end of a input string, and, if `modifier
 /m <#m>`_ is On, also immediately preceding
 any occurrence of  ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if you are
-using `Unicode version <tregexpr_interface.html#unicode>`__ of TRegExpr,
+using `Unicode version <tregexpr.html#unicode>`__ of TRegExpr,
 then also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or
 ``\x85``). Note that there is no empty line within the sequence
 ``\x0D\x0A``.
@@ -179,7 +179,7 @@ then also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or
 ``.`` matchs any character, but if you switch Off `modifier
 /s <#s>`_ then ``.`` doesn’t match
 ``\x0D\x0A`` and ``\x0A`` and ``\x0D`` (if you are using `Unicode
-version <tregexpr_interface.html#unicode>`__ of TRegExpr, then also
+version <tregexpr.html#unicode>`__ of TRegExpr, then also
 ``\x2028`` and  ``\x2029`` and ``\x0B`` and ``\x0C`` and ``\x85``).
 
 Note that ``^.*$`` (an empty line pattern) does not match the empty
@@ -188,8 +188,8 @@ within the sequence ``\x0A\x0D``.
 
 Multiline processing can be easely tuned for your own purpose with help
 of TRegExpr properties
-`LineSeparators <tregexpr_interface.html#lineseparators>`_ and
-`LinePairedSeparator <tregexpr_interface.html#linepairedseparator>`_,
+`LineSeparators <tregexpr.html#lineseparators>`_ and
+`LinePairedSeparator <tregexpr.html#linepairedseparator>`_,
 you can use only Unix style separators ``\n`` or only DOS/Windows style
 ``\r\n`` or mix them together (as described above and used by default)
 or define your own line separators!
@@ -305,12 +305,12 @@ The brackets ``( ... )`` may also be used to define regular expression
 subexpressions.
 
 Subexpression positions, lengths and actual values will be in
-`MatchPos <tregexpr_interface.html#matchpos>`_,
-`MatchLen <tregexpr_interface.html#matchlen>`_ and
-`Match <tregexpr_interface.html#match>`_.
+`MatchPos <tregexpr.html#matchpos>`_,
+`MatchLen <tregexpr.html#matchlen>`_ and
+`Match <tregexpr.html#match>`_.
 
 You can substitute them with
-`Substitute <tregexpr_interface.html#substitute>`_).
+`Substitute <tregexpr.html#substitute>`_).
 
 Subexpressions are numbered from left to right by their
 opening parenthesis (including nested subexpressions).
@@ -348,9 +348,9 @@ the `(?imsxr-imsxr) <#inlinemodifiers>`_.
 
 2)
 Assign to appropriate ``TRegExpr`` property
-(`Modifier* <tregexpr_interface.html#modifierstr>`__. The
+(`Modifier* <tregexpr.html#modifierstr>`__. The
 default values for new instances of TRegExpr object defined in `global
-variables <tregexpr_interface.html#global-constants>`_. For example global variable
+variables <tregexpr.html#global-constants>`_. For example global variable
 ``RegExprModifierX`` defines default value for ``ModifierX`` property.
 
 i
@@ -358,7 +358,7 @@ i
 
 Case-insensitive pattern matching (using installed in you system
 locale settings), see also
-`InvertCase <tregexpr_interface.html#invertcase>`__.
+`InvertCase <tregexpr.html#invertcase>`__.
 
 m
 ~
@@ -367,7 +367,7 @@ Treat string as multiple lines. So ``^`` and ``$`` matches the start or end
 of any line anywhere within the string.
 
 See also `Line
-separators <tregexpr_interface.html#lineseparators>`_.
+separators <tregexpr.html#lineseparators>`_.
 
 s
 ~
@@ -376,7 +376,7 @@ Treat string as single line. So ``.`` matches any
 character whatsoever, even a line separators.
 
 See also `Line
-separators <tregexpr_interface.html#lineseparators>`_, which it
+separators <tregexpr.html#lineseparators>`_, which it
 normally would not match.
 
 g

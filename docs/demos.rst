@@ -5,10 +5,10 @@ Introduction
 ------------
 
 If you don't familiar with regular expression, please, take a look at
-the `r.e.syntax <regexp_syntax.html>`__.
+the `r.e.syntax <regular_expressions.html>`__.
 
 TRegExpr interface described in `TRegExpr
-interface <tregexpr_interface.html>`__.
+interface <tregexpr.html>`__.
 
 Some of demo-projects use extended VCL properties which exists only in
 Delphi 4 or higher. While compiling in Delphi 3 or Delphi 2 you'll

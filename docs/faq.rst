@@ -31,7 +31,7 @@ I have a problem since no header file (``.h`` or ``.hpp``) is available.
 -  Now you can write code which uses the ``RegExpr`` unit.
 -  Don't forget to add  ``#include “RegExpr.hpp”`` where needed.
 -  Don't forget to replace all ``\`` in regular expressions with ``\\``
-   or redefined `EscChar <tregexpr_interface.html#escchar>`__ const.
+   or redefined `EscChar <tregexpr.html#escchar>`__ const.
 
 Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in Borland C++ Builder?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,10 +55,10 @@ rest of the file including last ``</html>``.
 **Answer**
 
 For backward compatibility, `modifier
-/s <regexp_syntax.html#modifier_s>`__ is ``On`` by default.
+/s <regular_expressions.html#modifier_s>`__ is ``On`` by default.
 
 Switch it Off and ``.`` will match any but `Line
-separators <regexp_syntax.html#syntax_line_separators>`__ - exactly as you wish.
+separators <regular_expressions.html#syntax_line_separators>`__ - exactly as you wish.
 
 BTW I suggest ``<font ([^\n>]*)>``, in ``Match[1]`` will be the URL.
 

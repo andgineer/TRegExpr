@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 10:09+0300\n"
-"PO-Revision-Date: 2019-05-03 15:51+0000\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"PO-Revision-Date: 2019-05-04 03:11+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: Bulgarian (https://www.transifex.com/masterAndrey/teams/98461/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -29,13 +29,13 @@ msgstr "Въведение"
 # dfa40637f5e84c8280470a89b89cb583
 #: ../../index.rst:4
 msgid ""
-"TRegExpr library implements `regular expressions <regexp_syntax.html>`_ in "
-"pure Delphi. TRegExpr is part of `Lazarus (Free Pascal) "
-"<http://wiki.freepascal.org/Regexpr>`_ project."
+"TRegExpr library implements `regular expressions "
+"<regular_expressions.html>`_ in pure Delphi. TRegExpr is part of `Lazarus "
+"(Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project."
 msgstr ""
 "Библиотеката TRegExpr реализира &quot;регулярни изрази&quot; "
-"<regexp_syntax.html> в чист Делфи. TRegExpr е част от `Lazarus (Free Pascal)"
-" <http://wiki.freepascal.org/Regexpr>`_ проект."
+"<regular_expressions.html> в чист Делфи. TRegExpr е част от `Lazarus (Free "
+"Pascal) <http://wiki.freepascal.org/Regexpr>`_ проект."
 
 # 57929c8115c34146ba8d53c86b73e99e
 #: ../../index.rst:8
@@ -100,11 +100,11 @@ msgstr "Бърз старт"
 msgid ""
 "To use the library just add `the sources "
 "<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
-"you project and use the class `TRegExpr <tregexpr_interface.html>`_."
+"you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 "За да използвате библиотеката, просто добавете `източниците "
 "<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ за "
-"да проектирате и използвате класа` TRegExpr <tregexpr_interface.html>`_."
+"да проектирате и използвате класа` TRegExpr <tregexpr.html>`_."
 
 # 604a644712bf457d89f53469bf0dea7e
 #: ../../index.rst:33
@@ -121,10 +121,10 @@ msgstr ""
 #: ../../index.rst:37
 msgid ""
 "If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use "
-"unicode <tregexpr_interface.html#unicode>`__."
+"unicode <tregexpr.html#unicode>`__."
 msgstr ""
 "Ако имате нужда от Unicode (т.нар. &quot;WideString&quot; в Delphi) - вижте "
-"`Как да използваме Unicode <tregexpr_interface.html#unicode>`__."
+"`Как да използваме Unicode <tregexpr.html#unicode>`__."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:41

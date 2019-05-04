@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-03 20:47+0300\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,12 +28,12 @@ msgstr ""
 
 #: ../../demos.rst:7
 # b64ac94696c64fea92662c7fe439b817
-msgid "If you don't familiar with regular expression, please, take a look at the `r.e.syntax <regexp_syntax.html>`__."
+msgid "If you don't familiar with regular expression, please, take a look at the `r.e.syntax <regular_expressions.html>`__."
 msgstr ""
 
 #: ../../demos.rst:10
 # 781500ac2b09419a9cb5595076f7de14
-msgid "TRegExpr interface described in `TRegExpr interface <tregexpr_interface.html>`__."
+msgid "TRegExpr interface described in `TRegExpr interface <tregexpr.html>`__."
 msgstr ""
 
 #: ../../demos.rst:13

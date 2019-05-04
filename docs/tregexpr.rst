@@ -1,7 +1,7 @@
 TRegExpr
 ========
 
-Implements `regular expressions <regexp_syntax.html>`_ in pure pascal.
+Implements `regular expressions <regular_expressions.html>`_ in pure pascal.
 
 To use it just copy `source code <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
 into your project.
@@ -39,12 +39,12 @@ ModifierStr
 ~~~~~~~~~~~
 
 Set or get default values of
-`r.e.modifiers <regexp_syntax.html#modifiers>`__.
+`r.e.modifiers <regular_expressions.html#modifiers>`__.
 
 Format of the string is similar as in
-`(?ismx-ismx) <regexp_syntax.html#inlinemodifiers>`__. For example
-``ModifierStr := ‘i-x’`` will switch on modifier `/i <regexp_syntax.html#i>`_,
-switch off `/x <regexp_syntax.html#x>`_ and leave unchanged others.
+`(?ismx-ismx) <regular_expressions.html#inlinemodifiers>`__. For example
+``ModifierStr := ‘i-x’`` will switch on modifier `/i <regular_expressions.html#i>`_,
+switch off `/x <regular_expressions.html#x>`_ and leave unchanged others.
 
 If you try to set unsupported modifier, ``Error`` will be called.
 
@@ -63,15 +63,15 @@ Modifier /r - (“Russian syntax extensions), initialized with
 ModifierS
 ~~~~~~~~~
 
-`Modifier /s <regexp_syntax.html#modifier_s>`__ - ‘.’ works as any char
+`Modifier /s <regular_expressions.html#modifier_s>`__ - ‘.’ works as any char
 (else doesn’t match LineSeparators_ and
-`LinePairedSeparator <tregexpr_interface.html#linepairedseparator>`__),
+`LinePairedSeparator <tregexpr.html#linepairedseparator>`__),
 initialized with `RegExprModifierS <#modifier_defs>`__ value.
 
 ModifierG
 ~~~~~~~~~
 
-`Modifier /g <regexp_syntax.html#modifier_g>`__ Switching off modifier
+`Modifier /g <regular_expressions.html#modifier_g>`__ Switching off modifier
 /g switchs all operators in non-greedy style, so if ModifierG = False,
 then all ‘\*’ works as ‘\*?’, all ‘+’ as ‘+?’ and so on, initialized
 with `RegExprModifierG <#modifier_defs>`__ value.
@@ -79,7 +79,7 @@ with `RegExprModifierG <#modifier_defs>`__ value.
 ModifierM
 ~~~~~~~~~
 
-`Modifier /m <regexp_syntax.html#modifier_m>`__ Treat string as multiple
+`Modifier /m <regular_expressions.html#modifier_m>`__ Treat string as multiple
 lines. That is, change \`^‘and \`$’ from matching at only the very start
 or end of the string to the start or end of any line anywhere within the
 string, initialized with `RegExprModifierM <#modifier_defs>`__ value.
@@ -87,7 +87,7 @@ string, initialized with `RegExprModifierM <#modifier_defs>`__ value.
 ModifierX
 ~~~~~~~~~
 
-`Modifier /x <regexp_syntax.html#modifier_x>`__ - (“eXtended syntax”),
+`Modifier /x <regular_expressions.html#modifier_x>`__ - (“eXtended syntax”),
 initialized with `RegExprModifierX <#modifier_defs>`__ value.
 
 Exec
@@ -304,7 +304,7 @@ line separators (like ``\n`` in Unix), initially filled with
 RegExprLineSeparators_ global constant)
 
 see also `about line
-separators <regexp_syntax.html#line-separators>`__
+separators <regular_expressions.html#line-separators>`__
 
 LinePairedSeparator
 ~~~~~~~~~~~~~~~~~~~
@@ -315,7 +315,7 @@ must contain exactly two chars or no chars at all, initially filled with
 RegExprLinePairedSeparator global constant)
 
 see also `about line
-separators <regexp_syntax.html#line-separators>`__
+separators <regular_expressions.html#line-separators>`__
 
 For example, if you need Unix-style behaviour, assign
 ``LineSeparators := #$a`` and ``LinePairedSeparator := ''`` (empty string).
@@ -333,7 +333,7 @@ RegExprLine[Paired]Separator[s] global constants):
     LinePairedSeparator := #$d#$a
 
 Behaviour of this mode is detailed described in the `syntax
-section <regexp_syntax.html#syntax_line_separators>`__.
+section <regular_expressions.html#syntax_line_separators>`__.
 
 InvertCase
 ~~~~~~~~~~
@@ -365,32 +365,32 @@ Escape-char, by default ``\``.
 RegExprModifierI
 ~~~~~~~~~~~~~~~~
 
-`Modifier i <regexp_syntax.html#i>`_ default value
+`Modifier i <regular_expressions.html#i>`_ default value
 
 RegExprModifierR
 ~~~~~~~~~~~~~~~~
 
-`Modifier r <regexp_syntax.html#r>`_ default value
+`Modifier r <regular_expressions.html#r>`_ default value
 
 RegExprModifierS
 ~~~~~~~~~~~~~~~~
 
-`Modifier s <regexp_syntax.html#s>`_ default value
+`Modifier s <regular_expressions.html#s>`_ default value
 
 RegExprModifierG
 ~~~~~~~~~~~~~~~~
 
-`Modifier g <regexp_syntax.html#g>`_ default value
+`Modifier g <regular_expressions.html#g>`_ default value
 
 RegExprModifierM
 ~~~~~~~~~~~~~~~~
 
-`Modifier m <regexp_syntax.html#m>`_ default value
+`Modifier m <regular_expressions.html#m>`_ default value
 
 RegExprModifierX
 ~~~~~~~~~~~~~~~~
 
-`Modifier x <regexp_syntax.html#x>`_ default value
+`Modifier x <regular_expressions.html#x>`_ default value
 
 RegExprSpaceChars
 ~~~~~~~~~~~~~~~~~

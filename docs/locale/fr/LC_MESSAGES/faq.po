@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-01 10:09+0300\n"
-"PO-Revision-Date: 2019-05-03 15:51+0000\n"
+"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"PO-Revision-Date: 2019-05-04 03:10+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: French (https://www.transifex.com/masterAndrey/teams/98461/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -83,8 +83,7 @@ msgstr "Ajoutez ``RegExpr.pas`` au projet ``bcb``."
 # 7b1b72640e2c46c7a5ae52e5dc598b7d
 #: ../../faq.rst:30
 msgid "Compile project. This generates the header file ``RegExpr.hpp``."
-msgstr ""
-"Compiler le projet. Cela génère le fichier d’en-tête ``RegExpr.hpp``."
+msgstr "Compiler le projet. Cela génère le fichier d’en-tête ``RegExpr.hpp``."
 
 # 16ee016a9fa547d7b412bd44ea526e44
 #: ../../faq.rst:31
@@ -101,11 +100,11 @@ msgstr ""
 #: ../../faq.rst:33
 msgid ""
 "Don't forget to replace all ``\\`` in regular expressions with ``\\\\`` or "
-"redefined `EscChar <tregexpr_interface.html#escchar>`__ const."
+"redefined `EscChar <tregexpr.html#escchar>`__ const."
 msgstr ""
 "N&#39;oubliez pas de remplacer tous les `` \\ `` dans les expressions "
-"régulières par `` \\\\ `` ou redéfinis `EscChar "
-"<tregexpr_interface.html#escchar>`__ const."
+"régulières par `` \\\\ `` ou redéfinis `EscChar <tregexpr.html#escchar>`__ "
+"const."
 
 # 6c8450146f0841d1a013cff6b32e8dcc
 #: ../../faq.rst:37
@@ -151,21 +150,21 @@ msgstr ""
 # 2456e655103c4b788ccb1bf90ed3772b
 #: ../../faq.rst:57
 msgid ""
-"For backward compatibility, `modifier /s <regexp_syntax.html#modifier_s>`__ "
-"is ``On`` by default."
+"For backward compatibility, `modifier /s "
+"<regular_expressions.html#modifier_s>`__ is ``On`` by default."
 msgstr ""
 "Pour la compatibilité ascendante, modificateur / s "
-"<regexp_syntax.html#modifier_s>`__ est` `On`` par défaut."
+"<regular_expressions.html#modifier_s>`__ est` `On`` par défaut."
 
 # 74667df4efa94c54bb5fa7140be21392
 #: ../../faq.rst:60
 msgid ""
 "Switch it Off and ``.`` will match any but `Line separators "
-"<regexp_syntax.html#syntax_line_separators>`__ - exactly as you wish."
+"<regular_expressions.html#syntax_line_separators>`__ - exactly as you wish."
 msgstr ""
 "Eteignez-le et ``.`` correspondra à tout sauf `séparateurs de lignes "
-"<regexp_syntax.html#syntax_line_separators>`__ - exactement comme vous le "
-"souhaitez."
+"<regular_expressions.html#syntax_line_separators>`__ - exactement comme vous"
+" le souhaitez."
 
 # b31d50bb744f40ae9282e43a1967fad6
 #: ../../faq.rst:63
@@ -206,11 +205,11 @@ msgid ""
 "of modifier ``g`` (use appropriate TRegExpr properties or operator ``?(-g)``"
 " in r.e.)."
 msgstr ""
-"Si vous voulez le mode ``non-gourmand``, vous pouvez utiliser des "
-"opérateurs ``non-gloutons`` comme `` +? `` Et ainsi de suite ou basculer "
-"tous les opérateurs en mode ``non-gloutons`` avec l&#39;aide du "
-"modificateur ` `g`` (utilisez les propriétés TRegExpr appropriées ou "
-"l&#39;opérateur` `?? (- g)` `dans re)."
+"Si vous voulez le mode ``non-gourmand``, vous pouvez utiliser des opérateurs"
+" ``non-gloutons`` comme `` +? `` Et ainsi de suite ou basculer tous les "
+"opérateurs en mode ``non-gloutons`` avec l&#39;aide du modificateur ` `g`` "
+"(utilisez les propriétés TRegExpr appropriées ou l&#39;opérateur` `?? (- g)`"
+" `dans re)."
 
 # 98b9a7d955c94ac699086ed6b50c59e2
 #: ../../faq.rst:82

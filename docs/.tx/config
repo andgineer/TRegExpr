@@ -1,9 +1,9 @@
 [main]
 host = https://www.transifex.com
 
-[tregexpr._build_gettext_index]
-file_filter = locale/<lang>/LC_MESSAGES/index.po
-source_file = _build/gettext/index.pot
+[tregexpr._build_gettext_regular_expressions]
+file_filter = locale/<lang>/LC_MESSAGES/regular_expressions.po
+source_file = _build/gettext/regular_expressions.pot
 source_lang = en
 type = PO
 
@@ -13,21 +13,21 @@ source_file = _build/gettext/faq.pot
 source_lang = en
 type = PO
 
-[tregexpr._build_gettext_regexp_syntax]
-file_filter = locale/<lang>/LC_MESSAGES/regexp_syntax.po
-source_file = _build/gettext/regexp_syntax.pot
-source_lang = en
-type = PO
-
-[tregexpr._build_gettext_tregexpr_interface]
-file_filter = locale/<lang>/LC_MESSAGES/tregexpr_interface.po
-source_file = _build/gettext/tregexpr_interface.pot
+[tregexpr._build_gettext_index]
+file_filter = locale/<lang>/LC_MESSAGES/index.po
+source_file = _build/gettext/index.pot
 source_lang = en
 type = PO
 
 [tregexpr._build_gettext_demos]
 file_filter = locale/<lang>/LC_MESSAGES/demos.po
 source_file = _build/gettext/demos.pot
+source_lang = en
+type = PO
+
+[tregexpr._build_gettext_tregexpr]
+file_filter = locale/<lang>/LC_MESSAGES/tregexpr.po
+source_file = _build/gettext/tregexpr.pot
 source_lang = en
 type = PO
 

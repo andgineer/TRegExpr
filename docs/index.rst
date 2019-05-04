@@ -2,7 +2,7 @@ Introduction
 ~~~~~~~~~~~~
 
 TRegExpr library implements `regular
-expressions <regexp_syntax.html>`_ in pure Delphi.
+expressions <regular_expressions.html>`_ in pure Delphi.
 TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project.
 
 TRegExpr is easy to use and powerful tool for sophisticated search and
@@ -28,14 +28,14 @@ Quick start
 ~~~~~~~~~~~
 
 To use the library just add `the sources <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
-to you project and use the class `TRegExpr <tregexpr_interface.html>`_.
+to you project and use the class `TRegExpr <tregexpr.html>`_.
 
 `Demo projects <demos.html>`__
 and `usage blog post <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__
 illustrate the simplicity and power of text processing with the library.
 
 If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use
-unicode <tregexpr_interface.html#unicode>`__.
+unicode <tregexpr.html#unicode>`__.
 
 Feedback
 ~~~~~~~~
@@ -50,8 +50,8 @@ Documentation
    :glob:
    :maxdepth: 2
 
-   regexp_syntax
-   tregexpr_interface
+   regular_expressions
+   tregexpr
    faq
    demos
 
