@@ -2,5 +2,5 @@
 #
 # upload to transiflex strings to translate
 #
-./create_translation.sh
+./map_trasifex.sh
 tx push --source --translations

@@ -19,32 +19,11 @@ do not forget to create the object instance:
 
     r := TRegExpr.Create. 
 
-How can I use TRegExpr with Borland C++ Builder?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Regular expressions with (?=...) do not work
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I have a problem since no header file (``.h`` or ``.hpp``) is available.
-
-**Answer**
-
--  Add ``RegExpr.pas`` to ``bcb`` project.
--  Compile project. This generates the header file ``RegExpr.hpp``.
--  Now you can write code which uses the ``RegExpr`` unit.
--  Don't forget to add  ``#include “RegExpr.hpp”`` where needed.
--  Don't forget to replace all ``\`` in regular expressions with ``\\``
-   or redefined `EscChar <tregexpr.html#escchar>`__ const.
-
-Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in Borland C++ Builder?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-**Answer**
-
-The hint is in the previous question ;) Symbol ``\`` has special
-meaning in ``C++``, so you have to ``escape`` it (as described in
-previous answer). But if you
-don't like r.e. like ``\\w+\\\\w+\\.\\w+`` you can redefine the constant ``EscChar``
-(in ``RegExpr.pas``).
-For example ``EscChar = "/"``. Then you can write ``/w+/w+/./w+``,
-looks unusual but more readable.
+Look ahead is not implemented in the TRegExpr. But in many cases you can
+easily `replace it with simple subexpressions <regular_expressions.html#lookahead>`_.
 
 Why does TRegExpr return more then one line?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,3 +132,31 @@ TRegExpr like Perl's or Unix's r.e. doesn't attempt to move forward and
 check - would it will be "better" match.
 Fisrt of all, just because there is no way to say it's more or less
 good match.
+
+How can I use TRegExpr with Borland C++ Builder?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have a problem since no header file (``.h`` or ``.hpp``) is available.
+
+**Answer**
+
+-  Add ``RegExpr.pas`` to ``bcb`` project.
+-  Compile project. This generates the header file ``RegExpr.hpp``.
+-  Now you can write code which uses the ``RegExpr`` unit.
+-  Don't forget to add  ``#include “RegExpr.hpp”`` where needed.
+-  Don't forget to replace all ``\`` in regular expressions with ``\\``
+   or redefined `EscChar <tregexpr.html#escchar>`__ const.
+
+Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in Borland C++ Builder?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Answer**
+
+The hint is in the previous question ;) Symbol ``\`` has special
+meaning in ``C++``, so you have to ``escape`` it (as described in
+previous answer). But if you
+don't like r.e. like ``\\w+\\\\w+\\.\\w+`` you can redefine the constant ``EscChar``
+(in ``RegExpr.pas``).
+For example ``EscChar = "/"``. Then you can write ``/w+/w+/./w+``,
+looks unusual but more readable.
+

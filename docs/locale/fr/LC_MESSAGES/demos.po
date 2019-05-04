@@ -1,25 +1,24 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2019, Andrey Sorokin
 # This file is distributed under the same license as the TRegExpr package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-04 06:10+0300\n"
-"PO-Revision-Date: 2019-05-04 03:11+0000\n"
+"POT-Creation-Date: 2019-05-04 13:48+0300\n"
+"PO-Revision-Date: 2019-05-04 07:42+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: French (https://www.transifex.com/masterAndrey/teams/98461/fr/)\n"
+"Language-Team: French "
+"(https://www.transifex.com/masterAndrey/teams/98461/fr/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: Babel 2.3.4\n"
 
 # 3123f93a15554569abef24250ec73e62
 #: ../../demos.rst:2
@@ -34,16 +33,15 @@ msgstr "introduction"
 # b64ac94696c64fea92662c7fe439b817
 #: ../../demos.rst:7
 msgid ""
-"If you don't familiar with regular expression, please, take a look at the "
-"`r.e.syntax <regular_expressions.html>`__."
+"If you don't familiar with regular expression, please, take a look at the"
+" `r.e.syntax <regular_expressions.html>`__."
 msgstr ""
-"Si vous n’êtes pas familier avec l’expression régulière, jetez un œil à la "
-"commande `resyntax <regular_expressions.html>`__."
+"Si vous n’êtes pas familier avec l’expression régulière, jetez un œil à "
+"la commande `resyntax <regular_expressions.html>`__."
 
 # 781500ac2b09419a9cb5595076f7de14
 #: ../../demos.rst:10
-msgid ""
-"TRegExpr interface described in `TRegExpr interface <tregexpr.html>`__."
+msgid "TRegExpr interface described in `TRegExpr interface <tregexpr.html>`__."
 msgstr ""
 "Interface TRegExpr décrite dans la section `Interface TRegExpr "
 "<tregexpr.html>`__."
@@ -52,17 +50,18 @@ msgstr ""
 #: ../../demos.rst:13
 msgid ""
 "Some of demo-projects use extended VCL properties which exists only in "
-"Delphi 4 or higher. While compiling in Delphi 3 or Delphi 2 you'll receive "
-"some error messages about unknown properties. You may ignore it - this "
-"properties is needed only for resizing and justification of components then "
-"form change it's size."
+"Delphi 4 or higher. While compiling in Delphi 3 or Delphi 2 you'll "
+"receive some error messages about unknown properties. You may ignore it -"
+" this properties is needed only for resizing and justification of "
+"components then form change it's size."
 msgstr ""
-"Certains projets de démonstration utilisent des propriétés VCL étendues qui "
-"n&#39;existent que dans Delphi 4 ou une version ultérieure. Lors de la "
-"compilation dans Delphi 3 ou Delphi 2, vous recevrez des messages "
-"d&#39;erreur concernant des propriétés inconnues. Vous pouvez l&#39;ignorer "
-"- ces propriétés ne sont nécessaires que pour le redimensionnement et la "
-"justification des composants, puis la modification de sa taille."
+"Certains projets de démonstration utilisent des propriétés VCL étendues "
+"qui n&#39;existent que dans Delphi 4 ou une version ultérieure. Lors de "
+"la compilation dans Delphi 3 ou Delphi 2, vous recevrez des messages "
+"d&#39;erreur concernant des propriétés inconnues. Vous pouvez "
+"l&#39;ignorer - ces propriétés ne sont nécessaires que pour le "
+"redimensionnement et la justification des composants, puis la "
+"modification de sa taille."
 
 # 24b2d41450ce4085b31a47b8e3640bec
 #: ../../demos.rst:20
@@ -72,7 +71,8 @@ msgstr "Windows compilé"
 # 3d88dfc7cf1745ac936985c537383f73
 #: ../../demos.rst:22
 msgid ""
-"First of all I recommend You to read `Text processing from bird's eye view "
+"First of all I recommend You to read `Text processing from bird's eye "
+"view "
 "<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__."
 msgstr ""
 "Tout d’abord, je vous recommande de lire `Traitement de texte vu à vol "
@@ -102,15 +102,16 @@ msgstr ""
 # ae410cefef0c47df9a9b4fdaaf0d0e08
 #: ../../demos.rst:32
 msgid ""
-"This localized versions distributed in localized full TRegExpr packages, and"
-" in separate localized documentation packages (when you unpack this "
-"documentation package in TRegExpr directory the localized demos overwrite "
-"English ones)."
+"This localized versions distributed in localized full TRegExpr packages, "
+"and in separate localized documentation packages (when you unpack this "
+"documentation package in TRegExpr directory the localized demos overwrite"
+" English ones)."
 msgstr ""
-"Ces versions localisées sont distribuées dans des packages TRegExpr complets"
-" localisés et dans des packages de documentation localisés distincts "
-"(lorsque vous décompressez ce package de documentation dans le répertoire "
-"TRegExpr, les démonstrations localisées remplacent celles en anglais)."
+"Ces versions localisées sont distribuées dans des packages TRegExpr "
+"complets localisés et dans des packages de documentation localisés "
+"distincts (lorsque vous décompressez ce package de documentation dans le "
+"répertoire TRegExpr, les démonstrations localisées remplacent celles en "
+"anglais)."
 
 # 8fc9996e05c345aa9e7e31bb9c67299f
 #: ../../demos.rst:38
@@ -156,9 +157,26 @@ msgid ""
 "href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 msgstr ""
 "Par exemple, remplace «www.masterAndrey.com» par « <a "
-"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> » ou «anso @ "
-"mail.ru» avec « <a href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a> "
-"»."
+"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> » ou «anso "
+"@ mail.ru» avec « <a "
+"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a> »."
+
+# f7a7a176770443fd845bcbdc8a69ccc9
+#: ../../demos.rst:53
+msgid ""
+"function DecorateURLs (\n"
+"    const AText : string;\n"
+"    AFlags : TDecorateURLsFlagSet = [durlAddr, durlPath]\n"
+") : string;\n"
+"\n"
+"type\n"
+"TDecorateURLsFlags = (\n"
+"    durlProto, durlAddr, durlPort, durlPath, durlBMark, durlParam);\n"
+"\n"
+"TDecorateURLsFlagSet = set of TDecorateURLsFlags;\n"
+"\n"
+"function DecorateEMails (const AText : string) : string;"
+msgstr ""
 
 # 92616dd287884554b817420670c50161
 #: ../../demos.rst:69
@@ -241,8 +259,8 @@ msgid ""
 "``AFlags`` describes, which parts of hyper-link must be included into "
 "visible part of the link."
 msgstr ""
-"``AFlags`` décrit quelles parties de l&#39;hyperlien doivent être incluses "
-"dans la partie visible du lien."
+"``AFlags`` décrit quelles parties de l&#39;hyperlien doivent être "
+"incluses dans la partie visible du lien."
 
 # 8a9151bca867444096cb6fd675d91897
 #: ../../demos.rst:84
@@ -284,5 +302,6 @@ msgstr ""
 #: ../../demos.rst:96
 msgid "Slightly more complex examples, see comments inside the unit"
 msgstr ""
-"Exemples légèrement plus complexes, voir les commentaires à l&#39;intérieur "
-"de l&#39;unité"
+"Exemples légèrement plus complexes, voir les commentaires à "
+"l&#39;intérieur de l&#39;unité"
+

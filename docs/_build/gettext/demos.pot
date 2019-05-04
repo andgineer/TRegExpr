@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"POT-Creation-Date: 2019-05-04 14:42+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,6 +94,22 @@ msgstr ""
 #: ../../demos.rst:49
 # 7152dc5e125c44c893a1daeb02f955d0
 msgid "For example, replaces ``www.masterAndrey.com`` with ``<a href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a>`` or ``anso@mail.ru`` with ``<a href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
+msgstr ""
+
+#: ../../demos.rst:53
+# f7a7a176770443fd845bcbdc8a69ccc9
+msgid "function DecorateURLs (\n"
+"    const AText : string;\n"
+"    AFlags : TDecorateURLsFlagSet = [durlAddr, durlPath]\n"
+") : string;\n"
+"\n"
+"type\n"
+"TDecorateURLsFlags = (\n"
+"    durlProto, durlAddr, durlPort, durlPath, durlBMark, durlParam);\n"
+"\n"
+"TDecorateURLsFlagSet = set of TDecorateURLsFlags;\n"
+"\n"
+"function DecorateEMails (const AText : string) : string;"
 msgstr ""
 
 #: ../../demos.rst:69

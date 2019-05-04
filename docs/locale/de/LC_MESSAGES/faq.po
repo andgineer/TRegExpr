@@ -1,25 +1,24 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2019, Andrey Sorokin
 # This file is distributed under the same license as the TRegExpr package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-04 06:10+0300\n"
-"PO-Revision-Date: 2019-05-04 03:10+0000\n"
+"POT-Creation-Date: 2019-05-04 13:48+0300\n"
+"PO-Revision-Date: 2019-05-04 07:42+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: German (https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
+"Language-Team: German "
+"(https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.3.4\n"
 
 # cf1fdea7e27f4b6b9e33211b59fc1c64
 #: ../../faq.rst:2
@@ -35,121 +34,68 @@ msgstr ""
 
 # 40da4f3424204e0f9f5560fb3c87b10a
 # 3833e9a61eba4b809278c359680e17ca
-# 5a47e00001fb4510bd56b96c8ae2de48
-# 063d88b9d1924eb3833098263231246a
-# ac33582fb29a41d182d1d5a37f804714
-# 7943cbe2de2f4a578f118eb36182d84c
-# e2ff87750895422bbacd133047904d32
-# 736edb290b65410a8c8b1774a344c60d
-# 4de8457af7c741fea504b9c213198f59
-#: ../../faq.rst:7 ../../faq.rst:27 ../../faq.rst:39 ../../faq.rst:55
-#: ../../faq.rst:71 ../../faq.rst:84 ../../faq.rst:104 ../../faq.rst:115
-#: ../../faq.rst:135
+#: ../../faq.rst:7 ../../faq.rst:34 ../../faq.rst:50 ../../faq.rst:63
+#: ../../faq.rst:83 ../../faq.rst:94 ../../faq.rst:114 ../../faq.rst:141
+#: ../../faq.rst:153
 msgid "**Answer**"
 msgstr "**Antworten**"
 
 # 42f037ad3d0d4c54b07a7dca4f7e1779
 #: ../../faq.rst:9
 msgid ""
-"You must create the object before usage. So, after you declared something "
-"like:"
+"You must create the object before usage. So, after you declared something"
+" like:"
 msgstr ""
-"Sie müssen das Objekt vor der Verwendung erstellen. Nachdem Sie also etwas "
-"erklärt haben:"
+"Sie müssen das Objekt vor der Verwendung erstellen. Nachdem Sie also "
+"etwas erklärt haben:"
+
+# a5956a2cf8c44909bc4302f8810f37ba
+#: ../../faq.rst:12
+msgid "r : TRegExpr"
+msgstr ""
 
 # e865298e59094744b6eb09fa43db311b
 #: ../../faq.rst:16
 msgid "do not forget to create the object instance:"
 msgstr "Vergessen Sie nicht, die Objektinstanz zu erstellen:"
 
-# 781bb73b9cd34896bd61ea052d2869ea
-#: ../../faq.rst:23
-msgid "How can I use TRegExpr with Borland C++ Builder?"
-msgstr "Wie kann ich TRegExpr mit Borland C ++ Builder verwenden?"
+# c0ed663f35dc4b31b84a24a42dfb7508
+#: ../../faq.rst:18
+msgid "r := TRegExpr.Create."
+msgstr ""
 
-# 252a4182e2ca41febf89678337efb6c2
+# c74dd30f3876405c96375f50eba0c708
+#: ../../faq.rst:23
+msgid "Regular expressions with (?=...) do not work"
+msgstr "Reguläre Ausdrücke mit (? = ...) funktionieren nicht"
+
+# 4c3e888756b74937a190a3d129fa0752
 #: ../../faq.rst:25
 msgid ""
-"I have a problem since no header file (``.h`` or ``.hpp``) is available."
+"Look ahead is not implemented in the TRegExpr. But in many cases you can "
+"easily `replace it with simple subexpressions "
+"<regular_expressions.html#lookahead>`_."
 msgstr ""
-"Ich habe ein Problem, da keine Header-Datei (``.h`` oder ``.hpp``) verfügbar"
-" ist."
-
-# c17bbf36186946eb9b60c1c609ec12ec
-#: ../../faq.rst:29
-msgid "Add ``RegExpr.pas`` to ``bcb`` project."
-msgstr "Fügen Sie ``RegExpr.pas`` zu ``bcb`` hinzu."
-
-# 7b1b72640e2c46c7a5ae52e5dc598b7d
-#: ../../faq.rst:30
-msgid "Compile project. This generates the header file ``RegExpr.hpp``."
-msgstr ""
-"Projekt kompilieren Dadurch wird die Header-Datei ``RegExpr.hpp`` generiert."
-
-# 16ee016a9fa547d7b412bd44ea526e44
-#: ../../faq.rst:31
-msgid "Now you can write code which uses the ``RegExpr`` unit."
-msgstr ""
-"Jetzt können Sie Code schreiben, der die ``RegExpr``-Einheit verwendet."
-
-# 92c071830b604493a9b0982e4c690f0d
-#: ../../faq.rst:32
-msgid "Don't forget to add  ``#include “RegExpr.hpp”`` where needed."
-msgstr ""
-"Vergessen Sie nicht, `` #include “RegExpr.hpp” `` bei Bedarf hinzuzufügen."
-
-# a14b93d760474e5f83f70bb9479d161b
-#: ../../faq.rst:33
-msgid ""
-"Don't forget to replace all ``\\`` in regular expressions with ``\\\\`` or "
-"redefined `EscChar <tregexpr.html#escchar>`__ const."
-msgstr ""
-"Vergessen Sie nicht, alle `` \\ `` in regulären Ausdrücken durch `` \\\\ `` "
-"oder neu definierte `EscChar zu ersetzen <tregexpr.html#escchar> __ const."
-
-# 6c8450146f0841d1a013cff6b32e8dcc
-#: ../../faq.rst:37
-msgid ""
-"Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in "
-"Borland C++ Builder?"
-msgstr ""
-"Warum arbeiten viele (einschließlich TRegExpr-Hilfe und -Demo) in Borland C "
-"++ Builder falsch?"
-
-# 86691c4364694b7a8784006481ec491e
-#: ../../faq.rst:41
-msgid ""
-"The hint is in the previous question ;) Symbol ``\\`` has special meaning in"
-" ``C++``, so you have to ``escape`` it (as described in previous answer). "
-"But if you don't like r.e. like ``\\\\w+\\\\\\\\w+\\\\.\\\\w+`` you can "
-"redefine the constant ``EscChar`` (in ``RegExpr.pas``). For example "
-"``EscChar = \"/\"``. Then you can write ``/w+/w+/./w+``, looks unusual but "
-"more readable."
-msgstr ""
-"Der Hinweis ist in der vorherigen Frage;) Das Symbol `` \\ `` hat eine "
-"besondere Bedeutung in `` C ++ ``, also müssen Sie es ``entkommen`` (wie in "
-"der vorherigen Antwort beschrieben). Wenn Sie nicht gerne `` \\\\ w + "
-"\\\\\\\\ w + \\\\. \\\\ w + `` mögen, können Sie die Konstante ``EscChar`` "
-"(in ``RegExpr.pas``) neu definieren. Zum Beispiel `` EscChar = &quot;/&quot;"
-" ``. Dann können Sie `` / w + / w + /. / W + `` schreiben, sieht "
-"ungewöhnlich aus, ist aber lesbarer."
+"Look Ahead ist in TRegExpr nicht implementiert. In vielen Fällen können "
+"Sie sie jedoch durch einfache `Unterausdrücke leicht ersetzen "
+"<regular_expressions.html#lookahead>`_."
 
 # 836b9a07a857496c8570a92e1ff86f73
-#: ../../faq.rst:50
+#: ../../faq.rst:29
 msgid "Why does TRegExpr return more then one line?"
 msgstr "Warum gibt TRegExpr mehr als eine Zeile zurück?"
 
 # 27f1d5918d444c55b07292a55a65fd49
-#: ../../faq.rst:52
+#: ../../faq.rst:31
 msgid ""
-"For example, r.e. ``<font .\\*>`` returns the first ``<font``, then the rest"
-" of the file including last ``</html>``."
+"For example, r.e. ``<font .\\*>`` returns the first ``<font``, then the "
+"rest of the file including last ``</html>``."
 msgstr ""
-"Zum Beispiel gibt re `` <font .\\*>`` das erste `` zurück</font> <font``, "
-"then the rest of the file including last ``</html> <font .\\*>``.</font>"
+"Zum Beispiel gibt re `` <font .\\*>`` das erste `` zurück</font> <font``,"
+" then the rest of the file including last ``</html> <font .\\*>``.</font>"
 
 # 2456e655103c4b788ccb1bf90ed3772b
-#: ../../faq.rst:57
+#: ../../faq.rst:36
 msgid ""
 "For backward compatibility, `modifier /s "
 "<regular_expressions.html#modifier_s>`__ is ``On`` by default."
@@ -158,155 +104,158 @@ msgstr ""
 "<regular_expressions.html#modifier_s> `__ ist standardmäßig` `Ein``."
 
 # 74667df4efa94c54bb5fa7140be21392
-#: ../../faq.rst:60
+#: ../../faq.rst:39
 msgid ""
 "Switch it Off and ``.`` will match any but `Line separators "
-"<regular_expressions.html#syntax_line_separators>`__ - exactly as you wish."
+"<regular_expressions.html#syntax_line_separators>`__ - exactly as you "
+"wish."
 msgstr ""
 "Schalten Sie es aus und ``.`` passt zu allen anderen als "
-"&#39;Trennzeichen&#39; <regular_expressions.html#syntax_line_separators> __ "
-"- genau wie Sie es wünschen."
+"&#39;Trennzeichen&#39; <regular_expressions.html#syntax_line_separators> "
+"__ - genau wie Sie es wünschen."
 
 # b31d50bb744f40ae9282e43a1967fad6
-#: ../../faq.rst:63
+#: ../../faq.rst:42
 msgid "BTW I suggest ``<font ([^\\n>]*)>``, in ``Match[1]`` will be the URL."
 msgstr ""
-"Übrigens empfehle ich `` <font ([^\\n>] *)&gt; ``, in `` Match [1] `` wird "
-"die URL.</font>"
+"Übrigens empfehle ich `` <font ([^\\n>] *)&gt; ``, in `` Match [1] `` "
+"wird die URL.</font>"
 
 # 65c336793c8746af86f7916910aa1bd4
-#: ../../faq.rst:66
+#: ../../faq.rst:45
 msgid "Why does TRegExpr return more then I expect?"
 msgstr "Warum gibt TRegExpr mehr als ich erwarte?"
 
 # d751c0f0d0e7458d905073d0ca772bee
-#: ../../faq.rst:68
+#: ../../faq.rst:47
 msgid ""
 "For example r.e. ``<p>(.+)</p>`` applyed to string ``<p>a</p><p>b</p>`` "
 "returns ``a</p><p>b`` but not ``a`` as I expected."
 msgstr ""
-"Zum Beispiel: `` <p> (. +) </p> `` auf String `` angewendet <p> ein </p><p> "
-"b </p> `` gibt `` a zurück </p><p> b`` aber nicht ``a`` wie ich erwartet "
-"hatte."
+"Zum Beispiel: `` <p> (. +) </p> `` auf String `` angewendet <p> ein "
+"</p><p> b </p> `` gibt `` a zurück </p><p> b`` aber nicht ``a`` wie ich "
+"erwartet hatte."
 
 # 2e19907717ae4932b951c9e57b2bbd5a
-#: ../../faq.rst:73
+#: ../../faq.rst:52
 msgid ""
-"By default all operators works in ``greedy`` mode, so they match as more as "
-"it possible."
+"By default all operators works in ``greedy`` mode, so they match as more "
+"as it possible."
 msgstr ""
-"Standardmäßig arbeiten alle Operatoren im ``gierigen`` Modus, so dass sie so"
-" weit wie möglich zusammenpassen."
+"Standardmäßig arbeiten alle Operatoren im ``gierigen`` Modus, so dass sie"
+" so weit wie möglich zusammenpassen."
 
 # aff79b8422d0482f8c03a4f9e3e5c2f6
-#: ../../faq.rst:76
+#: ../../faq.rst:55
 msgid ""
-"If you want ``non-greedy`` mode you can use ``non-greedy`` operators like "
-"``+?`` and so on or switch all operators into ``non-greedy`` mode with help "
-"of modifier ``g`` (use appropriate TRegExpr properties or operator ``?(-g)``"
-" in r.e.)."
+"If you want ``non-greedy`` mode you can use ``non-greedy`` operators like"
+" ``+?`` and so on or switch all operators into ``non-greedy`` mode with "
+"help of modifier ``g`` (use appropriate TRegExpr properties or operator "
+"``?(-g)`` in r.e.)."
 msgstr ""
 "Wenn Sie den ``nicht-gierigen`` Modus wollen, können Sie `` nicht-"
-"gierige`&#39;-Operatoren wie `` +? `` Usw. verwenden, oder alle Operatoren "
-"mit Hilfe des Modifikators `` ```g`` (verwenden Sie die entsprechenden "
-"TRegExpr-Eigenschaften oder den Operator` `? (- g)` `in re)."
+"gierige`&#39;-Operatoren wie `` +? `` Usw. verwenden, oder alle "
+"Operatoren mit Hilfe des Modifikators `` ```g`` (verwenden Sie die "
+"entsprechenden TRegExpr-Eigenschaften oder den Operator` `? (- g)` `in "
+"re)."
 
 # 98b9a7d955c94ac699086ed6b50c59e2
-#: ../../faq.rst:82
+#: ../../faq.rst:61
 msgid "How to parse sources like HTML with help of TRegExpr"
 msgstr "Wie kann man mit TRegExpr Quellen wie HTML analysieren?"
 
 # 84b05a8a734c400f84412a496820942a
-#: ../../faq.rst:86
+#: ../../faq.rst:65
 msgid "Sorry folks, but it's nearly impossible!"
 msgstr "Sorry Leute, aber es ist fast unmöglich!"
 
 # 8d6e67a8dc71482fab61baec80f05bb3
-#: ../../faq.rst:88
+#: ../../faq.rst:67
 msgid ""
-"Of course, you can easily use TRegExpr for extracting some information from "
-"HTML, as shown in my examples, but if you want accurate parsing you have to "
-"use real parser, not r.e."
+"Of course, you can easily use TRegExpr for extracting some information "
+"from HTML, as shown in my examples, but if you want accurate parsing you "
+"have to use real parser, not r.e."
 msgstr ""
 "Natürlich können Sie TRegExpr problemlos zum Extrahieren einiger "
-"Informationen aus HTML verwenden, wie in meinen Beispielen gezeigt. Wenn Sie"
-" jedoch eine genaue Analyse wünschen, müssen Sie einen echten Parser "
+"Informationen aus HTML verwenden, wie in meinen Beispielen gezeigt. Wenn "
+"Sie jedoch eine genaue Analyse wünschen, müssen Sie einen echten Parser "
 "verwenden, nicht re"
 
 # 6c0a493a04494f7aae37970898a379f4
-#: ../../faq.rst:92
+#: ../../faq.rst:71
 msgid ""
 "You can read full explanation in Tom Christiansen and Nathan Torkington "
 "``Perl Cookbook``, for example."
 msgstr ""
-"Die vollständige Erklärung finden Sie beispielsweise in Tom Christiansen und"
-" Nathan Torkington, `` Perl Cookbook``."
+"Die vollständige Erklärung finden Sie beispielsweise in Tom Christiansen "
+"und Nathan Torkington, `` Perl Cookbook``."
 
 # ed36cb64ef9248de884cbb0c9a7d08f9
-#: ../../faq.rst:95
+#: ../../faq.rst:74
 msgid ""
-"In short - there are many structures that can be easy parsed by real parser "
-"but cannot at all by r.e., and real parser is much faster to do the parsing,"
-" because r.e. doesn't simply scan input stream, it performs optimization "
-"search that can take a lot of time."
+"In short - there are many structures that can be easy parsed by real "
+"parser but cannot at all by r.e., and real parser is much faster to do "
+"the parsing, because r.e. doesn't simply scan input stream, it performs "
+"optimization search that can take a lot of time."
 msgstr ""
-"Kurz gesagt, es gibt viele Strukturen, die mit echtem Parser einfach geparst"
-" werden können, von re aber gar nicht, und realer Parser ist beim Parsing "
-"viel schneller, da re nicht nur den Eingabestrom scannt, sondern eine "
-"Optimierungssuche ausführt, die dauern kann viel Zeit."
+"Kurz gesagt, es gibt viele Strukturen, die mit echtem Parser einfach "
+"geparst werden können, von re aber gar nicht, und realer Parser ist beim "
+"Parsing viel schneller, da re nicht nur den Eingabestrom scannt, sondern "
+"eine Optimierungssuche ausführt, die dauern kann viel Zeit."
 
 # ab01e6cbba074618b1022ffead0efc80
-#: ../../faq.rst:102
+#: ../../faq.rst:81
 msgid "Is there a way to get multiple matches of a pattern on TRegExpr?"
 msgstr ""
 "Gibt es eine Möglichkeit, mehrere Übereinstimmungen eines Musters auf "
 "TRegExpr abzurufen?"
 
 # fe91a4bc0fd4447489141747ee0ea224
-#: ../../faq.rst:106
+#: ../../faq.rst:85
 msgid "You can iterate matches with ExecNext method."
 msgstr "Sie können Übereinstimmungen mit der ExecNext-Methode wiederholen."
 
 # 641d4fc669be4c9aa475918aa91126ed
-#: ../../faq.rst:108
+#: ../../faq.rst:87
 msgid ""
-"If you want some example, please take a look at ``TRegExpr.Replace`` method "
-"implementation or at the examples for `HyperLinksDecorator <demos.html>`_"
+"If you want some example, please take a look at ``TRegExpr.Replace`` "
+"method implementation or at the examples for `HyperLinksDecorator "
+"<demos.html>`_"
 msgstr ""
 "Wenn Sie ein Beispiel wünschen, werfen Sie einen Blick auf die "
-"Implementierung der `TRegExpr.Replace``-Methode oder auf die Beispiele für` "
-"HyperLinksDecorator <demos.html> _"
+"Implementierung der `TRegExpr.Replace``-Methode oder auf die Beispiele "
+"für` HyperLinksDecorator <demos.html> _"
 
 # 9a455417a3d044c9b984ae73dcc64ace
-#: ../../faq.rst:113
+#: ../../faq.rst:92
 msgid ""
-"I am checking user input. Why does TRegExpr return ``True`` for wrong input "
-"strings?"
+"I am checking user input. Why does TRegExpr return ``True`` for wrong "
+"input strings?"
 msgstr ""
 "Ich überprüfe die Benutzereingaben. Warum gibt TRegExpr für falsche "
 "Eingabezeichenfolgen &quot;True&quot; zurück?"
 
 # e7dd38f412234006aefa108dc8555b35
-#: ../../faq.rst:117
+#: ../../faq.rst:96
 msgid ""
 "In many cases TRegExpr users forget that regular expression is for "
 "**search** in input string."
 msgstr ""
-"In vielen Fällen vergessen TRegExpr-Benutzer, dass reguläre Ausdrücke für **"
-" Suche ** in der Eingabezeichenfolge sind."
+"In vielen Fällen vergessen TRegExpr-Benutzer, dass reguläre Ausdrücke für"
+" ** Suche ** in der Eingabezeichenfolge sind."
 
 # 84c50dddfedc418ca4e5de33a2388527
-#: ../../faq.rst:120
+#: ../../faq.rst:99
 msgid ""
-"So, for example if you use ``\\d{4,4}`` expression, you will get success for"
-" wrong user inputs like ``12345`` or ``any letters 1234``."
+"So, for example if you use ``\\d{4,4}`` expression, you will get success "
+"for wrong user inputs like ``12345`` or ``any letters 1234``."
 msgstr ""
-"Wenn Sie beispielsweise `` \\ d {4,4} `` Ausdruck verwenden, erhalten Sie "
-"Erfolg bei falschen Benutzereingaben wie ``12345`` oder `` any letters "
+"Wenn Sie beispielsweise `` \\ d {4,4} `` Ausdruck verwenden, erhalten Sie"
+" Erfolg bei falschen Benutzereingaben wie ``12345`` oder `` any letters "
 "1234``."
 
 # 555ace2776ff491baccc6bc35a2574b3
-#: ../../faq.rst:123
+#: ../../faq.rst:102
 msgid ""
 "You have to check from line start to line end to ensure there are no "
 "anything else around: ``^\\d{4,4}$``."
@@ -315,73 +264,147 @@ msgstr ""
 "sicherzustellen, dass nichts anderes vorhanden ist: `` ^ \\ d {4,4} $ ``."
 
 # 3c901ebacebb4af69e073edc07332ecd
-#: ../../faq.rst:129
+#: ../../faq.rst:108
 msgid "Why does non-greedy iterators sometimes work as in greedy mode?"
 msgstr ""
-"Warum funktionieren nichtgierige Iteratoren manchmal wie im gierigen Modus?"
+"Warum funktionieren nichtgierige Iteratoren manchmal wie im gierigen "
+"Modus?"
 
 # 360da2fcf4f04302a1ec1b9557fad598
-#: ../../faq.rst:131
+#: ../../faq.rst:110
 msgid ""
 "For example, the r.e. ``a+?,b+?`` applied to string ``aaa,bbb`` matches "
 "``aaa,b``, but should it not match ``a,b`` because of non-greediness of "
 "first iterator?"
 msgstr ""
-"Zum Beispiel entspricht das re `` a +?, B +? ``, Das auf den String `` aaa, "
-"bbb`` angewendet wird, `` aaa, b``, sollte aber nicht mit `` a, b`` wegen "
-"Nicht-Gier passen des ersten Iterators?"
+"Zum Beispiel entspricht das re `` a +?, B +? ``, Das auf den String `` "
+"aaa, bbb`` angewendet wird, `` aaa, b``, sollte aber nicht mit `` a, b`` "
+"wegen Nicht-Gier passen des ersten Iterators?"
 
 # fc89dddf135b42ac956db2e8891af351
-#: ../../faq.rst:137
+#: ../../faq.rst:116
 msgid ""
-"This is because of TRegExpr way to work. In fact many others r.e. engines "
-"work exactly the same: they performe only ``simple`` search optimization, "
-"and do not try to do the best optimization."
+"This is because of TRegExpr way to work. In fact many others r.e. engines"
+" work exactly the same: they performe only ``simple`` search "
+"optimization, and do not try to do the best optimization."
 msgstr ""
-"Dies liegt an TRegExprs Arbeitsweise. Tatsächlich arbeiten viele andere re-"
-"Engines genau gleich: Sie führen nur eine &quot;einfache&quot; "
+"Dies liegt an TRegExprs Arbeitsweise. Tatsächlich arbeiten viele andere "
+"re-Engines genau gleich: Sie führen nur eine &quot;einfache&quot; "
 "Suchoptimierung durch und versuchen nicht, die beste Optimierung zu "
 "erreichen."
 
 # ef8b9a54e25e4fa9a9ae7ab5904a4b17
-#: ../../faq.rst:141
+#: ../../faq.rst:120
 msgid ""
-"In some cases it's bad, but in common it's rather advantage then limitation,"
-" because of performance and predictability reasons."
+"In some cases it's bad, but in common it's rather advantage then "
+"limitation, because of performance and predictability reasons."
 msgstr ""
-"In manchen Fällen ist es schlecht, aber im Allgemeinen ist es aus Gründen "
-"der Leistung und Vorhersagbarkeit eher ein Vorteil als eine Einschränkung."
+"In manchen Fällen ist es schlecht, aber im Allgemeinen ist es aus Gründen"
+" der Leistung und Vorhersagbarkeit eher ein Vorteil als eine "
+"Einschränkung."
 
 # 947ff8c1afe940479c8fd0c41677ae41
-#: ../../faq.rst:144
+#: ../../faq.rst:123
 msgid ""
-"The main rule - r.e. first of all try to match from current place and only "
-"if that's completely impossible move forward by one char and try again from "
-"next position in the text."
+"The main rule - r.e. first of all try to match from current place and "
+"only if that's completely impossible move forward by one char and try "
+"again from next position in the text."
 msgstr ""
-"Die Hauptregel - versuchen Sie zuerst, vom aktuellen Ort aus zu passen. Nur "
-"wenn dies völlig unmöglich ist, bewegen Sie sich um ein Zeichen vorwärts und"
-" versuchen Sie es erneut von der nächsten Position im Text."
+"Die Hauptregel - versuchen Sie zuerst, vom aktuellen Ort aus zu passen. "
+"Nur wenn dies völlig unmöglich ist, bewegen Sie sich um ein Zeichen "
+"vorwärts und versuchen Sie es erneut von der nächsten Position im Text."
 
 # 7c46172a4c3b4941b63c368dc1b2a948
-#: ../../faq.rst:148
+#: ../../faq.rst:127
 msgid ""
-"So, if you use ``a,b+?`` it'll match ``a,b``. In case of ``a+?,b+?`` it's "
-"now not recommended (we add non-greedy modifyer) but still possible to match"
-" more then one ``a``, so TRegExpr will do it."
+"So, if you use ``a,b+?`` it'll match ``a,b``. In case of ``a+?,b+?`` it's"
+" now not recommended (we add non-greedy modifyer) but still possible to "
+"match more then one ``a``, so TRegExpr will do it."
 msgstr ""
-"Wenn Sie also `a, b + verwenden?` `Wird es` `a, b`` passen. Im Falle von `` "
-"a +?, B +? `` `Wird es jetzt nicht empfohlen (wir fügen einen nicht-gierigen"
-" Modifikator hinzu), aber es ist immer noch möglich, mehr als einen` `a`` zu"
-" finden, also macht TRegExpr dies."
+"Wenn Sie also `a, b + verwenden?` `Wird es` `a, b`` passen. Im Falle von "
+"`` a +?, B +? `` `Wird es jetzt nicht empfohlen (wir fügen einen nicht-"
+"gierigen Modifikator hinzu), aber es ist immer noch möglich, mehr als "
+"einen` `a`` zu finden, also macht TRegExpr dies."
 
 # 41feed27e8ad405faa9ea1e4b0c8d18f
-#: ../../faq.rst:152
+#: ../../faq.rst:131
 msgid ""
 "TRegExpr like Perl's or Unix's r.e. doesn't attempt to move forward and "
-"check - would it will be \"better\" match. Fisrt of all, just because there "
-"is no way to say it's more or less good match."
+"check - would it will be \"better\" match. Fisrt of all, just because "
+"there is no way to say it's more or less good match."
 msgstr ""
-"TRegExpr wie Perl oder Unix versucht nicht, sich vorwärts zu bewegen und zu "
-"prüfen - würde es &quot;besser&quot; passen. Fisrt von allem, nur weil es "
-"keine Möglichkeit gibt zu sagen, dass es mehr oder weniger gut passt."
+"TRegExpr wie Perl oder Unix versucht nicht, sich vorwärts zu bewegen und "
+"zu prüfen - würde es &quot;besser&quot; passen. Fisrt von allem, nur weil"
+" es keine Möglichkeit gibt zu sagen, dass es mehr oder weniger gut passt."
+
+# 781bb73b9cd34896bd61ea052d2869ea
+#: ../../faq.rst:137
+msgid "How can I use TRegExpr with Borland C++ Builder?"
+msgstr "Wie kann ich TRegExpr mit Borland C ++ Builder verwenden?"
+
+# 252a4182e2ca41febf89678337efb6c2
+#: ../../faq.rst:139
+msgid "I have a problem since no header file (``.h`` or ``.hpp``) is available."
+msgstr ""
+"Ich habe ein Problem, da keine Header-Datei (``.h`` oder ``.hpp``) "
+"verfügbar ist."
+
+# c17bbf36186946eb9b60c1c609ec12ec
+#: ../../faq.rst:143
+msgid "Add ``RegExpr.pas`` to ``bcb`` project."
+msgstr "Fügen Sie ``RegExpr.pas`` zu ``bcb`` hinzu."
+
+# 7b1b72640e2c46c7a5ae52e5dc598b7d
+#: ../../faq.rst:144
+msgid "Compile project. This generates the header file ``RegExpr.hpp``."
+msgstr ""
+"Projekt kompilieren Dadurch wird die Header-Datei ``RegExpr.hpp`` "
+"generiert."
+
+# 16ee016a9fa547d7b412bd44ea526e44
+#: ../../faq.rst:145
+msgid "Now you can write code which uses the ``RegExpr`` unit."
+msgstr "Jetzt können Sie Code schreiben, der die ``RegExpr``-Einheit verwendet."
+
+# 92c071830b604493a9b0982e4c690f0d
+#: ../../faq.rst:146
+msgid "Don't forget to add  ``#include “RegExpr.hpp”`` where needed."
+msgstr "Vergessen Sie nicht, `` #include “RegExpr.hpp” `` bei Bedarf hinzuzufügen."
+
+# a14b93d760474e5f83f70bb9479d161b
+#: ../../faq.rst:147
+msgid ""
+"Don't forget to replace all ``\\`` in regular expressions with ``\\\\`` "
+"or redefined `EscChar <tregexpr.html#escchar>`__ const."
+msgstr ""
+"Vergessen Sie nicht, alle `` \\ `` in regulären Ausdrücken durch `` \\\\ "
+"`` oder neu definierte `EscChar zu ersetzen <tregexpr.html#escchar> __ "
+"const."
+
+# 6c8450146f0841d1a013cff6b32e8dcc
+#: ../../faq.rst:151
+msgid ""
+"Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in "
+"Borland C++ Builder?"
+msgstr ""
+"Warum arbeiten viele (einschließlich TRegExpr-Hilfe und -Demo) in Borland"
+" C ++ Builder falsch?"
+
+# 86691c4364694b7a8784006481ec491e
+#: ../../faq.rst:155
+msgid ""
+"The hint is in the previous question ;) Symbol ``\\`` has special meaning"
+" in ``C++``, so you have to ``escape`` it (as described in previous "
+"answer). But if you don't like r.e. like ``\\\\w+\\\\\\\\w+\\\\.\\\\w+`` "
+"you can redefine the constant ``EscChar`` (in ``RegExpr.pas``). For "
+"example ``EscChar = \"/\"``. Then you can write ``/w+/w+/./w+``, looks "
+"unusual but more readable."
+msgstr ""
+"Der Hinweis ist in der vorherigen Frage;) Das Symbol `` \\ `` hat eine "
+"besondere Bedeutung in `` C ++ ``, also müssen Sie es ``entkommen`` (wie "
+"in der vorherigen Antwort beschrieben). Wenn Sie nicht gerne `` \\\\ w + "
+"\\\\\\\\ w + \\\\. \\\\ w + `` mögen, können Sie die Konstante "
+"``EscChar`` (in ``RegExpr.pas``) neu definieren. Zum Beispiel `` EscChar "
+"= &quot;/&quot; ``. Dann können Sie `` / w + / w + /. / W + `` schreiben,"
+" sieht ungewöhnlich aus, ist aber lesbarer."
+

@@ -7,6 +7,12 @@ source_file = _build/gettext/regular_expressions.pot
 source_lang = en
 type = PO
 
+[tregexpr._build_gettext_tregexpr]
+file_filter = locale/<lang>/LC_MESSAGES/tregexpr.po
+source_file = _build/gettext/tregexpr.pot
+source_lang = en
+type = PO
+
 [tregexpr._build_gettext_faq]
 file_filter = locale/<lang>/LC_MESSAGES/faq.po
 source_file = _build/gettext/faq.pot
@@ -22,12 +28,6 @@ type = PO
 [tregexpr._build_gettext_demos]
 file_filter = locale/<lang>/LC_MESSAGES/demos.po
 source_file = _build/gettext/demos.pot
-source_lang = en
-type = PO
-
-[tregexpr._build_gettext_tregexpr]
-file_filter = locale/<lang>/LC_MESSAGES/tregexpr.po
-source_file = _build/gettext/tregexpr.pot
 source_lang = en
 type = PO
 

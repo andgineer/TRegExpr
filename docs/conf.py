@@ -72,6 +72,7 @@ release = '0.952'
 locale_dirs = ['locale/']
 gettext_compact = False
 gettext_uuid = True
+gettext_additional_targets = ['literal-block']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -80,6 +81,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
+highlight_language = 'pascal'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False

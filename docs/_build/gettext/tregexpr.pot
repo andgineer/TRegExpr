@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-04 06:10+0300\n"
+"POT-Creation-Date: 2019-05-04 14:42+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,6 +191,12 @@ msgstr ""
 msgid "Without parameter works the same as"
 msgstr ""
 
+#: ../../tregexpr.rst:113
+# 9554d95b145844e9a0fac077f7e8a560
+msgid "if MatchLen \\[0\\] = 0 then ExecPos (MatchPos \\[0\\] + 1)\n"
+"  else ExecPos (MatchPos \\[0\\] + MatchLen \\[0\\]);"
+msgstr ""
+
 #: ../../tregexpr.rst:116
 # a925f1db28104a15bc3a4af88cf87295
 msgid "Raises exception if used without preceeding successful call to Exec_, ExecPos_ or ExecNext_."
@@ -201,6 +207,11 @@ msgstr ""
 msgid "So you always must use something like"
 msgstr ""
 
+#: ../../tregexpr.rst:123
+# a5be303551c641f986789278754e8e17
+msgid "if Exec (InputString) then repeat { proceed results} until not ExecNext;"
+msgstr ""
+
 #: ../../tregexpr.rst:126
 # accdc15bd2414c67959ca91416523513
 msgid "ExecPos"
@@ -209,6 +220,11 @@ msgstr ""
 #: ../../tregexpr.rst:128
 # 1172f9ed94d841d8846cf65a3c6ecd11
 msgid "Finds match for ``InputString`` starting from ``AOffset`` position"
+msgstr ""
+
+#: ../../tregexpr.rst:132
+# 36293936a5c84f5ba15ca349c26ed788
+msgid "AOffset=1 - first char of InputString"
 msgstr ""
 
 #: ../../tregexpr.rst:135
@@ -259,7 +275,7 @@ msgstr ""
 #: ../../tregexpr.rst:153
 #: ../../tregexpr.rst:154
 # 17a7b341d6fc4c588328b20b1178acc9
-# 46b34e362e314e1290ffb8f808dcc911
+# 17a7b341d6fc4c588328b20b1178acc9
 msgid "whole regular expression match"
 msgstr ""
 
@@ -328,9 +344,21 @@ msgstr ""
 msgid "uppercase all chars after that"
 msgstr ""
 
+#: ../../tregexpr.rst:165
+# 6e16afdd050e4f368892de2da891c5d0
+msgid "'1\\$ is $2\\\\rub\\\\' -> '1$ is <Match[2]>\\rub\\'\n"
+"'\\U$1\\\\r' transforms into '<Match[1] in uppercase>\\r'"
+msgstr ""
+
 #: ../../tregexpr.rst:168
 # 4b85168153b84479a80bb8202b1dfbcf
 msgid "If you want to place raw digit after ‘$n’ you must delimit ``n`` with curly braces ``{}``."
+msgstr ""
+
+#: ../../tregexpr.rst:173
+# 85569e13faf7400f884bb57d5fc5a26e
+msgid "'a$12bc' -> 'a<Match[12]>bc'\n"
+"'a${1}2bc' -> 'a<Match[1]>2bc'."
 msgstr ""
 
 #: ../../tregexpr.rst:177
@@ -346,7 +374,7 @@ msgstr ""
 #: ../../tregexpr.rst:181
 #: ../../tregexpr.rst:209
 # b322778a78174b19a1ec867d734b92fe
-# b0a1edfe9f524f7f8c03fe2a849936be
+# b322778a78174b19a1ec867d734b92fe
 msgid "Internally calls Exec_ / ExecNext_"
 msgstr ""
 
@@ -370,9 +398,20 @@ msgstr ""
 msgid "If ``AUseSubstitution`` is true, then ``AReplaceStr`` will be used as template for Substitution methods."
 msgstr ""
 
+#: ../../tregexpr.rst:198
+# 06bb14e2e3d44cd885e9003370843147
+msgid "Expression := '({-i}block|var)\\\\s\\*\\\\(\\\\s\\*(\\[^ \\]\\*)\\\\s\\*\\\\)\\\\s\\*';\n"
+"Replace ('BLOCK( test1)', 'def \"$1\" value \"$2\"', True);"
+msgstr ""
+
 #: ../../tregexpr.rst:201
 # 19c18b1de0f140e6b54eb9b509ffb64b
 msgid "will return:  def ‘BLOCK’ value ‘test1’"
+msgstr ""
+
+#: ../../tregexpr.rst:205
+# 5fe9c622e60040068319f376dc86f17c
+msgid "Replace ('BLOCK( test1)', 'def \"$1\" value \"$2\"', False)"
 msgstr ""
 
 #: ../../tregexpr.rst:207
@@ -408,6 +447,20 @@ msgstr ""
 #: ../../tregexpr.rst:226
 # 2767db19f2ce40f78b7da4cb1b8153c2
 msgid "Note, that some subexpr. may be not found and for such subexpr. ``MathPos=MatchLen=-1`` and ``Match=’’``."
+msgstr ""
+
+#: ../../tregexpr.rst:231
+# d3f54fd075074e0481f0beeed23208ea
+msgid "Expression := '(1)?2(3)?';\n"
+"Exec ('123'): SubExprMatchCount=2, Match[0]='123', [1]='1', [2]='3'\n"
+"\n"
+"Exec ('12'): SubExprMatchCount=1, Match[0]='12', [1]='1'\n"
+"\n"
+"Exec ('23'): SubExprMatchCount=2, Match[0]='23', [1]='', [2]='3'\n"
+"\n"
+"Exec ('2'): SubExprMatchCount=0, Match[0]='2'\n"
+"\n"
+"Exec ('7') - return False: SubExprMatchCount=-1"
 msgstr ""
 
 #: ../../tregexpr.rst:244
@@ -518,7 +571,7 @@ msgstr ""
 #: ../../tregexpr.rst:306
 #: ../../tregexpr.rst:317
 # 9a2790f4b35b46dd8d067f2601a11d2e
-# 3eb664c3654b4fbb96761a585b9068a7
+# 9a2790f4b35b46dd8d067f2601a11d2e
 msgid "see also `about line separators <regular_expressions.html#line-separators>`__"
 msgstr ""
 
@@ -550,6 +603,12 @@ msgstr ""
 #: ../../tregexpr.rst:327
 # e9b5de25fffd431483ee4bf0e87e2c9e
 msgid "By default ‘mixed’ mode is used (defined in RegExprLine[Paired]Separator[s] global constants):"
+msgstr ""
+
+#: ../../tregexpr.rst:332
+# 7e4dfafc0da343818e7c236d3a8a61a2
+msgid "LineSeparators := #$d#$a;\n"
+"LinePairedSeparator := #$d#$a"
 msgstr ""
 
 #: ../../tregexpr.rst:335
@@ -762,6 +821,22 @@ msgstr ""
 msgid "If ``AUseSubstitution` is true, then ``AReplaceStr`` will be used as template for ``Substitution methods``."
 msgstr ""
 
+#: ../../tregexpr.rst:453
+# 40be2a29721d41d0871f8243fbb27de4
+msgid "ReplaceRegExpr ('({-i}block|var)\\\\s\\*\\\\(\\\\s\\*(\\[^ \\]\\*)\\\\s\\*\\\\)\\\\s\\*',\n"
+"  'BLOCK( test1)', 'def \"$1\" value \"$2\"', True)\n"
+"\n"
+"return  def ‘BLOCK’ value ‘test1’"
+msgstr ""
+
+#: ../../tregexpr.rst:460
+# 2bf6d65a1443409384b682e259c5be76
+msgid "ReplaceRegExpr ('({-i}block|var)\\\\s\\*\\\\(\\\\s\\*(\\[^ \\]\\*)\\\\s\\*\\\\)\\\\s\\*',\n"
+"  'BLOCK( test1)', 'def \"$1\" value \"$2\"')\n"
+"\n"
+"return  def “$1” value “$2”"
+msgstr ""
+
 #: ../../tregexpr.rst:466
 # 154956e5a5684cfe8fe738b50f2e623e
 msgid "Version with options"
@@ -770,6 +845,19 @@ msgstr ""
 #: ../../tregexpr.rst:468
 # cfbcd8a386864fed94530caa92931339
 msgid "With ``Options`` you control ``\\n`` behaviour (if ``rroUseOsLineEnd`` then ``\\n`` is replaced with ``\\n\\r`` in Windows and ``\\n`` in Linux). And so on."
+msgstr ""
+
+#: ../../tregexpr.rst:471
+# 260c91d9e4944a759e3bd73168ebc836
+msgid "Type\n"
+"  TRegexReplaceOption = (rroModifierI,\n"
+"                         rroModifierR,\n"
+"                         rroModifierS,\n"
+"                         rroModifierG,\n"
+"                         rroModifierM,\n"
+"                         rroModifierX,\n"
+"                         rroUseSubstitution,\n"
+"                         rroUseOsLineEnd);"
 msgstr ""
 
 #: ../../tregexpr.rst:484
@@ -885,6 +973,15 @@ msgstr ""
 #: ../../tregexpr.rst:525
 # aed94ac85d94421eaa743168b7ac3892
 msgid "ERegExpr"
+msgstr ""
+
+#: ../../tregexpr.rst:529
+# a7223b94cacf4357adc94ff03ab8e197
+msgid "ERegExpr = class (Exception)\n"
+"  public\n"
+"   ErrorCode : integer; // error code. Compilation error codes are before 1000\n"
+"   CompilerErrorPos : integer; // Position in r.e. where compilation error occured\n"
+" end;"
 msgstr ""
 
 #: ../../tregexpr.rst:536
