@@ -1,25 +1,24 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2019, Andrey Sorokin
 # This file is distributed under the same license as the TRegExpr package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-04 10:41+0300\n"
+"POT-Creation-Date: 2019-05-04 19:18+0300\n"
 "PO-Revision-Date: 2019-05-04 07:42+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Russian (https://www.transifex.com/masterAndrey/teams/98461/ru/)\n"
+"Language-Team: Russian "
+"(https://www.transifex.com/masterAndrey/teams/98461/ru/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Generated-By: Babel 2.3.4\n"
 
 # e0e096577ddf42de84b4c0009d1ab8ee
 #: ../../index.rst:2
@@ -30,52 +29,50 @@ msgstr "Вступление"
 #: ../../index.rst:4
 msgid ""
 "TRegExpr library implements `regular expressions "
-"<regular_expressions.html>`_ in pure Delphi. TRegExpr is part of `Lazarus "
-"(Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project."
+"<regular_expressions.html>`_."
 msgstr ""
-"Библиотека TRegExpr реализует `регулярные выражения "
-"<regular_expressions.html>`_ на Паскале. TRegExpr является частью `Lazarus "
-"(Free Pascal) <http://wiki.freepascal.org/Regexpr>`_."
 
 # 57929c8115c34146ba8d53c86b73e99e
-#: ../../index.rst:8
+#: ../../index.rst:7
+#, fuzzy
 msgid ""
-"TRegExpr is easy to use and powerful tool for sophisticated search and "
-"substitution and for template-based text check."
+"Regular expressions are easy to use and powerful tool for sophisticated "
+"search and substitution and for template based text check."
 msgstr ""
 "TRegExpr - это простой в использовании и мощный инструмент для "
 "интеллектуального поиска и замены, а также для проверки текста на основе "
 "шаблонов."
 
 # 1f3133a0541e467bbc7f8228dfc89846
-#: ../../index.rst:11
+#: ../../index.rst:10
 msgid ""
 "It is especially useful for user input validation in input forms - to "
 "validate e-mail addresses and so on."
 msgstr ""
-"Это особенно полезно для проверки пользовательского ввода в формах ввода - "
-"для проверки адресов электронной почты и так далее."
+"Это особенно полезно для проверки пользовательского ввода в формах ввода "
+"- для проверки адресов электронной почты и так далее."
 
 # ddca2022171f445a9bcae654ef4b362f
-#: ../../index.rst:14
+#: ../../index.rst:13
 msgid ""
 "Also you can extract phone numbers, ZIP-codes etc from web-pages or "
-"documents, search for complex patterns in log files and all you can imagine."
-" Rules (templates) can be changed without your program recompilation."
+"documents, search for complex patterns in log files and all you can "
+"imagine. Rules (templates) can be changed without your program "
+"recompilation."
 msgstr ""
-"Также вы можете извлекать номера телефонов, почтовые индексы и т.д. из веб-"
-"страниц или документов, искать сложные шаблоны в файлах журналов и все, что "
-"вы можете себе представить. Правила (шаблоны) могут быть изменены без "
-"перекомпиляции вашей программы."
+"Также вы можете извлекать номера телефонов, почтовые индексы и т.д. из "
+"веб-страниц или документов, искать сложные шаблоны в файлах журналов и "
+"все, что вы можете себе представить. Правила (шаблоны) могут быть "
+"изменены без перекомпиляции вашей программы."
 
-# 678e5f44733344da971f19097ca43a40
-#: ../../index.rst:19
+# 6baba10c40834de1aa6cc9e87f5ba5a4
+#: ../../index.rst:17
 msgid ""
-"The library can be compiled by Delphi 2-7, Borland C++ Builder 3-6, "
-"FreePascal."
+"TRegExpr is implemented in pure Pascal. It's included into `Lazarus (Free"
+" Pascal) <http://wiki.freepascal.org/Regexpr>`_ project. But also it "
+"exists as separate library and can be compiled by Delphi 2-7, Borland C++"
+" Builder 3-6."
 msgstr ""
-"Библиотека может быть скомпилирована с помощью Delphi 2-7, Borland C ++ "
-"Builder 3-6, FreePascal."
 
 # ca3c7e798543405eb28c67b45452b350
 #: ../../index.rst:23
@@ -100,12 +97,12 @@ msgstr "Быстрый старт"
 #: ../../index.rst:30
 msgid ""
 "To use the library just add `the sources "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
-"you project and use the class `TRegExpr <tregexpr.html>`_."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"to you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 "Чтобы использовать библиотеку, просто добавьте `исходники "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ в "
-"ваш проект и далее используйте класс `TRegExpr <tregexpr.html>`_."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"в ваш проект и далее используйте класс `TRegExpr <tregexpr.html>`_."
 
 # 604a644712bf457d89f53469bf0dea7e
 #: ../../index.rst:33
@@ -124,8 +121,8 @@ msgid ""
 "If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use "
 "unicode <tregexpr.html#unicode>`__."
 msgstr ""
-"Если вам нужен Unicode (так называемые \"WideString\" в Delphi) - смотрите "
-"`Как использовать Unicode <tregexpr.html#unicode>`_."
+"Если вам нужен Unicode (так называемые \"WideString\" в Delphi) - "
+"смотрите `Как использовать Unicode <tregexpr.html#unicode>`_."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:41
@@ -163,41 +160,44 @@ msgstr ""
 # cb48bcda21e84448a807a9f10263f558
 #: ../../index.rst:63
 msgid ""
-"There are also old translations to German, Bulgarian, French and Spanish. If"
-" you want to help to update this old translations please `contact me "
-"<https://github.com/masterandrey>`_. New translations are based on `GetText "
+"There are also old translations to German, Bulgarian, French and Spanish."
+" If you want to help to update this old translations please `contact me "
+"<https://github.com/masterandrey>`_."
+msgstr ""
+
+# cb48bcda21e84448a807a9f10263f558
+#: ../../index.rst:66
+msgid ""
+"New translations are based on `GetText "
 "<https://en.wikipedia.org/wiki/Gettext>`_ and can be edited with "
 "`transifex.com "
-"<https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_. They are "
-"already machine-translated and need only proof-reading and may be some copy-"
-"pasting from old translations."
+"<https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_."
 msgstr ""
-"Есть также старые переводы на немецкий, болгарский, французский и испанский "
-"языки. Если вы хотите помочь обновить эти старые переводы, пожалуйста, "
-"свяжитесь со мной <https://github.com/masterandrey>`_. Новые переводы "
-"основаны на `GetText <https://en.wikipedia.org/wiki/Gettext>`_ и могут быть "
-"отредактированы с помощью `transifex.com "
-"<https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_. Они уже "
-"переведены автоматически и нуждаются только в корректуре и, возможно, "
-"вставки каких-то фрагментов из старых переводов."
+
+# fbddcb9245124935aaf6ae6770d22a6e
+#: ../../index.rst:69
+msgid ""
+"They are already machine-translated and need only proof-reading and may "
+"be some copy-pasting from old translations."
+msgstr ""
 
 # 6c20f98cad044e21ae70ee56aa06b220
-#: ../../index.rst:71
+#: ../../index.rst:73
 msgid "Source code"
 msgstr "Исходный код"
 
 # 84909a6ee27442989bc4e70e912d1423
-#: ../../index.rst:72
+#: ../../index.rst:74
 msgid "Pure Object Pascal."
 msgstr "Чистый Object Pascal."
 
 # b852f83bed1e4efe8de4bebf09c8ac3c
-#: ../../index.rst:74
+#: ../../index.rst:76
 msgid "`Original version <https://github.com/masterandrey/TRegExpr>`_"
 msgstr "`Оригинальная версия <https://github.com/masterandrey/TRegExpr>`_"
 
 # 4d7ba7e04b4e479fbb3fb94377ddaa2f
-#: ../../index.rst:75
+#: ../../index.rst:77
 msgid ""
 "`FreePascal fork (GitHub mirror of the SubVersion) "
 "<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
@@ -206,19 +206,19 @@ msgstr ""
 "<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
 
 # c556ccaa4805402ab0801fa2785c7456
-#: ../../index.rst:78
+#: ../../index.rst:80
 msgid "Gratitude"
 msgstr "Благодарности"
 
 # 268cc5e6c2da457ba50fc853fb103794
-#: ../../index.rst:80
+#: ../../index.rst:82
 msgid ""
 "Many features suggested and a lot of bugs founded (and even fixed) by "
 "TRegExpr’s contributors."
 msgstr "Сообществом предложено и реализовано множество функций TRegExpr."
 
 # 5fece84603234ac6a8b85c4ad5572d1f
-#: ../../index.rst:83
+#: ../../index.rst:85
 msgid ""
 "I cannot list here all of them, but I do appreciate all bug-reports, "
 "features suggestions and questions that I am receiving from you."
@@ -227,74 +227,125 @@ msgstr ""
 "предложения функций и вопросы, которые я получаю от вас."
 
 # 05c43ef077b446859f0d05b0b92edef0
-#: ../../index.rst:87
+#: ../../index.rst:89
 msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
-msgstr ""
-"Guido Muehlwitz - обнаружена и исправлена ошибка в обработке больших строк"
+msgstr "Guido Muehlwitz - обнаружена и исправлена ошибка в обработке больших строк"
 
 # 06dad95060b04bf2be1ff27e0c2abff2
-#: ../../index.rst:88
-msgid ""
-"Stephan Klimek - testing in CPPB and suggesting/implementing many features"
+#: ../../index.rst:90
+msgid "Stephan Klimek - testing in CPPB and suggesting/implementing many features"
 msgstr ""
 "Стефан Климек - тестирование в CPPB и предложение / реализация многих "
 "функций"
 
 # 2080a3d065de4827916dbbc174872814
-#: ../../index.rst:90
+#: ../../index.rst:92
 msgid "Steve Mudford - implemented Offset parameter"
 msgstr "Стив Мадфорд - реализован параметр Offset"
 
 # 48a3902a5577426bb7877d8a15c743c4
-#: ../../index.rst:91
+#: ../../index.rst:93
 msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
 "translation, usefull suggestions"
 msgstr ""
-"Мартин Баур (`www.mindpower.com <http://www.mindpower.com>`__) - немецкий "
-"перевод, полезные предложения"
+"Мартин Баур (`www.mindpower.com <http://www.mindpower.com>`__) - немецкий"
+" перевод, полезные предложения"
 
 # d402718ba09b49ffb284a26bc9e31d57
-#: ../../index.rst:93
+#: ../../index.rst:95
 msgid "Yury Finkel - implemented UniCode support, found and fixed some bugs"
 msgstr ""
 "Юрий Финкель - реализовал поддержку UniCode, нашел и исправил некоторые "
 "ошибки"
 
 # 28f0838389bf40bd8588b75e3c2cb818
-#: ../../index.rst:94
+#: ../../index.rst:96
 msgid "Ralf Junker - Implemented some features, many optimization suggestions"
 msgstr ""
 "Ральф Юнкер - Реализованы некоторые функции, много предложений по "
 "оптимизации"
 
 # d3324e4f8cfb4e1aacd8ed294617e2da
-#: ../../index.rst:96
+#: ../../index.rst:98
 msgid "Simeon Lilov - Bulgarian translation"
 msgstr "Симеон Лилов - болгарский перевод"
 
 # 35fbb7141a5346a4a884f660743d53dd
-#: ../../index.rst:97
-msgid ""
-"Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
+#: ../../index.rst:99
+msgid "Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
 msgstr "Филип Джирсбк и Мэтью Винтер - помогли в реализации не жадного режима"
 
 # 2fee3a31c1dd4a12931d90c5dbaf38c1
-#: ../../index.rst:99
+#: ../../index.rst:101
 msgid "Kit Eason many examples for introduction help section"
 msgstr "Kit Eason много примеров для документации"
 
 # baed1255c1c143b399d67758295109a4
-#: ../../index.rst:100
+#: ../../index.rst:102
 msgid "Juergen Schroth - bug hunting and useful suggestions"
 msgstr "Juergen Schroth - поиск ошибок и полезные советы"
 
 # 9f1031b4f6224dc99622a7c0a665c6e6
-#: ../../index.rst:101
+#: ../../index.rst:103
 msgid "Martin Ledoux - French translation"
 msgstr "Martin Ledoux - французский перевод"
 
 # 5bbca14a5c8045c0b0a16afd0ad75612
-#: ../../index.rst:102
+#: ../../index.rst:104
 msgid "Diego Calp, Argentina - Spanish translation"
 msgstr "Диего Кальп, Аргентина - испанский перевод"
+
+# dfa40637f5e84c8280470a89b89cb583
+#~ msgid ""
+#~ "TRegExpr library implements `regular "
+#~ "expressions <regular_expressions.html>`_ in pure "
+#~ "Delphi. TRegExpr is part of `Lazarus "
+#~ "(Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ "
+#~ "project."
+#~ msgstr ""
+#~ "Библиотека TRegExpr реализует `регулярные "
+#~ "выражения <regular_expressions.html>`_ на Паскале."
+#~ " TRegExpr является частью `Lazarus (Free"
+#~ " Pascal) <http://wiki.freepascal.org/Regexpr>`_."
+
+# 678e5f44733344da971f19097ca43a40
+#~ msgid ""
+#~ "The library can be compiled by "
+#~ "Delphi 2-7, Borland C++ Builder 3-6, "
+#~ "FreePascal."
+#~ msgstr ""
+#~ "Библиотека может быть скомпилирована с "
+#~ "помощью Delphi 2-7, Borland C ++ "
+#~ "Builder 3-6, FreePascal."
+
+# cb48bcda21e84448a807a9f10263f558
+#~ msgid ""
+#~ "There are also old translations to "
+#~ "German, Bulgarian, French and Spanish. "
+#~ "If you want to help to update "
+#~ "this old translations please `contact me"
+#~ " <https://github.com/masterandrey>`_. New translations"
+#~ " are based on `GetText "
+#~ "<https://en.wikipedia.org/wiki/Gettext>`_ and can be"
+#~ " edited with `transifex.com "
+#~ "<https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_. "
+#~ "They are already machine-translated and"
+#~ " need only proof-reading and may "
+#~ "be some copy-pasting from old "
+#~ "translations."
+#~ msgstr ""
+#~ "Есть также старые переводы на немецкий,"
+#~ " болгарский, французский и испанский языки."
+#~ " Если вы хотите помочь обновить эти"
+#~ " старые переводы, пожалуйста, свяжитесь со"
+#~ " мной <https://github.com/masterandrey>`_. Новые "
+#~ "переводы основаны на `GetText "
+#~ "<https://en.wikipedia.org/wiki/Gettext>`_ и могут "
+#~ "быть отредактированы с помощью `transifex.com"
+#~ " <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_."
+#~ " Они уже переведены автоматически и "
+#~ "нуждаются только в корректуре и, "
+#~ "возможно, вставки каких-то фрагментов из "
+#~ "старых переводов."
+

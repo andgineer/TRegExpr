@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-04 14:42+0300\n"
+"POT-Creation-Date: 2019-05-04 20:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,27 +23,27 @@ msgstr ""
 
 #: ../../index.rst:4
 # dfa40637f5e84c8280470a89b89cb583
-msgid "TRegExpr library implements `regular expressions <regular_expressions.html>`_ in pure Delphi. TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project."
+msgid "TRegExpr library implements `regular expressions <regular_expressions.html>`_."
 msgstr ""
 
-#: ../../index.rst:8
+#: ../../index.rst:7
 # 57929c8115c34146ba8d53c86b73e99e
-msgid "TRegExpr is easy to use and powerful tool for sophisticated search and substitution and for template-based text check."
+msgid "Regular expressions are easy to use and powerful tool for sophisticated search and substitution and for template based text check."
 msgstr ""
 
-#: ../../index.rst:11
+#: ../../index.rst:10
 # 1f3133a0541e467bbc7f8228dfc89846
 msgid "It is especially useful for user input validation in input forms - to validate e-mail addresses and so on."
 msgstr ""
 
-#: ../../index.rst:14
+#: ../../index.rst:13
 # ddca2022171f445a9bcae654ef4b362f
 msgid "Also you can extract phone numbers, ZIP-codes etc from web-pages or documents, search for complex patterns in log files and all you can imagine. Rules (templates) can be changed without your program recompilation."
 msgstr ""
 
-#: ../../index.rst:19
-# 678e5f44733344da971f19097ca43a40
-msgid "The library can be compiled by Delphi 2-7, Borland C++ Builder 3-6, FreePascal."
+#: ../../index.rst:17
+# 6baba10c40834de1aa6cc9e87f5ba5a4
+msgid "TRegExpr is implemented in pure Pascal. It's included into `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project. But also it exists as separate library and can be compiled by Delphi 2-7, Borland C++ Builder 3-6."
 msgstr ""
 
 #: ../../index.rst:23
@@ -103,100 +103,110 @@ msgstr ""
 
 #: ../../index.rst:63
 # cb48bcda21e84448a807a9f10263f558
-msgid "There are also old translations to German, Bulgarian, French and Spanish. If you want to help to update this old translations please `contact me <https://github.com/masterandrey>`_. New translations are based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_ and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_. They are already machine-translated and need only proof-reading and may be some copy-pasting from old translations."
+msgid "There are also old translations to German, Bulgarian, French and Spanish. If you want to help to update this old translations please `contact me <https://github.com/masterandrey>`_."
 msgstr ""
 
-#: ../../index.rst:71
+#: ../../index.rst:66
+# cb48bcda21e84448a807a9f10263f558
+msgid "New translations are based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_ and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_."
+msgstr ""
+
+#: ../../index.rst:69
+# fbddcb9245124935aaf6ae6770d22a6e
+msgid "They are already machine-translated and need only proof-reading and may be some copy-pasting from old translations."
+msgstr ""
+
+#: ../../index.rst:73
 # 6c20f98cad044e21ae70ee56aa06b220
 msgid "Source code"
 msgstr ""
 
-#: ../../index.rst:72
+#: ../../index.rst:74
 # 84909a6ee27442989bc4e70e912d1423
 msgid "Pure Object Pascal."
 msgstr ""
 
-#: ../../index.rst:74
+#: ../../index.rst:76
 # b852f83bed1e4efe8de4bebf09c8ac3c
 msgid "`Original version <https://github.com/masterandrey/TRegExpr>`_"
 msgstr ""
 
-#: ../../index.rst:75
+#: ../../index.rst:77
 # 4d7ba7e04b4e479fbb3fb94377ddaa2f
 msgid "`FreePascal fork (GitHub mirror of the SubVersion) <https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
 msgstr ""
 
-#: ../../index.rst:78
+#: ../../index.rst:80
 # c556ccaa4805402ab0801fa2785c7456
 msgid "Gratitude"
 msgstr ""
 
-#: ../../index.rst:80
+#: ../../index.rst:82
 # 268cc5e6c2da457ba50fc853fb103794
 msgid "Many features suggested and a lot of bugs founded (and even fixed) by TRegExpr’s contributors."
 msgstr ""
 
-#: ../../index.rst:83
+#: ../../index.rst:85
 # 5fece84603234ac6a8b85c4ad5572d1f
 msgid "I cannot list here all of them, but I do appreciate all bug-reports, features suggestions and questions that I am receiving from you."
 msgstr ""
 
-#: ../../index.rst:87
+#: ../../index.rst:89
 # 05c43ef077b446859f0d05b0b92edef0
 msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
 msgstr ""
 
-#: ../../index.rst:88
+#: ../../index.rst:90
 # 06dad95060b04bf2be1ff27e0c2abff2
 msgid "Stephan Klimek - testing in CPPB and suggesting/implementing many features"
 msgstr ""
 
-#: ../../index.rst:90
+#: ../../index.rst:92
 # 2080a3d065de4827916dbbc174872814
 msgid "Steve Mudford - implemented Offset parameter"
 msgstr ""
 
-#: ../../index.rst:91
+#: ../../index.rst:93
 # 48a3902a5577426bb7877d8a15c743c4
 msgid "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German translation, usefull suggestions"
 msgstr ""
 
-#: ../../index.rst:93
+#: ../../index.rst:95
 # d402718ba09b49ffb284a26bc9e31d57
 msgid "Yury Finkel - implemented UniCode support, found and fixed some bugs"
 msgstr ""
 
-#: ../../index.rst:94
+#: ../../index.rst:96
 # 28f0838389bf40bd8588b75e3c2cb818
 msgid "Ralf Junker - Implemented some features, many optimization suggestions"
 msgstr ""
 
-#: ../../index.rst:96
+#: ../../index.rst:98
 # d3324e4f8cfb4e1aacd8ed294617e2da
 msgid "Simeon Lilov - Bulgarian translation"
 msgstr ""
 
-#: ../../index.rst:97
+#: ../../index.rst:99
 # 35fbb7141a5346a4a884f660743d53dd
 msgid "Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
 msgstr ""
 
-#: ../../index.rst:99
+#: ../../index.rst:101
 # 2fee3a31c1dd4a12931d90c5dbaf38c1
 msgid "Kit Eason many examples for introduction help section"
 msgstr ""
 
-#: ../../index.rst:100
+#: ../../index.rst:102
 # baed1255c1c143b399d67758295109a4
 msgid "Juergen Schroth - bug hunting and useful suggestions"
 msgstr ""
 
-#: ../../index.rst:101
+#: ../../index.rst:103
 # 9f1031b4f6224dc99622a7c0a665c6e6
 msgid "Martin Ledoux - French translation"
 msgstr ""
 
-#: ../../index.rst:102
+#: ../../index.rst:104
 # 5bbca14a5c8045c0b0a16afd0ad75612
 msgid "Diego Calp, Argentina - Spanish translation"
 msgstr ""

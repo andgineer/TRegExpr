@@ -72,23 +72,23 @@ If you want ``-`` itself to be a member of a class, put it at the start
 or end of the list, or escape it with a backslash. If you want ``]`` you
 may place it at the start of list or escape it with a backslash.
 
-========= =========================================
-[-az]     ``a``, ``z`` and ``-``
-[az-]     ``a``, ``z`` and ``-``
-[a\-z]    ``a``, ``z`` and ``-``
-[a-z]     all characters from ``a`` to ``z``
-[\n-\x0D] any of ``#10``, ``#11``, ``#12``, ``#13``
-========= =========================================
+============= ==================================
+``[-az]``     ``a``, ``z`` and ``-``
+``[az-]``     ``a``, ``z`` and ``-``
+``[a\-z]``    ``a``, ``z`` and ``-``
+``[a-z]``     characters from ``a`` to ``z``
+``[\n-\x0D]`` characters from ``#10`` to ``#13``
+============= ==================================
 
 Predefined Character classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ======     =========================================
-``\w``     an alphanumeric character (including "_")
+``\w``     an alphanumeric character (including ``_``)
 ``\W``     a nonalphanumeric
 ``\d``     a numeric character
 ``\D``     a non-numeric
-``\s``     any space (same as [ \t\n\r\f])
+``\s``     any space (same as ``[ \t\n\r\f]``)
 ``\S``     a non space
 ======     =========================================
 
@@ -99,11 +99,15 @@ You may use ``\w``, ``\d`` and ``\s`` within `user character classes <User Chara
 ``foob[\w\s]r`` ``foobar``, ``foob r``, ``foobbr`` and so on but not ``foob1r``, ``foob=r`` and so on
 =============== =====================================================================================
 
-TRegExpr uses properties
-`SpaceChars <tregexpr.html#spacechars>`_ and
-`WordChars <tregexpr.html#wordchars>`_ to define
-character classes ``\w``, ``\W``, ``\s``, ``\S``, so you can easely
-redefine it.
+.. note::
+    `TRegExpr <tregexpr.html>`__
+
+    Properties
+    `SpaceChars <tregexpr.html#spacechars>`_ and
+    `WordChars <tregexpr.html#wordchars>`_ define
+    character classes ``\w``, ``\W``, ``\s``, ``\S``.
+
+    So you can redefine this classes.
 
 Metacharacters
 --------------
@@ -112,8 +116,13 @@ Metacharacters are special characters which are the essence of Regular
 Expressions. There are different types of metacharacters, described
 below.
 
-Line separators
+Line Boundaries
 ~~~~~~~~~~~~~~~
+
+If you want mathematically correct description look at
+`www.unicode.org <http://www.unicode.org/unicode/reports/tr18/>`__.
+
+Below is simple and short version.
 
 ============= ================================================
 ``^``         start of line
@@ -127,7 +136,7 @@ Line separators
 ``foob.r``    ``foobar``, ``foobbr``, ``foob1r`` and so on
 ============= ================================================
 
-The ``^`` metacharacter by default is matchthe
+The ``^`` metacharacter by default match the
 beginning of the input string, the ``$`` at the
 end.
 
@@ -136,54 +145,38 @@ so ``^`` will match after any line separator within the string,
 and ``$`` will match before any line separator. You can do this by
 switching ``On`` the `modifier /m <#m>`_.
 
+Note that there is no empty line within the sequence ``\x0D\x0A``.
+
+.. note::
+    `TRegExpr <tregexpr.html>`__
+
+    If you are using
+    `Unicode version <tregexpr.html#unicode>`__, then ``^``/``$``
+    also matches ``\x2028``, ``\x2029``, ``\x0B``, ``\x0C`` or ``\x85``.
+
 The ``\A`` and ``\Z`` are just like ``^`` and ``$``, except that they
 won’t match multiple times when the `modifier
 /m <#m>`_ is used.
 
 The ``.`` metacharacter by default matches any character, but if you
 switch ``Off`` the `modifier /s <#s>`_, then
-``.`` won’t match embedded line separators.
-
-Tech details
-^^^^^^^^^^^^
-
-`TRegExpr <tregexpr.html>`_ works with line separators as recommended at
-`www.unicode.org <http://www.unicode.org/unicode/reports/tr18/>`__:
-
-``^`` is at the beginning of a input string, and, if `modifier
-/m <#m>`_ is On, also immediately following
-any occurrence of ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if you are using
-`Unicode version <tregexpr.html#unicode>`__ of TRegExpr, then
-also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or ``\x85``).
-Note that there is no empty line within the sequence ``\x0D\x0A``.
-
-``$`` is at the end of a input string, and, if `modifier
-/m <#m>`_ is On, also immediately preceding
-any occurrence of  ``\x0D\x0A`` or ``\x0A`` or ``\x0D`` (if you are
-using `Unicode version <tregexpr.html#unicode>`__ of TRegExpr,
-then also ``\x2028`` or  ``\x2029`` or ``\x0B`` or ``\x0C`` or
-``\x85``). Note that there is no empty line within the sequence
-``\x0D\x0A``.
-
-``.`` matchs any character, but if you switch Off `modifier
-/s <#s>`_ then ``.`` doesn’t match
-``\x0D\x0A`` and ``\x0A`` and ``\x0D`` (if you are using `Unicode
-version <tregexpr.html#unicode>`__ of TRegExpr, then also
-``\x2028`` and  ``\x2029`` and ``\x0B`` and ``\x0C`` and ``\x85``).
+``.`` won’t match line separators inside the string.
 
 Note that ``^.*$`` (an empty line pattern) does not match the empty
-string within the sequence ``\x0D\x0A``, but matchs the empty string
+string within the sequence ``\x0D\x0A``, but matches the empty string
 within the sequence ``\x0A\x0D``.
 
-Multiline processing can be easely tuned for your own purpose with help
-of TRegExpr properties
-`LineSeparators <tregexpr.html#lineseparators>`_ and
-`LinePairedSeparator <tregexpr.html#linepairedseparator>`_,
-you can use only Unix style separators ``\n`` or only DOS/Windows style
-``\r\n`` or mix them together (as described above and used by default)
-or define your own line separators!
+.. note::
+    `TRegExpr <tregexpr.html>`__
 
-Word boundaries
+    Multiline processing can be tuned with of properties
+    `LineSeparators <tregexpr.html#lineseparators>`_ and
+    `LinePairedSeparator <tregexpr.html#linepairedseparator>`_.
+
+    So you can use Unix style separators ``\n`` or DOS/Windows style
+    ``\r\n`` or mix them together (as in described above default behaviour).
+
+Word Boundaries
 ~~~~~~~~~~~~~~~
 
 ====== ===================
@@ -193,8 +186,7 @@ Word boundaries
 
 A word boundary ``\b`` is a spot between two characters that has a
 ``\w`` on one side of it and a ``\W`` on the other side of it (in either
-order), counting the imaginary characters off the beginning and end of
-the string as matching a ``\W``.
+order).
 
 .. _iterator:
 
@@ -211,12 +203,6 @@ Iterator specify number of repetition of the item.
 ``*``      zero or more, similar to ``{0,}``
 ``+``      one or more, similar to ``{1,}``
 ``?``      zero or one, similar to ``{0,1}``
-``{n}?``   exactly ``n`` times, ``non-greedy``
-``{n,}?``  at least ``n`` times, ``non-greedy``
-``{n,m}?`` at least ``n`` but not more than ``m`` times, ``non-greedy``
-``*?``     zero or more, ``non-greedy``, similar to ``{0,}?``
-``+?``     one or more, ``non-greedy``, similar to ``{1,}?``
-``??``     zero or one, ``non-greedy``, similar to ``{0,1}?``
 ========== ============================================================
 
 So, digits in curly brackets ``{n,m}``, specify the minimum
@@ -226,9 +212,7 @@ The ``{n}`` is equivalent to ``{n,n}`` and matches exactly ``n`` times.
 
 The ``{n,}`` matches ``n`` or more times.
 
-There is no limit to the size
-of ``n`` or ``m``, but large numbers will chew up more memory and slow
-down r.e. execution.
+There is no limit to the size of ``n`` or ``m``.
 
 If a curly bracket occurs in any other context, it is treated as a
 regular character.
@@ -240,7 +224,7 @@ regular character.
 ``fooba{2}r``      ``foobaar``
 ``fooba{2,}r``     ``foobaar'``, ``foobaaar``, ``foobaaaar`` etc.
 ``fooba{2,3}r``    ``foobaar``, or ``foobaaar``  but not ``foobaaaar``
-``(foobar){8,10}`` strings which contain ``8``, ``9`` or ``10`` instances of the ``foobar``
+``(foobar){8,10}`` ``8``, ``9`` or ``10`` instances of the ``foobar`` (``()`` is `Subexpression <#subexpression>`__)
 ================== ========================================================================
 
 Greediness
@@ -310,21 +294,34 @@ Subexpressions
 The brackets ``( ... )`` may also be used to define regular expression
 subexpressions.
 
-Subexpression positions, lengths and actual values will be in
-`MatchPos <tregexpr.html#matchpos>`_,
-`MatchLen <tregexpr.html#matchlen>`_ and
-`Match <tregexpr.html#match>`_.
+.. note::
+    `TRegExpr <tregexpr.html>`__
 
-You can substitute them with
-`Substitute <tregexpr.html#substitute>`_).
+    Subexpression positions, lengths and actual values will be in
+    `MatchPos <tregexpr.html#matchpos>`_,
+    `MatchLen <tregexpr.html#matchlen>`_ and
+    `Match <tregexpr.html#match>`_.
+
+    You can substitute them with
+    `Substitute <tregexpr.html#substitute>`_.
 
 Subexpressions are numbered from left to right by their
 opening parenthesis (including nested subexpressions).
 
-First subexpression has number ``1``. Whole regular expression match has number ``0``.
+First subexpression has number ``1``.
+Whole regular expression has number ``0``.
 
-Expression ``(foo(bar))`` for string ``foobar``: ``subexpression 1``
-match ``foobar``, ``2`` - ``bar`` and ``0`` - ``foobar``
+.. note::
+
+    regular expression ``(foo(bar))``
+
+    for input string ``foobar``:
+
+    =================== ==========
+    ``subexpression 0`` ``foobar``
+    ``subexpression 1`` ``foobar``
+    ``subexpression 2`` ``bar``
+    =================== ==========
 
 Backreferences
 ~~~~~~~~~~~~~~
@@ -358,15 +355,19 @@ default values for new instances of TRegExpr object defined in `global
 variables <tregexpr.html#global-constants>`_. For example global variable
 ``RegExprModifierX`` defines default value for ``ModifierX`` property.
 
-i
-~
+.. _i:
+
+i, case-insensitive
+~~~~~~~~~~~~~~~~~~~
 
 Case-insensitive pattern matching (using installed in you system
 locale settings), see also
 `InvertCase <tregexpr.html#invertcase>`__.
 
-m
-~
+.. _m:
+
+m, multi-line strings
+~~~~~~~~~~~~~~~~~~~~~
 
 Treat string as multiple lines. So ``^`` and ``$`` matches the start or end
 of any line anywhere within the string.
@@ -374,8 +375,10 @@ of any line anywhere within the string.
 See also `Line
 separators <tregexpr.html#lineseparators>`_.
 
-s
-~
+.. _s:
+
+s, single line strings
+~~~~~~~~~~~~~~~~~~~~~~
 
 Treat string as single line. So ``.`` matches any
 character whatsoever, even a line separators.
@@ -384,10 +387,12 @@ See also `Line
 separators <tregexpr.html#lineseparators>`_, which it
 normally would not match.
 
-g
-~
+.. _g:
 
-Non standard modifier.
+g, greediness
+~~~~~~~~~~~~~
+
+`TRegExpr <index.html>`__ only modifier.
 
 Switching it ``Off`` you’ll switch all following
 operators into non-greedy mode. So, if
@@ -396,15 +401,20 @@ so on.
 
 By default this modifier is ``On``.
 
-x
-~
+.. _x:
 
-Tells the ``TRegExpr`` to ignore whitespace that
-is neither backslashed nor within a character class. You can use this to
-break up your regular expression into more readable parts.
+x, eXtended syntax
+~~~~~~~~~~~~~~~~~~
 
-The ``#`` character is also treated as a metacharacter introducing a
-comment. Notice that you can use empty lines to format regular expression for
+Allows to comment regular expression and break them up into
+multiple lines.
+
+If the modifier is ``On`` we ignore all whitespaces that
+is neither backslashed nor within a character class.
+
+And the ``#`` character separates comments.
+
+Notice that you can use empty lines to format regular expression for
 better readability:
 
 .. code-block:: text
@@ -420,14 +430,29 @@ the pattern (outside a character class, where they are unaffected by
 ``/x``), you’ll either have to escape them or encode them using
 octal or hex escapes.
 
-r
-~
+.. _r:
 
-Non-standard modifier.
+r, Russian range extension
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If is set then range ``а-я`` includes
-also ``ё``. And ``А-Я`` includes also ``Ё``. And ``а-Я``
-includes all russian symbols.
+`TRegExpr <index.html>`__ only modifier.
+
+In Russian ASCII table characters ``ё``/``Ё`` are placed separately
+from others.
+
+Big and small Russian characters are in separated ranges, this is the same
+as with English characters but nevertheless I wanted some short form.
+
+With this extension instead of ``[а-яА-ЯёЁ]`` you can write ``[а-Я]`` if
+you need all Russian characters.
+
+When the extension is ``On``:
+
+======= =======================================
+``а-я`` chars from ``а`` to ``я`` and ``ё``
+``А-Я`` chars from ``А`` to ``Я`` and ``Ё``
+``а-Я`` all russian symbols
+======= =======================================
 
 The modifier is set `On` by default.
 
@@ -439,17 +464,20 @@ Extensions
 (?=<lookahead>)
 ~~~~~~~~~~~~~~~
 
-Look ahead assertion. It checks input for the regular expression ``<look-ahead>``,
-but do not capture it. In many cases you can replace it with simple
-`Sub-expression <#subexpression>`_ but you have to ignore what will be captured in this subexpression.
+``Look ahead`` assertion. It checks input for the regular expression ``<look-ahead>``,
+but do not capture it.
 
-So ``(blah)(?=foobar)(blah)`` is the same as ``(blah)(foobar)(blah)`` but in
-the latter version you have to exclude the middle manually - use
-``Match[1] + Match[3]`` and ignore ``Match[2]``.
+In many cases you can replace ``look ahead`` with
+`Sub-expression <#subexpression>`_ and just ignore what will be
+captured in this subexpression.
+
+For example ``(blah)(?=foobar)(blah)`` is the same as ``(blah)(foobar)(blah)``.
+But in the latter version you have to exclude the middle sub-expression
+manually - use ``Match[1] + Match[3]`` and ignore ``Match[2]``.
+
 This is just not so convenient as in the former version where you can use
-whole ``Match[0]`` because captured by ``(?=...)`` part would not be included
-in the regular expression match.
-
+whole ``Match[0]`` because captured by ``look ahead`` part would not be
+included in the regular expression match.
 
 .. _inlinemodifiers:
 
@@ -470,18 +498,16 @@ subexpression
 (?#text)
 ~~~~~~~~
 
-A comment, the text is ignored. Note that TRegExpr closes the comment as
-soon as it sees a ``)``, so there is no way to put a literal ``)`` in
+A comment, the text is ignored. Note that the comment is closed by
+the nearest ``)``, so there is no way to put a literal ``)`` in
 the comment.
 
-Just now don’t forget to read the `FAQ <faq.html>`_ (expecially
-‘non-greediness’ optimization
-`question <faq.html#nongreedyoptimization>`_).
+Afterword
+---------
 
-Play ground
------------
+In the `FAQ <faq.html>`_ you can learn from others users problems.
 
-You can play with regular expressions using Windows
+You can play with regular expressions using compiled for Windows
 `REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`_.
 
 

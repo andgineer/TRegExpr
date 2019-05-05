@@ -2,13 +2,14 @@ TRegExpr
 ========
 
 Implements `regular expressions <regular_expressions.html>`_ in pure pascal.
+Is compatible with Free Pascal, Delphi 2-7, Borland C++ Builder 3-6.
 
 To use it just copy `source code <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
 into your project.
 
-The library had already included in
-`Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project so you do not need
-to copy anything if you use `Lazarus <https://www.lazarus-ide.org/>`_.
+The library had already included into
+`Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project so you
+do not need to copy anything if you use `Lazarus <https://www.lazarus-ide.org/>`_.
 
 TRegExpr class
 --------------
@@ -16,8 +17,12 @@ TRegExpr class
 VersionMajor, VersionMinor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Return major and minor version, for example, for v. 0.944 VersionMajor =
-0 and VersionMinor = 944
+Return major and minor version, for example, for ``version 0.944``
+
+::
+
+    VersionMajor = 0
+    VersionMinor = 944
 
 Expression
 ~~~~~~~~~~
@@ -51,44 +56,38 @@ If you try to set unsupported modifier, ``Error`` will be called.
 ModifierI
 ~~~~~~~~~
 
-Modifier /i - (“caseinsensitive”), initialized with
-`RegExprModifierI <#modifier_defs>`__ value.
+`Modifier /i, "case-insensitive" <regular_expressions.html#i>`, initialized with
+RegExprModifierI_ value.
 
 ModifierR
 ~~~~~~~~~
 
-Modifier /r - (“Russian syntax extensions), initialized with
-`RegExprModifierR <#modifier_defs>`__ value.
+`Modifier /r, "Russian range extension" <regular_expressions.html#r>`_, initialized with
+RegExprModifierR_ value.
 
 ModifierS
 ~~~~~~~~~
 
-`Modifier /s <regular_expressions.html#modifier_s>`__ - ‘.’ works as any char
-(else doesn’t match LineSeparators_ and
-`LinePairedSeparator <tregexpr.html#linepairedseparator>`__),
-initialized with `RegExprModifierS <#modifier_defs>`__ value.
+`Modifier /s, "single line strings" <regular_expressions.html#s>`_,
+initialized with RegExprModifierS_ value.
 
 ModifierG
 ~~~~~~~~~
 
-`Modifier /g <regular_expressions.html#modifier_g>`__ Switching off modifier
-/g switchs all operators in non-greedy style, so if ModifierG = False,
-then all ‘\*’ works as ‘\*?’, all ‘+’ as ‘+?’ and so on, initialized
-with `RegExprModifierG <#modifier_defs>`__ value.
+`Modifier /g, "greediness" <regular_expressions.html#g>`_, initialized
+with RegExprModifierG_ value.
 
 ModifierM
 ~~~~~~~~~
 
-`Modifier /m <regular_expressions.html#modifier_m>`__ Treat string as multiple
-lines. That is, change \`^‘and \`$’ from matching at only the very start
-or end of the string to the start or end of any line anywhere within the
-string, initialized with `RegExprModifierM <#modifier_defs>`__ value.
+`Modifier /m, "multi-line strings" <regular_expressions.html#m>`_, initialized
+with RegExprModifierM_ value.
 
 ModifierX
 ~~~~~~~~~
 
-`Modifier /x <regular_expressions.html#modifier_x>`__ - (“eXtended syntax”),
-initialized with `RegExprModifierX <#modifier_defs>`__ value.
+`Modifier /x, "eXtended syntax" <regular_expressions.html#x>`_,
+initialized with RegExprModifierX_ value.
 
 Exec
 ~~~~
@@ -464,7 +463,7 @@ be used as template for ``Substitution methods``:
 
 Returns  ``def 'BLOCK' value 'test1'``
 
-But this one (note there is no last parameter):
+But this one (note there is no last argument):
 
 ::
 

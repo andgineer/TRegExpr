@@ -2,22 +2,22 @@ Introduction
 ~~~~~~~~~~~~
 
 TRegExpr library implements `regular
-expressions <regular_expressions.html>`_ in pure Delphi.
-TRegExpr is part of `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project.
+expressions <regular_expressions.html>`_.
 
-TRegExpr is easy to use and powerful tool for sophisticated search and
-substitution and for template-based text check.
+Regular expressions are easy to use and powerful tool for sophisticated
+search and substitution and for template based text check.
 
 It is especially useful for user input validation in input forms - to
 validate e-mail addresses and so on.
 
 Also you can extract phone numbers, ZIP-codes etc from web-pages or documents,
 search for complex patterns in log files and all you can imagine.
-Rules (templates) can be changed without your
-program recompilation.
+Rules (templates) can be changed without your program recompilation.
 
-The library can be compiled by Delphi 2-7, Borland C++
-Builder 3-6, FreePascal.
+TRegExpr is implemented in pure Pascal. It's included into
+`Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project.
+But also it exists as separate library and can be compiled by Delphi 2-7,
+Borland C++ Builder 3-6.
 
 Reviews
 ~~~~~~~
@@ -62,8 +62,10 @@ The documentation is available in English and
 
 There are also old translations to German, Bulgarian, French and Spanish.
 If you want to help to update this old translations please `contact me <https://github.com/masterandrey>`_.
+
 New translations are based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
 and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_.
+
 They are already machine-translated and need only proof-reading
 and may be some copy-pasting from old translations.
 
