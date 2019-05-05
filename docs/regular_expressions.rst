@@ -7,8 +7,9 @@ Introduction
 Regular expressions are a handy way to specify patterns of
 text.
 
-So you can validate user input, search for some patterns like
-emails of phone numbers on web pages or in some documents and so on.
+With regular expressions you can validate user input, search for some
+patterns like emails of phone numbers on web pages or in some documents
+and so on.
 
 Below is complete regular expressions cheat sheet just on one page.
 
@@ -17,20 +18,19 @@ Simple matches
 
 Any single character matches itself.
 
-A series of characters matches that series of characters in the target
-string, so the pattern ``bluh`` would match ``bluh`` in the target
+A series of characters matches that series of characters in the input
 string.
 
-If you want to use some symbol with special meaning (see below) as plain
-symbol you have to "escape" it with backslash ``\``:
-
-=============== ======================
-``foobar``      matches ``foobar``
-``\^FooBarPtr`` matches ``^FooBarPtr``
-=============== ======================
+================== ======================
+Regular expression Matches
+================== ======================
+``foobar``         ``foobar``
+================== ======================
 
 Non-Printable Characters
 ------------------------
+
+To represent non-printable character in regular expression you use ``\x..``:
 
 ============== ====================================================================================
 ``\xnn``       character with hex code ``nn``
@@ -39,8 +39,8 @@ Non-Printable Characters
 ``\tfoobar``   ``foobar`` preceded by TAB
 ============== ====================================================================================
 
-There are a number of predefined non-printable character classes
-just like in ``C`` language:
+There are a number of one-character codes for non-printable characters
+just like in ``C`` language, they are prefixed by ``\``:
 
 ======== ==========================================================================
 ``\t``   tab (HT/TAB), same as ``\x09``
@@ -69,8 +69,10 @@ Within a list, the ``-`` character is used to specify a range, so that
 ``a-z`` represents all characters between ``a`` and ``z``, inclusive.
 
 If you want ``-`` itself to be a member of a class, put it at the start
-or end of the list, or escape it with a backslash. If you want ``]`` you
-may place it at the start of list or escape it with a backslash.
+or end of the list, or `escape <#escape>`__ it with a backslash.
+
+If you want ``]`` or ``[`` you may place it at the start of list or escape it
+with a backslash.
 
 ============= ==================================
 ``[-az]``     ``a``, ``z`` and ``-``
@@ -80,8 +82,27 @@ may place it at the start of list or escape it with a backslash.
 ``[\n-\x0D]`` characters from ``#10`` to ``#13``
 ============= ==================================
 
-Predefined Character classes
+.. _escape:
+
+Escaping
+--------
+
+If you want to use some character ``\`` in regular expression just
+prefix it with ``\``, like that: ``\\``.
+
+In fact you can ``escape`` with ``\`` any character that has special meaning
+in regular expressions.
+
+=============== ======================
+``\^FooBarPtr`` ``^FooBarPtr``
+``\[a\]``       ``[a]``
+=============== ======================
+
+Predefined Character Classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are a number of predefined character classes that save your
+typing - you do not specify them by hand and can just use them.
 
 ======     =========================================
 ``\w``     an alphanumeric character (including ``_``)
@@ -92,7 +113,8 @@ Predefined Character classes
 ``\S``     a non space
 ======     =========================================
 
-You may use ``\w``, ``\d`` and ``\s`` within `user character classes <User Character Classes_>`_.
+You may use ``\w``, ``\d`` and ``\s`` within
+`user character classes <User Character Classes_>`_.
 
 =============== =====================================================================================
 ``foob\dr``     ``foob1r``, ``foob6r`` and so on but not ``foobar``, ``foobbr`` and so on
@@ -112,9 +134,7 @@ You may use ``\w``, ``\d`` and ``\s`` within `user character classes <User Chara
 Metacharacters
 --------------
 
-Metacharacters are special characters which are the essence of Regular
-Expressions. There are different types of metacharacters, described
-below.
+Metacharacters are the essence of regular expressions.
 
 Line Boundaries
 ~~~~~~~~~~~~~~~
@@ -122,7 +142,7 @@ Line Boundaries
 If you want mathematically correct description look at
 `www.unicode.org <http://www.unicode.org/unicode/reports/tr18/>`__.
 
-Below is simple and short version.
+Here is simplified version.
 
 ============= ================================================
 ``^``         start of line
@@ -136,14 +156,13 @@ Below is simple and short version.
 ``foob.r``    ``foobar``, ``foobbr``, ``foob1r`` and so on
 ============= ================================================
 
-The ``^`` metacharacter by default match the
-beginning of the input string, the ``$`` at the
-end.
+``^`` metacharacter by default match the
+beginning of the input string. ``$`` - the end.
 
 You may, however, wish to treat a string as a multi-line text,
 so ``^`` will match after any line separator within the string,
 and ``$`` will match before any line separator. You can do this by
-switching ``On`` the `modifier /m <#m>`_.
+switching `modifier /m <#m>`_.
 
 Note that there is no empty line within the sequence ``\x0D\x0A``.
 
@@ -162,9 +181,10 @@ The ``.`` metacharacter by default matches any character, but if you
 switch ``Off`` the `modifier /s <#s>`_, then
 ``.`` won’t match line separators inside the string.
 
-Note that ``^.*$`` (an empty line pattern) does not match the empty
-string within the sequence ``\x0D\x0A``, but matches the empty string
-within the sequence ``\x0A\x0D``.
+Note that ``^.*$`` does not match a string between ``\x0D\x0A``,
+because this is unbreakable line separator.
+But it matches the empty string within the sequence ``\x0A\x0D`` because
+this is just wrong order to be treated as line separator.
 
 .. note::
     `TRegExpr <tregexpr.html>`__
@@ -226,6 +246,8 @@ regular character.
 ``fooba{2,3}r``    ``foobaar``, or ``foobaaar``  but not ``foobaaaar``
 ``(foobar){8,10}`` ``8``, ``9`` or ``10`` instances of the ``foobar`` (``()`` is `Subexpression <#subexpression>`__)
 ================== ========================================================================
+
+.. _greedy:
 
 Greediness
 ~~~~~~~~~~
@@ -340,28 +362,30 @@ single quotes) or ``77`` (without quotes) etc
 Modifiers
 ---------
 
-Modifiers are for changing behaviour of ``TRegExpr``.
+Modifiers are for changing behaviour of regular expressions.
 
-There are two ways to set up modifiers:
+You can set modifiers globally in your system or change inside the the
+regular expression using the `(?imsxr-imsxr) <#inlinemodifiers>`_.
 
-1)
-Embed within the regular expression using
-the `(?imsxr-imsxr) <#inlinemodifiers>`_.
+.. note::
+    `TRegExpr <tregexpr.html>`__
 
-2)
-Assign to appropriate ``TRegExpr`` property
-(`Modifier* <tregexpr.html#modifierstr>`__. The
-default values for new instances of TRegExpr object defined in `global
-variables <tregexpr.html#global-constants>`_. For example global variable
-``RegExprModifierX`` defines default value for ``ModifierX`` property.
+    To change modifiers use
+    `ModifierStr <tregexpr.html#modifierstr>`__
+    or appropriate ``TRegExpr`` properties
+    `Modifier* <tregexpr.html#modifieri>`__.
+
+    The default values are defined in `global
+    variables <tregexpr.html#global-constants>`_. For example global variable
+    ``RegExprModifierX`` defines default value for ``ModifierX`` property.
 
 .. _i:
 
 i, case-insensitive
 ~~~~~~~~~~~~~~~~~~~
 
-Case-insensitive pattern matching (using installed in you system
-locale settings), see also
+Case-insensitive. Use installed in you system
+locale settings, see also
 `InvertCase <tregexpr.html#invertcase>`__.
 
 .. _m:
@@ -394,10 +418,11 @@ g, greediness
 
 `TRegExpr <index.html>`__ only modifier.
 
-Switching it ``Off`` you’ll switch all following
-operators into non-greedy mode. So, if
-modifier ``/g`` is ``Off`` then ``+`` works as ``+?``, ``*`` as ``*?`` and
-so on.
+Switching it ``Off`` you’ll switch
+`iterators <#iterator>`__ into `non-greedy <#greedy>`__ mode.
+
+So, if modifier ``/g`` is ``Off`` then ``+`` works as ``+?``,
+``*`` as ``*?`` and so on.
 
 By default this modifier is ``On``.
 
@@ -432,8 +457,8 @@ octal or hex escapes.
 
 .. _r:
 
-r, Russian range extension
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+r, Russian ranges
+~~~~~~~~~~~~~~~~~
 
 `TRegExpr <index.html>`__ only modifier.
 
@@ -443,10 +468,10 @@ from others.
 Big and small Russian characters are in separated ranges, this is the same
 as with English characters but nevertheless I wanted some short form.
 
-With this extension instead of ``[а-яА-ЯёЁ]`` you can write ``[а-Я]`` if
+With this modifier instead of ``[а-яА-ЯёЁ]`` you can write ``[а-Я]`` if
 you need all Russian characters.
 
-When the extension is ``On``:
+When the modifier is ``On``:
 
 ======= =======================================
 ``а-я`` chars from ``а`` to ``я`` and ``ё``
@@ -464,29 +489,42 @@ Extensions
 (?=<lookahead>)
 ~~~~~~~~~~~~~~~
 
-``Look ahead`` assertion. It checks input for the regular expression ``<look-ahead>``,
-but do not capture it.
+``Look ahead`` assertion. It checks input for the regular expression
+``<look-ahead>``, but do not capture it.
 
-In many cases you can replace ``look ahead`` with
-`Sub-expression <#subexpression>`_ and just ignore what will be
-captured in this subexpression.
+.. note::
+    `TRegExpr <tregexpr.html>`__
 
-For example ``(blah)(?=foobar)(blah)`` is the same as ``(blah)(foobar)(blah)``.
-But in the latter version you have to exclude the middle sub-expression
-manually - use ``Match[1] + Match[3]`` and ignore ``Match[2]``.
+    Look-ahead is not implemented in TRegExpr.
 
-This is just not so convenient as in the former version where you can use
-whole ``Match[0]`` because captured by ``look ahead`` part would not be
-included in the regular expression match.
+    In many cases you can replace ``look ahead`` with
+    `Sub-expression <#subexpression>`_ and just ignore what will be
+    captured in this subexpression.
+
+    For example ``(blah)(?=foobar)(blah)`` is the same as ``(blah)(foobar)(blah)``.
+    But in the latter version you have to exclude the middle sub-expression
+    manually - use ``Match[1] + Match[3]`` and ignore ``Match[2]``.
+
+    This is just not so convenient as in the former version where you can use
+    whole ``Match[0]`` because captured by ``look ahead`` part would not be
+    included in the regular expression match.
 
 .. _inlinemodifiers:
 
-(?imsxr-imsxr)
-~~~~~~~~~~~~~~
+(?imsgxr-imsgxr)
+~~~~~~~~~~~~~~~~
 
-You may use it into r.e. for modifying modifiers by the fly. If this
-construction inlined into subexpression, then it effects only into this
-subexpression
+You may use it inside regular expression for modifying modifiers by the fly.
+
+This can be especially handy because it has local scope in a regular
+expression. It affects only that part of regular expression that follows
+``(?imsgxr-imsgxr)`` operator.
+
+And if it's inside subexpression it will
+affect only this subexpression - specifically the part of the subexpression
+that follows after the operator. So in ``((?i)Saint)-Petersburg`` it affects
+only subexpression ``((?i)Saint)`` so it will match ``saint-Petersburg``
+but not ``saint-petersburg``.
 
 ============================= ==================================================
 ``(?i)Saint-Petersburg``      ``Saint-petersburg`` and ``Saint-Petersburg``
@@ -498,7 +536,9 @@ subexpression
 (?#text)
 ~~~~~~~~
 
-A comment, the text is ignored. Note that the comment is closed by
+A comment, the text is ignored.
+
+Note that the comment is closed by
 the nearest ``)``, so there is no way to put a literal ``)`` in
 the comment.
 
