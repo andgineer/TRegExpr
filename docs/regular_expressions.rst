@@ -13,8 +13,11 @@ and so on.
 
 Below is complete regular expressions cheat sheet just on one page.
 
+Characters
+----------
+
 Simple matches
---------------
+~~~~~~~~~~~~~~
 
 Any single character matches itself.
 
@@ -28,7 +31,7 @@ Regular expression Matches
 ================== ======================
 
 Non-Printable Characters
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 To represent non-printable character in regular expression you use ``\x..``:
 
@@ -51,14 +54,36 @@ just like in ``C`` language, they are prefixed by ``\``:
 ``\e``   escape (ESC), same as ``\x1b``
 ======== ==========================================================================
 
+.. _escape:
+
+Escaping
+~~~~~~~~
+
+If you want to use character ``\`` in regular expression just
+prefix it with ``\``, like that: ``\\``.
+
+In fact you can ``escape`` with ``\`` any character that has special meaning
+in regular expressions.
+
+=============== ====================================================
+``\^FooBarPtr`` ``^FooBarPtr``
+``\[a\]``       ``[a]`` this is not `character class <#userclass>`__
+=============== ====================================================
+
+Character Classes
+-----------------
+
+.. _userclass:
+
 User Character Classes
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
-You can specify character class, by enclosing a list of characters in
-``[]``. This class will match any **one** character listed inside ``[]``.
+Character class is a list of characters inside ``[]``.
+The class matches any **one** character listed in this class.
 
-If the first character after the ``[`` is ``^``, the class matches any
-character **but** characters listed in the class.
+You can ``invert`` the class - if the first character after the ``[`` is
+``^``, then the class matches any character **but** characters listed
+in the class.
 
 ================= =============================================================
 ``foob[aeiou]r``  ``foobar``, ``foober`` etc but not ``foobbr``, ``foobcr`` etc
@@ -81,22 +106,6 @@ with a backslash.
 ``[a-z]``     characters from ``a`` to ``z``
 ``[\n-\x0D]`` characters from ``#10`` to ``#13``
 ============= ==================================
-
-.. _escape:
-
-Escaping
---------
-
-If you want to use some character ``\`` in regular expression just
-prefix it with ``\``, like that: ``\\``.
-
-In fact you can ``escape`` with ``\`` any character that has special meaning
-in regular expressions.
-
-=============== ======================
-``\^FooBarPtr`` ``^FooBarPtr``
-``\[a\]``       ``[a]``
-=============== ======================
 
 Predefined Character Classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -133,8 +142,6 @@ You may use ``\w``, ``\d`` and ``\s`` within
 
 Metacharacters
 --------------
-
-Metacharacters are the essence of regular expressions.
 
 Line Boundaries
 ~~~~~~~~~~~~~~~
