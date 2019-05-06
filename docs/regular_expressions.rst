@@ -140,8 +140,8 @@ You may use ``\w``, ``\d`` and ``\s`` within
 
     So you can redefine this classes.
 
-Metacharacters
---------------
+Boundaries
+----------
 
 .. _lineseparators:
 
@@ -219,11 +219,14 @@ order).
 
 .. _iterator:
 
-Iterators
-~~~~~~~~~
+Quantification
+--------------
 
-Any item of a regular expression may be followed by iterator.
-Iterator specify number of repetition of the item.
+Quantifier
+~~~~~~~~~~
+
+Any item of a regular expression may be followed by quantifier.
+Quantifier specifies number of repetition of the item.
 
 ========== ============================================================
 ``{n}``    exactly ``n`` times
@@ -261,11 +264,11 @@ regular character.
 Greediness
 ~~~~~~~~~~
 
-`Iterators <#iterator>`_ in ``greedy`` mode takes as many as possible,
+`Quantifiers <#iterator>`_ in ``greedy`` mode takes as many as possible,
 in ``non-greedy`` mode - as few as possible.
 
-By default all iterators are ``greedy``.
-Use ``?`` to make any iterator ``non-greedy``.
+By default all quantifiers are ``greedy``.
+Use ``?`` to make any quantifier ``non-greedy``.
 
 For string ``abbbbc``:
 
@@ -277,37 +280,35 @@ For string ``abbbbc``:
 ``b{2,3}``  ``bbb``
 =========== ============
 
-You can switch all iterators into ``non-greedy`` mode (`modifier /g <#g>`_,
+You can switch all quantifiers into ``non-greedy`` mode (`modifier /g <#g>`_,
 below we use `in-line modifier change <#inlinemodifiers>`_).
 
 ============ ============
 ``(?-g)b+``  ``b``
 ============ ============
 
-Alternatives
-~~~~~~~~~~~~
+The choice
+----------
 
-Series of alternatives are separated by ``|``.
+Expressions in the choice are separated by ``|``.
 
 So ``fee|fie|foe`` will match any of ``fee``, ``fie``,
 or ``foe`` in the target string (as would ``f(e|i|o)e``).
 
-The first alternative includes everything from the last pattern delimiter (``(``,
+The first expression includes everything from the last pattern delimiter (``(``,
 ``[``, or the beginning of the pattern) up to the first ``|``, and the
-last alternative contains everything from the last ``|`` to the next
+last expression contains everything from the last ``|`` to the next
 pattern delimiter.
 
 Sounds a little complicated, so it’s common practice to include
-alternatives in parentheses, to minimize confusion about where they
-start and end.
+the choice in parentheses, to minimize confusion about where it
+starts and ends.
 
-Alternatives are tried from left to right, so the first alternative
-found for which the entire expression matches, is the one that is
-chosen.
+Expressions in the choice are tried from left to right, so the first expression
+that matches, is the one that is chosen.
 
-This means that alternatives are not necessarily ``greedy``. For
-example, regular expression ``foo|foot`` in string ``barefoot`` will match ``foo``.
-Just a first alternative that's match.
+For example, regular expression ``foo|foot`` in string ``barefoot`` will match ``foo``.
+Just a first expression that matches.
 
 Also remember that ``|`` is interpreted as a literal within square
 brackets, so if you write ``[fee|fie|foe]`` you’re really only matching
@@ -320,7 +321,7 @@ brackets, so if you write ``[fee|fie|foe]`` you’re really only matching
 .. _subexpression:
 
 Subexpressions
-~~~~~~~~~~~~~~
+--------------
 
 The brackets ``( ... )`` may also be used to define regular expression
 subexpressions.
@@ -355,7 +356,7 @@ Whole regular expression has number ``0``.
     =================== ==========
 
 Backreferences
-~~~~~~~~~~~~~~
+--------------
 
 Metacharacters ``\1`` through ``\9`` are interpreted as backreferences.
 ``\n`` matches previously matched subexpression ``n``.
@@ -426,7 +427,7 @@ g, greediness
 `TRegExpr <index.html>`__ only modifier.
 
 Switching it ``Off`` you’ll switch
-`iterators <#iterator>`__ into `non-greedy <#greedy>`__ mode.
+`quantifiers <#iterator>`__ into `non-greedy <#greedy>`__ mode.
 
 So, if modifier ``/g`` is ``Off`` then ``+`` works as ``+?``,
 ``*`` as ``*?`` and so on.
