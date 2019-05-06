@@ -30,12 +30,11 @@ Quick start
 To use the library just add `the sources <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
 to you project and use the class `TRegExpr <tregexpr.html>`_.
 
-`Demo projects <demos.html>`__
-and `usage blog post <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__
-illustrate the simplicity and power of text processing with the library.
+In the `FAQ <faq.html>`_ you can learn from others users problems.
 
-If you need Unicode (so called ‘WideString’ in Delphi) - see `How to use
-unicode <tregexpr.html#unicode>`__.
+Ready to run Windows application
+`REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>`__
+will help you learn and debug regular expressions.
 
 Feedback
 ~~~~~~~~

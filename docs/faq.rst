@@ -25,6 +25,14 @@ Regular expressions with (?=...) do not work
 Look ahead is not implemented in the TRegExpr. But in many cases you can
 easily `replace it with simple subexpressions <regular_expressions.html#lookahead>`_.
 
+
+Does it support Unicode?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Answer**
+
+`How to use Unicode <tregexpr.html#unicode>`__
+
 Why does TRegExpr return more then one line?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

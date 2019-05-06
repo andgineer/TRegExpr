@@ -199,7 +199,7 @@ this is just wrong order to be treated as line separator.
     `TRegExpr <tregexpr.html>`__
 
     Multiline processing can be tuned with of properties
-    `LineSeparators <tregexpr.html#lineseparators>`_ and
+    `LineSeparators <tregexpr.html#lineseparators>`__ and
     `LinePairedSeparator <tregexpr.html#linepairedseparator>`_.
 
     So you can use Unix style separators ``\n`` or DOS/Windows style
@@ -405,8 +405,7 @@ m, multi-line strings
 Treat string as multiple lines. So ``^`` and ``$`` matches the start or end
 of any line anywhere within the string.
 
-See also `Line
-separators <tregexpr.html#lineseparators>`_.
+See also `Line Boundaries <tregexpr.html#lineseparators>`__.
 
 .. _s:
 
@@ -416,8 +415,7 @@ s, single line strings
 Treat string as single line. So ``.`` matches any
 character whatsoever, even a line separators.
 
-See also `Line
-separators <tregexpr.html#lineseparators>`_, which it
+See also `Line Boundaries <tregexpr.html#lineseparators>`__, which it
 normally would not match.
 
 .. _g:
@@ -554,9 +552,7 @@ the comment.
 Afterword
 ---------
 
-In the `FAQ <faq.html>`_ you can learn from others users problems.
-
-You can play with regular expressions using compiled for Windows
-`REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`_.
-
+In this ancient blog post from previous century I illustrate some usages of
+regular expressions: `Text processing from bird's eye
+view <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__.
 

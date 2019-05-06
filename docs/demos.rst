@@ -1,6 +1,8 @@
 Demos
 =====
 
+Demo code for `TRegExpr <index.html>`__
+
 Introduction
 ------------
 
@@ -9,30 +11,6 @@ the `r.e.syntax <regular_expressions.html>`__.
 
 TRegExpr interface described in `TRegExpr
 interface <tregexpr.html>`__.
-
-Some of demo-projects use extended VCL properties which exists only in
-Delphi 4 or higher. While compiling in Delphi 3 or Delphi 2 you'll
-receive some error messages about unknown properties. You may ignore it
-- this properties is needed only for resizing and justification of
-components then form change it's size.
-
-Windows compiled
-----------------
-
-First of all I recommend You to read `Text processing from bird's eye
-view <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__.
-
-Ready to run Windows application
-`REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/REStudio.exe>`__
-to learn and debug regular expressions.
-
-Please, note that there are localized demos available (with comments in
-source code on national languages).
-
-This localized versions distributed in localized full TRegExpr packages,
-and in separate localized documentation packages (when you unpack this
-documentation package in TRegExpr directory the localized demos
-overwrite English ones).
 
 Text2HTML
 ---------
@@ -48,7 +26,7 @@ This unit contains functions to decorate hyper-links.
 
 For example, replaces ``www.masterAndrey.com`` with
 ``<a href="http://www.masterAndrey.com">www.masterAndrey.com</a>``
-or ``anso@mail.ru`` with ``<a href="mailto:filbert@yandex.ru">filbert@yandex.ru</a>``.
+or ``filbert@yandex.ru`` with ``<a href="mailto:filbert@yandex.ru">filbert@yandex.ru</a>``.
  
 .. code-block:: pascal
 

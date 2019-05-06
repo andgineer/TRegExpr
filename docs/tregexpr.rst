@@ -29,13 +29,8 @@ Expression
 
 Regular expression.
 
-For optimization, TRegExpr will automatically compiles it into ``P-code``
-(you can see it with help of Dump_ method) and stores in internal
-structures.
-
-Regular expresion is re-compiled only if you call Exec_, ExecNext_,
-Substitute_, Dump_, etc. And only if Expression_
-was changed after last compilation.
+For optimization regular expression is automatically compiled into ``P-code``.
+Human-readable form of the ``P-code`` returns by Dump_.
 
 In case of any errors in compilation, ``Error`` method is called (by
 default ``Error`` raises exception ERegExpr_)
@@ -43,8 +38,8 @@ default ``Error`` raises exception ERegExpr_)
 ModifierStr
 ~~~~~~~~~~~
 
-Set or get default values of
-`r.e.modifiers <regular_expressions.html#modifiers>`__.
+Set or get values of
+`regular expression modifiers <regular_expressions.html#modifiers>`__.
 
 Format of the string is similar as in
 `(?ismx-ismx) <regular_expressions.html#inlinemodifiers>`__. For example
@@ -146,6 +141,9 @@ Any assignment to this property clears Match_, MatchPos_ and MatchLen_.
 Substitute
 ~~~~~~~~~~
 
+.. literalinclude:: ../src/RegExpr.pas
+   :lines: 470
+
 Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular expression
 and ``$n`` replaced by occurence of subexpression number ``n``.
 
@@ -191,6 +189,9 @@ object creation.
 
 Replace, ReplaceEx
 ~~~~~~~~~~~~~~~~~~
+
+.. literalinclude:: ../src/RegExpr.pas
+   :lines: 476-483, 497-499
 
 Returns the string with r.e. occurencies replaced by the replace string.
 
@@ -444,6 +445,10 @@ See also Split_ if you prefer to create ``TRegExpr`` instance explicitly.
 ReplaceRegExpr
 ~~~~~~~~~~~~~~
 
+.. literalinclude:: ../src/RegExpr.pas
+   :lines: 671-672, 676-687
+
+
 Returns the string with regular expressions replaced by the ``AReplaceStr``.
 See also Replace_ if you prefer to create TRegExpr instance explicitly.
 
@@ -546,13 +551,18 @@ ERegExpr
 Unicode
 -------
 
-TRegExpr now supports UniCode, but it works very slow :(
+UniCode slows down performance so use it only if you really need Unicode support.
 
-Who want to optimize it ? ;)
+To use Unicode remove ``off``
+in `regexpr.pas <https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__
+so it became ``{$DEFINE UniCode}``.
 
-Use it only if you really need Unicode support !
+.. literalinclude:: ../src/RegExpr.pas
+   :lines: 85-86
+   :lineno-start: 85
+   :linenos:
 
-Remove ``.`` in ``{.$DEFINE UniCode}`` in regexpr.pas. After that all
-strings will be treated as WideString.
+
+After that all strings will be treated as WideString.
 
  
