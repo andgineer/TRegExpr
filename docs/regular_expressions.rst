@@ -143,6 +143,8 @@ You may use ``\w``, ``\d`` and ``\s`` within
 Metacharacters
 --------------
 
+.. _lineseparators:
+
 Line Boundaries
 ~~~~~~~~~~~~~~~
 

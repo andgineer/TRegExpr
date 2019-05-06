@@ -307,8 +307,7 @@ LineSeparators
 line separators (like ``\n`` in Unix), initially filled with
 RegExprLineSeparators_ global constant)
 
-see also `about line
-separators <regular_expressions.html#line-separators>`__
+see also `Line Boundaries <regular_expressions.html#lineseparators>`__
 
 LinePairedSeparator
 ~~~~~~~~~~~~~~~~~~~
@@ -318,8 +317,7 @@ paired line separator (like ``\r\n`` in DOS and Windows).
 must contain exactly two chars or no chars at all, initially filled with
 RegExprLinePairedSeparator global constant)
 
-see also `about line
-separators <regular_expressions.html#line-separators>`__
+see also `Line Boundaries <regular_expressions.html#lineseparators>`__
 
 For example, if you need Unix-style behaviour, assign
 ``LineSeparators := #$a`` and ``LinePairedSeparator := ''`` (empty string).
@@ -336,8 +334,8 @@ RegExprLine[Paired]Separator[s] global constants):
     LineSeparators := #$d#$a; 
     LinePairedSeparator := #$d#$a
 
-Behaviour of this mode is detailed described in the `syntax
-section <regular_expressions.html#syntax_line_separators>`__.
+Behaviour of this mode is detailed described in the
+`Line Boundaries <regular_expressions.html#lineseparators>`__.
 
 InvertCase
 ~~~~~~~~~~
@@ -350,8 +348,8 @@ Compile
 
 Compiles regular expression.
 
-Useful for example for GUI regular expressions editors - to check regular expression
-without using it.
+Useful for example for GUI regular expressions editors - to check
+regular expression without using it.
 
 Dump
 ~~~~
