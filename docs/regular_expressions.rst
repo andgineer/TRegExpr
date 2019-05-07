@@ -1,7 +1,7 @@
 .. include:: translations_list.rst
 
-Regular expressions
-===================
+Regular expressions (RegEx)
+===========================
 
 Introduction
 ------------
@@ -26,11 +26,11 @@ Any single character matches itself.
 A series of characters matches that series of characters in the input
 string.
 
-================== ======================
-Regular expression Matches
-================== ======================
-``foobar``         ``foobar``
-================== ======================
+========== ==========
+RegEx      Matches
+========== ==========
+``foobar`` ``foobar``
+========== ==========
 
 Non-Printable Characters
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,15 +38,19 @@ Non-Printable Characters
 To represent non-printable character in regular expression you use ``\x..``:
 
 ============== ====================================================================================
+RegEx          Matches
+============== ====================================================================================
 ``\xnn``       character with hex code ``nn``
 ``\x{nnnn}``   character with hex code ``nnnn`` (one byte for plain text and two bytes for Unicode)
 ``foo\x20bar`` ``foo bar`` (note space in the middle)
 ``\tfoobar``   ``foobar`` preceded by TAB
 ============== ====================================================================================
 
-There are a number of one-character codes for non-printable characters
-just like in ``C`` language, they are prefixed by ``\``:
+There are a number of predefined ``escape-codes`` for non-printable characters,
+just like in ``C`` language:
 
+======== ==========================================================================
+RegEx    Matches
 ======== ==========================================================================
 ``\t``   tab (HT/TAB), same as ``\x09``
 ``\n``   newline (NL), same as ``\x0a``
@@ -61,12 +65,14 @@ just like in ``C`` language, they are prefixed by ``\``:
 Escaping
 ~~~~~~~~
 
-If you want to use character ``\`` in regular expression just
+If you want to use character ``\`` by itself, not as part of ``escape-code``, just
 prefix it with ``\``, like that: ``\\``.
 
-In fact you can ``escape`` with ``\`` any character that has special meaning
+In fact you can prefix (or ``escape``) with ``\`` any character that has special meaning
 in regular expressions.
 
+=============== ====================================================
+RegEx           Matches
 =============== ====================================================
 ``\^FooBarPtr`` ``^FooBarPtr``
 ``\[a\]``       ``[a]`` this is not `character class <#userclass>`__
@@ -88,6 +94,8 @@ You can ``invert`` the class - if the first character after the ``[`` is
 in the class.
 
 ================= =============================================================
+RegEx             Matches
+================= =============================================================
 ``foob[aeiou]r``  ``foobar``, ``foober`` etc but not ``foobbr``, ``foobcr`` etc
 ``foob[^aeiou]r`` ``foobbr``, ``foobcr`` etc but not ``foobar``, ``foober`` etc
 ================= =============================================================
@@ -101,6 +109,8 @@ or end of the list, or `escape <#escape>`__ it with a backslash.
 If you want ``]`` or ``[`` you may place it at the start of list or escape it
 with a backslash.
 
+============= ==================================
+RegEx         Matches
 ============= ==================================
 ``[-az]``     ``a``, ``z`` and ``-``
 ``[az-]``     ``a``, ``z`` and ``-``
@@ -116,6 +126,8 @@ There are a number of predefined character classes that save your
 typing - you do not specify them by hand and can just use them.
 
 ======     =========================================
+RegEx      Matches
+======     =========================================
 ``\w``     an alphanumeric character (including ``_``)
 ``\W``     a nonalphanumeric
 ``\d``     a numeric character
@@ -127,6 +139,8 @@ typing - you do not specify them by hand and can just use them.
 You may use ``\w``, ``\d`` and ``\s`` within
 `user character classes <User Character Classes_>`_.
 
+=============== =====================================================================================
+RegEx           Matches
 =============== =====================================================================================
 ``foob\dr``     ``foob1r``, ``foob6r`` and so on but not ``foobar``, ``foobbr`` and so on
 ``foob[\w\s]r`` ``foobar``, ``foob r``, ``foobbr`` and so on but not ``foob1r``, ``foob=r`` and so on
@@ -155,6 +169,8 @@ If you want mathematically correct description look at
 
 Here is simplified version.
 
+============= ================================================
+RegEx         Matches
 ============= ================================================
 ``^``         start of line
 ``$``         end of line
@@ -211,6 +227,8 @@ Word Boundaries
 ~~~~~~~~~~~~~~~
 
 ====== ===================
+RegEx  Matches
+====== ===================
 ``\b`` a word boundary
 ``\B`` a non-word boundary
 ====== ===================
@@ -230,6 +248,8 @@ Quantifier
 Any item of a regular expression may be followed by quantifier.
 Quantifier specifies number of repetition of the item.
 
+========== ============================================================
+RegEx      Matches
 ========== ============================================================
 ``{n}``    exactly ``n`` times
 ``{n,}``   at least ``n`` times
@@ -251,6 +271,8 @@ There is no limit to the size of ``n`` or ``m``.
 If a curly bracket occurs in any other context, it is treated as a
 regular character.
 
+================== ========================================================================
+RegEx              Matches
 ================== ========================================================================
 ``foob.*r``        ``foobar``,  ``foobalkjdflkj9r`` and ``foobr``
 ``foob.+r``        ``foobar``, ``foobalkjdflkj9r`` but not ``foobr``
@@ -275,6 +297,8 @@ Use ``?`` to make any quantifier ``non-greedy``.
 For string ``abbbbc``:
 
 =========== ============
+RegEx       Matches
+=========== ============
 ``b+``      ``bbbb``
 ``b+?``     ``b``
 ``b*?``     empty string
@@ -285,6 +309,7 @@ For string ``abbbbc``:
 You can switch all quantifiers into ``non-greedy`` mode (`modifier /g <#g>`_,
 below we use `in-line modifier change <#inlinemodifiers>`_).
 
+RegEx           Matches
 ============ ============
 ``(?-g)b+``  ``b``
 ============ ============
@@ -316,6 +341,8 @@ Also remember that ``|`` is interpreted as a literal within square
 brackets, so if you write ``[fee|fie|foe]`` you’re really only matching
 ``[feio|]``.
 
+================ ========================
+RegEx            Matches
 ================ ========================
 ``foo(bar|foo)`` ``foobar`` or ``foofoo``
 ================ ========================
@@ -363,6 +390,8 @@ Backreferences
 Metacharacters ``\1`` through ``\9`` are interpreted as backreferences.
 ``\n`` matches previously matched subexpression ``n``.
 
+=========== ============================
+RegEx       Matches
 =========== ============================
 ``(.)\1+``  ``aaaa`` and ``cc``
 ``(.+)\1+`` also ``abab`` and ``123123``
@@ -484,6 +513,8 @@ you need all Russian characters.
 When the modifier is ``On``:
 
 ======= =======================================
+RegEx   Matches
+======= =======================================
 ``а-я`` chars from ``а`` to ``я`` and ``ё``
 ``А-Я`` chars from ``А`` to ``Я`` and ``Ё``
 ``а-Я`` all russian symbols
@@ -536,6 +567,8 @@ that follows after the operator. So in ``((?i)Saint)-Petersburg`` it affects
 only subexpression ``((?i)Saint)`` so it will match ``saint-Petersburg``
 but not ``saint-petersburg``.
 
+============================= ==================================================
+RegEx                         Matches
 ============================= ==================================================
 ``(?i)Saint-Petersburg``      ``Saint-petersburg`` and ``Saint-Petersburg``
 ``(?i)Saint-(?-i)Petersburg`` ``Saint-Petersburg`` but not ``Saint-petersburg``

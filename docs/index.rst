@@ -44,6 +44,13 @@ Feedback
 If you see any problems,
 please `create the bug <https://github.com/masterandrey/TRegExpr/issues>`_.
 
+Source code
+~~~~~~~~~~~
+Pure Object Pascal.
+
+- `Original version <https://github.com/masterandrey/TRegExpr>`_
+- `FreePascal fork (GitHub mirror of the SubVersion) <https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_
+
 Documentation
 ~~~~~~~~~~~~~
 
@@ -69,13 +76,6 @@ and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tr
 
 They are already machine-translated and need only proof-reading
 and may be some copy-pasting from old translations.
-
-Source code
-~~~~~~~~~~~
-Pure Object Pascal.
-
-- `Original version <https://github.com/masterandrey/TRegExpr>`_
-- `FreePascal fork (GitHub mirror of the SubVersion) <https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_
 
 Gratitude
 ~~~~~~~~~
