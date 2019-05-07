@@ -343,8 +343,8 @@ Behaviour of this mode is detailed described in the
 InvertCase
 ~~~~~~~~~~
 
-Set this property if you want to override case-insensitive
-functionality.
+Invertion of character case. Redefine it if you want different
+behaviour.
 
 Compile
 ~~~~~~~

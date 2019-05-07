@@ -32,8 +32,8 @@ RegEx      Matches
 ``foobar`` ``foobar``
 ========== ==========
 
-Non-Printable Characters
-~~~~~~~~~~~~~~~~~~~~~~~~
+Non-Printable Characters (escape-codes)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To represent non-printable character in regular expression you use ``\x..``:
 
@@ -43,22 +43,22 @@ RegEx          Matches
 ``\xnn``       character with hex code ``nn``
 ``\x{nnnn}``   character with hex code ``nnnn`` (one byte for plain text and two bytes for Unicode)
 ``foo\x20bar`` ``foo bar`` (note space in the middle)
-``\tfoobar``   ``foobar`` preceded by TAB
 ============== ====================================================================================
 
 There are a number of predefined ``escape-codes`` for non-printable characters,
 just like in ``C`` language:
 
-======== ==========================================================================
-RegEx    Matches
-======== ==========================================================================
-``\t``   tab (HT/TAB), same as ``\x09``
-``\n``   newline (NL), same as ``\x0a``
-``\r``   car.return (CR), same as ``\x0d``
-``\f``   form feed (FF), same as ``\x0c``
-``\a``   alarm (BEL), same as ``\x07``
-``\e``   escape (ESC), same as ``\x1b``
-======== ==========================================================================
+============ ==========================================================================
+RegEx        Matches
+============ ==========================================================================
+``\t``       tab (HT/TAB), same as ``\x09``
+``\n``       newline (NL), same as ``\x0a``
+``\r``       car.return (CR), same as ``\x0d``
+``\f``       form feed (FF), same as ``\x0c``
+``\a``       alarm (BEL), same as ``\x07``
+``\e``       escape (ESC), same as ``\x1b``
+``\tfoobar`` ``foobar`` preceded by TAB
+============ ==========================================================================
 
 .. _escape:
 
@@ -71,12 +71,12 @@ prefix it with ``\``, like that: ``\\``.
 In fact you can prefix (or ``escape``) with ``\`` any character that has special meaning
 in regular expressions.
 
-=============== ====================================================
+=============== ========================================================================
 RegEx           Matches
-=============== ====================================================
-``\^FooBarPtr`` ``^FooBarPtr``
+=============== ========================================================================
+``\^FooBarPtr`` ``^FooBarPtr`` this is ``^`` and not `start of line <#lineseparators>`__
 ``\[a\]``       ``[a]`` this is not `character class <#userclass>`__
-=============== ====================================================
+=============== ========================================================================
 
 Character Classes
 -----------------
@@ -89,6 +89,12 @@ User Character Classes
 Character class is a list of characters inside ``[]``.
 The class matches any **one** character listed in this class.
 
+================= =============================================================
+RegEx             Matches
+================= =============================================================
+``foob[aeiou]r``  ``foobar``, ``foober`` etc but not ``foobbr``, ``foobcr`` etc
+================= =============================================================
+
 You can ``invert`` the class - if the first character after the ``[`` is
 ``^``, then the class matches any character **but** characters listed
 in the class.
@@ -96,7 +102,6 @@ in the class.
 ================= =============================================================
 RegEx             Matches
 ================= =============================================================
-``foob[aeiou]r``  ``foobar``, ``foober`` etc but not ``foobbr``, ``foobcr`` etc
 ``foob[^aeiou]r`` ``foobbr``, ``foobcr`` etc but not ``foobar``, ``foober`` etc
 ================= =============================================================
 
@@ -122,19 +127,19 @@ RegEx         Matches
 Predefined Character Classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are a number of predefined character classes that save your
-typing - you do not specify them by hand and can just use them.
+There are a number of predefined character classes that keeps regular expressions
+more compact.
 
-======     =========================================
+======     ==============================================
 RegEx      Matches
-======     =========================================
+======     ==============================================
 ``\w``     an alphanumeric character (including ``_``)
 ``\W``     a nonalphanumeric
-``\d``     a numeric character
+``\d``     a numeric character (same as ``[0123456789]``)
 ``\D``     a non-numeric
 ``\s``     any space (same as ``[ \t\n\r\f]``)
 ``\S``     a non space
-======     =========================================
+======     ==============================================
 
 You may use ``\w``, ``\d`` and ``\s`` within
 `user character classes <User Character Classes_>`_.
@@ -163,11 +168,6 @@ Boundaries
 
 Line Boundaries
 ~~~~~~~~~~~~~~~
-
-If you want mathematically correct description look at
-`www.unicode.org <http://www.unicode.org/unicode/reports/tr18/>`__.
-
-Here is simplified version.
 
 ============= ================================================
 RegEx         Matches
@@ -222,6 +222,10 @@ this is just wrong order to be treated as line separator.
 
     So you can use Unix style separators ``\n`` or DOS/Windows style
     ``\r\n`` or mix them together (as in described above default behaviour).
+
+If you prefer mathematically correct description you can find it on
+`www.unicode.org <http://www.unicode.org/unicode/reports/tr18/>`__.
+
 
 Word Boundaries
 ~~~~~~~~~~~~~~~
@@ -309,10 +313,11 @@ RegEx       Matches
 You can switch all quantifiers into ``non-greedy`` mode (`modifier /g <#g>`_,
 below we use `in-line modifier change <#inlinemodifiers>`_).
 
-RegEx           Matches
-============ ============
+============ =======
+RegEx        Matches
+============ =======
 ``(?-g)b+``  ``b``
-============ ============
+============ =======
 
 The choice
 ----------
@@ -372,7 +377,7 @@ opening parenthesis (including nested subexpressions).
 First subexpression has number ``1``.
 Whole regular expression has number ``0``.
 
-.. hint::
+.. tip::
 
     regular expression ``(foo(bar))``
 
@@ -437,7 +442,7 @@ m, multi-line strings
 Treat string as multiple lines. So ``^`` and ``$`` matches the start or end
 of any line anywhere within the string.
 
-See also `Line Boundaries <tregexpr.html#lineseparators>`__.
+See also `Line Boundaries <#lineseparators>`__.
 
 .. _s:
 
@@ -447,7 +452,7 @@ s, single line strings
 Treat string as single line. So ``.`` matches any
 character whatsoever, even a line separators.
 
-See also `Line Boundaries <tregexpr.html#lineseparators>`__, which it
+See also `Line Boundaries <#lineseparators>`__, which it
 normally would not match.
 
 .. _g:
@@ -455,7 +460,8 @@ normally would not match.
 g, greediness
 ~~~~~~~~~~~~~
 
-`TRegExpr <index.html>`__ only modifier.
+.. note::
+    `TRegExpr <tregexpr.html>`__ only modifier.
 
 Switching it ``Off`` you’ll switch
 `quantifiers <#iterator>`__ into `non-greedy <#greedy>`__ mode.
@@ -499,7 +505,8 @@ octal or hex escapes.
 r, Russian ranges
 ~~~~~~~~~~~~~~~~~
 
-`TRegExpr <index.html>`__ only modifier.
+.. note::
+    `TRegExpr <tregexpr.html>`__ only modifier.
 
 In Russian ASCII table characters ``ё``/``Ё`` are placed separately
 from others.
@@ -588,7 +595,7 @@ the comment.
 Afterword
 ---------
 
-In this ancient blog post from previous century I illustrate some usages of
-regular expressions: `Text processing from bird's eye
-view <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__.
+In this `ancient blog post from previous
+century <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__
+I illustrate some usages of regular expressions.
 
