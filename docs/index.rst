@@ -1,3 +1,5 @@
+.. include:: translations_list.rst
+
 Introduction
 ~~~~~~~~~~~~
 

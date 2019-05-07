@@ -118,6 +118,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/translations_list.rst">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/tregexpr.rst">
           <value>
             <set />
@@ -178,7 +183,72 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../masterandrey.com/_layouts/redirected.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/404.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/_layouts/redirected.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/pages/en/about.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/pages/en/demos.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/pages/en/faq.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/pages/en/index.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/pages/en/regexp_syntax.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/pages/en/tregexpr_interface.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../regexpstudio.com/pages/ru/regexp_syntax.md">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/work/compbiovis/backend/api/swagger.yaml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/dev_docker.sh">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/rabbit.sh">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/rabbit_create_users.sh">
           <value>
             <set />
           </value>
@@ -194,6 +264,11 @@
           </value>
         </entry>
         <entry key="/work/compbiovis/backend/server/controllers/projects/list.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/server/controllers/projects/profile/update.py">
           <value>
             <set />
           </value>
@@ -214,6 +289,21 @@
           </value>
         </entry>
         <entry key="/work/compbiovis/backend/tests/test_project_create.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/tests/test_project_profile.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/tests/test_project_profile_update_by_shared.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/worker/src/chop_chop.py">
           <value>
             <set />
           </value>
