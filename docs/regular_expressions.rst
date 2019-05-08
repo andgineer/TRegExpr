@@ -377,7 +377,7 @@ opening parenthesis (including nested subexpressions).
 First subexpression has number ``1``.
 Whole regular expression has number ``0``.
 
-.. highlights:: For example for input string ``foobar``:
+.. highlights:: For example for input string ``foobar``
     regular expression ``(foo(bar))`` will find:
 
     ============= ==========
