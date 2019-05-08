@@ -1,8 +1,9 @@
 .. list-table::
-   :widths: 50 10 10 10 10 10
+   :widths: 40 10 10 10 10 10 10
    :header-rows: 0
 
    * -
+     - `English <https://regex.masterandrey.com/en/latest/index.html>`__
      - `Русский <https://regex.masterandrey.com/ru/latest/index.html>`__
      - `Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__
      - `Български <https://regex.masterandrey.com/bg/latest/index.html>`__

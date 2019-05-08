@@ -1,0 +1,47 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, Andrey Sorokin
+# This file is distributed under the same license as the TRegExpr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Andrey Sorokin <filbert@yandex.ru>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: TRegExpr 0.952\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-08 11:59+0300\n"
+"PO-Revision-Date: 2019-05-08 09:12+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/masterAndrey/teams/98461/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# 386506b93c2b4e449857ff76081f8af7
+#: ../../translations_list.rst:6
+msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+
+# 3f15ad7c17fe4af08cf2ffe509438196
+#: ../../translations_list.rst:7
+msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+
+# d06176a22a7a4f5f81459dd82dc88ae4
+#: ../../translations_list.rst:8
+msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+
+# 3ac4578f257a41c4998b89bd434ba1fe
+#: ../../translations_list.rst:9
+msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
+msgstr "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
+
+# c1f75edf11a44b2aa9b1648c210a8fd2
+#: ../../translations_list.rst:10
+msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"

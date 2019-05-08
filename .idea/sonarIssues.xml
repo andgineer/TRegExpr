@@ -73,12 +73,122 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/bg/LC_MESSAGES/demos.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/bg/LC_MESSAGES/index.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/bg/LC_MESSAGES/regular_expressions.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/bg/LC_MESSAGES/tregexpr.po">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/locale/bg_BG/LC_MESSAGES/index.po">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/de/LC_MESSAGES/demos.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/de/LC_MESSAGES/index.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/de/LC_MESSAGES/regular_expressions.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/de/LC_MESSAGES/tregexpr.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/es/LC_MESSAGES/demos.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/es/LC_MESSAGES/index.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/es/LC_MESSAGES/regular_expressions.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/es/LC_MESSAGES/tregexpr.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/fr/LC_MESSAGES/demos.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/fr/LC_MESSAGES/faq.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/fr/LC_MESSAGES/index.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/fr/LC_MESSAGES/regular_expressions.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/fr/LC_MESSAGES/tregexpr.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/demos.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/faq.po">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/index.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/regular_expressions.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/translations_list.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/tregexpr.po">
           <value>
             <set />
           </value>
@@ -299,6 +409,11 @@
           </value>
         </entry>
         <entry key="/work/compbiovis/backend/tests/test_project_profile_update_by_shared.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/configs/template/backend_log.yaml">
           <value>
             <set />
           </value>

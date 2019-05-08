@@ -1,275 +1,271 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2019, Andrey Sorokin
 # This file is distributed under the same license as the TRegExpr package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
-#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-04 19:18+0300\n"
-"PO-Revision-Date: 2019-05-04 07:41+0000\n"
+"POT-Creation-Date: 2019-05-08 11:59+0300\n"
+"PO-Revision-Date: 2019-05-08 09:12+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Bulgarian "
-"(https://www.transifex.com/masterAndrey/teams/98461/bg/)\n"
+"Language-Team: Bulgarian (https://www.transifex.com/masterAndrey/teams/98461/bg/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.3.4\n"
+"Language: bg\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# 38c540a453ae4959b81179309d71fad2
-#: ../../tregexpr.rst:2
+# 3f5c4b46b8044bd9bb9061c9a90ab0ab
+#: ../../translations_list.rst:6
+msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+
+# 74a1815c08824b93b748a2883668627d
+#: ../../translations_list.rst:7
+msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+
+# b407bd977a834f6795a9fc68d4a38360
+#: ../../translations_list.rst:8
+msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+
+# 03b3613482794060b61394b75c161644
+#: ../../translations_list.rst:9
+msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
+msgstr "`Френски <https://regex.masterandrey.com/fr/latest/index.html>`__"
+
+# 3257c3d780c54ed7814b9a582a7fbf59
+#: ../../translations_list.rst:10
+msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+
+# f6ada2bfe25f4d65bca5318ec70927a1
+#: ../../tregexpr.rst:4
 msgid "TRegExpr"
 msgstr "TRegExpr"
 
-# 1b35c40b58434ce08011ce8b4b1281dd
-#: ../../tregexpr.rst:4
-#, fuzzy
+# c6fc1544642144a78e7659f7eb4e684d
+#: ../../tregexpr.rst:6
 msgid ""
-"Implements `regular expressions <regular_expressions.html>`_ in pure "
-"pascal. Is compatible with Free Pascal, Delphi 2-7, Borland C++ Builder "
-"3-6."
+"Implements `regular expressions <regular_expressions.html>`_ in pure pascal."
+" Is compatible with Free Pascal, Delphi 2-7, Borland C++ Builder 3-6."
 msgstr ""
 "Изпълнява &quot;регулярни изрази&quot; <regular_expressions.html> в чист "
-"паскал."
+"паскал. Съвместим е с Free Pascal, Delphi 2-7, Borland C ++ Builder 3-6."
 
-# 5e623a73afae41c688b18834dc47b966
-#: ../../tregexpr.rst:7
+# 2ba3cf26da5c4829b74b58094c4c32bc
+#: ../../tregexpr.rst:9
 msgid ""
 "To use it just copy `source code "
 "<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
 "into your project."
 msgstr ""
 "За да го използвате просто копирайте `изходния код "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
-"във вашия проект."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ във"
+" вашия проект."
 
-# 0c059da7ea744524a21dca4c03eb5e08
-#: ../../tregexpr.rst:10
-#, fuzzy
+# 41ec1f45ad7d43a8a3d7425e3466ace5
+#: ../../tregexpr.rst:12
 msgid ""
 "The library had already included into `Lazarus (Free Pascal) "
-"<http://wiki.freepascal.org/Regexpr>`_ project so you do not need to copy"
-" anything if you use `Lazarus <https://www.lazarus-ide.org/>`_."
+"<http://wiki.freepascal.org/Regexpr>`_ project so you do not need to copy "
+"anything if you use `Lazarus <https://www.lazarus-ide.org/>`_."
 msgstr ""
 "Библиотеката вече беше включена в `Lazarus (Free Pascal) "
-"<http://wiki.freepascal.org/Regexpr>`_ проекта, така че не е необходимо "
-"да копирате нищо, ако използвате` Lazarus <https://www.lazarus-"
-"ide.org/>`_."
+"<http://wiki.freepascal.org/Regexpr>`_ проекта, така че не е необходимо да "
+"копирате нищо, ако използвате` Lazarus <https://www.lazarus-ide.org/>`_."
 
-# dad2ce27a76a493999ee1dd0810dce84
-#: ../../tregexpr.rst:15
+# acbd4d5adc304679ae4e7e54886bbc24
+#: ../../tregexpr.rst:17
 msgid "TRegExpr class"
 msgstr "TRegExpr клас"
 
-# f98e72ac285e4fd3af6a40cd9dfeb110
-#: ../../tregexpr.rst:18
+# bb81bff294174f008b1e4a528b969e56
+#: ../../tregexpr.rst:20
 msgid "VersionMajor, VersionMinor"
 msgstr "VersionMajor, VersionMinor"
 
-# c7de356b46a449f9aa6a4e4f8f6ced23
-#: ../../tregexpr.rst:20
-#, fuzzy
+# 669a1f33a9644afb869c1aae34651c47
+#: ../../tregexpr.rst:22
 msgid "Return major and minor version, for example, for ``version 0.944``"
 msgstr ""
-"Върнете основната и второстепенната версия, например, за v. 0.944 "
-"VersionMajor = 0 и VersionMinor = 944"
+"Върнете основната и второстепенната версия, например, за &quot;версия "
+"0.944&quot;"
 
-# d000e079152d4589adc8e55f58fa9835
-#: ../../tregexpr.rst:24
-#, fuzzy
+# cf3a7bd8bcfd4c08912231dcb137e52d
+#: ../../tregexpr.rst:38
 msgid ""
 "VersionMajor = 0\n"
 "VersionMinor = 944"
-msgstr "VersionMajor, VersionMinor"
+msgstr "VersionMajor = 0 VersionMinor = 944"
 
-# 2a85e836d4e442a1b305660c3d54d7bf
-#: ../../tregexpr.rst:28
+# 9efe6569144e4c51b33536759af390f7
+#: ../../tregexpr.rst:30
 msgid "Expression"
 msgstr "изразяване"
 
-# 499be78f84734798bc8573020a1a2e9e
-#: ../../tregexpr.rst:30
+# 9ca99d5b12804cabafd89f462401fb87
+#: ../../tregexpr.rst:32
 msgid "Regular expression."
 msgstr "Редовен израз."
 
-# 02e15e8e7fa34ba298e31659e54e4603
-#: ../../tregexpr.rst:32
+# 07042b55db6d48399793fc80719d92b1
+#: ../../tregexpr.rst:34
 msgid ""
-"For optimization, TRegExpr will automatically compiles it into ``P-code``"
-" (you can see it with help of Dump_ method) and stores in internal "
-"structures."
+"For optimization regular expression is automatically compiled into "
+"``P-code``. Human-readable form of the ``P-code`` returns by Dump_."
 msgstr ""
-"За оптимизация, TRegExpr автоматично ще го компилира в `` P-code "
-"&#39;&#39; (можете да го видите с помощта на метода Dump_) и съхранява "
-"във вътрешни структури."
+"За оптимизация регулярният израз автоматично се компилира в `` P-code "
+"&#39;&#39;. Човешки четима форма на `` P-code`` се връща от Dump_."
 
-# 3139f80e8050479c865cd7cba0466c84
-#: ../../tregexpr.rst:36
+# 86c6be00dc334f83a36000bc211ed5da
+#: ../../tregexpr.rst:37
 msgid ""
-"Regular expresion is re-compiled only if you call Exec_, ExecNext_, "
-"Substitute_, Dump_, etc. And only if Expression_ was changed after last "
-"compilation."
-msgstr ""
-"Редовната експресия се прекомпилира само ако се обадите на Exec_, "
-"ExecNext_, Substitute_, Dump_ и т.н. И само ако Expression_ беше променен"
-" след последната компилация."
-
-# 06a068eb78bf456c915006f3b3fd050f
-#: ../../tregexpr.rst:40
-msgid ""
-"In case of any errors in compilation, ``Error`` method is called (by "
-"default ``Error`` raises exception ERegExpr_)"
+"In case of any errors in compilation, ``Error`` method is called (by default"
+" ``Error`` raises exception ERegExpr_)"
 msgstr ""
 "В случай на грешки при компилирането се извиква методът ``Error`` (по "
 "подразбиране ``Error`` повдига изключение ERegExpr_)"
 
-# 215faa741d804fa28e1ab58140732d42
-#: ../../tregexpr.rst:44
+# 5a6605f4dcc34c1a957509d8f8cb49a0
+#: ../../tregexpr.rst:41
 msgid "ModifierStr"
 msgstr "ModifierStr"
 
-# 99655fa0026c45faac10cbabc4fe8116
-#: ../../tregexpr.rst:46
+# acca0dc4581542b895d7f53d18b3d26d
+#: ../../tregexpr.rst:43
 msgid ""
-"Set or get default values of `r.e.modifiers "
+"Set or get values of `regular expression modifiers "
 "<regular_expressions.html#modifiers>`__."
 msgstr ""
-"Задайте или получите стойности по подразбиране на `r.e.modifiers "
+"Задайте или получите стойности на „модификатори на регулярни изрази "
 "<regular_expressions.html#modifiers>`__."
 
-# fd969ed7b04f470c9ebb28f3578036ba
-#: ../../tregexpr.rst:49
+# 4cbbc037abff4a33a109405aa0a804e0
+#: ../../tregexpr.rst:46
 msgid ""
 "Format of the string is similar as in `(?ismx-ismx) "
-"<regular_expressions.html#inlinemodifiers>`__. For example ``ModifierStr "
-":= ‘i-x’`` will switch on modifier `/i <regular_expressions.html#i>`_, "
-"switch off `/x <regular_expressions.html#x>`_ and leave unchanged others."
+"<regular_expressions.html#inlinemodifiers>`__. For example ``ModifierStr := "
+"‘i-x’`` will switch on modifier `/i <regular_expressions.html#i>`_, switch "
+"off `/x <regular_expressions.html#x>`_ and leave unchanged others."
 msgstr ""
 "Форматът на низа е подобен на този в ((? Ismx-ismx) "
 "<regular_expressions.html#inlinemodifiers>`__. Например ``ModifierStr: = "
-"&#39;i-x&#39;`` ще включи модификатор `/ i "
-"<regular_expressions.html#i>`_, изключете`/x "
-"<regular_expressions.html#x>`_ и оставят непроменени други."
+"&#39;i-x&#39;`` ще включи модификатор `/ i <regular_expressions.html#i>`_, "
+"изключете`/x <regular_expressions.html#x>`_ и оставят непроменени други."
 
-# 46f882f302864c8397addb697a2c7237
-#: ../../tregexpr.rst:54
+# c9a8779521dc4a95a352d82d3d001de6
+#: ../../tregexpr.rst:51
 msgid "If you try to set unsupported modifier, ``Error`` will be called."
 msgstr ""
-"Ако се опитате да зададете неподдържан модификатор, ще се извика `` Error"
-" &#39;&#39;."
+"Ако се опитате да зададете неподдържан модификатор, ще се извика `` Error "
+"&#39;&#39;."
 
-# 5b0008685c3d416a8f51fdf5ca9c9b39
-#: ../../tregexpr.rst:57
+# 07656feb72e64c1bb32eb9d81b882c69
+#: ../../tregexpr.rst:54
 msgid "ModifierI"
 msgstr "ModifierI"
 
-# cc6e17a6d80e432b829fe0b6326f7a87
-#: ../../tregexpr.rst:59
-#, fuzzy
+# 2eefd23deafe4b0fa8e7937ac131fa79
+#: ../../tregexpr.rst:56
 msgid ""
 "`Modifier /i, \"case-insensitive\" <regular_expressions.html#i>`, "
 "initialized with RegExprModifierI_ value."
 msgstr ""
-"`Модификатор / x <regular_expressions.html#modifier_x>`__ - (“ eXtended "
-"синтаксис ”), инициализиран с` RegExprModifierX <#modifier_defs>`__ "
-"стойност."
+"&quot;Модификатор / i,&quot; нечувствителен към регистъра &quot; "
+"<regular_expressions.html#i> `, инициализиран с RegExprModifierI_ стойност."
 
-# 2f0047d555c14a3e8de98a7d8eb8ac50
-#: ../../tregexpr.rst:63
+# 7b0a4fae72a34023b6958073426bfac3
+#: ../../tregexpr.rst:60
 msgid "ModifierR"
 msgstr "ModifierR"
 
-# 839992bf0afb4ad192d60defd641dcc7
-#: ../../tregexpr.rst:65
-#, fuzzy
+# 9294c83c7d464fc3999db3e3290a1d89
+#: ../../tregexpr.rst:62
 msgid ""
-"`Modifier /r, \"Russian range extension\" <regular_expressions.html#r>`_,"
-" initialized with RegExprModifierR_ value."
+"`Modifier /r, \"Russian range extension\" <regular_expressions.html#r>`_, "
+"initialized with RegExprModifierR_ value."
 msgstr ""
-"`Модификатор / x <regular_expressions.html#modifier_x>`__ - (“ eXtended "
-"синтаксис ”), инициализиран с` RegExprModifierX <#modifier_defs>`__ "
+"`Модификатор / r,&quot; Разширение на руски диапазон &quot; "
+"<regular_expressions.html#r>`_, инициализирана с RegExprModifierR_ "
 "стойност."
 
-# e97c822721e74e1786b072722729f780
-#: ../../tregexpr.rst:69
+# fa8ce43ebea2464390e5a7cf3832120b
+#: ../../tregexpr.rst:66
 msgid "ModifierS"
 msgstr "модификатори"
 
-# cc6e17a6d80e432b829fe0b6326f7a87
-#: ../../tregexpr.rst:71
-#, fuzzy
+# 9d03d2b0139745c2a64fce71412650ac
+#: ../../tregexpr.rst:68
 msgid ""
 "`Modifier /s, \"single line strings\" <regular_expressions.html#s>`_, "
 "initialized with RegExprModifierS_ value."
 msgstr ""
-"`Модификатор / x <regular_expressions.html#modifier_x>`__ - (“ eXtended "
-"синтаксис ”), инициализиран с` RegExprModifierX <#modifier_defs>`__ "
-"стойност."
+"`Модификатор / и,&quot; единични редове &quot; <regular_expressions.html#s> "
+"`_, инициализиран с RegExprModifierS_ стойност."
 
-# 87ea32c8b21941b3a74914a398b7cc41
-#: ../../tregexpr.rst:75
+# 49d2d0930e8d408bad1ed86f04fb8418
+#: ../../tregexpr.rst:72
 msgid "ModifierG"
 msgstr "ModifierG"
 
-# cc6e17a6d80e432b829fe0b6326f7a87
-#: ../../tregexpr.rst:77
-#, fuzzy
+# 82a12a65e34b491abc50e4be07c63116
+#: ../../tregexpr.rst:74
 msgid ""
 "`Modifier /g, \"greediness\" <regular_expressions.html#g>`_, initialized "
 "with RegExprModifierG_ value."
 msgstr ""
-"`Модификатор / x <regular_expressions.html#modifier_x>`__ - (“ eXtended "
-"синтаксис ”), инициализиран с` RegExprModifierX <#modifier_defs>`__ "
-"стойност."
+"&quot;Модификатор / g,&quot; алчност &quot; <regular_expressions.html#g>`_,"
+" инициализирана с RegExprModifierG_ стойност."
 
-# d7509d9e72944d2ab7322ced7035c95c
-#: ../../tregexpr.rst:81
+# cac30152913c4758b912dc0f8aa9015e
+#: ../../tregexpr.rst:78
 msgid "ModifierM"
 msgstr "ModifierM"
 
-# cc6e17a6d80e432b829fe0b6326f7a87
-#: ../../tregexpr.rst:83
-#, fuzzy
+# 74947754af20491fa77a56730dcfd6af
+#: ../../tregexpr.rst:80
 msgid ""
 "`Modifier /m, \"multi-line strings\" <regular_expressions.html#m>`_, "
 "initialized with RegExprModifierM_ value."
 msgstr ""
-"`Модификатор / x <regular_expressions.html#modifier_x>`__ - (“ eXtended "
-"синтаксис ”), инициализиран с` RegExprModifierX <#modifier_defs>`__ "
+"`Модификатор / м,&quot; многолинейни низове &quot; "
+"<regular_expressions.html#m>`_, инициализирана с RegExprModifierM_ "
 "стойност."
 
-# c908bfb9a90d4362bf669175cde389cb
-#: ../../tregexpr.rst:87
+# e9f2c3d86823414ab21d0f7d4ac0943b
+#: ../../tregexpr.rst:84
 msgid "ModifierX"
 msgstr "ModifierX"
 
-# cc6e17a6d80e432b829fe0b6326f7a87
-#: ../../tregexpr.rst:89
-#, fuzzy
+# e4ab3891319d4e128fe142bcaec2db57
+#: ../../tregexpr.rst:86
 msgid ""
 "`Modifier /x, \"eXtended syntax\" <regular_expressions.html#x>`_, "
 "initialized with RegExprModifierX_ value."
 msgstr ""
-"`Модификатор / x <regular_expressions.html#modifier_x>`__ - (“ eXtended "
-"синтаксис ”), инициализиран с` RegExprModifierX <#modifier_defs>`__ "
-"стойност."
+"`Модификатор / x,&quot; eXtended syntax &quot; <regular_expressions.html#x> "
+"`_, инициализирана с RegExprModifierX_ стойност."
 
-# 0e704456c23e48f69ccdf14802505d25
-#: ../../tregexpr.rst:93
+# 8a816b489f0745c39a69535b2a4fc115
+#: ../../tregexpr.rst:90
 msgid "Exec"
 msgstr "Exec"
 
-# c75c32e6d732466a89f6d6b7571e09fe
-#: ../../tregexpr.rst:95
+# 93053631b86a477e8970455c4174bff4
+#: ../../tregexpr.rst:92
 msgid "Match the regular expression against ``AInputString``."
 msgstr "Съвпадение на регулярния израз срещу ``AInputString``."
 
-# 3140a065cf914827aafd54fc0ad5a940
-#: ../../tregexpr.rst:97
+# 88fda6c106e842999d18ab53cf6965c1
+#: ../../tregexpr.rst:94
 msgid ""
 "Available overloaded ``Exec`` version without ``AInputString`` - it uses "
 "``AInputString`` from previous call."
@@ -277,54 +273,56 @@ msgstr ""
 "Налична претоварена версия ``Exec`` без ``AInputString`` - използва `` "
 "AInputString`` от предишно повикване."
 
-# 566f3fb352474b34844dfa979a8e454b
-#: ../../tregexpr.rst:100
+# c5716a70cf9a4ce4bd5ec4890c8d30fd
+#: ../../tregexpr.rst:97
 msgid ""
 "See also global function ExecRegExpr_ that you can use without explicit "
 "``TRegExpr`` object creation."
 msgstr ""
-"Вижте също глобалната функция ExecRegExpr_, която можете да използвате "
-"без изричното създаване на ``TRegExpr`` обекта."
+"Вижте също глобалната функция ExecRegExpr_, която можете да използвате без "
+"изричното създаване на ``TRegExpr`` обекта."
 
-# 901418a6698f44f897e08a572bff77ce
-#: ../../tregexpr.rst:104
+# 98f603584fcd4c989d76d16c84b287d0
+#: ../../tregexpr.rst:101
 msgid "ExecNext"
 msgstr "ExecNext"
 
-# 7e6c90e9d304410d941046679fa81975
-#: ../../tregexpr.rst:106
+# 491afedfa5124977bbf311f2feaa9d9a
+#: ../../tregexpr.rst:103
 msgid "Find next match."
 msgstr "Намерете следващия мач."
 
-# 3692f197c5a9492598fb524452a29e49
-#: ../../tregexpr.rst:108
+# 4b08edcc4a494820b35af45ea76a55cb
+#: ../../tregexpr.rst:105
 msgid "Without parameter works the same as"
 msgstr "Без параметър работи същото като"
 
-# 9554d95b145844e9a0fac077f7e8a560
-#: ../../tregexpr.rst:112
+# aaba6a2002174ce48abc49eefcb7b576
+#: ../../tregexpr.rst:121
 msgid ""
 "if MatchLen [0] = 0\n"
 "  then ExecPos (MatchPos [0] + 1)\n"
 "  else ExecPos (MatchPos [0] + MatchLen [0]);"
 msgstr ""
+"ако MatchLen [0] = 0 тогава ExecPos (MatchPos [0] + 1) друго ExecPos "
+"(MatchPos [0] + MatchLen [0]);"
 
-# a925f1db28104a15bc3a4af88cf87295
-#: ../../tregexpr.rst:116
+# 446ece5ade984588853382497b09a935
+#: ../../tregexpr.rst:113
 msgid ""
 "Raises exception if used without preceeding successful call to Exec_, "
 "ExecPos_ or ExecNext_."
 msgstr ""
-"Повдига изключението, ако се използва без предишното успешно извикване на"
-" Exec_, ExecPos_ или ExecNext_."
+"Повдига изключението, ако се използва без предишното успешно извикване на "
+"Exec_, ExecPos_ или ExecNext_."
 
-# 0e849c7e466844a2b3c5b4b0579748a8
-#: ../../tregexpr.rst:119
+# 259213a78dbe47b78fe81182e3b3acee
+#: ../../tregexpr.rst:116
 msgid "So you always must use something like"
 msgstr "Така че винаги трябва да използвате нещо подобно"
 
-# a5be303551c641f986789278754e8e17
-#: ../../tregexpr.rst:123
+# 0471f94cfb8d478ea2d75ee7462b6cdf
+#: ../../tregexpr.rst:132
 msgid ""
 "if Exec (InputString)\n"
 "  then\n"
@@ -332,282 +330,323 @@ msgid ""
 "      { proceed results}\n"
 "    until not ExecNext;"
 msgstr ""
+"Ако Exec (InputString) след това повторете {приключи резултатите}, докато не"
+" ExecNext;"
 
-# accdc15bd2414c67959ca91416523513
-#: ../../tregexpr.rst:130
+# 6008bb3c35734139be6fc7c39b05be1a
+#: ../../tregexpr.rst:127
 msgid "ExecPos"
 msgstr "ExecPos"
 
-# 1172f9ed94d841d8846cf65a3c6ecd11
-#: ../../tregexpr.rst:132
+# 526a9a5814ba4b2daa4acae479c793e7
+#: ../../tregexpr.rst:129
 msgid "Finds match for ``InputString`` starting from ``AOffset`` position"
-msgstr "Намира съвпадение за ``InputString``, започвайки от позиция ``AOffset``"
-
-# 36293936a5c84f5ba15ca349c26ed788
-#: ../../tregexpr.rst:136
-msgid "AOffset = 1 // first char of InputString"
 msgstr ""
+"Намира съвпадение за ``InputString``, започвайки от позиция ``AOffset``"
 
-# 6fbc46c569d0493294875a3236143bab
-#: ../../tregexpr.rst:139
+# 228f8508ff304847963971361f4b2cd2
+#: ../../tregexpr.rst:145
+msgid "AOffset = 1 // first char of InputString"
+msgstr "AOffset = 1 // първи символ на InputString"
+
+# b11d067e95a84c589d430f5ef75cccef
+#: ../../tregexpr.rst:136
 msgid "InputString"
 msgstr "InputString"
 
-# df00a5840a8d4505bc9b7f529721be25
-#: ../../tregexpr.rst:141
+# e24c18ba00054fcd9189cbd7287a0333
+#: ../../tregexpr.rst:138
 msgid ""
-"Returns current input string (from last Exec_ call or last assign to this"
-" property)."
+"Returns current input string (from last Exec_ call or last assign to this "
+"property)."
 msgstr ""
 "Връща текущия входен низ (от последното Exec_ повикване или последното "
 "присвояване на това свойство)."
 
-# 91170fb5c01946fab9f13c46aa639c3b
-#: ../../tregexpr.rst:144
-msgid "Any assignment to this property clears Match_, MatchPos_ and MatchLen_."
-msgstr "Всяко присвояване на това свойство изчиства Match_, MatchPos_ и MatchLen_."
+# c79c65df0443421a8752a72f7c152e8e
+#: ../../tregexpr.rst:141
+msgid ""
+"Any assignment to this property clears Match_, MatchPos_ and MatchLen_."
+msgstr ""
+"Всяко присвояване на това свойство изчиства Match_, MatchPos_ и MatchLen_."
 
-# 4c92cf154cce41c1bc65dae09f0f4bb1
-#: ../../tregexpr.rst:147
+# 6337af00e1f64137948b7e888a6a6f1d
+#: ../../tregexpr.rst:144
 msgid "Substitute"
 msgstr "заместител"
 
-# a28509e7090645779c4c3e10fea38822
-#: ../../tregexpr.rst:149
+# 4a2b9b37c1594f97b3daebee0baead1d
+#: ../../tregexpr.rst:160
+msgid "function Substitute (const ATemplate : RegExprString) : RegExprString;"
+msgstr "функция Заместник (const ATemplate: RegExprString): RegExprString;"
+
+# e394bfd1c89c4793950d23fc0f1acaf3
+#: ../../tregexpr.rst:150
 msgid ""
 "Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular "
-"expression and ``$n`` replaced by occurence of subexpression number "
-"``n``."
+"expression and ``$n`` replaced by occurence of subexpression number ``n``."
 msgstr ""
-"Връща ``ATemplate`` с `` $ &amp; `` или ``$0``, заменен с цял редовен "
-"израз и `` $ n`` заменен с поява на под-експресионен номер ``n``."
+"Връща ``ATemplate`` с `` $ &amp; `` или ``$0``, заменен с цял редовен израз "
+"и `` $ n`` заменен с поява на под-експресионен номер ``n``."
 
-# a19c2993b6c043f4b02483215c240fd4
-#: ../../tregexpr.rst:152
+# 472840eb62304a00ba548020c0ce03b8
+#: ../../tregexpr.rst:153
 msgid ""
-"To place into template characters ``$`` or ``\\``, use prefix ``\\``, "
-"like ``\\\\`` or ``\\$``."
+"To place into template characters ``$`` or ``\\``, use prefix ``\\``, like "
+"``\\\\`` or ``\\$``."
 msgstr ""
-"За да поставите в шаблони символи `` $ `` или `` `, използвайте префикс` "
-"`` `, като` `` `или` `` `."
+"За да поставите в шаблони символи `` $ `` или `` `, използвайте префикс` `` "
+"`, като` `` `или` `` `."
 
-# 99e6f70b4645433e97923e39ef6ad443
-#: ../../tregexpr.rst:155
+# 63534e92f9834a7d90a7ee143622abb5
+#: ../../tregexpr.rst:156
 msgid "symbol"
 msgstr "символ"
 
-# 97eb5bdc52ca4dc0aeee00fa4a5f3fca
-#: ../../tregexpr.rst:155
+# d80e1100cda54360abdc6636c280c412
+#: ../../tregexpr.rst:156
 msgid "description"
 msgstr "описание"
 
-# 615804c63e6b4a138a7e80271d62082b
-#: ../../tregexpr.rst:157
+# c529505cc5f642ba9f4418abe81c3a5d
+#: ../../tregexpr.rst:158
 msgid "``$&``"
 msgstr "`` $ &amp; ``"
 
-# 17a7b341d6fc4c588328b20b1178acc9
-#: ../../tregexpr.rst:157 ../../tregexpr.rst:158
+# f096a473d865448680bf781a0a1b27a1
+# 17a1db76015d44be88cddcc9d9eba35e
+#: ../../tregexpr.rst:158 ../../tregexpr.rst:159
 msgid "whole regular expression match"
 msgstr "съвпадение на целия регулярен израз"
 
-# a3e3160f96b24395bca4abc248cd7440
-#: ../../tregexpr.rst:158
+# f4fa484623154ad688f6084cdff1f5ab
+#: ../../tregexpr.rst:159
 msgid "``$0``"
 msgstr "``$0``"
 
-# a5dfe79bc6b140288a4f978913b56882
-#: ../../tregexpr.rst:159
+# acc558739ec14eb4a7fd736c44b2559b
+#: ../../tregexpr.rst:160
 msgid "``$n``"
 msgstr "``$N``"
 
-# f6ec6276f6c04d37b7a5c59d75e44e1a
-#: ../../tregexpr.rst:159
+# 562ec9c44605476d88da0758bc0d57fd
+#: ../../tregexpr.rst:160
 msgid "regular subexpression ``n`` match"
 msgstr "редовно съвпадение ``n``"
 
-# da45d7a572fc45c5a75830f634ccaffe
-#: ../../tregexpr.rst:160
+# c916e845bd5c443f82efdb244c7127a3
+#: ../../tregexpr.rst:161
 msgid "``\\n``"
 msgstr "``\\n``"
 
-# c5d2f29db0554b6ca55b962d007563f8
-#: ../../tregexpr.rst:160
+# 16b6159b15234a9990386dbc74ba8a9d
+#: ../../tregexpr.rst:161
 msgid "in Windows replaced with ``\\r\\n``"
 msgstr "в Windows се заменя с ``r``"
 
-# 444bc4fbd8d94e69a1ba5d21cb1b608e
-#: ../../tregexpr.rst:161
+# b641853e1a064839ad25ad3ce1a78962
+#: ../../tregexpr.rst:162
 msgid "``\\l``"
 msgstr "``\\L``"
 
-# f421e47b47f1465e8398852df7add6f6
-#: ../../tregexpr.rst:161
+# 959ac7183c074be8b35e4100cf827a37
+#: ../../tregexpr.rst:162
 msgid "lowcase one next char"
 msgstr "запълнете един следващ знак"
 
-# 90a248a24b89440aa6d2d6382eafa59a
-#: ../../tregexpr.rst:162
+# 4191919287c14e08a84835abc20b88cd
+#: ../../tregexpr.rst:163
 msgid "``\\L``"
 msgstr "``\\L``"
 
-# fa162dff7fef49d4818821f75e11a756
-#: ../../tregexpr.rst:162
+# c87dd00f4a4a49bbb874e18b33cd7d7b
+#: ../../tregexpr.rst:163
 msgid "lowercase all chars after that"
 msgstr "след това - малки букви"
 
-# 580297e5d8d046ef803101fa26f27806
-#: ../../tregexpr.rst:163
+# 07f7e7b7b8e641a4bcf954a079b671ef
+#: ../../tregexpr.rst:164
 msgid "``\\u``"
 msgstr "``\\U``"
 
-# 0c5839e9c83e474b8717694c4e34b9d6
-#: ../../tregexpr.rst:163
+# fb0ca4eda40e452baef2f2a9f5d27647
+#: ../../tregexpr.rst:164
 msgid "uppcase one next char"
 msgstr "въведете следващия знак"
 
-# 00b318b2fbcb4c62ab6f9fdb11a0e5d1
-#: ../../tregexpr.rst:164
+# 2e15d831287e4751a31bf1b5a0046f4f
+#: ../../tregexpr.rst:165
 msgid "``\\U``"
 msgstr "``\\U``"
 
-# 7ffb31af33cb4582ba42b64a3a683043
-#: ../../tregexpr.rst:164
+# 04e34a45291649be9dab57f54d6dee4f
+#: ../../tregexpr.rst:165
 msgid "uppercase all chars after that"
 msgstr "всички букви след това"
 
-# 6e16afdd050e4f368892de2da891c5d0
-#: ../../tregexpr.rst:169
+# 8b9416fac8664ded915ce216cd4dbf3e
+#: ../../tregexpr.rst:182
 msgid ""
 "'1\\$ is $2\\\\rub\\\\' -> '1$ is <Match[2]>\\rub\\'\n"
 "'\\U$1\\\\r' transforms into '<Match[1] in uppercase>\\r'"
 msgstr ""
+"&#39;1 $ е $ 2,&#39; -&gt; &#39;1 $ е <Match[2]> R $ &#39;се превръща в&#39;"
+" \\ t <Match[1] in uppercase> \\ R &#39;"
 
-# 4b85168153b84479a80bb8202b1dfbcf
-#: ../../tregexpr.rst:172
+# 90871cb19a5e48c2ab3ee073b35a9986
+#: ../../tregexpr.rst:173
 msgid ""
-"If you want to place raw digit after ‘$n’ you must delimit ``n`` with "
-"curly braces ``{}``."
+"If you want to place raw digit after ‘$n’ you must delimit ``n`` with curly "
+"braces ``{}``."
 msgstr ""
 "Ако искате да поставите необработена цифра след &#39;$ n&#39;, трябва да "
 "ограничите ``n`` с фигурни скоби `` {} ``."
 
-# 85569e13faf7400f884bb57d5fc5a26e
-#: ../../tregexpr.rst:177
+# 2e177d2b54d74932b5fd8bc383a6ccd5
+#: ../../tregexpr.rst:190
 msgid ""
 "'a$12bc' -> 'a<Match[12]>bc'\n"
 "'a${1}2bc' -> 'a<Match[1]>2bc'."
 msgstr ""
+"&#39;a $ 12bc&#39; -&gt; &#39;a <Match[12]> bc &#39;&#39; a $ {1} 2bc "
+"&#39;-&gt;&#39; a <Match[1]> 2Вс &quot;."
 
-# 9285f4f0589c4df88ed9a1b9d25cc774
-#: ../../tregexpr.rst:181
+# 2eb81ed8a63448f0ab099b319cf804c3
+#: ../../tregexpr.rst:182
 msgid "Split"
 msgstr "разцепване"
 
-# 471e9a74ee6f4427adfbcb9831c7ad5b
-#: ../../tregexpr.rst:183
+# f89a1def92de47ffb43b3476f0c8414c
+#: ../../tregexpr.rst:184
 msgid "Split AInputStr into APieces by r.e. occurencies"
 msgstr "Разделете AInputStr на APieces чрез повторни прояви"
 
-# b322778a78174b19a1ec867d734b92fe
-#: ../../tregexpr.rst:185 ../../tregexpr.rst:213
+# f379a206d15e4e7a81cad0a490eca4fc
+# b3116d72eb17431c84246d3689ff2e36
+#: ../../tregexpr.rst:186 ../../tregexpr.rst:229
 msgid "Internally calls Exec_ / ExecNext_"
 msgstr "Вътрешно извиква Exec_ / ExecNext_"
 
-# 0d64e7cd9fc344a5b7d389ec5306d7f0
-#: ../../tregexpr.rst:187
+# f0031cbeab624426b31706cee4b6eb65
+#: ../../tregexpr.rst:188
 msgid ""
 "See also global function SplitRegExpr_ that you can use without explicit "
 "``TRegExpr`` object creation."
 msgstr ""
-"Вижте също глобалната функция SplitRegExpr_, която можете да използвате "
-"без изричното създаване на ``TRegExpr`` обекта."
+"Вижте също глобалната функция SplitRegExpr_, която можете да използвате без "
+"изричното създаване на ``TRegExpr`` обекта."
 
-# 40886178c28345688eeab68c4ca19f58
-#: ../../tregexpr.rst:193
+# 38645dd65f544f0781499cfe7a5b9ff6
+#: ../../tregexpr.rst:194
 msgid "Replace, ReplaceEx"
 msgstr "Замяна, ReplaceEx"
 
-# 09523f19b3134cd0a900969dbc980445
-#: ../../tregexpr.rst:195
-msgid "Returns the string with r.e. occurencies replaced by the replace string."
+# 17a19dd3f42540fc8cd014812aff66de
+#: ../../tregexpr.rst:210
+msgid ""
+"function Replace (Const AInputStr : RegExprString;\n"
+"  const AReplaceStr : RegExprString;\n"
+"  AUseSubstitution : boolean= False)\n"
+" : RegExprString; overload;\n"
+"\n"
+"function Replace (Const AInputStr : RegExprString;\n"
+"  AReplaceFunc : TRegExprReplaceFunction)\n"
+" : RegExprString; overload;\n"
+"\n"
+"function ReplaceEx (Const AInputStr : RegExprString;\n"
+"  AReplaceFunc : TRegExprReplaceFunction):\n"
+"  RegExprString;"
+msgstr ""
+"функция Замяна (Const AInputStr: RegExprString; const AReplaceStr: "
+"RegExprString; AUseSubstitution: boolean = False): RegExprString; "
+"претоварване; функция Замяна (Const AInputStr: RegExprString; AReplaceFunc: "
+"TRegExprReplaceFunction): RegExprString; претоварване; функция ReplaceEx "
+"(Const AInputStr: RegExprString; AReplaceFunc: TRegExprReplaceFunction): "
+"RegExprString;"
+
+# d6564932039e438c981ee7b2624888af
+#: ../../tregexpr.rst:211
+msgid ""
+"Returns the string with r.e. occurencies replaced by the replace string."
 msgstr "Връща низа с повторно заменяеми с заместващия низ низ."
 
-# 2253e3011c6f4789b9c96651014918ff
-#: ../../tregexpr.rst:197
-#, fuzzy
+# 13f5545bf47a41399e753a9835b95b71
+#: ../../tregexpr.rst:213
 msgid ""
-"If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` "
-"will be used as template for Substitution methods."
+"If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will "
+"be used as template for Substitution methods."
 msgstr ""
-"Ако ``AUseSubstitution`` е вярно, то ``AReplaceStr`` ще се използва като "
-"шаблон за методи за заместване."
+"Ако последният аргумент (`` AUseSubstitution``) е вярно, то `` AReplaceStr``"
+" ще бъде използван като шаблон за методи за заместване."
 
-# 06bb14e2e3d44cd885e9003370843147
-#: ../../tregexpr.rst:202
+# ed3fb4395c2640238a5dd9d77bf735a7
+#: ../../tregexpr.rst:230
 msgid ""
 "Expression := '((?i)block|var)\\s*(\\s*\\([^ ]*\\)\\s*)\\s*';\n"
 "Replace ('BLOCK( test1)', 'def \"$1\" value \"$2\"', True);"
 msgstr ""
+"Израз: = &#39;((? I) блок | var) s * (* ([^] * * s *) s *&#39;; Заменете "
+"(&#39;BLOCK (test1)&#39;, &#39;def&#39; $ 1 &quot;стойност&quot; $ 2 "
+"&quot;&#39;, True);"
 
-# 19c18b1de0f140e6b54eb9b509ffb64b
-#: ../../tregexpr.rst:205
-#, fuzzy
+# e8185af4881841498602a279fd958a28
+#: ../../tregexpr.rst:221
 msgid "Returns ``def \"BLOCK\" value \"test1\"``"
-msgstr "ще се върне: def &#39;BLOCK&#39; стойност &#39;test1&#39;"
+msgstr "Връща `` def &#39;&#39; BLOCK стойността &quot;test1&quot; ``"
 
-# 5fe9c622e60040068319f376dc86f17c
-#: ../../tregexpr.rst:209
+# fd88317c67c54528a7c39dadb4f44081
+#: ../../tregexpr.rst:237
 msgid "Replace ('BLOCK( test1)', 'def \"$1\" value \"$2\"', False)"
 msgstr ""
+"Замяна („BLOCK (test1)“, „def“ $ 1 „стойност“ $ 2 &quot;&quot;, False)"
 
-# 468582f17cf44aa99caf539ca7906a57
-#: ../../tregexpr.rst:211
-#, fuzzy
+# 8d04a89b875e4da080ff7cee940b2836
+#: ../../tregexpr.rst:227
 msgid "Returns ``def \"$1\" value \"$2\"``"
-msgstr "ще се върне: def „$ 1“ стойност „$ 2“"
+msgstr "Връща `` def &#39;$ 1 &quot;стойност&quot; $ 2 &quot;` `"
 
-# 217cf585377e4a5a87cd0d665e3ef7e9
-#: ../../tregexpr.rst:215
+# 20f505783ced47869cf3e1c3e384119f
+#: ../../tregexpr.rst:231
 msgid ""
-"Overloaded version and ``ReplaceEx`` operate with call-back function, so "
-"you can implement really complex functionality."
+"Overloaded version and ``ReplaceEx`` operate with call-back function, so you"
+" can implement really complex functionality."
 msgstr ""
-"Претоварената версия и ``ReplaceEx`` работят с функция обратно повикване,"
-" така че можете да реализирате наистина сложна функционалност."
+"Претоварената версия и ``ReplaceEx`` работят с функция обратно повикване, "
+"така че можете да реализирате наистина сложна функционалност."
 
-# 3e40efdfe68a447a865227806a4c7649
-#: ../../tregexpr.rst:218
+# 467643ebf82040db8ccb8f3d15798769
+#: ../../tregexpr.rst:234
 msgid ""
-"See also global function ReplaceRegExpr_ that you can use without "
-"explicit ``TRegExpr`` object creation."
+"See also global function ReplaceRegExpr_ that you can use without explicit "
+"``TRegExpr`` object creation."
 msgstr ""
-"Вижте също глобална функция ReplaceRegExpr_, която можете да използвате "
-"без изричното създаване на ``TRegExpr``."
+"Вижте също глобална функция ReplaceRegExpr_, която можете да използвате без "
+"изричното създаване на ``TRegExpr``."
 
-# bc9f9ad63fa947458f625b6264d75cda
-#: ../../tregexpr.rst:222
+# 7d60b250e9dd47178bca864ebdffb63f
+#: ../../tregexpr.rst:238
 msgid "SubExprMatchCount"
 msgstr "SubExprMatchCount"
 
-# d5ba0e249bdd4d8da0cfa8cfdeabbe6f
-#: ../../tregexpr.rst:224
-msgid "Number of subexpressions has been found in last Exec_ / ExecNext_ call."
+# 28ca90185cbb4bbd831f8ed5fec7d50d
+#: ../../tregexpr.rst:240
+msgid ""
+"Number of subexpressions has been found in last Exec_ / ExecNext_ call."
 msgstr "В последното повикване Exec_ / ExecNext_ е намерен брой подекспресии."
 
-# d72f338a23914f4da1e709843b857975
-#: ../../tregexpr.rst:226
+# 6fef5c87860b49cb857e65a109c6377d
+#: ../../tregexpr.rst:242
 msgid ""
-"If there are no subexpr. but whole expr was found (Exec\\* returned "
-"True), then ``SubExprMatchCount=0``, if no subexpressions nor whole r.e. "
-"found (Exec_ / ExecNext_ returned false) then ``SubExprMatchCount=-1``."
+"If there are no subexpr. but whole expr was found (Exec\\* returned True), "
+"then ``SubExprMatchCount=0``, if no subexpressions nor whole r.e. found "
+"(Exec_ / ExecNext_ returned false) then ``SubExprMatchCount=-1``."
 msgstr ""
-"Ако няма субекспр. но е открит цял expr (Exec * върна True), след това ``"
-" SubExprMatchCount = 0``, ако не са намерени никакви подекспресии или "
-"цяло (Exec_ / ExecNext_ false), след това `` SubExprMatchCount = -1``."
+"Ако няма субекспр. но е открит цял expr (Exec * върна True), след това `` "
+"SubExprMatchCount = 0``, ако не са намерени никакви подекспресии или цяло "
+"(Exec_ / ExecNext_ false), след това `` SubExprMatchCount = -1``."
 
-# 2767db19f2ce40f78b7da4cb1b8153c2
-#: ../../tregexpr.rst:230
+# 44738ac9c8ac48eb8ce744e3b52b78d9
+#: ../../tregexpr.rst:246
 msgid ""
 "Note, that some subexpr. may be not found and for such subexpr. "
 "``MathPos=MatchLen=-1`` and ``Match=’’``."
@@ -615,8 +654,8 @@ msgstr ""
 "Имайте предвид, че някои субекспр. може да не бъде намерен и за такъв "
 "subexpr. `` MathPos = MatchLen = -1`` и `` Match = &#39;&#39; ``."
 
-# d3f54fd075074e0481f0beeed23208ea
-#: ../../tregexpr.rst:235
+# 75a36a73f7344c18826a039ea6fc2ba3
+#: ../../tregexpr.rst:263
 msgid ""
 "Expression := '(1)?2(3)?';\n"
 "Exec ('123'): SubExprMatchCount=2, Match[0]='123', [1]='1', [2]='3'\n"
@@ -629,172 +668,177 @@ msgid ""
 "\n"
 "Exec ('7') - return False: SubExprMatchCount=-1"
 msgstr ""
+"Израз: = &#39;(1)? 2 (3)?&#39;; Exec (&#39;123&#39;): SubExprMatchCount = 2,"
+" Match [0] = &#39;123&#39;, [1] = &#39;1&#39;, [2] = &#39;3&#39; Exec "
+"(&#39;12&#39;): SubExprMatchCount = 1, Match [0] = &#39;12 &#39;, [1] =&#39;"
+" 1 &#39;Exec (&#39; 23 &#39;): SubExprMatchCount = 2, Match [0] =&#39; 23 "
+"&#39;, [1] =&#39; &#39;, [2] =&#39; 3 &#39;Exec (&#39; 2 &#39;) &#39;): "
+"SubExprMatchCount = 0, Match [0] =&#39; 2 &#39;Exec (&#39; 7 &#39;) - "
+"върнете False: SubExprMatchCount = -1"
 
-# d6446a058569424690d3f8bfbd469117
-#: ../../tregexpr.rst:248
+# f290523619774f3dafcf675885a55ddf
+#: ../../tregexpr.rst:264
 msgid "MatchPos"
 msgstr "MatchPos"
 
-# e0784531b3c640539018d95c97165d23
-#: ../../tregexpr.rst:250
+# 7510e2dcd04c4d24a53e6fd9fc350048
+#: ../../tregexpr.rst:266
 msgid ""
 "pos of entrance subexpr. ``#Idx`` into tested in last ``Exec*`` string. "
 "First subexpr. have ``Idx=1``, last - ``MatchCount``, whole r.e. have "
 "``Idx=0``."
 msgstr ""
-"поз. `` # Idx`` се тества в последния `` Exec * `` низ. Първият субекср. "
-"има `` Idx = 1``, последно - ``MatchCount``, цялото re има `` Idx = 0``."
+"поз. `` # Idx`` се тества в последния `` Exec * `` низ. Първият субекср. има"
+" `` Idx = 1``, последно - ``MatchCount``, цялото re има `` Idx = 0``."
 
-# a66ed6de99ff46099378eedabcf77813
-#: ../../tregexpr.rst:254
+# e8e07a25804c442bb21638a532682e9d
+#: ../../tregexpr.rst:270
 msgid ""
 "Returns ``-1`` if in r.e. no such subexpr. or this subexpr. not found in "
 "input string."
 msgstr ""
-"Връща ``-1``, ако не е такъв. или този субекспр. не е намерен във входния"
-" низ."
+"Връща ``-1``, ако не е такъв. или този субекспр. не е намерен във входния "
+"низ."
 
-# 04f50017d5d444659d11747e8362b1df
-#: ../../tregexpr.rst:258
+# 414ffc981aea4d7ead37eb16d08ed051
+#: ../../tregexpr.rst:274
 msgid "MatchLen"
 msgstr "MatchLen"
 
-# 8e884ab088554170b70d0b9d2692c809
-#: ../../tregexpr.rst:260
+# c5c3096175d34ee7a85c7cce68e3efaf
+#: ../../tregexpr.rst:276
 msgid ""
-"len of entrance subexpr. ``#Idx`` r.e. into tested in last ``Exec*`` "
-"string. First subexpr. have ``Idx=1``, last - MatchCount, whole r.e. have"
-" ``Idx=0``."
+"len of entrance subexpr. ``#Idx`` r.e. into tested in last ``Exec*`` string."
+" First subexpr. have ``Idx=1``, last - MatchCount, whole r.e. have "
+"``Idx=0``."
 msgstr ""
 "от входния субекспр. `` # Idx`` се тества в последния `` Exec * `` низ. "
-"Първият субекср. да има `` Idx = 1``, последно - MatchCount, целият има "
-"`` Idx = 0``."
+"Първият субекср. да има `` Idx = 1``, последно - MatchCount, целият има `` "
+"Idx = 0``."
 
-# bbba58adb0954e1e88c524d9bb34160b
-#: ../../tregexpr.rst:264
+# 2b72f0745ed243aba413dd5f0c291813
+#: ../../tregexpr.rst:280
 msgid ""
-"Returns -1 if in r.e. no such subexpr. or this subexpr. not found in "
-"input string."
-msgstr "Връща -1, ако не е такъв. или този субекспр. не е намерен във входния низ."
+"Returns -1 if in r.e. no such subexpr. or this subexpr. not found in input "
+"string."
+msgstr ""
+"Връща -1, ако не е такъв. или този субекспр. не е намерен във входния низ."
 
-# da753df4c443438b8abe57a911637416
-#: ../../tregexpr.rst:268
+# 04b54fd291f546dfaeea6b10985b1c41
+#: ../../tregexpr.rst:284
 msgid "Match"
 msgstr "Мач"
 
-# 02a23874f30c452da792eda482fd62e9
-#: ../../tregexpr.rst:270
+# c13ba47476a14ea38e36e42bb0c8ce4c
+#: ../../tregexpr.rst:286
 msgid ""
-"Returns ``’’`` if in r.e. no such subexpression or this subexpression was"
-" not found in the input string."
+"Returns ``’’`` if in r.e. no such subexpression or this subexpression was "
+"not found in the input string."
 msgstr ""
-"Връща `` &#39;&#39; `, ако няма подобна експресия или тази субекспресия "
-"не е намерена във входния низ."
+"Връща `` &#39;&#39; `, ако няма подобна експресия или тази субекспресия не е"
+" намерена във входния низ."
 
-# 89ec4afadd974ba188387c67bc86f14f
-#: ../../tregexpr.rst:274
+# c72617dd918d4917b39fe8cb3c9eca06
+#: ../../tregexpr.rst:290
 msgid "LastError"
 msgstr "LastError"
 
-# 5adfd6f2bf3d4083a7fd8d5af8db4cd8
-#: ../../tregexpr.rst:276
+# 0111f9a880a94f1d923cf0ace9d538bf
+#: ../../tregexpr.rst:292
 msgid ""
 "Returns ``ID`` of last error, ``0`` if no errors (unusable if ``Error`` "
-"method raises exception) and clear internal status into ``0`` (no "
-"errors)."
+"method raises exception) and clear internal status into ``0`` (no errors)."
 msgstr ""
-"Връща ``ID`` на последната грешка, ``0``, ако няма грешки (неизползваеми,"
-" ако метод ``Error`` повдигне изключение) и изчисти вътрешния статус в ``"
-" 0`` (без грешки)."
+"Връща ``ID`` на последната грешка, ``0``, ако няма грешки (неизползваеми, "
+"ако метод ``Error`` повдигне изключение) и изчисти вътрешния статус в `` 0``"
+" (без грешки)."
 
-# 8902c40fabf34dadbaaca281acc2207e
-#: ../../tregexpr.rst:280
+# 9ff701b9629048e98f7191697fb08de3
+#: ../../tregexpr.rst:296
 msgid "ErrorMsg"
 msgstr "ERRORMSG"
 
-# f0dcf06301844649adfbadb8d8a8d6d4
-#: ../../tregexpr.rst:282
+# 1a921f7677d640c59bcc4c5efb041611
+#: ../../tregexpr.rst:298
 msgid "Returns ``Error`` message for error with ``ID = AErrorID``."
 msgstr "Връща съобщението `` Error &#39;&#39; за грешка с `` ID = AErrorID``."
 
-# 6e49cd6c15b84f38ba4e22529accdaf7
-#: ../../tregexpr.rst:285
+# 27d825aab15a461d93d9b35a06af51f9
+#: ../../tregexpr.rst:301
 msgid "CompilerErrorPos"
 msgstr "CompilerErrorPos"
 
-# 73e266fea1294fdea0be2ce8a84d81a1
-#: ../../tregexpr.rst:287
+# f8e53b92c535460986eb868f171017d4
+#: ../../tregexpr.rst:303
 msgid "Returns pos in r.e. there compiler stopped."
 msgstr "Връща пози в ре там компилаторът спря."
 
-# 68a43b758c6948a18e6701b8fb00812e
-#: ../../tregexpr.rst:289
+# 4ed36e015d7c45eba18d28d55c055969
+#: ../../tregexpr.rst:305
 msgid "Useful for error diagnostics"
 msgstr "Полезно за диагностика на грешки"
 
-# 18c8e71b482b4b13aff769194f90df6c
-#: ../../tregexpr.rst:292
+# 65f1080b133240cda5155821e0ac15ac
+#: ../../tregexpr.rst:308
 msgid "SpaceChars"
 msgstr "SpaceChars"
 
-# 6c1028cadcb44c92b5d9b529824d72ff
-#: ../../tregexpr.rst:294
+# 94edc0a75d1a4cf89fd83e84e5b9b7dd
+#: ../../tregexpr.rst:310
 msgid ""
-"Contains chars, treated as ``\\s`` (initially filled with "
-"RegExprSpaceChars_ global constant)"
+"Contains chars, treated as ``\\s`` (initially filled with RegExprSpaceChars_"
+" global constant)"
 msgstr ""
-"Съдържа символи, третирани като `` `&#39;(първоначално запълнени с "
-"глобална константа RegExprSpaceChars_)."
+"Съдържа символи, третирани като `` `&#39;(първоначално запълнени с глобална "
+"константа RegExprSpaceChars_)."
 
-# 8cf870efcd0d4c7a8b0cc93e84516465
-#: ../../tregexpr.rst:298
+# 9df6b1a5d2a54684923f7706eba0158e
+#: ../../tregexpr.rst:314
 msgid "WordChars"
 msgstr "WordChars"
 
-# a270f810074240d9b63651ad4c4a8a17
-#: ../../tregexpr.rst:300
+# 6f624a0be9f04cd7864cd25cd8229fb3
+#: ../../tregexpr.rst:316
 msgid ""
-"Contains chars, treated as ``\\w`` (initially filled with "
-"RegExprWordChars_ global constant)"
+"Contains chars, treated as ``\\w`` (initially filled with RegExprWordChars_ "
+"global constant)"
 msgstr ""
 "Съдържа символи, третирани като ``w`` (първоначално запълнени с глобална "
 "константа RegExprWordChars_)"
 
-# 6a97370bdeab422bb5ae0c9b3a036f97
-#: ../../tregexpr.rst:305
+# 00ecff7461814119b5bfae15829a8ea9
+#: ../../tregexpr.rst:321
 msgid "LineSeparators"
 msgstr "LineSeparators"
 
-# f24790b4283644b8b544d7e2a5da684a
-#: ../../tregexpr.rst:307
+# 9a3500b086c14fb3bff0b7e9124cbda8
+#: ../../tregexpr.rst:323
 msgid ""
 "line separators (like ``\\n`` in Unix), initially filled with "
 "RegExprLineSeparators_ global constant)"
 msgstr ""
-"разделители на линии (като ``n`` в Unix), първоначално запълнени с "
-"глобална константа RegExprLineSeparators_)"
+"разделители на линии (като ``n`` в Unix), първоначално запълнени с глобална "
+"константа RegExprLineSeparators_)"
 
-# 9a2790f4b35b46dd8d067f2601a11d2e
-#: ../../tregexpr.rst:310 ../../tregexpr.rst:321
-msgid ""
-"see also `about line separators <regular_expressions.html#line-"
-"separators>`__"
+# a7edfdf52b514b5c85372a67a43e4574
+# 5418a04cacc14db18bb228928365a59b
+#: ../../tregexpr.rst:326 ../../tregexpr.rst:336
+msgid "see also `Line Boundaries <regular_expressions.html#lineseparators>`__"
 msgstr ""
-"виж също `за разделителите на линии <regular_expressions.html#line-"
-"separators>`__"
+"виж също „Граници на линиите <regular_expressions.html#lineseparators>`__"
 
-# 365d71bfb73645d8ac1dc3bc69bebba2
-#: ../../tregexpr.rst:314
+# c2447ccb6c5c4f6583cf828eef1d271a
+#: ../../tregexpr.rst:329
 msgid "LinePairedSeparator"
 msgstr "LinePairedSeparator"
 
-# 0858c0e771ff4062a02f4f60e60b319c
-#: ../../tregexpr.rst:316
+# 32c809ef69fd45aca1465c74cf8d1898
+#: ../../tregexpr.rst:331
 msgid "paired line separator (like ``\\r\\n`` in DOS and Windows)."
 msgstr "разделител на сдвоена линия (като &quot;r&quot; в DOS и Windows)."
 
-# 908fba08a9e14d618d0639c8a52414ec
-#: ../../tregexpr.rst:318
+# 94152e0d07ca4effbb3392f5f3086297
+#: ../../tregexpr.rst:333
 msgid ""
 "must contain exactly two chars or no chars at all, initially filled with "
 "RegExprLinePairedSeparator global constant)"
@@ -802,243 +846,251 @@ msgstr ""
 "трябва да съдържа точно два знака или никакви символа, първоначално "
 "запълнени с глобална константа RegExprLinePairedSeparator)"
 
-# d5fcd4a7ae984f41954575a890a13689
-#: ../../tregexpr.rst:324
+# 1d32429d578248bbabb36fbf3796ae26
+#: ../../tregexpr.rst:338
 msgid ""
-"For example, if you need Unix-style behaviour, assign ``LineSeparators :="
-" #$a`` and ``LinePairedSeparator := ''`` (empty string)."
+"For example, if you need Unix-style behaviour, assign ``LineSeparators := "
+"#$a`` and ``LinePairedSeparator := ''`` (empty string)."
 msgstr ""
 "Например, ако се нуждаете от поведение в стил Unix, задайте `` "
-"LineSeparators: = # $ a`` и `` LinePairedSeparator: = &#39;&#39; `(празен"
-" низ)."
+"LineSeparators: = # $ a`` и `` LinePairedSeparator: = &#39;&#39; `(празен "
+"низ)."
 
-# c3211083e90a4a39a944ec1bc4b36deb
-#: ../../tregexpr.rst:327
+# c91bba98a70f4ecf953a851b9ec263c2
+#: ../../tregexpr.rst:341
 msgid ""
 "If you want to accept as line separators only ``\\x0D\\x0A`` but not "
-"``\\x0D`` or ``\\x0A`` alone, then assign ``LineSeparators := ''`` (empty"
-" string) and ``LinePairedSeparator := #$d#$a``."
+"``\\x0D`` or ``\\x0A`` alone, then assign ``LineSeparators := ''`` (empty "
+"string) and ``LinePairedSeparator := #$d#$a``."
 msgstr ""
-"Ако искате да приемете като разделители на редове само ``x0D0A``, но не и"
-" ``0D`` или ``0A``, задайте `` LineSeparators: = &#39;&#39; `(празен низ)"
-" и `` LinePairedSeparator: = # $ d # $ a``."
+"Ако искате да приемете като разделители на редове само ``x0D0A``, но не и "
+"``0D`` или ``0A``, задайте `` LineSeparators: = &#39;&#39; `(празен низ) и "
+"`` LinePairedSeparator: = # $ d # $ a``."
 
-# e9b5de25fffd431483ee4bf0e87e2c9e
-#: ../../tregexpr.rst:331
+# b9ffc66d3010475eb17261ef2a30862f
+#: ../../tregexpr.rst:345
 msgid ""
-"By default ‘mixed’ mode is used (defined in "
-"RegExprLine[Paired]Separator[s] global constants):"
+"By default ‘mixed’ mode is used (defined in RegExprLine[Paired]Separator[s] "
+"global constants):"
 msgstr ""
-"По подразбиране се използва &#39;смесен&#39; режим (дефиниран в "
-"RegExprLine [Paired] Сепаратор [s] глобални константи):"
+"По подразбиране се използва &#39;смесен&#39; режим (дефиниран в RegExprLine "
+"[Paired] Сепаратор [s] глобални константи):"
 
-# 7e4dfafc0da343818e7c236d3a8a61a2
-#: ../../tregexpr.rst:336
+# 18e0cf5179cb48139ce11e4eb4fdf785
+#: ../../tregexpr.rst:362
 msgid ""
 "LineSeparators := #$d#$a;\n"
 "LinePairedSeparator := #$d#$a"
 msgstr ""
+"Разделители на реда: = # $ d # $ a; LinePairedSeparator: = # $ d # $ a"
 
-# d8be7f9e6d1d4bb482ae504c9a589919
-#: ../../tregexpr.rst:339
+# b5e0494343e746f28363d60baf7c9618
+#: ../../tregexpr.rst:353
 msgid ""
-"Behaviour of this mode is detailed described in the `syntax section "
-"<regular_expressions.html#syntax_line_separators>`__."
+"Behaviour of this mode is detailed described in the `Line Boundaries "
+"<regular_expressions.html#lineseparators>`__."
 msgstr ""
-"Поведението на този режим е описано подробно в `синтактичния раздел "
-"<regular_expressions.html#syntax_line_separators>`__."
+"Поведението на този режим е описано подробно в `Линии на границите "
+"<regular_expressions.html#lineseparators>`__."
 
-# c9a5033ddf894b9da56c691eb013541f
-#: ../../tregexpr.rst:343
+# dbaaa651e6584c3b9f5f1753749485a1
+#: ../../tregexpr.rst:357
 msgid "InvertCase"
 msgstr "InvertCase"
 
-# 695956b458584ac29fd3a42ac17e9671
-#: ../../tregexpr.rst:345
-msgid "Set this property if you want to override case-insensitive functionality."
+# 599955c526de4d3faaf92eeebb20de67
+#: ../../tregexpr.rst:359
+msgid ""
+"Invertion of character case. Redefine it if you want different behaviour."
 msgstr ""
-"Задайте това свойство, ако искате да замените функционалността без "
-"чувствителност към регистър."
+"Инвертиране на случай на характер. Предефинирайте го, ако искате различно "
+"поведение."
 
-# e3afaecd54dd4fb3b652545a4477e036
-#: ../../tregexpr.rst:349
+# f4de23dca4364a17bd02c74b4b39c065
+#: ../../tregexpr.rst:363
 msgid "Compile"
 msgstr "събирам"
 
-# d44c9ef8b2a74f4c855c33ee7671d119
-#: ../../tregexpr.rst:351
+# 5b1d8daf5c7549449bf68084d37016f7
+#: ../../tregexpr.rst:365
 msgid "Compiles regular expression."
 msgstr "Компилира регулярния израз."
 
-# 9772176176724152abcfa01ce5275d48
-#: ../../tregexpr.rst:353
+# 21b6db06715e4e968dab2bc5f4b0c222
+#: ../../tregexpr.rst:367
 msgid ""
-"Useful for example for GUI regular expressions editors - to check regular"
-" expression without using it."
+"Useful for example for GUI regular expressions editors - to check regular "
+"expression without using it."
 msgstr ""
-"Полезно например за редакторите на регулярни изрази с графичен интерфейс "
-"- за да проверите регулярния израз без да го използвате."
+"Полезно например за редакторите на регулярни изрази с графичен интерфейс - "
+"за да проверите регулярния израз без да го използвате."
 
-# a3e43476373a48978533b7dd6819d647
-#: ../../tregexpr.rst:357
+# bde7cc3a16aa4e839b1bda6aaf8cd24b
+#: ../../tregexpr.rst:371
 msgid "Dump"
 msgstr "бунище"
 
-# a80b2e57d8cb464d8ea2e4a12fa4fbe7
-#: ../../tregexpr.rst:359
-msgid "Show ``P-code`` (compiled regular expression) as human-readable string."
-msgstr "Покажете ``P-code`` (компилиран редовен израз) като четлив за човека низ."
+# c3f9971bd23e4e8087a90d90dacd839e
+#: ../../tregexpr.rst:373
+msgid ""
+"Show ``P-code`` (compiled regular expression) as human-readable string."
+msgstr ""
+"Покажете ``P-code`` (компилиран редовен израз) като четлив за човека низ."
 
-# 9f264ffc0a2b4738b7670ee5ad10a703
-#: ../../tregexpr.rst:362
+# efc20effbcbf4af982cb5ed6691e4168
+#: ../../tregexpr.rst:376
 msgid "Global constants"
 msgstr "Глобални константи"
 
-# 27406b79d7294fc281b4b1e526b94aa5
-#: ../../tregexpr.rst:365
+# f28c5ea31aca4517850c10ad9e2c13e3
+#: ../../tregexpr.rst:379
 msgid "EscChar"
 msgstr "EscChar"
 
-# 125f2a4e7a824ac8bc65b2b761482b42
-#: ../../tregexpr.rst:367
+# 96989aa0f21a4fa4a27b398a1d8898d4
+#: ../../tregexpr.rst:381
 msgid "Escape-char, by default ``\\``."
 msgstr "Escape-char, по подразбиране `` `."
 
-# b694219c815443b39f3e092d12171dba
-#: ../../tregexpr.rst:370
+# 435dfb47319e4e8c915795affc5a3eba
+#: ../../tregexpr.rst:384
 msgid "RegExprModifierI"
 msgstr "RegExprModifierI"
 
-# 088ef484a7bd4a65a20b1d88022ce0d0
-#: ../../tregexpr.rst:372
+# 0ae0840b42584944ae260ea86bbda689
+#: ../../tregexpr.rst:386
 msgid "`Modifier i <regular_expressions.html#i>`_ default value"
 msgstr ""
-"&quot;Модификатор i <regular_expressions.html#i>`_ стойност по "
-"подразбиране"
+"&quot;Модификатор i <regular_expressions.html#i>`_ стойност по подразбиране"
 
-# aa9c039a53d74df59987ae3abed1ce18
-#: ../../tregexpr.rst:375
+# b9112c1257c14baeabd8aa6d50da2fae
+#: ../../tregexpr.rst:389
 msgid "RegExprModifierR"
 msgstr "RegExprModifierR"
 
-# 217317d65eee4edd9e01483cd49a0d83
-#: ../../tregexpr.rst:377
+# 5ad3e34b33ab4a669e969e952738ed25
+#: ../../tregexpr.rst:391
 msgid "`Modifier r <regular_expressions.html#r>`_ default value"
-msgstr "`Модификатор r <regular_expressions.html#r>`_ стойност по подразбиране"
+msgstr ""
+"`Модификатор r <regular_expressions.html#r>`_ стойност по подразбиране"
 
-# 45cda2c7f6ca40c0ab899663a0f65f05
-#: ../../tregexpr.rst:380
+# edceb073a4ff40e2831d42cf55b76b60
+#: ../../tregexpr.rst:394
 msgid "RegExprModifierS"
 msgstr "RegExprModifierS"
 
-# 59b7ae2c56fa49f5801c1d3af277f8e8
-#: ../../tregexpr.rst:382
+# 6e6d620ddbf946b4ac91dd22fe6fe9b2
+#: ../../tregexpr.rst:396
 msgid "`Modifier s <regular_expressions.html#s>`_ default value"
-msgstr "`Модификатор s <regular_expressions.html#s>`_ стойност по подразбиране"
+msgstr ""
+"`Модификатор s <regular_expressions.html#s>`_ стойност по подразбиране"
 
-# 58bc3091060d4399a02951ec97630f33
-#: ../../tregexpr.rst:385
+# 36aefec81e09426dbe367ddef6140eea
+#: ../../tregexpr.rst:399
 msgid "RegExprModifierG"
 msgstr "RegExprModifierG"
 
-# da0b49d2a3d74b32988134b30e573819
-#: ../../tregexpr.rst:387
+# 86cfbb87e0c849dcadf9dde1f6c318a9
+#: ../../tregexpr.rst:401
 msgid "`Modifier g <regular_expressions.html#g>`_ default value"
-msgstr "`Модификатор g <regular_expressions.html#g>`_ стойност по подразбиране"
+msgstr ""
+"`Модификатор g <regular_expressions.html#g>`_ стойност по подразбиране"
 
-# 0d2a949eb6a340399449ebacb03097ac
-#: ../../tregexpr.rst:390
+# b7623751ad644f0e9139fc50d6a78ea1
+#: ../../tregexpr.rst:404
 msgid "RegExprModifierM"
 msgstr "RegExprModifierM"
 
-# 60489a8dd5f24d2ba28233c0a1458f2d
-#: ../../tregexpr.rst:392
+# 35e625762244405f916c0a2bb32e5b3e
+#: ../../tregexpr.rst:406
 msgid "`Modifier m <regular_expressions.html#m>`_ default value"
-msgstr "`Модификатор m <regular_expressions.html#m>`_ стойност по подразбиране"
+msgstr ""
+"`Модификатор m <regular_expressions.html#m>`_ стойност по подразбиране"
 
-# aeb6c43c45a84a549d44b4de741fe653
-#: ../../tregexpr.rst:395
+# 378869f67dcc46ae95fb5e1ca3966fee
+#: ../../tregexpr.rst:409
 msgid "RegExprModifierX"
 msgstr "RegExprModifierX"
 
-# b491af4c78b94bc18fc874d59524b7a1
-#: ../../tregexpr.rst:397
+# 646c4805e7f04cbead159befd21509bf
+#: ../../tregexpr.rst:411
 msgid "`Modifier x <regular_expressions.html#x>`_ default value"
-msgstr "`Модификатор x <regular_expressions.html#x>`_ стойност по подразбиране"
+msgstr ""
+"`Модификатор x <regular_expressions.html#x>`_ стойност по подразбиране"
 
-# ad707065285c43e18a9477e6ede04d9b
-#: ../../tregexpr.rst:400
+# d7e360b5b14747f8871f1fd639283e4d
+#: ../../tregexpr.rst:414
 msgid "RegExprSpaceChars"
 msgstr "RegExprSpaceChars"
 
-# d97ac5ca4291439d9990079ff07d9b1b
-#: ../../tregexpr.rst:402
+# a02b25600d80477ba15359bf9c336cd9
+#: ../../tregexpr.rst:416
 msgid "Default for SpaceChars_ property"
 msgstr "По подразбиране за свойството SpaceChars_"
 
-# 4aa0deda29784187946dd010c02c5aec
-#: ../../tregexpr.rst:406
+# c5e02818ecd24c4fafb77cec23f3c3f7
+#: ../../tregexpr.rst:420
 msgid "RegExprWordChars"
 msgstr "RegExprWordChars"
 
-# e31a20227b1f463f8eb30a51a63d9b12
-#: ../../tregexpr.rst:408
+# 89933627cd9c4cccbf12e64e68ea774d
+#: ../../tregexpr.rst:422
 msgid "Default value for WordChars_ property"
 msgstr "Стойност по подразбиране за свойството WordChars_"
 
-# 587f145f49a743a7ac74d65b58a7d6d4
-#: ../../tregexpr.rst:412
+# 543872c3906e4206a21a292120869f38
+#: ../../tregexpr.rst:426
 msgid "RegExprLineSeparators"
 msgstr "RegExprLineSeparators"
 
-# 02f6f3bc3f3240999252663ffb1946ba
-#: ../../tregexpr.rst:414
+# e20d11ea0a824812897e01353d855977
+#: ../../tregexpr.rst:428
 msgid "Default value for LineSeparators_ property"
 msgstr "Стойност по подразбиране за свойството LineSeparators_"
 
-# f11ef3231f4a4f7c976633edcbf6cdde
-#: ../../tregexpr.rst:417
+# 4211f8ac71034746b6210b1c4baa99ab
+#: ../../tregexpr.rst:431
 msgid "RegExprLinePairedSeparator"
 msgstr "RegExprLinePairedSeparator"
 
-# 845c9e7f55954551b55b737424a5aa70
-#: ../../tregexpr.rst:419
+# 784f434987b4475eb498ca6cfc9c5637
+#: ../../tregexpr.rst:433
 msgid "Default value for LinePairedSeparator_ property"
 msgstr "Стойност по подразбиране за свойството LinePairedSeparator_"
 
-# ad093a53ba3d4944a8d9921577e5b6e3
-#: ../../tregexpr.rst:423
+# 00564f5197634162a9e39cd363dfe48b
+#: ../../tregexpr.rst:437
 msgid "RegExprInvertCaseFunction"
 msgstr "RegExprInvertCaseFunction"
 
-# 39bb61941e1b44c1b2df720ff7b38904
-#: ../../tregexpr.rst:425
+# 758ded3f88df455c87aebd5ed7b0cd7d
+#: ../../tregexpr.rst:439
 msgid "Default for InvertCase_ property"
 msgstr "По подразбиране за свойството InvertCase_"
 
-# 0539fbf94edd40388db5e2100343c4c5
-#: ../../tregexpr.rst:428
+# ad95a480547541deb22959e509a50aa1
+#: ../../tregexpr.rst:442
 msgid "Global functions"
 msgstr "Глобални функции"
 
-# ff352fde8a094be0b82e9b5e15427f0c
-#: ../../tregexpr.rst:430
+# 9573df23a7a54531ac8cf2399328deef
+#: ../../tregexpr.rst:444
 msgid ""
 "All this functionality is available as methods of ``TRegExpr``, but with "
-"global functions you do not need to create ``TReExpr`` instance so your "
-"code would be more simple if you just need one function."
+"global functions you do not need to create ``TReExpr`` instance so your code"
+" would be more simple if you just need one function."
 msgstr ""
 "Цялата тази функционалност е достъпна като методи на ``TRegExpr``, но с "
-"глобални функции не е необходимо да създавате ``TReExpr`` екземпляр, така"
-" че вашият код да бъде по-прост, ако имате нужда само от една функция."
+"глобални функции не е необходимо да създавате ``TReExpr`` екземпляр, така че"
+" вашият код да бъде по-прост, ако имате нужда само от една функция."
 
-# 976f67edefab42f3ac9f276d20a8a6bf
-#: ../../tregexpr.rst:435
+# 61dbaa14d6da41b0abc14673bdae05eb
+#: ../../tregexpr.rst:449
 msgid "ExecRegExpr"
 msgstr "ExecRegExpr"
 
-# 379c9c62941e4aaba9f5033fbe5164ec
-#: ../../tregexpr.rst:437
+# a3ed1ed81a7e45769b8146f04cf11fff
+#: ../../tregexpr.rst:451
 msgid ""
 "true if the string matches the regular expression. Just as Exec_ in "
 "``TRegExpr``."
@@ -1046,47 +1098,77 @@ msgstr ""
 "true, ако низът съответства на регулярния израз. Точно като Exec_ в "
 "&quot;TRegExpr&quot;."
 
-# 8ebb3f82d0ed4174b953a0d49c6e3225
-#: ../../tregexpr.rst:441
+# 6bc0551a202a4935a77a3d7328f326e0
+#: ../../tregexpr.rst:455
 msgid "SplitRegExpr"
 msgstr "SplitRegExpr"
 
-# 50b241d388564b3897942fe14045c6a4
-#: ../../tregexpr.rst:443
+# 5ad5ae23280b4cda97f07461d731e110
+#: ../../tregexpr.rst:457
 msgid ""
-"Splits the string by regular expressions. See also Split_ if you prefer "
-"to create ``TRegExpr`` instance explicitly."
+"Splits the string by regular expressions. See also Split_ if you prefer to "
+"create ``TRegExpr`` instance explicitly."
 msgstr ""
 "Разделя низа с регулярни изрази. Вижте също Split_, ако предпочитате да "
 "създадете екземпляр ``TRegExpr`` изрично."
 
-# 848d75458db94f55aa25dc110c38dab1
-#: ../../tregexpr.rst:447
+# b1d5b7e94d16440c836895dd092750e9
+#: ../../tregexpr.rst:461
 msgid "ReplaceRegExpr"
 msgstr "ReplaceRegExpr"
 
-# 3446fdd5d12849ca9d526b4ac3599206
-#: ../../tregexpr.rst:449
+# af002aa6162543908fb2813b895e6a6f
+#: ../../tregexpr.rst:477
 msgid ""
-"Returns the string with regular expressions replaced by the "
-"``AReplaceStr``. See also Replace_ if you prefer to create TRegExpr "
-"instance explicitly."
+"function ReplaceRegExpr (\n"
+"    const ARegExpr, AInputStr, AReplaceStr : RegExprString;\n"
+"    AUseSubstitution : boolean= False\n"
+") : RegExprString; overload;\n"
+"\n"
+"Type\n"
+"  TRegexReplaceOption = (rroModifierI,\n"
+"                         rroModifierR,\n"
+"                         rroModifierS,\n"
+"                         rroModifierG,\n"
+"                         rroModifierM,\n"
+"                         rroModifierX,\n"
+"                         rroUseSubstitution,\n"
+"                         rroUseOsLineEnd);\n"
+"  TRegexReplaceOptions = Set of TRegexReplaceOption;\n"
+"\n"
+"function ReplaceRegExpr (\n"
+"    const ARegExpr, AInputStr, AReplaceStr : RegExprString;\n"
+"    Options :TRegexReplaceOptions\n"
+") : RegExprString; overload;"
+msgstr ""
+"функция ReplaceRegExpr (const ARegExpr, AInputStr, AReplaceStr: "
+"RegExprString; AUseSubstitution: boolean = False): RegExprString; "
+"претоварване; Тип TRegexReplaceOption = (rroModifierI, rroModifierR, "
+"rroModifierS, rroModifierG, rroModifierM, rroModifierX, rroUseSubstitution, "
+"rroUseOsLineEnd); TRegexReplaceOptions = Набор от TRegexReplaceOption; "
+"функция ReplaceRegExpr (const ARegExpr, AInputStr, AReplaceStr: "
+"RegExprString; Опции: TRegexReplaceOptions): RegExprString; претоварване;"
+
+# 9c6d70992b754b3bbbc7a49254175287
+#: ../../tregexpr.rst:486
+msgid ""
+"Returns the string with regular expressions replaced by the ``AReplaceStr``."
+" See also Replace_ if you prefer to create TRegExpr instance explicitly."
 msgstr ""
 "Връща низа с регулярни изрази, заменен от ``AReplaceStr``. Вж. Също "
 "Replace_, ако предпочитате да създадете TRegExpr например."
 
-# 1b6dc7fa59294b0ba3653468f5cee2d4
-#: ../../tregexpr.rst:452
-#, fuzzy
+# d4a68a75ab204f8b83af34fff67b6613
+#: ../../tregexpr.rst:489
 msgid ""
-"If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` "
-"will be used as template for ``Substitution methods``:"
+"If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will "
+"be used as template for ``Substitution methods``:"
 msgstr ""
-"Ако `` AUseSubstitution` е вярно, то ``AReplaceStr`` ще бъде използван "
-"като шаблон за `` Методи за заместване``."
+"Ако последният аргумент (`` AUseSubstitution``) е вярно, то `` AReplaceStr``"
+" ще бъде използван като шаблон за `` Методи за заместване``:"
 
-# 2bf6d65a1443409384b682e259c5be76
-#: ../../tregexpr.rst:457
+# 9f4ff278cd904c4a9d91efe6601682e1
+#: ../../tregexpr.rst:506
 msgid ""
 "ReplaceRegExpr (\n"
 "  '((?i)block|var)\\s*(\\s*\\([^ ]*\\)\\s*)\\s*',\n"
@@ -1095,20 +1177,21 @@ msgid ""
 "  True\n"
 ")"
 msgstr ""
+"ReplaceRegExpr (&#39;((? I) блок | var) s * (* * * (*) * * * *,&#39; BLOCK "
+"(test1) &#39;,&#39; def &#39;$ 1 &quot;value&quot; $ 2 &quot;&quot;, вярно)"
 
-# 19c18b1de0f140e6b54eb9b509ffb64b
-#: ../../tregexpr.rst:464
-#, fuzzy
+# 510fc70071a2433a82b553c1635205b0
+#: ../../tregexpr.rst:501
 msgid "Returns  ``def 'BLOCK' value 'test1'``"
-msgstr "ще се върне: def &#39;BLOCK&#39; стойност &#39;test1&#39;"
+msgstr "Връща `` def &#39;BLOCK&#39; стойност &#39;test1&#39;``"
 
-# ab2ee91a93a44e7ea26959497f57dd99
-#: ../../tregexpr.rst:466
+# 01c164ea8d6c436e9e098ea0861a7ff8
+#: ../../tregexpr.rst:503
 msgid "But this one (note there is no last argument):"
-msgstr ""
+msgstr "Но тази (забележете, че няма последен аргумент):"
 
-# 2bf6d65a1443409384b682e259c5be76
-#: ../../tregexpr.rst:470
+# 92e29bdd96f945819ff25f52778eb37d
+#: ../../tregexpr.rst:519
 msgid ""
 "ReplaceRegExpr (\n"
 "  '((?i)block|var)\\s*(\\s*\\([^ ]*\\)\\s*)\\s*',\n"
@@ -1116,30 +1199,31 @@ msgid ""
 "  'def \"$1\" value \"$2\"'\n"
 ")"
 msgstr ""
+"ReplaceRegExpr (&#39;((? I) блок | var) s * (* * * (*) * * * *,&#39; BLOCK "
+"(test1) &#39;,&#39; def &#39;$ 1 &quot;value&quot; $ 2 &quot;&#39;)"
 
-# 468582f17cf44aa99caf539ca7906a57
-#: ../../tregexpr.rst:476
-#, fuzzy
+# 9a36f76aed2547529aa1f13e347bbad7
+#: ../../tregexpr.rst:513
 msgid "Returns ``def \"$1\" value \"$2\"``"
-msgstr "ще се върне: def „$ 1“ стойност „$ 2“"
+msgstr "Връща `` def &#39;$ 1 &quot;стойност&quot; $ 2 &quot;` `"
 
-# 154956e5a5684cfe8fe738b50f2e623e
-#: ../../tregexpr.rst:479
+# 1439b264fec74ae2ad9ea11a708e39a0
+#: ../../tregexpr.rst:516
 msgid "Version with options"
 msgstr "Версия с опции"
 
-# cfbcd8a386864fed94530caa92931339
-#: ../../tregexpr.rst:481
+# 59a896bcd29b4fe7a64e8a7fe3a3965c
+#: ../../tregexpr.rst:518
 msgid ""
-"With ``Options`` you control ``\\n`` behaviour (if ``rroUseOsLineEnd`` "
-"then ``\\n`` is replaced with ``\\n\\r`` in Windows and ``\\n`` in "
-"Linux). And so on."
+"With ``Options`` you control ``\\n`` behaviour (if ``rroUseOsLineEnd`` then "
+"``\\n`` is replaced with ``\\n\\r`` in Windows and ``\\n`` in Linux). And so"
+" on."
 msgstr ""
-"С ``Опции`` вие контролирате `` `` поведение (ако ``rroUseOsLineEnd`` "
-"тогава `` `` се заменя с ``n`` в Windows и `` `` Linux). И така нататък."
+"С ``Опции`` вие контролирате `` `` поведение (ако ``rroUseOsLineEnd`` тогава"
+" `` `` се заменя с ``n`` в Windows и `` `` Linux). И така нататък."
 
-# 260c91d9e4944a759e3bd73168ebc836
-#: ../../tregexpr.rst:484
+# 1702c97357584e5db57510b1e9b92bdb
+#: ../../tregexpr.rst:521
 msgid ""
 "Type\n"
 "  TRegexReplaceOption = (rroModifierI,\n"
@@ -1151,81 +1235,84 @@ msgid ""
 "                         rroUseSubstitution,\n"
 "                         rroUseOsLineEnd);"
 msgstr ""
+"Тип TRegexReplaceOption = (rroModifierI, rroModifierR, rroModifierS, "
+"rroModifierG, rroModifierM, rroModifierX, rroUseSubstitution, "
+"rroUseOsLineEnd);"
 
-# 1ed790106086420dbcb76422bd55ca5d
-#: ../../tregexpr.rst:497
+# e747a44e799d4feaaf94048c08314432
+#: ../../tregexpr.rst:534
 msgid "QuoteRegExprMetaChars"
 msgstr "QuoteRegExprMetaChars"
 
-# a32c441895684121977d60f0fbd6db0c
-#: ../../tregexpr.rst:499
+# 8c2ca91909c74d17addb1eb016706043
+#: ../../tregexpr.rst:536
 msgid ""
-"Replace all metachars with its safe representation, for example "
-"``abc'cd.(`` converts into ``abc\\'cd\\.\\(``"
+"Replace all metachars with its safe representation, for example ``abc'cd.(``"
+" converts into ``abc\\'cd\\.\\(``"
 msgstr ""
 "Заменете всички метачари със своето безопасно представяне, например "
 "&quot;abc&#39;cd. (` `Преобразува в` `abc cd&quot;; \\ t"
 
-# 77d383900a7c4f6588708ac87a1d30f8
-#: ../../tregexpr.rst:502
+# cebe4757d37b45c79e067109c4921ceb
+#: ../../tregexpr.rst:539
 msgid "This function usefull for r.e. autogeneration from user input"
 msgstr ""
-"Тази функция е полезна за повторно автоматично генериране от "
-"потребителския вход"
+"Тази функция е полезна за повторно автоматично генериране от потребителския "
+"вход"
 
-# a5c9b2e21be44d4783cc11c309b5113c
-#: ../../tregexpr.rst:505
+# 2bdfadf38db04a459f7419a83eeb3458
+#: ../../tregexpr.rst:542
 msgid "RegExprSubExpressions"
 msgstr "RegExprSubExpressions"
 
-# bb18fa14624b49f89e7e635017d65415
-#: ../../tregexpr.rst:507
+# 083c4faf9d8a405e8088cf559ee18449
+#: ../../tregexpr.rst:544
 msgid "Makes list of subexpressions found in ``ARegExpr``"
 msgstr "Прави списък с подекспресии, намерени в ``ARegExpr``"
 
-# f5fe823d6b9d44c19a4656fccfb94ec7
-#: ../../tregexpr.rst:509
+# c726c27d99884b64a5604d85f48f17e3
+#: ../../tregexpr.rst:546
 msgid ""
-"In ``ASubExps`` every item represent subexpression, from first to last, "
-"in format:"
+"In ``ASubExps`` every item represent subexpression, from first to last, in "
+"format:"
 msgstr ""
 "В ``ASubExps`` всеки елемент представлява субекспресия, от първата до "
 "последната във формат:"
 
-# 691fb061827f4c34a92dacde681dc4d5
-#: ../../tregexpr.rst:512
+# b3a29f76341745d7ac5055477c2da842
+#: ../../tregexpr.rst:549
 msgid "String - subexpression text (without ‘()’)"
 msgstr "String - текст с подекспресия (без „()“)"
 
-# fd9c0421e94f42a2b7c1a24d60b09c3d
-#: ../../tregexpr.rst:514
+# a34d0dfac79a414ea3e59fa4d03a8225
+#: ../../tregexpr.rst:551
 msgid ""
-"low word of Object - starting position in ARegExpr, including ‘(’ if "
-"exists! (first position is 1)"
+"low word of Object - starting position in ARegExpr, including ‘(’ if exists!"
+" (first position is 1)"
 msgstr ""
-"ниска дума на обект - начална позиция в ARegExpr, включително &#39;(&#39;"
-" ако съществува! (първа позиция е 1)"
+"ниска дума на обект - начална позиция в ARegExpr, включително &#39;(&#39; "
+"ако съществува! (първа позиция е 1)"
 
-# 36c9774b5f4543b2a3f11b8d3ebed089
-#: ../../tregexpr.rst:517
+# 0aa6146caff74cf6aab90b4cf1b41d8f
+#: ../../tregexpr.rst:554
 msgid ""
 "high word of Object - length, including starting ‘(’ and ending ‘)’ if "
 "exist!"
 msgstr ""
-"висока дума на обект - дължина, включително начална &#39;(&#39; и "
-"завършваща &#39;)&#39; ако съществуват!"
+"висока дума на обект - дължина, включително начална &#39;(&#39; и завършваща"
+" &#39;)&#39; ако съществуват!"
 
-# 2e1c0fd57150421c9f7fb6dfadd66141
-#: ../../tregexpr.rst:520
+# bc3f379edd864391b8a3f5bd07d3458f
+#: ../../tregexpr.rst:557
 msgid ""
 "``AExtendedSyntax`` - must be ``True`` if modifier ``/x`` will be ``On`` "
 "while using the r.e."
 msgstr ""
-"``AExtendedSyntax`` - трябва да е `` True &#39;&#39;, ако модификаторът "
-"`` / x`` е ``On``, докато използвате повторно"
+"``AExtendedSyntax`` - трябва да е `` True &#39;&#39;, ако модификаторът `` /"
+" x`` е ``On``, докато използвате повторно"
 
-# e124e12c0b9748088e423f0cb5c53c37
-#: ../../tregexpr.rst:523
+# 68fad3f1f5eb44f39c0bb576bb897160
+#: ../../tregexpr.rst:560
 msgid ""
 "Usefull for GUI editors of r.e. etc (you can find example of using in "
 "`REStudioMain.pas "
@@ -1235,113 +1322,113 @@ msgstr ""
 "използване в `REStudioMain.pas "
 "<https://github.com/masterandrey/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMain.pas#L474>`_)"
 
-# 3f20b5860f984ad8b65858dad109f7b3
-#: ../../tregexpr.rst:527
+# a02ee22a78564e36b1198a8d2c12af6e
+#: ../../tregexpr.rst:564
 msgid "Result code"
 msgstr "Код на резултатите"
 
-# d1575d03df594bb5a1f5259d9bde1f96
-#: ../../tregexpr.rst:527
+# 7703cb5190574750b293c36de93346d4
+#: ../../tregexpr.rst:564
 msgid "Meaning"
 msgstr "значение"
 
-# 4f0a93de521a470f8ccd3bc06efde5d9
-#: ../../tregexpr.rst:529
+# 893b2fb7e289469cb5d507a899c3e007
+#: ../../tregexpr.rst:566
 msgid "0"
 msgstr "0"
 
-# e31c68543c174722ab7814aa70c21d42
-#: ../../tregexpr.rst:529
+# 714be4f186e24dc8ba5743f60455aeb9
+#: ../../tregexpr.rst:566
 msgid "Success. No unbalanced brackets was found"
 msgstr "Успех. Не бяха намерени небалансирани скоби"
 
-# d5330ee8b4de4800b73f912aee5f0687
-#: ../../tregexpr.rst:530
+# 9d210255fa6b4605aea7acd36d5453d4
+#: ../../tregexpr.rst:567
 msgid "-1"
 msgstr "-1"
 
-# 61091b3b25774e2cbebe3ab73c70c459
-#: ../../tregexpr.rst:530
+# 0965fc8ef9b94c5abb4d4ec6b7939dc0
+#: ../../tregexpr.rst:567
 msgid "there are not enough closing brackets ``)``"
 msgstr "няма достатъчно затварящи скоби ``) ``"
 
-# 27190c0c3dfd4d35b17fe9b37fc76a4c
-#: ../../tregexpr.rst:531
+# f90d5709ab734df2a2a983b055144d1f
+#: ../../tregexpr.rst:568
 msgid "-(n+1)"
 msgstr "- (п + 1)"
 
-# 1a26203a8657400c9d453af26cd933de
-#: ../../tregexpr.rst:531
-msgid "at position n was found opening ``[`` without corresponding closing ``]``"
+# c4aa173ab51b4ad98ffe47774ec61918
+#: ../../tregexpr.rst:568
+msgid ""
+"at position n was found opening ``[`` without corresponding closing ``]``"
 msgstr "в позиция n е намерено отваряне ``[`` без съответно затваряне ``] ``"
 
-# 6c205095ee8d4373983f802772b82aca
-#: ../../tregexpr.rst:532
+# d4d93d80a3b8488783f9444918cfca97
+#: ../../tregexpr.rst:569
 msgid "n"
 msgstr "п"
 
-# 7b8a44df14a44204b77878f26f7f7f79
-#: ../../tregexpr.rst:532
+# 641804a74f5a480fb4804d0db0fdb294
+#: ../../tregexpr.rst:569
 msgid ""
-"at position n was found closing bracket ``)`` without corresponding "
-"opening ``(``"
-msgstr ""
-"на позиция n е намерена затваряща скоба ``) `` без съответно отваряне "
+"at position n was found closing bracket ``)`` without corresponding opening "
 "``(``"
-
-# 5ccc5e356eda4954a316c17918906fa4
-#: ../../tregexpr.rst:535
-msgid ""
-"If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal"
-" ones"
 msgstr ""
-"Ако `` Резултат <> 0``, то ``ASubExprs`` може да съдържа празни елементи "
-"или незаконни"
+"на позиция n е намерена затваряща скоба ``) `` без съответно отваряне ``(``"
 
-# aed94ac85d94421eaa743168b7ac3892
-#: ../../tregexpr.rst:538
+# 12383808554e43c1a157c2d6a747e9a5
+#: ../../tregexpr.rst:572
+msgid ""
+"If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal "
+"ones"
+msgstr ""
+"Ако `` Резултат <> 0``, то ``ASubExprs`` може да съдържа празни елементи или"
+" незаконни"
+
+# 4822de27e31841ae9c48e0748d771be3
+#: ../../tregexpr.rst:575
 msgid "ERegExpr"
 msgstr "ERegExpr"
 
-# a7223b94cacf4357adc94ff03ab8e197
-#: ../../tregexpr.rst:542
+# 1abb93e2c8bb4256b08e581b1cb2bb66
+#: ../../tregexpr.rst:591
 msgid ""
 "ERegExpr = class (Exception)\n"
 "  public\n"
-"   ErrorCode : integer; // error code. Compilation error codes are before"
-" 1000\n"
-"   CompilerErrorPos : integer; // Position in r.e. where compilation "
-"error occured\n"
+"   ErrorCode : integer; // error code. Compilation error codes are before 1000\n"
+"   CompilerErrorPos : integer; // Position in r.e. where compilation error occured\n"
 " end;"
 msgstr ""
+"ERegExpr = клас (Изключение) public ErrorCode: integer; // код на грешка. "
+"Кодовете за грешки при компилирането са преди 1000 CompilerErrorPos: "
+"integer; // Позиция, където е станала грешка при компилирането;"
 
-# 5acc362ed76e4abebb386b53cb17ec25
-#: ../../tregexpr.rst:549
+# 1692bd97a4634df4a54adc7162019d48
+#: ../../tregexpr.rst:586
 msgid "Unicode"
 msgstr "Unicode"
 
-# a7d589b8a607447db3b94266e7a63009
-#: ../../tregexpr.rst:551
-msgid "TRegExpr now supports UniCode, but it works very slow :("
-msgstr "TRegExpr вече поддържа UniCode, но работи много бавно: ("
-
-# 84722658884048a78b46f8fc469e9bd7
-#: ../../tregexpr.rst:553
-msgid "Who want to optimize it ? ;)"
-msgstr "Кой иска да го оптимизира? )"
-
-# 428fc56a60244ed9bd7e21fe079b4450
-#: ../../tregexpr.rst:555
-msgid "Use it only if you really need Unicode support !"
-msgstr "Използвайте го само ако наистина се нуждаете от поддръжка на Unicode!"
-
-# c44517be82fc44adbe4f598a2e67cff1
-#: ../../tregexpr.rst:557
+# 4fc194ba927d4167b60f913bd76127f5
+#: ../../tregexpr.rst:588
 msgid ""
-"Remove ``.`` in ``{.$DEFINE UniCode}`` in regexpr.pas. After that all "
-"strings will be treated as WideString."
+"UniCode slows down performance so use it only if you really need Unicode "
+"support."
 msgstr ""
-"Премахнете ``.`` в ``{.$DEFINE UniCode}`` в regexpr.pas. След това всички"
-" низове ще се третират като WideString."
+"UniCode забавя изпълнението, така че го използвайте само ако наистина се "
+"нуждаете от поддръжка на Unicode."
 
+# 166c66cd203f415fa9b93fd2d0e380a2
+#: ../../tregexpr.rst:591
+msgid ""
+"To use Unicode uncomment ``{$DEFINE UniCode}`` in `regexpr.pas "
+"<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__"
+" (remove ``off``)."
+msgstr ""
+"За да използвате Uncomode uncomment `` {$ DEFINE UniCode} `` в `regexpr.pas "
+"<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>"
+" `__ (премахнете` `изключено``)."
 
+# 2031f821f06d4234809f7596e9f62b9d
+#: ../../tregexpr.rst:596
+msgid "After that all strings will be treated as WideString."
+msgstr "След това всички низове ще се третират като WideString."
