@@ -377,7 +377,7 @@ opening parenthesis (including nested subexpressions).
 First subexpression has number ``1``.
 Whole regular expression has number ``0``.
 
-.. tip::
+.. pull-quote:: Example
 
     regular expression ``(foo(bar))``
 

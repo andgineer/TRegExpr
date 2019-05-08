@@ -143,8 +143,9 @@ Any assignment to this property clears Match_, MatchPos_ and MatchLen_.
 Substitute
 ~~~~~~~~~~
 
-.. literalinclude:: ../src/RegExpr.pas
-   :lines: 470
+::
+
+    function Substitute (const ATemplate : RegExprString) : RegExprString;
 
 Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular expression
 and ``$n`` replaced by occurence of subexpression number ``n``.
@@ -192,8 +193,20 @@ object creation.
 Replace, ReplaceEx
 ~~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: ../src/RegExpr.pas
-   :lines: 476-483, 497-499
+::
+
+    function Replace (Const AInputStr : RegExprString;
+      const AReplaceStr : RegExprString;
+      AUseSubstitution : boolean= False)
+     : RegExprString; overload;
+
+    function Replace (Const AInputStr : RegExprString;
+      AReplaceFunc : TRegExprReplaceFunction)
+     : RegExprString; overload;
+
+    function ReplaceEx (Const AInputStr : RegExprString;
+      AReplaceFunc : TRegExprReplaceFunction):
+      RegExprString;
 
 Returns the string with r.e. occurencies replaced by the replace string.
 
@@ -447,9 +460,28 @@ See also Split_ if you prefer to create ``TRegExpr`` instance explicitly.
 ReplaceRegExpr
 ~~~~~~~~~~~~~~
 
-.. literalinclude:: ../src/RegExpr.pas
-   :lines: 671-672, 676-687
+::
 
+    function ReplaceRegExpr (
+        const ARegExpr, AInputStr, AReplaceStr : RegExprString;
+        AUseSubstitution : boolean= False
+    ) : RegExprString; overload;
+
+    Type
+      TRegexReplaceOption = (rroModifierI,
+                             rroModifierR,
+                             rroModifierS,
+                             rroModifierG,
+                             rroModifierM,
+                             rroModifierX,
+                             rroUseSubstitution,
+                             rroUseOsLineEnd);
+      TRegexReplaceOptions = Set of TRegexReplaceOption;
+
+    function ReplaceRegExpr (
+        const ARegExpr, AInputStr, AReplaceStr : RegExprString;
+        Options :TRegexReplaceOptions
+    ) : RegExprString; overload;
 
 Returns the string with regular expressions replaced by the ``AReplaceStr``.
 See also Replace_ if you prefer to create TRegExpr instance explicitly.
@@ -553,16 +585,12 @@ ERegExpr
 Unicode
 -------
 
-UniCode slows down performance so use it only if you really need Unicode support.
+UniCode slows down performance so use it only if you really need Unicode
+support.
 
-To use Unicode remove ``off``
+To use Unicode uncomment ``{$DEFINE UniCode}``
 in `regexpr.pas <https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__
-so it became ``{$DEFINE UniCode}``.
-
-.. literalinclude:: ../src/RegExpr.pas
-   :lines: 85-86
-   :lineno-start: 85
-   :linenos:
+(remove ``off``).
 
 
 After that all strings will be treated as WideString.
