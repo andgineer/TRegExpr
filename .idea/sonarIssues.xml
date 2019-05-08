@@ -178,6 +178,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/regular_expressions.mo">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/locale/ru/LC_MESSAGES/regular_expressions.po">
           <value>
             <set />
@@ -383,7 +388,22 @@
             <set />
           </value>
         </entry>
+        <entry key="/work/compbiovis/backend/server/controllers/request.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/server/db/conn.py">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/work/compbiovis/backend/server/db/models/project.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/compbiovis/backend/server/journaling.py">
           <value>
             <set />
           </value>

@@ -183,7 +183,7 @@ msgid ""
 "initialized with RegExprModifierI_ value."
 msgstr ""
 "`Modifier / i,&quot; Groß- und Kleinschreibung wird nicht berücksichtigt "
-"&quot; <regular_expressions.html#i> `, initialisiert mit RegExprModifierI_ "
+"&quot; <regular_expressions.html#i>`__, initialisiert mit RegExprModifierI_ "
 "value."
 
 # 7b0a4fae72a34023b6958073426bfac3
@@ -387,8 +387,8 @@ msgid ""
 "Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular "
 "expression and ``$n`` replaced by occurence of subexpression number ``n``."
 msgstr ""
-"Gibt ``ATemplate`` zurück, wobei `` $ &amp; `` oder ``$0`` durch den ganzen "
-"regulären Ausdruck ersetzt werden und `` $ n`` durch das Auftreten der "
+"Gibt ``ATemplate`` zurück, wobei ``$&`` oder ``$0`` durch den ganzen "
+"regulären Ausdruck ersetzt werden und ``$n`` durch das Auftreten der "
 "Unterausdrucknummer ``n`` ersetzt wird."
 
 # 472840eb62304a00ba548020c0ce03b8
@@ -411,7 +411,7 @@ msgstr "Beschreibung"
 # c529505cc5f642ba9f4418abe81c3a5d
 #: ../../tregexpr.rst:158
 msgid "``$&``"
-msgstr "`` $ &amp; ``"
+msgstr "``$&``"
 
 # f096a473d865448680bf781a0a1b27a1
 # 17a1db76015d44be88cddcc9d9eba35e
@@ -427,7 +427,7 @@ msgstr "``$0``"
 # acc558739ec14eb4a7fd736c44b2559b
 #: ../../tregexpr.rst:160
 msgid "``$n``"
-msgstr "`` $ n``"
+msgstr "``$n``"
 
 # 562ec9c44605476d88da0758bc0d57fd
 #: ../../tregexpr.rst:160
@@ -442,7 +442,7 @@ msgstr "``\\n``"
 # 16b6159b15234a9990386dbc74ba8a9d
 #: ../../tregexpr.rst:161
 msgid "in Windows replaced with ``\\r\\n``"
-msgstr "in Windows durch `` \\ r \\ n`` ersetzt"
+msgstr "in Windows durch ``\\r\\n`` ersetzt"
 
 # b641853e1a064839ad25ad3ce1a78962
 #: ../../tregexpr.rst:162
@@ -696,9 +696,9 @@ msgid ""
 "First subexpr. have ``Idx=1``, last - ``MatchCount``, whole r.e. have "
 "``Idx=0``."
 msgstr ""
-"pos von Eingang subexpr. `` # Idx`` wurde in der letzten `` Exec * `` "
-"Zeichenfolge getestet. Erster Unterausdruck habe `` Idx = 1``, zuletzt - `` "
-"MatchCount``, ganze hat `` Idx = 0``."
+"pos von Eingang subexpr. ``#Idx`` wurde in der letzten `` Exec * `` "
+"Zeichenfolge getestet. Erster Unterausdruck habe ``Idx=1``, zuletzt - `` "
+"MatchCount``, ganze hat ``Idx=0``."
 
 # e8e07a25804c442bb21638a532682e9d
 #: ../../tregexpr.rst:270
@@ -721,9 +721,9 @@ msgid ""
 " First subexpr. have ``Idx=1``, last - MatchCount, whole r.e. have "
 "``Idx=0``."
 msgstr ""
-"len von entry subexpr. `` # Idx`` wird in der letzten `` Exec * `` "
-"Zeichenfolge getestet. Erster Unterausdruck habe `` Idx = 1``, letzte - "
-"MatchCount, ganze hat `` Idx = 0``."
+"len von entry subexpr. ``#Idx`` wird in der letzten `` Exec * `` "
+"Zeichenfolge getestet. Erster Unterausdruck habe ``Idx=1``, letzte - "
+"MatchCount, ganze hat ``Idx=0``."
 
 # 2b72f0745ed243aba413dd5f0c291813
 #: ../../tregexpr.rst:280
@@ -800,7 +800,7 @@ msgid ""
 "Contains chars, treated as ``\\s`` (initially filled with RegExprSpaceChars_"
 " global constant)"
 msgstr ""
-"Enthält Zeichen, die als `` \\ s`` behandelt werden (anfänglich mit der "
+"Enthält Zeichen, die als ``\\s`` behandelt werden (anfänglich mit der "
 "globalen Konstante RegExprSpaceChars_ gefüllt)"
 
 # 9df6b1a5d2a54684923f7706eba0158e
@@ -814,7 +814,7 @@ msgid ""
 "Contains chars, treated as ``\\w`` (initially filled with RegExprWordChars_ "
 "global constant)"
 msgstr ""
-"Enthält Zeichen, die als `` \\ w`` behandelt werden (anfänglich mit der "
+"Enthält Zeichen, die als ``\\w`` behandelt werden (anfänglich mit der "
 "globalen Konstante RegExprWordChars_ gefüllt)"
 
 # 00ecff7461814119b5bfae15829a8ea9
@@ -846,7 +846,7 @@ msgstr "LinePairedSeparator"
 # 32c809ef69fd45aca1465c74cf8d1898
 #: ../../tregexpr.rst:331
 msgid "paired line separator (like ``\\r\\n`` in DOS and Windows)."
-msgstr "gepaartes Trennzeichen (wie `` \\ r \\ n`` in DOS und Windows)."
+msgstr "gepaartes Trennzeichen (wie ``\\r\\n`` in DOS und Windows)."
 
 # 94152e0d07ca4effbb3392f5f3086297
 #: ../../tregexpr.rst:333
@@ -1361,7 +1361,7 @@ msgstr "-1"
 # 0965fc8ef9b94c5abb4d4ec6b7939dc0
 #: ../../tregexpr.rst:567
 msgid "there are not enough closing brackets ``)``"
-msgstr "Es gibt nicht genug schließende Klammern ``) ``"
+msgstr "Es gibt nicht genug schließende Klammern ``)``"
 
 # f90d5709ab734df2a2a983b055144d1f
 #: ../../tregexpr.rst:568
@@ -1387,7 +1387,7 @@ msgid ""
 "at position n was found closing bracket ``)`` without corresponding opening "
 "``(``"
 msgstr ""
-"In Position n wurde das Schließen der Klammer ``) `` ohne entsprechende "
+"In Position n wurde das Schließen der Klammer ``)`` ohne entsprechende "
 "Öffnung ``(``) gefunden"
 
 # 12383808554e43c1a157c2d6a747e9a5
@@ -1438,10 +1438,10 @@ msgid ""
 "<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__"
 " (remove ``off``)."
 msgstr ""
-"Um Unicode zu verwenden, kommentieren Sie `` {$ DEFINE UniCode} `` `in` "
+"Um Unicode zu verwenden, kommentieren Sie ``{$DEFINE UniCode}`` `in` "
 "regexpr.pas "
 "<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>"
-" `__ (entferne` `off``)."
+" `__ (entferne ``off``)."
 
 # 2031f821f06d4234809f7596e9f62b9d
 #: ../../tregexpr.rst:596

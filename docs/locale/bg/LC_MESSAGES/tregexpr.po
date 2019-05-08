@@ -180,7 +180,7 @@ msgid ""
 "initialized with RegExprModifierI_ value."
 msgstr ""
 "&quot;Модификатор / i,&quot; нечувствителен към регистъра &quot; "
-"<regular_expressions.html#i> `, инициализиран с RegExprModifierI_ стойност."
+"<regular_expressions.html#i>`__, инициализиран с RegExprModifierI_ стойност."
 
 # 7b0a4fae72a34023b6958073426bfac3
 #: ../../tregexpr.rst:60
@@ -386,8 +386,8 @@ msgid ""
 "Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular "
 "expression and ``$n`` replaced by occurence of subexpression number ``n``."
 msgstr ""
-"Връща ``ATemplate`` с `` $ &amp; `` или ``$0``, заменен с цял редовен израз "
-"и `` $ n`` заменен с поява на под-експресионен номер ``n``."
+"Връща ``ATemplate`` с ``$&`` или ``$0``, заменен с цял редовен израз "
+"и ``$n`` заменен с поява на под-експресионен номер ``n``."
 
 # 472840eb62304a00ba548020c0ce03b8
 #: ../../tregexpr.rst:153
@@ -395,7 +395,7 @@ msgid ""
 "To place into template characters ``$`` or ``\\``, use prefix ``\\``, like "
 "``\\\\`` or ``\\$``."
 msgstr ""
-"За да поставите в шаблони символи `` $ `` или `` `, използвайте префикс` `` "
+"За да поставите в шаблони символи ``$`` или `` `, използвайте префикс` `` "
 "`, като` `` `или` `` `."
 
 # 63534e92f9834a7d90a7ee143622abb5
@@ -411,7 +411,7 @@ msgstr "описание"
 # c529505cc5f642ba9f4418abe81c3a5d
 #: ../../tregexpr.rst:158
 msgid "``$&``"
-msgstr "`` $ &amp; ``"
+msgstr "``$&``"
 
 # f096a473d865448680bf781a0a1b27a1
 # 17a1db76015d44be88cddcc9d9eba35e
@@ -688,8 +688,8 @@ msgid ""
 "First subexpr. have ``Idx=1``, last - ``MatchCount``, whole r.e. have "
 "``Idx=0``."
 msgstr ""
-"поз. `` # Idx`` се тества в последния `` Exec * `` низ. Първият субекср. има"
-" `` Idx = 1``, последно - ``MatchCount``, цялото re има `` Idx = 0``."
+"поз. ``#Idx`` се тества в последния `` Exec * `` низ. Първият субекср. има"
+" ``Idx=1``, последно - ``MatchCount``, цялото re има ``Idx=0``."
 
 # e8e07a25804c442bb21638a532682e9d
 #: ../../tregexpr.rst:270
@@ -712,8 +712,8 @@ msgid ""
 " First subexpr. have ``Idx=1``, last - MatchCount, whole r.e. have "
 "``Idx=0``."
 msgstr ""
-"от входния субекспр. `` # Idx`` се тества в последния `` Exec * `` низ. "
-"Първият субекср. да има `` Idx = 1``, последно - MatchCount, целият има `` "
+"от входния субекспр. ``#Idx`` се тества в последния `` Exec * `` низ. "
+"Първият субекср. да има ``Idx=1``, последно - MatchCount, целият има `` "
 "Idx = 0``."
 
 # 2b72f0745ed243aba413dd5f0c291813
@@ -750,7 +750,7 @@ msgid ""
 "method raises exception) and clear internal status into ``0`` (no errors)."
 msgstr ""
 "Връща ``ID`` на последната грешка, ``0``, ако няма грешки (неизползваеми, "
-"ако метод ``Error`` повдигне изключение) и изчисти вътрешния статус в `` 0``"
+"ако метод ``Error`` повдигне изключение) и изчисти вътрешния статус в ``0``"
 " (без грешки)."
 
 # 9ff701b9629048e98f7191697fb08de3
@@ -1350,7 +1350,7 @@ msgstr "-1"
 # 0965fc8ef9b94c5abb4d4ec6b7939dc0
 #: ../../tregexpr.rst:567
 msgid "there are not enough closing brackets ``)``"
-msgstr "няма достатъчно затварящи скоби ``) ``"
+msgstr "няма достатъчно затварящи скоби ``)``"
 
 # f90d5709ab734df2a2a983b055144d1f
 #: ../../tregexpr.rst:568
@@ -1361,7 +1361,7 @@ msgstr "- (п + 1)"
 #: ../../tregexpr.rst:568
 msgid ""
 "at position n was found opening ``[`` without corresponding closing ``]``"
-msgstr "в позиция n е намерено отваряне ``[`` без съответно затваряне ``] ``"
+msgstr "в позиция n е намерено отваряне ``[`` без съответно затваряне ``]``"
 
 # d4d93d80a3b8488783f9444918cfca97
 #: ../../tregexpr.rst:569
@@ -1374,7 +1374,7 @@ msgid ""
 "at position n was found closing bracket ``)`` without corresponding opening "
 "``(``"
 msgstr ""
-"на позиция n е намерена затваряща скоба ``) `` без съответно отваряне ``(``"
+"на позиция n е намерена затваряща скоба ``)`` без съответно отваряне ``(``"
 
 # 12383808554e43c1a157c2d6a747e9a5
 #: ../../tregexpr.rst:572
@@ -1424,7 +1424,7 @@ msgid ""
 "<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__"
 " (remove ``off``)."
 msgstr ""
-"За да използвате Uncomode uncomment `` {$ DEFINE UniCode} `` в `regexpr.pas "
+"За да използвате Uncomode uncomment ``{$DEFINE UniCode}`` в `regexpr.pas "
 "<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>"
 " `__ (премахнете` `изключено``)."
 
