@@ -377,17 +377,16 @@ opening parenthesis (including nested subexpressions).
 First subexpression has number ``1``.
 Whole regular expression has number ``0``.
 
-.. pull-quote:: Example
+.. highlights:: For example for input string ``foobar``:
+    regular expression ``(foo(bar))`` will find:
 
-    regular expression ``(foo(bar))``
-
-    for input string ``foobar``:
-
-    =================== ==========
-    ``subexpression 0`` ``foobar``
-    ``subexpression 1`` ``foobar``
-    ``subexpression 2`` ``bar``
-    =================== ==========
+    ============= ==========
+    subexpression value
+    ============= ==========
+    ``0``         ``foobar``
+    ``1``         ``foobar``
+    ``2``         ``bar``
+    ============= ==========
 
 Backreferences
 --------------
