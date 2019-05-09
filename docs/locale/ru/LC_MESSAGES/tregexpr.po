@@ -120,7 +120,7 @@ msgid ""
 "For optimization regular expression is automatically compiled into "
 "``P-code``. Human-readable form of the ``P-code`` returns by Dump_."
 msgstr ""
-"Для оптимизации регулярное выражение автоматически компилируется в `` "
+"Для оптимизации регулярное выражение автоматически компилируется в ``"
 "P-код``. Читаемая человеком форма `` P-кода`` возвращает Dump_."
 
 # 86c6be00dc334f83a36000bc211ed5da
@@ -588,7 +588,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will "
 "be used as template for Substitution methods."
 msgstr ""
-"Если последний аргумент (`` AUseSubstitution``) равен true, то `` "
+"Если последний аргумент (`` AUseSubstitution``) равен true, то ``"
 "AReplaceStr`` будет использоваться в качестве шаблона для методов "
 "подстановки."
 
@@ -1184,7 +1184,7 @@ msgid ""
 "Returns the string with regular expressions replaced by the ``AReplaceStr``."
 " See also Replace_ if you prefer to create TRegExpr instance explicitly."
 msgstr ""
-"Возвращает строку с регулярными выражениями, замененными на `` "
+"Возвращает строку с регулярными выражениями, замененными на ``"
 "AReplaceStr``. Смотрите также Replace_, если вы предпочитаете создавать "
 "экземпляр TRegExpr явно."
 
@@ -1194,7 +1194,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will "
 "be used as template for ``Substitution methods``:"
 msgstr ""
-"Если последний аргумент (`` AUseSubstitution``) равен true, то `` "
+"Если последний аргумент (`` AUseSubstitution``) равен true, то ``"
 "AReplaceStr`` будет использоваться в качестве шаблона для `` методов "
 "подстановки``:"
 
@@ -1295,8 +1295,8 @@ msgid ""
 "Replace all metachars with its safe representation, for example ``abc'cd.(``"
 " converts into ``abc\\'cd\\.\\(``"
 msgstr ""
-"Замените все мета-символы своим безопасным представлением, например, `` "
-"abc&#39;cd. (`` Преобразуется в `` abc \\ &#39;cd \\. \\ (``"
+"Замените все мета-символы своим безопасным представлением, например, ``"
+"abc'cd.(`` преобразуется в ``abc\\'cd\\.\\(``"
 
 # cebe4757d37b45c79e067109c4921ceb
 #: ../../tregexpr.rst:539
@@ -1394,7 +1394,7 @@ msgstr "-1"
 # 0965fc8ef9b94c5abb4d4ec6b7939dc0
 #: ../../tregexpr.rst:567
 msgid "there are not enough closing brackets ``)``"
-msgstr "недостаточно закрывающих скобок``)``"
+msgstr "недостаточно закрывающих скобок ``)``"
 
 # f90d5709ab734df2a2a983b055144d1f
 #: ../../tregexpr.rst:568
@@ -1428,7 +1428,7 @@ msgid ""
 "If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal "
 "ones"
 msgstr ""
-"Если `` Result <> 0``, то ``ASubExprs`` может содержать пустые или "
+"Если ``Result <> 0``, то ``ASubExprs`` может содержать пустые или "
 "недопустимые элементы."
 
 # 4822de27e31841ae9c48e0748d771be3
@@ -1475,7 +1475,7 @@ msgstr ""
 "Чтобы использовать Unicode раскомментируйте ``{$DEFINE UniCode}`` в "
 "`regexpr.pas "
 "<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>"
-" `__ (удалить ``off``)."
+"`__ (удалить ``off``)."
 
 # 2031f821f06d4234809f7596e9f62b9d
 #: ../../tregexpr.rst:596

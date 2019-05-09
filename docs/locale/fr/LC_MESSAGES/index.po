@@ -151,7 +151,7 @@ msgid ""
 msgstr ""
 "Prêt à exécuter l&#39;application Windows `REStudio "
 "<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>"
-" `__ vous aidera à apprendre et à déboguer les expressions régulières."
+"`__ vous aidera à apprendre et à déboguer les expressions régulières."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:42

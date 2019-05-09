@@ -189,8 +189,8 @@ msgid ""
 "To represent non-printable character in regular expression you use "
 "``\\x..``:"
 msgstr ""
-"Para representar caracteres no imprimibles en expresiones regulares, use `` "
-"\\ x..``:"
+"Para representar caracteres no imprimibles en expresiones regulares, use ``"
+"\\x..``:"
 
 # 99108af9295841c68db59822412689a5
 #: ../../regular_expressions.rst:43
@@ -243,7 +243,7 @@ msgstr "`` \\ t``"
 # 82c6681e916f4e2aaef959365310eb45
 #: ../../regular_expressions.rst:54
 msgid "tab (HT/TAB), same as ``\\x09``"
-msgstr "pestaña (HT / TAB), igual que `` \\ x09``"
+msgstr "pestaña (HT / TAB), igual que ``\\x09``"
 
 # d3873114276842e2a8b829a626be258c
 #: ../../regular_expressions.rst:55
@@ -316,7 +316,7 @@ msgid ""
 "If you want to use character ``\\`` by itself, not as part of ``escape-"
 "code``, just prefix it with ``\\``, like that: ``\\\\``."
 msgstr ""
-"Si desea utilizar el carácter ``\\`` por sí mismo, no como parte de `` "
+"Si desea utilizar el carácter ``\\`` por sí mismo, no como parte de ``"
 "escape-code``, simplemente prefiéstelo con ``\\``, así: ``\\\\``."
 
 # c92dd65e00154917bf73dfaf233a8623
@@ -565,7 +565,7 @@ msgstr "`` foob \\ dr``"
 msgid ""
 "``foob1r``, ``foob6r`` and so on but not ``foobar``, ``foobbr`` and so on"
 msgstr ""
-"``foob1r``, ``foob6r`` y así sucesivamente, pero no ``foobar``, `` "
+"``foob1r``, ``foob6r`` y así sucesivamente, pero no ``foobar``, ``"
 "foobbr`` y así sucesivamente"
 
 # dfb845b2a2594c7ab40c1b72f119bc8d
@@ -579,7 +579,7 @@ msgid ""
 "``foobar``, ``foob r``, ``foobbr`` and so on but not ``foob1r``, ``foob=r`` "
 "and so on"
 msgstr ""
-"``foobar``, `` foob r``, ``foobbr`` y así sucesivamente, pero no `` "
+"``foobar``, `` foob r``, ``foobbr`` y así sucesivamente, pero no ``"
 "foob1r``, `` foob = r`` y así sucesivamente"
 
 # eedae6fabfd74022bfab29cc94103cea
@@ -1072,12 +1072,12 @@ msgstr "`` b + ``"
 # 3feacdc5bfb34128a95f74ba7552dcf7
 #: ../../regular_expressions.rst:306
 msgid "``bbbb``"
-msgstr "`` bbbb``"
+msgstr "``bbbb``"
 
 # 0d80f7da5c2f4519963404c8a75af4e8
 #: ../../regular_expressions.rst:307
 msgid "``b+?``"
-msgstr "`` b +? ``"
+msgstr "``b+?``"
 
 # 921469b0517c4f6cb8c0ed9d8660b660
 # f90207780f704a649cc65f64cc0d3c0b
@@ -1088,7 +1088,7 @@ msgstr "`` b``"
 # 529a666926184f4495b4229f01a1f29e
 #: ../../regular_expressions.rst:308
 msgid "``b*?``"
-msgstr "`` b *? ``"
+msgstr "``b*?``"
 
 # b5e1456ada1c4d3fa0db9df04d16362e
 #: ../../regular_expressions.rst:308
@@ -1146,7 +1146,7 @@ msgid ""
 "So ``fee|fie|foe`` will match any of ``fee``, ``fie``, or ``foe`` in the "
 "target string (as would ``f(e|i|o)e``)."
 msgstr ""
-"Entonces `` fee | fie | foe`` coincidirá con cualquiera de ``fee``, `` "
+"Entonces `` fee | fie | foe`` coincidirá con cualquiera de ``fee``, ``"
 "fie``, o ``foe`` en la cadena objetivo (como lo haría `` f (e | i | o) e "
 "``)."
 
@@ -1265,8 +1265,8 @@ msgid ""
 "For example for input string ``foobar`` regular expression ``(foo(bar))`` "
 "will find:"
 msgstr ""
-"Por ejemplo, para la cadena de entrada ``foobar`` la expresión regular `` "
-"(foo (bar)) `` encontrará:"
+"Por ejemplo, para la cadena de entrada ``foobar`` la expresión regular ``"
+"(foo(bar))`` encontrará:"
 
 # 08f1cd3ca4714b99b50bda6f66d20693
 #: ../../regular_expressions.rst:384
@@ -1663,7 +1663,7 @@ msgid ""
 "included in the regular expression match."
 msgstr ""
 "Esto simplemente no es tan conveniente como en la versión anterior, en la "
-"que puede usar ``Match[0]`` completo porque la parte capturada por `` "
+"que puede usar ``Match[0]`` completo porque la parte capturada por ``"
 "look ahead`` no se incluiría en la coincidencia de expresiones regulares."
 
 # 70e7700c7c26498bb4c413739e9ea313

@@ -722,10 +722,10 @@ msgid ""
 " match after any line separator within the string, and ``$`` will match "
 "before any line separator. You can do this by switching `modifier /m <#m>`_."
 msgstr ""
-"Може обаче да искате да третирате низ като многоредов текст, така че `` `` "
+"Може обаче да искате да третирате низ като многоредов текст, така че ``^`` "
 "ще съвпадне след всеки разделител на редове в низ и ``$`` ще съвпадне "
 "преди всеки разделител. Можете да направите това, като превключите `modifier"
-" / m <#m>`_."
+" /m <#m>`_."
 
 # 9552daf0442440008e3fe3f1b4e9b036
 #: ../../regular_expressions.rst:194

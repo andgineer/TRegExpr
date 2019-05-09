@@ -281,7 +281,7 @@ msgid ""
 "See also global function ExecRegExpr_ that you can use without explicit "
 "``TRegExpr`` object creation."
 msgstr ""
-"Siehe auch die globale Funktion ExecRegExpr_, die Sie ohne explizite `` "
+"Siehe auch die globale Funktion ExecRegExpr_, die Sie ohne explizite ``"
 "TRegExpr``-Objekterstellung verwenden können."
 
 # 98f603584fcd4c989d76d16c84b287d0
@@ -500,8 +500,8 @@ msgid ""
 "If you want to place raw digit after ‘$n’ you must delimit ``n`` with curly "
 "braces ``{}``."
 msgstr ""
-"Wenn Sie eine rohe Ziffer nach &#39;$ n&#39; setzen möchten, müssen Sie `` "
-"n`` mit geschweiften Klammern `` {} `` abgrenzen."
+"Wenn Sie eine rohe Ziffer nach &#39;$ n&#39; setzen möchten, müssen Sie ``"
+"n`` mit geschweiften Klammern ``{}`` abgrenzen."
 
 # 2e177d2b54d74932b5fd8bc383a6ccd5
 #: ../../tregexpr.rst:190
@@ -534,7 +534,7 @@ msgid ""
 "See also global function SplitRegExpr_ that you can use without explicit "
 "``TRegExpr`` object creation."
 msgstr ""
-"Siehe auch die globale Funktion SplitRegExpr_, die Sie ohne explizite `` "
+"Siehe auch die globale Funktion SplitRegExpr_, die Sie ohne explizite ``"
 "TRegExpr``-Objekterstellung verwenden können."
 
 # 38645dd65f544f0781499cfe7a5b9ff6
@@ -624,7 +624,7 @@ msgid ""
 "See also global function ReplaceRegExpr_ that you can use without explicit "
 "``TRegExpr`` object creation."
 msgstr ""
-"Siehe auch die globale Funktion ReplaceRegExpr_, die Sie ohne explizite `` "
+"Siehe auch die globale Funktion ReplaceRegExpr_, die Sie ohne explizite ``"
 "TRegExpr``-Objekterstellung verwenden können."
 
 # 7d60b250e9dd47178bca864ebdffb63f
@@ -1261,7 +1261,7 @@ msgid ""
 " converts into ``abc\\'cd\\.\\(``"
 msgstr ""
 "Ersetzen Sie alle Metachars durch ihre sichere Darstellung, zum Beispiel `` "
-"abc&#39;cd. (`` Konvertiert in `` abc \\ &#39;cd \\. \\ (``.)"
+"abc&#39;cd. (`` Konvertiert in ``abc\\'cd\\.\\(``.)"
 
 # cebe4757d37b45c79e067109c4921ceb
 #: ../../tregexpr.rst:539
@@ -1396,7 +1396,7 @@ msgid ""
 "If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal "
 "ones"
 msgstr ""
-"Wenn `` Result <> 0`` ```ASubExprs`` kann leere oder illegale Elemente "
+"Wenn ``Result <> 0`` ```ASubExprs`` kann leere oder illegale Elemente "
 "enthalten"
 
 # 4822de27e31841ae9c48e0748d771be3
@@ -1441,7 +1441,7 @@ msgstr ""
 "Um Unicode zu verwenden, kommentieren Sie ``{$DEFINE UniCode}`` `in` "
 "regexpr.pas "
 "<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>"
-" `__ (entferne ``off``)."
+"`__ (entferne ``off``)."
 
 # 2031f821f06d4234809f7596e9f62b9d
 #: ../../tregexpr.rst:596

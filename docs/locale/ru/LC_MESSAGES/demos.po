@@ -120,9 +120,9 @@ msgid ""
 "href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 msgstr ""
 "Например, замените `` www.masterAndrey.com`` на `` <a "
-"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` или `` "
-"filbert @ yandex.ru`` на `` <a "
-"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a> ``."
+"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` или ``"
+"filbert@yandex.ru`` на ``<a "
+"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 
 # f7a7a176770443fd845bcbdc8a69ccc9
 #: ../../demos.rst:33

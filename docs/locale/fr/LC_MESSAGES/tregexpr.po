@@ -213,7 +213,7 @@ msgid ""
 "initialized with RegExprModifierS_ value."
 msgstr ""
 "`Modificateur / s,&quot; chaînes simples &quot; <regular_expressions.html#s>"
-" `_, initialisé avec la valeur RegExprModifierS_."
+"`_, initialisé avec la valeur RegExprModifierS_."
 
 # 49d2d0930e8d408bad1ed86f04fb8418
 #: ../../tregexpr.rst:72
@@ -586,7 +586,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will "
 "be used as template for Substitution methods."
 msgstr ""
-"Si le dernier argument (`` AUseSubstitution``) est vrai, alors `` "
+"Si le dernier argument (`` AUseSubstitution``) est vrai, alors ``"
 "AReplaceStr`` sera utilisé comme modèle pour les méthodes de substitution."
 
 # ed3fb4395c2640238a5dd9d77bf735a7
@@ -666,8 +666,8 @@ msgid ""
 "Note, that some subexpr. may be not found and for such subexpr. "
 "``MathPos=MatchLen=-1`` and ``Match=’’``."
 msgstr ""
-"Notez que certains subexpr. peut ne pas être trouvé et pour ces subexpr. `` "
-"MathPos = MatchLen = -1`` et `` Match = &#39;&#39; `."
+"Notez que certains subexpr. peut ne pas être trouvé et pour ces subexpr. ``"
+"MathPos = MatchLen = -1`` et ``Match = &#39;&#39;``."
 
 # 75a36a73f7344c18826a039ea6fc2ba3
 #: ../../tregexpr.rst:263
@@ -704,7 +704,7 @@ msgid ""
 "``Idx=0``."
 msgstr ""
 "pos d&#39;entrée subexpr. `` # # Idx`` dans testé dans la dernière chaîne ``"
-" Exec * ``. Premier sous-représentant ont ``Idx=1``, dernier - `` "
+" Exec * ``. Premier sous-représentant ont ``Idx=1``, dernier - ``"
 "MatchCount``, tout le monde a ``Idx=0``."
 
 # e8e07a25804c442bb21638a532682e9d
@@ -728,8 +728,8 @@ msgid ""
 " First subexpr. have ``Idx=1``, last - MatchCount, whole r.e. have "
 "``Idx=0``."
 msgstr ""
-"len d&#39;entrée subexpr. `` # # Idx`` est testé dans la dernière chaîne `` "
-"Exec * ``. Premier sous-représentant ont ``Idx=1``, dernier - MatchCount,"
+"len d&#39;entrée subexpr. `` # # Idx`` est testé dans la dernière chaîne ``"
+"Exec*``. Premier sous-représentant ont ``Idx=1``, dernier - MatchCount,"
 " tout le monde a ``Idx=0``."
 
 # 2b72f0745ed243aba413dd5f0c291813
@@ -883,9 +883,9 @@ msgid ""
 "string) and ``LinePairedSeparator := #$d#$a``."
 msgstr ""
 "Si vous souhaitez n&#39;accepter que les séparateurs de lignes `` \\ \\ x0D "
-"\\ x0A`` mais pas les ``\\x0D`` ou `` \\ x0A``, attribuez `` "
-"`LineSeparators: = &#39;&#39;` (chaîne vide) et `` LinePairedSeparator: = # "
-"$ d # $ a``."
+"\\ x0A`` mais pas les ``\\x0D`` ou `` \\ x0A``, attribuez ``"
+"LineSeparators: = &#39;&#39; (chaîne vide) et ``LinePairedSeparator: = # "
+"$d#$a``."
 
 # b9ffc66d3010475eb17261ef2a30862f
 #: ../../tregexpr.rst:345
@@ -1094,7 +1094,7 @@ msgid ""
 "global functions you do not need to create ``TReExpr`` instance so your code"
 " would be more simple if you just need one function."
 msgstr ""
-"Toutes ces fonctionnalités sont disponibles en tant que méthodes de `` "
+"Toutes ces fonctionnalités sont disponibles en tant que méthodes de ``"
 "TRegExpr``, mais avec les fonctions globales, il n&#39;est pas nécessaire de"
 " créer une instance ``TReExpr`` pour que votre code soit plus simple si vous"
 " n&#39;avez besoin que d&#39;une seule fonction."
@@ -1170,7 +1170,7 @@ msgid ""
 "Returns the string with regular expressions replaced by the ``AReplaceStr``."
 " See also Replace_ if you prefer to create TRegExpr instance explicitly."
 msgstr ""
-"Retourne la chaîne avec les expressions régulières remplacées par le `` "
+"Retourne la chaîne avec les expressions régulières remplacées par le ``"
 "AReplaceStr``. Voir aussi Replace_ si vous préférez créer explicitement "
 "l&#39;instance de TRegExpr."
 
@@ -1180,7 +1180,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will "
 "be used as template for ``Substitution methods``:"
 msgstr ""
-"Si le dernier argument (`` AUseSubstitution``) est vrai, alors `` "
+"Si le dernier argument (`` AUseSubstitution``) est vrai, alors ``"
 "AReplaceStr`` sera utilisé comme modèle pour `` Méthodes de substitution``:"
 
 # 9f4ff278cd904c4a9d91efe6601682e1
@@ -1237,7 +1237,7 @@ msgid ""
 "``\\n`` is replaced with ``\\n\\r`` in Windows and ``\\n`` in Linux). And so"
 " on."
 msgstr ""
-"Avec ``Options`` vous contrôlez le comportement du ``\\n`` (si `` "
+"Avec ``Options`` vous contrôlez le comportement du ``\\n`` (si ``"
 "rroUseOsLineEnd`` alors ``\\n`` est remplacé par ``\\n\\r`` sous Windows"
 " et ``\\n`` dans Linux). Etc."
 
@@ -1404,7 +1404,7 @@ msgid ""
 "If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal "
 "ones"
 msgstr ""
-"Si `` Result <> 0``, alors ``ASubExprs`` peut contenir des éléments vides ou"
+"Si ``Result <> 0``, alors ``ASubExprs`` peut contenir des éléments vides ou"
 " illégaux"
 
 # 4822de27e31841ae9c48e0748d771be3
@@ -1450,7 +1450,7 @@ msgstr ""
 "Pour utiliser le commentaire Unicode ``{$DEFINE UniCode}`` dans "
 "`regexpr.pas "
 "<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>"
-" `__ (enlever ``off``)."
+"`__ (enlever ``off``)."
 
 # 2031f821f06d4234809f7596e9f62b9d
 #: ../../tregexpr.rst:596

@@ -149,7 +149,7 @@ msgid ""
 msgstr ""
 "Bereit zum Ausführen der Windows-Anwendung `REStudio "
 "<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>"
-" `__ hilft Ihnen, reguläre Ausdrücke zu lernen und zu debuggen."
+"`__ hilft Ihnen, reguläre Ausdrücke zu lernen und zu debuggen."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:42

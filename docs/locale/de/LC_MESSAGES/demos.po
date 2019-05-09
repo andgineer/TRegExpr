@@ -122,9 +122,9 @@ msgid ""
 "href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 msgstr ""
 "Ersetzt beispielsweise `` www.masterAndrey.com`` durch `` <a "
-"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` oder `` "
-"filbert @ yandex.ru`` durch `` <a "
-"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a> ``."
+"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` oder ``"
+"filbert@yandex.ru`` durch ``<a "
+"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 
 # f7a7a176770443fd845bcbdc8a69ccc9
 #: ../../demos.rst:33
@@ -241,9 +241,9 @@ msgid ""
 "``www.masterAndrey.com/contacts.htm`` will be decorated as ``<a "
 "href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com</a>``."
 msgstr ""
-"Wenn zum Beispiel AFlags `` [durlAddr] `` ist, wird der Hyperlink `` "
-"www.masterAndrey.com / contact.htm` als `` <a "
-"href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com</a> `` "
+"Wenn zum Beispiel AFlags `` [durlAddr] `` ist, wird der Hyperlink ``"
+"www.masterAndrey.com/contact.htm` als ``<a "
+"href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com</a>`` "
 "verziert."
 
 # 19e04c2855034e2da0d032ce97d8daef

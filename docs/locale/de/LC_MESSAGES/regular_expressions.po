@@ -242,7 +242,7 @@ msgstr "`` \\ t``"
 # 82c6681e916f4e2aaef959365310eb45
 #: ../../regular_expressions.rst:54
 msgid "tab (HT/TAB), same as ``\\x09``"
-msgstr "Registerkarte (HT / TAB), identisch mit `` \\ x09``"
+msgstr "Registerkarte (HT / TAB), identisch mit ``\\x09``"
 
 # d3873114276842e2a8b829a626be258c
 #: ../../regular_expressions.rst:55
@@ -1076,12 +1076,12 @@ msgstr "`` b + ``"
 # 3feacdc5bfb34128a95f74ba7552dcf7
 #: ../../regular_expressions.rst:306
 msgid "``bbbb``"
-msgstr "`` bbbb``"
+msgstr "``bbbb``"
 
 # 0d80f7da5c2f4519963404c8a75af4e8
 #: ../../regular_expressions.rst:307
 msgid "``b+?``"
-msgstr "`` b +? ``"
+msgstr "``b+?``"
 
 # 921469b0517c4f6cb8c0ed9d8660b660
 # f90207780f704a649cc65f64cc0d3c0b
@@ -1092,7 +1092,7 @@ msgstr "&quot;b&quot;"
 # 529a666926184f4495b4229f01a1f29e
 #: ../../regular_expressions.rst:308
 msgid "``b*?``"
-msgstr "`` b *? ``"
+msgstr "``b*?``"
 
 # b5e1456ada1c4d3fa0db9df04d16362e
 #: ../../regular_expressions.rst:308

@@ -317,8 +317,8 @@ msgid ""
 "``aaa,b``, but should it not match ``a,b`` because of non-greediness of "
 "first iterator?"
 msgstr ""
-"Zum Beispiel entspricht das re `` a +?, B +? ``, Das auf den String `` aaa, "
-"bbb`` angewendet wird, `` aaa, b``, sollte aber nicht mit `` a, b`` wegen "
+"Zum Beispiel entspricht das re ``a+?,b+?``, Das auf den String ``aaa,"
+"bbb`` angewendet wird, ``aaa,b``, sollte aber nicht mit ``a,b`` wegen "
 "Nicht-Gier passen des ersten Iterators?"
 
 # fc89dddf135b42ac956db2e8891af351
@@ -360,9 +360,9 @@ msgid ""
 "now not recommended (we add non-greedy modifyer) but still possible to match"
 " more then one ``a``, so TRegExpr will do it."
 msgstr ""
-"Wenn Sie also `a, b + verwenden?` `Wird es` `a, b`` passen. Im Falle von `` "
-"a +?, B +? `` `Wird es jetzt nicht empfohlen (wir fügen einen nicht-gierigen"
-" Modifikator hinzu), aber es ist immer noch möglich, mehr als einen` `a`` zu"
+"Wenn Sie also ``a,b+?`` Wird es ``a,b`` passen. Im Falle von ``"
+"a+?,b+?`` Wird es jetzt nicht empfohlen (wir fügen einen nicht-gierigen"
+" Modifikator hinzu), aber es ist immer noch möglich, mehr als einen ``a`` zu"
 " finden, also macht TRegExpr dies."
 
 # 41feed27e8ad405faa9ea1e4b0c8d18f

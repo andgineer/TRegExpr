@@ -147,7 +147,7 @@ msgid ""
 msgstr ""
 "Готовое к запуску приложение Windows `REStudio "
 "<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>"
-" `__ поможет вам выучить и отладить регулярные выражения."
+"`__ поможет вам выучить и отладить регулярные выражения."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:42

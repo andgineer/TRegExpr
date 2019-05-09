@@ -244,7 +244,7 @@ msgstr "`` \\ t``"
 # 82c6681e916f4e2aaef959365310eb45
 #: ../../regular_expressions.rst:54
 msgid "tab (HT/TAB), same as ``\\x09``"
-msgstr "onglet (HT / TAB), identique à `` \\ x09``"
+msgstr "onglet (HT / TAB), identique à ``\\x09``"
 
 # d3873114276842e2a8b829a626be258c
 #: ../../regular_expressions.rst:55
@@ -370,8 +370,8 @@ msgid ""
 "Character class is a list of characters inside ``[]``. The class matches any"
 " **one** character listed in this class."
 msgstr ""
-"La classe de caractères est une liste de caractères à l&#39;intérieur de `` "
-"[] ``. La classe correspond à n&#39;importe quel ** un ** caractère "
+"La classe de caractères est une liste de caractères à l&#39;intérieur de ``"
+"[]``. La classe correspond à n&#39;importe quel ** un ** caractère "
 "répertorié dans cette classe."
 
 # 387f63fe1526437db8dd2f254ad9e756
@@ -391,7 +391,7 @@ msgid ""
 "``^``, then the class matches any character **but** characters listed in the"
 " class."
 msgstr ""
-"Vous pouvez `` inverser`` la classe - si le premier caractère après le `` "
+"Vous pouvez `` inverser`` la classe - si le premier caractère après le ``"
 "[`` est ``^``, alors la classe correspond à n&#39;importe quel caractère "
 "** à l&#39;exception des ** caractères répertoriés dans la classe."
 
@@ -412,7 +412,7 @@ msgid ""
 "``a-z`` represents all characters between ``a`` and ``z``, inclusive."
 msgstr ""
 "Dans une liste, le caractère ``-`` est utilisé pour spécifier une plage, de "
-"sorte que ``az`` représente tous les caractères compris entre ``a`` et `` "
+"sorte que ``az`` représente tous les caractères compris entre ``a`` et ``"
 "z``, inclus."
 
 # 8326fed543454049bdf3ae0171c7eaf1
@@ -584,8 +584,8 @@ msgid ""
 "``foobar``, ``foob r``, ``foobbr`` and so on but not ``foob1r``, ``foob=r`` "
 "and so on"
 msgstr ""
-"``foobar``, `` foob r``, ``foobbr`` et ainsi de suite mais pas `` "
-"foob1r``, `` `foob = r`` et ainsi de suite"
+"``foobar``, ``foob r``, ``foobbr`` et ainsi de suite mais pas ``"
+"foob1r``, ``foob = r`` et ainsi de suite"
 
 # eedae6fabfd74022bfab29cc94103cea
 # 284bcdb3373d4d02962c898ce6ff4522
@@ -1081,12 +1081,12 @@ msgstr "`` b + ``"
 # 3feacdc5bfb34128a95f74ba7552dcf7
 #: ../../regular_expressions.rst:306
 msgid "``bbbb``"
-msgstr "`` bbbb``"
+msgstr "``bbbb``"
 
 # 0d80f7da5c2f4519963404c8a75af4e8
 #: ../../regular_expressions.rst:307
 msgid "``b+?``"
-msgstr "`` b +? ``"
+msgstr "``b+?``"
 
 # 921469b0517c4f6cb8c0ed9d8660b660
 # f90207780f704a649cc65f64cc0d3c0b
@@ -1097,7 +1097,7 @@ msgstr "`` b``"
 # 529a666926184f4495b4229f01a1f29e
 #: ../../regular_expressions.rst:308
 msgid "``b*?``"
-msgstr "`` b *? ``"
+msgstr "``b*?``"
 
 # b5e1456ada1c4d3fa0db9df04d16362e
 #: ../../regular_expressions.rst:308
@@ -1130,7 +1130,7 @@ msgid ""
 "You can switch all quantifiers into ``non-greedy`` mode (`modifier /g "
 "<#g>`_, below we use `in-line modifier change <#inlinemodifiers>`_)."
 msgstr ""
-"Vous pouvez basculer tous les quantificateurs en mode `` non-gourmand`` "
+"Vous pouvez basculer tous les quantificateurs en mode ``non-gourmand`` "
 "(`modificateur / g <#g>`_, nous utilisons ci-dessous `le modificateur"
 " en ligne &lt;et # du modificateur de ligne>`_)."
 
@@ -1393,8 +1393,8 @@ msgid ""
 "default value for ``ModifierX`` property."
 msgstr ""
 "Les valeurs par défaut sont définies dans `variables globales <tregexpr.html"
-"#global-constants>`_. Par exemple, la variable globale `` "
-"RegExprModifierX`` définit la valeur par défaut de la propriété `` "
+"#global-constants>`_. Par exemple, la variable globale ``"
+"RegExprModifierX`` définit la valeur par défaut de la propriété ``"
 "ModifierX``."
 
 # 91a5d7fb7d534fb89ab007acda93900a

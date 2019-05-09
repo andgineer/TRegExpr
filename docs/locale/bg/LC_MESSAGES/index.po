@@ -149,7 +149,7 @@ msgid ""
 msgstr ""
 "Готови ли сте да стартирате Windows приложението &quot;REStudio&quot; "
 "<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>"
-" `__ ще ви помогне да научите и отстраните грешки на регулярни изрази."
+"`__ ще ви помогне да научите и отстраните грешки на регулярни изрази."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:42

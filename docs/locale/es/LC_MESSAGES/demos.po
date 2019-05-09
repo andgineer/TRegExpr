@@ -121,9 +121,9 @@ msgid ""
 "href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 msgstr ""
 "Por ejemplo, reemplaza `` www.masterAndrey.com`` por `` <a "
-"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` o `` "
-"filbert @ yandex.ru`` por `` <a "
-"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a> ``."
+"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` o ``"
+"filbert@yandex.ru`` por ``<a"
+"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 
 # f7a7a176770443fd845bcbdc8a69ccc9
 #: ../../demos.rst:33

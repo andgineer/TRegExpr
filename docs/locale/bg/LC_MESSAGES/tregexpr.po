@@ -270,7 +270,7 @@ msgid ""
 "Available overloaded ``Exec`` version without ``AInputString`` - it uses "
 "``AInputString`` from previous call."
 msgstr ""
-"Налична претоварена версия ``Exec`` без ``AInputString`` - използва `` "
+"Налична претоварена версия ``Exec`` без ``AInputString`` - използва ``"
 "AInputString`` от предишно повикване."
 
 # c5716a70cf9a4ce4bd5ec4890c8d30fd
@@ -395,8 +395,8 @@ msgid ""
 "To place into template characters ``$`` or ``\\``, use prefix ``\\``, like "
 "``\\\\`` or ``\\$``."
 msgstr ""
-"За да поставите в шаблони символи ``$`` или `` `, използвайте префикс` `` "
-"`, като` `` `или` `` `."
+"За да поставите в шаблони символи ``$`` или ``\\``, използвайте префикс ``\\``"
+", като ``\\\\`` или ``\\$``."
 
 # 63534e92f9834a7d90a7ee143622abb5
 #: ../../tregexpr.rst:156
@@ -641,9 +641,9 @@ msgid ""
 "then ``SubExprMatchCount=0``, if no subexpressions nor whole r.e. found "
 "(Exec_ / ExecNext_ returned false) then ``SubExprMatchCount=-1``."
 msgstr ""
-"Ако няма субекспр. но е открит цял expr (Exec * върна True), след това `` "
+"Ако няма субекспр. но е открит цял expr (Exec * върна True), след това ``"
 "SubExprMatchCount = 0``, ако не са намерени никакви подекспресии или цяло "
-"(Exec_ / ExecNext_ false), след това `` SubExprMatchCount = -1``."
+"(Exec_ / ExecNext_ false), след това ``SubExprMatchCount = -1``."
 
 # 44738ac9c8ac48eb8ce744e3b52b78d9
 #: ../../tregexpr.rst:246
@@ -713,7 +713,7 @@ msgid ""
 "``Idx=0``."
 msgstr ""
 "от входния субекспр. ``#Idx`` се тества в последния `` Exec * `` низ. "
-"Първият субекср. да има ``Idx=1``, последно - MatchCount, целият има `` "
+"Първият субекср. да има ``Idx=1``, последно - MatchCount, целият има ``"
 "Idx = 0``."
 
 # 2b72f0745ed243aba413dd5f0c291813
@@ -852,8 +852,8 @@ msgid ""
 "For example, if you need Unix-style behaviour, assign ``LineSeparators := "
 "#$a`` and ``LinePairedSeparator := ''`` (empty string)."
 msgstr ""
-"Например, ако се нуждаете от поведение в стил Unix, задайте `` "
-"LineSeparators: = # $ a`` и `` LinePairedSeparator: = &#39;&#39; `(празен "
+"Например, ако се нуждаете от поведение в стил Unix, задайте ``"
+"LineSeparators: = #$a`` и ``LinePairedSeparator: = &#39;&#39;`` (празен "
 "низ)."
 
 # c91bba98a70f4ecf953a851b9ec263c2
@@ -1282,7 +1282,7 @@ msgstr ""
 # b3a29f76341745d7ac5055477c2da842
 #: ../../tregexpr.rst:549
 msgid "String - subexpression text (without ‘()’)"
-msgstr "String - текст с подекспресия (без „()“)"
+msgstr "String - текст с подекспресия (без ``()``)"
 
 # a34d0dfac79a414ea3e59fa4d03a8225
 #: ../../tregexpr.rst:551
@@ -1426,7 +1426,7 @@ msgid ""
 msgstr ""
 "За да използвате Uncomode uncomment ``{$DEFINE UniCode}`` в `regexpr.pas "
 "<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>"
-" `__ (премахнете` `изключено``)."
+"`__ (премахнете` `изключено``)."
 
 # 2031f821f06d4234809f7596e9f62b9d
 #: ../../tregexpr.rst:596
