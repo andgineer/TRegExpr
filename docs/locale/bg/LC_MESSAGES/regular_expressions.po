@@ -224,83 +224,83 @@ msgid ""
 "There are a number of predefined ``escape-codes`` for non-printable "
 "characters, just like in ``C`` language:"
 msgstr ""
-"Има редица предварително дефинирани `` escape-codes &#39;&#39; за символи, "
+"Има редица предварително дефинирани ``escape-codes &#39;&#39; за символи, "
 "които не могат да бъдат отпечатани, точно като в ``C`` език:"
 
 # 7d6577d190114fc6ae47e4ec69f30538
 #: ../../regular_expressions.rst:54
 msgid "``\\t``"
-msgstr "`` \\ T``"
+msgstr "``\\t``"
 
 # 82c6681e916f4e2aaef959365310eb45
 #: ../../regular_expressions.rst:54
 msgid "tab (HT/TAB), same as ``\\x09``"
-msgstr "(HT / TAB), същото като &quot;x09&quot;"
+msgstr "tab (HT/TAB), същото като ``\\x09``"
 
 # d3873114276842e2a8b829a626be258c
 #: ../../regular_expressions.rst:55
 msgid "``\\n``"
-msgstr "`` \\ N``"
+msgstr "``\\n``"
 
 # f2c219a64f984dbe84fc97853e1fd7d7
 #: ../../regular_expressions.rst:55
 msgid "newline (NL), same as ``\\x0a``"
-msgstr "нов ред (NL), същото като &quot;x0a&quot;"
+msgstr "newline (NL), същото като ``\\x0a``"
 
 # 601239cbea974efa91c35798bae1be44
 #: ../../regular_expressions.rst:56
 msgid "``\\r``"
-msgstr "`` \\ R``"
+msgstr "``\\r``"
 
 # ad51988cde454d0cab4e10bf10f7ee50
 #: ../../regular_expressions.rst:56
 msgid "car.return (CR), same as ``\\x0d``"
-msgstr "car.return (CR), същото като &quot;x0d&quot;"
+msgstr "car.return (CR), същото като ``\\x0d``"
 
 # 23a62f60f8a9443c85c7d0fedf74af98
 #: ../../regular_expressions.rst:57
 msgid "``\\f``"
-msgstr "`` \\ F``"
+msgstr "``\\f``"
 
 # 0234058d16bb4442908237984ed54486
 #: ../../regular_expressions.rst:57
 msgid "form feed (FF), same as ``\\x0c``"
-msgstr "форма (FF), същата като &quot;x0c&quot;"
+msgstr "form feed (FF), същата като ``\\x0c``"
 
 # 973e39b242244d8e856d13f6505c4422
 #: ../../regular_expressions.rst:58
 msgid "``\\a``"
-msgstr "`` \\ A``"
+msgstr "``\\a``"
 
 # 44c6f994104f4e84a64c39d7d65043be
 #: ../../regular_expressions.rst:58
 msgid "alarm (BEL), same as ``\\x07``"
-msgstr "аларма (BEL), същата като &quot;x07&quot;"
+msgstr "alarm (BEL), същата като ``\\x07``"
 
 # 48f2ae8c833f4848a9496002af12b8a7
 #: ../../regular_expressions.rst:59
 msgid "``\\e``"
-msgstr "`` \\ E``"
+msgstr "``\\e``"
 
 # b143d953a8d2483d8b4b46b0c6dd94df
 #: ../../regular_expressions.rst:59
 msgid "escape (ESC), same as ``\\x1b``"
-msgstr "бягство (ESC), същото като &quot;x1b&quot;"
+msgstr "escape (ESC), същото като ``\\x1b``"
 
 # 9d5061f101ac49b0b07b70a8980205f1
 #: ../../regular_expressions.rst:60
 msgid "``\\tfoobar``"
-msgstr "`` \\ Tfoobar``"
+msgstr "``\\tfoobar``"
 
 # c3d7b7da564442cc869102df733bc866
 #: ../../regular_expressions.rst:60
 msgid "``foobar`` preceded by TAB"
-msgstr "&quot;foobar&quot;, предшествано от TAB"
+msgstr "``foobar``, предшествано от TAB"
 
 # bff99611ece44f6096d3d93bc422213b
 #: ../../regular_expressions.rst:66
 msgid "Escaping"
-msgstr "Бягството"
+msgstr "Escaping"
 
 # 4043410069434af68c63dfec2b76058a
 #: ../../regular_expressions.rst:68
@@ -308,8 +308,8 @@ msgid ""
 "If you want to use character ``\\`` by itself, not as part of ``escape-"
 "code``, just prefix it with ``\\``, like that: ``\\\\``."
 msgstr ""
-"Ако искате да използвате символ `` `сам по себе си, а не като част от` "
-"`escape-code``, просто го префиксирайте с` `` `, като този:` `."
+"Ако искате да използвате символ ``\\`` сам по себе си, а не като част от `"
+"`escape-code``, просто го префиксирайте с ``\\``, като този: ``\\\\``."
 
 # c92dd65e00154917bf73dfaf233a8623
 #: ../../regular_expressions.rst:71
@@ -317,31 +317,31 @@ msgid ""
 "In fact you can prefix (or ``escape``) with ``\\`` any character that has "
 "special meaning in regular expressions."
 msgstr ""
-"Всъщност можете да поставите префикс (или &quot;escape&quot;) с `` всеки "
+"Всъщност можете да поставите префикс (или ``escape``) с ``\\`` всеки "
 "символ, който има специално значение в регулярните изрази."
 
 # 8cded9271ee144b3bfef52eabd5ff4f9
 #: ../../regular_expressions.rst:77
 msgid "``\\^FooBarPtr``"
-msgstr "`` \\ ^ FooBarPtr``"
+msgstr "``\\^FooBarPtr``"
 
 # 69eaeb1114a94d47ac8f5cf9f6b0bbfd
 #: ../../regular_expressions.rst:77
 msgid ""
 "``^FooBarPtr`` this is ``^`` and not `start of line <#lineseparators>`__"
 msgstr ""
-"`` ^ FooBarPtr`` това е `` `` `и не` `старт на ред <#lineseparators&gt;` "
+"``^FooBarPtr`` това е ``^`` `и не `старт на ред <#lineseparators>`"
 "__"
 
 # c74ccd0bddc742e3a5209d8e863de079
 #: ../../regular_expressions.rst:78
 msgid "``\\[a\\]``"
-msgstr "`` \\ [А \\] ``"
+msgstr "``\\[a\\]``"
 
 # 09bfd4d6eef24cc0871853e08da6d485
 #: ../../regular_expressions.rst:78
 msgid "``[a]`` this is not `character class <#userclass>`__"
-msgstr "`` [а] `` това не е &#39;class class <#userclass&gt; `__"
+msgstr "``[а]`` това не е &#39;class class <#userclass>`__"
 
 # c04d4af31f2c4019a248b87417ec779b
 #: ../../regular_expressions.rst:82
@@ -760,7 +760,7 @@ msgid ""
 "inside the string."
 msgstr ""
 "Метасимволът &quot;.` `По подразбиране съвпада с всеки символ, но ако "
-"включите` `Off`` на` modifier / s <#s&gt; `_, то` `` `няма да съвпада с "
+"включите` `Off`` на` modifier / s <#s>`_, то` `` `няма да съвпада с "
 "разделителните линии в низ."
 
 # 4a25808dfd214bbc8822aa5cfb2d11e7
@@ -897,7 +897,7 @@ msgstr "``*``"
 # 7b59b045f2664d41bb53615a0a7dc454
 #: ../../regular_expressions.rst:261
 msgid "zero or more, similar to ``{0,}``"
-msgstr "нула или повече, подобно на `` {0,} ``"
+msgstr "нула или повече, подобно на ``{0,}``"
 
 # 802df398cb6c48ff9c813b94da9a9970
 #: ../../regular_expressions.rst:262
@@ -967,7 +967,7 @@ msgstr "&quot;foobar&quot;, &quot;foobalkjdflkj9r&quot; и &quot;foobr&quot;"
 # 2252b8fdd1d74649b843835891bc81c7
 #: ../../regular_expressions.rst:282
 msgid "``foob.+r``"
-msgstr "`` Foob. + R``"
+msgstr "``foob.+r``"
 
 # 83bfd9d88ac647a9b3f77ce23c5147b7
 #: ../../regular_expressions.rst:282
@@ -982,7 +982,7 @@ msgstr "``foob.?r``"
 # a80637243c464359b09e9260456a1095
 #: ../../regular_expressions.rst:283
 msgid "``foobar``, ``foobbr`` and ``foobr`` but not ``foobalkj9r``"
-msgstr "``foobar``, ``foobbr`` и ``foobr``, но не `` foobalkj9r``"
+msgstr "``foobar``, ``foobbr`` и ``foobr``, но не ``foobalkj9r``"
 
 # 154817d8465b44ff846b626e48d52cab
 #: ../../regular_expressions.rst:284
@@ -1056,7 +1056,7 @@ msgstr ""
 # f7ff280c5d5d456ca6da8073b3ab3d53
 #: ../../regular_expressions.rst:301
 msgid "For string ``abbbbc``:"
-msgstr "За низ `` abbbbc``:"
+msgstr "За низ ``abbbbc``:"
 
 # 43797c5989704389b0cd5d6a5eabfea5
 #: ../../regular_expressions.rst:306
@@ -1077,7 +1077,7 @@ msgstr "`` Б +? ``"
 # f90207780f704a649cc65f64cc0d3c0b
 #: ../../regular_expressions.rst:307 ../../regular_expressions.rst:319
 msgid "``b``"
-msgstr "`` b``"
+msgstr "``b``"
 
 # 529a666926184f4495b4229f01a1f29e
 #: ../../regular_expressions.rst:308
@@ -1107,7 +1107,7 @@ msgstr "`` Б {2,3} ``"
 # b8da64bd696d44a6bc9cab4804c19fbe
 #: ../../regular_expressions.rst:310
 msgid "``bbb``"
-msgstr "`` Bbb``"
+msgstr "``bbb``"
 
 # e67d8bbbce274020a1fae4a09cca06e1
 #: ../../regular_expressions.rst:313
@@ -1625,8 +1625,8 @@ msgid ""
 "<#subexpression>`_ and just ignore what will be captured in this "
 "subexpression."
 msgstr ""
-"В много случаи можете да замените `` look ahead`` с `Sub-expression "
-"<#subexpression>` и просто да игнорирате това, което ще бъде уловено в"
+"В много случаи можете да замените ``look ahead`` с `Sub-expression "
+"<#subexpression>`__ и просто да игнорирате това, което ще бъде уловено в"
 " тази подекспресия."
 
 # abb016d6c5624accabc611c78353ea11

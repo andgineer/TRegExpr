@@ -81,7 +81,7 @@ msgid ""
 msgstr ""
 "La bibliothèque avait déjà inclus dans `Lazarus (Free Pascal) "
 "<http://wiki.freepascal.org/Regexpr>`_ projet donc vous n&#39;avez pas "
-"besoin de copier quoi que ce soit si vous utilisez` Lazarus <https://www"
+"besoin de copier quoi que ce soit si vous utilisez `Lazarus <https://www"
 ".lazarus-ide.org/>`_."
 
 # acbd4d5adc304679ae4e7e54886bbc24
@@ -98,7 +98,7 @@ msgstr "VersionMajor, VersionMinor"
 #: ../../tregexpr.rst:22
 msgid "Return major and minor version, for example, for ``version 0.944``"
 msgstr ""
-"Retourne les versions majeure et mineure, par exemple, pour `` version "
+"Retourne les versions majeure et mineure, par exemple, pour ``version "
 "0.944``"
 
 # cf3a7bd8bcfd4c08912231dcb137e52d
@@ -125,7 +125,7 @@ msgid ""
 "``P-code``. Human-readable form of the ``P-code`` returns by Dump_."
 msgstr ""
 "Pour l&#39;optimisation, l&#39;expression régulière est automatiquement "
-"compilée dans le `` P-code``. La forme lisible par l’homme du `` P-code`` "
+"compilée dans le ``P-code``. La forme lisible par l’homme du ``P-code`` "
 "est retournée par Dump_."
 
 # 86c6be00dc334f83a36000bc211ed5da

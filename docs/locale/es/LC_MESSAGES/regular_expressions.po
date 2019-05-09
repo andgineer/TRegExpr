@@ -325,13 +325,13 @@ msgid ""
 "In fact you can prefix (or ``escape``) with ``\\`` any character that has "
 "special meaning in regular expressions."
 msgstr ""
-"De hecho, puedes usar el prefijo (o `` escape``) con ``\\`` cualquier "
+"De hecho, puedes usar el prefijo (o ``escape``) con ``\\`` cualquier "
 "carácter que tenga un significado especial en las expresiones regulares."
 
 # 8cded9271ee144b3bfef52eabd5ff4f9
 #: ../../regular_expressions.rst:77
 msgid "``\\^FooBarPtr``"
-msgstr "`` \\ ^ FooBarPtr``"
+msgstr "``\\^FooBarPtr``"
 
 # 69eaeb1114a94d47ac8f5cf9f6b0bbfd
 #: ../../regular_expressions.rst:77
@@ -904,7 +904,7 @@ msgstr "``*``"
 # 7b59b045f2664d41bb53615a0a7dc454
 #: ../../regular_expressions.rst:261
 msgid "zero or more, similar to ``{0,}``"
-msgstr "cero o más, similar a `` {0,} ``"
+msgstr "cero o más, similar a ``{0,}``"
 
 # 802df398cb6c48ff9c813b94da9a9970
 #: ../../regular_expressions.rst:262
@@ -990,7 +990,7 @@ msgstr "`` foob.? r``"
 # a80637243c464359b09e9260456a1095
 #: ../../regular_expressions.rst:283
 msgid "``foobar``, ``foobbr`` and ``foobr`` but not ``foobalkj9r``"
-msgstr "``foobar``, ``foobbr`` y ``foobr`` pero no `` foobalkj9r``"
+msgstr "``foobar``, ``foobbr`` y ``foobr`` pero no ``foobalkj9r``"
 
 # 154817d8465b44ff846b626e48d52cab
 #: ../../regular_expressions.rst:284
@@ -1062,7 +1062,7 @@ msgstr ""
 # f7ff280c5d5d456ca6da8073b3ab3d53
 #: ../../regular_expressions.rst:301
 msgid "For string ``abbbbc``:"
-msgstr "Para la cadena `` abbbbc``:"
+msgstr "Para la cadena ``abbbbc``:"
 
 # 43797c5989704389b0cd5d6a5eabfea5
 #: ../../regular_expressions.rst:306
@@ -1083,7 +1083,7 @@ msgstr "``b+?``"
 # f90207780f704a649cc65f64cc0d3c0b
 #: ../../regular_expressions.rst:307 ../../regular_expressions.rst:319
 msgid "``b``"
-msgstr "`` b``"
+msgstr "``b``"
 
 # 529a666926184f4495b4229f01a1f29e
 #: ../../regular_expressions.rst:308
@@ -1638,7 +1638,7 @@ msgid ""
 "<#subexpression>`_ and just ignore what will be captured in this "
 "subexpression."
 msgstr ""
-"En muchos casos, puede reemplazar `` look ahead`` con `Sub-expression "
+"En muchos casos, puede reemplazar ``look ahead`` con `Sub-expression "
 "<#subexpression>`_ y simplemente ignorar lo que se capturará en esta "
 "subexpresión."
 

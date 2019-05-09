@@ -80,7 +80,7 @@ msgid ""
 msgstr ""
 "Библиотеката вече беше включена в `Lazarus (Free Pascal) "
 "<http://wiki.freepascal.org/Regexpr>`_ проекта, така че не е необходимо да "
-"копирате нищо, ако използвате` Lazarus <https://www.lazarus-ide.org/>`_."
+"копирате нищо, ако използвате `Lazarus <https://www.lazarus-ide.org/>`_."
 
 # acbd4d5adc304679ae4e7e54886bbc24
 #: ../../tregexpr.rst:17
@@ -122,8 +122,8 @@ msgid ""
 "For optimization regular expression is automatically compiled into "
 "``P-code``. Human-readable form of the ``P-code`` returns by Dump_."
 msgstr ""
-"За оптимизация регулярният израз автоматично се компилира в `` P-code "
-"&#39;&#39;. Човешки четима форма на `` P-code`` се връща от Dump_."
+"За оптимизация регулярният израз автоматично се компилира в ``P-code "
+"&#39;&#39;. Човешки четима форма на ``P-code`` се връща от Dump_."
 
 # 86c6be00dc334f83a36000bc211ed5da
 #: ../../tregexpr.rst:37

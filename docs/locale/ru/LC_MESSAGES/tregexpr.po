@@ -78,9 +78,9 @@ msgid ""
 "<http://wiki.freepascal.org/Regexpr>`_ project so you do not need to copy "
 "anything if you use `Lazarus <https://www.lazarus-ide.org/>`_."
 msgstr ""
-"Библиотека уже включена в Lazarus (Free Pascal) "
+"Библиотека уже включена в `Lazarus (Free Pascal) "
 "<http://wiki.freepascal.org/Regexpr>`_ проект, поэтому вам не нужно ничего "
-"копировать, если вы используете` Lazarus <https://www.lazarus-ide.org/>`_."
+"копировать, если вы используете `Lazarus <https://www.lazarus-ide.org/>`_."
 
 # acbd4d5adc304679ae4e7e54886bbc24
 #: ../../tregexpr.rst:17
@@ -95,7 +95,7 @@ msgstr "VersionMajor, VersionMinor"
 # 669a1f33a9644afb869c1aae34651c47
 #: ../../tregexpr.rst:22
 msgid "Return major and minor version, for example, for ``version 0.944``"
-msgstr "Вернуть мажорную и минорную версию, например, для `` version 0.944``"
+msgstr "Вернуть мажорную и минорную версию, например, для ``version 0.944``"
 
 # cf3a7bd8bcfd4c08912231dcb137e52d
 #: ../../tregexpr.rst:38
@@ -121,7 +121,7 @@ msgid ""
 "``P-code``. Human-readable form of the ``P-code`` returns by Dump_."
 msgstr ""
 "Для оптимизации регулярное выражение автоматически компилируется в ``"
-"P-код``. Читаемая человеком форма `` P-кода`` возвращает Dump_."
+"P-код``. Читаемая человеком форма ``P-кода`` возвращает Dump_."
 
 # 86c6be00dc334f83a36000bc211ed5da
 #: ../../tregexpr.rst:37
@@ -178,7 +178,7 @@ msgid ""
 "`Modifier /i, \"case-insensitive\" <regular_expressions.html#i>`, "
 "initialized with RegExprModifierI_ value."
 msgstr ""
-"`Модификатор / i, \"регистро-нечуствительный\" "
+"`Модификатор /i, \"регистро-нечуствительный\" "
 "<regular_expressions.html#i>`__, инициализируется значением "
 "RegExprModifierI_."
 
@@ -193,7 +193,7 @@ msgid ""
 "`Modifier /r, \"Russian range extension\" <regular_expressions.html#r>`_, "
 "initialized with RegExprModifierR_ value."
 msgstr ""
-"`Модификатор / г,&quot; расширение русского диапазона &quot; "
+"`Модификатор /г, \"расширение русского диапазона\" "
 "<regular_expressions.html#r>`_, инициализируется значением "
 "RegExprModifierR_."
 
@@ -208,7 +208,7 @@ msgid ""
 "`Modifier /s, \"single line strings\" <regular_expressions.html#s>`_, "
 "initialized with RegExprModifierS_ value."
 msgstr ""
-"`Модификатор / ы,&quot; однострочные строки &quot; "
+"`Модификатор /s, \"однострочный текст\" "
 "<regular_expressions.html#s>`_, инициализируется значением "
 "RegExprModifierS_."
 
@@ -223,7 +223,7 @@ msgid ""
 "`Modifier /g, \"greediness\" <regular_expressions.html#g>`_, initialized "
 "with RegExprModifierG_ value."
 msgstr ""
-"`Модификатор / г,&quot; жадность &quot; <regular_expressions.html#g>`_, "
+"`Модификатор /g, \"жадность\" <regular_expressions.html#g>`_, "
 "инициализируется значением RegExprModifierG_."
 
 # cac30152913c4758b912dc0f8aa9015e
@@ -237,7 +237,7 @@ msgid ""
 "`Modifier /m, \"multi-line strings\" <regular_expressions.html#m>`_, "
 "initialized with RegExprModifierM_ value."
 msgstr ""
-"`Модификатор / м,&quot; многострочные строки &quot; "
+"`Модификатор /m, \"многострочный текст\" "
 "<regular_expressions.html#m>`_, инициализируется значением "
 "RegExprModifierM_."
 
@@ -252,7 +252,7 @@ msgid ""
 "`Modifier /x, \"eXtended syntax\" <regular_expressions.html#x>`_, "
 "initialized with RegExprModifierX_ value."
 msgstr ""
-"`Модификатор / x,&quot; расширенный синтаксис &quot; "
+"`Модификатор /x, \"расширенный синтаксис\" "
 "<regular_expressions.html#x>`_, инициализируется значением "
 "RegExprModifierX_."
 
@@ -264,7 +264,7 @@ msgstr "Exec"
 # 93053631b86a477e8970455c4174bff4
 #: ../../tregexpr.rst:92
 msgid "Match the regular expression against ``AInputString``."
-msgstr "Сопоставьте регулярное выражение с ``AInputString``."
+msgstr "Ищет регулярное выражение в ``AInputString``."
 
 # 88fda6c106e842999d18ab53cf6965c1
 #: ../../tregexpr.rst:94
@@ -292,7 +292,7 @@ msgstr "ExecNext"
 # 491afedfa5124977bbf311f2feaa9d9a
 #: ../../tregexpr.rst:103
 msgid "Find next match."
-msgstr "Найти следующий матч."
+msgstr "Найти следующее совпадение."
 
 # 4b08edcc4a494820b35af45ea76a55cb
 #: ../../tregexpr.rst:105
@@ -306,8 +306,9 @@ msgid ""
 "  then ExecPos (MatchPos [0] + 1)\n"
 "  else ExecPos (MatchPos [0] + MatchLen [0]);"
 msgstr ""
-"если MatchLen [0] = 0, то ExecPos (MatchPos [0] + 1), в противном случае "
-"ExecPos (MatchPos [0] + MatchLen [0]);"
+"if MatchLen [0] = 0\n"
+"  then ExecPos (MatchPos [0] + 1)\n"
+"  else ExecPos (MatchPos [0] + MatchLen [0]);"
 
 # 446ece5ade984588853382497b09a935
 #: ../../tregexpr.rst:113
@@ -447,7 +448,7 @@ msgstr "``\\n``"
 # 16b6159b15234a9990386dbc74ba8a9d
 #: ../../tregexpr.rst:161
 msgid "in Windows replaced with ``\\r\\n``"
-msgstr "в Windows заменено на ``\\r\\n``"
+msgstr "для Windows ``\\r\\n``"
 
 # b641853e1a064839ad25ad3ce1a78962
 #: ../../tregexpr.rst:162
@@ -467,7 +468,7 @@ msgstr "``\\L``"
 # c87dd00f4a4a49bbb874e18b33cd7d7b
 #: ../../tregexpr.rst:163
 msgid "lowercase all chars after that"
-msgstr "строчные все символы после этого"
+msgstr "делает строчными все символы после этого"
 
 # 07f7e7b7b8e641a4bcf954a079b671ef
 #: ../../tregexpr.rst:164
@@ -477,7 +478,7 @@ msgstr "``\\u``"
 # fb0ca4eda40e452baef2f2a9f5d27647
 #: ../../tregexpr.rst:164
 msgid "uppcase one next char"
-msgstr "Uppcase один следующий символ"
+msgstr "делает заглавным один следующий символ"
 
 # 2e15d831287e4751a31bf1b5a0046f4f
 #: ../../tregexpr.rst:165
@@ -487,7 +488,7 @@ msgstr "``\\U``"
 # 04e34a45291649be9dab57f54d6dee4f
 #: ../../tregexpr.rst:165
 msgid "uppercase all chars after that"
-msgstr "заглавные буквы после этого"
+msgstr "делает заглавными все символы после этого"
 
 # 8b9416fac8664ded915ce216cd4dbf3e
 #: ../../tregexpr.rst:182
@@ -495,9 +496,8 @@ msgid ""
 "'1\\$ is $2\\\\rub\\\\' -> '1$ is <Match[2]>\\rub\\'\n"
 "'\\U$1\\\\r' transforms into '<Match[1] in uppercase>\\r'"
 msgstr ""
-"&#39;1 \\ $ is $ 2 \\\\ rub \\\\&#39; -&gt; &#39;1 $ is <Match[2]> \\ rub \\"
-" &#39;&#39; \\ U $ 1 \\\\ r &#39;превращается в&#39; <Match[1] in uppercase>"
-" \\р&#39;"
+"'1\\$ это $2\\\\rub\\\\' -> '1$ это <Match[2]>\\rub\\'\n"
+"'\\U$1\\\\r' преобразует в '<Match[1] в верхнем регистре>\\r'"
 
 # 90871cb19a5e48c2ab3ee073b35a9986
 #: ../../tregexpr.rst:173
@@ -520,7 +520,7 @@ msgstr ""
 # 2eb81ed8a63448f0ab099b319cf804c3
 #: ../../tregexpr.rst:182
 msgid "Split"
-msgstr "Трещина"
+msgstr "Split"
 
 # f89a1def92de47ffb43b3476f0c8414c
 #: ../../tregexpr.rst:184
@@ -588,7 +588,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will "
 "be used as template for Substitution methods."
 msgstr ""
-"Если последний аргумент (`` AUseSubstitution``) равен true, то ``"
+"Если последний аргумент (``AUseSubstitution``) равен true, то ``"
 "AReplaceStr`` будет использоваться в качестве шаблона для методов "
 "подстановки."
 
@@ -598,26 +598,23 @@ msgid ""
 "Expression := '((?i)block|var)\\s*(\\s*\\([^ ]*\\)\\s*)\\s*';\n"
 "Replace ('BLOCK( test1)', 'def \"$1\" value \"$2\"', True);"
 msgstr ""
-"Выражение: = &#39;((? I) block | var) \\ s * (\\ s * \\ ([^] * \\) \\ s *) "
-"\\ s *&#39;; Заменить (&#39;BLOCK (test1)&#39;, &#39;def &quot;$ 1&quot;, "
-"значение &quot;$ 2&quot;, True);"
+"Expression := '((?i)block|var)\\s*(\\s*\\([^ ]*\\)\\s*)\\s*';\n"
+"Replace ('BLOCK( test1)', 'def \"$1\" value \"$2\"', True);"
 
 # e8185af4881841498602a279fd958a28
 #: ../../tregexpr.rst:221
 msgid "Returns ``def \"BLOCK\" value \"test1\"``"
-msgstr "Возвращает `` def &quot;BLOCK&quot; значение &quot;test1&quot; ``"
+msgstr "Возвращает ``def \"BLOCK\" value \"test1\"``"
 
 # fd88317c67c54528a7c39dadb4f44081
 #: ../../tregexpr.rst:237
 msgid "Replace ('BLOCK( test1)', 'def \"$1\" value \"$2\"', False)"
-msgstr ""
-"Заменить (&#39;BLOCK (test1)&#39;, &#39;def &quot;$ 1&quot;, значение "
-"&quot;$ 2&quot;, False)"
+msgstr "Replace ('BLOCK( test1)', 'def \"$1\" value \"$2\"', False)"
 
 # 8d04a89b875e4da080ff7cee940b2836
 #: ../../tregexpr.rst:227
 msgid "Returns ``def \"$1\" value \"$2\"``"
-msgstr "Возвращает `` def &quot;$ 1&quot; значение &quot;$ 2&quot; ``"
+msgstr "Возвращает ``def \"$1\" value \"$2\"``"
 
 # 20f505783ced47869cf3e1c3e384119f
 #: ../../tregexpr.rst:231
@@ -856,7 +853,7 @@ msgstr "LinePairedSeparator"
 #: ../../tregexpr.rst:331
 msgid "paired line separator (like ``\\r\\n`` in DOS and Windows)."
 msgstr ""
-"разделитель парных строк (например, ``\r\n"
+"разделитель парных строк (например, ``\\r\\n"
 "`` в DOS и Windows)."
 
 # 94152e0d07ca4effbb3392f5f3086297
@@ -903,7 +900,7 @@ msgstr ""
 msgid ""
 "LineSeparators := #$d#$a;\n"
 "LinePairedSeparator := #$d#$a"
-msgstr "LineSeparators: = # $ d # $ a; LinePairedSeparator: = # $ d # $ a"
+msgstr "LineSeparators: = #$d#$a; LinePairedSeparator: = #$d#$a"
 
 # b5e0494343e746f28363d60baf7c9618
 #: ../../tregexpr.rst:353
@@ -924,7 +921,7 @@ msgstr "InvertCase"
 msgid ""
 "Invertion of character case. Redefine it if you want different behaviour."
 msgstr ""
-"Инверсия регистра символов. Переопределите его, если хотите другое "
+"Инвертирует регистр символов для регистро-независимого поиска. Переопределите, если хотите другое "
 "поведение."
 
 # f4de23dca4364a17bd02c74b4b39c065

@@ -123,8 +123,8 @@ msgid ""
 "For optimization regular expression is automatically compiled into "
 "``P-code``. Human-readable form of the ``P-code`` returns by Dump_."
 msgstr ""
-"Zur Optimierung wird der reguläre Ausdruck automatisch in `` P-Code`` "
-"kompiliert. Von Menschen lesbare Form des `` P-Codes`` wird von Dump_ "
+"Zur Optimierung wird der reguläre Ausdruck automatisch in ``P-Code`` "
+"kompiliert. Von Menschen lesbare Form des ``P-Codes`` wird von Dump_ "
 "zurückgegeben."
 
 # 86c6be00dc334f83a36000bc211ed5da

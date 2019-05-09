@@ -98,9 +98,9 @@ msgid ""
 "as separate library and can be compiled by Delphi 2-7, Borland C++ Builder "
 "3-6."
 msgstr ""
-"TRegExpr реализован на чистом Паскале. Это входит в Lazarus (Free Pascal) "
-"<http://wiki.freepascal.org/Regexpr>`_ проект. Но он также существует как "
-"отдельная библиотека и может быть скомпилирован Delphi 2-7, Borland C ++ "
+"TRegExpr реализован на чистом Паскале. Является частью `Lazarus (Free Pascal) "
+"<http://wiki.freepascal.org/Regexpr>`_ проект. Но также существует как "
+"отдельная библиотека и может быть скомпилирована Delphi 2-7, Borland C ++ "
 "Builder 3-6."
 
 # ca3c7e798543405eb28c67b45452b350
