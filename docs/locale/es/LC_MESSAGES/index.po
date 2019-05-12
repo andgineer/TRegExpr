@@ -1,50 +1,55 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2019, Andrey Sorokin
 # This file is distributed under the same license as the TRegExpr package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-08 11:59+0300\n"
+"POT-Creation-Date: 2019-05-12 17:26+0300\n"
 "PO-Revision-Date: 2019-05-08 09:13+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Spanish (https://www.transifex.com/masterAndrey/teams/98461/es/)\n"
+"Language-Team: Spanish "
+"(https://www.transifex.com/masterAndrey/teams/98461/es/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.3.4\n"
 
 # ab7f160cdf66442c921786c514900fef
 #: ../../translations_list.rst:6
+#, fuzzy
+msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+
+# ab7f160cdf66442c921786c514900fef
+#: ../../translations_list.rst:7
 msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
 msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
-#: ../../translations_list.rst:7
+#: ../../translations_list.rst:8
 msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
 msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
-#: ../../translations_list.rst:8
+#: ../../translations_list.rst:9
 msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
 msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
-#: ../../translations_list.rst:9
+#: ../../translations_list.rst:10
 msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
 msgstr "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
-#: ../../translations_list.rst:10
+#: ../../translations_list.rst:11
 msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
-msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+msgstr "Español"
 
 # e0e096577ddf42de84b4c0009d1ab8ee
 #: ../../index.rst:4
@@ -66,9 +71,9 @@ msgid ""
 "Regular expressions are easy to use and powerful tool for sophisticated "
 "search and substitution and for template based text check."
 msgstr ""
-"Las expresiones regulares son una herramienta potente y fácil de usar para "
-"la búsqueda y sustitución sofisticadas y para la verificación de texto "
-"basada en plantillas."
+"Las expresiones regulares son una herramienta potente y fácil de usar "
+"para la búsqueda y sustitución sofisticadas y para la verificación de "
+"texto basada en plantillas."
 
 # 1f3133a0541e467bbc7f8228dfc89846
 #: ../../index.rst:12
@@ -83,26 +88,27 @@ msgstr ""
 #: ../../index.rst:15
 msgid ""
 "Also you can extract phone numbers, ZIP-codes etc from web-pages or "
-"documents, search for complex patterns in log files and all you can imagine."
-" Rules (templates) can be changed without your program recompilation."
+"documents, search for complex patterns in log files and all you can "
+"imagine. Rules (templates) can be changed without your program "
+"recompilation."
 msgstr ""
-"También puede extraer números de teléfono, códigos postales, etc. de páginas"
-" web o documentos, buscar patrones complejos en los archivos de registro y "
-"todo lo que pueda imaginar. Las reglas (plantillas) se pueden cambiar sin la"
-" recompilación de su programa."
+"También puede extraer números de teléfono, códigos postales, etc. de "
+"páginas web o documentos, buscar patrones complejos en los archivos de "
+"registro y todo lo que pueda imaginar. Las reglas (plantillas) se pueden "
+"cambiar sin la recompilación de su programa."
 
 # 6baba10c40834de1aa6cc9e87f5ba5a4
 #: ../../index.rst:19
 msgid ""
-"TRegExpr is implemented in pure Pascal. It's included into `Lazarus (Free "
-"Pascal) <http://wiki.freepascal.org/Regexpr>`_ project. But also it exists "
-"as separate library and can be compiled by Delphi 2-7, Borland C++ Builder "
-"3-6."
+"TRegExpr is implemented in pure Pascal. It's included into `Lazarus (Free"
+" Pascal) <http://wiki.freepascal.org/Regexpr>`_ project. But also it "
+"exists as separate library and can be compiled by Delphi 2-7, Borland C++"
+" Builder 3-6."
 msgstr ""
 "TRegExpr se implementa en Pascal puro. Está incluido en `Lázaro (Pascal "
-"Libre) <http://wiki.freepascal.org/Regexpr>`_ proyecto. Pero también existe"
-" como una biblioteca separada y puede ser compilada por Delphi 2-7, Borland "
-"C ++ Builder 3-6."
+"Libre) <http://wiki.freepascal.org/Regexpr>`_ proyecto. Pero también "
+"existe como una biblioteca separada y puede ser compilada por Delphi 2-7,"
+" Borland C ++ Builder 3-6."
 
 # ca3c7e798543405eb28c67b45452b350
 #: ../../index.rst:25
@@ -127,8 +133,8 @@ msgstr "Inicio rápido"
 #: ../../index.rst:32
 msgid ""
 "To use the library just add `the sources "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
-"you project and use the class `TRegExpr <tregexpr.html>`_."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"to you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 "Para usar la biblioteca solo agregue `las fuentes "
 "<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
@@ -138,7 +144,8 @@ msgstr ""
 #: ../../index.rst:35
 msgid "In the `FAQ <faq.html>`_ you can learn from others users problems."
 msgstr ""
-"En el `FAQ <faq.html>`_ puedes aprender de los problemas de otros usuarios."
+"En el `FAQ <faq.html>`_ puedes aprender de los problemas de otros "
+"usuarios."
 
 # 3abbbeffa14f40e4a3b0a934fc3174db
 #: ../../index.rst:37
@@ -148,8 +155,8 @@ msgid ""
 " will help you learn and debug regular expressions."
 msgstr ""
 "Listo para ejecutar la aplicación de Windows `REStudio "
-"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>"
-"`__ te ayudará a aprender y depurar expresiones regulares."
+"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>`__"
+" te ayudará a aprender y depurar expresiones regulares."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:42
@@ -211,12 +218,12 @@ msgstr ""
 # cb48bcda21e84448a807a9f10263f558
 #: ../../index.rst:71
 msgid ""
-"There are also old translations to German, Bulgarian, French and Spanish. If"
-" you want to help to update this old translations please `contact me "
+"There are also old translations to German, Bulgarian, French and Spanish."
+" If you want to help to update this old translations please `contact me "
 "<https://github.com/masterandrey>`_."
 msgstr ""
-"También hay traducciones antiguas al alemán, búlgaro, francés y español. Si "
-"quieres ayudar a actualizar estas traducciones antiguas, por favor, "
+"También hay traducciones antiguas al alemán, búlgaro, francés y español. "
+"Si quieres ayudar a actualizar estas traducciones antiguas, por favor, "
 "contáctame. <https://github.com/masterandrey>`_."
 
 # cb48bcda21e84448a807a9f10263f558
@@ -229,17 +236,17 @@ msgid ""
 msgstr ""
 "Las nuevas traducciones se basan en `GetText "
 "<https://en.wikipedia.org/wiki/Gettext>`_ y se puede editar con` "
-"transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/> "
-"`_."
+"transifex.com "
+"<https://www.transifex.com/masterAndrey/tregexpr/dashboard/> `_."
 
 # fbddcb9245124935aaf6ae6770d22a6e
 #: ../../index.rst:77
 msgid ""
-"They are already machine-translated and need only proof-reading and may be "
-"some copy-pasting from old translations."
+"They are already machine-translated and need only proof-reading and may "
+"be some copy-pasting from old translations."
 msgstr ""
-"Ya están traducidos automáticamente y solo necesitan corrección de pruebas, "
-"y pueden ser copias de las antiguas traducciones."
+"Ya están traducidos automáticamente y solo necesitan corrección de "
+"pruebas, y pueden ser copias de las antiguas traducciones."
 
 # c556ccaa4805402ab0801fa2785c7456
 #: ../../index.rst:81
@@ -268,15 +275,15 @@ msgstr ""
 #: ../../index.rst:90
 msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
 msgstr ""
-"Guido Muehlwitz: error encontrado y arreglado en el procesamiento de cadenas"
-" grandes"
+"Guido Muehlwitz: error encontrado y arreglado en el procesamiento de "
+"cadenas grandes"
 
 # 06dad95060b04bf2be1ff27e0c2abff2
 #: ../../index.rst:91
-msgid ""
-"Stephan Klimek - testing in CPPB and suggesting/implementing many features"
+msgid "Stephan Klimek - testing in CPPB and suggesting/implementing many features"
 msgstr ""
-"Stephan Klimek: prueba en CPPB y sugiere / implementa muchas características"
+"Stephan Klimek: prueba en CPPB y sugiere / implementa muchas "
+"características"
 
 # 2080a3d065de4827916dbbc174872814
 #: ../../index.rst:93
@@ -289,8 +296,8 @@ msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
 "translation, usefull suggestions"
 msgstr ""
-"Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - Traducción "
-"al alemán, sugerencias útiles"
+"Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - "
+"Traducción al alemán, sugerencias útiles"
 
 # d402718ba09b49ffb284a26bc9e31d57
 #: ../../index.rst:96
@@ -313,8 +320,7 @@ msgstr "Simeon Lilov - Traducción Búlgaro"
 
 # 35fbb7141a5346a4a884f660743d53dd
 #: ../../index.rst:100
-msgid ""
-"Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
+msgid "Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
 msgstr ""
 "Filip Jirsk y Matthew Winter: ayuda en el modo de implementación no "
 "codicioso"
@@ -338,3 +344,4 @@ msgstr "Martin Ledoux - Traducción al francés"
 #: ../../index.rst:105
 msgid "Diego Calp, Argentina - Spanish translation"
 msgstr "Diego Calp, Argentina - Traducción al Español"
+

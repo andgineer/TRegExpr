@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-08 11:59+0300\n"
+"POT-Creation-Date: 2019-05-12 21:15+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../../translations_list.rst:6
+# bf3c1985d6cb4bb7b8e93a78e85aa43c
+msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+msgstr ""
+
+#: ../../translations_list.rst:7
 # 1e981c1fd2a743f1b2bfa307b6562f8b
 msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
 msgstr ""
 
-#: ../../translations_list.rst:7
+#: ../../translations_list.rst:8
 # 959cf23b9f86427f9643550f26b816be
 msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
 msgstr ""
 
-#: ../../translations_list.rst:8
+#: ../../translations_list.rst:9
 # 9a388b794d4d4d85b042be34566891a6
 msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
 msgstr ""
 
-#: ../../translations_list.rst:9
+#: ../../translations_list.rst:10
 # 397812a6c3e4474b9d73b7b403041015
 msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
 msgstr ""
 
-#: ../../translations_list.rst:10
+#: ../../translations_list.rst:11
 # bf3c1985d6cb4bb7b8e93a78e85aa43c
 msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
 msgstr ""

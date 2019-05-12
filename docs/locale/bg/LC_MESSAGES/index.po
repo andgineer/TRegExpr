@@ -1,48 +1,53 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2019, Andrey Sorokin
 # This file is distributed under the same license as the TRegExpr package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-08 11:59+0300\n"
+"POT-Creation-Date: 2019-05-12 17:26+0300\n"
 "PO-Revision-Date: 2019-05-08 09:13+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Bulgarian (https://www.transifex.com/masterAndrey/teams/98461/bg/)\n"
+"Language-Team: Bulgarian "
+"(https://www.transifex.com/masterAndrey/teams/98461/bg/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: bg\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.3.4\n"
 
 # ab7f160cdf66442c921786c514900fef
 #: ../../translations_list.rst:6
+#, fuzzy
+msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+
+# ab7f160cdf66442c921786c514900fef
+#: ../../translations_list.rst:7
 msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
 msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
-#: ../../translations_list.rst:7
+#: ../../translations_list.rst:8
 msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
 msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
-#: ../../translations_list.rst:8
+#: ../../translations_list.rst:9
 msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
-msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+msgstr "Български"
 
 # ab7f160cdf66442c921786c514900fef
-#: ../../translations_list.rst:9
+#: ../../translations_list.rst:10
 msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
 msgstr "`Френски <https://regex.masterandrey.com/fr/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
-#: ../../translations_list.rst:10
+#: ../../translations_list.rst:11
 msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
 msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
 
@@ -66,8 +71,8 @@ msgid ""
 "Regular expressions are easy to use and powerful tool for sophisticated "
 "search and substitution and for template based text check."
 msgstr ""
-"Редовните изрази са лесни за използване и мощно средство за сложно търсене и"
-" подмяна, както и за проверка на текст въз основа на шаблони."
+"Редовните изрази са лесни за използване и мощно средство за сложно "
+"търсене и подмяна, както и за проверка на текст въз основа на шаблони."
 
 # 1f3133a0541e467bbc7f8228dfc89846
 #: ../../index.rst:12
@@ -75,33 +80,34 @@ msgid ""
 "It is especially useful for user input validation in input forms - to "
 "validate e-mail addresses and so on."
 msgstr ""
-"Това е особено полезно за валидиране на потребителски вход във формуляри за "
-"въвеждане - за валидиране на имейл адреси и т.н."
+"Това е особено полезно за валидиране на потребителски вход във формуляри "
+"за въвеждане - за валидиране на имейл адреси и т.н."
 
 # ddca2022171f445a9bcae654ef4b362f
 #: ../../index.rst:15
 msgid ""
 "Also you can extract phone numbers, ZIP-codes etc from web-pages or "
-"documents, search for complex patterns in log files and all you can imagine."
-" Rules (templates) can be changed without your program recompilation."
+"documents, search for complex patterns in log files and all you can "
+"imagine. Rules (templates) can be changed without your program "
+"recompilation."
 msgstr ""
-"Също така можете да извличате телефонни номера, ZIP-кодове и т.н. от уеб-"
-"страници или документи, да търсите сложни модели в лог файловете и всичко, "
-"което можете да си представите. Правила (шаблони) могат да бъдат променяни "
-"без прекомпилация на програмата."
+"Също така можете да извличате телефонни номера, ZIP-кодове и т.н. от "
+"уеб-страници или документи, да търсите сложни модели в лог файловете и "
+"всичко, което можете да си представите. Правила (шаблони) могат да бъдат "
+"променяни без прекомпилация на програмата."
 
 # 6baba10c40834de1aa6cc9e87f5ba5a4
 #: ../../index.rst:19
 msgid ""
-"TRegExpr is implemented in pure Pascal. It's included into `Lazarus (Free "
-"Pascal) <http://wiki.freepascal.org/Regexpr>`_ project. But also it exists "
-"as separate library and can be compiled by Delphi 2-7, Borland C++ Builder "
-"3-6."
+"TRegExpr is implemented in pure Pascal. It's included into `Lazarus (Free"
+" Pascal) <http://wiki.freepascal.org/Regexpr>`_ project. But also it "
+"exists as separate library and can be compiled by Delphi 2-7, Borland C++"
+" Builder 3-6."
 msgstr ""
-"TRegExpr се реализира в чист Pascal. Той е включен в `Lazarus (Free Pascal) "
-"<http://wiki.freepascal.org/Regexpr>`_ проект. Но тя съществува и като "
-"отделна библиотека и може да бъде компилирана от Delphi 2-7, Borland C ++ "
-"Builder 3-6."
+"TRegExpr се реализира в чист Pascal. Той е включен в `Lazarus (Free "
+"Pascal) <http://wiki.freepascal.org/Regexpr>`_ проект. Но тя съществува и"
+" като отделна библиотека и може да бъде компилирана от Delphi 2-7, "
+"Borland C ++ Builder 3-6."
 
 # ca3c7e798543405eb28c67b45452b350
 #: ../../index.rst:25
@@ -126,19 +132,19 @@ msgstr "Бърз старт"
 #: ../../index.rst:32
 msgid ""
 "To use the library just add `the sources "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
-"you project and use the class `TRegExpr <tregexpr.html>`_."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"to you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 "За да използвате библиотеката, просто добавете `източниците "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ за "
-"да проектирате и използвате класа` TRegExpr <tregexpr.html>`_."
+"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"за да проектирате и използвате класа` TRegExpr <tregexpr.html>`_."
 
 # 8f3942b9d4e941ea900924467c155c42
 #: ../../index.rst:35
 msgid "In the `FAQ <faq.html>`_ you can learn from others users problems."
 msgstr ""
-"В `Често задавани въпроси <faq.html>`_ можете да научите от проблемите на "
-"другите потребители."
+"В `Често задавани въпроси <faq.html>`_ можете да научите от проблемите на"
+" другите потребители."
 
 # 3abbbeffa14f40e4a3b0a934fc3174db
 #: ../../index.rst:37
@@ -148,8 +154,8 @@ msgid ""
 " will help you learn and debug regular expressions."
 msgstr ""
 "Готови ли сте да стартирате Windows приложението &quot;REStudio&quot; "
-"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>"
-"`__ ще ви помогне да научите и отстраните грешки на регулярни изрази."
+"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>`__"
+" ще ви помогне да научите и отстраните грешки на регулярни изрази."
 
 # d5fbb4416fe442e68b451ea2f14187c6
 #: ../../index.rst:42
@@ -211,12 +217,12 @@ msgstr ""
 # cb48bcda21e84448a807a9f10263f558
 #: ../../index.rst:71
 msgid ""
-"There are also old translations to German, Bulgarian, French and Spanish. If"
-" you want to help to update this old translations please `contact me "
+"There are also old translations to German, Bulgarian, French and Spanish."
+" If you want to help to update this old translations please `contact me "
 "<https://github.com/masterandrey>`_."
 msgstr ""
-"Има и стари преводи на немски, български, френски и испански. Ако искате да "
-"помогнете да актуализирате старите преводи, моля свържете се с мен "
+"Има и стари преводи на немски, български, френски и испански. Ако искате "
+"да помогнете да актуализирате старите преводи, моля свържете се с мен "
 "<https://github.com/masterandrey>`_."
 
 # cb48bcda21e84448a807a9f10263f558
@@ -229,17 +235,17 @@ msgid ""
 msgstr ""
 "Новите преводи са базирани на `GetText "
 "<https://en.wikipedia.org/wiki/Gettext>`_ и може да се редактира с` "
-"transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/> "
-"`_."
+"transifex.com "
+"<https://www.transifex.com/masterAndrey/tregexpr/dashboard/> `_."
 
 # fbddcb9245124935aaf6ae6770d22a6e
 #: ../../index.rst:77
 msgid ""
-"They are already machine-translated and need only proof-reading and may be "
-"some copy-pasting from old translations."
+"They are already machine-translated and need only proof-reading and may "
+"be some copy-pasting from old translations."
 msgstr ""
-"Те вече са преведени машинно и се нуждаят само от корекционно четене и може "
-"да са копиране от стари преводи."
+"Те вече са преведени машинно и се нуждаят само от корекционно четене и "
+"може да са копиране от стари преводи."
 
 # c556ccaa4805402ab0801fa2785c7456
 #: ../../index.rst:81
@@ -252,8 +258,8 @@ msgid ""
 "Many features suggested and a lot of bugs founded (and even fixed) by "
 "TRegExpr’s contributors."
 msgstr ""
-"Предложени са много функции и много грешки, основани (и дори фиксирани) от "
-"участниците в TRegExpr."
+"Предложени са много функции и много грешки, основани (и дори фиксирани) "
+"от участниците в TRegExpr."
 
 # 5fece84603234ac6a8b85c4ad5572d1f
 #: ../../index.rst:86
@@ -268,15 +274,15 @@ msgstr ""
 #: ../../index.rst:90
 msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
 msgstr ""
-"Guido Muehlwitz - открил и фиксирал грозна грешка при обработката на големи "
-"низове"
+"Guido Muehlwitz - открил и фиксирал грозна грешка при обработката на "
+"големи низове"
 
 # 06dad95060b04bf2be1ff27e0c2abff2
 #: ../../index.rst:91
-msgid ""
-"Stephan Klimek - testing in CPPB and suggesting/implementing many features"
+msgid "Stephan Klimek - testing in CPPB and suggesting/implementing many features"
 msgstr ""
-"Стефан Климек - тестване в CPPB и предлагане / реализиране на много функции"
+"Стефан Климек - тестване в CPPB и предлагане / реализиране на много "
+"функции"
 
 # 2080a3d065de4827916dbbc174872814
 #: ../../index.rst:93
@@ -289,20 +295,18 @@ msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
 "translation, usefull suggestions"
 msgstr ""
-"Мартин Баур (&quot;www.mindpower.com.&quot; <http://www.mindpower.com>`__) -"
-" немски превод, полезни предложения"
+"Мартин Баур (&quot;www.mindpower.com.&quot; "
+"<http://www.mindpower.com>`__) - немски превод, полезни предложения"
 
 # d402718ba09b49ffb284a26bc9e31d57
 #: ../../index.rst:96
 msgid "Yury Finkel - implemented UniCode support, found and fixed some bugs"
-msgstr ""
-"Юрий Финкел - внедри поддръжка на UniCode, намери и отстрани някои грешки"
+msgstr "Юрий Финкел - внедри поддръжка на UniCode, намери и отстрани някои грешки"
 
 # 28f0838389bf40bd8588b75e3c2cb818
 #: ../../index.rst:97
 msgid "Ralf Junker - Implemented some features, many optimization suggestions"
-msgstr ""
-"Ralf Junker - Реализира някои функции, много предложения за оптимизация"
+msgstr "Ralf Junker - Реализира някои функции, много предложения за оптимизация"
 
 # d3324e4f8cfb4e1aacd8ed294617e2da
 #: ../../index.rst:99
@@ -311,8 +315,7 @@ msgstr "Симеон Лилов - превод на български език"
 
 # 35fbb7141a5346a4a884f660743d53dd
 #: ../../index.rst:100
-msgid ""
-"Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
+msgid "Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
 msgstr "Филип Джирск и Матю Зина - помощ в изпълнението не-алчен режим"
 
 # 2fee3a31c1dd4a12931d90c5dbaf38c1
@@ -334,3 +337,4 @@ msgstr "Мартин Леду - превод на френски"
 #: ../../index.rst:105
 msgid "Diego Calp, Argentina - Spanish translation"
 msgstr "Diego Calp, Аржентина - превод на испански"
+

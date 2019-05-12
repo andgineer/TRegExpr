@@ -1,48 +1,53 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2019, Andrey Sorokin
 # This file is distributed under the same license as the TRegExpr package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-08 11:59+0300\n"
+"POT-Creation-Date: 2019-05-12 17:26+0300\n"
 "PO-Revision-Date: 2019-05-08 09:12+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Spanish (https://www.transifex.com/masterAndrey/teams/98461/es/)\n"
+"Language-Team: Spanish "
+"(https://www.transifex.com/masterAndrey/teams/98461/es/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.3.4\n"
+
+# bf3c1985d6cb4bb7b8e93a78e85aa43c
+#: ../../translations_list.rst:6
+#, fuzzy
+msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
 
 # 1e981c1fd2a743f1b2bfa307b6562f8b
-#: ../../translations_list.rst:6
+#: ../../translations_list.rst:7
 msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
 msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
 
 # 959cf23b9f86427f9643550f26b816be
-#: ../../translations_list.rst:7
+#: ../../translations_list.rst:8
 msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
 msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
 
 # 9a388b794d4d4d85b042be34566891a6
-#: ../../translations_list.rst:8
+#: ../../translations_list.rst:9
 msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
 msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
 
 # 397812a6c3e4474b9d73b7b403041015
-#: ../../translations_list.rst:9
+#: ../../translations_list.rst:10
 msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
 msgstr "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
 
 # bf3c1985d6cb4bb7b8e93a78e85aa43c
-#: ../../translations_list.rst:10
+#: ../../translations_list.rst:11
 msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
 msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
 
@@ -64,18 +69,16 @@ msgstr "Introducción"
 # b64ac94696c64fea92662c7fe439b817
 #: ../../demos.rst:11
 msgid ""
-"If you don't familiar with regular expression, please, take a look at the "
-"`r.e.syntax <regular_expressions.html>`__."
+"If you don't familiar with regular expression, please, take a look at the"
+" `r.e.syntax <regular_expressions.html>`__."
 msgstr ""
 "Si no está familiarizado con la expresión regular, por favor, eche un "
 "vistazo a la &#39;sintaxis&#39; <regular_expressions.html>`__."
 
 # 781500ac2b09419a9cb5595076f7de14
 #: ../../demos.rst:14
-msgid ""
-"TRegExpr interface described in `TRegExpr interface <tregexpr.html>`__."
-msgstr ""
-"Interfaz TRegExpr descrita en la interfaz `TRegExpr <tregexpr.html>`__."
+msgid "TRegExpr interface described in `TRegExpr interface <tregexpr.html>`__."
+msgstr "Interfaz TRegExpr descrita en la interfaz `TRegExpr <tregexpr.html>`__."
 
 # 8fc9996e05c345aa9e7e31bb9c67299f
 #: ../../demos.rst:18
@@ -121,9 +124,9 @@ msgid ""
 "href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 msgstr ""
 "Por ejemplo, reemplaza `` www.masterAndrey.com`` por `` <a "
-"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` o ``"
-"filbert@yandex.ru`` por ``<a"
-"href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
+"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` o "
+"``filbert@yandex.ru`` por "
+"``<ahref=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 
 # f7a7a176770443fd845bcbdc8a69ccc9
 #: ../../demos.rst:33
@@ -141,11 +144,11 @@ msgid ""
 "\n"
 "function DecorateEMails (const AText : string) : string;"
 msgstr ""
-"function DecorateURLs (const AText: string; AFlags: TDecorateURLsFlagSet = "
-"[durlAddr, durlPath]): string; escriba TDecorateURLsFlags = (durlProto, "
-"durlAddr, durlPort, durlPath, durlBMark, durlParam); TDecorateURLsFlagSet = "
-"conjunto de TDecorateURLsFlags; función DecorateEMails (const AText: "
-"string): string;"
+"function DecorateURLs (const AText: string; AFlags: TDecorateURLsFlagSet "
+"= [durlAddr, durlPath]): string; escriba TDecorateURLsFlags = (durlProto,"
+" durlAddr, durlPort, durlPath, durlBMark, durlParam); "
+"TDecorateURLsFlagSet = conjunto de TDecorateURLsFlags; función "
+"DecorateEMails (const AText: string): string;"
 
 # 92616dd287884554b817420670c50161
 #: ../../demos.rst:49
@@ -228,8 +231,8 @@ msgid ""
 "``AFlags`` describes, which parts of hyper-link must be included into "
 "visible part of the link."
 msgstr ""
-"``AFlags`` describe qué partes del hipervínculo deben incluirse en la parte "
-"visible del enlace."
+"``AFlags`` describe qué partes del hipervínculo deben incluirse en la "
+"parte visible del enlace."
 
 # 8a9151bca867444096cb6fd675d91897
 #: ../../demos.rst:64
@@ -270,3 +273,4 @@ msgstr ""
 #: ../../demos.rst:76
 msgid "Slightly more complex examples, see comments inside the unit"
 msgstr "Ejemplos un poco más complejos, ver comentarios dentro de la unidad"
+
