@@ -1760,10 +1760,3 @@ msgstr ""
 "In diesem `alten Blogeintrag aus dem vorigen Jahrhundert "
 "<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__"
 " Ich erläutere einige Verwendungen von regulären Ausdrücken."
-
-# 65e912a9d36d4a848da135f43832674c
-#~ msgid ""
-#~ "`English "
-#~ "<https://regex.masterandrey.com/en/latest/regular_expressions.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-

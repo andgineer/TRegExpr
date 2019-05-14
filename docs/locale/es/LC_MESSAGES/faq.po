@@ -447,8 +447,3 @@ msgstr ""
 "la constante ``EscChar`` (en ``RegExpr.pas``). Por ejemplo `` EscChar = "
 "&quot;/&quot; ``. Luego puede escribir `` / w + / w + /. / W + ``, parece"
 " inusual pero más legible."
-
-# e2a3dc0c705640788818a205bca41480
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/faq.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-

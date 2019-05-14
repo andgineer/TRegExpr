@@ -442,8 +442,3 @@ msgstr ""
 "можете да предефинирате константата ``EscChar`` (в ``RegExpr.pas``). "
 "Например ``EscChar = &quot;/&quot;``. Тогава можете да напишете "
 "``/w+/w+/./w+``, изглежда необичайно, но по-разбираемо."
-
-# e2a3dc0c705640788818a205bca41480
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/faq.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-

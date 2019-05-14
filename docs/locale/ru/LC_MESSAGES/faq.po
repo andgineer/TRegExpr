@@ -430,8 +430,3 @@ msgstr ""
 "``\\w+\\\\w+\\.\\w+``, вы можете переопределить константу ``EscChar`` (в "
 "``RegExpr.pas``). Скажем, ``EscChar = \"/\"``. Затем вы можете написать "
 "``/w+/w+/. /W+`` - выглядит необычно, но более читабельно."
-
-# e2a3dc0c705640788818a205bca41480
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/faq.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-

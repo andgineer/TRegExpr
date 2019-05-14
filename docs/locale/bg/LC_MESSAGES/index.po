@@ -337,27 +337,3 @@ msgstr "Мартин Леду - превод на френски"
 msgid "Diego Calp, Argentina - Spanish translation"
 msgstr "Diego Calp, Аржентина - превод на испански"
 
-# ab7f160cdf66442c921786c514900fef
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-
-# ab7f160cdf66442c921786c514900fef
-#~ msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
-#~ msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
-
-# ab7f160cdf66442c921786c514900fef
-#~ msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
-#~ msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
-
-# ab7f160cdf66442c921786c514900fef
-#~ msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
-#~ msgstr "Български"
-
-# ab7f160cdf66442c921786c514900fef
-#~ msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
-#~ msgstr "`Френски <https://regex.masterandrey.com/fr/latest/index.html>`__"
-
-# ab7f160cdf66442c921786c514900fef
-#~ msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
-#~ msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
-

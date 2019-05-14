@@ -282,8 +282,3 @@ msgid "Slightly more complex examples, see comments inside the unit"
 msgstr ""
 "Exemples légèrement plus complexes, voir les commentaires à "
 "l&#39;intérieur de l&#39;unité"
-
-# bf3c1985d6cb4bb7b8e93a78e85aa43c
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/demos.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-

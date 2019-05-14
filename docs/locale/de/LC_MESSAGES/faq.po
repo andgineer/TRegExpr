@@ -450,8 +450,3 @@ msgstr ""
 "``EscChar`` (in ``RegExpr.pas``) neu definieren. Zum Beispiel `` EscChar "
 "= &quot;/&quot; ``. Dann können Sie `` / w + / w + /. / W + `` schreiben,"
 " sieht ungewöhnlich aus, ist aber lesbarer."
-
-# e2a3dc0c705640788818a205bca41480
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/faq.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-

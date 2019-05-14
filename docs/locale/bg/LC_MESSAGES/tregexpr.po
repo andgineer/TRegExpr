@@ -1434,8 +1434,3 @@ msgstr ""
 #: ../../tregexpr.rst:606
 msgid "After that all strings will be treated as WideString."
 msgstr "След това всички низове ще се третират като WideString."
-
-# 3257c3d780c54ed7814b9a582a7fbf59
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/tregexpr.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-

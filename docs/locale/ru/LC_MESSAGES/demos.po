@@ -283,8 +283,3 @@ msgstr ""
 #: ../../demos.rst:86
 msgid "Slightly more complex examples, see comments inside the unit"
 msgstr "Чуть более сложные примеры, см. Комментарии внутри блока"
-
-# bf3c1985d6cb4bb7b8e93a78e85aa43c
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/demos.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/demos.html>`__"
-

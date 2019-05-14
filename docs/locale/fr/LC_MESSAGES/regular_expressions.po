@@ -1771,10 +1771,3 @@ msgstr ""
 "Dans cet `ancien billet de blog du siècle précédent "
 "<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__"
 " J&#39;illustre quelques utilisations d&#39;expressions régulières."
-
-# 65e912a9d36d4a848da135f43832674c
-#~ msgid ""
-#~ "`English "
-#~ "<https://regex.masterandrey.com/en/latest/regular_expressions.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-

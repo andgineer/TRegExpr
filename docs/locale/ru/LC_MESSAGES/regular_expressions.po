@@ -1750,10 +1750,3 @@ msgstr ""
 "В этой `древней статье из прошлого века "
 "<https://masterandrey.com/posts/ru/text_processing_from_birds_eye_view.html>`__"
 " есть примеры использования регулярных выражений."
-
-# 65e912a9d36d4a848da135f43832674c
-#~ msgid ""
-#~ "`English "
-#~ "<https://regex.masterandrey.com/en/latest/regular_expressions.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-
