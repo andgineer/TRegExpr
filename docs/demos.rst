@@ -1,4 +1,14 @@
-.. include:: translations_list.rst
+.. list-table::
+   :widths: 40 10 10 10 10 10 10
+   :header-rows: 0
+
+   * -
+     - English
+     - `Русский <https://regex.masterandrey.com/ru/latest/demos.html>`__
+     - `Deutsch <https://regex.masterandrey.com/de/latest/demos.html>`__
+     - `Български <https://regex.masterandrey.com/bg/latest/demos.html>`__
+     - `Français <https://regex.masterandrey.com/fr/latest/demos.html>`__
+     - `Español <https://regex.masterandrey.com/es/latest/demos.html>`__
 
 Demos
 =====
