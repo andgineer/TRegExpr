@@ -27,7 +27,6 @@ msgstr "`English <https://regex.masterandrey.com/en/latest/regular_expressions.h
 
 # f78866de30184f25aacf1a0ccd28dbd9
 #: ../../regular_expressions.rst:7
-#, fuzzy
 msgid ""
 "`Русский "
 "<https://regex.masterandrey.com/ru/latest/regular_expressions.html>`__"

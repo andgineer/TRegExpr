@@ -587,7 +587,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` "
 "will be used as template for Substitution methods."
 msgstr ""
-"Ако последният аргумент (`` AUseSubstitution``) е вярно, то `` "
+"Ако последният аргумент (``AUseSubstitution``) е вярно, то `` "
 "AReplaceStr`` ще бъде използван като шаблон за методи за заместване."
 
 # 06bb14e2e3d44cd885e9003370843147
@@ -1165,7 +1165,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` "
 "will be used as template for ``Substitution methods``:"
 msgstr ""
-"Ако последният аргумент (`` AUseSubstitution``) е вярно, то `` "
+"Ако последният аргумент (``AUseSubstitution``) е вярно, то `` "
 "AReplaceStr`` ще бъде използван като шаблон за `` Методи за заместване``:"
 
 # 2bf6d65a1443409384b682e259c5be76

@@ -595,7 +595,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` "
 "will be used as template for Substitution methods."
 msgstr ""
-"Si le dernier argument (`` AUseSubstitution``) est vrai, alors "
+"Si le dernier argument (``AUseSubstitution``) est vrai, alors "
 "``AReplaceStr`` sera utilisé comme modèle pour les méthodes de "
 "substitution."
 
@@ -612,7 +612,7 @@ msgstr ""
 # 19c18b1de0f140e6b54eb9b509ffb64b
 #: ../../tregexpr.rst:231
 msgid "Returns ``def \"BLOCK\" value \"test1\"``"
-msgstr "Retourne `` def &quot;BLOCK&quot; valeur &quot;test1&quot; &quot;` `"
+msgstr "Retourne ``def \"BLOCK\" valeur \"test1\"``"
 
 # 5fe9c622e60040068319f376dc86f17c
 #: ../../tregexpr.rst:235
@@ -1187,7 +1187,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` "
 "will be used as template for ``Substitution methods``:"
 msgstr ""
-"Si le dernier argument (`` AUseSubstitution``) est vrai, alors "
+"Si le dernier argument (``AUseSubstitution``) est vrai, alors "
 "``AReplaceStr`` sera utilisé comme modèle pour `` Méthodes de "
 "substitution``:"
 

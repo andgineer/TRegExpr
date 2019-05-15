@@ -11,5 +11,5 @@ sphinx-build -b html -D language=ru . _build/html/ru
 if [[ "$OSTYPE" == "darwin"* ]]; then
     open _build/html/ru/index.html
 else
-    google-chrome _build/html/ru/index.html
+    google-chrome _build/html/ru/tregexpr.html
 fi

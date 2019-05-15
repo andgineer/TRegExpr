@@ -604,7 +604,7 @@ msgstr ""
 # 19c18b1de0f140e6b54eb9b509ffb64b
 #: ../../tregexpr.rst:231
 msgid "Returns ``def \"BLOCK\" value \"test1\"``"
-msgstr "Liefert `` def &quot;BLOCK&quot; Wert &quot;test1&quot; ``"
+msgstr "Liefert ``def \"BLOCK\" Wert &quot;test1&quot; ``"
 
 # 5fe9c622e60040068319f376dc86f17c
 #: ../../tregexpr.rst:235
@@ -1182,7 +1182,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` "
 "will be used as template for ``Substitution methods``:"
 msgstr ""
-"Wenn das letzte Argument (`` AUseSubstitution``) wahr ist, wird `` "
+"Wenn das letzte Argument (``AUseSubstitution``) wahr ist, wird `` "
 "AReplaceStr`` als Vorlage für `` Substitutionsmethoden`` verwendet:"
 
 # 2bf6d65a1443409384b682e259c5be76

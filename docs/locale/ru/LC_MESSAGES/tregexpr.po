@@ -27,7 +27,6 @@ msgstr "`English <https://regex.masterandrey.com/en/latest/tregexpr.html>`__"
 
 # 5f3d678e3947428f872296a3f7123621
 #: ../../tregexpr.rst:7
-#, fuzzy
 msgid "`Русский <https://regex.masterandrey.com/ru/latest/tregexpr.html>`__"
 msgstr "Русский"
 
@@ -1192,7 +1191,7 @@ msgid ""
 "If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` "
 "will be used as template for ``Substitution methods``:"
 msgstr ""
-"Если последний аргумент (`` AUseSubstitution``) равен true, то "
+"Если последний аргумент (``AUseSubstitution``) равен true, то "
 "``AReplaceStr`` будет использоваться в качестве шаблона для `` методов "
 "подстановки``:"
 
@@ -1216,7 +1215,7 @@ msgstr ""
 # 19c18b1de0f140e6b54eb9b509ffb64b
 #: ../../tregexpr.rst:511
 msgid "Returns  ``def 'BLOCK' value 'test1'``"
-msgstr "Возвращает значение `` def &#39;BLOCK&#39; &#39;test1&#39;``"
+msgstr "Возвращает ``def 'BLOCK' value 'test1'``"
 
 # ab2ee91a93a44e7ea26959497f57dd99
 #: ../../tregexpr.rst:513
@@ -1241,7 +1240,7 @@ msgstr ""
 # 468582f17cf44aa99caf539ca7906a57
 #: ../../tregexpr.rst:523
 msgid "Returns ``def \"$1\" value \"$2\"``"
-msgstr "Возвращает `` def &quot;$ 1&quot; значение &quot;$ 2&quot; ``"
+msgstr "Возвращает ``def \"$1\" value \"$2\"``"
 
 # 154956e5a5684cfe8fe738b50f2e623e
 #: ../../tregexpr.rst:526
@@ -1255,7 +1254,7 @@ msgid ""
 "then ``\\n`` is replaced with ``\\n\\r`` in Windows and ``\\n`` in "
 "Linux). And so on."
 msgstr ""
-"С ``Options`` вы управляете поведением ``\\n`` (если `` "
+"С ``Options`` вы управляете поведением ``\\n`` (если ``"
 "rroUseOsLineEnd``, то ``\\n`` заменяется на ``\\n\\r`` в Windows и "
 "``\\n`` в Linux). И так далее."
 
@@ -1333,7 +1332,7 @@ msgid ""
 "low word of Object - starting position in ARegExpr, including ‘(’ if "
 "exists! (first position is 1)"
 msgstr ""
-"младшее слово Object - начальная позиция в ARegExpr, включая &#39;(&#39; "
+"младшее слово Object - начальная позиция в ARegExpr, включая ‘(’ "
 "если существует! (первая позиция 1)"
 
 # 36c9774b5f4543b2a3f11b8d3ebed089

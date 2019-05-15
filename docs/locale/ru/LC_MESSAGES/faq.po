@@ -27,7 +27,6 @@ msgstr "`English <https://regex.masterandrey.com/en/latest/faq.html>`__"
 
 # 7bbeef6bea68422db66aa6085017ef9f
 #: ../../faq.rst:7
-#, fuzzy
 msgid "`Русский <https://regex.masterandrey.com/ru/latest/faq.html>`__"
 msgstr "Русский"
 
