@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-12 17:26+0300\n"
+"POT-Creation-Date: 2019-05-15 20:39+0300\n"
 "PO-Revision-Date: 2019-05-08 09:12+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: Spanish "
@@ -20,58 +20,62 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-# e2a3dc0c705640788818a205bca41480
-#: ../../translations_list.rst:6
-#, fuzzy
-msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+# 0130ccb90d724184b2c0c189b7d7f8ff
+#: ../../faq.rst:6
+msgid "English"
+msgstr ""
 
 # 7bbeef6bea68422db66aa6085017ef9f
-#: ../../translations_list.rst:7
-msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+#: ../../faq.rst:7
+#, fuzzy
+msgid "`Русский <https://regex.masterandrey.com/ru/latest/faq.html>`__"
 msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
 
 # 47d26c4e88e1421c992425b65f8521ae
-#: ../../translations_list.rst:8
-msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+#: ../../faq.rst:8
+#, fuzzy
+msgid "`Deutsch <https://regex.masterandrey.com/de/latest/faq.html>`__"
 msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
 
 # 552aef36d89e4ec5a789d12e92aad0c5
-#: ../../translations_list.rst:9
-msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+#: ../../faq.rst:9
+#, fuzzy
+msgid "`Български <https://regex.masterandrey.com/bg/latest/faq.html>`__"
 msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
 
 # e4e735c9540244d3a49b5f5d285b4c61
-#: ../../translations_list.rst:10
-msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
+#: ../../faq.rst:10
+#, fuzzy
+msgid "`Français <https://regex.masterandrey.com/fr/latest/faq.html>`__"
 msgstr "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
 
 # e2a3dc0c705640788818a205bca41480
-#: ../../translations_list.rst:11
-msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+#: ../../faq.rst:11
+#, fuzzy
+msgid "`Español <https://regex.masterandrey.com/es/latest/faq.html>`__"
 msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
 
 # cf1fdea7e27f4b6b9e33211b59fc1c64
-#: ../../faq.rst:4
+#: ../../faq.rst:14
 msgid "FAQ"
 msgstr "Preguntas más frecuentes"
 
 # d6fc760c6fc94d9a899a479298b4c3dc
-#: ../../faq.rst:7
+#: ../../faq.rst:17
 msgid "I found a terrible bug: TRegExpr raises Access Violation exception!"
 msgstr ""
 "Encontré un error terrible: TRegExpr genera una excepción de violación de"
 " acceso."
 
 # 40da4f3424204e0f9f5560fb3c87b10a
-#: ../../faq.rst:9 ../../faq.rst:34 ../../faq.rst:44 ../../faq.rst:60
-#: ../../faq.rst:73 ../../faq.rst:93 ../../faq.rst:104 ../../faq.rst:124
-#: ../../faq.rst:151 ../../faq.rst:163
+#: ../../faq.rst:19 ../../faq.rst:44 ../../faq.rst:54 ../../faq.rst:70
+#: ../../faq.rst:83 ../../faq.rst:103 ../../faq.rst:114 ../../faq.rst:134
+#: ../../faq.rst:161 ../../faq.rst:173
 msgid "**Answer**"
 msgstr "**Responder**"
 
 # 42f037ad3d0d4c54b07a7dca4f7e1779
-#: ../../faq.rst:11
+#: ../../faq.rst:21
 msgid ""
 "You must create the object before usage. So, after you declared something"
 " like:"
@@ -80,27 +84,27 @@ msgstr ""
 " algo como:"
 
 # a5956a2cf8c44909bc4302f8810f37ba
-#: ../../faq.rst:14
+#: ../../faq.rst:24
 msgid "r : TRegExpr"
 msgstr "r: TRegExpr"
 
 # e865298e59094744b6eb09fa43db311b
-#: ../../faq.rst:18
+#: ../../faq.rst:28
 msgid "do not forget to create the object instance:"
 msgstr "No te olvides de crear la instancia de objeto:"
 
 # c0ed663f35dc4b31b84a24a42dfb7508
-#: ../../faq.rst:20
+#: ../../faq.rst:30
 msgid "r := TRegExpr.Create."
 msgstr "r: = TRegExpr.Create."
 
 # c74dd30f3876405c96375f50eba0c708
-#: ../../faq.rst:25
+#: ../../faq.rst:35
 msgid "Regular expressions with (?=...) do not work"
 msgstr "Las expresiones regulares con (? = ...) no funcionan"
 
 # 4c3e888756b74937a190a3d129fa0752
-#: ../../faq.rst:27
+#: ../../faq.rst:37
 msgid ""
 "Look ahead is not implemented in the TRegExpr. But in many cases you can "
 "easily `replace it with simple subexpressions "
@@ -111,22 +115,22 @@ msgstr ""
 "<regular_expressions.html#lookahead>`_."
 
 # 77037f107b7e47abaa5fcf3a28e7b18c
-#: ../../faq.rst:32
+#: ../../faq.rst:42
 msgid "Does it support Unicode?"
 msgstr "¿Es compatible con Unicode?"
 
 # 155b188809f94d1e9cca25cf1937d82d
-#: ../../faq.rst:36
+#: ../../faq.rst:46
 msgid "`How to use Unicode <tregexpr.html#unicode>`__"
 msgstr "`Cómo usar Unicode <tregexpr.html#unicode>`__"
 
 # 836b9a07a857496c8570a92e1ff86f73
-#: ../../faq.rst:39
+#: ../../faq.rst:49
 msgid "Why does TRegExpr return more then one line?"
 msgstr "¿Por qué TRegExpr devuelve más de una línea?"
 
 # 27f1d5918d444c55b07292a55a65fd49
-#: ../../faq.rst:41
+#: ../../faq.rst:51
 msgid ""
 "For example, r.e. ``<font .\\*>`` returns the first ``<font``, then the "
 "rest of the file including last ``</html>``."
@@ -135,7 +139,7 @@ msgstr ""
 "then the rest of the file including last ``</html> <font .\\*>``.</font>"
 
 # 2456e655103c4b788ccb1bf90ed3772b
-#: ../../faq.rst:46
+#: ../../faq.rst:56
 msgid ""
 "For backward compatibility, `modifier /s "
 "<regular_expressions.html#modifier_s>`__ is ``On`` by default."
@@ -144,7 +148,7 @@ msgstr ""
 "<regular_expressions.html#modifier_s>`__ es` `On`` por defecto."
 
 # 74667df4efa94c54bb5fa7140be21392
-#: ../../faq.rst:49
+#: ../../faq.rst:59
 msgid ""
 "Switch it Off and ``.`` will match any but `Line separators "
 "<regular_expressions.html#syntax_line_separators>`__ - exactly as you "
@@ -155,19 +159,19 @@ msgstr ""
 "como lo deseas."
 
 # b31d50bb744f40ae9282e43a1967fad6
-#: ../../faq.rst:52
+#: ../../faq.rst:62
 msgid "BTW I suggest ``<font ([^\\n>]*)>``, in ``Match[1]`` will be the URL."
 msgstr ""
 "Por cierto, sugiero que `` <font ([^\\n>] *)&gt; ``, en `` Match [1] `` "
 "será la URL.</font>"
 
 # 65c336793c8746af86f7916910aa1bd4
-#: ../../faq.rst:55
+#: ../../faq.rst:65
 msgid "Why does TRegExpr return more then I expect?"
 msgstr "¿Por qué TRegExpr regresa más de lo que esperaba?"
 
 # d751c0f0d0e7458d905073d0ca772bee
-#: ../../faq.rst:57
+#: ../../faq.rst:67
 msgid ""
 "For example r.e. ``<p>(.+)</p>`` applyed to string ``<p>a</p><p>b</p>`` "
 "returns ``a</p><p>b`` but not ``a`` as I expected."
@@ -177,7 +181,7 @@ msgstr ""
 "esperaba."
 
 # 2e19907717ae4932b951c9e57b2bbd5a
-#: ../../faq.rst:62
+#: ../../faq.rst:72
 msgid ""
 "By default all operators works in ``greedy`` mode, so they match as more "
 "as it possible."
@@ -186,7 +190,7 @@ msgstr ""
 "que coincidan tanto como sea posible."
 
 # aff79b8422d0482f8c03a4f9e3e5c2f6
-#: ../../faq.rst:65
+#: ../../faq.rst:75
 msgid ""
 "If you want ``non-greedy`` mode you can use ``non-greedy`` operators like"
 " ``+?`` and so on or switch all operators into ``non-greedy`` mode with "
@@ -200,17 +204,17 @@ msgstr ""
 "re)."
 
 # 98b9a7d955c94ac699086ed6b50c59e2
-#: ../../faq.rst:71
+#: ../../faq.rst:81
 msgid "How to parse sources like HTML with help of TRegExpr"
 msgstr "Cómo analizar fuentes como HTML con la ayuda de TRegExpr"
 
 # 84b05a8a734c400f84412a496820942a
-#: ../../faq.rst:75
+#: ../../faq.rst:85
 msgid "Sorry folks, but it's nearly impossible!"
 msgstr "Lo siento amigos, pero es casi imposible!"
 
 # 8d6e67a8dc71482fab61baec80f05bb3
-#: ../../faq.rst:77
+#: ../../faq.rst:87
 msgid ""
 "Of course, you can easily use TRegExpr for extracting some information "
 "from HTML, as shown in my examples, but if you want accurate parsing you "
@@ -221,7 +225,7 @@ msgstr ""
 "análisis preciso, tiene que usar un analizador real, no"
 
 # 6c0a493a04494f7aae37970898a379f4
-#: ../../faq.rst:81
+#: ../../faq.rst:91
 msgid ""
 "You can read full explanation in Tom Christiansen and Nathan Torkington "
 "``Perl Cookbook``, for example."
@@ -230,7 +234,7 @@ msgstr ""
 "Torkington `` Perl Cookbook``, por ejemplo."
 
 # ed36cb64ef9248de884cbb0c9a7d08f9
-#: ../../faq.rst:84
+#: ../../faq.rst:94
 msgid ""
 "In short - there are many structures that can be easy parsed by real "
 "parser but cannot at all by r.e., and real parser is much faster to do "
@@ -244,19 +248,19 @@ msgstr ""
 "puede realizar un montón de tiempo."
 
 # ab01e6cbba074618b1022ffead0efc80
-#: ../../faq.rst:91
+#: ../../faq.rst:101
 msgid "Is there a way to get multiple matches of a pattern on TRegExpr?"
 msgstr ""
 "¿Hay alguna forma de obtener varias coincidencias de un patrón en "
 "TRegExpr?"
 
 # fe91a4bc0fd4447489141747ee0ea224
-#: ../../faq.rst:95
+#: ../../faq.rst:105
 msgid "You can iterate matches with ExecNext method."
 msgstr "Puede iterar coincidencias con el método ExecNext."
 
 # 641d4fc669be4c9aa475918aa91126ed
-#: ../../faq.rst:97
+#: ../../faq.rst:107
 msgid ""
 "If you want some example, please take a look at ``TRegExpr.Replace`` "
 "method implementation or at the examples for `HyperLinksDecorator "
@@ -267,7 +271,7 @@ msgstr ""
 "<demos.html>`_"
 
 # 9a455417a3d044c9b984ae73dcc64ace
-#: ../../faq.rst:102
+#: ../../faq.rst:112
 msgid ""
 "I am checking user input. Why does TRegExpr return ``True`` for wrong "
 "input strings?"
@@ -276,7 +280,7 @@ msgstr ""
 "``True`` para las cadenas de entrada incorrectas?"
 
 # e7dd38f412234006aefa108dc8555b35
-#: ../../faq.rst:106
+#: ../../faq.rst:116
 msgid ""
 "In many cases TRegExpr users forget that regular expression is for "
 "**search** in input string."
@@ -285,7 +289,7 @@ msgstr ""
 "regular es para ** búsqueda ** en la cadena de entrada."
 
 # 84c50dddfedc418ca4e5de33a2388527
-#: ../../faq.rst:109
+#: ../../faq.rst:119
 msgid ""
 "So, for example if you use ``\\d{4,4}`` expression, you will get success "
 "for wrong user inputs like ``12345`` or ``any letters 1234``."
@@ -295,7 +299,7 @@ msgstr ""
 "cualquier letra 1234``."
 
 # 555ace2776ff491baccc6bc35a2574b3
-#: ../../faq.rst:112
+#: ../../faq.rst:122
 msgid ""
 "You have to check from line start to line end to ensure there are no "
 "anything else around: ``^\\d{4,4}$``."
@@ -304,14 +308,14 @@ msgstr ""
 "para asegurarse de que no haya nada más alrededor: `` ^ \\ d {4,4} $ ``."
 
 # 3c901ebacebb4af69e073edc07332ecd
-#: ../../faq.rst:118
+#: ../../faq.rst:128
 msgid "Why does non-greedy iterators sometimes work as in greedy mode?"
 msgstr ""
 "¿Por qué los iteradores no codiciosos a veces funcionan como en modo "
 "codicioso?"
 
 # 360da2fcf4f04302a1ec1b9557fad598
-#: ../../faq.rst:120
+#: ../../faq.rst:130
 msgid ""
 "For example, the r.e. ``a+?,b+?`` applied to string ``aaa,bbb`` matches "
 "``aaa,b``, but should it not match ``a,b`` because of non-greediness of "
@@ -322,7 +326,7 @@ msgstr ""
 "codicia de primer iterador?"
 
 # fc89dddf135b42ac956db2e8891af351
-#: ../../faq.rst:126
+#: ../../faq.rst:136
 msgid ""
 "This is because of TRegExpr way to work. In fact many others r.e. engines"
 " work exactly the same: they performe only ``simple`` search "
@@ -334,7 +338,7 @@ msgstr ""
 "optimización."
 
 # ef8b9a54e25e4fa9a9ae7ab5904a4b17
-#: ../../faq.rst:130
+#: ../../faq.rst:140
 msgid ""
 "In some cases it's bad, but in common it's rather advantage then "
 "limitation, because of performance and predictability reasons."
@@ -343,7 +347,7 @@ msgstr ""
 "limitación, debido a razones de rendimiento y previsibilidad."
 
 # 947ff8c1afe940479c8fd0c41677ae41
-#: ../../faq.rst:133
+#: ../../faq.rst:143
 msgid ""
 "The main rule - r.e. first of all try to match from current place and "
 "only if that's completely impossible move forward by one char and try "
@@ -354,7 +358,7 @@ msgstr ""
 "e intentar nuevamente desde la siguiente posición en el texto."
 
 # 7c46172a4c3b4941b63c368dc1b2a948
-#: ../../faq.rst:137
+#: ../../faq.rst:147
 msgid ""
 "So, if you use ``a,b+?`` it'll match ``a,b``. In case of ``a+?,b+?`` it's"
 " now not recommended (we add non-greedy modifyer) but still possible to "
@@ -366,7 +370,7 @@ msgstr ""
 "que TRegExpr lo hará."
 
 # 41feed27e8ad405faa9ea1e4b0c8d18f
-#: ../../faq.rst:141
+#: ../../faq.rst:151
 msgid ""
 "TRegExpr like Perl's or Unix's r.e. doesn't attempt to move forward and "
 "check - would it will be \"better\" match. Fisrt of all, just because "
@@ -377,39 +381,39 @@ msgstr ""
 " de decir que sea más o menos una buena combinación."
 
 # 781bb73b9cd34896bd61ea052d2869ea
-#: ../../faq.rst:147
+#: ../../faq.rst:157
 msgid "How can I use TRegExpr with Borland C++ Builder?"
 msgstr "¿Cómo puedo usar TRegExpr con Borland C ++ Builder?"
 
 # 252a4182e2ca41febf89678337efb6c2
-#: ../../faq.rst:149
+#: ../../faq.rst:159
 msgid "I have a problem since no header file (``.h`` or ``.hpp``) is available."
 msgstr ""
 "Tengo un problema porque no hay ningún archivo de encabezado (``.h`` o "
 "``.hpp``) disponible."
 
 # c17bbf36186946eb9b60c1c609ec12ec
-#: ../../faq.rst:153
+#: ../../faq.rst:163
 msgid "Add ``RegExpr.pas`` to ``bcb`` project."
 msgstr "Agregue ``RegExpr.pas`` al proyecto ``bcb``."
 
 # 7b1b72640e2c46c7a5ae52e5dc598b7d
-#: ../../faq.rst:154
+#: ../../faq.rst:164
 msgid "Compile project. This generates the header file ``RegExpr.hpp``."
 msgstr "Compilar proyecto. Esto genera el archivo de encabezado ``RegExpr.hpp``."
 
 # 16ee016a9fa547d7b412bd44ea526e44
-#: ../../faq.rst:155
+#: ../../faq.rst:165
 msgid "Now you can write code which uses the ``RegExpr`` unit."
 msgstr "Ahora puede escribir código que usa la unidad ``RegExpr``."
 
 # 92c071830b604493a9b0982e4c690f0d
-#: ../../faq.rst:156
+#: ../../faq.rst:166
 msgid "Don't forget to add  ``#include “RegExpr.hpp”`` where needed."
 msgstr "No olvide agregar `` #include “RegExpr.hpp” `` donde sea necesario."
 
 # a14b93d760474e5f83f70bb9479d161b
-#: ../../faq.rst:157
+#: ../../faq.rst:167
 msgid ""
 "Don't forget to replace all ``\\`` in regular expressions with ``\\\\`` "
 "or redefined `EscChar <tregexpr.html#escchar>`__ const."
@@ -418,7 +422,7 @@ msgstr ""
 "``\\\\`` o redefinido `EscChar <tregexpr.html#escchar>`__ const."
 
 # 6c8450146f0841d1a013cff6b32e8dcc
-#: ../../faq.rst:161
+#: ../../faq.rst:171
 msgid ""
 "Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in "
 "Borland C++ Builder?"
@@ -427,7 +431,7 @@ msgstr ""
 "mal en Borland C ++ Builder?"
 
 # 86691c4364694b7a8784006481ec491e
-#: ../../faq.rst:165
+#: ../../faq.rst:175
 msgid ""
 "The hint is in the previous question ;) Symbol ``\\`` has special meaning"
 " in ``C++``, so you have to ``escape`` it (as described in previous "
@@ -443,4 +447,8 @@ msgstr ""
 "la constante ``EscChar`` (en ``RegExpr.pas``). Por ejemplo `` EscChar = "
 "&quot;/&quot; ``. Luego puede escribir `` / w + / w + /. / W + ``, parece"
 " inusual pero más legible."
+
+# e2a3dc0c705640788818a205bca41480
+#~ msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
 

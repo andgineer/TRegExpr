@@ -1,4 +1,14 @@
-.. include:: translations_list.rst
+.. list-table::
+   :widths: 40 10 10 10 10 10 10
+   :header-rows: 0
+
+   * -
+     - English
+     - `Русский <https://regex.masterandrey.com/ru/latest/tregexpr.html>`__
+     - `Deutsch <https://regex.masterandrey.com/de/latest/tregexpr.html>`__
+     - `Български <https://regex.masterandrey.com/bg/latest/tregexpr.html>`__
+     - `Français <https://regex.masterandrey.com/fr/latest/tregexpr.html>`__
+     - `Español <https://regex.masterandrey.com/es/latest/tregexpr.html>`__
 
 TRegExpr
 ========

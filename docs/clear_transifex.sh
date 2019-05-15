@@ -7,4 +7,3 @@ tx delete --resource tregexpr._build_gettext_faq --force
 tx delete --resource tregexpr._build_gettext_index --force
 tx delete --resource tregexpr._build_gettext_regular_expressions --force
 tx delete --resource tregexpr._build_gettext_tregexpr --force
-tx delete --resource tregexpr._build_gettext_translations_list --force

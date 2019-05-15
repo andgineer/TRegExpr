@@ -1,4 +1,14 @@
-.. include:: translations_list.rst
+.. list-table::
+   :widths: 40 10 10 10 10 10 10
+   :header-rows: 0
+
+   * -
+     - English
+     - `Русский <https://regex.masterandrey.com/ru/latest/faq.html>`__
+     - `Deutsch <https://regex.masterandrey.com/de/latest/faq.html>`__
+     - `Български <https://regex.masterandrey.com/bg/latest/faq.html>`__
+     - `Français <https://regex.masterandrey.com/fr/latest/faq.html>`__
+     - `Español <https://regex.masterandrey.com/es/latest/faq.html>`__
 
 FAQ
 ===

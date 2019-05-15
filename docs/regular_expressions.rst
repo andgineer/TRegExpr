@@ -1,4 +1,14 @@
-.. include:: translations_list.rst
+.. list-table::
+   :widths: 40 10 10 10 10 10 10
+   :header-rows: 0
+
+   * -
+     - English
+     - `Русский <https://regex.masterandrey.com/ru/latest/regular_expressions.html>`__
+     - `Deutsch <https://regex.masterandrey.com/de/latest/regular_expressions.html>`__
+     - `Български <https://regex.masterandrey.com/bg/latest/regular_expressions.html>`__
+     - `Français <https://regex.masterandrey.com/fr/latest/regular_expressions.html>`__
+     - `Español <https://regex.masterandrey.com/es/latest/regular_expressions.html>`__
 
 Regular expressions (RegEx)
 ===========================
