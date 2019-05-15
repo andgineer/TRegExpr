@@ -31,3 +31,9 @@ source_file = _build/gettext/demos.pot
 source_lang = en
 type = PO
 
+[tregexpr._build_gettext_translations_list]
+file_filter = locale/<lang>/LC_MESSAGES/translations_list.po
+source_file = _build/gettext/translations_list.pot
+source_lang = en
+type = PO
+

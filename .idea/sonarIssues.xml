@@ -38,6 +38,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/clear_transifex.sh">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/conf.py">
           <value>
             <set />
@@ -78,6 +83,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/bg/LC_MESSAGES/faq.po">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/locale/bg/LC_MESSAGES/index.po">
           <value>
             <set />
@@ -103,6 +113,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/de/LC_MESSAGES/faq.po">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/docs/locale/de/LC_MESSAGES/index.po">
           <value>
             <set />
@@ -119,6 +134,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/docs/locale/es/LC_MESSAGES/demos.po">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/locale/es/LC_MESSAGES/faq.po">
           <value>
             <set />
           </value>
