@@ -510,7 +510,7 @@ msgid ""
 "If you want to place raw digit after ‘$n’ you must delimit ``n`` with "
 "curly braces ``{}``."
 msgstr ""
-"Если вы хотите поместить необработанную цифру после &#39;$ n&#39;, вы "
+"Если вы хотите поместить необработанную цифру после ``n``, вы "
 "должны разделить ``n`` фигурными скобками ``{}``."
 
 # 85569e13faf7400f884bb57d5fc5a26e
@@ -780,7 +780,7 @@ msgstr "ErrorMsg"
 # f0dcf06301844649adfbadb8d8a8d6d4
 #: ../../tregexpr.rst:308
 msgid "Returns ``Error`` message for error with ``ID = AErrorID``."
-msgstr "Возвращает сообщение об ошибке ``Error`` с `` ID = AErrorID``."
+msgstr "Возвращает сообщение об ошибке ``Error`` с ``ID = AErrorID``."
 
 # 6e49cd6c15b84f38ba4e22529accdaf7
 #: ../../tregexpr.rst:311
@@ -872,7 +872,7 @@ msgid ""
 " #$a`` and ``LinePairedSeparator := ''`` (empty string)."
 msgstr ""
 "Например, если вам нужно поведение в стиле Unix, присвойте "
-"``LineSeparators: = #$a`` и ``LinePairedSeparator: = &#39;&#39;`` (пустая"
+"``LineSeparators: = #$a`` и ``LinePairedSeparator: = ''`` (пустая"
 " строка)."
 
 # c3211083e90a4a39a944ec1bc4b36deb
@@ -908,7 +908,7 @@ msgid ""
 "Behaviour of this mode is detailed described in the `Line Boundaries "
 "<regular_expressions.html#lineseparators>`__."
 msgstr ""
-"Поведение этого режима подробно описано в «Границах линий». "
+"Поведение этого режима подробно описано в `Разделителях строк "
 "<regular_expressions.html#lineseparators>`__."
 
 # c9a5033ddf894b9da56c691eb013541f
@@ -1192,7 +1192,7 @@ msgid ""
 "will be used as template for ``Substitution methods``:"
 msgstr ""
 "Если последний аргумент (``AUseSubstitution``) равен true, то "
-"``AReplaceStr`` будет использоваться в качестве шаблона для `` методов "
+"``AReplaceStr`` будет использоваться в качестве шаблона для ``методов "
 "подстановки``:"
 
 # 2bf6d65a1443409384b682e259c5be76
