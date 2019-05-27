@@ -30,40 +30,40 @@ msgstr ""
 #, fuzzy
 msgid ""
 "`Русский "
-"<https://regex.masterandrey.com/ru/latest/regular_expressions.html>`__"
-msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+"<https://regex.sorokin.engineer/ru/latest/regular_expressions.html>`__"
+msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 
 # a527af33c2d34a34ba5ac2cdf817d1c0
 #: ../../regular_expressions.rst:8
 #, fuzzy
 msgid ""
 "`Deutsch "
-"<https://regex.masterandrey.com/de/latest/regular_expressions.html>`__"
-msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+"<https://regex.sorokin.engineer/de/latest/regular_expressions.html>`__"
+msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
 
 # 305606a9ef6e40cbb52c6f0690274fd5
 #: ../../regular_expressions.rst:9
 #, fuzzy
 msgid ""
 "`Български "
-"<https://regex.masterandrey.com/bg/latest/regular_expressions.html>`__"
-msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+"<https://regex.sorokin.engineer/bg/latest/regular_expressions.html>`__"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
 # db5cf923a0f24fbd96c31488fea62803
 #: ../../regular_expressions.rst:10
 #, fuzzy
 msgid ""
 "`Français "
-"<https://regex.masterandrey.com/fr/latest/regular_expressions.html>`__"
-msgstr "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
+"<https://regex.sorokin.engineer/fr/latest/regular_expressions.html>`__"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 
 # 94fb67db62c04236bb0ed90f06daaabe
 #: ../../regular_expressions.rst:11
 #, fuzzy
 msgid ""
 "`Español "
-"<https://regex.masterandrey.com/es/latest/regular_expressions.html>`__"
-msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+"<https://regex.sorokin.engineer/es/latest/regular_expressions.html>`__"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
 # f31d49f9e1da427886b0f062a7129019
 #: ../../regular_expressions.rst:14
@@ -1770,14 +1770,14 @@ msgstr "Epílogo"
 #: ../../regular_expressions.rst:607
 msgid ""
 "In this `ancient blog post from previous century "
-"<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__"
+"<https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html>`__"
 " I illustrate some usages of regular expressions."
 msgstr ""
 "En este `antiguo blog del siglo anterior. "
-"<https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__"
+"<https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html>`__"
 " ilustro algunos usos de expresiones regulares."
 
 # 33fa7ef366574502aff1eff05b18dc7e
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+#~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
+#~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 

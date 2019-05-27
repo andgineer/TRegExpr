@@ -28,32 +28,32 @@ msgstr ""
 # 5f3d678e3947428f872296a3f7123621
 #: ../../tregexpr.rst:7
 #, fuzzy
-msgid "`Русский <https://regex.masterandrey.com/ru/latest/tregexpr.html>`__"
-msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+msgid "`Русский <https://regex.sorokin.engineer/ru/latest/tregexpr.html>`__"
+msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 
 # a8caac3fc2ae431c9397132b240f52d4
 #: ../../tregexpr.rst:8
 #, fuzzy
-msgid "`Deutsch <https://regex.masterandrey.com/de/latest/tregexpr.html>`__"
-msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/tregexpr.html>`__"
+msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
 
 # 975bcd0fce804b17b63c6f3b4b748c94
 #: ../../tregexpr.rst:9
 #, fuzzy
-msgid "`Български <https://regex.masterandrey.com/bg/latest/tregexpr.html>`__"
-msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+msgid "`Български <https://regex.sorokin.engineer/bg/latest/tregexpr.html>`__"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
 # 7b1f1a73b7594de483816459cb9cd6d2
 #: ../../tregexpr.rst:10
 #, fuzzy
-msgid "`Français <https://regex.masterandrey.com/fr/latest/tregexpr.html>`__"
-msgstr "`Френски <https://regex.masterandrey.com/fr/latest/index.html>`__"
+msgid "`Français <https://regex.sorokin.engineer/fr/latest/tregexpr.html>`__"
+msgstr "`Френски <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 
 # aa90c7e86ff940aab57b013680c2d4df
 #: ../../tregexpr.rst:11
 #, fuzzy
-msgid "`Español <https://regex.masterandrey.com/es/latest/tregexpr.html>`__"
-msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+msgid "`Español <https://regex.sorokin.engineer/es/latest/tregexpr.html>`__"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
 # 38c540a453ae4959b81179309d71fad2
 #: ../../tregexpr.rst:14
@@ -1436,6 +1436,6 @@ msgid "After that all strings will be treated as WideString."
 msgstr "След това всички низове ще се третират като WideString."
 
 # 287bda0491e047d7bc868ce5da81ada4
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+#~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
+#~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 

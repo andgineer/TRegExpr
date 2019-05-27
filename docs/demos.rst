@@ -4,11 +4,11 @@
 
    * -
      - English
-     - `Русский <https://regex.masterandrey.com/ru/latest/demos.html>`__
-     - `Deutsch <https://regex.masterandrey.com/de/latest/demos.html>`__
-     - `Български <https://regex.masterandrey.com/bg/latest/demos.html>`__
-     - `Français <https://regex.masterandrey.com/fr/latest/demos.html>`__
-     - `Español <https://regex.masterandrey.com/es/latest/demos.html>`__
+     - `Русский <https://regex.sorokin.engineer/ru/latest/demos.html>`__
+     - `Deutsch <https://regex.sorokin.engineer/de/latest/demos.html>`__
+     - `Български <https://regex.sorokin.engineer/bg/latest/demos.html>`__
+     - `Français <https://regex.sorokin.engineer/fr/latest/demos.html>`__
+     - `Español <https://regex.sorokin.engineer/es/latest/demos.html>`__
 
 Demos
 =====

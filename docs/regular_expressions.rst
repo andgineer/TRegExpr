@@ -4,11 +4,11 @@
 
    * -
      - English
-     - `Русский <https://regex.masterandrey.com/ru/latest/regular_expressions.html>`__
-     - `Deutsch <https://regex.masterandrey.com/de/latest/regular_expressions.html>`__
-     - `Български <https://regex.masterandrey.com/bg/latest/regular_expressions.html>`__
-     - `Français <https://regex.masterandrey.com/fr/latest/regular_expressions.html>`__
-     - `Español <https://regex.masterandrey.com/es/latest/regular_expressions.html>`__
+     - `Русский <https://regex.sorokin.engineer/ru/latest/regular_expressions.html>`__
+     - `Deutsch <https://regex.sorokin.engineer/de/latest/regular_expressions.html>`__
+     - `Български <https://regex.sorokin.engineer/bg/latest/regular_expressions.html>`__
+     - `Français <https://regex.sorokin.engineer/fr/latest/regular_expressions.html>`__
+     - `Español <https://regex.sorokin.engineer/es/latest/regular_expressions.html>`__
 
 Regular expressions (RegEx)
 ===========================
@@ -605,6 +605,6 @@ Afterword
 ---------
 
 In this `ancient blog post from previous
-century <https://masterandrey.com/posts/en/text_processing_from_birds_eye_view.html>`__
+century <https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html>`__
 I illustrate some usages of regular expressions.
 

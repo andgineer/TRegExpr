@@ -28,32 +28,32 @@ msgstr ""
 # 7bbeef6bea68422db66aa6085017ef9f
 #: ../../faq.rst:7
 #, fuzzy
-msgid "`Русский <https://regex.masterandrey.com/ru/latest/faq.html>`__"
-msgstr "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+msgid "`Русский <https://regex.sorokin.engineer/ru/latest/faq.html>`__"
+msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 
 # 47d26c4e88e1421c992425b65f8521ae
 #: ../../faq.rst:8
 #, fuzzy
-msgid "`Deutsch <https://regex.masterandrey.com/de/latest/faq.html>`__"
-msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/faq.html>`__"
+msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
 
 # 552aef36d89e4ec5a789d12e92aad0c5
 #: ../../faq.rst:9
 #, fuzzy
-msgid "`Български <https://regex.masterandrey.com/bg/latest/faq.html>`__"
-msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+msgid "`Български <https://regex.sorokin.engineer/bg/latest/faq.html>`__"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
 # e4e735c9540244d3a49b5f5d285b4c61
 #: ../../faq.rst:10
 #, fuzzy
-msgid "`Français <https://regex.masterandrey.com/fr/latest/faq.html>`__"
-msgstr "`Френски <https://regex.masterandrey.com/fr/latest/index.html>`__"
+msgid "`Français <https://regex.sorokin.engineer/fr/latest/faq.html>`__"
+msgstr "`Френски <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 
 # e2a3dc0c705640788818a205bca41480
 #: ../../faq.rst:11
 #, fuzzy
-msgid "`Español <https://regex.masterandrey.com/es/latest/faq.html>`__"
-msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+msgid "`Español <https://regex.sorokin.engineer/es/latest/faq.html>`__"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
 # cf1fdea7e27f4b6b9e33211b59fc1c64
 #: ../../faq.rst:14
@@ -444,6 +444,6 @@ msgstr ""
 "``/w+/w+/./w+``, изглежда необичайно, но по-разбираемо."
 
 # e2a3dc0c705640788818a205bca41480
-#~ msgid "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
-#~ msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+#~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
+#~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 

@@ -23,36 +23,36 @@ msgstr ""
 # 54bd071b6b824a54b9ac5c35fbfa06bf
 #: ../../demos.rst:6
 msgid "English"
-msgstr "`English <https://regex.masterandrey.com/en/latest/demos.html>`__"
+msgstr "`English <https://regex.sorokin.engineer/en/latest/demos.html>`__"
 
 # 1e981c1fd2a743f1b2bfa307b6562f8b
 #: ../../demos.rst:7
-msgid "`Русский <https://regex.masterandrey.com/ru/latest/demos.html>`__"
+msgid "`Русский <https://regex.sorokin.engineer/ru/latest/demos.html>`__"
 msgstr "Русский"
 
 # 959cf23b9f86427f9643550f26b816be
 #: ../../demos.rst:8
 #, fuzzy
-msgid "`Deutsch <https://regex.masterandrey.com/de/latest/demos.html>`__"
-msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/demos.html>`__"
+msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
 
 # 9a388b794d4d4d85b042be34566891a6
 #: ../../demos.rst:9
 #, fuzzy
-msgid "`Български <https://regex.masterandrey.com/bg/latest/demos.html>`__"
-msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+msgid "`Български <https://regex.sorokin.engineer/bg/latest/demos.html>`__"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
 # 397812a6c3e4474b9d73b7b403041015
 #: ../../demos.rst:10
 #, fuzzy
-msgid "`Français <https://regex.masterandrey.com/fr/latest/demos.html>`__"
-msgstr "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
+msgid "`Français <https://regex.sorokin.engineer/fr/latest/demos.html>`__"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 
 # bf3c1985d6cb4bb7b8e93a78e85aa43c
 #: ../../demos.rst:11
 #, fuzzy
-msgid "`Español <https://regex.masterandrey.com/es/latest/demos.html>`__"
-msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+msgid "`Español <https://regex.sorokin.engineer/es/latest/demos.html>`__"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
 # 3123f93a15554569abef24250ec73e62
 #: ../../demos.rst:14

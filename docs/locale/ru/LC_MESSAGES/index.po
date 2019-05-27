@@ -23,32 +23,32 @@ msgstr ""
 # 87453ca657c04b1384b86f82a4be1e7e
 #: ../../index.rst:6
 msgid "English"
-msgstr "`English <https://regex.masterandrey.com/en/latest/index.html>`__"
+msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
 #: ../../index.rst:7
-msgid "`Русский <https://regex.masterandrey.com/ru/latest/index.html>`__"
+msgid "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 msgstr "Русский"
 
 # ab7f160cdf66442c921786c514900fef
 #: ../../index.rst:8
-msgid "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
-msgstr "`Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__"
+msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
+msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
 #: ../../index.rst:9
-msgid "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
-msgstr "`Български <https://regex.masterandrey.com/bg/latest/index.html>`__"
+msgid "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
 #: ../../index.rst:10
-msgid "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
-msgstr "`Français <https://regex.masterandrey.com/fr/latest/index.html>`__"
+msgid "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 
 # ab7f160cdf66442c921786c514900fef
 #: ../../index.rst:11
-msgid "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
-msgstr "`Español <https://regex.masterandrey.com/es/latest/index.html>`__"
+msgid "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
 # e0e096577ddf42de84b4c0009d1ab8ee
 #: ../../index.rst:14
@@ -117,10 +117,10 @@ msgstr "Отзывы"
 #: ../../index.rst:37
 msgid ""
 "`How good the library was met "
-"<https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html>`_."
+"<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
 msgstr ""
 "`Как библиотека была встречена "
-"<https://masterandrey.com/posts/ru/regexpstudio_site_is_lunched.html>`_."
+"<https://sorokin.engineer/posts/ru/regexpstudio_site_is_lunched.html>`_."
 
 # dfa2788a71244850a2527e38817dfbaa
 #: ../../index.rst:40
@@ -206,10 +206,10 @@ msgstr "Переводы"
 #: ../../index.rst:78
 msgid ""
 "The documentation is available in English and `Russian "
-"<https://regexpr.masterandrey.com/ru/latest/>`_."
+"<https://regexpr.sorokin.engineer/ru/latest/>`_."
 msgstr ""
 "Документация доступна на `английском "
-"<https://regexpr.masterandrey.com/en/latest/>`_ и русском  языках. "
+"<https://regexpr.sorokin.engineer/en/latest/>`_ и русском  языках. "
 
 # cb48bcda21e84448a807a9f10263f558
 #: ../../index.rst:81

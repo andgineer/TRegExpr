@@ -4,11 +4,11 @@
 
    * -
      - English
-     - `Русский <https://regex.masterandrey.com/ru/latest/tregexpr.html>`__
-     - `Deutsch <https://regex.masterandrey.com/de/latest/tregexpr.html>`__
-     - `Български <https://regex.masterandrey.com/bg/latest/tregexpr.html>`__
-     - `Français <https://regex.masterandrey.com/fr/latest/tregexpr.html>`__
-     - `Español <https://regex.masterandrey.com/es/latest/tregexpr.html>`__
+     - `Русский <https://regex.sorokin.engineer/ru/latest/tregexpr.html>`__
+     - `Deutsch <https://regex.sorokin.engineer/de/latest/tregexpr.html>`__
+     - `Български <https://regex.sorokin.engineer/bg/latest/tregexpr.html>`__
+     - `Français <https://regex.sorokin.engineer/fr/latest/tregexpr.html>`__
+     - `Español <https://regex.sorokin.engineer/es/latest/tregexpr.html>`__
 
 TRegExpr
 ========

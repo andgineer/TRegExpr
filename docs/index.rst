@@ -4,11 +4,11 @@
 
    * -
      - English
-     - `Русский <https://regex.masterandrey.com/ru/latest/index.html>`__
-     - `Deutsch <https://regex.masterandrey.com/de/latest/index.html>`__
-     - `Български <https://regex.masterandrey.com/bg/latest/index.html>`__
-     - `Français <https://regex.masterandrey.com/fr/latest/index.html>`__
-     - `Español <https://regex.masterandrey.com/es/latest/index.html>`__
+     - `Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__
+     - `Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__
+     - `Български <https://regex.sorokin.engineer/bg/latest/index.html>`__
+     - `Français <https://regex.sorokin.engineer/fr/latest/index.html>`__
+     - `Español <https://regex.sorokin.engineer/es/latest/index.html>`__
 
 Introduction
 ~~~~~~~~~~~~
@@ -34,7 +34,7 @@ Borland C++ Builder 3-6.
 Reviews
 ~~~~~~~
 
-`How good the library was met <https://masterandrey.com/posts/en/regexpstudio_site_is_lunched.html>`_.
+`How good the library was met <https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_.
 
 Quick start
 ~~~~~~~~~~~
@@ -76,7 +76,7 @@ Documentation
 Translations
 ~~~~~~~~~~~~
 The documentation is available in English and
-`Russian <https://regexpr.masterandrey.com/ru/latest/>`_.
+`Russian <https://regexpr.sorokin.engineer/ru/latest/>`_.
 
 There are also old translations to German, Bulgarian, French and Spanish.
 If you want to help to update this old translations please `contact me <https://github.com/andgineer>`_.
