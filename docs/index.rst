@@ -39,26 +39,26 @@ Reviews
 Quick start
 ~~~~~~~~~~~
 
-To use the library just add `the sources <https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_
+To use the library just add `the sources <https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_
 to you project and use the class `TRegExpr <tregexpr.html>`_.
 
 In the `FAQ <faq.html>`_ you can learn from others users problems.
 
 Ready to run Windows application
-`REStudio <https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>`__
+`REStudio <https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__
 will help you learn and debug regular expressions.
 
 Feedback
 ~~~~~~~~
 
 If you see any problems,
-please `create the bug <https://github.com/masterandrey/TRegExpr/issues>`_.
+please `create the bug <https://github.com/andgineer/TRegExpr/issues>`_.
 
 Source code
 ~~~~~~~~~~~
 Pure Object Pascal.
 
-- `Original version <https://github.com/masterandrey/TRegExpr>`_
+- `Original version <https://github.com/andgineer/TRegExpr>`_
 - `FreePascal fork (GitHub mirror of the SubVersion) <https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_
 
 Documentation
@@ -79,7 +79,7 @@ The documentation is available in English and
 `Russian <https://regexpr.masterandrey.com/ru/latest/>`_.
 
 There are also old translations to German, Bulgarian, French and Spanish.
-If you want to help to update this old translations please `contact me <https://github.com/masterandrey>`_.
+If you want to help to update this old translations please `contact me <https://github.com/andgineer>`_.
 
 New translations are based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
 and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_.

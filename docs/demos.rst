@@ -27,11 +27,11 @@ interface <tregexpr.html>`__.
 Text2HTML
 ---------
 
-`Text2HTML sources <https://github.com/masterandrey/TRegExpr/tree/master/examples/Text2HTML>`_
+`Text2HTML sources <https://github.com/andgineer/TRegExpr/tree/master/examples/Text2HTML>`_
 
 Publish plain text as HTML
 
-Uses unit `HyperLinksDecorator <https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__
+Uses unit `HyperLinksDecorator <https://github.com/andgineer/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__
 that is based on TRegExpr.
  
 This unit contains functions to decorate hyper-links.
@@ -75,12 +75,12 @@ For example, if `AFlags` is ``[durlAddr]`` then hyper link
 ``www.masterAndrey.com/contacts.htm`` will be decorated as
 ``<a href="www.masterAndrey.com/contacts.htm">www.masterAndrey.com</a>``.
 
-`TRegExprRoutines <https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>`_
+`TRegExprRoutines <https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprRoutines>`_
 ----------------------------------------------------------------------------------------------------
 
 Very simple examples, see comments inside the unit
 
-`TRegExprClass <https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>`_
+`TRegExprClass <https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprClass>`_
 ----------------------------------------------------------------------------------------------
 
 Slightly more complex examples, see comments inside the unit

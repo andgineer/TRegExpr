@@ -75,11 +75,11 @@ msgstr ""
 #: ../../tregexpr.rst:19
 msgid ""
 "To use it just copy `source code "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ "
 "into your project."
 msgstr ""
 "Um es zu benutzen, kopiere einfach `Quellcode "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ "
 "in dein Projekt."
 
 # 0c059da7ea744524a21dca4c03eb5e08
@@ -1339,11 +1339,11 @@ msgstr ""
 msgid ""
 "Usefull for GUI editors of r.e. etc (you can find example of using in "
 "`REStudioMain.pas "
-"<https://github.com/masterandrey/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMain.pas#L474>`_)"
+"<https://github.com/andgineer/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMain.pas#L474>`_)"
 msgstr ""
 "Nützlich für GUI-Editoren von re etc (ein Beispiel für die Verwendung "
 "finden Sie in `REStudioMain.pas) "
-"<https://github.com/masterandrey/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMain.pas#L474>"
+"<https://github.com/andgineer/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMain.pas#L474>"
 " _)"
 
 # 3f20b5860f984ad8b65858dad109f7b3
@@ -1449,12 +1449,12 @@ msgstr ""
 #: ../../tregexpr.rst:601
 msgid ""
 "To use Unicode uncomment ``{$DEFINE UniCode}`` in `regexpr.pas "
-"<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__"
+"<https://github.com/andgineer/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__"
 " (remove ``off``)."
 msgstr ""
 "Um Unicode zu verwenden, kommentieren Sie ``{$DEFINE UniCode}`` `in` "
 "regexpr.pas "
-"<https://github.com/masterandrey/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__"
+"<https://github.com/andgineer/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__"
 " (entferne ``off``)."
 
 # c44517be82fc44adbe4f598a2e67cff1

@@ -131,11 +131,11 @@ msgstr "Бърз старт"
 #: ../../index.rst:42
 msgid ""
 "To use the library just add `the sources "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ "
 "to you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 "За да използвате библиотеката, просто добавете `източниците "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/RegExpr.pas>`_ "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ "
 "за да проектирате и използвате класа` TRegExpr <tregexpr.html>`_."
 
 # 8f3942b9d4e941ea900924467c155c42
@@ -149,11 +149,11 @@ msgstr ""
 #: ../../index.rst:47
 msgid ""
 "Ready to run Windows application `REStudio "
-"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>`__"
+"<https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__"
 " will help you learn and debug regular expressions."
 msgstr ""
 "Готови ли сте да стартирате Windows приложението &quot;REStudio&quot; "
-"<https://github.com/masterandrey/TRegExpr/releases/download/0.952b/restudio.zip>`__"
+"<https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__"
 " ще ви помогне да научите и отстраните грешки на регулярни изрази."
 
 # d5fbb4416fe442e68b451ea2f14187c6
@@ -165,10 +165,10 @@ msgstr "Обратна връзка"
 #: ../../index.rst:54
 msgid ""
 "If you see any problems, please `create the bug "
-"<https://github.com/masterandrey/TRegExpr/issues>`_."
+"<https://github.com/andgineer/TRegExpr/issues>`_."
 msgstr ""
 "Ако видите някакви проблеми, моля създайте бъг "
-"<https://github.com/masterandrey/TRegExpr/issues>`_."
+"<https://github.com/andgineer/TRegExpr/issues>`_."
 
 # 6c20f98cad044e21ae70ee56aa06b220
 #: ../../index.rst:58
@@ -182,8 +182,8 @@ msgstr "Чист обект Pascal."
 
 # b852f83bed1e4efe8de4bebf09c8ac3c
 #: ../../index.rst:61
-msgid "`Original version <https://github.com/masterandrey/TRegExpr>`_"
-msgstr "`Оригинална версия <https://github.com/masterandrey/TRegExpr>`_"
+msgid "`Original version <https://github.com/andgineer/TRegExpr>`_"
+msgstr "`Оригинална версия <https://github.com/andgineer/TRegExpr>`_"
 
 # 4d7ba7e04b4e479fbb3fb94377ddaa2f
 #: ../../index.rst:62
@@ -218,11 +218,11 @@ msgstr ""
 msgid ""
 "There are also old translations to German, Bulgarian, French and Spanish."
 " If you want to help to update this old translations please `contact me "
-"<https://github.com/masterandrey>`_."
+"<https://github.com/andgineer>`_."
 msgstr ""
 "Има и стари преводи на немски, български, френски и испански. Ако искате "
 "да помогнете да актуализирате старите преводи, моля свържете се с мен "
-"<https://github.com/masterandrey>`_."
+"<https://github.com/andgineer>`_."
 
 # cb48bcda21e84448a807a9f10263f558
 #: ../../index.rst:84

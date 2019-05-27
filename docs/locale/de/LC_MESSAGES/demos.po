@@ -95,10 +95,10 @@ msgstr "Text2HTML"
 #: ../../demos.rst:30
 msgid ""
 "`Text2HTML sources "
-"<https://github.com/masterandrey/TRegExpr/tree/master/examples/Text2HTML>`_"
+"<https://github.com/andgineer/TRegExpr/tree/master/examples/Text2HTML>`_"
 msgstr ""
 "`Text2HTML-Quellen "
-"<https://github.com/masterandrey/TRegExpr/tree/master/examples/Text2HTML>"
+"<https://github.com/andgineer/TRegExpr/tree/master/examples/Text2HTML>"
 " _"
 
 # d245d943d424493686194ed4c34496a4
@@ -110,11 +110,11 @@ msgstr "Veröffentlichen Sie Nur-Text als HTML"
 #: ../../demos.rst:34
 msgid ""
 "Uses unit `HyperLinksDecorator "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__"
+"<https://github.com/andgineer/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__"
 " that is based on TRegExpr."
 msgstr ""
 "Verwendet die Einheit `HyperLinksDecorator "
-"<https://github.com/masterandrey/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__,"
+"<https://github.com/andgineer/TRegExpr/blob/master/src/HyperLinksDecorator.pas>`__,"
 " das auf TRegExpr basiert."
 
 # 1e585d008e2b4b52844d261128e19247
@@ -259,10 +259,10 @@ msgstr ""
 #: ../../demos.rst:79
 msgid ""
 "`TRegExprRoutines "
-"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>`_"
+"<https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprRoutines>`_"
 msgstr ""
 "`TRegExprRoutines "
-"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprRoutines>"
+"<https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprRoutines>"
 " _"
 
 # 64b3450332934ae6b2181e3d04022fea
@@ -274,10 +274,10 @@ msgstr "Sehr einfache Beispiele, siehe Kommentare im Gerät"
 #: ../../demos.rst:84
 msgid ""
 "`TRegExprClass "
-"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>`_"
+"<https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprClass>`_"
 msgstr ""
 "`TRegExprClass "
-"<https://github.com/masterandrey/TRegExpr/tree/master/examples/TRegExprClass>"
+"<https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprClass>"
 " _"
 
 # 56993d7a10d746e08c7c712cec5c7274
