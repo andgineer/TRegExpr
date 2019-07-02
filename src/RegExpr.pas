@@ -1,4 +1,4 @@
-﻿unit RegExpr;
+unit RegExpr;
 
 {
      TRegExpr class library
@@ -63,6 +63,7 @@ interface
 {$IFDEF VER130} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D5
 {$IFDEF VER140} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D6
 {$IFDEF VER150} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF VER160} {$DEFINE D8} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
 
 // ======== Define base compiler options
 {$BOOLEVAL OFF}
@@ -117,6 +118,10 @@ interface
 // Define 'OverMeth' options, to use method overloading (do not edit this definitions).
 {$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
 {$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
+
+// Define 'InlineFuncs' options, to use inline keyword (do not edit this definitions).
+{$IFDEF D8} {$DEFINE InlineFuncs} {$ENDIF}
+{$IFDEF FPC} {$DEFINE InlineFuncs} {$ENDIF}
 
 uses
  Classes,  // TStrings in Split method
@@ -314,9 +319,9 @@ type
     FUseUnicodeWordDetection : Boolean;
     function IsUnicodeWordChar(AChar : REChar) : Boolean;
     {$ENDIF}
-    function IsWordChar(AChar : REChar) : Boolean; inline;
-    function IsSpaceChar(AChar : PRegExprChar) : Boolean; inline;
-    function IsDigit(AChar : PRegExprChar) : Boolean; inline;
+    function IsWordChar(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function IsSpaceChar(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function IsDigit(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
@@ -749,7 +754,7 @@ const
  XIgnoredChars = [' ', #9, #$d, #$a];
  {$ENDIF}
 
- function AlignToPtr(const p: Pointer): Pointer; inline;
+ function AlignToPtr(const p: Pointer): Pointer; {$IFDEF InlineFuncs}inline;{$ENDIF}
  begin
  {$IFDEF FPC_REQUIRES_PROPER_ALIGNMENT}
    Result := Align(p, SizeOf(Pointer));
@@ -758,7 +763,7 @@ const
  {$ENDIF}
  end;
 
- function AlignToInt(const p: Pointer): Pointer; inline;
+ function AlignToInt(const p: Pointer): Pointer; {$IFDEF InlineFuncs}inline;{$ENDIF}
  begin
  {$IFDEF FPC_REQUIRES_PROPER_ALIGNMENT}
    Result := Align(p, SizeOf(integer));
@@ -1493,7 +1498,7 @@ end;
 {$ENDIF}
 
 
-function TRegExpr.IsWordChar(AChar: REChar): Boolean; {$IFDEF FPC}inline;{$ENDIF}
+function TRegExpr.IsWordChar(AChar: REChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   Result := Pos(AChar, fWordChars)>0;
   {$IFDEF UnicodeWordDetection}
@@ -4152,7 +4157,7 @@ function TRegExpr.Dump : RegExprString;
 {$IFDEF UseSetOfChar} //###0.929
   Ch : REChar;
 {$ENDIF}
-  function PrintableChar(AChar: REChar): string; inline;
+  function PrintableChar(AChar: REChar): string; {$IFDEF InlineFuncs}inline;{$ENDIF}
     begin
       if AChar < ' '
        then Result := '#' + IntToStr (Ord (AChar))
