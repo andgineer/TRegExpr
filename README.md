@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/masterandrey/TRegExpr.png)](https://travis-ci.org/masterandrey/TRegExpr)
+[![Build Status](https://travis-ci.org/andgineer/TRegExpr.png)](https://travis-ci.org/andgineer/TRegExpr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### TRegExpr: Delphi / FreePascal(Lazarus) library for regular expressions.
@@ -9,7 +9,7 @@ Now it's part of [Lazarus (Free Pascal)](http://wiki.freepascal.org/Regexpr) pro
 
 #### Documentation in English, Russian, German, Bulgarian, French and Spanish
 
-[regexpr.masterandrey.com](http://regexpr.masterandrey.com/en/latest/)
+[regex.sorokin.enginer](https://regex.sorokin.enginer/regex)
 
 #### FreePascal fork
 
