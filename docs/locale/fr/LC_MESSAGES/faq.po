@@ -205,8 +205,8 @@ msgstr ""
 
 # 98b9a7d955c94ac699086ed6b50c59e2
 #: ../../faq.rst:81
-msgid "How to parse sources like HTML with help of TRegExpr"
-msgstr "Comment analyser des sources comme HTML avec l&#39;aide de TRegExpr"
+msgid "How to parse sources like HTML with help of TRegExpr?"
+msgstr "Comment analyser des sources comme HTML avec l&#39;aide de TRegExpr?"
 
 # 84b05a8a734c400f84412a496820942a
 #: ../../faq.rst:85
