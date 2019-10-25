@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/andgineer/TRegExpr.png)](https://travis-ci.org/andgineer/TRegExpr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Translation status](https://hosted.weblate.org/widgets/tregexpr/-/tregexpr/svg-badge.svg)](https://hosted.weblate.org/engage/tregexpr/?utm_source=widget")
 
 ### TRegExpr: Delphi / FreePascal(Lazarus) library for regular expressions.
 
