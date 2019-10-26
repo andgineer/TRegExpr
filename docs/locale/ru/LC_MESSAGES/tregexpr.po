@@ -5,19 +5,22 @@
 #
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-15 20:39+0300\n"
-"PO-Revision-Date: 2019-05-08 09:12+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Russian "
-"(https://www.transifex.com/masterAndrey/teams/98461/ru/)\n"
+"PO-Revision-Date: 2019-10-26 13:07+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
+"tregexpr/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.9.1-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 641c63bb9dac43b69cd3528d9789b841
@@ -32,21 +35,18 @@ msgstr "Русский"
 
 # a8caac3fc2ae431c9397132b240f52d4
 #: ../../tregexpr.rst:8
-#, fuzzy
 msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/tregexpr.html>`__"
-msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
+msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/tregexpr.html>`__"
 
 # 975bcd0fce804b17b63c6f3b4b748c94
 #: ../../tregexpr.rst:9
-#, fuzzy
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/tregexpr.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/tregexpr.html>`__"
 
 # 7b1f1a73b7594de483816459cb9cd6d2
 #: ../../tregexpr.rst:10
-#, fuzzy
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/tregexpr.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/tregexpr.html>`__"
 
 # aa90c7e86ff940aab57b013680c2d4df
 #: ../../tregexpr.rst:11
@@ -1483,5 +1483,3 @@ msgstr ""
 #: ../../tregexpr.rst:606
 msgid "After that all strings will be treated as WideString."
 msgstr "После этого все строки будут рассматриваться как WideString."
-
-
