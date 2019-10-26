@@ -82,7 +82,7 @@ There are also old translations to German, Bulgarian, French and Spanish.
 If you want to help to update this old translations please `contact me <https://github.com/andgineer>`_.
 
 New translations are based on `GetText <https://en.wikipedia.org/wiki/Gettext>`_
-and can be edited with `transifex.com <https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_.
+and can be edited with `Weblate <https://hosted.weblate.org/projects/tregexpr/>`_.
 
 They are already machine-translated and need only proof-reading
 and may be some copy-pasting from old translations.
