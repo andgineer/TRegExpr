@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-15 20:39+0300\n"
+"POT-Creation-Date: 2019-10-26 16:03+0300\n"
 "PO-Revision-Date: 2019-05-08 09:13+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: French "
@@ -20,42 +20,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-# 87453ca657c04b1384b86f82a4be1e7e
+# bcceb9ddb03f415580d4b5e55290527d
 #: ../../index.rst:6
 msgid "English"
 msgstr ""
 
-# ab7f160cdf66442c921786c514900fef
+# 54ebc251eff34812b1ee36830f7dc863
 #: ../../index.rst:7
 msgid "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 
-# ab7f160cdf66442c921786c514900fef
+# 2d2ce49cc5d9419eb0b14fc888a6c42c
 #: ../../index.rst:8
 msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
 msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
 
-# ab7f160cdf66442c921786c514900fef
+# a93b59bc459140358ce5d55c2374e488
 #: ../../index.rst:9
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
-# ab7f160cdf66442c921786c514900fef
+# efc050cad2b549edbc16be95d6eaa025
 #: ../../index.rst:10
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 msgstr "Français"
 
-# ab7f160cdf66442c921786c514900fef
+# e0ee4837c5ce459bb0f114816a1916ba
 #: ../../index.rst:11
 msgid "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
-# e0e096577ddf42de84b4c0009d1ab8ee
+# 47015840eef94746af12ae2d485ec72d
 #: ../../index.rst:14
 msgid "Introduction"
 msgstr "introduction"
 
-# dfa40637f5e84c8280470a89b89cb583
+# ede0a10b7fcc4dcba1b7b72f22a9155c
 #: ../../index.rst:16
 msgid ""
 "TRegExpr library implements `regular expressions "
@@ -64,7 +64,7 @@ msgstr ""
 "La bibliothèque TRegExpr implémente des expressions régulières "
 "<regular_expressions.html>`_."
 
-# 57929c8115c34146ba8d53c86b73e99e
+# 59e11d1ab1c34e3f89ed8152be66c8fc
 #: ../../index.rst:19
 msgid ""
 "Regular expressions are easy to use and powerful tool for sophisticated "
@@ -74,7 +74,7 @@ msgstr ""
 "pour la recherche et la substitution sophistiquées et pour la "
 "vérification de texte basée sur des modèles."
 
-# 1f3133a0541e467bbc7f8228dfc89846
+# 3459108fa31a4788ab3b8051340eff5a
 #: ../../index.rst:22
 msgid ""
 "It is especially useful for user input validation in input forms - to "
@@ -84,7 +84,7 @@ msgstr ""
 "dans les formulaires de saisie - pour valider les adresses électroniques,"
 " etc."
 
-# ddca2022171f445a9bcae654ef4b362f
+# 486bb59e358b43a58f0f35d3fadb79be
 #: ../../index.rst:25
 msgid ""
 "Also you can extract phone numbers, ZIP-codes etc from web-pages or "
@@ -98,7 +98,7 @@ msgstr ""
 " Les règles (modèles) peuvent être modifiées sans la recompilation de "
 "votre programme."
 
-# 6baba10c40834de1aa6cc9e87f5ba5a4
+# 6b71a468aa3f4976a3c909b8fc98ee9e
 #: ../../index.rst:29
 msgid ""
 "TRegExpr is implemented in pure Pascal. It's included into `Lazarus (Free"
@@ -111,12 +111,12 @@ msgstr ""
 "aussi en tant que bibliothèque séparée et peut être compilé par Delphi "
 "2-7, Borland C ++ Builder 3-6."
 
-# ca3c7e798543405eb28c67b45452b350
+# b5eb9411c78749cb80cd15750a7bda79
 #: ../../index.rst:35
 msgid "Reviews"
 msgstr "Avis"
 
-# ab7f160cdf66442c921786c514900fef
+# 540dc5e7519749f8a49f668715cabf86
 #: ../../index.rst:37
 msgid ""
 "`How good the library was met "
@@ -125,30 +125,30 @@ msgstr ""
 "`Comment bien la bibliothèque a été rencontré "
 "<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
 
-# dfa2788a71244850a2527e38817dfbaa
+# 4991414b12c64f829b62f63e6954ed5c
 #: ../../index.rst:40
 msgid "Quick start"
 msgstr "Démarrage rapide"
 
-# 8825857f9bf247d9906c37896e2aafef
+# b2ae96ff6acf425a831b8f206c384066
 #: ../../index.rst:42
 msgid ""
 "To use the library just add `the sources "
-"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ "
-"to you project and use the class `TRegExpr <tregexpr.html>`_."
+"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
+"you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 "Pour utiliser la bibliothèque, ajoutez simplement `les sources "
 "<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ "
 "vous projetez et utilisez la classe` TRegExpr <tregexpr.html>`_."
 
-# 8f3942b9d4e941ea900924467c155c42
+# 0d79895ebfb6444e9d3ff580b250cef6
 #: ../../index.rst:45
 msgid "In the `FAQ <faq.html>`_ you can learn from others users problems."
 msgstr ""
 "Dans la `FAQ <faq.html>`_ vous pouvez apprendre des problèmes des autres "
 "utilisateurs."
 
-# 3abbbeffa14f40e4a3b0a934fc3174db
+# 495db3fc133940d68ab0e306d9d90e89
 #: ../../index.rst:47
 msgid ""
 "Ready to run Windows application `REStudio "
@@ -159,12 +159,12 @@ msgstr ""
 "<https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__"
 " vous aidera à apprendre et à déboguer les expressions régulières."
 
-# d5fbb4416fe442e68b451ea2f14187c6
+# 9cff298482634c6dbc386a8a027e2840
 #: ../../index.rst:52
 msgid "Feedback"
 msgstr "Retour d&#39;information"
 
-# cccbc0ef47fe4a05907f7c41f32d4e15
+# c434c32e8851474bad530a979ff83e4b
 #: ../../index.rst:54
 msgid ""
 "If you see any problems, please `create the bug "
@@ -173,22 +173,22 @@ msgstr ""
 "Si vous voyez des problèmes, veuillez créer le bogue. "
 "<https://github.com/andgineer/TRegExpr/issues>`_."
 
-# 6c20f98cad044e21ae70ee56aa06b220
+# e4726e8b8e7e4509bb7791a0c1815055
 #: ../../index.rst:58
 msgid "Source code"
 msgstr "Code source"
 
-# 84909a6ee27442989bc4e70e912d1423
+# 898ff6a3cafd4362a456612766b2b726
 #: ../../index.rst:59
 msgid "Pure Object Pascal."
 msgstr "Pure Object Pascal."
 
-# b852f83bed1e4efe8de4bebf09c8ac3c
+# 737ca1e7359545caa65cb89240868a3f
 #: ../../index.rst:61
 msgid "`Original version <https://github.com/andgineer/TRegExpr>`_"
 msgstr "`Version originale <https://github.com/andgineer/TRegExpr>`_"
 
-# 4d7ba7e04b4e479fbb3fb94377ddaa2f
+# 7a40d773d7c04ab98d27ec24118b0ccd
 #: ../../index.rst:62
 msgid ""
 "`FreePascal fork (GitHub mirror of the SubVersion) "
@@ -197,17 +197,17 @@ msgstr ""
 "`Fourche FreePascal (miroir GitHub de la SubVersion) "
 "<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
 
-# a2ac7709ea0344e5931a96f336a6bb2e
+# bfbc7bfded90471e851d3b8093cbc999
 #: ../../index.rst:65
 msgid "Documentation"
 msgstr "Documentation"
 
-# ba7fd3ff15ee48dc9402cbf6cbeaa7dd
+# 7ed254abc43244fe969f8fcdc61d0e0b
 #: ../../index.rst:77
 msgid "Translations"
 msgstr "Traductions"
 
-# 62822795d0d7436abbf8bcbdd3104cd8
+# 5ac6599f49a444f79024504d878b0c33
 #: ../../index.rst:78
 msgid ""
 "The documentation is available in English and `Russian "
@@ -216,7 +216,7 @@ msgstr ""
 "La documentation est disponible en anglais et en russe "
 "<https://regexpr.sorokin.engineer/ru/latest/>`_."
 
-# cb48bcda21e84448a807a9f10263f558
+# 6db169b8d43c4484b5cc08a93a5d311d
 #: ../../index.rst:81
 msgid ""
 "There are also old translations to German, Bulgarian, French and Spanish."
@@ -227,20 +227,20 @@ msgstr ""
 "français et espagnol. Si vous voulez aider à mettre à jour ces anciennes "
 "traductions, veuillez me contacter. <https://github.com/andgineer>`_."
 
-# cb48bcda21e84448a807a9f10263f558
+# 20d0dc3b43624e2c97772a2714b57edc
 #: ../../index.rst:84
+#, fuzzy
 msgid ""
 "New translations are based on `GetText "
-"<https://en.wikipedia.org/wiki/Gettext>`_ and can be edited with "
-"`transifex.com "
-"<https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_."
+"<https://en.wikipedia.org/wiki/Gettext>`_ and can be edited with `Weblate"
+" <https://hosted.weblate.org/projects/tregexpr/>`_."
 msgstr ""
 "Les nouvelles traductions sont basées sur `GetText "
 "<https://en.wikipedia.org/wiki/Gettext>`_ et peut être édité avec` "
 "transifex.com "
 "<https://www.transifex.com/masterAndrey/tregexpr/dashboard/> `_."
 
-# fbddcb9245124935aaf6ae6770d22a6e
+# bed34ff5ee4148a7b9dd8cd37c9db579
 #: ../../index.rst:87
 msgid ""
 "They are already machine-translated and need only proof-reading and may "
@@ -250,12 +250,12 @@ msgstr ""
 "correction d&#39;épreuves. Il peut s&#39;agir d&#39;un copier-coller "
 "d&#39;anciennes traductions."
 
-# c556ccaa4805402ab0801fa2785c7456
+# f535900368084ad8a3bfed3d6eb7ed3f
 #: ../../index.rst:91
 msgid "Gratitude"
 msgstr "Reconnaissance"
 
-# 268cc5e6c2da457ba50fc853fb103794
+# d313b21f8d76493688fcdf71b1adf61c
 #: ../../index.rst:93
 msgid ""
 "Many features suggested and a lot of bugs founded (and even fixed) by "
@@ -264,7 +264,7 @@ msgstr ""
 "Beaucoup de fonctionnalités suggérées et beaucoup de bugs fondés (et même"
 " corrigés) par les contributeurs de TRegExpr."
 
-# 5fece84603234ac6a8b85c4ad5572d1f
+# eff79c5b43e740a28bdb2d9266138549
 #: ../../index.rst:96
 msgid ""
 "I cannot list here all of them, but I do appreciate all bug-reports, "
@@ -274,26 +274,26 @@ msgstr ""
 "rapports de bugs, suggestions de fonctionnalités et questions que je "
 "reçois de votre part."
 
-# 05c43ef077b446859f0d05b0b92edef0
+# 160e6d10af5b45678086bcecaf2f8ccc
 #: ../../index.rst:100
 msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
 msgstr ""
 "Guido Muehlwitz - bogue trouvé et corrigé dans le traitement d&#39;une "
 "grosse chaîne"
 
-# 06dad95060b04bf2be1ff27e0c2abff2
+# 7f5bfc14b9ac4064b3ae3a150933960f
 #: ../../index.rst:101
 msgid "Stephan Klimek - testing in CPPB and suggesting/implementing many features"
 msgstr ""
 "Stephan Klimek - teste dans CPPB et suggère / implémente de nombreuses "
 "fonctionnalités"
 
-# 2080a3d065de4827916dbbc174872814
+# 6c05204e930c48ce91d149bcefa0d333
 #: ../../index.rst:103
 msgid "Steve Mudford - implemented Offset parameter"
 msgstr "Steve Mudford - Paramètre de décalage implémenté"
 
-# 48a3902a5577426bb7877d8a15c743c4
+# 314aa921882c4d12948b9c2a70d11abb
 #: ../../index.rst:104
 msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
@@ -302,50 +302,50 @@ msgstr ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - "
 "traduction allemande, suggestions utiles"
 
-# d402718ba09b49ffb284a26bc9e31d57
+# 587479db44134d4bad81d5f1294044ee
 #: ../../index.rst:106
 msgid "Yury Finkel - implemented UniCode support, found and fixed some bugs"
 msgstr ""
 "Yury Finkel - implémenté le support UniCode, trouvé et corrigé quelques "
 "bugs"
 
-# 28f0838389bf40bd8588b75e3c2cb818
+# 0e7d798dcfb841cb9721dfb54acae872
 #: ../../index.rst:107
 msgid "Ralf Junker - Implemented some features, many optimization suggestions"
 msgstr ""
 "Ralf Junker - Implémentation de certaines fonctionnalités, nombreuses "
 "suggestions d&#39;optimisation"
 
-# d3324e4f8cfb4e1aacd8ed294617e2da
+# 4073ffb53aef4064880a1fe785bc14bd
 #: ../../index.rst:109
 msgid "Simeon Lilov - Bulgarian translation"
 msgstr "Simeon Lilov - traduction en bulgare"
 
-# 35fbb7141a5346a4a884f660743d53dd
+# f798907889f648d38a794a0d213bc63f
 #: ../../index.rst:110
 msgid "Filip Jirsбk and Matthew Winter - help in Implementation non-greedy mode"
 msgstr ""
 "Filip Jirsбk et Matthew Winter - aide à la mise en œuvre en mode non-"
 "gourmand"
 
-# 2fee3a31c1dd4a12931d90c5dbaf38c1
+# b9d9d2e44c0e4025857043de25eda658
 #: ../../index.rst:112
 msgid "Kit Eason many examples for introduction help section"
 msgstr ""
 "Kit Eason de nombreux exemples pour la section d&#39;aide à "
 "l&#39;introduction"
 
-# baed1255c1c143b399d67758295109a4
+# 5478de2a73bf451b85c14932ddf9a8fd
 #: ../../index.rst:113
 msgid "Juergen Schroth - bug hunting and useful suggestions"
 msgstr "Juergen Schroth - chasse aux insectes et suggestions utiles"
 
-# 9f1031b4f6224dc99622a7c0a665c6e6
+# 75b427306b5b45b3a8178c21d95bd42f
 #: ../../index.rst:114
 msgid "Martin Ledoux - French translation"
 msgstr "Martin Ledoux - traduction française"
 
-# 5bbca14a5c8045c0b0a16afd0ad75612
+# 194dd8dd93f241999a5e313f2fa609fe
 #: ../../index.rst:115
 msgid "Diego Calp, Argentina - Spanish translation"
 msgstr "Diego Calp, Argentine - traduction espagnole"
