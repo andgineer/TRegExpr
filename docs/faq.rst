@@ -186,7 +186,7 @@ Why TRegExpr does not work with strings with #0 inside?
 **Answer**
 
 The TRegExpr parser convert all strings to PChars and internally all processing
-are based on zero-terminated PChars.
+are based on #0k-terminated PChars.
 
 To make it work with #0 chars we need a big effort. Are you going to volunteer
 to fix that?
