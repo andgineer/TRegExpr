@@ -78,7 +78,7 @@ like ``+?`` and so on or switch all operators into
 TRegExpr properties or operator ``?(-g)`` in r.e.).
 
 How to parse sources like HTML with help of TRegExpr?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Answer**
 
