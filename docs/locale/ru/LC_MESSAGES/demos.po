@@ -5,19 +5,22 @@
 #
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-15 20:39+0300\n"
-"PO-Revision-Date: 2019-05-08 09:12+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Russian "
-"(https://www.transifex.com/masterAndrey/teams/98461/ru/)\n"
+"PO-Revision-Date: 2019-10-27 13:53+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/demos/"
+"ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.9.1-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 54bd071b6b824a54b9ac5c35fbfa06bf
@@ -32,27 +35,23 @@ msgstr "Русский"
 
 # 959cf23b9f86427f9643550f26b816be
 #: ../../demos.rst:8
-#, fuzzy
 msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/demos.html>`__"
-msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
+msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/demos.html>`__"
 
 # 9a388b794d4d4d85b042be34566891a6
 #: ../../demos.rst:9
-#, fuzzy
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/demos.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/demos.html>`__"
 
 # 397812a6c3e4474b9d73b7b403041015
 #: ../../demos.rst:10
-#, fuzzy
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/demos.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/demos.html>`__"
 
 # bf3c1985d6cb4bb7b8e93a78e85aa43c
 #: ../../demos.rst:11
-#, fuzzy
 msgid "`Español <https://regex.sorokin.engineer/es/latest/demos.html>`__"
-msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/demos.html>`__"
 
 # 3123f93a15554569abef24250ec73e62
 #: ../../demos.rst:14
@@ -282,5 +281,3 @@ msgstr ""
 #: ../../demos.rst:86
 msgid "Slightly more complex examples, see comments inside the unit"
 msgstr "Чуть более сложные примеры, см. Комментарии внутри блока"
-
-
