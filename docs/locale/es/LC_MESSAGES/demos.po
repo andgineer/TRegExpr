@@ -5,19 +5,21 @@
 #
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-15 20:39+0300\n"
-"PO-Revision-Date: 2019-05-08 09:12+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: Spanish "
-"(https://www.transifex.com/masterAndrey/teams/98461/es/)\n"
+"PO-Revision-Date: 2019-10-30 19:03+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/tregexpr/demos/"
+"es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 54bd071b6b824a54b9ac5c35fbfa06bf
@@ -127,10 +129,10 @@ msgid ""
 "``filbert@yandex.ru`` with ``<a "
 "href=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
 msgstr ""
-"Por ejemplo, reemplaza `` www.masterAndrey.com`` por `` <a "
-"href=\"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` o "
-"``filbert@yandex.ru`` por "
-"``<ahref=\"mailto:filbert@yandex.ru\">filbert@yandex.ru</a>``."
+"Por ejemplo, reemplaza `` www.masterAndrey.com`` por `` <a href=\""
+"http://www.masterAndrey.com\">www.masterAndrey.com</a> `` o "
+"``filbert@yandex.ru`` por ``<a href=\"mailto:filbert@yandex.ru\""
+">filbert@yandex.ru</a>``."
 
 # f7a7a176770443fd845bcbdc8a69ccc9
 #: ../../demos.rst:43
@@ -240,15 +242,15 @@ msgstr ""
 
 # 8a9151bca867444096cb6fd675d91897
 #: ../../demos.rst:74
+#, fuzzy
 msgid ""
 "For example, if `AFlags` is ``[durlAddr]`` then hyper link "
 "``www.masterAndrey.com/contacts.htm`` will be decorated as ``<a "
 "href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com</a>``."
 msgstr ""
 "Por ejemplo, si `AFlags` es` `[durlAddr]` `entonces el hipervínculo` "
-"`www.masterAndrey.com / contacts.htm`` se decorará <a "
-"href=\"www.masterAndrey.com/contacts.htm\">como`</a> ` <a "
-"href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com`</a> `."
+"`www.masterAndrey.com/contacts.htm`` se decorará como <a href=\""
+"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com`</a>``."
 
 # 19e04c2855034e2da0d032ce97d8daef
 #: ../../demos.rst:79
@@ -281,4 +283,3 @@ msgstr "Ejemplos un poco más complejos, ver comentarios dentro de la unidad"
 # bf3c1985d6cb4bb7b8e93a78e85aa43c
 #~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 #~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
-
