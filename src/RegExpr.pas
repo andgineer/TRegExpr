@@ -2568,6 +2568,19 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
       end;
     '(': begin
         if regparse^ = '?' then begin
+           // check for non-capturing group: (?:text)
+           if (regparse + 1)^ = ':' then begin
+             if regnpar < NSUBEXP then
+               NonCapture [regnpar] := True;
+             inc (regparse, 2);
+             ret := ParseReg (1, flags);
+             if ret = nil then begin
+               Result := nil;
+               EXIT;
+              end;
+             flagp := flagp or flags and (HASWIDTH or SPSTART);
+           end
+           else
            // check for extended Perl syntax : (?..)
            if (regparse + 1)^ = '#' then begin // (?#comment)
               inc (regparse, 2); // find closing ')'
@@ -2597,12 +2610,6 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
             end;
           end
          else begin
-           if regparse^ = ':' then // Non-capturing group (:text)
-           begin
-             if regnpar < NSUBEXP then
-               NonCapture [regnpar] := True;
-             Inc (regparse);
-           end;
            ret := ParseReg (1, flags);
            if ret = nil then begin
              Result := nil;
