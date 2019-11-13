@@ -6,7 +6,7 @@
                                      (-) - bugfix
                                      (^) - improvement
  v. 0.953 2019.11.13
- -=- (+) Support non-capturing groups (:text), by Alexey Torgashin (Alextp)
+ -=- (+) Support non-capturing groups (?:...), by Alexey Torgashin (Alextp)
 
  v. 0.952 2004.01.11
  -=- (+) FreePascal support, thanks to Yaroslav Romanchenko (SAGE)
