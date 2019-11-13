@@ -1313,15 +1313,16 @@ procedure TRegExpr.SetExpression (const s : RegExprString);
 --------------------------------------------------------------}
 
 function TRegExpr.GetSubExprMatchCount : integer;
+var
+  i : integer;
  begin
   if Assigned (fInputString) then begin
-     Result := NSUBEXP - 1;
-     while (Result > 0) and ((startp [Result] = nil)
-                             or (endp [Result] = nil)
-                             or NonCapture [Result])
-      do dec (Result);
-    end
-   else Result := -1;
+    Result := 0;
+    for i := 1 {not 0} to NSUBEXP - 1 do
+      if Assigned(startp [i]) and Assigned(endp [i]) and not NonCapture [i]
+        then inc (Result);
+  end
+  else Result := -1;
  end; { of function TRegExpr.GetSubExprMatchCount
 --------------------------------------------------------------}
 
