@@ -70,6 +70,7 @@ type
     Procedure RunTest25;
     Procedure RunTest26;
     Procedure RunTest27;
+    Procedure RunTest28;
   end;
 
 implementation
@@ -84,7 +85,7 @@ Type
   end;
 
 const
-  testCases: array [1..27] of TRegExTest = (
+  testCases: array [1..28] of TRegExTest = (
     (
     expression: '\nd';
     inputText: 'abc'#13#10'def';
@@ -273,6 +274,13 @@ const
     substitutionText: '';
     expectedResult: 'Test: hel'#$d#$a'lo ;';
     matchStart: 1
+    ),
+    (
+    expression: '(?:\w+)=\w+;(\w+)=\w+;(?:\w+)=\w+;(\w+)=\w+;';
+    inputText: 'skip1=11;needed1=22;skip2=33;needed2=44;';
+    substitutionText: '$1 $2';
+    expectedResult: 'needed1 needed2';
+    matchStart: 0
     )
   );
 
@@ -469,6 +477,11 @@ end;
 procedure TTestRegexpr.RunTest27;
 begin
   RunRETest(27);
+end;
+
+procedure TTestRegexpr.RunTest28;
+begin
+  RunRETest(28);
 end;
 
 Class function TTestRegexpr.PrintableString(AString: string): string;

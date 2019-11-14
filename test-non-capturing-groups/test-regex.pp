@@ -1,6 +1,6 @@
 {$mode objfpc}
 uses
-  Classes, SysUtils, RegExpr;
+  Classes, SysUtils, RegExpr in '../src/RegExpr.pas';
 
 procedure Test(const ARegex, AStr: string);
 var
