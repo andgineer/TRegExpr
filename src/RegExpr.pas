@@ -1784,6 +1784,14 @@ function TRegExpr.CompileRegExpr (exp : PRegExprChar) : boolean;
   flags:=0;
   regparse := nil; // for correct error handling
   regexpbeg := exp;
+
+  for flags := 0 to NSUBEXP-1 do
+  begin
+    startp [flags] := nil;
+    endp [flags] := nil;
+    NonCapture [flags] := False;
+  end;
+
   try
 
   if programm <> nil then begin
