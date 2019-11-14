@@ -5,7 +5,8 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
- v. 0.953 2019.11.13
+ v. 0.954 2019.11.14
+ -=- (^) Changed type of InputString / Expression from PChar to string
  -=- (+) Support non-capturing groups (?:...), by Alexey Torgashin (Alextp)
 
  v. 0.952 2004.01.11
