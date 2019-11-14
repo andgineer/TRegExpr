@@ -5,4 +5,10 @@
 *.dproj.local
 *.exe
 *__history
+*.lps
+*.dbg
 urls.txt
+bin/
+lib/
+test-regex
+testregexpr
