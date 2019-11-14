@@ -12,8 +12,6 @@
 
 -=- put precalculated lengths into EXACTLY[CI] !
 
--=- fInputString as string (suggested by Ralf Junker)
-
 -=- Add regstart optimization for case-insensitive mode ?
  Or complitely remove because FirstCharSet is faster ?
 
