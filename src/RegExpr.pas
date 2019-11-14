@@ -2576,7 +2576,9 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            // check for non-capturing group: (?:text)
            if (regparse + 1)^ = ':' then begin
              if regnpar < NSUBEXP then
+             begin
                NonCapture [regnpar] := True;
+             end;
              inc (regparse, 2);
              ret := ParseReg (1, flags);
              if ret = nil then begin
@@ -3625,7 +3627,6 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
    for i := 0 to NSUBEXP - 1 do begin
      startp [i] := nil;
      endp [i] := nil;
-     NonCapture [i] := False;
     end;
   end; { of procedure ClearMatchs;
 ..............................................................}
@@ -3796,7 +3797,6 @@ procedure TRegExpr.SetInputString (const AInputString : RegExprString);
   for i := 0 to NSUBEXP - 1 do begin
     startp [i] := nil;
     endp [i] := nil;
-    NonCapture [i] := False;
    end;
 
   // need reallocation of input string buffer ?
