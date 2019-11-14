@@ -1319,8 +1319,12 @@ var
   if Assigned (fInputString) then begin
     Result := 0;
     for i := 1 {not 0} to NSUBEXP - 1 do
-      if Assigned(startp [i]) and Assigned(endp [i]) and not NonCapture [i]
-        then inc (Result);
+    begin
+      if not Assigned(startp [i]) or not Assigned(endp [i])
+       then Break;
+      if not NonCapture [i]
+       then inc (Result);
+    end;
   end
   else Result := -1;
  end; { of function TRegExpr.GetSubExprMatchCount
@@ -3949,9 +3953,8 @@ begin
     Ch := p^;
     inc (p);
     if Ch = '$'
-     then n := ParseVarName (p)
+     then n := GetSubExprArrayIndex(ParseVarName (p))
      else n := -1;
-    n := GetSubExprArrayIndex(n);
     if n >= 0 then begin
       inc (ResultLen, endp [n] - startp [n]);
     end
@@ -3996,9 +3999,8 @@ begin
     inc (p);
     p1 := p;
     if Ch = '$'
-     then n := ParseVarName (p)
+     then n := GetSubExprArrayIndex(ParseVarName (p))
      else n := -1;
-    n := GetSubExprArrayIndex(n);
     if (n >= 0) then begin
       p0 := startp[n];
       p1 := endp[n];
