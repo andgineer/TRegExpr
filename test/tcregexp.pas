@@ -71,6 +71,7 @@ type
     Procedure RunTest26;
     Procedure RunTest27;
     Procedure RunTest28;
+    Procedure RunTest29;
   end;
 
 implementation
@@ -85,7 +86,7 @@ Type
   end;
 
 const
-  testCases: array [1..28] of TRegExTest = (
+  testCases: array [1..29] of TRegExTest = (
     (
     expression: '\nd';
     inputText: 'abc'#13#10'def';
@@ -280,6 +281,13 @@ const
     inputText: 'skip1=11;needed1=22;skip2=33;needed2=44;';
     substitutionText: '$1 $2';
     expectedResult: 'needed1 needed2';
+    matchStart: 0
+    ),
+    (
+    expression: '.*?\b(https?|ftp)://(?:\w+)\.(?:\w+)\.(\w+)';
+    inputText: '>>ftp://www.name.com';
+    substitutionText: '$1 $2';
+    expectedResult: 'ftp com';
     matchStart: 0
     )
   );
@@ -482,6 +490,11 @@ end;
 procedure TTestRegexpr.RunTest28;
 begin
   RunRETest(28);
+end;
+
+procedure TTestRegexpr.RunTest29;
+begin
+  RunRETest(29);
 end;
 
 Class function TTestRegexpr.PrintableString(AString: string): string;
