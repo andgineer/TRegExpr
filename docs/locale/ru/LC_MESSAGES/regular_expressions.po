@@ -10,13 +10,17 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-15 07:26+0300\n"
-"PO-Revision-Date: 2019-10-27 13:53+0000\n"
+"PO-Revision-Date: 2019-11-15 05:00+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
-"Language-Team: Russian "
-"<https://hosted.weblate.org/projects/tregexpr/regular_expressions/ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
+"regular_expressions/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 3a33618c52cc401886a2ed6c3e3c95db
@@ -636,7 +640,7 @@ msgstr "Разделители строк"
 # dd6ff73c75ba4459a8e74e1ef355e4b2
 #: ../../regular_expressions.rst:185
 msgid "``^``"
-msgstr "``^`` "
+msgstr "``^``"
 
 # e46750e7cc2349f48faa55bf61fd8d28
 #: ../../regular_expressions.rst:185
@@ -1689,7 +1693,7 @@ msgstr ""
 # c26db2c00e3144079e351b63fac1258a
 #: ../../regular_expressions.rst:573
 msgid "(?:<non-capturing group>)"
-msgstr ""
+msgstr "(?:<non-capturing group>)"
 
 # 01e078b0b8fd44a38e50d4a0eeb5a5c9
 #: ../../regular_expressions.rst:575
@@ -1697,6 +1701,9 @@ msgid ""
 "``?:`` is used when you want to group an expression, but you do not want "
 "to save it as a matched/captured portion of the string."
 msgstr ""
+"``?:`` можно использовать, если вы хотите сгруппировать какую-то часть "
+"регулярного выражения, но вам не нужно чтобы соответствующей ей текст "
+"захватывался."
 
 # d043ab868375470c9dac14605825a786
 #: ../../regular_expressions.rst:578
@@ -1704,26 +1711,34 @@ msgid ""
 "So this is just a way to organize your regex into subexpressions without "
 "overhead of capturing result:"
 msgstr ""
+"Таким образом это способ организации регулярного выражения без захламления "
+"результата:"
 
 # 6f52528b218943adba99160f2f9943d9
 #: ../../regular_expressions.rst:584
 msgid "``(https?|ftp)://([^/\\r\\n]+)``"
 msgstr ""
+"``(https?|ftp)://([^/\\r\\n"
+"]+)``"
 
 # 34754c9d22f3469e80acbd4dc2ae0ebc
 #: ../../regular_expressions.rst:584
 msgid "in ``https://sorokin.engineer`` matches ``https`` and ``sorokin.engineer``"
 msgstr ""
+"в ``https://sorokin.engineer`` захватит подвыражения ``https`` и "
+"``sorokin.engineer``"
 
 # c4cc4401229649b5a96f45c2a6355c7c
 #: ../../regular_expressions.rst:586
 msgid "``(?:https?|ftp)://([^/\\r\\n]+)``"
 msgstr ""
+"``(?:https?|ftp)://([^/\\r\\n"
+"]+)``"
 
 # 544d5cbd3fd84acd917e3cc51f404f90
 #: ../../regular_expressions.rst:586
 msgid "in ``https://sorokin.engineer`` matches only ``sorokin.engineer``"
-msgstr ""
+msgstr "в ``https://sorokin.engineer`` захватит только ``sorokin.engineer``"
 
 # 1c6a374d9d9948a990d7fcfeae7803e4
 #: ../../regular_expressions.rst:591
@@ -1762,9 +1777,9 @@ msgid ""
 msgstr ""
 "И если оно находится внутри подвыражения, оно будет влиять только на это "
 "подвыражение, а именно на ту часть подвыражения, которая следует за "
-"оператором. Таким образом, в ``((?i)Saint)-Petersburg`` это влияет только"
-" на подвыражение ``((?i)Saint)``, поэтому оно будет соответствовать "
-"``saint-Petersburg``, но не ``saint-petersburg`` ,"
+"оператором. Таким образом, в ``((?i)Saint)-Petersburg`` это влияет только на "
+"подвыражение ``((?i)Saint)``, поэтому оно будет соответствовать ``saint-"
+"Petersburg``, но не ``saint-petersburg``."
 
 # 73fc41ceb89646babab0449866a6addc
 #: ../../regular_expressions.rst:608
@@ -1848,4 +1863,3 @@ msgstr ""
 #~ "not want to save it as a "
 #~ "matched/captured portion of the string."
 #~ msgstr ""
-
