@@ -568,6 +568,25 @@ Extensions
 
 .. _inlinemodifiers:
 
+
+(?:<non-capturing group>)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``?:`` is used when you want to group an expression, but you do not want to
+save it as a matched/captured portion of the string.
+
+So this is just a way to organize your regex into subexpressions without
+overhead of capturing result:
+
+================================ =======================================
+RegEx                            Matches
+================================ =======================================
+``(https?|ftp)://([^/\r\n]+)``   in ``https://sorokin.engineer`` matches
+                                 ``https`` and ``sorokin.engineer``
+``(?:https?|ftp)://([^/\r\n]+)`` in ``https://sorokin.engineer`` matches
+                                 only ``sorokin.engineer``
+================================ =======================================
+
 (?imsgxr-imsgxr)
 ~~~~~~~~~~~~~~~~
 
