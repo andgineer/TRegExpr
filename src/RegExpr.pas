@@ -295,8 +295,8 @@ type
     // to the thing following the set of BRANCHes.) The opcodes are:
     programm : PRegExprChar; // Unwarranted chumminess with compiler.
 
-    fExpression : PRegExprChar; // source of compiled r.e.
-    fInputString : PRegExprChar; // input string
+    fExpression : RegExprString; // source of compiled r.e.
+    fInputString : RegExprString; // input string
 
     fLastError : integer; // see Error, LastError
 
@@ -331,7 +331,6 @@ type
     // [re]compile it if something changed
     function IsProgrammOk : boolean; //###0.941
 
-    function GetExpression : RegExprString;
     procedure SetExpression (const s : RegExprString);
 
     function GetModifierStr : RegExprString;
@@ -537,7 +536,7 @@ type
     // after last [re]compilation.
     // If any errors while [re]compilation occures, Error method is called
     // (by default Error raises exception - see below)
-    property Expression : RegExprString read GetExpression write SetExpression;
+    property Expression : RegExprString read fExpression write SetExpression;
 
     // Set/get default values of r.e.syntax modifiers. Modifiers in
     // r.e. (?ismx-ismx) will replace this default values.
@@ -1201,8 +1200,8 @@ constructor TRegExpr.Create;
  begin
   inherited;
   programm := nil;
-  fExpression := nil;
-  fInputString := nil;
+  fExpression := '';
+  fInputString := '';
 
   regexpbeg := nil;
   fExprIsCompiled := false;
@@ -1243,16 +1242,6 @@ destructor TRegExpr.Destroy;
     FreeMem (programm);
     programm:=nil;
   end;
-  if fExpression <> nil then
-  begin
-    FreeMem (fExpression);
-    fExpression:=nil;
-  end;
-  if fInputString <> nil then
-  begin
-    FreeMem (fInputString);
-    fInputString:=nil;
-  end;
  end; { of destructor TRegExpr.Destroy
 --------------------------------------------------------------}
 
@@ -1278,37 +1267,13 @@ begin
 end; { of function TRegExpr.InvertCaseFunction
 --------------------------------------------------------------}
 
-function TRegExpr.GetExpression : RegExprString;
- begin
-  if fExpression <> nil
-   then Result := fExpression
-   else Result := '';
- end; { of function TRegExpr.GetExpression
---------------------------------------------------------------}
-
 procedure TRegExpr.SetExpression (const s : RegExprString);
- var
-  Len : PtrInt; //###0.950
  begin
   if (s <> fExpression) or not fExprIsCompiled then begin
     fExprIsCompiled := false;
-    if fExpression <> nil then begin
-      FreeMem (fExpression);
-      fExpression := nil;
-     end;
-    if s <> '' then begin
-      Len := length (s); //###0.950
-      GetMem (fExpression, (Len + 1) * SizeOf (REChar));
-//      StrPCopy (fExpression, s); //###0.950 replaced due to StrPCopy limitation of 255 chars
-      {$IFDEF UniCode}
-      StrPCopy (fExpression, Copy (s, 1, Len)); //###0.950
-      {$ELSE}
-      StrLCopy (fExpression, PRegExprChar (s), Len); //###0.950
-      {$ENDIF UniCode}
-
-      InvalidateProgramm; //###0.941
-     end;
-   end;
+    fExpression := s;
+    InvalidateProgramm; //###0.941
+  end;
  end; { of procedure TRegExpr.SetExpression
 --------------------------------------------------------------}
 
@@ -1316,7 +1281,7 @@ function TRegExpr.GetSubExprMatchCount : integer;
 var
   i : integer;
  begin
-  if Assigned (fInputString) then begin
+  if fInputString <> '' then begin
     Result := 0;
     for i := 1 {not 0} to NSUBEXP - 1 do
     begin
@@ -1334,12 +1299,12 @@ function TRegExpr.GetSubExprArrayIndex (Idx : integer) : integer;
 var
   BusyIdx, i : integer;
 begin
-  if (Idx = 0) and Assigned (fInputString) then
+  if (Idx = 0) and (fInputString <> '') then
   begin
     Result := 0;
     EXIT;
   end;
-  if (Idx > 0) and (Idx < NSUBEXP) and Assigned (fInputString) then
+  if (Idx > 0) and (Idx < NSUBEXP) and (fInputString <> '') then
   begin
     BusyIdx := -1;
     for i := 0 to NSUBEXP-1 do
@@ -1360,7 +1325,7 @@ function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
  begin
    Idx := GetSubExprArrayIndex(Idx);
    if Idx >= 0 then
-     Result := (startp [Idx] - fInputString) + 1
+     Result := startp [Idx] - PRegExprChar(fInputString) + 1
    else Result := -1;
  end; { of function TRegExpr.GetMatchPos
 --------------------------------------------------------------}
@@ -1560,11 +1525,11 @@ procedure TRegExpr.InvalidateProgramm;
 
 procedure TRegExpr.Compile; //###0.941
  begin
-  if fExpression = nil then begin // No Expression assigned
+  if fExpression = '' then begin // No Expression assigned
     Error (reeNoExpression);
     EXIT;
    end;
-  CompileRegExpr (fExpression);
+  CompileRegExpr (PRegExprChar(fExpression));
  end; { of procedure TRegExpr.Compile
 --------------------------------------------------------------}
 
@@ -3664,7 +3629,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
    then EXIT;
 
   // Check InputString presence
-  if not Assigned (fInputString) then begin
+  if fInputString = '' then begin
     Error (reeNoInputStringSpecified);
     EXIT;
    end;
@@ -3681,7 +3646,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
   if AOffset > (InputLen + 1) // for matching empty string after last char.
    then EXIT;
 
-  StartPtr := fInputString + AOffset - 1;
+  StartPtr := PRegExprChar(fInputString) + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
   if regmust <> nil then begin
@@ -3699,11 +3664,11 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
    end;
 
   // Mark beginning of line for ^ .
-  fInputStart := fInputString;
+  fInputStart := PRegExprChar(fInputString);
 
   // Pointer to end of input stream - for
   // pascal-style string processing (may include #0)
-  fInputEnd := fInputString + InputLen;
+  fInputEnd := PRegExprChar(fInputString) + InputLen;
 
   {$IFDEF ComplexBraces}
   // no loops started
@@ -3777,7 +3742,7 @@ function TRegExpr.ExecNext : boolean;
    end;
 //  Offset := MatchPos [0] + MatchLen [0];
 //  if MatchLen [0] = 0
-  Offset := endp [0] - fInputString + 1; //###0.929
+  Offset := endp [0] - PRegExprChar(fInputString) + 1; //###0.929
   if endp [0] = startp [0] //###0.929
    then inc (Offset); // prevent infinite looping if empty string match r.e.
   Result := ExecPrim (Offset);
@@ -3786,7 +3751,7 @@ function TRegExpr.ExecNext : boolean;
 
 function TRegExpr.GetInputString : RegExprString;
  begin
-  if not Assigned (fInputString) then begin
+  if fInputString = '' then begin
     Error (reeGetInputStringWithoutInputString);
     EXIT;
    end;
@@ -3796,7 +3761,6 @@ function TRegExpr.GetInputString : RegExprString;
 
 procedure TRegExpr.SetInputString (const AInputString : RegExprString);
  var
-  Len : PtrInt;
   i : PtrInt;
  begin
   // clear Match* - before next Exec* call it's undefined
@@ -3805,35 +3769,8 @@ procedure TRegExpr.SetInputString (const AInputString : RegExprString);
     endp [i] := nil;
    end;
 
-  // need reallocation of input string buffer ?
-  Len := length (AInputString);
-  if Assigned (fInputString) and (Length (fInputString) <> Len) then begin
-    FreeMem (fInputString);
-    fInputString := nil;
-   end;
-  // buffer [re]allocation
-  if not Assigned (fInputString)
-   then GetMem (fInputString, (Len + 1) * SizeOf (REChar));
-
-  // copy input string into buffer
-  {$IFDEF UniCode}
-  StrPCopy (fInputString, Copy (AInputString, 1, Len)); //###0.927
-  {$ELSE}
-  StrLCopy (fInputString, PRegExprChar (AInputString), Len);
-  {$ENDIF}
-
-  {
-  fInputString : string;
-  fInputStart, fInputEnd : PRegExprChar;
-
-  SetInputString:
   fInputString := AInputString;
   UniqueString (fInputString);
-  fInputStart := PChar (fInputString);
-  Len := length (fInputString);
-  fInputEnd := PRegExprChar (integer (fInputStart) + Len); ??
-  !! startp/endp still dangerous to use ?
-  }
  end; { of procedure TRegExpr.SetInputString
 --------------------------------------------------------------}
 
@@ -3940,7 +3877,7 @@ begin
   // Check programm and input string
   if not IsProgrammOk
    then EXIT;
-  if not Assigned (fInputString) then begin
+  if fInputString = '' then begin
     Error (reeNoInputStringSpecified);
     EXIT;
    end;
