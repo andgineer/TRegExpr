@@ -416,7 +416,6 @@ type
     function GetMatchLen (Idx : integer) : PtrInt;
     function GetMatch (Idx : integer) : RegExprString;
 
-    function GetInputString : RegExprString;
     procedure SetInputString (const AInputString : RegExprString);
 
     {$IFNDEF UseSetOfChar}
@@ -578,7 +577,7 @@ type
     // returns current input string (from last Exec call or last assign
     // to this property).
     // Any assignment to this property clear Match* properties !
-    property InputString : RegExprString read GetInputString write SetInputString;
+    property InputString : RegExprString read fInputString write SetInputString;
 
     // Number of subexpressions has been found in last Exec* call.
     // If there are no subexpr. but whole expr was found (Exec* returned True),
@@ -1349,29 +1348,31 @@ var AModifiersInt : integer) : boolean;
   IsOn := true;
   Mask := 0; // prevent compiler warning
   for i := 1 to length (AModifiers) do
-   if AModifiers [i] = '-'
-    then IsOn := false
-    else begin
-      if Pos (AModifiers [i], 'iI') > 0
-       then Mask := MaskModI
-      else if Pos (AModifiers [i], 'rR') > 0
-       then Mask := MaskModR
-      else if Pos (AModifiers [i], 'sS') > 0
-       then Mask := MaskModS
-      else if Pos (AModifiers [i], 'gG') > 0
-       then Mask := MaskModG
-      else if Pos (AModifiers [i], 'mM') > 0
-       then Mask := MaskModM
-      else if Pos (AModifiers [i], 'xX') > 0
-       then Mask := MaskModX
+  begin
+   case UpCase(AModifiers [i]) of
+     '-':
+       IsOn := false;
+     'I':
+       Mask := MaskModI;
+     'R':
+       Mask := MaskModR;
+     'S':
+       Mask := MaskModS;
+     'G':
+       Mask := MaskModG;
+     'M':
+       Mask := MaskModM;
+     'X':
+       Mask := MaskModX;
       else begin
         Result := false;
         EXIT;
        end;
-      if IsOn
-       then AModifiersInt := AModifiersInt or Mask
-       else AModifiersInt := AModifiersInt and not Mask;
-     end;
+   end;
+   if IsOn
+    then AModifiersInt := AModifiersInt or Mask
+    else AModifiersInt := AModifiersInt and not Mask;
+  end;
  end; { of function TRegExpr.ParseModifiersStr
 --------------------------------------------------------------}
 
@@ -3716,16 +3717,6 @@ function TRegExpr.ExecNext : boolean;
    then inc (Offset); // prevent infinite looping if empty string match r.e.
   Result := ExecPrim (Offset);
  end; { of function TRegExpr.ExecNext
---------------------------------------------------------------}
-
-function TRegExpr.GetInputString : RegExprString;
- begin
-  if fInputString = '' then begin
-    Error (reeGetInputStringWithoutInputString);
-    EXIT;
-   end;
-  Result := fInputString;
- end; { of function TRegExpr.GetInputString
 --------------------------------------------------------------}
 
 procedure TRegExpr.SetInputString (const AInputString : RegExprString);
