@@ -189,14 +189,13 @@ const
   + 'abcdefghijklmnopqrstuvwxyz'
   + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
   RegExprLineSeparators : RegExprString =// default value for LineSeparators
-   #$d#$a{$IFDEF UniCode}+#$b#$c#$2028#$2029#$85{$ENDIF}; //###0.947
+   #$d#$a#$b#$c {$IFDEF UniCode}+#$2028#$2029#$85{$ENDIF};
   RegExprLinePairedSeparator : RegExprString =// default value for LinePairedSeparator
    #$d#$a;
   { if You need Unix-styled line separators (only \n), then use:
   RegExprLineSeparators = #$a;
   RegExprLinePairedSeparator = '';
   }
-
 
 const
  NSUBEXP = 90; // max number of subexpression //###0.929
@@ -2445,9 +2444,9 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
                {$IFDEF UniCode} //###0.935
                if (ord ((regparse + 1)^) < 256)
                   and (char ((regparse + 1)^)
-                        in ['d', 'D', 's', 'S', 'w', 'W']) then begin
+                        in ['d', 'D', 's', 'S', 'w', 'W', 'v']) then begin
                {$ELSE}
-               if (regparse + 1)^ in ['d', 'D', 's', 'S', 'w', 'W'] then begin
+               if (regparse + 1)^ in ['d', 'D', 's', 'S', 'w', 'W', 'v'] then begin
                {$ENDIF}
                  EmitRangeC ('-'); // or treat as error ?!!
                  CONTINUE;
@@ -2495,6 +2494,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
                   'd': EmitRangeStr ('0123456789');
                   'w': EmitRangeStr (WordChars);
                   's': EmitRangeStr (SpaceChars);
+                  'v': EmitRangeStr (RegExprLineSeparators);
                   else EmitSimpleRangeC (UnQuoteChar (regparse));
                  end; { of case}
                end
@@ -2630,6 +2630,12 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
              {$ELSE}
              ret := EmitNode (NOTLETTER);
              {$ENDIF}
+             flagp := flagp or HASWIDTH or SIMPLE;
+            end;
+          'v': begin
+             ret := EmitRange (ANYOF);
+             EmitRangeStr (RegExprLineSeparators);
+             EmitRangeC (#0);
              flagp := flagp or HASWIDTH or SIMPLE;
             end;
            '1' .. '9': begin //###0.936

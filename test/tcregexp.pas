@@ -15,12 +15,14 @@ unit tcregexp;
 interface
 
 uses
-{$IFDEF FPC}
-fpcunit, testregistry,
-{$ELSE}
-TestFramework,
-{$ENDIF}
-  Classes, SysUtils, regexpr {$IFDEF FPC}in '../src/RegExpr.pas'{$ENDIF};
+  {$IFDEF FPC}
+  fpcunit, testregistry,
+  fpwidestring, //required in FPC to use WideChar uppercase/lowercase
+  {$ELSE}
+  TestFramework,
+  {$ENDIF}
+  Classes, SysUtils,
+  RegExpr {$IFDEF FPC}in '../src/RegExpr.pas'{$ENDIF};
 
 type
 
@@ -72,6 +74,7 @@ type
     Procedure RunTest27;
     Procedure RunTest28;
     Procedure RunTest29;
+    Procedure RunTest30;
   end;
 
 implementation
@@ -86,7 +89,7 @@ Type
   end;
 
 const
-  testCases: array [1..29] of TRegExTest = (
+  testCases: array [1..30] of TRegExTest = (
     (
     expression: '\nd';
     inputText: 'abc'#13#10'def';
@@ -288,6 +291,13 @@ const
     inputText: '>>ftp://www.name.com';
     substitutionText: '$1 $2';
     expectedResult: 'ftp com';
+    matchStart: 0
+    ),
+    (
+    expression: '\v';
+    inputText: 'aaa'#10'bbb'#13'ccc'#$c'ddd'#$b'eee';
+    substitutionText: '-';
+    expectedResult: 'aaa-bbb-ccc-ddd-eee';
     matchStart: 0
     )
   );
@@ -495,6 +505,11 @@ end;
 procedure TTestRegexpr.RunTest29;
 begin
   RunRETest(29);
+end;
+
+procedure TTestRegexpr.RunTest30;
+begin
+  RunRETest(30);
 end;
 
 Class function TTestRegexpr.PrintableString(AString: string): string;
