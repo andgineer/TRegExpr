@@ -1348,29 +1348,31 @@ var AModifiersInt : integer) : boolean;
   IsOn := true;
   Mask := 0; // prevent compiler warning
   for i := 1 to length (AModifiers) do
-   if AModifiers [i] = '-'
-    then IsOn := false
-    else begin
-      if Pos (AModifiers [i], 'iI') > 0
-       then Mask := MaskModI
-      else if Pos (AModifiers [i], 'rR') > 0
-       then Mask := MaskModR
-      else if Pos (AModifiers [i], 'sS') > 0
-       then Mask := MaskModS
-      else if Pos (AModifiers [i], 'gG') > 0
-       then Mask := MaskModG
-      else if Pos (AModifiers [i], 'mM') > 0
-       then Mask := MaskModM
-      else if Pos (AModifiers [i], 'xX') > 0
-       then Mask := MaskModX
+  begin
+   case UpCase(AModifiers [i]) of
+     '-':
+       IsOn := false;
+     'I':
+       Mask := MaskModI;
+     'R':
+       Mask := MaskModR;
+     'S':
+       Mask := MaskModS;
+     'G':
+       Mask := MaskModG;
+     'M':
+       Mask := MaskModM;
+     'X':
+       Mask := MaskModX;
       else begin
         Result := false;
         EXIT;
        end;
-      if IsOn
-       then AModifiersInt := AModifiersInt or Mask
-       else AModifiersInt := AModifiersInt and not Mask;
-     end;
+   end;
+   if IsOn
+    then AModifiersInt := AModifiersInt or Mask
+    else AModifiersInt := AModifiersInt and not Mask;
+  end;
  end; { of function TRegExpr.ParseModifiersStr
 --------------------------------------------------------------}
 
