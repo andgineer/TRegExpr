@@ -416,7 +416,6 @@ type
     function GetMatchLen (Idx : integer) : PtrInt;
     function GetMatch (Idx : integer) : RegExprString;
 
-    function GetInputString : RegExprString;
     procedure SetInputString (const AInputString : RegExprString);
 
     {$IFNDEF UseSetOfChar}
@@ -578,7 +577,7 @@ type
     // returns current input string (from last Exec call or last assign
     // to this property).
     // Any assignment to this property clear Match* properties !
-    property InputString : RegExprString read GetInputString write SetInputString;
+    property InputString : RegExprString read fInputString write SetInputString;
 
     // Number of subexpressions has been found in last Exec* call.
     // If there are no subexpr. but whole expr was found (Exec* returned True),
@@ -3716,16 +3715,6 @@ function TRegExpr.ExecNext : boolean;
    then inc (Offset); // prevent infinite looping if empty string match r.e.
   Result := ExecPrim (Offset);
  end; { of function TRegExpr.ExecNext
---------------------------------------------------------------}
-
-function TRegExpr.GetInputString : RegExprString;
- begin
-  if fInputString = '' then begin
-    Error (reeGetInputStringWithoutInputString);
-    EXIT;
-   end;
-  Result := fInputString;
- end; { of function TRegExpr.GetInputString
 --------------------------------------------------------------}
 
 procedure TRegExpr.SetInputString (const AInputString : RegExprString);
