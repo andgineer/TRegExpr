@@ -82,10 +82,10 @@ implementation
 
 Type
   TRegExTest = record
-    Expression: string;
-    InputText: string;
-    SubstitutionText: string;
-    ExpectedResult: string;
+    Expression: RegExprString;
+    InputText: RegExprString;
+    SubstitutionText: RegExprString;
+    ExpectedResult: RegExprString;
     MatchStart: integer;
   end;
 
