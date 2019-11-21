@@ -38,7 +38,7 @@ def install_osx_dmg(dmg):
         return False
 
     # Install .pkg files with installer
-    install_pkg = lambda v, f: os_command('sudo installer -pkg %s/%s -target /System/Volumes/Data' % (v, f)) == 0
+    install_pkg = lambda v, f: os_command('sudo installer -pkg %s/%s' % (v, f)) == 0
 
     for v in vol:
         try:
