@@ -238,7 +238,8 @@ type
      FUseOsLineEndOnReplace: Boolean;
     startp : array [0 .. NSUBEXP - 1] of PRegExprChar; // founded expr starting points
     endp : array [0 .. NSUBEXP - 1] of PRegExprChar; // founded expr end points
-    NonCapture : array [0 .. NSUBEXP - 1] of Boolean; // flag of non-capturing sub expressions
+    FSubExprIndexes : array [0 .. NSUBEXP - 1] of integer;
+    FSubExprCount : integer;
 
     {$IFDEF ComplexBraces}
     LoopStack : array [1 .. LoopStackMax] of integer; // state before entering loop
@@ -295,8 +296,8 @@ type
     // to the thing following the set of BRANCHes.) The opcodes are:
     programm : PRegExprChar; // Unwarranted chumminess with compiler.
 
-    fExpression : PRegExprChar; // source of compiled r.e.
-    fInputString : PRegExprChar; // input string
+    fExpression : RegExprString; // source of compiled r.e.
+    fInputString : RegExprString; // input string
 
     fLastError : integer; // see Error, LastError
 
@@ -320,6 +321,7 @@ type
     FUseUnicodeWordDetection : Boolean;
     function IsUnicodeWordChar(AChar : REChar) : Boolean;
     {$ENDIF}
+    procedure ClearInternalIndexes;
     function IsWordChar(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsDigit(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -331,7 +333,6 @@ type
     // [re]compile it if something changed
     function IsProgrammOk : boolean; //###0.941
 
-    function GetExpression : RegExprString;
     procedure SetExpression (const s : RegExprString);
 
     function GetModifierStr : RegExprString;
@@ -411,13 +412,10 @@ type
     function DumpOp (op : REChar) : RegExprString;
     {$ENDIF}
 
-    function GetSubExprMatchCount : integer;
-    function GetSubExprArrayIndex (Idx : integer) : integer;
     function GetMatchPos (Idx : integer) : PtrInt;
     function GetMatchLen (Idx : integer) : PtrInt;
     function GetMatch (Idx : integer) : RegExprString;
 
-    function GetInputString : RegExprString;
     procedure SetInputString (const AInputString : RegExprString);
 
     {$IFNDEF UseSetOfChar}
@@ -537,7 +535,7 @@ type
     // after last [re]compilation.
     // If any errors while [re]compilation occures, Error method is called
     // (by default Error raises exception - see below)
-    property Expression : RegExprString read GetExpression write SetExpression;
+    property Expression : RegExprString read fExpression write SetExpression;
 
     // Set/get default values of r.e.syntax modifiers. Modifiers in
     // r.e. (?ismx-ismx) will replace this default values.
@@ -579,7 +577,7 @@ type
     // returns current input string (from last Exec call or last assign
     // to this property).
     // Any assignment to this property clear Match* properties !
-    property InputString : RegExprString read GetInputString write SetInputString;
+    property InputString : RegExprString read fInputString write SetInputString;
 
     // Number of subexpressions has been found in last Exec* call.
     // If there are no subexpr. but whole expr was found (Exec* returned True),
@@ -593,7 +591,7 @@ type
     //  Exec ('23'): SubExprMatchCount=2, Match[0]='23', [1]='', [2]='3'
     //  Exec ('2'): SubExprMatchCount=0, Match[0]='2'
     //  Exec ('7') - return False: SubExprMatchCount=-1
-    property SubExprMatchCount : integer read GetSubExprMatchCount;
+    property SubExprMatchCount : integer read FSubExprCount;
 
     // pos of entrance subexpr. #Idx into tested in last Exec*
     // string. First subexpr. has Idx=1, last - MatchCount,
@@ -1201,8 +1199,8 @@ constructor TRegExpr.Create;
  begin
   inherited;
   programm := nil;
-  fExpression := nil;
-  fInputString := nil;
+  fExpression := '';
+  fInputString := '';
 
   regexpbeg := nil;
   fExprIsCompiled := false;
@@ -1243,16 +1241,6 @@ destructor TRegExpr.Destroy;
     FreeMem (programm);
     programm:=nil;
   end;
-  if fExpression <> nil then
-  begin
-    FreeMem (fExpression);
-    fExpression:=nil;
-  end;
-  if fInputString <> nil then
-  begin
-    FreeMem (fInputString);
-    fInputString:=nil;
-  end;
  end; { of destructor TRegExpr.Destroy
 --------------------------------------------------------------}
 
@@ -1278,96 +1266,28 @@ begin
 end; { of function TRegExpr.InvertCaseFunction
 --------------------------------------------------------------}
 
-function TRegExpr.GetExpression : RegExprString;
- begin
-  if fExpression <> nil
-   then Result := fExpression
-   else Result := '';
- end; { of function TRegExpr.GetExpression
---------------------------------------------------------------}
-
 procedure TRegExpr.SetExpression (const s : RegExprString);
- var
-  Len : PtrInt; //###0.950
  begin
   if (s <> fExpression) or not fExprIsCompiled then begin
     fExprIsCompiled := false;
-    if fExpression <> nil then begin
-      FreeMem (fExpression);
-      fExpression := nil;
-     end;
-    if s <> '' then begin
-      Len := length (s); //###0.950
-      GetMem (fExpression, (Len + 1) * SizeOf (REChar));
-//      StrPCopy (fExpression, s); //###0.950 replaced due to StrPCopy limitation of 255 chars
-      {$IFDEF UniCode}
-      StrPCopy (fExpression, Copy (s, 1, Len)); //###0.950
-      {$ELSE}
-      StrLCopy (fExpression, PRegExprChar (s), Len); //###0.950
-      {$ENDIF UniCode}
-
-      InvalidateProgramm; //###0.941
-     end;
-   end;
+    fExpression := s;
+    InvalidateProgramm; //###0.941
+  end;
  end; { of procedure TRegExpr.SetExpression
 --------------------------------------------------------------}
 
-function TRegExpr.GetSubExprMatchCount : integer;
-var
-  i : integer;
- begin
-  if Assigned (fInputString) then begin
-    Result := 0;
-    for i := 1 {not 0} to NSUBEXP - 1 do
-    begin
-      if not Assigned(startp [i]) or not Assigned(endp [i])
-       then Break;
-      if not NonCapture [i]
-       then inc (Result);
-    end;
-  end
-  else Result := -1;
- end; { of function TRegExpr.GetSubExprMatchCount
---------------------------------------------------------------}
-
-function TRegExpr.GetSubExprArrayIndex (Idx : integer) : integer;
-var
-  BusyIdx, i : integer;
-begin
-  if (Idx = 0) and Assigned (fInputString) then
-  begin
-    Result := 0;
-    EXIT;
-  end;
-  if (Idx > 0) and (Idx < NSUBEXP) and Assigned (fInputString) then
-  begin
-    BusyIdx := -1;
-    for i := 0 to NSUBEXP-1 do
-    begin
-      if Assigned (startp [i]) and Assigned(endp [i]) and not NonCapture [i] then
-        Inc (BusyIdx);
-      if BusyIdx = Idx then
-      begin
-        Result := i;
-        EXIT;
-      end;
-    end;
-  end;
-  Result := -1;
-end;
-
 function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
  begin
-   Idx := GetSubExprArrayIndex(Idx);
+   Idx := FSubExprIndexes [Idx];
    if Idx >= 0 then
-     Result := (startp [Idx] - fInputString) + 1
+     Result := startp [Idx] - PRegExprChar(fInputString) + 1
    else Result := -1;
  end; { of function TRegExpr.GetMatchPos
 --------------------------------------------------------------}
 
 function TRegExpr.GetMatchLen (Idx : integer) : PtrInt;
  begin
-   Idx := GetSubExprArrayIndex(Idx);
+   Idx := FSubExprIndexes [Idx];
    if Idx >= 0 then
      Result := endp [Idx] - startp [Idx]
    else Result := -1;
@@ -1377,7 +1297,7 @@ function TRegExpr.GetMatchLen (Idx : integer) : PtrInt;
 function TRegExpr.GetMatch (Idx : integer) : RegExprString;
  begin
   Result:='';
-  Idx := GetSubExprArrayIndex(Idx);
+  Idx := FSubExprIndexes [Idx];
   if (Idx >= 0) and (endp [Idx] > startp[Idx])
    //then Result := copy (fInputString, MatchPos [Idx], MatchLen [Idx]) //###0.929
    then begin
@@ -1428,29 +1348,31 @@ var AModifiersInt : integer) : boolean;
   IsOn := true;
   Mask := 0; // prevent compiler warning
   for i := 1 to length (AModifiers) do
-   if AModifiers [i] = '-'
-    then IsOn := false
-    else begin
-      if Pos (AModifiers [i], 'iI') > 0
-       then Mask := MaskModI
-      else if Pos (AModifiers [i], 'rR') > 0
-       then Mask := MaskModR
-      else if Pos (AModifiers [i], 'sS') > 0
-       then Mask := MaskModS
-      else if Pos (AModifiers [i], 'gG') > 0
-       then Mask := MaskModG
-      else if Pos (AModifiers [i], 'mM') > 0
-       then Mask := MaskModM
-      else if Pos (AModifiers [i], 'xX') > 0
-       then Mask := MaskModX
+  begin
+   case UpCase(AModifiers [i]) of
+     '-':
+       IsOn := false;
+     'I':
+       Mask := MaskModI;
+     'R':
+       Mask := MaskModR;
+     'S':
+       Mask := MaskModS;
+     'G':
+       Mask := MaskModG;
+     'M':
+       Mask := MaskModM;
+     'X':
+       Mask := MaskModX;
       else begin
         Result := false;
         EXIT;
        end;
-      if IsOn
-       then AModifiersInt := AModifiersInt or Mask
-       else AModifiersInt := AModifiersInt and not Mask;
-     end;
+   end;
+   if IsOn
+    then AModifiersInt := AModifiersInt or Mask
+    else AModifiersInt := AModifiersInt and not Mask;
+  end;
  end; { of function TRegExpr.ParseModifiersStr
 --------------------------------------------------------------}
 
@@ -1560,11 +1482,11 @@ procedure TRegExpr.InvalidateProgramm;
 
 procedure TRegExpr.Compile; //###0.941
  begin
-  if fExpression = nil then begin // No Expression assigned
+  if fExpression = '' then begin // No Expression assigned
     Error (reeNoExpression);
     EXIT;
    end;
-  CompileRegExpr (fExpression);
+  CompileRegExpr (PRegExprChar(fExpression));
  end; { of procedure TRegExpr.Compile
 --------------------------------------------------------------}
 
@@ -1763,6 +1685,20 @@ const
  RusRangeHiHigh = 'Я';
 {$ENDIF}
 
+procedure TRegExpr.ClearInternalIndexes;
+var
+  i : integer;
+begin
+  for i := 0 to NSUBEXP-1 do
+  begin
+    startp [i] := nil;
+    endp [i] := nil;
+    FSubExprIndexes [i] := -1;
+  end;
+  FSubExprIndexes [0] := 0;
+  FSubExprCount := 0;
+end;
+
 function TRegExpr.CompileRegExpr (exp : PRegExprChar) : boolean;
 // Compile a regular expression into internal code
 // We can't allocate space until we know how big the compiled form will be,
@@ -1785,12 +1721,7 @@ function TRegExpr.CompileRegExpr (exp : PRegExprChar) : boolean;
   regparse := nil; // for correct error handling
   regexpbeg := exp;
 
-  for flags := 0 to NSUBEXP-1 do
-  begin
-    startp [flags] := nil;
-    endp [flags] := nil;
-    NonCapture [flags] := False;
-  end;
+  ClearInternalIndexes;
 
   try
 
@@ -2583,8 +2514,6 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
         if regparse^ = '?' then begin
            // check for non-capturing group: (?:text)
            if (regparse + 1)^ = ':' then begin
-             if regnpar < NSUBEXP then
-               NonCapture [regnpar] := True;
              inc (regparse, 2);
              ret := ParseReg (1, flags);
              if ret = nil then begin
@@ -2623,6 +2552,12 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
             end;
           end
          else begin
+           // normal (capturing) group
+           if FSubExprCount < NSUBEXP - 1 then
+           begin
+             inc (FSubExprCount);
+             FSubExprIndexes [FSubExprCount] := regnpar;
+           end;
            ret := ParseReg (1, flags);
            if ret = nil then begin
              Result := nil;
@@ -2836,7 +2771,7 @@ function TRegExpr.regrepeat (p : PRegExprChar; AMax : PtrInt) : PtrInt;
        end;
      end;
     BSUBEXP: begin //###0.936
-      ArrayIndex := GetSubExprArrayIndex(ord (opnd^));
+      ArrayIndex := FSubExprIndexes [ord (opnd^)];
       if ArrayIndex < 0
        then EXIT;
       sestart := startp [ArrayIndex];
@@ -2858,7 +2793,7 @@ function TRegExpr.regrepeat (p : PRegExprChar; AMax : PtrInt) : PtrInt;
       UNTIL Result >= AMax;
      end;
     BSUBEXPCI: begin //###0.936
-      ArrayIndex := GetSubExprArrayIndex(ord (opnd^));
+      ArrayIndex := FSubExprIndexes [ord (opnd^)];
       if ArrayIndex < 0
        then EXIT;
       sestart := startp [ArrayIndex];
@@ -3165,7 +3100,7 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
            end;
          BSUBEXP: begin //###0.936
            no := ord ((scan + REOpSz + RENextOffSz)^);
-           no := GetSubExprArrayIndex(no);
+           no := FSubExprIndexes [no];
            if no < 0
             then EXIT;
            if startp [no] = nil
@@ -3184,7 +3119,7 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
           end;
          BSUBEXPCI: begin //###0.936
            no := ord ((scan + REOpSz + RENextOffSz)^);
-           no := GetSubExprArrayIndex(no);
+           no := FSubExprIndexes [no];
            if no < 0
             then EXIT;
            if startp [no] = nil
@@ -3664,7 +3599,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
    then EXIT;
 
   // Check InputString presence
-  if not Assigned (fInputString) then begin
+  if fInputString = '' then begin
     Error (reeNoInputStringSpecified);
     EXIT;
    end;
@@ -3681,7 +3616,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
   if AOffset > (InputLen + 1) // for matching empty string after last char.
    then EXIT;
 
-  StartPtr := fInputString + AOffset - 1;
+  StartPtr := PRegExprChar(fInputString) + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
   if regmust <> nil then begin
@@ -3699,11 +3634,11 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
    end;
 
   // Mark beginning of line for ^ .
-  fInputStart := fInputString;
+  fInputStart := PRegExprChar(fInputString);
 
   // Pointer to end of input stream - for
   // pascal-style string processing (may include #0)
-  fInputEnd := fInputString + InputLen;
+  fInputEnd := PRegExprChar(fInputString) + InputLen;
 
   {$IFDEF ComplexBraces}
   // no loops started
@@ -3777,26 +3712,15 @@ function TRegExpr.ExecNext : boolean;
    end;
 //  Offset := MatchPos [0] + MatchLen [0];
 //  if MatchLen [0] = 0
-  Offset := endp [0] - fInputString + 1; //###0.929
+  Offset := endp [0] - PRegExprChar(fInputString) + 1; //###0.929
   if endp [0] = startp [0] //###0.929
    then inc (Offset); // prevent infinite looping if empty string match r.e.
   Result := ExecPrim (Offset);
  end; { of function TRegExpr.ExecNext
 --------------------------------------------------------------}
 
-function TRegExpr.GetInputString : RegExprString;
- begin
-  if not Assigned (fInputString) then begin
-    Error (reeGetInputStringWithoutInputString);
-    EXIT;
-   end;
-  Result := fInputString;
- end; { of function TRegExpr.GetInputString
---------------------------------------------------------------}
-
 procedure TRegExpr.SetInputString (const AInputString : RegExprString);
  var
-  Len : PtrInt;
   i : PtrInt;
  begin
   // clear Match* - before next Exec* call it's undefined
@@ -3805,35 +3729,8 @@ procedure TRegExpr.SetInputString (const AInputString : RegExprString);
     endp [i] := nil;
    end;
 
-  // need reallocation of input string buffer ?
-  Len := length (AInputString);
-  if Assigned (fInputString) and (Length (fInputString) <> Len) then begin
-    FreeMem (fInputString);
-    fInputString := nil;
-   end;
-  // buffer [re]allocation
-  if not Assigned (fInputString)
-   then GetMem (fInputString, (Len + 1) * SizeOf (REChar));
-
-  // copy input string into buffer
-  {$IFDEF UniCode}
-  StrPCopy (fInputString, Copy (AInputString, 1, Len)); //###0.927
-  {$ELSE}
-  StrLCopy (fInputString, PRegExprChar (AInputString), Len);
-  {$ENDIF}
-
-  {
-  fInputString : string;
-  fInputStart, fInputEnd : PRegExprChar;
-
-  SetInputString:
   fInputString := AInputString;
   UniqueString (fInputString);
-  fInputStart := PChar (fInputString);
-  Len := length (fInputString);
-  fInputEnd := PRegExprChar (integer (fInputStart) + Len); ??
-  !! startp/endp still dangerous to use ?
-  }
  end; { of procedure TRegExpr.SetInputString
 --------------------------------------------------------------}
 
@@ -3940,7 +3837,7 @@ begin
   // Check programm and input string
   if not IsProgrammOk
    then EXIT;
-  if not Assigned (fInputString) then begin
+  if fInputString = '' then begin
     Error (reeNoInputStringSpecified);
     EXIT;
    end;
@@ -3959,7 +3856,7 @@ begin
     Ch := p^;
     inc (p);
     if Ch = '$'
-     then n := GetSubExprArrayIndex(ParseVarName (p))
+     then n := FSubExprIndexes [ParseVarName (p)]
      else n := -1;
     if n >= 0 then begin
       inc (ResultLen, endp [n] - startp [n]);
@@ -4005,7 +3902,7 @@ begin
     inc (p);
     p1 := p;
     if Ch = '$'
-     then n := GetSubExprArrayIndex(ParseVarName (p))
+     then n := FSubExprIndexes [ParseVarName (p)]
      else n := -1;
     if (n >= 0) then begin
       p0 := startp[n];
