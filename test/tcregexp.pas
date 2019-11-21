@@ -17,7 +17,9 @@ interface
 uses
   {$IFDEF FPC}
   fpcunit, testregistry,
-  fpwidestring, //required in FPC to use WideChar uppercase/lowercase
+    {$IFDEF VER3}
+    fpwidestring, //required in FPC to use WideChar uppercase/lowercase
+    {$ENDIF}
   {$ELSE}
   TestFramework,
   {$ENDIF}
