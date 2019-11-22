@@ -282,6 +282,7 @@ type
     regexpbeg : PRegExprChar; // only for error handling. Contains
     // pointer to beginning of r.e. while compiling
     fExprIsCompiled : boolean; // true if r.e. successfully compiled
+    fSecondPass : boolean;
 
     // programm is essentially a linear encoding
     // of a nondeterministic finite-state machine (aka syntax charts or
@@ -1741,6 +1742,7 @@ function TRegExpr.CompileRegExpr (exp : PRegExprChar) : boolean;
   // well, may it's paranoia. I'll check it later... !!!!!!!!
 
   // First pass: determine size, legality.
+  fSecondPass := False;
   fCompModifiers := fModifiers;
   regparse := exp;
   regnpar := 1;
@@ -1754,6 +1756,7 @@ function TRegExpr.CompileRegExpr (exp : PRegExprChar) : boolean;
   GetMem (programm, regsize * SizeOf (REChar));
 
   // Second pass: emit code.
+  fSecondPass := True;
   fCompModifiers := fModifiers;
   regparse := exp;
   regnpar := 1;
@@ -2557,6 +2560,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
           end
          else begin
            // normal (capturing) group
+          if fSecondPass then // must skip this block for one of passes, to not double groups count
            if FSubExprCount < NSUBEXP - 1 then
            begin
              inc (FSubExprCount);
