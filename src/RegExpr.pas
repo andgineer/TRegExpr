@@ -732,7 +732,7 @@ uses
 {$ENDIF}
 {$ELSE}
 uses
-  System.Character;
+  System.Character; // System.Character exists since Delphi 2009
 {$ENDIF}
 
 const
@@ -789,7 +789,11 @@ begin
     Result := AnsiUpperCase (ch)[1];
     {$ENDIF}
   {$ELSE}
-  todo
+    {$IFDEF UniCode}
+    Result := TCharacter.ToUpper (ch);
+    {$ELSE}
+    Result := AnsiUpperCase (ch)[1];
+    {$ENDIF}
   {$ENDIF}
 end;
 
@@ -811,7 +815,11 @@ begin
     Result := AnsiLowerCase (ch)[1];
     {$ENDIF}
   {$ELSE}
-  todo
+    {$IFDEF UniCode}
+    Result := TCharacter.ToLower (ch);
+    {$ELSE}
+    Result := AnsiLowerCase (ch)[1];
+    {$ENDIF}
   {$ENDIF}
 end;
 
@@ -1303,9 +1311,22 @@ begin
   if Ord(Ch) < 128 then
     EXIT;
 
+  {$IFDEF FPC}
   Result := _UpperCase (Ch);
   if Result = Ch then
     Result := _LowerCase (Ch);
+  {$ELSE}
+    {$IFDEF UniCode}
+    if TCharacter.IsUpper (Ch) then
+      Result := TCharacter.ToLower (Ch)
+    else
+      Result := TCharacter.ToUpper (Ch);
+    {$ELSE}
+    Result := _UpperCase (Ch);
+    if Result = Ch then
+      Result := _LowerCase (Ch);
+    {$ENDIF}
+  {$ENDIF}
 end; { of function TRegExpr.InvertCaseFunction
 --------------------------------------------------------------}
 
