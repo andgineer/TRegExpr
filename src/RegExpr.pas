@@ -1413,20 +1413,20 @@ var AModifiersInt : integer) : boolean;
   Mask := 0; // prevent compiler warning
   for i := 1 to length (AModifiers) do
   begin
-   case UpCase(AModifiers [i]) of
+   case AModifiers [i] of
      '-':
        IsOn := false;
-     'I':
+     'I', 'i':
        Mask := MaskModI;
-     'R':
+     'R', 'r':
        Mask := MaskModR;
-     'S':
+     'S', 's':
        Mask := MaskModS;
-     'G':
+     'G', 'g':
        Mask := MaskModG;
-     'M':
+     'M', 'm':
        Mask := MaskModM;
-     'X':
+     'X', 'x':
        Mask := MaskModX;
       else begin
         Result := false;
