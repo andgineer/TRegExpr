@@ -768,7 +768,7 @@ const
  end;
 
 
-function _UpperCase(AChar : WideChar) : WideChar;
+function _UpperCase(AChar : REChar) : REChar;
 begin
   Result := AChar;
 
@@ -782,38 +782,38 @@ begin
     EXIT;
 
   case Ord(AChar) of
-    $0E4: Result := WideChar($0C4);
-    $0F6: Result := WideChar($0D6);
-    $0FC: Result := WideChar($0DC);
+    $0E4: Result := REChar($0C4);
+    $0F6: Result := REChar($0D6);
+    $0FC: Result := REChar($0DC);
 
     // Latin-1 Supplement
-    $0E0: Result := WideChar($0C0);
-    $0E1: Result := WideChar($0C1);
-    $0E2: Result := WideChar($0C2);
-    $0E3: Result := WideChar($0C3);
-    $0E5: Result := WideChar($0C5);
-    $0E6: Result := WideChar($0C6);
-    $0E7: Result := WideChar($0C7);
-    $0E8: Result := WideChar($0C8);
-    $0E9: Result := WideChar($0C9);
-    $0EA: Result := WideChar($0CA);
-    $0EB: Result := WideChar($0CB);
-    $0EC: Result := WideChar($0CC);
-    $0ED: Result := WideChar($0CD);
-    $0EE: Result := WideChar($0CE);
-    $0EF: Result := WideChar($0CF);
-    $0F0: Result := WideChar($0D0);
-    $0F1: Result := WideChar($0D1);
-    $0F2: Result := WideChar($0D2);
-    $0F3: Result := WideChar($0D3);
-    $0F4: Result := WideChar($0D4);
-    $0F5: Result := WideChar($0D5);
-    $0F8: Result := WideChar($0D8);
-    $0F9: Result := WideChar($0D9);
-    $0FA: Result := WideChar($0DA);
-    $0FB: Result := WideChar($0DB);
-    $0FD: Result := WideChar($0DD);
-    $0FE: Result := WideChar($0DE);
+    $0E0: Result := REChar($0C0);
+    $0E1: Result := REChar($0C1);
+    $0E2: Result := REChar($0C2);
+    $0E3: Result := REChar($0C3);
+    $0E5: Result := REChar($0C5);
+    $0E6: Result := REChar($0C6);
+    $0E7: Result := REChar($0C7);
+    $0E8: Result := REChar($0C8);
+    $0E9: Result := REChar($0C9);
+    $0EA: Result := REChar($0CA);
+    $0EB: Result := REChar($0CB);
+    $0EC: Result := REChar($0CC);
+    $0ED: Result := REChar($0CD);
+    $0EE: Result := REChar($0CE);
+    $0EF: Result := REChar($0CF);
+    $0F0: Result := REChar($0D0);
+    $0F1: Result := REChar($0D1);
+    $0F2: Result := REChar($0D2);
+    $0F3: Result := REChar($0D3);
+    $0F4: Result := REChar($0D4);
+    $0F5: Result := REChar($0D5);
+    $0F8: Result := REChar($0D8);
+    $0F9: Result := REChar($0D9);
+    $0FA: Result := REChar($0DA);
+    $0FB: Result := REChar($0DB);
+    $0FD: Result := REChar($0DD);
+    $0FE: Result := REChar($0DE);
 
     {$IFDEF UniCode}
     // Greek and Coptic
@@ -969,7 +969,7 @@ begin
 end;  { of function _UpperCase
 --------------------------------------------------------------}
 
-function _LowerCase(AChar : WideChar) : WideChar;
+function _LowerCase(AChar : REChar) : REChar;
 begin
   Result := AChar;
 
@@ -983,38 +983,38 @@ begin
     EXIT;
 
   case Ord(AChar) of
-    $0C4: Result := WideChar($0E4);
-    $0D6: Result := WideChar($0F6);
-    $0DC: Result := WideChar($0FC);
+    $0C4: Result := REChar($0E4);
+    $0D6: Result := REChar($0F6);
+    $0DC: Result := REChar($0FC);
 
     // Latin-1 Supplement
-    $0C0: Result := WideChar($0E0);
-    $0C1: Result := WideChar($0E1);
-    $0C2: Result := WideChar($0E2);
-    $0C3: Result := WideChar($0E3);
-    $0C5: Result := WideChar($0E5);
-    $0C6: Result := WideChar($0E6);
-    $0C7: Result := WideChar($0E7);
-    $0C8: Result := WideChar($0E8);
-    $0C9: Result := WideChar($0E9);
-    $0CA: Result := WideChar($0EA);
-    $0CB: Result := WideChar($0EB);
-    $0CC: Result := WideChar($0EC);
-    $0CD: Result := WideChar($0ED);
-    $0CE: Result := WideChar($0EE);
-    $0CF: Result := WideChar($0EF);
-    $0D0: Result := WideChar($0F0);
-    $0D1: Result := WideChar($0F1);
-    $0D2: Result := WideChar($0F2);
-    $0D3: Result := WideChar($0F3);
-    $0D4: Result := WideChar($0F4);
-    $0D5: Result := WideChar($0F5);
-    $0D8: Result := WideChar($0F8);
-    $0D9: Result := WideChar($0F9);
-    $0DA: Result := WideChar($0FA);
-    $0DB: Result := WideChar($0FB);
-    $0DD: Result := WideChar($0FD);
-    $0DE: Result := WideChar($0FE);
+    $0C0: Result := REChar($0E0);
+    $0C1: Result := REChar($0E1);
+    $0C2: Result := REChar($0E2);
+    $0C3: Result := REChar($0E3);
+    $0C5: Result := REChar($0E5);
+    $0C6: Result := REChar($0E6);
+    $0C7: Result := REChar($0E7);
+    $0C8: Result := REChar($0E8);
+    $0C9: Result := REChar($0E9);
+    $0CA: Result := REChar($0EA);
+    $0CB: Result := REChar($0EB);
+    $0CC: Result := REChar($0EC);
+    $0CD: Result := REChar($0ED);
+    $0CE: Result := REChar($0EE);
+    $0CF: Result := REChar($0EF);
+    $0D0: Result := REChar($0F0);
+    $0D1: Result := REChar($0F1);
+    $0D2: Result := REChar($0F2);
+    $0D3: Result := REChar($0F3);
+    $0D4: Result := REChar($0F4);
+    $0D5: Result := REChar($0F5);
+    $0D8: Result := REChar($0F8);
+    $0D9: Result := REChar($0F9);
+    $0DA: Result := REChar($0FA);
+    $0DB: Result := REChar($0FB);
+    $0DD: Result := REChar($0FD);
+    $0DE: Result := REChar($0FE);
 
     {$IFDEF UniCode}
     // Greek and Coptic
@@ -1644,9 +1644,9 @@ destructor TRegExpr.Destroy;
 
 class function TRegExpr.InvertCaseFunction (const Ch : REChar) : REChar;
 begin
-  Result := REChar (_UpperCase (Ch));
+  Result := _UpperCase (Ch);
   if Result = Ch then
-    Result := REChar (_LowerCase (Ch));
+    Result := _LowerCase (Ch);
 end; { of function TRegExpr.InvertCaseFunction
 --------------------------------------------------------------}
 
@@ -4352,7 +4352,7 @@ begin
           smodeOneLower, smodeAllLower:
             begin
               Ch := p0^;
-              Ch := REChar( _LowerCase(Ch));
+              Ch := _LowerCase(Ch);
               ResultPtr^ := Ch;
               if Mode = smodeOneLower then
                 Mode := smodeNormal;
@@ -4360,7 +4360,7 @@ begin
           smodeOneUpper, smodeAllUpper:
             begin
               Ch := p0^;
-              Ch := REChar( _UpperCase(Ch));
+              Ch := _UpperCase(Ch);
               ResultPtr^ := Ch;
               if Mode = smodeOneUpper then
                 Mode := smodeNormal;
