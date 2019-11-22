@@ -768,24 +768,22 @@ const
  end;
 
 
-function _UpperCase(AChar : WideChar) : WideChar;
+function _UpperCase(AChar : WideChar) : WideChar; {$IFNDEF UniCode}inline;{$ENDIF}
 begin
+  Result := AChar;
+
   if (AChar >= 'a') and (AChar <= 'z') then
   begin
-    Result := AChar;
     Dec (Result, 32);
-    EXIT;
-  end;
-
-  if Ord(AChar) < 128 then
-  begin
-    Result := AChar;
     EXIT;
   end;
 
   {$IFNDEF UniCode}
   EXIT;
   {$ENDIF}
+
+  if Ord(AChar) < 128 then
+    EXIT;
 
   case Ord(AChar) of
     // Basic Latin
@@ -1000,24 +998,22 @@ begin
 end;  { of function _UpperCase
 --------------------------------------------------------------}
 
-function _LowerCase(AChar : WideChar) : WideChar;
+function _LowerCase(AChar : WideChar) : WideChar; {$IFNDEF UniCode}inline;{$ENDIF}
 begin
+  Result := AChar;
+
   if (AChar >= 'A') and (AChar <= 'Z') then
   begin
-    Result := AChar;
     Inc (Result, 32);
-    EXIT;
-  end;
-
-  if Ord(AChar) < 128 then
-  begin
-    Result := AChar;
     EXIT;
   end;
 
   {$IFNDEF UniCode}
   EXIT;
   {$ENDIF}
+
+  if Ord(AChar) < 128 then
+    EXIT;
 
   case Ord(AChar) of
     // Basic Latin
