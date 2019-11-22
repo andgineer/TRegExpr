@@ -5,6 +5,9 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
+ v. 0.955 2019.11.20
+ -=- (+) Support meta chars \v (vertical white space), \h (horizontal white space)
+
  v. 0.954 2019.11.14
  -=- (^) Changed type of InputString / Expression from PChar to string
  -=- (+) Support non-capturing groups (?:...), by Alexey Torgashin (Alextp)
