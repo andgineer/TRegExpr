@@ -768,7 +768,7 @@ const
  end;
 
 
-function _UpperCase(AChar : WideChar) : WideChar; {$IFNDEF UniCode}inline;{$ENDIF}
+function _UpperCase(AChar : WideChar) : WideChar;
 begin
   Result := AChar;
 
@@ -778,44 +778,44 @@ begin
     EXIT;
   end;
 
-  {$IFNDEF UniCode}
-  EXIT;
-  {$ENDIF}
-
   if Ord(AChar) < 128 then
     EXIT;
 
   case Ord(AChar) of
-    // Basic Latin
-    $061: Result := WideChar($041);
-    $062: Result := WideChar($042);
-    $063: Result := WideChar($043);
-    $064: Result := WideChar($044);
-    $065: Result := WideChar($045);
-    $066: Result := WideChar($046);
-    $067: Result := WideChar($047);
-    $068: Result := WideChar($048);
-    $069: Result := WideChar($049);
-    $06A: Result := WideChar($04A);
-    $06B: Result := WideChar($04B);
-    $06C: Result := WideChar($04C);
-    $06D: Result := WideChar($04D);
-    $06E: Result := WideChar($04E);
-    $06F: Result := WideChar($04F);
-    $070: Result := WideChar($050);
-    $071: Result := WideChar($051);
-    $072: Result := WideChar($052);
-    $073: Result := WideChar($053);
-    $074: Result := WideChar($054);
-    $075: Result := WideChar($055);
-    $076: Result := WideChar($056);
-    $077: Result := WideChar($057);
-    $078: Result := WideChar($058);
-    $079: Result := WideChar($059);
-    $07A: Result := WideChar($05A);
     $0E4: Result := WideChar($0C4);
     $0F6: Result := WideChar($0D6);
     $0FC: Result := WideChar($0DC);
+
+    // Latin-1 Supplement
+    $0E0: Result := WideChar($0C0);
+    $0E1: Result := WideChar($0C1);
+    $0E2: Result := WideChar($0C2);
+    $0E3: Result := WideChar($0C3);
+    $0E5: Result := WideChar($0C5);
+    $0E6: Result := WideChar($0C6);
+    $0E7: Result := WideChar($0C7);
+    $0E8: Result := WideChar($0C8);
+    $0E9: Result := WideChar($0C9);
+    $0EA: Result := WideChar($0CA);
+    $0EB: Result := WideChar($0CB);
+    $0EC: Result := WideChar($0CC);
+    $0ED: Result := WideChar($0CD);
+    $0EE: Result := WideChar($0CE);
+    $0EF: Result := WideChar($0CF);
+    $0F0: Result := WideChar($0D0);
+    $0F1: Result := WideChar($0D1);
+    $0F2: Result := WideChar($0D2);
+    $0F3: Result := WideChar($0D3);
+    $0F4: Result := WideChar($0D4);
+    $0F5: Result := WideChar($0D5);
+    $0F8: Result := WideChar($0D8);
+    $0F9: Result := WideChar($0D9);
+    $0FA: Result := WideChar($0DA);
+    $0FB: Result := WideChar($0DB);
+    $0FD: Result := WideChar($0DD);
+    $0FE: Result := WideChar($0DE);
+
+    {$IFDEF UniCode}
     // Greek and Coptic
     $3AC: Result := WideChar($386);
     $3AD: Result := WideChar($388);
@@ -964,41 +964,12 @@ begin
     $17A: Result := WideChar($179);
     $17C: Result := WideChar($17B);
     $17E: Result := WideChar($17D);
-    // Latin-1 Supplement
-    $0E0: Result := WideChar($0C0);
-    $0E1: Result := WideChar($0C1);
-    $0E2: Result := WideChar($0C2);
-    $0E3: Result := WideChar($0C3);
-    $0E5: Result := WideChar($0C5);
-    $0E6: Result := WideChar($0C6);
-    $0E7: Result := WideChar($0C7);
-    $0E8: Result := WideChar($0C8);
-    $0E9: Result := WideChar($0C9);
-    $0EA: Result := WideChar($0CA);
-    $0EB: Result := WideChar($0CB);
-    $0EC: Result := WideChar($0CC);
-    $0ED: Result := WideChar($0CD);
-    $0EE: Result := WideChar($0CE);
-    $0EF: Result := WideChar($0CF);
-    $0F0: Result := WideChar($0D0);
-    $0F1: Result := WideChar($0D1);
-    $0F2: Result := WideChar($0D2);
-    $0F3: Result := WideChar($0D3);
-    $0F4: Result := WideChar($0D4);
-    $0F5: Result := WideChar($0D5);
-    $0F8: Result := WideChar($0D8);
-    $0F9: Result := WideChar($0D9);
-    $0FA: Result := WideChar($0DA);
-    $0FB: Result := WideChar($0DB);
-    $0FD: Result := WideChar($0DD);
-    $0FE: Result := WideChar($0DE);
-
-    else  Result := AChar;
+    {$ENDIF}
   end;
 end;  { of function _UpperCase
 --------------------------------------------------------------}
 
-function _LowerCase(AChar : WideChar) : WideChar; {$IFNDEF UniCode}inline;{$ENDIF}
+function _LowerCase(AChar : WideChar) : WideChar;
 begin
   Result := AChar;
 
@@ -1008,44 +979,44 @@ begin
     EXIT;
   end;
 
-  {$IFNDEF UniCode}
-  EXIT;
-  {$ENDIF}
-
   if Ord(AChar) < 128 then
     EXIT;
 
   case Ord(AChar) of
-    // Basic Latin
-    $041: Result := WideChar($061);
-    $042: Result := WideChar($062);
-    $043: Result := WideChar($063);
-    $044: Result := WideChar($064);
-    $045: Result := WideChar($065);
-    $046: Result := WideChar($066);
-    $047: Result := WideChar($067);
-    $048: Result := WideChar($068);
-    $049: Result := WideChar($069);
-    $04A: Result := WideChar($06A);
-    $04B: Result := WideChar($06B);
-    $04C: Result := WideChar($06C);
-    $04D: Result := WideChar($06D);
-    $04E: Result := WideChar($06E);
-    $04F: Result := WideChar($06F);
-    $050: Result := WideChar($070);
-    $051: Result := WideChar($071);
-    $052: Result := WideChar($072);
-    $053: Result := WideChar($073);
-    $054: Result := WideChar($074);
-    $055: Result := WideChar($075);
-    $056: Result := WideChar($076);
-    $057: Result := WideChar($077);
-    $058: Result := WideChar($078);
-    $059: Result := WideChar($079);
-    $05A: Result := WideChar($07A);
     $0C4: Result := WideChar($0E4);
     $0D6: Result := WideChar($0F6);
     $0DC: Result := WideChar($0FC);
+
+    // Latin-1 Supplement
+    $0C0: Result := WideChar($0E0);
+    $0C1: Result := WideChar($0E1);
+    $0C2: Result := WideChar($0E2);
+    $0C3: Result := WideChar($0E3);
+    $0C5: Result := WideChar($0E5);
+    $0C6: Result := WideChar($0E6);
+    $0C7: Result := WideChar($0E7);
+    $0C8: Result := WideChar($0E8);
+    $0C9: Result := WideChar($0E9);
+    $0CA: Result := WideChar($0EA);
+    $0CB: Result := WideChar($0EB);
+    $0CC: Result := WideChar($0EC);
+    $0CD: Result := WideChar($0ED);
+    $0CE: Result := WideChar($0EE);
+    $0CF: Result := WideChar($0EF);
+    $0D0: Result := WideChar($0F0);
+    $0D1: Result := WideChar($0F1);
+    $0D2: Result := WideChar($0F2);
+    $0D3: Result := WideChar($0F3);
+    $0D4: Result := WideChar($0F4);
+    $0D5: Result := WideChar($0F5);
+    $0D8: Result := WideChar($0F8);
+    $0D9: Result := WideChar($0F9);
+    $0DA: Result := WideChar($0FA);
+    $0DB: Result := WideChar($0FB);
+    $0DD: Result := WideChar($0FD);
+    $0DE: Result := WideChar($0FE);
+
+    {$IFDEF UniCode}
     // Greek and Coptic
     $386: Result := WideChar($3AC);
     $388: Result := WideChar($3AD);
@@ -1194,36 +1165,7 @@ begin
     $179: Result := WideChar($17A);
     $17B: Result := WideChar($17C);
     $17D: Result := WideChar($17E);
-    // Latin-1 Supplement
-    $0C0: Result := WideChar($0E0);
-    $0C1: Result := WideChar($0E1);
-    $0C2: Result := WideChar($0E2);
-    $0C3: Result := WideChar($0E3);
-    $0C5: Result := WideChar($0E5);
-    $0C6: Result := WideChar($0E6);
-    $0C7: Result := WideChar($0E7);
-    $0C8: Result := WideChar($0E8);
-    $0C9: Result := WideChar($0E9);
-    $0CA: Result := WideChar($0EA);
-    $0CB: Result := WideChar($0EB);
-    $0CC: Result := WideChar($0EC);
-    $0CD: Result := WideChar($0ED);
-    $0CE: Result := WideChar($0EE);
-    $0CF: Result := WideChar($0EF);
-    $0D0: Result := WideChar($0F0);
-    $0D1: Result := WideChar($0F1);
-    $0D2: Result := WideChar($0F2);
-    $0D3: Result := WideChar($0F3);
-    $0D4: Result := WideChar($0F4);
-    $0D5: Result := WideChar($0F5);
-    $0D8: Result := WideChar($0F8);
-    $0D9: Result := WideChar($0F9);
-    $0DA: Result := WideChar($0FA);
-    $0DB: Result := WideChar($0FB);
-    $0DD: Result := WideChar($0FD);
-    $0DE: Result := WideChar($0FE);
-
-    else  Result := AChar;
+    {$ENDIF}
   end;
 end;  { of function _LowerCase
 --------------------------------------------------------------}
