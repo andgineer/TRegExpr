@@ -783,6 +783,10 @@ begin
     EXIT;
   end;
 
+  {$IFNDEF UniCode}
+  EXIT;
+  {$ENDIF}
+
   case Ord(AChar) of
     // Basic Latin
     $061: Result := WideChar($041);
@@ -1010,6 +1014,10 @@ begin
     Result := AChar;
     EXIT;
   end;
+
+  {$IFNDEF UniCode}
+  EXIT;
+  {$ENDIF}
 
   case Ord(AChar) of
     // Basic Latin
