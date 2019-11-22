@@ -729,13 +729,6 @@ implementation
 uses
   UnicodeData;
 {$ENDIF}
-{$ELSE}
-uses
-{$IFDEF WIN32}
-    Windows; // CharUpper/Lower
-{$ELSE}
-    Libc; //Qt.pas from Borland does not expose char handling functions
-{$ENDIF}
 {$ENDIF}
 
 const
@@ -773,6 +766,463 @@ const
    Result := p;
  {$ENDIF}
  end;
+
+
+function _UpperCase(AChar : WideChar) : WideChar;
+begin
+  if (AChar >= 'a') and (AChar <= 'z') then
+  begin
+    Result := AChar;
+    Dec (Result, 32);
+    EXIT;
+  end;
+
+  if Ord(AChar) < 128 then
+  begin
+    Result := AChar;
+    EXIT;
+  end;
+
+  case Ord(AChar) of
+    // Basic Latin
+    $061: Result := WideChar($041);
+    $062: Result := WideChar($042);
+    $063: Result := WideChar($043);
+    $064: Result := WideChar($044);
+    $065: Result := WideChar($045);
+    $066: Result := WideChar($046);
+    $067: Result := WideChar($047);
+    $068: Result := WideChar($048);
+    $069: Result := WideChar($049);
+    $06A: Result := WideChar($04A);
+    $06B: Result := WideChar($04B);
+    $06C: Result := WideChar($04C);
+    $06D: Result := WideChar($04D);
+    $06E: Result := WideChar($04E);
+    $06F: Result := WideChar($04F);
+    $070: Result := WideChar($050);
+    $071: Result := WideChar($051);
+    $072: Result := WideChar($052);
+    $073: Result := WideChar($053);
+    $074: Result := WideChar($054);
+    $075: Result := WideChar($055);
+    $076: Result := WideChar($056);
+    $077: Result := WideChar($057);
+    $078: Result := WideChar($058);
+    $079: Result := WideChar($059);
+    $07A: Result := WideChar($05A);
+    $0E4: Result := WideChar($0C4);
+    $0F6: Result := WideChar($0D6);
+    $0FC: Result := WideChar($0DC);
+    // Greek and Coptic
+    $3AC: Result := WideChar($386);
+    $3AD: Result := WideChar($388);
+    $3AE: Result := WideChar($389);
+    $3AF: Result := WideChar($38A);
+    $3CC: Result := WideChar($38C);
+    $3CD: Result := WideChar($38E);
+    $3CE: Result := WideChar($38F);
+    $390: Result := WideChar($390);
+    $3B1: Result := WideChar($391);
+    $3B2: Result := WideChar($392);
+    $3B3: Result := WideChar($393);
+    $3B4: Result := WideChar($394);
+    $3B5: Result := WideChar($395);
+    $3B6: Result := WideChar($396);
+    $3B7: Result := WideChar($397);
+    $3B8: Result := WideChar($398);
+    $3B9: Result := WideChar($399);
+    $3BA: Result := WideChar($39A);
+    $3BB: Result := WideChar($39B);
+    $3BC: Result := WideChar($39C);
+    $3BD: Result := WideChar($39D);
+    $3BE: Result := WideChar($39E);
+    $3BF: Result := WideChar($39F);
+    $3C0: Result := WideChar($3A0);
+    $3C1: Result := WideChar($3A1);
+    $3C3: Result := WideChar($3A3);
+    $3C4: Result := WideChar($3A4);
+    $3C5: Result := WideChar($3A5);
+    $3C6: Result := WideChar($3A6);
+    $3C7: Result := WideChar($3A7);
+    $3C8: Result := WideChar($3A8);
+    $3C9: Result := WideChar($3A9);
+    $3CA: Result := WideChar($3AA);
+    $3CB: Result := WideChar($3AB);
+    // Cyrillic
+    $450: Result := WideChar($400);
+    $451: Result := WideChar($401);
+    $452: Result := WideChar($402);
+    $453: Result := WideChar($403);
+    $454: Result := WideChar($404);
+    $455: Result := WideChar($405);
+    $456: Result := WideChar($406);
+    $457: Result := WideChar($407);
+    $458: Result := WideChar($408);
+    $459: Result := WideChar($409);
+    $45A: Result := WideChar($40A);
+    $45B: Result := WideChar($40B);
+    $45C: Result := WideChar($40C);
+    $45D: Result := WideChar($40D);
+    $45E: Result := WideChar($40E);
+    $45F: Result := WideChar($40F);
+    $430: Result := WideChar($410);
+    $431: Result := WideChar($411);
+    $432: Result := WideChar($412);
+    $433: Result := WideChar($413);
+    $434: Result := WideChar($414);
+    $435: Result := WideChar($415);
+    $436: Result := WideChar($416);
+    $437: Result := WideChar($417);
+    $438: Result := WideChar($418);
+    $439: Result := WideChar($419);
+    $43A: Result := WideChar($41A);
+    $43B: Result := WideChar($41B);
+    $43C: Result := WideChar($41C);
+    $43D: Result := WideChar($41D);
+    $43E: Result := WideChar($41E);
+    $43F: Result := WideChar($41F);
+    $440: Result := WideChar($420);
+    $441: Result := WideChar($421);
+    $442: Result := WideChar($422);
+    $443: Result := WideChar($423);
+    $444: Result := WideChar($424);
+    $445: Result := WideChar($425);
+    $446: Result := WideChar($426);
+    $447: Result := WideChar($427);
+    $448: Result := WideChar($428);
+    $449: Result := WideChar($429);
+    $44A: Result := WideChar($42A);
+    $44B: Result := WideChar($42B);
+    $44C: Result := WideChar($42C);
+    $44D: Result := WideChar($42D);
+    $44E: Result := WideChar($42E);
+    $44F: Result := WideChar($42F);
+    // Latin Extended-A
+    $101: Result := WideChar($100);
+    $103: Result := WideChar($102);
+    $105: Result := WideChar($104);
+    $107: Result := WideChar($106);
+    $109: Result := WideChar($108);
+    $10B: Result := WideChar($10A);
+    $10D: Result := WideChar($10C);
+    $10F: Result := WideChar($10E);
+    $111: Result := WideChar($110);
+    $113: Result := WideChar($112);
+    $115: Result := WideChar($114);
+    $117: Result := WideChar($116);
+    $119: Result := WideChar($118);
+    $11B: Result := WideChar($11A);
+    $11D: Result := WideChar($11C);
+    $11F: Result := WideChar($11E);
+    $121: Result := WideChar($120);
+    $123: Result := WideChar($122);
+    $125: Result := WideChar($124);
+    $127: Result := WideChar($126);
+    $129: Result := WideChar($128);
+    $12B: Result := WideChar($12A);
+    $12D: Result := WideChar($12C);
+    $12F: Result := WideChar($12E);
+    $130: Result := WideChar($130);
+    $133: Result := WideChar($132);
+    $135: Result := WideChar($134);
+    $137: Result := WideChar($136);
+    $13A: Result := WideChar($139);
+    $13C: Result := WideChar($13B);
+    $13E: Result := WideChar($13D);
+    $140: Result := WideChar($13F);
+    $142: Result := WideChar($141);
+    $144: Result := WideChar($143);
+    $146: Result := WideChar($145);
+    $148: Result := WideChar($147);
+    $14B: Result := WideChar($14A);
+    $14D: Result := WideChar($14C);
+    $14F: Result := WideChar($14E);
+    $151: Result := WideChar($150);
+    $153: Result := WideChar($152);
+    $155: Result := WideChar($154);
+    $157: Result := WideChar($156);
+    $159: Result := WideChar($158);
+    $15B: Result := WideChar($15A);
+    $15D: Result := WideChar($15C);
+    $15F: Result := WideChar($15E);
+    $161: Result := WideChar($160);
+    $163: Result := WideChar($162);
+    $165: Result := WideChar($164);
+    $167: Result := WideChar($166);
+    $169: Result := WideChar($168);
+    $16B: Result := WideChar($16A);
+    $16D: Result := WideChar($16C);
+    $16F: Result := WideChar($16E);
+    $171: Result := WideChar($170);
+    $173: Result := WideChar($172);
+    $175: Result := WideChar($174);
+    $177: Result := WideChar($176);
+    $178: Result := WideChar($178);
+    $17A: Result := WideChar($179);
+    $17C: Result := WideChar($17B);
+    $17E: Result := WideChar($17D);
+    // Latin-1 Supplement
+    $0E0: Result := WideChar($0C0);
+    $0E1: Result := WideChar($0C1);
+    $0E2: Result := WideChar($0C2);
+    $0E3: Result := WideChar($0C3);
+    $0E5: Result := WideChar($0C5);
+    $0E6: Result := WideChar($0C6);
+    $0E7: Result := WideChar($0C7);
+    $0E8: Result := WideChar($0C8);
+    $0E9: Result := WideChar($0C9);
+    $0EA: Result := WideChar($0CA);
+    $0EB: Result := WideChar($0CB);
+    $0EC: Result := WideChar($0CC);
+    $0ED: Result := WideChar($0CD);
+    $0EE: Result := WideChar($0CE);
+    $0EF: Result := WideChar($0CF);
+    $0F0: Result := WideChar($0D0);
+    $0F1: Result := WideChar($0D1);
+    $0F2: Result := WideChar($0D2);
+    $0F3: Result := WideChar($0D3);
+    $0F4: Result := WideChar($0D4);
+    $0F5: Result := WideChar($0D5);
+    $0F8: Result := WideChar($0D8);
+    $0F9: Result := WideChar($0D9);
+    $0FA: Result := WideChar($0DA);
+    $0FB: Result := WideChar($0DB);
+    $0FD: Result := WideChar($0DD);
+    $0FE: Result := WideChar($0DE);
+
+    else  Result := AChar;
+  end;
+end;  { of function _UpperCase
+--------------------------------------------------------------}
+
+function _LowerCase(AChar : WideChar) : WideChar;
+begin
+  if (AChar >= 'A') and (AChar <= 'Z') then
+  begin
+    Result := AChar;
+    Inc (Result, 32);
+    EXIT;
+  end;
+
+  if Ord(AChar) < 128 then
+  begin
+    Result := AChar;
+    EXIT;
+  end;
+
+  case Ord(AChar) of
+    // Basic Latin
+    $041: Result := WideChar($061);
+    $042: Result := WideChar($062);
+    $043: Result := WideChar($063);
+    $044: Result := WideChar($064);
+    $045: Result := WideChar($065);
+    $046: Result := WideChar($066);
+    $047: Result := WideChar($067);
+    $048: Result := WideChar($068);
+    $049: Result := WideChar($069);
+    $04A: Result := WideChar($06A);
+    $04B: Result := WideChar($06B);
+    $04C: Result := WideChar($06C);
+    $04D: Result := WideChar($06D);
+    $04E: Result := WideChar($06E);
+    $04F: Result := WideChar($06F);
+    $050: Result := WideChar($070);
+    $051: Result := WideChar($071);
+    $052: Result := WideChar($072);
+    $053: Result := WideChar($073);
+    $054: Result := WideChar($074);
+    $055: Result := WideChar($075);
+    $056: Result := WideChar($076);
+    $057: Result := WideChar($077);
+    $058: Result := WideChar($078);
+    $059: Result := WideChar($079);
+    $05A: Result := WideChar($07A);
+    $0C4: Result := WideChar($0E4);
+    $0D6: Result := WideChar($0F6);
+    $0DC: Result := WideChar($0FC);
+    // Greek and Coptic
+    $386: Result := WideChar($3AC);
+    $388: Result := WideChar($3AD);
+    $389: Result := WideChar($3AE);
+    $38A: Result := WideChar($3AF);
+    $38C: Result := WideChar($3CC);
+    $38E: Result := WideChar($3CD);
+    $38F: Result := WideChar($3CE);
+    $390: Result := WideChar($390);
+    $391: Result := WideChar($3B1);
+    $392: Result := WideChar($3B2);
+    $393: Result := WideChar($3B3);
+    $394: Result := WideChar($3B4);
+    $395: Result := WideChar($3B5);
+    $396: Result := WideChar($3B6);
+    $397: Result := WideChar($3B7);
+    $398: Result := WideChar($3B8);
+    $399: Result := WideChar($3B9);
+    $39A: Result := WideChar($3BA);
+    $39B: Result := WideChar($3BB);
+    $39C: Result := WideChar($3BC);
+    $39D: Result := WideChar($3BD);
+    $39E: Result := WideChar($3BE);
+    $39F: Result := WideChar($3BF);
+    $3A0: Result := WideChar($3C0);
+    $3A1: Result := WideChar($3C1);
+    $3A3: Result := WideChar($3C3);
+    $3A4: Result := WideChar($3C4);
+    $3A5: Result := WideChar($3C5);
+    $3A6: Result := WideChar($3C6);
+    $3A7: Result := WideChar($3C7);
+    $3A8: Result := WideChar($3C8);
+    $3A9: Result := WideChar($3C9);
+    $3AA: Result := WideChar($3CA);
+    $3AB: Result := WideChar($3CB);
+    // Cyrillic
+    $400: Result := WideChar($450);
+    $401: Result := WideChar($451);
+    $402: Result := WideChar($452);
+    $403: Result := WideChar($453);
+    $404: Result := WideChar($454);
+    $405: Result := WideChar($455);
+    $406: Result := WideChar($456);
+    $407: Result := WideChar($457);
+    $408: Result := WideChar($458);
+    $409: Result := WideChar($459);
+    $40A: Result := WideChar($45A);
+    $40B: Result := WideChar($45B);
+    $40C: Result := WideChar($45C);
+    $40D: Result := WideChar($45D);
+    $40E: Result := WideChar($45E);
+    $40F: Result := WideChar($45F);
+    $410: Result := WideChar($430);
+    $411: Result := WideChar($431);
+    $412: Result := WideChar($432);
+    $413: Result := WideChar($433);
+    $414: Result := WideChar($434);
+    $415: Result := WideChar($435);
+    $416: Result := WideChar($436);
+    $417: Result := WideChar($437);
+    $418: Result := WideChar($438);
+    $419: Result := WideChar($439);
+    $41A: Result := WideChar($43A);
+    $41B: Result := WideChar($43B);
+    $41C: Result := WideChar($43C);
+    $41D: Result := WideChar($43D);
+    $41E: Result := WideChar($43E);
+    $41F: Result := WideChar($43F);
+    $420: Result := WideChar($440);
+    $421: Result := WideChar($441);
+    $422: Result := WideChar($442);
+    $423: Result := WideChar($443);
+    $424: Result := WideChar($444);
+    $425: Result := WideChar($445);
+    $426: Result := WideChar($446);
+    $427: Result := WideChar($447);
+    $428: Result := WideChar($448);
+    $429: Result := WideChar($449);
+    $42A: Result := WideChar($44A);
+    $42B: Result := WideChar($44B);
+    $42C: Result := WideChar($44C);
+    $42D: Result := WideChar($44D);
+    $42E: Result := WideChar($44E);
+    $42F: Result := WideChar($44F);
+    // Latin Extended-A
+    $100: Result := WideChar($101);
+    $102: Result := WideChar($103);
+    $104: Result := WideChar($105);
+    $106: Result := WideChar($107);
+    $108: Result := WideChar($109);
+    $10A: Result := WideChar($10B);
+    $10C: Result := WideChar($10D);
+    $10E: Result := WideChar($10F);
+    $110: Result := WideChar($111);
+    $112: Result := WideChar($113);
+    $114: Result := WideChar($115);
+    $116: Result := WideChar($117);
+    $118: Result := WideChar($119);
+    $11A: Result := WideChar($11B);
+    $11C: Result := WideChar($11D);
+    $11E: Result := WideChar($11F);
+    $120: Result := WideChar($121);
+    $122: Result := WideChar($123);
+    $124: Result := WideChar($125);
+    $126: Result := WideChar($127);
+    $128: Result := WideChar($129);
+    $12A: Result := WideChar($12B);
+    $12C: Result := WideChar($12D);
+    $12E: Result := WideChar($12F);
+    $130: Result := WideChar($130);
+    $132: Result := WideChar($133);
+    $134: Result := WideChar($135);
+    $136: Result := WideChar($137);
+    $139: Result := WideChar($13A);
+    $13B: Result := WideChar($13C);
+    $13D: Result := WideChar($13E);
+    $13F: Result := WideChar($140);
+    $141: Result := WideChar($142);
+    $143: Result := WideChar($144);
+    $145: Result := WideChar($146);
+    $147: Result := WideChar($148);
+    $14A: Result := WideChar($14B);
+    $14C: Result := WideChar($14D);
+    $14E: Result := WideChar($14F);
+    $150: Result := WideChar($151);
+    $152: Result := WideChar($153);
+    $154: Result := WideChar($155);
+    $156: Result := WideChar($157);
+    $158: Result := WideChar($159);
+    $15A: Result := WideChar($15B);
+    $15C: Result := WideChar($15D);
+    $15E: Result := WideChar($15F);
+    $160: Result := WideChar($161);
+    $162: Result := WideChar($163);
+    $164: Result := WideChar($165);
+    $166: Result := WideChar($167);
+    $168: Result := WideChar($169);
+    $16A: Result := WideChar($16B);
+    $16C: Result := WideChar($16D);
+    $16E: Result := WideChar($16F);
+    $170: Result := WideChar($171);
+    $172: Result := WideChar($173);
+    $174: Result := WideChar($175);
+    $176: Result := WideChar($177);
+    $178: Result := WideChar($178);
+    $179: Result := WideChar($17A);
+    $17B: Result := WideChar($17C);
+    $17D: Result := WideChar($17E);
+    // Latin-1 Supplement
+    $0C0: Result := WideChar($0E0);
+    $0C1: Result := WideChar($0E1);
+    $0C2: Result := WideChar($0E2);
+    $0C3: Result := WideChar($0E3);
+    $0C5: Result := WideChar($0E5);
+    $0C6: Result := WideChar($0E6);
+    $0C7: Result := WideChar($0E7);
+    $0C8: Result := WideChar($0E8);
+    $0C9: Result := WideChar($0E9);
+    $0CA: Result := WideChar($0EA);
+    $0CB: Result := WideChar($0EB);
+    $0CC: Result := WideChar($0EC);
+    $0CD: Result := WideChar($0ED);
+    $0CE: Result := WideChar($0EE);
+    $0CF: Result := WideChar($0EF);
+    $0D0: Result := WideChar($0F0);
+    $0D1: Result := WideChar($0F1);
+    $0D2: Result := WideChar($0F2);
+    $0D3: Result := WideChar($0F3);
+    $0D4: Result := WideChar($0F4);
+    $0D5: Result := WideChar($0F5);
+    $0D8: Result := WideChar($0F8);
+    $0D9: Result := WideChar($0F9);
+    $0DA: Result := WideChar($0FA);
+    $0DB: Result := WideChar($0FB);
+    $0DD: Result := WideChar($0FD);
+    $0DE: Result := WideChar($0FE);
+
+    else  Result := AChar;
+  end;
+end;  { of function _LowerCase
+--------------------------------------------------------------}
 
 {=============================================================}
 {===================== Global functions ======================}
@@ -1246,25 +1696,11 @@ destructor TRegExpr.Destroy;
  end; { of destructor TRegExpr.Destroy
 --------------------------------------------------------------}
 
-{$IFDEF UNICODE}
-function AnsiUpperCase(const s: RegExprString): RegExprString;inline;
-
-begin
-  Result:=WideUpperCase(S);
-end;
-
-function AnsiLowerCase(const s: RegExprString): RegExprString;inline;
-
-begin
-  Result:=WideLowerCase(S);
-end;
-{$ENDIF}
-
 class function TRegExpr.InvertCaseFunction (const Ch : REChar) : REChar;
 begin
-  Result := {$IFDEF FPC}AnsiUpperCase (Ch) [1]{$ELSE} REChar (CharUpper (PChar (Ch))){$ENDIF};
+  Result := REChar (_UpperCase (Ch));
   if Result = Ch then
-    Result := {$IFDEF FPC}AnsiLowerCase (Ch) [1]{$ELSE} REChar (CharLower (PChar (Ch))){$ENDIF};
+    Result := REChar (_LowerCase (Ch));
 end; { of function TRegExpr.InvertCaseFunction
 --------------------------------------------------------------}
 
@@ -3970,7 +4406,7 @@ begin
           smodeOneLower, smodeAllLower:
             begin
               Ch := p0^;
-              Ch := AnsiLowerCase(Ch)[1];
+              Ch := REChar( _LowerCase(Ch));
               ResultPtr^ := Ch;
               if Mode = smodeOneLower then
                 Mode := smodeNormal;
@@ -3978,7 +4414,7 @@ begin
           smodeOneUpper, smodeAllUpper:
             begin
               Ch := p0^;
-              Ch := AnsiUpperCase(Ch)[1];
+              Ch := REChar( _UpperCase(Ch));
               ResultPtr^ := Ch;
               if Mode = smodeOneUpper then
                 Mode := smodeNormal;
