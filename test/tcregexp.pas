@@ -80,6 +80,7 @@ type
     Procedure RunTest31;
     Procedure RunTest32;
     Procedure RunTest33;
+    Procedure RunTestGrp;
   end;
 
 implementation
@@ -551,6 +552,22 @@ end;
 procedure TTestRegexpr.RunTest33;
 begin
   RunRETest(33);
+end;
+
+procedure TTestRegexpr.RunTestGrp;
+var
+  R: TRegExpr;
+begin
+  R:= TRegExpr.Create;
+  try
+    R.Expression:= '(\w+) (?:\w+) (\w+) (?:\w+) (\d+)';
+    R.InputString:= 'abc wall dirt wert 234';
+    R.ExecPos(1);
+    AreEqual('Group finder failed', 1, R.MatchPos[0]);
+    AreEqual('Group counter failed', 3, R.SubExprMatchCount);
+  finally
+    FreeAndNil(R);
+  end;
 end;
 
 Class function TTestRegexpr.PrintableString(AString: string): string;
