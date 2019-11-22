@@ -78,6 +78,9 @@ type
     Procedure RunTest29;
     Procedure RunTest30;
     Procedure RunTest31;
+    Procedure RunTest32;
+    Procedure RunTest33;
+    Procedure RunTestGrp;
   end;
 
 implementation
@@ -92,7 +95,7 @@ Type
   end;
 
 const
-  testCases: array [1..31] of TRegExTest = (
+  testCases: array [1..33] of TRegExTest = (
     (
     expression: '\nd';
     inputText: 'abc'#13#10'def';
@@ -308,6 +311,20 @@ const
     inputText: #9'aaa  bbb '#9' ccc  '#$A0#9;
     substitutionText: '-';
     expectedResult: '-aaa-bbb-ccc-';
+    matchStart: 0
+    ),
+    (
+    expression: '\w+';
+    inputText: 'abc XY 12.,';
+    substitutionText: '\L$0';
+    expectedResult: 'abc xy 12.,';
+    matchStart: 0
+    ),
+    (
+    expression: '\w+';
+    inputText: 'abc XY 12.,';
+    substitutionText: '\U$0';
+    expectedResult: 'ABC XY 12.,';
     matchStart: 0
     )
   );
@@ -525,6 +542,32 @@ end;
 procedure TTestRegexpr.RunTest31;
 begin
   RunRETest(31);
+end;
+
+procedure TTestRegexpr.RunTest32;
+begin
+  RunRETest(32);
+end;
+
+procedure TTestRegexpr.RunTest33;
+begin
+  RunRETest(33);
+end;
+
+procedure TTestRegexpr.RunTestGrp;
+var
+  R: TRegExpr;
+begin
+  R:= TRegExpr.Create;
+  try
+    R.Expression:= '(\w+) (?:\w+) (\w+) (?:\w+) (\d+)';
+    R.InputString:= 'abc wall dirt wert 234';
+    R.ExecPos(1);
+    AreEqual('Group finder failed', 1, R.MatchPos[0]);
+    AreEqual('Group counter failed', 3, R.SubExprMatchCount);
+  finally
+    FreeAndNil(R);
+  end;
 end;
 
 Class function TTestRegexpr.PrintableString(AString: string): string;
