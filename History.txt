@@ -5,12 +5,18 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
+ v. 0.956 2019.11.22
+ -=- (+) Rework UpperCase/LowerCase/InvertCase for FPC+Delphi.
+  By Alexey Torgashin.
+
  v. 0.955 2019.11.20
- -=- (+) Support meta chars \v (vertical white space), \h (horizontal white space)
+ -=- (+) Support meta chars \v (vertical white space), \h (horizontal
+  white space). By Alexey Torgashin.
 
  v. 0.954 2019.11.14
- -=- (^) Changed type of InputString / Expression from PChar to string
- -=- (+) Support non-capturing groups (?:...), by Alexey Torgashin (Alextp)
+ -=- (^) Changed type of InputString, Expression from PChar to string.
+  By Alexey Torgashin.
+ -=- (+) Support non-capturing groups (?:...). By Alexey Torgashin.
 
  v. 0.952 2004.01.11
  -=- (+) FreePascal support, thanks to Yaroslav Romanchenko (SAGE)
