@@ -324,6 +324,7 @@ type
     function IsUnicodeWordChar(AChar : REChar) : Boolean;
     {$ENDIF}
     procedure ClearInternalIndexes;
+    procedure ClearMatchs;
     function IsWordChar(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsDigit(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -3958,17 +3959,17 @@ function TRegExpr.ExecPos (AOffset: PtrInt {$IFDEF DefParam}= 1{$ENDIF}) : boole
  end; { of function TRegExpr.ExecPos
 --------------------------------------------------------------}
 
+procedure TRegExpr.ClearMatchs;
+var i : integer;
+begin
+  for i := 0 to NSUBEXP - 1 do begin
+    startp [i] := nil;
+    endp [i] := nil;
+  end;
+end; { of function TRegExpr.ClearMatchs
+--------------------------------------------------------------}
+
 function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
- procedure ClearMatchs;
-  // Clears matchs array
-  var i : integer;
-  begin
-   for i := 0 to NSUBEXP - 1 do begin
-     startp [i] := nil;
-     endp [i] := nil;
-    end;
-  end; { of procedure ClearMatchs;
-..............................................................}
  function RegMatch (str : PRegExprChar) : boolean;
   // try match at specific point
   begin
@@ -4118,15 +4119,8 @@ function TRegExpr.ExecNext : boolean;
 --------------------------------------------------------------}
 
 procedure TRegExpr.SetInputString (const AInputString : RegExprString);
- var
-  i : PtrInt;
  begin
-  // clear Match* - before next Exec* call it's undefined
-  for i := 0 to NSUBEXP - 1 do begin
-    startp [i] := nil;
-    endp [i] := nil;
-   end;
-
+  ClearMatchs;
   fInputString := AInputString;
   UniqueString (fInputString);
  end; { of procedure TRegExpr.SetInputString
