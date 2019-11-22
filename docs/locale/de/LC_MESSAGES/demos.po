@@ -5,29 +5,30 @@
 #
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-15 20:39+0300\n"
-"PO-Revision-Date: 2019-05-08 09:12+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: German "
-"(https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
+"PO-Revision-Date: 2019-11-23 03:40+0000\n"
+"Last-Translator: Elmar Dolgener <elmar.dolgener@fau.de>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/tregexpr/demos/de/"
+">\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 54bd071b6b824a54b9ac5c35fbfa06bf
 #: ../../demos.rst:6
 msgid "English"
-msgstr ""
+msgstr "Englisch"
 
 # 1e981c1fd2a743f1b2bfa307b6562f8b
 #: ../../demos.rst:7
-#, fuzzy
 msgid "`Русский <https://regex.sorokin.engineer/ru/latest/demos.html>`__"
 msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html> __"
 
@@ -39,15 +40,13 @@ msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html> __"
 
 # 9a388b794d4d4d85b042be34566891a6
 #: ../../demos.rst:9
-#, fuzzy
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/demos.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html> __"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/demos.html>`__"
 
 # 397812a6c3e4474b9d73b7b403041015
 #: ../../demos.rst:10
-#, fuzzy
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/demos.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html> __"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/demos.html>`__"
 
 # bf3c1985d6cb4bb7b8e93a78e85aa43c
 #: ../../demos.rst:11
@@ -288,4 +287,3 @@ msgstr "Etwas komplexere Beispiele, siehe Kommentare innerhalb der Einheit"
 # bf3c1985d6cb4bb7b8e93a78e85aa43c
 #~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 #~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
-
