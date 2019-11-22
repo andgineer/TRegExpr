@@ -732,11 +732,7 @@ uses
 {$ENDIF}
 {$ELSE}
 uses
-{$IFDEF WIN32}
-    Windows; // CharUpper/Lower
-{$ELSE}
-    Libc; //Qt.pas from Borland does not expose char handling functions
-{$ENDIF}
+  System.Character;
 {$ENDIF}
 
 const
@@ -774,6 +770,50 @@ const
    Result := p;
  {$ENDIF}
  end;
+
+function _UpperCase (ch : REChar): REChar;
+begin
+  Result := ch;
+  if (ch >= 'a') and (ch <= 'z') then
+  begin
+    Dec (Result, 32);
+    EXIT;
+  end;
+  if Ord (ch) < 128 then
+    EXIT;
+
+  {$IFDEF FPC}
+    {$IFDEF UniCode}
+    Result := UnicodeUpperCase (ch)[1];
+    {$ELSE}
+    Result := AnsiUpperCase (ch)[1];
+    {$ENDIF}
+  {$ELSE}
+  todo
+  {$ENDIF}
+end;
+
+function _LowerCase (ch : REChar): REChar;
+begin
+  Result := ch;
+  if (ch >= 'A') and (ch <= 'Z') then
+  begin
+    Inc (Result, 32);
+    EXIT;
+  end;
+  if Ord (ch) < 128 then
+    EXIT;
+
+  {$IFDEF FPC}
+    {$IFDEF UniCode}
+    Result := UnicodeLowerCase (ch)[1];
+    {$ELSE}
+    Result := AnsiLowerCase (ch)[1];
+    {$ENDIF}
+  {$ELSE}
+  todo
+  {$ENDIF}
+end;
 
 {=============================================================}
 {===================== Global functions ======================}
@@ -1247,25 +1287,25 @@ destructor TRegExpr.Destroy;
  end; { of destructor TRegExpr.Destroy
 --------------------------------------------------------------}
 
-{$IFDEF UNICODE}
-function AnsiUpperCase(const s: RegExprString): RegExprString;inline;
-
-begin
-  Result:=WideUpperCase(S);
-end;
-
-function AnsiLowerCase(const s: RegExprString): RegExprString;inline;
-
-begin
-  Result:=WideLowerCase(S);
-end;
-{$ENDIF}
-
 class function TRegExpr.InvertCaseFunction (const Ch : REChar) : REChar;
 begin
-  Result := {$IFDEF FPC}AnsiUpperCase (Ch) [1]{$ELSE} REChar (CharUpper (PChar (Ch))){$ENDIF};
+  Result := Ch;
+  if (Ch >= 'a') and (Ch <= 'z') then
+  begin
+    Dec (Result, 32);
+    EXIT;
+  end;
+  if (Ch >= 'A') and (Ch <= 'Z') then
+  begin
+    Inc (Result, 32);
+    EXIT;
+  end;
+  if Ord(Ch) < 128 then
+    EXIT;
+
+  Result := _UpperCase (Ch);
   if Result = Ch then
-    Result := {$IFDEF FPC}AnsiLowerCase (Ch) [1]{$ELSE} REChar (CharLower (PChar (Ch))){$ENDIF};
+    Result := _LowerCase (Ch);
 end; { of function TRegExpr.InvertCaseFunction
 --------------------------------------------------------------}
 
@@ -3974,7 +4014,7 @@ begin
           smodeOneLower, smodeAllLower:
             begin
               Ch := p0^;
-              Ch := AnsiLowerCase(Ch)[1];
+              Ch := _LowerCase(Ch);
               ResultPtr^ := Ch;
               if Mode = smodeOneLower then
                 Mode := smodeNormal;
@@ -3982,7 +4022,7 @@ begin
           smodeOneUpper, smodeAllUpper:
             begin
               Ch := p0^;
-              Ch := AnsiUpperCase(Ch)[1];
+              Ch := _UpperCase(Ch);
               ResultPtr^ := Ch;
               if Mode = smodeOneUpper then
                 Mode := smodeNormal;
