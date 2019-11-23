@@ -325,7 +325,7 @@ type
     function IsUnicodeWordChar(AChar : REChar) : Boolean;
     {$ENDIF}
     procedure ClearInternalIndexes;
-    function InBuffer(Ptr : PRegExprChar) : boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function InBuffer(Ptr : PRegExprChar) : boolean; inline;
     function IsWordChar(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsDigit(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -1343,7 +1343,7 @@ procedure TRegExpr.SetExpression (const s : RegExprString);
 
 function TRegExpr.InBuffer (Ptr : PRegExprChar) : boolean;
 begin
-  Result := (Ptr >= fInputStart) and (Ptr <= fInputEnd);
+  Result := Ptr < fInputEnd;
 end;
 
 function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
