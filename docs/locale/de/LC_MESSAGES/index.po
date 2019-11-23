@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-26 16:03+0300\n"
-"PO-Revision-Date: 2019-11-23 03:40+0000\n"
-"Last-Translator: Elmar Dolgener <elmar.dolgener@fau.de>\n"
+"PO-Revision-Date: 2019-11-23 04:24+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/tregexpr/index/de/"
 ">\n"
 "Language: de\n"
@@ -30,27 +30,27 @@ msgstr "Englisch"
 # 54ebc251eff34812b1ee36830f7dc863
 #: ../../index.rst:7
 msgid "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
-msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html> __"
+msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 
 # 2d2ce49cc5d9419eb0b14fc888a6c42c
 #: ../../index.rst:8
 msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
-msgstr "Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
+msgstr "Deutsch"
 
 # a93b59bc459140358ce5d55c2374e488
 #: ../../index.rst:9
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html> __"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
 # efc050cad2b549edbc16be95d6eaa025
 #: ../../index.rst:10
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html> __"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 
 # e0ee4837c5ce459bb0f114816a1916ba
 #: ../../index.rst:11
 msgid "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
-msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html> __"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
 # 47015840eef94746af12ae2d485ec72d
 #: ../../index.rst:14
