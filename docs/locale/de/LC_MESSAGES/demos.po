@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-15 20:39+0300\n"
-"PO-Revision-Date: 2019-11-23 04:24+0000\n"
+"PO-Revision-Date: 2019-11-23 04:41+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/tregexpr/demos/de/"
 ">\n"
@@ -25,7 +25,7 @@ msgstr ""
 # 54bd071b6b824a54b9ac5c35fbfa06bf
 #: ../../demos.rst:6
 msgid "English"
-msgstr "Englisch"
+msgstr "`English <https://regex.sorokin.engineer/en/latest/demos.html>`__"
 
 # 1e981c1fd2a743f1b2bfa307b6562f8b
 #: ../../demos.rst:7
