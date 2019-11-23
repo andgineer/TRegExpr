@@ -5,19 +5,21 @@
 #
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-15 07:26+0300\n"
-"PO-Revision-Date: 2019-05-08 09:13+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: German "
-"(https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
+"PO-Revision-Date: 2019-11-23 04:24+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/tregexpr/"
+"regular_expressions/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 3a33618c52cc401886a2ed6c3e3c95db
@@ -27,43 +29,46 @@ msgstr ""
 
 # b4fdc3810e1f4c92914af76c64cadb3c
 #: ../../regular_expressions.rst:7
-#, fuzzy
 msgid ""
 "`Русский "
 "<https://regex.sorokin.engineer/ru/latest/regular_expressions.html>`__"
-msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html> __"
+msgstr ""
+"`Русский <https://regex.sorokin.engineer/ru/latest/"
+"regular_expressions.html>`__"
 
 # be172fcfbc42477397123f54ccab60e6
 #: ../../regular_expressions.rst:8
-#, fuzzy
 msgid ""
 "`Deutsch "
 "<https://regex.sorokin.engineer/de/latest/regular_expressions.html>`__"
-msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html> __"
+msgstr "Deutsch"
 
 # 5efb9fa726cc4efd80f397d5b459016c
 #: ../../regular_expressions.rst:9
-#, fuzzy
 msgid ""
 "`Български "
 "<https://regex.sorokin.engineer/bg/latest/regular_expressions.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html> __"
+msgstr ""
+"`Български <https://regex.sorokin.engineer/bg/latest/"
+"regular_expressions.html>`__"
 
 # 56782c450aa24c96a903ade449b8077a
 #: ../../regular_expressions.rst:10
-#, fuzzy
 msgid ""
 "`Français "
 "<https://regex.sorokin.engineer/fr/latest/regular_expressions.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html> __"
+msgstr ""
+"`Français <https://regex.sorokin.engineer/fr/latest/"
+"regular_expressions.html>`__"
 
 # 4e484ab0fbca4e35a4224e235417f357
 #: ../../regular_expressions.rst:11
-#, fuzzy
 msgid ""
 "`Español "
 "<https://regex.sorokin.engineer/es/latest/regular_expressions.html>`__"
-msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html> __"
+msgstr ""
+"`Español <https://regex.sorokin.engineer/es/latest/"
+"regular_expressions.html>`__"
 
 # b715d57139c1428d82cc462b29b58e14
 #: ../../regular_expressions.rst:14
@@ -1858,4 +1863,3 @@ msgstr ""
 #~ "not want to save it as a "
 #~ "matched/captured portion of the string."
 #~ msgstr ""
-
