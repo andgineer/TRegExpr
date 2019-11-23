@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-26 16:03+0300\n"
-"PO-Revision-Date: 2019-11-23 04:24+0000\n"
+"PO-Revision-Date: 2019-11-23 04:41+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/tregexpr/index/de/"
 ">\n"
@@ -25,7 +25,7 @@ msgstr ""
 # bcceb9ddb03f415580d4b5e55290527d
 #: ../../index.rst:6
 msgid "English"
-msgstr "Englisch"
+msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 
 # 54ebc251eff34812b1ee36830f7dc863
 #: ../../index.rst:7
@@ -138,14 +138,15 @@ msgid ""
 "<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
 "you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
-"Um die Bibliothek zu verwenden, fügen Sie einfach die Quellen hinzu "
-"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ für"
-" Ihr Projekt und verwenden Sie die Klasse `TRegExpr <tregexpr.html>`_."
+"Um die Bibliothek zu verwenden, fügen Sie einfach `die Quellen hinzu "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`__ für "
+"Ihr Projekt und verwenden Sie die Klasse `TRegExpr <tregexpr.html>`__."
 
 # 0d79895ebfb6444e9d3ff580b250cef6
 #: ../../index.rst:45
 msgid "In the `FAQ <faq.html>`_ you can learn from others users problems."
-msgstr "In den `FAQ <faq.html> Sie können von anderen Benutzern Probleme lernen."
+msgstr ""
+"In den `FAQ <faq.html>`__ Sie können von anderen Benutzern Probleme lernen."
 
 # 495db3fc133940d68ab0e306d9d90e89
 #: ../../index.rst:47
@@ -169,8 +170,8 @@ msgid ""
 "If you see any problems, please `create the bug "
 "<https://github.com/andgineer/TRegExpr/issues>`_."
 msgstr ""
-"Wenn Sie Probleme sehen, erstellen Sie den Fehler "
-"<https://github.com/andgineer/TRegExpr/issues>`_."
+"Wenn Sie Probleme sehen, erstellen `Sie den Fehler <https://github.com/"
+"andgineer/TRegExpr/issues>`__."
 
 # e4726e8b8e7e4509bb7791a0c1815055
 #: ../../index.rst:58
@@ -193,9 +194,8 @@ msgid ""
 "`FreePascal fork (GitHub mirror of the SubVersion) "
 "<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
 msgstr ""
-"`FreePascal-Gabel (GitHub-Spiegel der Subversion) "
-"<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>"
-" _"
+"`FreePascal-Gabel (GitHub-Spiegel der Subversion) <https://github.com/"
+"graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`__"
 
 # bfbc7bfded90471e851d3b8093cbc999
 #: ../../index.rst:65
@@ -213,8 +213,8 @@ msgid ""
 "The documentation is available in English and `Russian "
 "<https://regexpr.sorokin.engineer/ru/latest/>`_."
 msgstr ""
-"Die Dokumentation ist in Englisch und Russisch verfügbar "
-"<https://regexpr.sorokin.engineer/ru/latest/>`_."
+"Die Dokumentation ist in `Englisch verfügbar <https://regexpr.sorokin."
+"engineer/en/latest/>`__."
 
 # 6db169b8d43c4484b5cc08a93a5d311d
 #: ../../index.rst:81
@@ -298,8 +298,8 @@ msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
 "translation, usefull suggestions"
 msgstr ""
-"Martin Baur (www.mindpower.com) <http://www.mindpower.com>`__) - deutsche"
-" Übersetzung, nützliche Vorschläge"
+"Martin Baur (`www.mindpower.com) <http://www.mindpower.com>`__) - deutsche "
+"Übersetzung, nützliche Vorschläge"
 
 # 587479db44134d4bad81d5f1294044ee
 #: ../../index.rst:106
