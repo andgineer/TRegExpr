@@ -5,11 +5,6 @@
 -=- VCL-version of TRegExpr - for dummies ;) and TRegExprEdit
  (replacement for TMaskEdit).
 
--=- working with pascal-style string.
- Now pascal-strings converted into PChar, so
- you can't find r.e. in strings with #0 -chars.
- (suggested by Pavel O).
-
 -=- put precalculated lengths into EXACTLY[CI] !
 
 -=- Add regstart optimization for case-insensitive mode ?
@@ -25,4 +20,3 @@
  merge EXACTLY etc).
 
 -=- There are no special command for files (Johan Smit).
-
