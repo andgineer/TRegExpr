@@ -3667,7 +3667,6 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
  var
   s : PRegExprChar;
   StartPtr: PRegExprChar;
-  InputLen : PtrInt;
  begin
   Result := false; // Be paranoid...
 
@@ -3685,8 +3684,6 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
     EXIT;
    end;
 
-  InputLen := length (fInputString);
-
   //Check that the start position is not negative
   if AOffset < 1 then begin
     Error (reeOffsetMustBeGreaterThen0);
@@ -3694,7 +3691,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
    end;
   // Check that the start position is not longer than the line
   // If so then exit with nothing found
-  if AOffset > (InputLen + 1) // for matching empty string after last char.
+  if AOffset > (length (fInputString) + 1) // for matching empty string after last char.
    then EXIT;
 
   StartPtr := PRegExprChar(fInputString) + AOffset - 1;
