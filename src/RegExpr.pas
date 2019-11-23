@@ -325,6 +325,7 @@ type
     function IsUnicodeWordChar(AChar : REChar) : Boolean;
     {$ENDIF}
     procedure ClearInternalIndexes;
+    function InBuffer(Ptr : PRegExprChar) : boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsWordChar(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsDigit(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -1339,6 +1340,11 @@ procedure TRegExpr.SetExpression (const s : RegExprString);
   end;
  end; { of procedure TRegExpr.SetExpression
 --------------------------------------------------------------}
+
+function TRegExpr.InBuffer (Ptr : PRegExprChar) : boolean;
+begin
+  Result := (Ptr >= fInputStart) and (Ptr <= fInputEnd);
+end;
 
 function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
  begin
@@ -3714,13 +3720,6 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
      then EXIT;
    end;
 
-  // Mark beginning of line for ^ .
-  fInputStart := PRegExprChar(fInputString);
-
-  // Pointer to end of input stream - for
-  // pascal-style string processing (may include #0)
-  fInputEnd := PRegExprChar(fInputString) + InputLen;
-
   {$IFDEF ComplexBraces}
   // no loops started
   LoopStackIdx := 0; //###0.925
@@ -3812,6 +3811,13 @@ procedure TRegExpr.SetInputString (const AInputString : RegExprString);
 
   fInputString := AInputString;
   UniqueString (fInputString);
+
+  // Mark beginning of line for ^ .
+  fInputStart := PRegExprChar(fInputString);
+
+  // Pointer to end of input stream - for
+  // pascal-style string processing (may include #0)
+  fInputEnd := PRegExprChar(fInputString) + Length(fInputString);
  end; { of procedure TRegExpr.SetInputString
 --------------------------------------------------------------}
 
