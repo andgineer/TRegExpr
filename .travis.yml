@@ -4,10 +4,6 @@ language: generic
 sudo: required
 dist: trusty
 
-os:
-  - linux
-  - osx
-
 env:
   global:
     - WINEPREFIX=~/.winelaz
@@ -22,5 +18,5 @@ before_install:
   - Xvfb $DISPLAY &
 
 script:
-  - lazbuild $LAZ_OPT test/testregexpr.lpi             # Build project
-  - $LAZ_ENV test/testregexpr --all --format=plain # Run testsuite
+  - lazbuild test/testregexpr.lpi             # Build project
+  - test/testregexpr --all --format=plain # Run testsuite
