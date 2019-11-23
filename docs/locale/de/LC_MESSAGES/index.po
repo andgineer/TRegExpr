@@ -5,30 +5,32 @@
 #
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-26 16:03+0300\n"
-"PO-Revision-Date: 2019-05-08 09:13+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: German "
-"(https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
+"PO-Revision-Date: 2019-11-23 04:24+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/tregexpr/index/de/"
+">\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # bcceb9ddb03f415580d4b5e55290527d
 #: ../../index.rst:6
 msgid "English"
-msgstr ""
+msgstr "Englisch"
 
 # 54ebc251eff34812b1ee36830f7dc863
 #: ../../index.rst:7
 msgid "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
-msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html> __"
+msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 
 # 2d2ce49cc5d9419eb0b14fc888a6c42c
 #: ../../index.rst:8
@@ -38,17 +40,17 @@ msgstr "Deutsch"
 # a93b59bc459140358ce5d55c2374e488
 #: ../../index.rst:9
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html> __"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
 # efc050cad2b549edbc16be95d6eaa025
 #: ../../index.rst:10
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html> __"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 
 # e0ee4837c5ce459bb0f114816a1916ba
 #: ../../index.rst:11
 msgid "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
-msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html> __"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
 # 47015840eef94746af12ae2d485ec72d
 #: ../../index.rst:14
@@ -71,8 +73,8 @@ msgid ""
 "search and substitution and for template based text check."
 msgstr ""
 "Reguläre Ausdrücke sind ein benutzerfreundliches und leistungsfähiges "
-"Werkzeug für die anspruchsvolle Suche und Ersetzung sowie für "
-"textbasierte Textvorlagen."
+"Werkzeug für anspruchsvollere Such- und Ersetzungsaufgaben sowie für "
+"vorlagenbasiertes Überprüfen von Text."
 
 # 3459108fa31a4788ab3b8051340eff5a
 #: ../../index.rst:22
@@ -80,8 +82,8 @@ msgid ""
 "It is especially useful for user input validation in input forms - to "
 "validate e-mail addresses and so on."
 msgstr ""
-"Es ist besonders nützlich für die Überprüfung der Benutzereingaben in "
-"Eingabeformularen - zum Überprüfen von E-Mail-Adressen usw."
+"Besonders nützlich sind sie zum Prüfen von Benutzereingaben in "
+"Eingabemasken, zum Validieren von E-Mail-Adressen usw."
 
 # 486bb59e358b43a58f0f35d3fadb79be
 #: ../../index.rst:25
@@ -91,10 +93,11 @@ msgid ""
 "imagine. Rules (templates) can be changed without your program "
 "recompilation."
 msgstr ""
-"Sie können auch Telefonnummern, Postleitzahlen usw. aus Webseiten oder "
-"Dokumenten extrahieren, nach komplexen Mustern in Protokolldateien suchen"
-" und alles, was Sie sich vorstellen können. Regeln (Vorlagen) können ohne"
-" Neuprogrammierung des Programms geändert werden."
+"Auch können Sie damit Telefonnummern, Postleitzahlen usw. aus Webseiten oder "
+"Dokumenten extrahieren, nach komplexen Mustern in Protokolldateien suchen "
+"und was Sie sich sonst noch in der Art vorstellen können. Die Regeln "
+"(Vorlagen) lassen sich ändern, ohne die gesamte Anwendung neu kompilieren zu "
+"müssen."
 
 # 6b71a468aa3f4976a3c909b8fc98ee9e
 #: ../../index.rst:29
@@ -104,15 +107,15 @@ msgid ""
 "exists as separate library and can be compiled by Delphi 2-7, Borland C++"
 " Builder 3-6."
 msgstr ""
-"TRegExpr wird in reinem Pascal implementiert. Es ist in `Lazarus (Free "
-"Pascal) enthalten. <http://wiki.freepascal.org/Regexpr>`_ Projekt. Es ist"
-" aber auch als separate Bibliothek vorhanden und kann von Delphi 2-7, "
-"Borland C ++ Builder 3-6 kompiliert werden."
+"TRegExpr ist 100% in Pascal implementiert. Es ist Bestandteil von `Lazarus ("
+"Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ , aber auch als separate "
+"Bibliothek nutzbar und kann auch mit Delphi 2-7 oder dem Borland C ++ "
+"Builder 3-6 kompiliert werden."
 
 # b5eb9411c78749cb80cd15750a7bda79
 #: ../../index.rst:35
 msgid "Reviews"
-msgstr "Bewertungen"
+msgstr "Rezensionen"
 
 # 540dc5e7519749f8a49f668715cabf86
 #: ../../index.rst:37
@@ -347,4 +350,3 @@ msgstr "Diego Calp, Argentinien - spanische Übersetzung"
 # ab7f160cdf66442c921786c514900fef
 #~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 #~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
-

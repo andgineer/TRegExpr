@@ -5,55 +5,52 @@
 #
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-15 20:39+0300\n"
-"PO-Revision-Date: 2019-05-08 09:12+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: German "
-"(https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
+"PO-Revision-Date: 2019-11-23 04:24+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/tregexpr/tregexpr/"
+"de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 641c63bb9dac43b69cd3528d9789b841
 #: ../../tregexpr.rst:6
 msgid "English"
-msgstr ""
+msgstr "Englisch"
 
 # 5f3d678e3947428f872296a3f7123621
 #: ../../tregexpr.rst:7
-#, fuzzy
 msgid "`Русский <https://regex.sorokin.engineer/ru/latest/tregexpr.html>`__"
-msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html> __"
+msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/tregexpr.html>`__"
 
 # a8caac3fc2ae431c9397132b240f52d4
 #: ../../tregexpr.rst:8
-#, fuzzy
 msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/tregexpr.html>`__"
-msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html> __"
+msgstr "Deutsch"
 
 # 975bcd0fce804b17b63c6f3b4b748c94
 #: ../../tregexpr.rst:9
-#, fuzzy
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/tregexpr.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html> __"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/tregexpr.html>`__"
 
 # 7b1f1a73b7594de483816459cb9cd6d2
 #: ../../tregexpr.rst:10
-#, fuzzy
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/tregexpr.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html> __"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/tregexpr.html>`__"
 
 # aa90c7e86ff940aab57b013680c2d4df
 #: ../../tregexpr.rst:11
-#, fuzzy
 msgid "`Español <https://regex.sorokin.engineer/es/latest/tregexpr.html>`__"
-msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html> __"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/tregexpr.html>`__"
 
 # 38c540a453ae4959b81179309d71fad2
 #: ../../tregexpr.rst:14
@@ -68,8 +65,8 @@ msgid ""
 "3-6."
 msgstr ""
 "Implementiert `reguläre Ausdrücke <regular_expressions.html> in reinem "
-"Pascal. Ist kompatibel mit Free Pascal, Delphi 2-7, Borland C ++ Builder "
-"3-6."
+"Pascal, kompatibel zu Free Pascal, Delphi 2 bis 7 und Borland C++ Builder 3 "
+"bis 6."
 
 # 5e623a73afae41c688b18834dc47b966
 #: ../../tregexpr.rst:19
@@ -78,9 +75,8 @@ msgid ""
 "<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ "
 "into your project."
 msgstr ""
-"Um es zu benutzen, kopiere einfach `Quellcode "
-"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ "
-"in dein Projekt."
+"Um es zu benutzen, kopiere einfach den `Quellcode <https://github.com/"
+"andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ in Dein Projekt."
 
 # 0c059da7ea744524a21dca4c03eb5e08
 #: ../../tregexpr.rst:22
@@ -89,25 +85,25 @@ msgid ""
 "<http://wiki.freepascal.org/Regexpr>`_ project so you do not need to copy"
 " anything if you use `Lazarus <https://www.lazarus-ide.org/>`_."
 msgstr ""
-"Die Bibliothek war bereits in `Lazarus (Free Pascal) enthalten. "
-"<http://wiki.freepascal.org/Regexpr> Wenn Sie `Lazarus verwenden, müssen "
-"Sie nichts kopieren <https://www.lazarus-ide.org/>`_."
+"In der IDE `Lazarus (Free Pascal) <https://www.lazarus-ide.org/>`_ ist diese "
+"Bibliothek `bereits enthalten <http://wiki.freepascal.org/Regexpr/>`_ . "
+"Falls Sie also Lazarus verwenden, müssen Sie gar nichts kopieren."
 
 # dad2ce27a76a493999ee1dd0810dce84
 #: ../../tregexpr.rst:27
 msgid "TRegExpr class"
-msgstr "TRegExpr-Klasse"
+msgstr "Klasse TRegExpr"
 
 # f98e72ac285e4fd3af6a40cd9dfeb110
 #: ../../tregexpr.rst:30
 msgid "VersionMajor, VersionMinor"
-msgstr "VersionMajor, VersionMinor"
+msgstr "Haupt- und Nebenversion"
 
 # c7de356b46a449f9aa6a4e4f8f6ced23
 #: ../../tregexpr.rst:32
 msgid "Return major and minor version, for example, for ``version 0.944``"
 msgstr ""
-"Geben Sie die Dur- und Moll-Version zurück, zum Beispiel für `` Version "
+"Gibt die Haupt- und Nebenversionsnummer zurück, zum Beispiel für `` Version "
 "0.944``"
 
 # d000e079152d4589adc8e55f58fa9835
@@ -115,7 +111,7 @@ msgstr ""
 msgid ""
 "VersionMajor = 0\n"
 "VersionMinor = 944"
-msgstr "VersionMajor = 0 VersionMinor = 944"
+msgstr "Hauptversion = 0 Nebenversion = 944"
 
 # 2a85e836d4e442a1b305660c3d54d7bf
 #: ../../tregexpr.rst:40
@@ -303,7 +299,7 @@ msgstr "ExecNext"
 # 7e6c90e9d304410d941046679fa81975
 #: ../../tregexpr.rst:113
 msgid "Find next match."
-msgstr "Nächstes Spiel finden"
+msgstr "Nächste Übereinstimmung finden."
 
 # 3692f197c5a9492598fb524452a29e49
 #: ../../tregexpr.rst:115
@@ -501,9 +497,8 @@ msgid ""
 "'1\\$ is $2\\\\rub\\\\' -> '1$ is <Match[2]>\\rub\\'\n"
 "'\\U$1\\\\r' transforms into '<Match[1] in uppercase>\\r'"
 msgstr ""
-"&#39;1 \\ $ ist $ 2 \\\\ rub \\\\&#39; -&gt; &#39;1 $ ist <Match[2]> \\ "
-"rub \\ &#39;&#39; \\ U $ 1 \\\\ &#39;verwandelt sich in&#39; <Match[1] in"
-" uppercase> \\ r &#39;"
+"'1\\$ is $2\\\\rub\\\\' -> '1$ is <Match[2]>\\rub\\'\n"
+"'\\U$1\\\\r' wird zu '<Match[1] in uppercase>\\r'"
 
 # 4b85168153b84479a80bb8202b1dfbcf
 #: ../../tregexpr.rst:183
@@ -656,10 +651,10 @@ msgid ""
 "True), then ``SubExprMatchCount=0``, if no subexpressions nor whole r.e. "
 "found (Exec_ / ExecNext_ returned false) then ``SubExprMatchCount=-1``."
 msgstr ""
-"Wenn es keinen Subexpr gibt. Es wurde jedoch ein vollständiger Ausdruck "
-"gefunden (Exec \\ * hat True zurückgegeben), dann `` SubExprMatchCount = "
-"0``, wenn weder Unterausdrücke noch ganze gefunden wurden (Exec_ / "
-"ExecNext_ hat false zurückgegeben), dann `` SubExprMatchCount = -1``"
+"Wenn es keine Subexpressions gibt, jedoch ein vollständiger Ausdruck "
+"gefunden wurde (Exec \\ * hat True zurückgegeben), dann ``SubExprMatchCount ="
+" 0``, falls weder Unterausdrücke noch vollständige gefunden wurden (Exec_ / "
+"ExecNext_ lieferte False), dann ``SubExprMatchCount = -1``."
 
 # 2767db19f2ce40f78b7da4cb1b8153c2
 #: ../../tregexpr.rst:256
@@ -864,8 +859,8 @@ msgid ""
 "must contain exactly two chars or no chars at all, initially filled with "
 "RegExprLinePairedSeparator global constant)"
 msgstr ""
-"muss genau zwei Zeichen oder keine Zeichen enthalten, die anfangs mit der"
-" globalen Konstante RegExprLinePairedSeparator gefüllt sind."
+"muss genau zwei oder gar keine Zeichen enthalten und ist anfangs mit dem "
+"Inhalt der globalen Konstante RegExprLinePairedSeparator vorbefüllt"
 
 # d5fcd4a7ae984f41954575a890a13689
 #: ../../tregexpr.rst:348
@@ -1239,9 +1234,9 @@ msgid ""
 "then ``\\n`` is replaced with ``\\n\\r`` in Windows and ``\\n`` in "
 "Linux). And so on."
 msgstr ""
-"Mit ``Options`` steuern Sie das Verhalten von `\\ n`` (wenn` "
-"`rroUseOsLineEnd``` dann in` `\\ n`` durch` `\\ n \\ r`` ersetzt wird "
-"und` `\\ n`` in Linux). Und so weiter."
+"Mit ``Options`` steuert man das Verhalten von `\\ n`` (mit "
+"``rroUseOsLineEnd`` wird ``\\ n`` unter Windows durch ``\\ n \\ r`` ersetzt "
+", unter Linux bleibt es ein ``\\ n``). Und so weiter."
 
 # 260c91d9e4944a759e3bd73168ebc836
 #: ../../tregexpr.rst:531
@@ -1331,8 +1326,8 @@ msgid ""
 "``AExtendedSyntax`` - must be ``True`` if modifier ``/x`` will be ``On`` "
 "while using the r.e."
 msgstr ""
-"``AExtendedSyntax`` - muss ``True`` sein, wenn der ``/x`` `` `` `ein ist,"
-" während der re verwendet wird"
+"``AExtendedSyntax`` - muss ``True`` sein, wenn der Schalter ``/x`` mit dem "
+"regulären Ausdruck verwendet werden soll."
 
 # e124e12c0b9748088e423f0cb5c53c37
 #: ../../tregexpr.rst:570
@@ -1465,4 +1460,3 @@ msgstr "Danach werden alle Zeichenfolgen als WideString behandelt."
 # 287bda0491e047d7bc868ce5da81ada4
 #~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 #~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
-
