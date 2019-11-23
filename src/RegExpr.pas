@@ -325,7 +325,6 @@ type
     function IsUnicodeWordChar(AChar : REChar) : Boolean;
     {$ENDIF}
     procedure ClearInternalIndexes;
-    function InBuffer(Ptr : PRegExprChar) : boolean; inline;
     function IsWordChar(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsDigit(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -1340,11 +1339,6 @@ procedure TRegExpr.SetExpression (const s : RegExprString);
   end;
  end; { of procedure TRegExpr.SetExpression
 --------------------------------------------------------------}
-
-function TRegExpr.InBuffer (Ptr : PRegExprChar) : boolean;
-begin
-  Result := Ptr < fInputEnd;
-end;
 
 function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
  begin
@@ -3053,15 +3047,15 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
          if (scan^ = BOUND)
           xor (
           ((reginput = fInputStart) or not IsWordChar((reginput - 1)^))
-            and (reginput^ <> #0) and IsWordChar(reginput^)
+            and (reginput < fInputEnd) and IsWordChar(reginput^)
            or
             (reginput <> fInputStart) and IsWordChar((reginput - 1)^)
-            and ((reginput^ = #0) or not IsWordChar(reginput^)))
+            and ((reginput = fInputEnd) or not IsWordChar(reginput^)))
           then EXIT;
 
          BOL: if reginput <> fInputStart
                then EXIT;
-         EOL: if reginput^ <> #0
+         EOL: if reginput < fInputEnd
                then EXIT;
          BOLML: if reginput > fInputStart then begin
             nextch := (reginput - 1)^;
@@ -3081,7 +3075,7 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
                 then EXIT;
               end;
            end;
-         EOLML: if reginput^ <> #0 then begin
+         EOLML: if reginput < fInputEnd then begin
             nextch := reginput^;
             if (nextch <> fLinePairedSeparatorHead)
                or ((reginput + 1)^ <> fLinePairedSeparatorTail)
@@ -3100,12 +3094,12 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
               end;
            end;
          ANY: begin
-            if reginput^ = #0
+            if reginput = fInputEnd
              then EXIT;
             inc (reginput);
            end;
          ANYML: begin //###0.941
-            if (reginput^ = #0)
+            if (reginput = fInputEnd)
              or ((reginput^ = fLinePairedSeparatorHead)
                  and ((reginput + 1)^ = fLinePairedSeparatorTail))
              or {$IFNDEF UniCode} (reginput^ in fLineSeparatorsSet)
@@ -3114,33 +3108,33 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
             inc (reginput);
            end;
          ANYDIGIT: begin
-            if (reginput^ = #0) or Not IsDigit(reginput) then
+            if (reginput = fInputEnd) or Not IsDigit(reginput) then
               EXIT;
             inc (reginput);
            end;
          NOTDIGIT: begin
-            if (reginput^ = #0) or IsDigit(reginput) then
+            if (reginput = fInputEnd) or IsDigit(reginput) then
               EXIT;
             inc (reginput);
            end;
          {$IFNDEF UseSetOfChar} //###0.929
          ANYLETTER: begin
-            if (reginput^ = #0) or not IsWordChar(reginput^) //###0.943
+            if (reginput = fInputEnd) or not IsWordChar(reginput^) //###0.943
              then EXIT;
             inc (reginput);
            end;
          NOTLETTER: begin
-            if (reginput^ = #0) or IsWordChar(reginput^) //###0.943
+            if (reginput = fInputEnd) or IsWordChar(reginput^) //###0.943
              then EXIT;
             inc (reginput);
            end;
          ANYSPACE: begin
-            if (reginput^ = #0) or not IsSpaceChar(reginput) //###0.943
+            if (reginput = fInputEnd) or not IsSpaceChar(reginput) //###0.943
              then EXIT;
             inc (reginput);
            end;
          NOTSPACE: begin
-            if (reginput^ = #0) or IsSpaceChar(reginput) //###0.943
+            if (reginput = fInputEnd) or IsSpaceChar(reginput) //###0.943
              then EXIT;
             inc (reginput);
            end;
@@ -3225,7 +3219,7 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
            reginput := save;
           end;
          ANYOFTINYSET: begin
-           if (reginput^ = #0) or //!!!TinySet
+           if (reginput = fInputEnd) or //!!!TinySet
              ((reginput^ <> (scan + REOpSz + RENextOffSz)^)
              and (reginput^ <> (scan + REOpSz + RENextOffSz + 1)^)
              and (reginput^ <> (scan + REOpSz + RENextOffSz + 2)^))
@@ -3233,7 +3227,7 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
            inc (reginput);
           end;
          ANYBUTTINYSET: begin
-           if (reginput^ = #0) or //!!!TinySet
+           if (reginput = fInputEnd) or //!!!TinySet
              (reginput^ = (scan + REOpSz + RENextOffSz)^)
              or (reginput^ = (scan + REOpSz + RENextOffSz + 1)^)
              or (reginput^ = (scan + REOpSz + RENextOffSz + 2)^)
@@ -3242,29 +3236,29 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
           end;
          {$IFDEF UseSetOfChar} //###0.929
          ANYOFFULLSET: begin
-           if (reginput^ = #0)
+           if (reginput = fInputEnd)
               or not (reginput^ in PSetOfREChar (scan + REOpSz + RENextOffSz)^)
             then EXIT;
            inc (reginput);
           end;
          {$ELSE}
          ANYOF: begin
-            if (reginput^ = #0) or (StrScan (scan + REOpSz + RENextOffSz, reginput^) = nil)
+            if (reginput = fInputEnd) or (StrScan (scan + REOpSz + RENextOffSz, reginput^) = nil)
              then EXIT;
             inc (reginput);
            end;
          ANYBUT: begin
-            if (reginput^ = #0) or (StrScan (scan + REOpSz + RENextOffSz, reginput^) <> nil)
+            if (reginput = fInputEnd) or (StrScan (scan + REOpSz + RENextOffSz, reginput^) <> nil)
              then EXIT;
             inc (reginput);
            end;
          ANYOFCI: begin
-            if (reginput^ = #0) or (StrScanCI (scan + REOpSz + RENextOffSz, reginput^) = nil)
+            if (reginput = fInputEnd) or (StrScanCI (scan + REOpSz + RENextOffSz, reginput^) = nil)
              then EXIT;
             inc (reginput);
            end;
          ANYBUTCI: begin
-            if (reginput^ = #0) or (StrScanCI (scan + REOpSz + RENextOffSz, reginput^) <> nil)
+            if (reginput = fInputEnd) or (StrScanCI (scan + REOpSz + RENextOffSz, reginput^) <> nil)
              then EXIT;
             inc (reginput);
            end;
@@ -3752,7 +3746,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
        {$ELSE}
        Result := RegMatch (s);
        {$ENDIF}
-       if Result or (s^ = #0) // Exit on a match or after testing the end-of-string.
+       if Result or (s = fInputEnd) // Exit on a match or after testing the end-of-string.
         then EXIT
         else ClearMatchs; //###0.949
        inc (s);
@@ -3760,7 +3754,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
 (*  optimized and fixed by Martin Fuller - empty strings
     were not allowed to pass through in UseFirstCharSet mode
      {$IFDEF UseFirstCharSet} //###0.929
-     while s^ <> #0 do begin
+     while s < fInputEnd do begin
        if s^ in FirstCharSet
         then Result := RegMatch (s);
        if Result
@@ -3773,7 +3767,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
       if Result
        then EXIT;
       inc (s);
-     UNTIL s^ = #0;
+     UNTIL s = fInputEnd;
      {$ENDIF}
 *)
     end;
@@ -3817,7 +3811,7 @@ procedure TRegExpr.SetInputString (const AInputString : RegExprString);
 
   // Pointer to end of input stream - for
   // pascal-style string processing (may include #0)
-  fInputEnd := PRegExprChar(fInputString) + Length(fInputString);
+  fInputEnd := fInputStart + Length(fInputString);
  end; { of procedure TRegExpr.SetInputString
 --------------------------------------------------------------}
 
