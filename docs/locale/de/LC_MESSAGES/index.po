@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-26 16:03+0300\n"
-"PO-Revision-Date: 2019-11-23 04:41+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"PO-Revision-Date: 2019-11-26 10:05+0000\n"
+"Last-Translator: Elmar Dolgener <elmar.dolgener@fau.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/tregexpr/index/de/"
 ">\n"
 "Language: de\n"
@@ -123,8 +123,8 @@ msgid ""
 "`How good the library was met "
 "<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
 msgstr ""
-"`Wie gut war die Bibliothek getroffen? "
-"<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
+"Machen Sie sich ein Bild von der`Resonanz <https://sorokin.engineer/posts/en/"
+"regexpstudio_site_is_lunched.html>`_ bei den Anwendern."
 
 # 4991414b12c64f829b62f63e6954ed5c
 #: ../../index.rst:40
@@ -138,15 +138,15 @@ msgid ""
 "<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
 "you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
-"Um die Bibliothek zu verwenden, fügen Sie einfach `die Quellen hinzu "
-"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`__ für "
-"Ihr Projekt und verwenden Sie die Klasse `TRegExpr <tregexpr.html>`__."
+"Um die Bibliothek zu verwenden, fügen Sie einfach `den Quelltext "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`__ Ihrem "
+"Projekt hinzu und verwenden Sie die Klasse `TRegExpr <tregexpr.html>`__."
 
 # 0d79895ebfb6444e9d3ff580b250cef6
 #: ../../index.rst:45
 msgid "In the `FAQ <faq.html>`_ you can learn from others users problems."
 msgstr ""
-"In den `FAQ <faq.html>`__ Sie können von anderen Benutzern Probleme lernen."
+"In den `FAQ <faq.html>`__ können Sie aus den Problemen anderer Nutzer lernen."
 
 # 495db3fc133940d68ab0e306d9d90e89
 #: ../../index.rst:47
@@ -155,9 +155,9 @@ msgid ""
 "<https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__"
 " will help you learn and debug regular expressions."
 msgstr ""
-"Bereit zum Ausführen der Windows-Anwendung `REStudio "
-"<https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__"
-" hilft Ihnen, reguläre Ausdrücke zu lernen und zu debuggen."
+"Die benutzerfreundliche Windows-Anwendung `REStudio <https://github.com/"
+"andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__ hilft Ihnen "
+"dabei, reguläre Ausdrücke zu erlernen und zu debuggen."
 
 # 9cff298482634c6dbc386a8a027e2840
 #: ../../index.rst:52
@@ -170,8 +170,8 @@ msgid ""
 "If you see any problems, please `create the bug "
 "<https://github.com/andgineer/TRegExpr/issues>`_."
 msgstr ""
-"Wenn Sie Probleme sehen, erstellen `Sie den Fehler <https://github.com/"
-"andgineer/TRegExpr/issues>`__."
+"Wenn Sie auf ein Problem stoßen, erstellen Sie bitte einen `Fehlerbericht "
+"<https://github.com/andgineer/TRegExpr/issues>`__."
 
 # e4726e8b8e7e4509bb7791a0c1815055
 #: ../../index.rst:58
@@ -181,7 +181,7 @@ msgstr "Quellcode"
 # 898ff6a3cafd4362a456612766b2b726
 #: ../../index.rst:59
 msgid "Pure Object Pascal."
-msgstr "Pure Object Pascal."
+msgstr "Ausschließlich Object Pascal."
 
 # 737ca1e7359545caa65cb89240868a3f
 #: ../../index.rst:61
@@ -194,8 +194,8 @@ msgid ""
 "`FreePascal fork (GitHub mirror of the SubVersion) "
 "<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
 msgstr ""
-"`FreePascal-Gabel (GitHub-Spiegel der Subversion) <https://github.com/"
-"graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`__"
+"`FreePascal-Fork (GitHub-Spiegel der Subversion) <https://github.com/graemeg/"
+"freepascal/blob/master/packages/regexpr/src/regexpr.pas>`__"
 
 # bfbc7bfded90471e851d3b8093cbc999
 #: ../../index.rst:65
@@ -277,7 +277,7 @@ msgstr ""
 #: ../../index.rst:100
 msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
 msgstr ""
-"Guido Muehlwitz - hässlicher Fehler in der Verarbeitung großer Saiten "
+"Guido Muehlwitz - hässlicher Fehler in der Verarbeitung großer Seiten "
 "gefunden und behoben"
 
 # 7f5bfc14b9ac4064b3ae3a150933960f
