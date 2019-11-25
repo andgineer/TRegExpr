@@ -68,10 +68,6 @@ RegEx        Matches
 ``\a``       alarm (BEL), same as ``\x07``
 ``\e``       escape (ESC), same as ``\x1b``
 ``\tfoobar`` ``foobar`` preceded by TAB
-``\h``       horizontal whitespace. the tab and all characters in the "space separator"
-             Unicode category.
-``\v``       vertical whitespace. all characters treated as line breaks in the Unicode
-             standard.
 ============ ==========================================================================
 
 .. _escape:
@@ -153,6 +149,10 @@ RegEx      Matches
 ``\D``     a non-numeric
 ``\s``     any space (same as ``[ \t\n\r\f]``)
 ``\S``     a non space
+``\h``     horizontal whitespace. the tab and all characters in the "space separator"
+           Unicode category.
+``\v``     vertical whitespace. all characters treated as line breaks in the Unicode
+           standard.
 ======     ==============================================
 
 You may use ``\w``, ``\d`` and ``\s`` within
