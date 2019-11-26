@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-26 16:03+0300\n"
-"PO-Revision-Date: 2019-11-26 10:05+0000\n"
-"Last-Translator: Elmar Dolgener <elmar.dolgener@fau.de>\n"
+"PO-Revision-Date: 2019-11-26 11:43+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/tregexpr/index/de/"
 ">\n"
 "Language: de\n"
@@ -230,15 +230,13 @@ msgstr ""
 
 # 20d0dc3b43624e2c97772a2714b57edc
 #: ../../index.rst:84
-#, fuzzy
 msgid ""
 "New translations are based on `GetText "
 "<https://en.wikipedia.org/wiki/Gettext>`_ and can be edited with `Weblate"
 " <https://hosted.weblate.org/projects/tregexpr/>`_."
 msgstr ""
-"Neue Übersetzungen basieren auf GetText "
-"<https://en.wikipedia.org/wiki/Gettext>`_ und kann mit` transifex.com "
-"bearbeitet werden "
+"Neue Übersetzungen basieren auf GetText <https://en.wikipedia.org/wiki/"
+"Gettext>`_ und kann mit` transifex.com bearbeitet werden "
 "<https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_."
 
 # bed34ff5ee4148a7b9dd8cd37c9db579
