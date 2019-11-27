@@ -329,11 +329,11 @@ const
     matchStart: 0
     ),
     ( // NULL chars in InputString
-    expression: '\d+\w+$';
-    inputText: #0+'.:'+#0+'ab'+#0+'_23_';
+    expression: '[2-5]+(\s+)([xyz\$\#]{3,})\1.+';
+    inputText: '.:'+#0+'ab'+#0+'_34  z$x  '+#0+'end';
     substitutionText: '';
-    expectedResult: '23_';
-    matchStart: 9
+    expectedResult: '34  z$x  '+#0+'end';
+    matchStart: 8
     )
   );
 
