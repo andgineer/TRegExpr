@@ -1,3 +1,5 @@
+*.cfg
+*.dof
 *.dcu
 *.res
 *.dproj

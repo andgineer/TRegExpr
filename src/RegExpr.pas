@@ -54,16 +54,7 @@ interface
 {$ENDIF}
 
 // ======== Determine compiler
-{$IFDEF VER80} Sorry, TRegExpr is for 32-bits Delphi only. Delphi 1 is not supported (and whos really care today?!). {$ENDIF}
-{$IFDEF VER90} {$DEFINE D2} {$ENDIF} // D2
-{$IFDEF VER93} {$DEFINE D2} {$ENDIF} // CPPB 1
-{$IFDEF VER100} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D3
-{$IFDEF VER110} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // CPPB 3
-{$IFDEF VER120} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D4
-{$IFDEF VER130} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D5
-{$IFDEF VER140} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D6
-{$IFDEF VER150} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
-{$IFDEF VER160} {$DEFINE D8} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$I regexpr_compilers.inc}
 
 // ======== Define base compiler options
 {$BOOLEVAL OFF}
@@ -731,8 +722,10 @@ uses
   UnicodeData;
 {$ENDIF}
 {$ELSE}
-uses
-  System.Character; // System.Character exists since Delphi 2009
+  {$IFDEF D2009}
+  uses
+    System.Character; // System.Character exists since Delphi 2009
+  {$ENDIF}
 {$ENDIF}
 
 const
@@ -790,7 +783,9 @@ begin
     {$ENDIF}
   {$ELSE}
     {$IFDEF UniCode}
+    {$IFDEF D2009}
     Result := TCharacter.ToUpper (ch);
+    {$ENDIF}
     {$ELSE}
     Result := AnsiUpperCase (ch)[1];
     {$ENDIF}
@@ -816,7 +811,9 @@ begin
     {$ENDIF}
   {$ELSE}
     {$IFDEF UniCode}
+    {$IFDEF D2009}
     Result := TCharacter.ToLower (ch);
+    {$ENDIF}
     {$ELSE}
     Result := AnsiLowerCase (ch)[1];
     {$ENDIF}
@@ -1317,10 +1314,12 @@ begin
     Result := _LowerCase (Ch);
   {$ELSE}
     {$IFDEF UniCode}
+    {$IFDEF D2009}
     if TCharacter.IsUpper (Ch) then
       Result := TCharacter.ToLower (Ch)
     else
       Result := TCharacter.ToUpper (Ch);
+    {$ENDIF}
     {$ELSE}
     Result := _UpperCase (Ch);
     if Result = Ch then
@@ -1514,7 +1513,7 @@ end;
 {$ENDIF}
 
 
-function TRegExpr.IsWordChar(AChar: REChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.IsWordChar(AChar: REChar): Boolean;
 begin
   Result := Pos(AChar, fWordChars)>0;
   {$IFDEF UnicodeWordDetection}
