@@ -5,8 +5,9 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
- v. 0.956 2019.11.22
- -=- (+) Rework UpperCase/LowerCase/InvertCase for FPC+Delphi.
+ v. 0.957 2019.11.23
+ -=- (+) InputString can contain NULL chars. By Alexey Torgashin.
+ -=- (^) Rework UpperCase/LowerCase/InvertCase for FPC+Delphi.
   By Alexey Torgashin.
 
  v. 0.955 2019.11.20
