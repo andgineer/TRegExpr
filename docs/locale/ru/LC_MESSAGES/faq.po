@@ -10,13 +10,17 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-28 18:10+0300\n"
-"PO-Revision-Date: 2019-10-26 10:49+0000\n"
+"PO-Revision-Date: 2019-11-28 15:14+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
-"Language-Team: Russian "
-"<https://hosted.weblate.org/projects/tregexpr/faq/ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/faq/ru/>"
+"\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 420897fb25af4c7b8320dec8b9bf7c95
@@ -447,11 +451,15 @@ msgid ""
 "The TRegExpr parser does support input strings with #0 chars. The support"
 " was added by [Alexey-T](https://github.com/Alexey-T)."
 msgstr ""
+"Поддержка строк с нулевыми символами б]ла добавлена в TRegExpr в 2019 году "
+"[Alexey-T](https://github.com/Alexey-T)."
 
 # 9942c7c9068b44179d1618294123cc2a
 #: ../../faq.rst:191
 msgid "But at the moment #0 chars insire regex are not supported."
 msgstr ""
+"Но нулевые символы внутри самого регулярного выражения так и не "
+"поддерживаются."
 
 # 4a95a45ae6ef45479f620c97dca9223c
 #: ../../faq.rst:193
@@ -459,6 +467,8 @@ msgid ""
 "So you can parse text with `#0`-chars inside it but you cannot use regex "
 "with `#0`-chars or `\\x00` expression inside."
 msgstr ""
+"Таким образом вы можете обрабатывать текст с нулевыми символами но не можете "
+"вставлять нулевые символы или выражения `\\x00` в регулярное выражение."
 
 # 8c7a115a5d18412ca3b276de6978645a
 #~ msgid ""
@@ -480,4 +490,3 @@ msgstr ""
 #~ "Чтобы работать с #0 символами, нужно "
 #~ "приложить большие усилия. Вы готовы "
 #~ "вызваться добровольцем?"
-
