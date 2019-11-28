@@ -180,13 +180,15 @@ don't like r.e. like ``\\w+\\\\w+\\.\\w+`` you can redefine the constant ``EscCh
 For example ``EscChar = "/"``. Then you can write ``/w+/w+/./w+``,
 looks unusual but more readable.
 
-Why TRegExpr does not work with strings with #0 inside?
+Why TRegExpr does not work with regex with #0 inside?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Answer**
 
-The TRegExpr parser convert all strings to PChars and internally all processing
-are based on #0k-terminated PChars.
+The TRegExpr parser does support input strings with #0 chars.
+The support was added by [Alexey-T](https://github.com/Alexey-T).
 
-To make it work with #0 chars we need a big effort. Are you going to volunteer
-to fix that?
+But at the moment #0 chars insire regex are not supported.
+
+So you can parse text with `#0`-chars inside it but you cannot use regex with
+`#0`-chars or `\x00` expression inside.
