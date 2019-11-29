@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-15 20:39+0300\n"
-"PO-Revision-Date: 2019-10-26 13:07+0000\n"
+"PO-Revision-Date: 2019-11-29 05:25+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
 "tregexpr/ru/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.9.1-dev\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 641c63bb9dac43b69cd3528d9789b841
@@ -50,7 +50,6 @@ msgstr "`Français <https://regex.sorokin.engineer/fr/latest/tregexpr.html>`__"
 
 # aa90c7e86ff940aab57b013680c2d4df
 #: ../../tregexpr.rst:11
-#, fuzzy
 msgid "`Español <https://regex.sorokin.engineer/es/latest/tregexpr.html>`__"
 msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
@@ -501,8 +500,8 @@ msgid ""
 "'1\\$ is $2\\\\rub\\\\' -> '1$ is <Match[2]>\\rub\\'\n"
 "'\\U$1\\\\r' transforms into '<Match[1] in uppercase>\\r'"
 msgstr ""
-"'1\\$ is $2\\\\rub\\\\' -> '1$ is <Match[2]>\\rub\\'\n"
-"'\\U$1\\\\r' transforms into '<Match[1] in uppercase>\\r'"
+"'1\\$ is $2\\\\rub\\\\' -> '1$ это <Match[2]>\\rub\\'\n"
+"'\\U$1\\\\r' преобразуется '<Match[1] в верхнем регистре>\\r'"
 
 # 4b85168153b84479a80bb8202b1dfbcf
 #: ../../tregexpr.rst:183
@@ -1350,8 +1349,8 @@ msgid ""
 "``AExtendedSyntax`` - must be ``True`` if modifier ``/x`` will be ``On`` "
 "while using the r.e."
 msgstr ""
-"``AExtendedSyntax`` - должно быть ``True``, если модификатор ``/x`` будет"
-" ``On`` при использовании re"
+"``AExtendedSyntax`` - должно быть ``True``, если модификатор ``/x`` будет "
+"``On`` при использовании r.e."
 
 # e124e12c0b9748088e423f0cb5c53c37
 #: ../../tregexpr.rst:570
@@ -1447,10 +1446,8 @@ msgid ""
 msgstr ""
 "ERegExpr = class (Exception)\n"
 "  public\n"
-"   ErrorCode : integer; // error code. Compilation error codes are before"
-" 1000\n"
-"   CompilerErrorPos : integer; // Position in r.e. where compilation "
-"error occured\n"
+"   ErrorCode : integer; // error code. Ошибка компиляции менее 1000\n"
+"   CompilerErrorPos : integer; // Позиция в которой найдена ошибка\n"
 " end;"
 
 # 5acc362ed76e4abebb386b53cb17ec25
