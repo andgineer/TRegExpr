@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-28 18:10+0300\n"
-"PO-Revision-Date: 2019-11-28 15:14+0000\n"
+"PO-Revision-Date: 2019-11-29 05:25+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/faq/ru/>"
 "\n"
@@ -224,9 +224,9 @@ msgid ""
 "have to use real parser, not r.e."
 msgstr ""
 "Конечно, вы можете легко использовать TRegExpr для извлечения некоторой "
-"информации из HTML, как показано в моих примерах, но если вам нужен "
-"точный синтаксический анализ, вы должны использовать полноценный парсер, "
-"а не"
+"информации из HTML, как показано в моих примерах, но если вам нужен точный "
+"синтаксический анализ, вы должны использовать полноценный парсер, а не "
+"регулярные выражения"
 
 # 9565d64088b445999b49b8f42e7ef392
 #: ../../faq.rst:91
@@ -441,7 +441,6 @@ msgstr ""
 
 # 7317170c1b5148d49eaf5658800b28f1
 #: ../../faq.rst:184
-#, fuzzy
 msgid "Why TRegExpr does not work with regex with #0 inside?"
 msgstr "Почему TRegExpr не работает со строками с #0 внутри?"
 
@@ -451,7 +450,7 @@ msgid ""
 "The TRegExpr parser does support input strings with #0 chars. The support"
 " was added by [Alexey-T](https://github.com/Alexey-T)."
 msgstr ""
-"Поддержка строк с нулевыми символами б]ла добавлена в TRegExpr в 2019 году "
+"Поддержка строк с нулевыми символами была добавлена в TRegExpr в 2019 году "
 "[Alexey-T](https://github.com/Alexey-T)."
 
 # 9942c7c9068b44179d1618294123cc2a
