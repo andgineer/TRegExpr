@@ -1352,7 +1352,7 @@ procedure TRegExpr.SetExpression (const s : RegExprString);
 function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
  begin
    Idx := FSubExprIndexes [Idx];
-   if Idx >= 0 then
+   if (Idx >= 0) and (startp [Idx] <> nil) then
      Result := startp [Idx] - fInputStart + 1
    else Result := -1;
  end; { of function TRegExpr.GetMatchPos
@@ -1361,7 +1361,7 @@ function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
 function TRegExpr.GetMatchLen (Idx : integer) : PtrInt;
  begin
    Idx := FSubExprIndexes [Idx];
-   if Idx >= 0 then
+   if (Idx >= 0) and (startp [Idx] <> nil) then
      Result := endp [Idx] - startp [Idx]
    else Result := -1;
  end; { of function TRegExpr.GetMatchLen

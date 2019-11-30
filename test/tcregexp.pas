@@ -44,6 +44,7 @@ type
     procedure AreEqual(ArrorMessage: string; i1,i2: integer); overload;
   published
     procedure TestEmpty;
+    procedure TestNotFound;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -382,6 +383,19 @@ procedure TTestRegexpr.TestEmpty;
 begin
   CompileRE('1'); // just to create RE object
   IsFalse('UseOsLineEndOnReplace correctly set', RE.UseOsLineEndOnReplace);
+end;
+
+procedure TTestRegexpr.TestNotFound;
+var
+  N: integer;
+begin
+  CompileRE('w{2,}');
+  RE.InputString:= 'tst';
+  IsFalse('Exec must give False', RE.Exec(1));
+  N:= RE.MatchPos[0];
+  IsTrue('MatchPos[0] must be -1, but it is '+IntToStr(N), N=-1);
+  N:=RE.MatchLen[0];
+  IsTrue('MatchLen[0] must be -1, but it is '+IntToStr(N), N=-1);
 end;
 
 {$IFDEF OverMeth}
