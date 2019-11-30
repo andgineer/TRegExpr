@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-28 18:10+0300\n"
+"POT-Creation-Date: 2019-11-30 07:00+0300\n"
 "PO-Revision-Date: 2019-05-08 09:12+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: French "
@@ -472,7 +472,7 @@ msgstr ""
 #: ../../faq.rst:188
 msgid ""
 "The TRegExpr parser does support input strings with #0 chars. The support"
-" was added by [Alexey-T](https://github.com/Alexey-T)."
+" was added by `Alexey-T <https://github.com/Alexey-T>`__."
 msgstr ""
 
 # 9942c7c9068b44179d1618294123cc2a
@@ -495,18 +495,15 @@ msgstr ""
 #~ msgid "Why TRegExpr does not work with strings with #0 inside?"
 #~ msgstr ""
 
-# 8c7a115a5d18412ca3b276de6978645a
-#~ msgid ""
-#~ "The TRegExpr parser convert all strings"
-#~ " to PChars and internally all "
-#~ "processing are based on #0k-terminated"
-#~ " PChars."
-#~ msgstr ""
-
 # 28d625d553ad49b591763bf49d5fb880
 #~ msgid ""
-#~ "To make it work with #0 chars "
-#~ "we need a big effort. Are you "
-#~ "going to volunteer to fix that?"
+#~ msgstr ""
+
+# fd3e6f7f17ec417c8ef21374c88dd26e
+#~ msgid ""
+#~ "The TRegExpr parser does support input"
+#~ " strings with #0 chars. The support"
+#~ " was added by "
+#~ "[Alexey-T](https://github.com/Alexey-T)."
 #~ msgstr ""
 

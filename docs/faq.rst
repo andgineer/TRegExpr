@@ -186,7 +186,7 @@ Why TRegExpr does not work with regex with #0 inside?
 **Answer**
 
 The TRegExpr parser does support input strings with #0 chars.
-The support was added by [Alexey-T](https://github.com/Alexey-T).
+The support was added by `Alexey-T <https://github.com/Alexey-T>`__.
 
 But at the moment #0 chars insire regex are not supported.
 
