@@ -1353,7 +1353,7 @@ function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
  begin
    Idx := FSubExprIndexes [Idx];
    if Idx >= 0 then
-     Result := startp [Idx] - PRegExprChar(fInputString) + 1
+     Result := startp [Idx] - fInputStart + 1
    else Result := -1;
  end; { of function TRegExpr.GetMatchPos
 --------------------------------------------------------------}
@@ -1971,7 +1971,7 @@ function TRegExpr.ParseReg (paren : integer; var flagp : integer) : PRegExprChar
       EXIT;
      end
     else inc (regparse); // skip trailing ')'
-  if (paren = 0) and (regparse^ <> #0) then begin
+  if (paren = 0) and (regparse < fRegexEnd) then begin
       if regparse^ = ')'
        then Error (reeCompParseRegUnmatchedBrackets2)
        else Error (reeCompParseRegJunkOnEnd);
@@ -1994,7 +1994,7 @@ function TRegExpr.ParseBranch (var flagp : integer) : PRegExprChar;
 
   ret := EmitNode (BRANCH);
   chain := nil;
-  while (regparse^ <> #0) and (regparse^ <> '|')
+  while (regparse < fRegexEnd) and (regparse^ <> '|')
         and (regparse^ <> ')') do begin
     latest := ParsePiece (flags);
     if latest = nil then begin
@@ -2261,14 +2261,14 @@ function TRegExpr.UnQuoteChar (var APtr : PRegExprChar) : REChar;
     'x': begin // \x: hex char
       Result := #0;
       inc (APtr);
-      if APtr^ = #0 then begin
+      if APtr >= fRegexEnd then begin
         Error (reeNoHexCodeAfterBSlashX);
         EXIT;
        end;
       if APtr^ = '{' then begin // \x{nnnn} //###0.936
          REPEAT
           inc (APtr);
-          if APtr^ = #0 then begin
+          if APtr >= fRegexEnd then begin
             Error (reeNoHexCodeAfterBSlashX);
             EXIT;
            end;
@@ -2288,7 +2288,7 @@ function TRegExpr.UnQuoteChar (var APtr : PRegExprChar) : REChar;
          Result := REChar (HexDig (APtr^));
          // HexDig will cause Error if bad hex digit found
          inc (APtr);
-         if APtr^ = #0 then begin
+         if APtr >= fRegexEnd then begin
            Error (reeNoHexCodeAfterBSlashX);
            EXIT;
           end;
@@ -2507,9 +2507,9 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
           inc (regparse);
          end;
 
-        while (regparse^ <> #0) and (regparse^ <> ']') do begin
+        while (regparse < fRegexEnd) and (regparse^ <> ']') do begin
           if (regparse^ = '-')
-              and ((regparse + 1)^ <> #0) and ((regparse + 1)^ <> ']')
+              and ((regparse + 1) < fRegexEnd) and ((regparse + 1)^ <> ']')
               and CanBeRange then begin
              inc (regparse);
              RangeEnd := regparse^;
@@ -2559,7 +2559,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            else begin
              if regparse^ = EscChar then begin
                 inc (regparse);
-                if regparse^ = #0 then begin
+                if regparse >= fRegexEnd then begin
                   Error (reeParseAtomTrailingBackSlash);
                   EXIT;
                  end;
@@ -2600,7 +2600,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            // check for extended Perl syntax : (?..)
            if (regparse + 1)^ = '#' then begin // (?#comment)
               inc (regparse, 2); // find closing ')'
-              while (regparse^ <> #0) and (regparse^ <> ')')
+              while (regparse < fRegexEnd) and (regparse^ <> ')')
                do inc (regparse);
               if regparse^ <> ')' then begin
                 Error (reeUnclosedComment);
@@ -2612,7 +2612,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            else begin // modifiers ?
              inc (regparse); // skip '?'
              begmodfs := regparse;
-             while (regparse^ <> #0) and (regparse^ <> ')')
+             while (regparse < fRegexEnd) and (regparse^ <> ')')
               do inc (regparse);
              if (regparse^ <> ')')
                 or not ParseModifiersStr (copy (begmodfs, 1, (regparse - begmodfs)), fCompModifiers) then begin
@@ -2641,7 +2641,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            flagp := flagp or flags and (HASWIDTH or SPSTART);
           end;
       end;
-    #0, '|', ')': begin // Supposed to be caught earlier.
+    '|', ')': begin // Supposed to be caught earlier.
        Error (reeInternalUrp);
        EXIT;
       end;
@@ -2650,7 +2650,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
        EXIT;
       end;
     EscChar: begin
-        if regparse^ = #0 then begin
+        if regparse >= fRegexEnd then begin
           Error (reeTrailingBackSlash);
           EXIT;
          end;
@@ -2738,7 +2738,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
                {$ELSE}regparse^ in XIgnoredChars{$ENDIF})) then begin //###0.941 \x
          if regparse^ = '#' then begin // Skip eXtended comment
             // find comment terminator (group of \n and/or \r)
-            while (regparse^ <> #0) and (regparse^ <> #$d) and (regparse^ <> #$a)
+            while (regparse < fRegexEnd) and (regparse^ <> #$d) and (regparse^ <> #$a)
              do inc (regparse);
             while (regparse^ = #$d) or (regparse^ = #$a) // skip comment terminator
              do inc (regparse); // attempt to support different type of line separators
@@ -3700,7 +3700,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
   if AOffset > (length (fInputString) + 1) // for matching empty string after last char.
    then EXIT;
 
-  StartPtr := PRegExprChar(fInputString) + AOffset - 1;
+  StartPtr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
   if regmust <> nil then begin
@@ -3789,7 +3789,7 @@ function TRegExpr.ExecNext : boolean;
    end;
 //  Offset := MatchPos [0] + MatchLen [0];
 //  if MatchLen [0] = 0
-  Offset := endp [0] - PRegExprChar(fInputString) + 1; //###0.929
+  Offset := endp [0] - fInputStart + 1; //###0.929
   if endp [0] = startp [0] //###0.929
    then inc (Offset); // prevent infinite looping if empty string match r.e.
   Result := ExecPrim (Offset);
@@ -3809,11 +3809,7 @@ procedure TRegExpr.SetInputString (const AInputString : RegExprString);
   fInputString := AInputString;
   UniqueString (fInputString);
 
-  // Mark beginning of line for ^ .
   fInputStart := PRegExprChar(fInputString);
-
-  // Pointer to end of input stream - for
-  // pascal-style string processing (may include #0)
   fInputEnd := fInputStart + Length(fInputString);
  end; { of procedure TRegExpr.SetInputString
 --------------------------------------------------------------}

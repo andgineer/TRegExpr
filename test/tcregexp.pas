@@ -329,7 +329,7 @@ const
     matchStart: 0
     ),
     ( // NULL chars in InputString
-    expression: '[2-5]+(\s+)([xyz\$\#]{3,})\1.+';
+    expression: #0+'?[2-5]+(\s+)([xyz\$\#]{3,})\1'+#0+'+.+';
     inputText: '.:'+#0+'ab'+#0+'_34  z$x  '+#0+'end';
     substitutionText: '';
     expectedResult: '34  z$x  '+#0+'end';
