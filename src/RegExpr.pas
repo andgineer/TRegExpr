@@ -271,6 +271,10 @@ type
     reginput : PRegExprChar; // String-input pointer.
     fInputStart : PRegExprChar; // Pointer to first char of input string.
     fInputEnd : PRegExprChar; // Pointer to char AFTER last char of input string
+    fRegexStart : PRegExprChar;
+    fRegexEnd : PRegExprChar;
+    fMetaStart : PRegExprChar;
+    fMetaEnd : PRegExprChar;
 
     // work variables for compiler's routines
     regparse : PRegExprChar;  // Input-scan pointer.
@@ -884,21 +888,21 @@ begin
 end;
 {$ENDIF}
 
+const
+  META : RegExprString = '^$.[()|?+*'+EscChar+'{';
+
 function QuoteRegExprMetaChars (const AStr : RegExprString) : RegExprString;
- const
-  RegExprMetaSet : RegExprString = '^$.[()|?+*'+EscChar+'{'
-  + ']}'; // - this last are additional to META.
-  // Very similar to META array, but slighly changed.
-  // !Any changes in META array must be synchronized with this set.
  var
+  MetaAll : RegExprString; // Very similar to META, but slighly changed.
   i, i0, Len : PtrInt;
 begin
   Result := '';
+  MetaAll := META + ']}';
   Len := length (AStr);
   i := 1;
   i0 := i;
   while i <= Len do begin
-    if Pos (AStr [i], RegExprMetaSet) > 0 then begin
+    if Pos (AStr [i], MetaAll) > 0 then begin
       Result := Result + System.Copy (AStr, i0, i - i0)
                  + EscChar + AStr [i];
       i0 := i + 1;
@@ -1274,6 +1278,9 @@ constructor TRegExpr.Create;
 
   FUseOsLineEndOnReplace:=True;
   FReplaceLineEnd:=sLineBreak;
+
+  fMetaStart := PRegExprChar(META);
+  fMetaEnd := fMetaStart + Length(META);
  end; { of constructor TRegExpr.Create
 --------------------------------------------------------------}
 
@@ -1335,6 +1342,9 @@ procedure TRegExpr.SetExpression (const s : RegExprString);
   if (s <> fExpression) or not fExprIsCompiled then begin
     fExprIsCompiled := false;
     fExpression := s;
+    UniqueString(fExpression);
+    fRegexStart := PRegExprChar(fExpression);
+    fRegexEnd := fRegexStart + Length(fExpression);
     InvalidateProgramm; //###0.941
   end;
  end; { of procedure TRegExpr.SetExpression
@@ -1696,16 +1706,16 @@ procedure TRegExpr.InsertOperator (op : TREOp; opnd : PRegExprChar; sz : integer
  end; { of procedure TRegExpr.InsertOperator
 --------------------------------------------------------------}
 
-function strcspn (s1 : PRegExprChar; s2 : PRegExprChar) : PtrInt;
+function FindInitLen (s1, s2, end1, end2 : PRegExprChar) : PtrInt;
 // find length of initial segment of s1 consisting
 // entirely of characters not from s2
  var scan1, scan2 : PRegExprChar;
  begin
   Result := 0;
   scan1 := s1;
-  while scan1^ <> #0 do begin
+  while scan1 < end1 do begin
     scan2 := s2;
-    while scan2^ <> #0 do
+    while scan2 < end2 do
      if scan1^ = scan2^
       then EXIT
       else inc (scan2);
@@ -1721,9 +1731,6 @@ const
  SIMPLE   =   02; // Simple enough to be STAR/PLUS/BRACES operand.
  SPSTART  =   04; // Starts with * or +.
  WORST    =   0;  // Worst case.
- META : array [0 .. 12] of REChar = (
-  '^', '$', '.', '[', '(', ')', '|', '?', '+', '*', EscChar, '{', #0);
- // Any modification must be synchronized with QuoteRegExprMetaChars !!!
 
 {$IFDEF UniCode}
  RusRangeLo : array [0 .. 33] of REChar =
@@ -2745,13 +2752,13 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
          ret := EmitNode (COMMENT); // comment
         end
        else begin
-         len := strcspn (regparse, META);
+         len := FindInitLen (regparse, fMetaStart, fRegexEnd, fMetaEnd);
          if len <= 0 then
           if regparse^ <> '{' then begin
              Error (reeRarseAtomInternalDisaster);
              EXIT;
             end
-           else len := strcspn (regparse + 1, META) + 1; // bad {n,m} - compile as EXATLY
+           else len := FindInitLen (regparse + 1, fMetaStart, fRegexEnd, fMetaEnd) + 1; // bad {n,m} - compile as EXATLY
          ender := (regparse + len)^;
          if (len > 1)
             and ((ender = '*') or (ender = '+') or (ender = '?') or (ender = '{'))
