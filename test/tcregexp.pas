@@ -82,6 +82,7 @@ type
     Procedure RunTest32;
     Procedure RunTest33;
     Procedure RunTest34;
+    Procedure RunTest35;
     Procedure RunTestGrp;
   end;
 
@@ -97,7 +98,7 @@ Type
   end;
 
 const
-  testCases: array [1..34] of TRegExTest = (
+  testCases: array [1..35] of TRegExTest = (
     (
     expression: '\nd';
     inputText: 'abc'#13#10'def';
@@ -335,6 +336,13 @@ const
     substitutionText: '';
     expectedResult: '34  z$x  '+#0+'end';
     matchStart: 8
+    ),
+    (
+    expression: '\w\cA\cz\cb\w';
+    inputText: '..abc'#1#26#2'test';
+    substitutionText: '';
+    expectedResult: 'c'#1#26#2't';
+    matchStart: 5
     )
   );
 
@@ -575,6 +583,11 @@ end;
 procedure TTestRegexpr.RunTest34;
 begin
   RunRETest(34);
+end;
+
+procedure TTestRegexpr.RunTest35;
+begin
+  RunRETest(35);
 end;
 
 procedure TTestRegexpr.RunTestGrp;
