@@ -1524,26 +1524,28 @@ begin
 end;
 {$ENDIF}
 
-
 function TRegExpr.IsWordChar(AChar: REChar): Boolean;
 begin
-  Result := Pos(AChar, fWordChars)>0;
+  Result := Pos(AChar, fWordChars) > 0;
   {$IFDEF UnicodeWordDetection}
-  If Not Result and UseUnicodeWordDetection then
-    Result:=IsUnicodeWordChar(aChar);
+  if not Result and UseUnicodeWordDetection then
+    Result := IsUnicodeWordChar(aChar);
   {$ENDIF}
 end;
 
-
 function TRegExpr.IsSpaceChar(AChar: PRegExprChar): Boolean;
 begin
-  Result:=Pos(AChar^,fSpaceChars)>0;
+  Result := Pos(AChar^, fSpaceChars) > 0;
 end;
 
 function TRegExpr.IsDigit(AChar: PRegExprChar): Boolean;
 begin
-  // Avoid Unicode char-> ansi char conversion in case of unicode regexp.
-  Result:=Ord(AChar^) in [Ord('0')..Ord('9')]
+  case AChar^ of
+    '0'..'9':
+      Result := True;
+    else
+      Result := False;
+  end;
 end;
 
 procedure TRegExpr.InvalidateProgramm;
