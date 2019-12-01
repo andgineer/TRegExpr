@@ -262,6 +262,10 @@ type
     reginput : PRegExprChar; // String-input pointer.
     fInputStart : PRegExprChar; // Pointer to first char of input string.
     fInputEnd : PRegExprChar; // Pointer to char AFTER last char of input string
+    fRegexStart : PRegExprChar;
+    fRegexEnd : PRegExprChar;
+    fMetaStart : PRegExprChar;
+    fMetaEnd : PRegExprChar;
 
     // work variables for compiler's routines
     regparse : PRegExprChar;  // Input-scan pointer.
@@ -731,7 +735,7 @@ uses
 const
  // TRegExpr.VersionMajor/Minor return values of these constants:
  TRegExprVersionMajor : integer = 0;
- TRegExprVersionMinor : integer = 952;
+ TRegExprVersionMinor : integer = 958;
 
  MaskModI = 1;  // modifier /i bit in fModifiers
  MaskModR = 2;  // -"- /r
@@ -881,21 +885,21 @@ begin
 end;
 {$ENDIF}
 
+const
+  META : RegExprString = '^$.[()|?+*'+EscChar+'{';
+
 function QuoteRegExprMetaChars (const AStr : RegExprString) : RegExprString;
- const
-  RegExprMetaSet : RegExprString = '^$.[()|?+*'+EscChar+'{'
-  + ']}'; // - this last are additional to META.
-  // Very similar to META array, but slighly changed.
-  // !Any changes in META array must be synchronized with this set.
  var
+  MetaAll : RegExprString; // Very similar to META, but slighly changed.
   i, i0, Len : PtrInt;
 begin
   Result := '';
+  MetaAll := META + ']}';
   Len := length (AStr);
   i := 1;
   i0 := i;
   while i <= Len do begin
-    if Pos (AStr [i], RegExprMetaSet) > 0 then begin
+    if Pos (AStr [i], MetaAll) > 0 then begin
       Result := Result + System.Copy (AStr, i0, i - i0)
                  + EscChar + AStr [i];
       i0 := i + 1;
@@ -1271,6 +1275,9 @@ constructor TRegExpr.Create;
 
   FUseOsLineEndOnReplace:=True;
   FReplaceLineEnd:=sLineBreak;
+
+  fMetaStart := PRegExprChar(META);
+  fMetaEnd := fMetaStart + Length(META);
  end; { of constructor TRegExpr.Create
 --------------------------------------------------------------}
 
@@ -1334,6 +1341,9 @@ procedure TRegExpr.SetExpression (const s : RegExprString);
   if (s <> fExpression) or not fExprIsCompiled then begin
     fExprIsCompiled := false;
     fExpression := s;
+    UniqueString(fExpression);
+    fRegexStart := PRegExprChar(fExpression);
+    fRegexEnd := fRegexStart + Length(fExpression);
     InvalidateProgramm; //###0.941
   end;
  end; { of procedure TRegExpr.SetExpression
@@ -1342,8 +1352,8 @@ procedure TRegExpr.SetExpression (const s : RegExprString);
 function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
  begin
    Idx := FSubExprIndexes [Idx];
-   if Idx >= 0 then
-     Result := startp [Idx] - PRegExprChar(fInputString) + 1
+   if (Idx >= 0) and (startp [Idx] <> nil) then
+     Result := startp [Idx] - fInputStart + 1
    else Result := -1;
  end; { of function TRegExpr.GetMatchPos
 --------------------------------------------------------------}
@@ -1351,7 +1361,7 @@ function TRegExpr.GetMatchPos (Idx : integer) : PtrInt;
 function TRegExpr.GetMatchLen (Idx : integer) : PtrInt;
  begin
    Idx := FSubExprIndexes [Idx];
-   if Idx >= 0 then
+   if (Idx >= 0) and (startp [Idx] <> nil) then
      Result := endp [Idx] - startp [Idx]
    else Result := -1;
  end; { of function TRegExpr.GetMatchLen
@@ -1695,16 +1705,16 @@ procedure TRegExpr.InsertOperator (op : TREOp; opnd : PRegExprChar; sz : integer
  end; { of procedure TRegExpr.InsertOperator
 --------------------------------------------------------------}
 
-function strcspn (s1 : PRegExprChar; s2 : PRegExprChar) : PtrInt;
+function FindInitLen (s1, s2, end1, end2 : PRegExprChar) : PtrInt;
 // find length of initial segment of s1 consisting
 // entirely of characters not from s2
  var scan1, scan2 : PRegExprChar;
  begin
   Result := 0;
   scan1 := s1;
-  while scan1^ <> #0 do begin
+  while scan1 < end1 do begin
     scan2 := s2;
-    while scan2^ <> #0 do
+    while scan2 < end2 do
      if scan1^ = scan2^
       then EXIT
       else inc (scan2);
@@ -1720,9 +1730,6 @@ const
  SIMPLE   =   02; // Simple enough to be STAR/PLUS/BRACES operand.
  SPSTART  =   04; // Starts with * or +.
  WORST    =   0;  // Worst case.
- META : array [0 .. 12] of REChar = (
-  '^', '$', '.', '[', '(', ')', '|', '?', '+', '*', EscChar, '{', #0);
- // Any modification must be synchronized with QuoteRegExprMetaChars !!!
 
 {$IFDEF UniCode}
  RusRangeLo : array [0 .. 33] of REChar =
@@ -1964,7 +1971,7 @@ function TRegExpr.ParseReg (paren : integer; var flagp : integer) : PRegExprChar
       EXIT;
      end
     else inc (regparse); // skip trailing ')'
-  if (paren = 0) and (regparse^ <> #0) then begin
+  if (paren = 0) and (regparse < fRegexEnd) then begin
       if regparse^ = ')'
        then Error (reeCompParseRegUnmatchedBrackets2)
        else Error (reeCompParseRegJunkOnEnd);
@@ -1987,7 +1994,7 @@ function TRegExpr.ParseBranch (var flagp : integer) : PRegExprChar;
 
   ret := EmitNode (BRANCH);
   chain := nil;
-  while (regparse^ <> #0) and (regparse^ <> '|')
+  while (regparse < fRegexEnd) and (regparse^ <> '|')
         and (regparse^ <> ')') do begin
     latest := ParsePiece (flags);
     if latest = nil then begin
@@ -2254,14 +2261,14 @@ function TRegExpr.UnQuoteChar (var APtr : PRegExprChar) : REChar;
     'x': begin // \x: hex char
       Result := #0;
       inc (APtr);
-      if APtr^ = #0 then begin
+      if APtr >= fRegexEnd then begin
         Error (reeNoHexCodeAfterBSlashX);
         EXIT;
        end;
       if APtr^ = '{' then begin // \x{nnnn} //###0.936
          REPEAT
           inc (APtr);
-          if APtr^ = #0 then begin
+          if APtr >= fRegexEnd then begin
             Error (reeNoHexCodeAfterBSlashX);
             EXIT;
            end;
@@ -2281,7 +2288,7 @@ function TRegExpr.UnQuoteChar (var APtr : PRegExprChar) : REChar;
          Result := REChar (HexDig (APtr^));
          // HexDig will cause Error if bad hex digit found
          inc (APtr);
-         if APtr^ = #0 then begin
+         if APtr >= fRegexEnd then begin
            Error (reeNoHexCodeAfterBSlashX);
            EXIT;
           end;
@@ -2500,9 +2507,9 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
           inc (regparse);
          end;
 
-        while (regparse^ <> #0) and (regparse^ <> ']') do begin
+        while (regparse < fRegexEnd) and (regparse^ <> ']') do begin
           if (regparse^ = '-')
-              and ((regparse + 1)^ <> #0) and ((regparse + 1)^ <> ']')
+              and ((regparse + 1) < fRegexEnd) and ((regparse + 1)^ <> ']')
               and CanBeRange then begin
              inc (regparse);
              RangeEnd := regparse^;
@@ -2552,7 +2559,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            else begin
              if regparse^ = EscChar then begin
                 inc (regparse);
-                if regparse^ = #0 then begin
+                if regparse >= fRegexEnd then begin
                   Error (reeParseAtomTrailingBackSlash);
                   EXIT;
                  end;
@@ -2593,7 +2600,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            // check for extended Perl syntax : (?..)
            if (regparse + 1)^ = '#' then begin // (?#comment)
               inc (regparse, 2); // find closing ')'
-              while (regparse^ <> #0) and (regparse^ <> ')')
+              while (regparse < fRegexEnd) and (regparse^ <> ')')
                do inc (regparse);
               if regparse^ <> ')' then begin
                 Error (reeUnclosedComment);
@@ -2605,7 +2612,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            else begin // modifiers ?
              inc (regparse); // skip '?'
              begmodfs := regparse;
-             while (regparse^ <> #0) and (regparse^ <> ')')
+             while (regparse < fRegexEnd) and (regparse^ <> ')')
               do inc (regparse);
              if (regparse^ <> ')')
                 or not ParseModifiersStr (copy (begmodfs, 1, (regparse - begmodfs)), fCompModifiers) then begin
@@ -2634,7 +2641,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
            flagp := flagp or flags and (HASWIDTH or SPSTART);
           end;
       end;
-    #0, '|', ')': begin // Supposed to be caught earlier.
+    '|', ')': begin // Supposed to be caught earlier.
        Error (reeInternalUrp);
        EXIT;
       end;
@@ -2643,7 +2650,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
        EXIT;
       end;
     EscChar: begin
-        if regparse^ = #0 then begin
+        if regparse >= fRegexEnd then begin
           Error (reeTrailingBackSlash);
           EXIT;
          end;
@@ -2731,7 +2738,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
                {$ELSE}regparse^ in XIgnoredChars{$ENDIF})) then begin //###0.941 \x
          if regparse^ = '#' then begin // Skip eXtended comment
             // find comment terminator (group of \n and/or \r)
-            while (regparse^ <> #0) and (regparse^ <> #$d) and (regparse^ <> #$a)
+            while (regparse < fRegexEnd) and (regparse^ <> #$d) and (regparse^ <> #$a)
              do inc (regparse);
             while (regparse^ = #$d) or (regparse^ = #$a) // skip comment terminator
              do inc (regparse); // attempt to support different type of line separators
@@ -2744,13 +2751,13 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
          ret := EmitNode (COMMENT); // comment
         end
        else begin
-         len := strcspn (regparse, META);
+         len := FindInitLen (regparse, fMetaStart, fRegexEnd, fMetaEnd);
          if len <= 0 then
           if regparse^ <> '{' then begin
              Error (reeRarseAtomInternalDisaster);
              EXIT;
             end
-           else len := strcspn (regparse + 1, META) + 1; // bad {n,m} - compile as EXATLY
+           else len := FindInitLen (regparse + 1, fMetaStart, fRegexEnd, fMetaEnd) + 1; // bad {n,m} - compile as EXATLY
          ender := (regparse + len)^;
          if (len > 1)
             and ((ender = '*') or (ender = '+') or (ender = '?') or (ender = '{'))
@@ -3693,7 +3700,7 @@ function TRegExpr.ExecPrim (AOffset: PtrInt) : boolean;
   if AOffset > (length (fInputString) + 1) // for matching empty string after last char.
    then EXIT;
 
-  StartPtr := PRegExprChar(fInputString) + AOffset - 1;
+  StartPtr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
   if regmust <> nil then begin
@@ -3782,7 +3789,7 @@ function TRegExpr.ExecNext : boolean;
    end;
 //  Offset := MatchPos [0] + MatchLen [0];
 //  if MatchLen [0] = 0
-  Offset := endp [0] - PRegExprChar(fInputString) + 1; //###0.929
+  Offset := endp [0] - fInputStart + 1; //###0.929
   if endp [0] = startp [0] //###0.929
    then inc (Offset); // prevent infinite looping if empty string match r.e.
   Result := ExecPrim (Offset);
@@ -3802,11 +3809,7 @@ procedure TRegExpr.SetInputString (const AInputString : RegExprString);
   fInputString := AInputString;
   UniqueString (fInputString);
 
-  // Mark beginning of line for ^ .
   fInputStart := PRegExprChar(fInputString);
-
-  // Pointer to end of input stream - for
-  // pascal-style string processing (may include #0)
   fInputEnd := fInputStart + Length(fInputString);
  end; { of procedure TRegExpr.SetInputString
 --------------------------------------------------------------}

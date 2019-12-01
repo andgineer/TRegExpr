@@ -44,6 +44,7 @@ type
     procedure AreEqual(ArrorMessage: string; i1,i2: integer); overload;
   published
     procedure TestEmpty;
+    procedure TestNotFound;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -329,7 +330,7 @@ const
     matchStart: 0
     ),
     ( // NULL chars in InputString
-    expression: '[2-5]+(\s+)([xyz\$\#]{3,})\1.+';
+    expression: #0+'?[2-5]+(\s+)([xyz\$\#]{3,})\1'+#0+'+.+';
     inputText: '.:'+#0+'ab'+#0+'_34  z$x  '+#0+'end';
     substitutionText: '';
     expectedResult: '34  z$x  '+#0+'end';
@@ -382,6 +383,15 @@ procedure TTestRegexpr.TestEmpty;
 begin
   CompileRE('1'); // just to create RE object
   IsFalse('UseOsLineEndOnReplace correctly set', RE.UseOsLineEndOnReplace);
+end;
+
+procedure TTestRegexpr.TestNotFound;
+begin
+  CompileRE('w{2,}');
+  RE.InputString:= 'tst';
+  IsFalse('Exec must give False', RE.Exec(1));
+  AreEqual('MatchPos[0] must fail', -1, RE.MatchPos[0]);
+  AreEqual('MatchLen[0] must fail', -1, RE.MatchLen[0]);
 end;
 
 {$IFDEF OverMeth}
