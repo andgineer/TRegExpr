@@ -2269,13 +2269,13 @@ function TRegExpr.UnQuoteChar (var APtr : PRegExprChar) : REChar;
           EXIT;
         end;
         ch := APtr^;
-        if (ch in ['a'..'z']) then // fast LowerCase
-          Dec(ch, 32);
+        if (ch >= 'a') and (ch <= 'z') then // fast UpCase
+          Dec (ch, 32);
         if (ch < 'A') or (ch > 'Z') then begin
           Error (reeNoLetterAfterBSlashC);
           EXIT;
         end;
-        Result := REChar(Ord(ch)-Ord('A')+1);
+        Result := REChar (Ord(ch) - Ord('A') + 1);
       end;
     'x': begin // \x: hex char
       Result := #0;
