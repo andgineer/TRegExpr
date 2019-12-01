@@ -1728,10 +1728,10 @@ function FindInitLen (s1, s2, end1, end2 : PRegExprChar) : PtrInt;
 
 const
 // Flags to be passed up and down.
- HASWIDTH =   01; // Known never to match nil string.
- SIMPLE   =   02; // Simple enough to be STAR/PLUS/BRACES operand.
- SPSTART  =   04; // Starts with * or +.
- WORST    =   0;  // Worst case.
+ flag_HasWidth  = 01; // Known never to match nil string.
+ flag_Simple    = 02; // Simple enough to be STAR/PLUS/BRACES operand.
+ flag_SpecStart = 04; // Starts with * or +.
+ flag_Worst     =  0; // Worst case.
 
 {$IFDEF UniCode}
  RusRangeLo : array [0 .. 33] of REChar =
@@ -1859,7 +1859,7 @@ function TRegExpr.CompileRegExpr (exp : PRegExprChar) : boolean;
     // with the beginning of the r.e. and avoiding duplication
     // strengthens checking. Not a strong reason, but sufficient in the
     // absence of others.
-    if (flags and SPSTART) <> 0 then begin
+    if (flags and flag_SpecStart) <> 0 then begin
         longest := nil;
         len := 0;
         while scan <> nil do begin
@@ -1912,7 +1912,7 @@ function TRegExpr.ParseReg (paren : integer; var flagp : integer) : PRegExprChar
  begin
   flags:=0;
   Result := nil;
-  flagp := HASWIDTH; // Tentatively.
+  flagp := flag_HasWidth; // Tentatively.
   parno := 0; // eliminate compiler stupid warning
   SavedModifiers := fCompModifiers;
 
@@ -1937,9 +1937,9 @@ function TRegExpr.ParseReg (paren : integer; var flagp : integer) : PRegExprChar
   if ret <> nil
    then Tail (ret, br) // OPEN -> first.
    else ret := br;
-  if (flags and HASWIDTH) = 0
-   then flagp := flagp and not HASWIDTH;
-  flagp := flagp or flags and SPSTART;
+  if (flags and flag_HasWidth) = 0
+   then flagp := flagp and not flag_HasWidth;
+  flagp := flagp or flags and flag_SpecStart;
   while (regparse^ = '|') do begin
     inc (regparse);
     br := ParseBranch (flags);
@@ -1948,9 +1948,9 @@ function TRegExpr.ParseReg (paren : integer; var flagp : integer) : PRegExprChar
        EXIT;
       end;
     Tail (ret, br); // BRANCH -> BRANCH.
-    if (flags and HASWIDTH) = 0
-     then flagp := flagp and not HASWIDTH;
-    flagp := flagp or flags and SPSTART;
+    if (flags and flag_HasWidth) = 0
+     then flagp := flagp and not flag_HasWidth;
+    flagp := flagp or flags and flag_SpecStart;
    end;
 
   // Make a closing node, and hook it on the end.
@@ -1992,7 +1992,7 @@ function TRegExpr.ParseBranch (var flagp : integer) : PRegExprChar;
   flags : integer;
  begin
   flags:=0;
-  flagp := WORST; // Tentatively.
+  flagp := flag_Worst; // Tentatively.
 
   ret := EmitNode (BRANCH);
   chain := nil;
@@ -2003,9 +2003,9 @@ function TRegExpr.ParseBranch (var flagp : integer) : PRegExprChar;
       Result := nil;
       EXIT;
      end;
-    flagp := flagp or flags and HASWIDTH;
+    flagp := flagp or flags and flag_HasWidth;
     if chain = nil // First piece.
-     then flagp := flagp or flags and SPSTART
+     then flagp := flagp or flags and flag_SpecStart
      else Tail (chain, latest);
     chain := latest;
    end;
@@ -2108,17 +2108,17 @@ function TRegExpr.ParsePiece (var flagp : integer) : PRegExprChar;
     flagp := flags;
     EXIT;
    end;
-  if ((flags and HASWIDTH) = 0) and (op <> '?') then begin
+  if ((flags and flag_HasWidth) = 0) and (op <> '?') then begin
     Error (reePlusStarOperandCouldBeEmpty);
     EXIT;
    end;
 
   case op of
     '*': begin
-      flagp := WORST or SPSTART;
+      flagp := flag_Worst or flag_SpecStart;
       NonGreedyCh := (regparse + 1)^ = '?'; //###0.940
       NonGreedyOp := NonGreedyCh or ((fCompModifiers and MaskModG) = 0); //###0.940
-      if (flags and SIMPLE) = 0 then begin
+      if (flags and flag_Simple) = 0 then begin
          if NonGreedyOp //###0.940
           then EmitComplexBraces (0, MaxBracesArg, NonGreedyOp)
           else begin // Emit x* as (x&|), where & means "self".
@@ -2139,10 +2139,10 @@ function TRegExpr.ParsePiece (var flagp : integer) : PRegExprChar;
        then inc (regparse); // Skip extra char ('?')
      end; { of case '*'}
     '+': begin
-      flagp := WORST or SPSTART or HASWIDTH;
+      flagp := flag_Worst or flag_SpecStart or flag_HasWidth;
       NonGreedyCh := (regparse + 1)^ = '?'; //###0.940
       NonGreedyOp := NonGreedyCh or ((fCompModifiers and MaskModG) = 0); //###0.940
-      if (flags and SIMPLE) = 0 then begin
+      if (flags and flag_Simple) = 0 then begin
          if NonGreedyOp //###0.940
           then EmitComplexBraces (1, MaxBracesArg, NonGreedyOp)
           else begin // Emit x+ as x(&|), where & means "self".
@@ -2163,11 +2163,11 @@ function TRegExpr.ParsePiece (var flagp : integer) : PRegExprChar;
        then inc (regparse); // Skip extra char ('?')
      end; { of case '+'}
     '?': begin
-      flagp := WORST;
+      flagp := flag_Worst;
       NonGreedyCh := (regparse + 1)^ = '?'; //###0.940
       NonGreedyOp := NonGreedyCh or ((fCompModifiers and MaskModG) = 0); //###0.940
       if NonGreedyOp then begin //###0.940  // We emit x?? as x{0,1}?
-         if (flags and SIMPLE) = 0
+         if (flags and flag_Simple) = 0
           then EmitComplexBraces (0, 1, NonGreedyOp)
           else EmitSimpleBraces (0, 1, NonGreedyOp);
         end
@@ -2214,13 +2214,13 @@ function TRegExpr.ParsePiece (var flagp : integer) : PRegExprChar;
         EXIT;
        end;
       if BracesMin > 0
-       then flagp := WORST;
+       then flagp := flag_Worst;
       if BracesMax > 0
-       then flagp := flagp or HASWIDTH or SPSTART;
+       then flagp := flagp or flag_HasWidth or flag_SpecStart;
 
       NonGreedyCh := (regparse + 1)^ = '?'; //###0.940
       NonGreedyOp := NonGreedyCh or ((fCompModifiers and MaskModG) = 0); //###0.940
-      if (flags and SIMPLE) <> 0
+      if (flags and flag_Simple) <> 0
        then EmitSimpleBraces (BracesMin, BracesMax, NonGreedyOp)
        else EmitComplexBraces (BracesMin, BracesMax, NonGreedyOp);
       if NonGreedyCh //###0.940
@@ -2351,7 +2351,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
     else ret := EmitNode (EXACTLY);
    EmitC (ch);
    EmitC (#0);
-   flagp := flagp or HASWIDTH or SIMPLE;
+   flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
  procedure EmitStr (const s : RegExprString);
@@ -2481,7 +2481,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
  begin
   Result := nil;
   flags:=0;
-  flagp := WORST; // Tentatively.
+  flagp := flag_Worst; // Tentatively.
 
   inc (regparse);
   case (regparse - 1)^ of
@@ -2496,16 +2496,16 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
     '.':
        if (fCompModifiers and MaskModS) <> 0 then begin
           ret := EmitNode (ANY);
-          flagp := flagp or HASWIDTH or SIMPLE;
+          flagp := flagp or flag_HasWidth or flag_Simple;
          end
         else begin // not /s, so emit [^:LineSeparators:]
           ret := EmitNode (ANYML);
-          flagp := flagp or HASWIDTH; // not so simple ;)
+          flagp := flagp or flag_HasWidth; // not so simple ;)
 //          ret := EmitRange (ANYBUT);
 //          EmitRangeStr (LineSeparators); //###0.941
 //          EmitRangeStr (LinePairedSeparator); // !!! isn't correct if have to accept only paired
 //          EmitRangeC (#0);
-//          flagp := flagp or HASWIDTH or SIMPLE;
+//          flagp := flagp or flag_HasWidth or flag_Simple;
          end;
     '[': begin
         if regparse^ = '^' then begin // Complement of range.
@@ -2601,7 +2601,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
           EXIT;
          end;
         inc (regparse);
-        flagp := flagp or HASWIDTH or SIMPLE;
+        flagp := flagp or flag_HasWidth or flag_Simple;
       end;
     '(': begin
         if regparse^ = '?' then begin
@@ -2613,7 +2613,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
                Result := nil;
                EXIT;
               end;
-             flagp := flagp or flags and (HASWIDTH or SPSTART);
+             flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
            end
            else
            // check for extended Perl syntax : (?..)
@@ -2657,7 +2657,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
              Result := nil;
              EXIT;
             end;
-           flagp := flagp or flags and (HASWIDTH or SPSTART);
+           flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
           end;
       end;
     '|', ')': begin // Supposed to be caught earlier.
@@ -2680,11 +2680,11 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
           'Z': ret := EmitNode (EOL); //###0.941
           'd': begin // r.e.extension - any digit ('0' .. '9')
              ret := EmitNode (ANYDIGIT);
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'D': begin // r.e.extension - not digit ('0' .. '9')
              ret := EmitNode (NOTDIGIT);
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           's': begin // r.e.extension - any space char
              {$IFDEF UseSetOfChar}
@@ -2694,7 +2694,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
              {$ELSE}
              ret := EmitNode (ANYSPACE);
              {$ENDIF}
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'S': begin // r.e.extension - not space char
              {$IFDEF UseSetOfChar}
@@ -2704,7 +2704,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
              {$ELSE}
              ret := EmitNode (NOTSPACE);
              {$ENDIF}
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'w': begin // r.e.extension - any english char / digit / '_'
              {$IFDEF UseSetOfChar}
@@ -2714,7 +2714,7 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
              {$ELSE}
              ret := EmitNode (ANYLETTER);
              {$ENDIF}
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'W': begin // r.e.extension - not english char / digit / '_'
              {$IFDEF UseSetOfChar}
@@ -2724,26 +2724,26 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
              {$ELSE}
              ret := EmitNode (NOTLETTER);
              {$ENDIF}
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'v': begin
              ret := EmitRange (ANYOF);
              EmitRangeStr (RegExprLineSeparators);
              EmitRangeC (#0);
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'h': begin
              ret := EmitRange (ANYOF);
              EmitRangeStr (RegExprHorzSeparators);
              EmitRangeC (#0);
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
            '1' .. '9': begin //###0.936
              if (fCompModifiers and MaskModI) <> 0
               then ret := EmitNode (BSUBEXPCI)
               else ret := EmitNode (BSUBEXP);
              EmitC (REChar (ord (regparse^) - ord ('0')));
-             flagp := flagp or HASWIDTH or SIMPLE;
+             flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           else EmitExactly (UnQuoteChar (regparse));
          end; { of case}
@@ -2781,9 +2781,9 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
          if (len > 1)
             and ((ender = '*') or (ender = '+') or (ender = '?') or (ender = '{'))
           then dec (len); // Back off clear of ?+*{ operand.
-         flagp := flagp or HASWIDTH;
+         flagp := flagp or flag_HasWidth;
          if len = 1
-         then flagp := flagp or SIMPLE;
+         then flagp := flagp or flag_Simple;
          if (fCompModifiers and MaskModI) <> 0
           then ret := EmitNode (EXACTLYCI)
           else ret := EmitNode (EXACTLY);
