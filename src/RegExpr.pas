@@ -735,7 +735,7 @@ uses
 const
  // TRegExpr.VersionMajor/Minor return values of these constants:
  TRegExprVersionMajor : integer = 0;
- TRegExprVersionMinor : integer = 958;
+ TRegExprVersionMinor : integer = 959;
 
  MaskModI = 1;  // modifier /i bit in fModifiers
  MaskModR = 2;  // -"- /r
@@ -1153,6 +1153,7 @@ const
  reeInternalUrp = 114;
  reeQPSBFollowsNothing = 115;
  reeTrailingBackSlash = 116;
+ reeNoLetterAfterBSlashC = 117;
  reeRarseAtomInternalDisaster = 119;
  reeBRACESArgTooBig = 122;
  reeBracesMinParamGreaterMax = 124;
@@ -1191,6 +1192,7 @@ function TRegExpr.ErrorMsg (AErrorID : integer) : RegExprString;
     reeInvalidRange: Result := 'TRegExpr(comp): Invalid [] Range';
     reeParseAtomTrailingBackSlash: Result := 'TRegExpr(comp): Parse Atom Trailing \';
     reeNoHexCodeAfterBSlashX: Result := 'TRegExpr(comp): No Hex Code After \x';
+    reeNoLetterAfterBSlashC: Result := 'TRegExpr(comp): No Letter "A".."Z" After \c';
     reeHexCodeAfterBSlashXTooBig: Result := 'TRegExpr(comp): Hex Code After \x Is Too Big';
     reeUnmatchedSqBrackets: Result := 'TRegExpr(comp): Unmatched []';
     reeInternalUrp: Result := 'TRegExpr(comp): Internal Urp';
@@ -2250,6 +2252,8 @@ function TRegExpr.ParsePiece (var flagp : integer) : PRegExprChar;
   end;
 
 function TRegExpr.UnQuoteChar (var APtr : PRegExprChar) : REChar;
+ var
+   ch : REChar;
  begin
   case APtr^ of
     't': Result := #$9;  // \t => tab (HT/TAB)
@@ -2258,6 +2262,21 @@ function TRegExpr.UnQuoteChar (var APtr : PRegExprChar) : REChar;
     'f': Result := #$c;  // \f => form feed (FF)
     'a': Result := #$7;  // \a => alarm (bell) (BEL)
     'e': Result := #$1b; // \e => escape (ESC)
+    'c': begin // \cK => code for Ctrl+K
+        inc (APtr);
+        if APtr >= fRegexEnd then begin
+          Error (reeNoLetterAfterBSlashC);
+          EXIT;
+        end;
+        ch := APtr^;
+        if (ch >= 'a') and (ch <= 'z') then // fast UpCase
+          Dec (ch, 32);
+        if (ch < 'A') or (ch > 'Z') then begin
+          Error (reeNoLetterAfterBSlashC);
+          EXIT;
+        end;
+        Result := REChar (Ord(ch) - Ord('A') + 1);
+      end;
     'x': begin // \x: hex char
       Result := #0;
       inc (APtr);

@@ -5,7 +5,8 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
- v. 0.958 2019.11.30
+ v. 0.959 2019.12.01
+ -=- (+) Support control escape sequences \cA...\cZ. By Alexey Torgashin.
  -=- (+) Expression can contain NULL chars. By Alexey Torgashin.
 
  v. 0.957 2019.11.23
