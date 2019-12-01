@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-30 07:00+0300\n"
+"POT-Creation-Date: 2019-12-01 07:42+0300\n"
 "PO-Revision-Date: 2019-11-23 04:24+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: German "
@@ -71,10 +71,9 @@ msgstr ""
 # d8ef20469e4244fbbcde975c75897209
 # 62d80bab9af74b41bd449cadfbf74ea8
 # 6e16604b5b6f40948ef74c01a559c635
-# 21f81bf320364bc9bf014c2ef8a62289
 #: ../../faq.rst:19 ../../faq.rst:44 ../../faq.rst:54 ../../faq.rst:70
 #: ../../faq.rst:83 ../../faq.rst:103 ../../faq.rst:114 ../../faq.rst:134
-#: ../../faq.rst:161 ../../faq.rst:173 ../../faq.rst:186
+#: ../../faq.rst:161 ../../faq.rst:173
 msgid "**Answer**"
 msgstr "**Antworten**"
 
@@ -455,30 +454,6 @@ msgstr ""
 "= &quot;/&quot; ``. Dann können Sie `` / w + / w + /. / W + `` schreiben,"
 " sieht ungewöhnlich aus, ist aber lesbarer."
 
-# 7317170c1b5148d49eaf5658800b28f1
-#: ../../faq.rst:184
-msgid "Why TRegExpr does not work with regex with #0 inside?"
-msgstr ""
-
-# fd3e6f7f17ec417c8ef21374c88dd26e
-#: ../../faq.rst:188
-msgid ""
-"The TRegExpr parser does support input strings with #0 chars. The support"
-" was added by `Alexey-T <https://github.com/Alexey-T>`__."
-msgstr ""
-
-# 9942c7c9068b44179d1618294123cc2a
-#: ../../faq.rst:191
-msgid "But at the moment #0 chars insire regex are not supported."
-msgstr ""
-
-# 4a95a45ae6ef45479f620c97dca9223c
-#: ../../faq.rst:193
-msgid ""
-"So you can parse text with `#0`-chars inside it but you cannot use regex "
-"with `#0`-chars or `\\x00` expression inside."
-msgstr ""
-
 # e2a3dc0c705640788818a205bca41480
 #~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 #~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
@@ -487,15 +462,31 @@ msgstr ""
 #~ msgid "Why TRegExpr does not work with strings with #0 inside?"
 #~ msgstr ""
 
-# 28d625d553ad49b591763bf49d5fb880
+# fd3e6f7f17ec417c8ef21374c88dd26e
 #~ msgid ""
+#~ msgstr ""
+
+# 7317170c1b5148d49eaf5658800b28f1
+#~ msgid "Why TRegExpr does not work with regex with #0 inside?"
 #~ msgstr ""
 
 # fd3e6f7f17ec417c8ef21374c88dd26e
 #~ msgid ""
 #~ "The TRegExpr parser does support input"
 #~ " strings with #0 chars. The support"
-#~ " was added by "
-#~ "[Alexey-T](https://github.com/Alexey-T)."
+#~ " was added by `Alexey-T "
+#~ "<https://github.com/Alexey-T>`__."
+#~ msgstr ""
+
+# 9942c7c9068b44179d1618294123cc2a
+#~ msgid "But at the moment #0 chars insire regex are not supported."
+#~ msgstr ""
+
+# 4a95a45ae6ef45479f620c97dca9223c
+#~ msgid ""
+#~ "So you can parse text with "
+#~ "`#0`-chars inside it but you cannot "
+#~ "use regex with `#0`-chars or `\\x00` "
+#~ "expression inside."
 #~ msgstr ""
 
