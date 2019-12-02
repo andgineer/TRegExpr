@@ -12,5 +12,6 @@
 urls.txt
 bin/
 lib/
-test-regex
-testregexpr
+build/
+test_fpc
+test_delphi

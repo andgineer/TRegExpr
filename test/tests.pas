@@ -1,4 +1,4 @@
-unit tcregexp;
+unit tests;
 
 {$IFDEF FPC}
 {$mode objfpc}{$H+}
