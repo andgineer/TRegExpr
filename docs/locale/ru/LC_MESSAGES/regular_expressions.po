@@ -10,13 +10,17 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-01 21:29+0300\n"
-"PO-Revision-Date: 2019-11-24 07:53+0000\n"
+"PO-Revision-Date: 2019-12-02 19:05+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
-"Language-Team: Russian "
-"<https://hosted.weblate.org/projects/tregexpr/regular_expressions/ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
+"regular_expressions/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 2301c624bdbc4514a3ba3deafe4768d2
@@ -295,24 +299,23 @@ msgstr "``foobar``, перед которым стоит TAB"
 
 # 85fa17d40c55412aa3b44963ef808ea4
 #: ../../regular_expressions.rst:71
-#, fuzzy
 msgid "``\\cx``"
-msgstr "``\\xnn``"
+msgstr "``\\cx``"
 
 # 7b96b0a75c1045ea990f25164362ac0f
 #: ../../regular_expressions.rst:71
 msgid "Control Escape Sequence (``Ctrl-x``)"
-msgstr ""
+msgstr "Управляющая последовательность (``Ctrl-x``)"
 
 # 4c1e5ea3f9fc42d58dd64698d720abd4
 #: ../../regular_expressions.rst:72
 msgid "For example, ``\\ci`` matches the target sequence"
-msgstr ""
+msgstr "Например ``\\ci`` соответствует"
 
 # 87218694eec54e45bead46dd146e0eec
 #: ../../regular_expressions.rst:73
 msgid "``\\x09``, because ``ctrl-i`` has the value ``0x09``"
-msgstr ""
+msgstr "``\\x09``, потому что ``ctrl-i`` это код ``0x09``"
 
 # 7e35e7f2e1254b7ba12a76e202ca9b9a
 #: ../../regular_expressions.rst:80
@@ -558,7 +561,6 @@ msgstr "``\\h``"
 
 # be112ef05e4f43afb2a13b85b94d07a8
 #: ../../regular_expressions.rst:156
-#, fuzzy
 msgid "horizontal whitespace. the tab and all characters"
 msgstr ""
 "горизонтальный разделитель. Табуляция, пробел и все символы которые "
@@ -566,7 +568,6 @@ msgstr ""
 
 # be112ef05e4f43afb2a13b85b94d07a8
 #: ../../regular_expressions.rst:157
-#, fuzzy
 msgid "in the \"space separator\" Unicode category."
 msgstr ""
 "горизонтальный разделитель. Табуляция, пробел и все символы которые "
@@ -579,16 +580,13 @@ msgstr "``\\v``"
 
 # 2e843a74c12b4db5815c32b90e8b2216
 #: ../../regular_expressions.rst:158
-#, fuzzy
 msgid "vertical whitespace. all characters treated as"
-msgstr ""
-"вертикальные разделители. новая строка и все символы которые в Unicode "
-"входят в \"vertical whitespace\"."
+msgstr "вертикальные разделители. новая строка и все символы которые"
 
 # 2e843a74c12b4db5815c32b90e8b2216
 #: ../../regular_expressions.rst:159
 msgid "line breaks in the Unicode standard."
-msgstr ""
+msgstr "в Unicode входят в разделители строк."
 
 # 308467b8235f4d0588ece5b4de390555
 #: ../../regular_expressions.rst:162
@@ -1872,4 +1870,3 @@ msgstr ""
 # 01e078b0b8fd44a38e50d4a0eeb5a5c9
 #~ msgid ""
 #~ msgstr ""
-
