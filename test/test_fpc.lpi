@@ -7,7 +7,7 @@
         <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="testregexpr"/>
+      <Title Value="test_fpc"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
@@ -30,11 +30,11 @@
     </RequiredPackages>
     <Units Count="2">
       <Unit0>
-        <Filename Value="testregexpr.pp"/>
+        <Filename Value="test_fpc.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="tcregexp.pas"/>
+        <Filename Value="tests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit1>
     </Units>
@@ -42,12 +42,12 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="testregexpr"/>
+      <Filename Value="test_fpc"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
       <OtherUnitFiles Value="../src"/>
-      <UnitOutputDirectory Value="bin"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
       <Debugging>

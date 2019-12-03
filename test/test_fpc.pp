@@ -1,9 +1,9 @@
-program testregexpr;
+program test_fpc;
 
 {$mode objfpc}{$H+}
 
 uses
-  Classes, consoletestrunner, tcregexp;
+  Classes, consoletestrunner, tests;
 
 type
 
@@ -22,7 +22,8 @@ begin
   DefaultRunAllTests:=True;
   Application := TMyTestRunner.Create(nil);
   Application.Initialize;
-  Application.Title:='testregexpr';
+  Application.Title:='test_fpc';
   Application.Run;
   Application.Free;
 end.
+
