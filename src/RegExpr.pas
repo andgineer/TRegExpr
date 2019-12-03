@@ -323,6 +323,8 @@ type
     function IsWordChar(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsDigit(AChar : PRegExprChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function IsHorzSeparator(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function IsLineSeparator(AChar : REChar) : Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
@@ -407,7 +409,7 @@ type
     function ExecPrim (AOffset: PtrInt) : boolean;
 
     {$IFDEF RegExpPCodeDump}
-    function DumpOp (op : REChar) : RegExprString;
+    function DumpOp (op : TREOp) : RegExprString;
     {$ENDIF}
 
     function GetMatchPos (Idx : integer) : PtrInt;
@@ -1090,9 +1092,14 @@ const
  BOUND       = TREOp (37);  // Match "" between words //###0.943
  NOTBOUND    = TREOp (38);  // Match "" not between words //###0.943
 
+ ANYHORZSEP  = TREOp (39); // Any horizontal whitespace \h
+ NOTHORZSEP  = TREOp (40); // Not horizontal whitespace \H
+ ANYVERTSEP  = TREOp (41); // Any vertical whitespace \v
+ NOTVERTSEP  = TREOp (42); // Not vertical whitespace \V
+
  // !!! Change OPEN value if you add new opcodes !!!
 
- OPEN        = TREOp (39); // -    Mark this point in input as start of \n
+ OPEN        = TREOp (43); // -    Mark this point in input as start of \n
                            //      OPEN + 1 is \1, etc.
  CLOSE       = TREOp (ord (OPEN) + NSUBEXP);
                            // -    Analogous to OPEN.
@@ -1543,6 +1550,35 @@ begin
   case AChar^ of
     '0'..'9':
       Result := True;
+    else
+      Result := False;
+  end;
+end;
+
+function TRegExpr.IsHorzSeparator(AChar: REChar): Boolean;
+begin
+ // Tab and Unicode categoty "Space Separator": https://www.compart.com/en/unicode/category/Zs
+ case AChar of
+   #9, #$20, #$A0:
+     Result := True;
+   {$IFDEF UniCode}
+   #$1680, #$2000..#$200A, #$202F, #$205F, #$3000:
+     Result := True;
+   {$ENDIF}
+   else
+     Result := False;
+  end;
+end;
+
+function TRegExpr.IsLineSeparator(AChar: REChar): Boolean;
+begin
+  case AChar of
+    #$d, #$a, #$b, #$c:
+      Result := True;
+    {$IFDEF UniCode}
+    #$2028, #$2029, #$85:
+      Result := True;
+    {$ENDIF}
     else
       Result := False;
   end;
@@ -2538,9 +2574,9 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
                {$IFDEF UniCode} //###0.935
                if (ord ((regparse + 1)^) < 256)
                   and (char ((regparse + 1)^)
-                        in ['d', 'D', 's', 'S', 'w', 'W', 'v', 'h']) then begin
+                        in ['d', 'D', 's', 'S', 'w', 'W', 'v', 'V', 'h', 'H']) then begin
                {$ELSE}
-               if (regparse + 1)^ in ['d', 'D', 's', 'S', 'w', 'W', 'v', 'h'] then begin
+               if (regparse + 1)^ in ['d', 'D', 's', 'S', 'w', 'W', 'v', 'V', 'h', 'H'] then begin
                {$ENDIF}
                  EmitRangeC ('-'); // or treat as error ?!!
                  CONTINUE;
@@ -2729,18 +2765,22 @@ function TRegExpr.ParseAtom (var flagp : integer) : PRegExprChar;
              flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'v': begin
-             ret := EmitRange (ANYOF);
-             EmitRangeStr (RegExprLineSeparators);
-             EmitRangeC (#0);
+             ret := EmitNode (ANYVERTSEP);
+             flagp := flagp or flag_HasWidth or flag_Simple;
+            end;
+          'V': begin
+             ret := EmitNode (NOTVERTSEP);
              flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'h': begin
-             ret := EmitRange (ANYOF);
-             EmitRangeStr (RegExprHorzSeparators);
-             EmitRangeC (#0);
+             ret := EmitNode (ANYHORZSEP);
              flagp := flagp or flag_HasWidth or flag_Simple;
             end;
-           '1' .. '9': begin //###0.936
+          'H': begin
+             ret := EmitNode (NOTHORZSEP);
+             flagp := flagp or flag_HasWidth or flag_Simple;
+            end;
+          '1' .. '9': begin //###0.936
              if (fCompModifiers and MaskModI) <> 0
               then ret := EmitNode (BSUBEXPCI)
               else ret := EmitNode (BSUBEXP);
@@ -2961,6 +3001,30 @@ function TRegExpr.regrepeat (p : PRegExprChar; AMax : PtrInt) : PtrInt;
         inc (scan);
         end;
     {$ENDIF}
+    ANYVERTSEP:
+      while (Result < TheMax) and IsLineSeparator(scan^) do
+        begin
+        inc (Result);
+        inc (scan);
+        end;
+    NOTVERTSEP:
+      while (Result < TheMax) and not IsLineSeparator(scan^) do
+        begin
+        inc (Result);
+        inc (scan);
+        end;
+    ANYHORZSEP:
+      while (Result < TheMax) and IsHorzSeparator(scan^) do
+        begin
+        inc (Result);
+        inc (scan);
+        end;
+    NOTHORZSEP:
+      while (Result < TheMax) and not IsHorzSeparator(scan^) do
+        begin
+        inc (Result);
+        inc (scan);
+        end;
     ANYOFTINYSET: begin
       while (Result < TheMax) and //!!!TinySet
        ((scan^ = opnd^) or (scan^ = (opnd + 1)^)
@@ -3166,6 +3230,26 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
             inc (reginput);
            end;
          {$ENDIF}
+         ANYVERTSEP: begin
+            if (reginput = fInputEnd) or not IsLineSeparator(reginput^) then
+              EXIT;
+            inc (reginput);
+           end;
+         NOTVERTSEP: begin
+            if (reginput = fInputEnd) or IsLineSeparator(reginput^) then
+              EXIT;
+            inc (reginput);
+           end;
+         ANYHORZSEP: begin
+            if (reginput = fInputEnd) or not IsHorzSeparator(reginput^) then
+              EXIT;
+            inc (reginput);
+           end;
+         NOTHORZSEP: begin
+            if (reginput = fInputEnd) or IsHorzSeparator(reginput^) then
+              EXIT;
+            inc (reginput);
+           end;
          EXACTLYCI: begin
             opnd := scan + REOpSz + RENextOffSz; // OPERAND
             // Inline the first character, for speed.
@@ -3544,6 +3628,22 @@ procedure TRegExpr.FillFirstCharSet (prog : PRegExprChar);
           end;
          NOTDIGIT: begin
            FirstCharSet := FirstCharSet + ([#0 .. #255] - ['0' .. '9']); //###0.948 FirstCharSet was forgotten
+           EXIT;
+          end;
+         ANYVERTSEP: begin
+           FirstCharSet := FirstCharSet + [#$d, #$a, #$b, #$c];
+           EXIT;
+          end;
+         NOTVERTSEP: begin
+           FirstCharSet := FirstCharSet + ([#0 .. #255] - [#$d, #$a, #$b, #$c]);
+           EXIT;
+          end;
+         ANYHORZSEP: begin
+           FirstCharSet := FirstCharSet + [#9, #$20, #$A0];
+           EXIT;
+          end;
+         NOTHORZSEP: begin
+           FirstCharSet := FirstCharSet + ([#0 .. #255] - [#9, #$20, #$A0]);
            EXIT;
           end;
          EXACTLYCI: begin
@@ -4166,6 +4266,10 @@ function TRegExpr.DumpOp (op : TREOp) : RegExprString;
     NOTDIGIT:     Result := 'NOTDIGIT';
     ANYSPACE:     Result := 'ANYSPACE';
     NOTSPACE:     Result := 'NOTSPACE';
+    ANYHORZSEP:   Result := 'ANYHORZSEP';
+    NOTHORZSEP:   Result := 'NOTHORZSEP';
+    ANYVERTSEP:   Result := 'ANYVERTSEP';
+    NOTVERTSEP:   Result := 'NOTVERTSEP';
     ANYOF:        Result := 'ANYOF';
     ANYBUT:       Result := 'ANYBUT';
     ANYOFCI:      Result := 'ANYOF/CI';
