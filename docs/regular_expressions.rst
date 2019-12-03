@@ -67,10 +67,9 @@ RegEx        Matches
 ``\f``       form feed (FF), same as ``\x0c``
 ``\a``       alarm (BEL), same as ``\x07``
 ``\e``       escape (ESC), same as ``\x1b``
-``\tfoobar`` ``foobar`` preceded by TAB
-``\cx``      Control Escape Sequence (``Ctrl-x``)
-..           For example, ``\ci`` matches the target sequence
-..           ``\x09``, because ``ctrl-i`` has the value ``0x09``
+``\cx``      | Control Escape Sequence (``Ctrl-x``)
+             | For example, ``\ci`` matches the target sequence
+             | ``\x09``, because ``ctrl-i`` has the value ``0x09``
 ============ ==========================================================================
 
 
@@ -153,10 +152,10 @@ RegEx      Matches
 ``\D``     a non-numeric
 ``\s``     any space (same as ``[ \t\n\r\f]``)
 ``\S``     a non space
-``\h``     horizontal whitespace. the tab and all characters
-..         in the "space separator" Unicode category.
-``\v``     vertical whitespace. all characters treated as
-..         line breaks in the Unicode standard.
+``\h``     | horizontal whitespace. the tab and all characters
+           | in the "space separator" Unicode category.
+``\v``     | vertical whitespace. all characters treated as
+           | line breaks in the Unicode standard.
 ======     ==============================================
 
 You may use ``\w``, ``\d`` and ``\s`` within

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-01 21:29+0300\n"
+"POT-Creation-Date: 2019-12-03 06:34+0300\n"
 "PO-Revision-Date: 2019-05-08 09:13+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
 "Language-Team: Bulgarian "
@@ -123,15 +123,15 @@ msgstr "Поредица от символи съвпада с тази поре
 # 319cc6f63c2a4caf92ca8a38ecb9802f
 # 22500637c54e49098693e87c9ccae9ec
 #: ../../regular_expressions.rst:40 ../../regular_expressions.rst:51
-#: ../../regular_expressions.rst:62 ../../regular_expressions.rst:89
-#: ../../regular_expressions.rst:107 ../../regular_expressions.rst:117
-#: ../../regular_expressions.rst:132 ../../regular_expressions.rst:148
-#: ../../regular_expressions.rst:166 ../../regular_expressions.rst:191
-#: ../../regular_expressions.rst:252 ../../regular_expressions.rst:274
-#: ../../regular_expressions.rst:297 ../../regular_expressions.rst:322
-#: ../../regular_expressions.rst:335 ../../regular_expressions.rst:368
-#: ../../regular_expressions.rst:416 ../../regular_expressions.rst:540
-#: ../../regular_expressions.rst:590 ../../regular_expressions.rst:614
+#: ../../regular_expressions.rst:62 ../../regular_expressions.rst:88
+#: ../../regular_expressions.rst:106 ../../regular_expressions.rst:116
+#: ../../regular_expressions.rst:131 ../../regular_expressions.rst:147
+#: ../../regular_expressions.rst:165 ../../regular_expressions.rst:190
+#: ../../regular_expressions.rst:251 ../../regular_expressions.rst:273
+#: ../../regular_expressions.rst:296 ../../regular_expressions.rst:321
+#: ../../regular_expressions.rst:334 ../../regular_expressions.rst:367
+#: ../../regular_expressions.rst:415 ../../regular_expressions.rst:539
+#: ../../regular_expressions.rst:589 ../../regular_expressions.rst:613
 msgid "RegEx"
 msgstr "регулярен израз"
 
@@ -140,23 +140,23 @@ msgstr "регулярен израз"
 # 4bdae65788674999a815b59c082bf527
 # 8c58ecc88958455389fb61b29c47426e
 #: ../../regular_expressions.rst:40 ../../regular_expressions.rst:51
-#: ../../regular_expressions.rst:62 ../../regular_expressions.rst:89
-#: ../../regular_expressions.rst:107 ../../regular_expressions.rst:117
-#: ../../regular_expressions.rst:132 ../../regular_expressions.rst:148
-#: ../../regular_expressions.rst:166 ../../regular_expressions.rst:191
-#: ../../regular_expressions.rst:252 ../../regular_expressions.rst:274
-#: ../../regular_expressions.rst:297 ../../regular_expressions.rst:322
-#: ../../regular_expressions.rst:335 ../../regular_expressions.rst:368
-#: ../../regular_expressions.rst:416 ../../regular_expressions.rst:540
-#: ../../regular_expressions.rst:590 ../../regular_expressions.rst:614
+#: ../../regular_expressions.rst:62 ../../regular_expressions.rst:88
+#: ../../regular_expressions.rst:106 ../../regular_expressions.rst:116
+#: ../../regular_expressions.rst:131 ../../regular_expressions.rst:147
+#: ../../regular_expressions.rst:165 ../../regular_expressions.rst:190
+#: ../../regular_expressions.rst:251 ../../regular_expressions.rst:273
+#: ../../regular_expressions.rst:296 ../../regular_expressions.rst:321
+#: ../../regular_expressions.rst:334 ../../regular_expressions.rst:367
+#: ../../regular_expressions.rst:415 ../../regular_expressions.rst:539
+#: ../../regular_expressions.rst:589 ../../regular_expressions.rst:613
 msgid "Matches"
 msgstr "кибрит"
 
 # 05cebc1522c4416b849b07c5466a117a
 # 6f46369e518745949f8ea11b2e6a7592
 # aa1637e1f53b44e389aab23d2fc1e42f
-#: ../../regular_expressions.rst:42 ../../regular_expressions.rst:404
-#: ../../regular_expressions.rst:405
+#: ../../regular_expressions.rst:42 ../../regular_expressions.rst:403
+#: ../../regular_expressions.rst:404
 msgid "``foobar``"
 msgstr "``foobar``"
 
@@ -275,44 +275,34 @@ msgstr "``\\e``"
 msgid "escape (ESC), same as ``\\x1b``"
 msgstr "escape (ESC), същото като ``\\x1b``"
 
-# f861afc1fd674a8ea890836e77efd551
-#: ../../regular_expressions.rst:70
-msgid "``\\tfoobar``"
-msgstr "``\\tfoobar``"
-
-# 50138bdc51004464a071cdfc76794e4e
-#: ../../regular_expressions.rst:70
-msgid "``foobar`` preceded by TAB"
-msgstr "``foobar``, предшествано от TAB"
-
 # 85fa17d40c55412aa3b44963ef808ea4
-#: ../../regular_expressions.rst:71
+#: ../../regular_expressions.rst:70
 #, fuzzy
 msgid "``\\cx``"
 msgstr "`` \\ Xnn``"
 
-# 7b96b0a75c1045ea990f25164362ac0f
-#: ../../regular_expressions.rst:71
+# 32eddeb2f4bb49edbb98f32b03ec0b1b
+#: ../../regular_expressions.rst
 msgid "Control Escape Sequence (``Ctrl-x``)"
 msgstr ""
 
-# 4c1e5ea3f9fc42d58dd64698d720abd4
-#: ../../regular_expressions.rst:72
+# 44fc44b707f940ebb83c8e472b669de3
+#: ../../regular_expressions.rst
 msgid "For example, ``\\ci`` matches the target sequence"
 msgstr ""
 
-# 87218694eec54e45bead46dd146e0eec
-#: ../../regular_expressions.rst:73
+# 44fc44b707f940ebb83c8e472b669de3
+#: ../../regular_expressions.rst
 msgid "``\\x09``, because ``ctrl-i`` has the value ``0x09``"
 msgstr ""
 
 # 7e35e7f2e1254b7ba12a76e202ca9b9a
-#: ../../regular_expressions.rst:80
+#: ../../regular_expressions.rst:79
 msgid "Escaping"
 msgstr "Escaping"
 
 # 95162b9fd89d454181ba6648918a1cd3
-#: ../../regular_expressions.rst:82
+#: ../../regular_expressions.rst:81
 msgid ""
 "If you want to use character ``\\`` by itself, not as part of ``escape-"
 "code``, just prefix it with ``\\``, like that: ``\\\\``."
@@ -321,7 +311,7 @@ msgstr ""
 "``escape-code``, просто го префиксирайте с ``\\``, като този: ``\\\\``."
 
 # fb29e285b1c54d6b8ba79d6cf2f24cbf
-#: ../../regular_expressions.rst:85
+#: ../../regular_expressions.rst:84
 msgid ""
 "In fact you can prefix (or ``escape``) with ``\\`` any character that has"
 " special meaning in regular expressions."
@@ -330,37 +320,37 @@ msgstr ""
 "символ, който има специално значение в регулярните изрази."
 
 # 9f03c2ed5d004c178a0c68eda87f8312
-#: ../../regular_expressions.rst:91
+#: ../../regular_expressions.rst:90
 msgid "``\\^FooBarPtr``"
 msgstr "``\\^FooBarPtr``"
 
 # da2e2027f9474bea8ebbec93a25e4be3
-#: ../../regular_expressions.rst:91
+#: ../../regular_expressions.rst:90
 msgid "``^FooBarPtr`` this is ``^`` and not `start of line <#lineseparators>`__"
 msgstr "``^FooBarPtr`` това е ``^`` `и не `старт на ред <#lineseparators>`__"
 
 # 9426d648293d4b4fbde0d4b165424745
-#: ../../regular_expressions.rst:92
+#: ../../regular_expressions.rst:91
 msgid "``\\[a\\]``"
 msgstr "``\\[a\\]``"
 
 # f7de56168c734690b58598c5a268a94f
-#: ../../regular_expressions.rst:92
+#: ../../regular_expressions.rst:91
 msgid "``[a]`` this is not `character class <#userclass>`__"
 msgstr "``[а]`` това не е &#39;class class <#userclass>`__"
 
 # 0647bc139a1e44e88ab4fca36da2dcc2
-#: ../../regular_expressions.rst:96
+#: ../../regular_expressions.rst:95
 msgid "Character Classes"
 msgstr "Класове на знаците"
 
 # a2465c9c491e426abd723d39ef28c7be
-#: ../../regular_expressions.rst:101
+#: ../../regular_expressions.rst:100
 msgid "User Character Classes"
 msgstr "Класове на потребителските знаци"
 
 # cda7014241084ffc801a314b5c29742c
-#: ../../regular_expressions.rst:103
+#: ../../regular_expressions.rst:102
 msgid ""
 "Character class is a list of characters inside ``[]``. The class matches "
 "any **one** character listed in this class."
@@ -369,19 +359,19 @@ msgstr ""
 "** един ** символ, изброени в този клас."
 
 # 29b9f34a3f794799996491af9a220658
-#: ../../regular_expressions.rst:109
+#: ../../regular_expressions.rst:108
 msgid "``foob[aeiou]r``"
 msgstr "`` foob [аеиоу] r``"
 
 # 5aca24add0ac4aedad65d7ee3ba4459a
-#: ../../regular_expressions.rst:109
+#: ../../regular_expressions.rst:108
 msgid "``foobar``, ``foober`` etc but not ``foobbr``, ``foobcr`` etc"
 msgstr ""
 "&quot;foobar&quot;, &quot;foober&quot; и т.н., но не и "
 "&quot;foobbr&quot;, &quot;foobcr&quot; и т.н."
 
 # 49139725730f49109f96cc7aab17f520
-#: ../../regular_expressions.rst:112
+#: ../../regular_expressions.rst:111
 msgid ""
 "You can ``invert`` the class - if the first character after the ``[`` is "
 "``^``, then the class matches any character **but** characters listed in "
@@ -392,19 +382,19 @@ msgstr ""
 "изброени в класа."
 
 # c1a092c15ffe4280a4de1ba80a73c942
-#: ../../regular_expressions.rst:119
+#: ../../regular_expressions.rst:118
 msgid "``foob[^aeiou]r``"
 msgstr "`` Foob [^ аеиоу] r``"
 
 # 06bde9a597004d619e4c77e419455ac2
-#: ../../regular_expressions.rst:119
+#: ../../regular_expressions.rst:118
 msgid "``foobbr``, ``foobcr`` etc but not ``foobar``, ``foober`` etc"
 msgstr ""
 "&quot;foobbr&quot;, &quot;foobcr&quot; и т.н., но не &quot;foobar&quot;, "
 "&quot;foober&quot; и т.н."
 
 # 737bfd29a6c64cc38e0ed0c8b9c917dd
-#: ../../regular_expressions.rst:122
+#: ../../regular_expressions.rst:121
 msgid ""
 "Within a list, the ``-`` character is used to specify a range, so that "
 "``a-z`` represents all characters between ``a`` and ``z``, inclusive."
@@ -414,7 +404,7 @@ msgstr ""
 "включително."
 
 # 6e3b251955144e319b558e0b0c7242cb
-#: ../../regular_expressions.rst:125
+#: ../../regular_expressions.rst:124
 msgid ""
 "If you want ``-`` itself to be a member of a class, put it at the start "
 "or end of the list, or `escape <#escape>`__ it with a backslash."
@@ -423,7 +413,7 @@ msgstr ""
 " в края на списъка, или `escape <#escape>`__ с обратна наклонена черта."
 
 # 7516c007a6aa4f7fa8cb6823e33e5df2
-#: ../../regular_expressions.rst:128
+#: ../../regular_expressions.rst:127
 msgid ""
 "If you want ``]`` or ``[`` you may place it at the start of list or "
 "escape it with a backslash."
@@ -432,54 +422,54 @@ msgstr ""
 "списъка или да го избягате с обратна наклонена черта."
 
 # 269e7a24531f42df8f3dc05e74fb9ec4
-#: ../../regular_expressions.rst:134
+#: ../../regular_expressions.rst:133
 msgid "``[-az]``"
 msgstr "``[-az]``"
 
-# 262ecb5cd36e4c518cdc8c0fc6819cbd
 # 97861cf27e894778ab24b653ad4070af
-#: ../../regular_expressions.rst:134 ../../regular_expressions.rst:135
-#: ../../regular_expressions.rst:136
+# 262ecb5cd36e4c518cdc8c0fc6819cbd
+#: ../../regular_expressions.rst:133 ../../regular_expressions.rst:134
+#: ../../regular_expressions.rst:135
 msgid "``a``, ``z`` and ``-``"
 msgstr "&quot;а&quot;, &quot;z&quot; и &quot;-`&quot;"
 
 # 1a4d8523913e4982be81473b6ef5bc01
-#: ../../regular_expressions.rst:135
+#: ../../regular_expressions.rst:134
 msgid "``[az-]``"
 msgstr "``[az-]``"
 
 # c022cffa3ef642a2825070f3a30e7b74
-#: ../../regular_expressions.rst:136
+#: ../../regular_expressions.rst:135
 msgid "``[a\\-z]``"
 msgstr "`` [А \\ -Z] ``"
 
 # 1342d8b4627e4ab38e88c86bad243c42
-#: ../../regular_expressions.rst:137
+#: ../../regular_expressions.rst:136
 msgid "``[a-z]``"
 msgstr "``[a-z]``"
 
 # b2bc17a8452d40b08cc2542f7df8075c
-#: ../../regular_expressions.rst:137
+#: ../../regular_expressions.rst:136
 msgid "characters from ``a`` to ``z``"
 msgstr "символи от ``а`` до `` ``"
 
 # 100606bbe9024b54903c489a4610c80e
-#: ../../regular_expressions.rst:138
+#: ../../regular_expressions.rst:137
 msgid "``[\\n-\\x0D]``"
 msgstr "``[\\n-\\x0D]``"
 
 # 3d90b66f1af34e0f8320dc8321c4e500
-#: ../../regular_expressions.rst:138
+#: ../../regular_expressions.rst:137
 msgid "characters from ``#10`` to ``#13``"
 msgstr "символи от &quot;# 10&quot; до &quot;# 13&quot;"
 
 # 7c4c43667b5e405abe354207fa8ae183
-#: ../../regular_expressions.rst:142
+#: ../../regular_expressions.rst:141
 msgid "Predefined Character Classes"
 msgstr "Предварително дефинирани класове символи"
 
 # 817fcc7d5ac1434babba9a55d88793d5
-#: ../../regular_expressions.rst:144
+#: ../../regular_expressions.rst:143
 msgid ""
 "There are a number of predefined character classes that keeps regular "
 "expressions more compact."
@@ -488,99 +478,99 @@ msgstr ""
 "регулярните изрази по-компактни."
 
 # 85fa17d40c55412aa3b44963ef808ea4
-#: ../../regular_expressions.rst:150
+#: ../../regular_expressions.rst:149
 msgid "``\\w``"
 msgstr "``\\W``"
 
 # 2c31bef370e44b50a9949645aa4b7e37
-#: ../../regular_expressions.rst:150
+#: ../../regular_expressions.rst:149
 msgid "an alphanumeric character (including ``_``)"
 msgstr "буквено-цифров знак (включително ``_``)"
 
 # 571bd1ce0fa1444fbc2c1d2574a091d6
-#: ../../regular_expressions.rst:151
+#: ../../regular_expressions.rst:150
 msgid "``\\W``"
 msgstr "``\\W``"
 
 # 27e54276b17045d7a1bfc8382ff78db5
-#: ../../regular_expressions.rst:151
+#: ../../regular_expressions.rst:150
 msgid "a nonalphanumeric"
 msgstr "не-буквено число"
 
 # 9cda84725980412a917e9703864047a9
-#: ../../regular_expressions.rst:152
+#: ../../regular_expressions.rst:151
 msgid "``\\d``"
 msgstr "`` \\ D``"
 
 # 0a90c7e21cf64799915875086b066d32
-#: ../../regular_expressions.rst:152
+#: ../../regular_expressions.rst:151
 msgid "a numeric character (same as ``[0123456789]``)"
 msgstr "цифров знак (същия като ``[0123456789]``)"
 
 # fb3731fe7c8f4daa85519e1624f6806a
-#: ../../regular_expressions.rst:153
+#: ../../regular_expressions.rst:152
 msgid "``\\D``"
 msgstr "`` \\ D``"
 
 # 1df9d045c0fe4bf5853a2d01dd7a58fb
-#: ../../regular_expressions.rst:153
+#: ../../regular_expressions.rst:152
 msgid "a non-numeric"
 msgstr "не-цифров"
 
 # 9848a35031e842bc80deda00ddcd5a4d
-#: ../../regular_expressions.rst:154
+#: ../../regular_expressions.rst:153
 msgid "``\\s``"
 msgstr "`` \\ S``"
 
 # 431f2a7edce64db393daf3c5cbcdb9c0
-#: ../../regular_expressions.rst:154
+#: ../../regular_expressions.rst:153
 msgid "any space (same as ``[ \\t\\n\\r\\f]``)"
 msgstr "всяко пространство (същото като `` [\\ t"
 
 # b50e51df4f1d47c981af98f4bfcf6c19
-#: ../../regular_expressions.rst:155
+#: ../../regular_expressions.rst:154
 msgid "``\\S``"
 msgstr "`` \\ S``"
 
 # 5d994221a5394bfbb7b27772b9c52caa
-#: ../../regular_expressions.rst:155
+#: ../../regular_expressions.rst:154
 msgid "a non space"
 msgstr "непространство"
 
 # 4e9eb1e0d9a04d5b81760cc2e7217900
-#: ../../regular_expressions.rst:156
+#: ../../regular_expressions.rst:155
 #, fuzzy
 msgid "``\\h``"
 msgstr "``\\W``"
 
-# be112ef05e4f43afb2a13b85b94d07a8
-#: ../../regular_expressions.rst:156
+# 6d49b1c2fa0b48e191bb58c659871df7
+#: ../../regular_expressions.rst
 msgid "horizontal whitespace. the tab and all characters"
 msgstr ""
 
-# be112ef05e4f43afb2a13b85b94d07a8
-#: ../../regular_expressions.rst:157
+# 6d49b1c2fa0b48e191bb58c659871df7
+#: ../../regular_expressions.rst
 msgid "in the \"space separator\" Unicode category."
 msgstr ""
 
 # 144b4226cbd64fc984c35892e85565f0
-#: ../../regular_expressions.rst:158
+#: ../../regular_expressions.rst:157
 #, fuzzy
 msgid "``\\v``"
 msgstr "``\\W``"
 
-# 2e843a74c12b4db5815c32b90e8b2216
-#: ../../regular_expressions.rst:158
+# cdb94f3f457b4daab487c675e1dc4b50
+#: ../../regular_expressions.rst
 msgid "vertical whitespace. all characters treated as"
 msgstr ""
 
-# 2e843a74c12b4db5815c32b90e8b2216
-#: ../../regular_expressions.rst:159
+# cdb94f3f457b4daab487c675e1dc4b50
+#: ../../regular_expressions.rst
 msgid "line breaks in the Unicode standard."
 msgstr ""
 
 # 308467b8235f4d0588ece5b4de390555
-#: ../../regular_expressions.rst:162
+#: ../../regular_expressions.rst:161
 msgid ""
 "You may use ``\\w``, ``\\d`` and ``\\s`` within `user character classes "
 "<User Character Classes_>`_."
@@ -589,24 +579,24 @@ msgstr ""
 "потребителски характер <User Character Classes_>`_."
 
 # 262b22ec4c6943739dcc30675868ff5a
-#: ../../regular_expressions.rst:168
+#: ../../regular_expressions.rst:167
 msgid "``foob\\dr``"
 msgstr "``foob\\dr``"
 
 # 50ce579845274e42a5874da6c8d2700e
-#: ../../regular_expressions.rst:168
+#: ../../regular_expressions.rst:167
 msgid "``foob1r``, ``foob6r`` and so on but not ``foobar``, ``foobbr`` and so on"
 msgstr ""
 "&quot;foob1r&quot;, &quot;foob6r&quot; и така нататък, но не и "
 "&quot;foobar&quot;, &quot;foobbr&quot; и т.н."
 
 # 3603e495fd6c4a839bc338afe93725cd
-#: ../../regular_expressions.rst:169
+#: ../../regular_expressions.rst:168
 msgid "``foob[\\w\\s]r``"
 msgstr "`` Foob [\\ т \\ S] r``"
 
 # 492baf0ab2f645b6913112fd4e2fd7f5
-#: ../../regular_expressions.rst:169
+#: ../../regular_expressions.rst:168
 msgid ""
 "``foobar``, ``foob r``, ``foobbr`` and so on but not ``foob1r``, "
 "``foob=r`` and so on"
@@ -615,14 +605,14 @@ msgstr ""
 "и &quot;foob1r&quot;, &quot;foob = r&quot; и т.н."
 
 # acefe68bad7f4e2e9afb0d16eb37f56d
-#: ../../regular_expressions.rst:173 ../../regular_expressions.rst:215
-#: ../../regular_expressions.rst:235 ../../regular_expressions.rst:382
-#: ../../regular_expressions.rst:434 ../../regular_expressions.rst:561
+#: ../../regular_expressions.rst:172 ../../regular_expressions.rst:214
+#: ../../regular_expressions.rst:234 ../../regular_expressions.rst:381
+#: ../../regular_expressions.rst:433 ../../regular_expressions.rst:560
 msgid "`TRegExpr <tregexpr.html>`__"
 msgstr "`TRegExpr <tregexpr.html>`__"
 
 # 61e21b8174424ca08c41b6118c1ccb66
-#: ../../regular_expressions.rst:175
+#: ../../regular_expressions.rst:174
 msgid ""
 "Properties `SpaceChars <tregexpr.html#spacechars>`_ and `WordChars "
 "<tregexpr.html#wordchars>`_ define character classes ``\\w``, ``\\W``, "
@@ -633,112 +623,112 @@ msgstr ""
 "&quot;W&quot;, &quot;s&quot;, &quot;s&quot;."
 
 # f9c6029030844b37b8552e55daa8d7a6
-#: ../../regular_expressions.rst:180
+#: ../../regular_expressions.rst:179
 msgid "So you can redefine this classes."
 msgstr "Така че можете да предефинирате тези класове."
 
 # 022540e086e94486a9ff10fa18f33672
-#: ../../regular_expressions.rst:183
+#: ../../regular_expressions.rst:182
 msgid "Boundaries"
 msgstr "граници"
 
 # 16c26a49125b43ab8e8a965d9cee8846
-#: ../../regular_expressions.rst:188
+#: ../../regular_expressions.rst:187
 msgid "Line Boundaries"
 msgstr "Граници на линии"
 
 # 4270c5a253c04dfe98f0dabd1334ab96
-#: ../../regular_expressions.rst:193
+#: ../../regular_expressions.rst:192
 msgid "``^``"
 msgstr "`` `` ^"
 
 # 77bfcc6f673a43e780aed338dc66680b
-#: ../../regular_expressions.rst:193
+#: ../../regular_expressions.rst:192
 msgid "start of line"
 msgstr "начало на линията"
 
 # bab820eecd524230822e4373fba664cd
-#: ../../regular_expressions.rst:194
+#: ../../regular_expressions.rst:193
 msgid "``$``"
 msgstr "`` `` $"
 
 # b6adc0903a7146a192b1f0dee9f18fe1
-#: ../../regular_expressions.rst:194
+#: ../../regular_expressions.rst:193
 msgid "end of line"
 msgstr "края на линията"
 
 # 6c9023afcf524111a688df2acb22962d
-#: ../../regular_expressions.rst:195
+#: ../../regular_expressions.rst:194
 msgid "``\\A``"
 msgstr "`` \\ A``"
 
 # 67de088835aa45349cc1f941e4f29f8c
-#: ../../regular_expressions.rst:195
+#: ../../regular_expressions.rst:194
 msgid "start of text"
 msgstr "начало на текста"
 
 # f2ab5e4785ab4a459f53a89b362fec90
-#: ../../regular_expressions.rst:196
+#: ../../regular_expressions.rst:195
 msgid "``\\Z``"
 msgstr "`` \\ Z``"
 
 # cbcf225dfbc648afaed7d3099f76b35a
-#: ../../regular_expressions.rst:196
+#: ../../regular_expressions.rst:195
 msgid "end of text"
 msgstr "края на текста"
 
 # 8537fa30ca3b40eaaf9bb4775edbe7e5
-#: ../../regular_expressions.rst:197
+#: ../../regular_expressions.rst:196
 msgid "``.``"
 msgstr "``.``"
 
 # f0ff397f34c440afb1843674b47b23a7
-#: ../../regular_expressions.rst:197
+#: ../../regular_expressions.rst:196
 msgid "any character in line"
 msgstr "всеки знак в ред"
 
 # b4f1467b393d49a68957f8c0dbbd39c9
-#: ../../regular_expressions.rst:198
+#: ../../regular_expressions.rst:197
 msgid "``^foobar``"
 msgstr "`` ^ Foobar``"
 
 # 0957829de247416dad8f474bcd2e5e6b
-#: ../../regular_expressions.rst:198
+#: ../../regular_expressions.rst:197
 msgid "``foobar`` only if it's at the beginning of line"
 msgstr "&quot;foobar&quot; само ако е в началото на линията"
 
 # 84b607d07b754118abcc5d67126990c3
-#: ../../regular_expressions.rst:199
+#: ../../regular_expressions.rst:198
 msgid "``foobar$``"
 msgstr "`` `` Foobar $"
 
 # 0dcddba362784018a432851e84b8967d
-#: ../../regular_expressions.rst:199
+#: ../../regular_expressions.rst:198
 msgid "``foobar`` only if it's at the end of line"
 msgstr "&quot;foobar&quot;, само ако е в края на реда"
 
 # 41daf48ac4244ae3bb977d4d0642136a
-#: ../../regular_expressions.rst:200
+#: ../../regular_expressions.rst:199
 msgid "``^foobar$``"
 msgstr "``^foobar$``"
 
 # dd8507fa51044e01b812624f988b455b
-#: ../../regular_expressions.rst:200
+#: ../../regular_expressions.rst:199
 msgid "``foobar`` only if it's the only string in line"
 msgstr "``foobar`` само ако е единственият низ в ред"
 
 # b4bc24fd68154e02b44e755885b74b05
-#: ../../regular_expressions.rst:201
+#: ../../regular_expressions.rst:200
 msgid "``foob.r``"
 msgstr "`` Foob.r``"
 
 # 4c31a4ac43ba4ca2b0e763e1b3f65ea8
-#: ../../regular_expressions.rst:201
+#: ../../regular_expressions.rst:200
 msgid "``foobar``, ``foobbr``, ``foob1r`` and so on"
 msgstr "&quot;foobar&quot;, &quot;foobbr&quot;, &quot;foob1r&quot; и т.н."
 
 # 0170eb436f0845ed84f99d433f00f08d
-#: ../../regular_expressions.rst:204
+#: ../../regular_expressions.rst:203
 msgid ""
 "``^`` metacharacter by default match the beginning of the input string. "
 "``$`` - the end."
@@ -747,7 +737,7 @@ msgstr ""
 " $ `` - краят."
 
 # 22c074afe0084dee80f38a9f745ef98b
-#: ../../regular_expressions.rst:207
+#: ../../regular_expressions.rst:206
 msgid ""
 "You may, however, wish to treat a string as a multi-line text, so ``^`` "
 "will match after any line separator within the string, and ``$`` will "
@@ -760,12 +750,12 @@ msgstr ""
 "превключите `modifier /m <#m>`_."
 
 # 17b4892999f54a11bce5f41de7f7b39a
-#: ../../regular_expressions.rst:212
+#: ../../regular_expressions.rst:211
 msgid "Note that there is no empty line within the sequence ``\\x0D\\x0A``."
 msgstr "Забележете, че няма празна линия в последователността &quot;x0D0A&quot;."
 
 # 44f96d21d58745c488e9ceab0c893d78
-#: ../../regular_expressions.rst:217
+#: ../../regular_expressions.rst:216
 msgid ""
 "If you are using `Unicode version <tregexpr.html#unicode>`__, then "
 "``^``/``$`` also matches ``\\x2028``, ``\\x2029``, ``\\x0B``, ``\\x0C`` "
@@ -775,7 +765,7 @@ msgstr ""
 "`` `` `` `` `също съвпада` `2028``,` `2029``,` `0B``,` `0C`` или` ` `."
 
 # d87185060f5543a681304125a948f648
-#: ../../regular_expressions.rst:221
+#: ../../regular_expressions.rst:220
 msgid ""
 "The ``\\A`` and ``\\Z`` are just like ``^`` and ``$``, except that they "
 "won’t match multiple times when the `modifier /m <#m>`_ is used."
@@ -785,7 +775,7 @@ msgstr ""
 "използва."
 
 # 955b620b6d904b24a171f61f47267552
-#: ../../regular_expressions.rst:225
+#: ../../regular_expressions.rst:224
 msgid ""
 "The ``.`` metacharacter by default matches any character, but if you "
 "switch ``Off`` the `modifier /s <#s>`_, then ``.`` won’t match line "
@@ -796,7 +786,7 @@ msgstr ""
 "разделителните линии в низ."
 
 # 2df380939c8e41c9acee849f36bbc0af
-#: ../../regular_expressions.rst:229
+#: ../../regular_expressions.rst:228
 msgid ""
 "Note that ``^.*$`` does not match a string between ``\\x0D\\x0A``, "
 "because this is unbreakable line separator. But it matches the empty "
@@ -809,7 +799,7 @@ msgstr ""
 "просто грешен ред, за да бъде третиран като разделител на линии."
 
 # c58f677cff324188918116eea0b08da0
-#: ../../regular_expressions.rst:237
+#: ../../regular_expressions.rst:236
 msgid ""
 "Multiline processing can be tuned with of properties `LineSeparators "
 "<tregexpr.html#lineseparators>`__ and `LinePairedSeparator "
@@ -820,7 +810,7 @@ msgstr ""
 "<tregexpr.html#linepairedseparator>`_."
 
 # 603dc8124e0c48f08a341019fa393adc
-#: ../../regular_expressions.rst:241
+#: ../../regular_expressions.rst:240
 msgid ""
 "So you can use Unix style separators ``\\n`` or DOS/Windows style "
 "``\\r\\n`` or mix them together (as in described above default "
@@ -831,7 +821,7 @@ msgstr ""
 " по подразбиране)."
 
 # 9fb6e50653944ac0a95d98361e3fe39b
-#: ../../regular_expressions.rst:244
+#: ../../regular_expressions.rst:243
 msgid ""
 "If you prefer mathematically correct description you can find it on "
 "`www.unicode.org <http://www.unicode.org/unicode/reports/tr18/>`__."
@@ -841,32 +831,32 @@ msgstr ""
 "<http://www.unicode.org/unicode/reports/tr18/>`__."
 
 # 6487b3c6d48a4a74b819e7deec1dbbd2
-#: ../../regular_expressions.rst:249
+#: ../../regular_expressions.rst:248
 msgid "Word Boundaries"
 msgstr "Граници на думи"
 
 # 6404a3e3c39b476486ad1218d55d0ffa
-#: ../../regular_expressions.rst:254
+#: ../../regular_expressions.rst:253
 msgid "``\\b``"
 msgstr "``\\b```"
 
 # 441fa8cb8f3f403b9be229e4fd501bf9
-#: ../../regular_expressions.rst:254
+#: ../../regular_expressions.rst:253
 msgid "a word boundary"
 msgstr "граница на думата"
 
 # e7b57325803745b5b459a818c62cf533
-#: ../../regular_expressions.rst:255
+#: ../../regular_expressions.rst:254
 msgid "``\\B``"
 msgstr "``\\B``"
 
 # fabf37e6dc454de5a0d41df2ecc41767
-#: ../../regular_expressions.rst:255
+#: ../../regular_expressions.rst:254
 msgid "a non-word boundary"
 msgstr "граница без думи"
 
 # 7a4c9476d9f645a3ba7bf5187dec6fe4
-#: ../../regular_expressions.rst:258
+#: ../../regular_expressions.rst:257
 msgid ""
 "A word boundary ``\\b`` is a spot between two characters that has a "
 "``\\w`` on one side of it and a ``\\W`` on the other side of it (in "
@@ -876,17 +866,17 @@ msgstr ""
 " едната страна на него и` `` `` от другата страна (в който и да е ред)."
 
 # eb75d0eb144b4ba8be0801dd42baa438
-#: ../../regular_expressions.rst:265
+#: ../../regular_expressions.rst:264
 msgid "Quantification"
 msgstr "количествено определяне"
 
 # 204f22faa62b487aa2cd9d58a563ba63
-#: ../../regular_expressions.rst:268
+#: ../../regular_expressions.rst:267
 msgid "Quantifier"
 msgstr "квантор"
 
 # 37cdf9be9acd4dbc87ca1bd85c215024
-#: ../../regular_expressions.rst:270
+#: ../../regular_expressions.rst:269
 msgid ""
 "Any item of a regular expression may be followed by quantifier. "
 "Quantifier specifies number of repetition of the item."
@@ -895,67 +885,67 @@ msgstr ""
 "Quantifier определя броя на повторенията на елемента."
 
 # f465798f5b824c9f998f2ea2fc79fe1c
-#: ../../regular_expressions.rst:276
+#: ../../regular_expressions.rst:275
 msgid "``{n}``"
 msgstr "`` {N} ``"
 
 # 5bea2b3fa5b34f18997a775850163356
-#: ../../regular_expressions.rst:276
+#: ../../regular_expressions.rst:275
 msgid "exactly ``n`` times"
 msgstr "точно ``n`` пъти"
 
 # 1cd8dafa6a334c8387e09e36520e99fa
-#: ../../regular_expressions.rst:277
+#: ../../regular_expressions.rst:276
 msgid "``{n,}``"
 msgstr "`` {П} ``"
 
 # b4505c8e01d64999b5de9a125298bc9d
-#: ../../regular_expressions.rst:277
+#: ../../regular_expressions.rst:276
 msgid "at least ``n`` times"
 msgstr "поне ``n`` пъти"
 
 # 8979bd97d38f4e3bb8fcc6b80a4ec7b3
-#: ../../regular_expressions.rst:278
+#: ../../regular_expressions.rst:277
 msgid "``{n,m}``"
 msgstr "`` {П, т} ``"
 
 # d2773cbd290544688f465e340676ca02
-#: ../../regular_expressions.rst:278
+#: ../../regular_expressions.rst:277
 msgid "at least ``n`` but not more than ``m`` times"
 msgstr "най-малко ``n``, но не повече от ``m`` пъти"
 
 # c3cec7e93960458d894b514dfe855cfe
-#: ../../regular_expressions.rst:279
+#: ../../regular_expressions.rst:278
 msgid "``*``"
 msgstr "``*``"
 
 # a6120220bcee49e193ea1648274bc61e
-#: ../../regular_expressions.rst:279
+#: ../../regular_expressions.rst:278
 msgid "zero or more, similar to ``{0,}``"
 msgstr "нула или повече, подобно на ``{0,}``"
 
 # d0ab961d8ced410d9f47f242f2c0acd7
-#: ../../regular_expressions.rst:280
+#: ../../regular_expressions.rst:279
 msgid "``+``"
 msgstr "``+``"
 
 # 8fd43575f11d48078853401babd80e80
-#: ../../regular_expressions.rst:280
+#: ../../regular_expressions.rst:279
 msgid "one or more, similar to ``{1,}``"
 msgstr "една или повече, подобни на ``{1,}``"
 
 # 222cbbc98dc34a6d9a017e54de271358
-#: ../../regular_expressions.rst:281
+#: ../../regular_expressions.rst:280
 msgid "``?``"
 msgstr "``?``"
 
 # c5a7616d27db453ab06d565b01b82a96
-#: ../../regular_expressions.rst:281
+#: ../../regular_expressions.rst:280
 msgid "zero or one, similar to ``{0,1}``"
 msgstr "нула или едно, подобно на ``{0,1}``"
 
 # 16f6dd1e3998493f89f82e13e21ef164
-#: ../../regular_expressions.rst:284
+#: ../../regular_expressions.rst:283
 msgid ""
 "So, digits in curly brackets ``{n,m}``, specify the minimum number of "
 "times to match ``n`` and the maximum ``m``."
@@ -964,22 +954,22 @@ msgstr ""
 "пъти, за да съответстват ``n`` и максималния ``m``."
 
 # 5116d6e94572498db9e0469ba6033c48
-#: ../../regular_expressions.rst:287
+#: ../../regular_expressions.rst:286
 msgid "The ``{n}`` is equivalent to ``{n,n}`` and matches exactly ``n`` times."
 msgstr "`` {N} `` е еквивалентно на `` {n, n} `` и отговаря точно на ``n`` пъти."
 
 # 4896bdacdf2b4c6cbc82527295b6ec29
-#: ../../regular_expressions.rst:289
+#: ../../regular_expressions.rst:288
 msgid "The ``{n,}`` matches ``n`` or more times."
 msgstr "`` {N,} `` съвпада с ``n`` или повече пъти."
 
 # 0288258e8c2d4245a43e5ec788016a6c
-#: ../../regular_expressions.rst:291
+#: ../../regular_expressions.rst:290
 msgid "There is no limit to the size of ``n`` or ``m``."
 msgstr "Няма ограничение за размера на „n“ или „m“."
 
 # 566ed3e193644126bdadc6cbea5330b1
-#: ../../regular_expressions.rst:293
+#: ../../regular_expressions.rst:292
 msgid ""
 "If a curly bracket occurs in any other context, it is treated as a "
 "regular character."
@@ -988,74 +978,74 @@ msgstr ""
 "редовен символ."
 
 # 709518fffe614703a98115ac2961d5b1
-#: ../../regular_expressions.rst:299
+#: ../../regular_expressions.rst:298
 msgid "``foob.*r``"
 msgstr "``foob.*r``"
 
 # c0b0055a08e4474d849564e0877ca0e9
-#: ../../regular_expressions.rst:299
+#: ../../regular_expressions.rst:298
 msgid "``foobar``,  ``foobalkjdflkj9r`` and ``foobr``"
 msgstr "&quot;foobar&quot;, &quot;foobalkjdflkj9r&quot; и &quot;foobr&quot;"
 
 # 432b31c0416b46f5a25a5d8b51e26dec
-#: ../../regular_expressions.rst:300
+#: ../../regular_expressions.rst:299
 msgid "``foob.+r``"
 msgstr "``foob.+r``"
 
 # c9262340f16f453f950c623bc1868bd7
-#: ../../regular_expressions.rst:300
+#: ../../regular_expressions.rst:299
 msgid "``foobar``, ``foobalkjdflkj9r`` but not ``foobr``"
 msgstr "``foobar``, ``foobalkjdflkj9r``, но не ``foobr``"
 
 # b967b62d80d54b56b700f83a4dd5c789
-#: ../../regular_expressions.rst:301
+#: ../../regular_expressions.rst:300
 msgid "``foob.?r``"
 msgstr "``foob.?r``"
 
 # 2ea41cfacb1341149ec2262f331e6336
-#: ../../regular_expressions.rst:301
+#: ../../regular_expressions.rst:300
 msgid "``foobar``, ``foobbr`` and ``foobr`` but not ``foobalkj9r``"
 msgstr "``foobar``, ``foobbr`` и ``foobr``, но не ``foobalkj9r``"
 
 # d1b3e2cbbab04884a2f45fa8aa7dc2cc
-#: ../../regular_expressions.rst:302
+#: ../../regular_expressions.rst:301
 msgid "``fooba{2}r``"
 msgstr "``fooba{2}r``"
 
 # 1c50a55aaef8425e81adf22f761076be
-#: ../../regular_expressions.rst:302
+#: ../../regular_expressions.rst:301
 msgid "``foobaar``"
 msgstr "``foobaar``"
 
 # e6621f3c4e6649acb378d2689c8e39ac
-#: ../../regular_expressions.rst:303
+#: ../../regular_expressions.rst:302
 msgid "``fooba{2,}r``"
 msgstr "``fooba{2}r``"
 
 # 2060baada54c4e0ea8bf1d2e2105961e
-#: ../../regular_expressions.rst:303
+#: ../../regular_expressions.rst:302
 msgid "``foobaar'``, ``foobaaar``, ``foobaaaar`` etc."
 msgstr "``foobaar``, ``foobaaar``, ``foobaaaar`` и т.н."
 
 # 44078bb302754d829dc0f88bf2e6abcc
-#: ../../regular_expressions.rst:304
+#: ../../regular_expressions.rst:303
 msgid "``fooba{2,3}r``"
 msgstr "`` Fooba {2,3} r``"
 
 # 1af7e11879234b1487e8bd249e56270f
-#: ../../regular_expressions.rst:304
+#: ../../regular_expressions.rst:303
 msgid "``foobaar``, or ``foobaaar``  but not ``foobaaaar``"
 msgstr ""
 "&quot;foobaar&quot;, или &quot;foobaaar&quot;, но не и "
 "&quot;foobaaaar&quot;"
 
 # da0f8a7f352740a4b4fedd25deb05e84
-#: ../../regular_expressions.rst:305
+#: ../../regular_expressions.rst:304
 msgid "``(foobar){8,10}``"
 msgstr "`` (Foobar) {} 8,10 ``"
 
 # f8154887054244b28d23d68614b0254d
-#: ../../regular_expressions.rst:305
+#: ../../regular_expressions.rst:304
 msgid ""
 "``8``, ``9`` or ``10`` instances of the ``foobar`` (``()`` is "
 "`Subexpression <#subexpression>`__)"
@@ -1064,12 +1054,12 @@ msgstr ""
 "&quot;foobar&quot; (``()`` е `Subexpression <#subexpression>`__)"
 
 # 57068601c2104c01bf29130a55878380
-#: ../../regular_expressions.rst:311
+#: ../../regular_expressions.rst:310
 msgid "Greediness"
 msgstr "лакомия"
 
 # aa6b6c4beec2477793d25888ac947d93
-#: ../../regular_expressions.rst:313
+#: ../../regular_expressions.rst:312
 msgid ""
 "`Quantifiers <#iterator>`_ in ``greedy`` mode takes as many as possible, "
 "in ``non-greedy`` mode - as few as possible."
@@ -1078,7 +1068,7 @@ msgstr ""
 " е възможно повече, в &quot;не-алчен&quot; режим - възможно най-малко."
 
 # c4786f39ffd341aead88ee6dac5f26fc
-#: ../../regular_expressions.rst:316
+#: ../../regular_expressions.rst:315
 msgid ""
 "By default all quantifiers are ``greedy``. Use ``?`` to make any "
 "quantifier ``non-greedy``."
@@ -1087,62 +1077,62 @@ msgstr ""
 "За да направите какъвто и да е квантификатор `` алчен``."
 
 # 3bc09341788d4ee3933a36ad5c97e621
-#: ../../regular_expressions.rst:319
+#: ../../regular_expressions.rst:318
 msgid "For string ``abbbbc``:"
 msgstr "За низ ``abbbbc``:"
 
 # 06dbe57777b74b7e914596023946365e
-#: ../../regular_expressions.rst:324
+#: ../../regular_expressions.rst:323
 msgid "``b+``"
 msgstr "`` Б + ``"
 
 # 4cb043a8fbff42289fcb4f942823ae1f
-#: ../../regular_expressions.rst:324
+#: ../../regular_expressions.rst:323
 msgid "``bbbb``"
 msgstr "``bbbb``"
 
 # fcb922ab13b64b30a0c7479893bc5761
-#: ../../regular_expressions.rst:325
+#: ../../regular_expressions.rst:324
 msgid "``b+?``"
 msgstr "`` Б +? ``"
 
 # 6e1061bcc51f43f5845f5ca16d3a3a7e
-#: ../../regular_expressions.rst:325 ../../regular_expressions.rst:337
+#: ../../regular_expressions.rst:324 ../../regular_expressions.rst:336
 msgid "``b``"
 msgstr "``b``"
 
 # 169c5f49fe1544529e797f497d9b872d
-#: ../../regular_expressions.rst:326
+#: ../../regular_expressions.rst:325
 msgid "``b*?``"
 msgstr "`` В *? ``"
 
 # 130e4e4ef60349ca9cebefda22bd1c16
-#: ../../regular_expressions.rst:326
+#: ../../regular_expressions.rst:325
 msgid "empty string"
 msgstr "празен низ"
 
 # d0960a7b9f124d38a05c1d2851cf3412
-#: ../../regular_expressions.rst:327
+#: ../../regular_expressions.rst:326
 msgid "``b{2,3}?``"
 msgstr "`` б {2,3}? ``"
 
 # a18e0452dec143e2b8240f8f11a3108e
-#: ../../regular_expressions.rst:327
+#: ../../regular_expressions.rst:326
 msgid "``bb``"
 msgstr "``bb``"
 
 # f699f16db3da47c58f7b977a6c710b13
-#: ../../regular_expressions.rst:328
+#: ../../regular_expressions.rst:327
 msgid "``b{2,3}``"
 msgstr "`` Б {2,3} ``"
 
 # f1dc94347f7c4c3fb9ca7770e8cb82cb
-#: ../../regular_expressions.rst:328
+#: ../../regular_expressions.rst:327
 msgid "``bbb``"
 msgstr "``bbb``"
 
 # 5345cecd11274f0b9c897303ca68b605
-#: ../../regular_expressions.rst:331
+#: ../../regular_expressions.rst:330
 msgid ""
 "You can switch all quantifiers into ``non-greedy`` mode (`modifier /g "
 "<#g>`_, below we use `in-line modifier change <#inlinemodifiers>`_)."
@@ -1152,22 +1142,22 @@ msgstr ""
 "<#inlinemodifiers>`_)."
 
 # 2991e6b3bd1143469cafe95e38a0ad9c
-#: ../../regular_expressions.rst:337
+#: ../../regular_expressions.rst:336
 msgid "``(?-g)b+``"
 msgstr "`` (? -G) б + ``"
 
 # de02794b226e4ead90a86e7a935c6207
-#: ../../regular_expressions.rst:341
+#: ../../regular_expressions.rst:340
 msgid "The choice"
 msgstr "Избора"
 
 # 3668e1229cb04b5da1dec6fa30b4fd5a
-#: ../../regular_expressions.rst:343
+#: ../../regular_expressions.rst:342
 msgid "Expressions in the choice are separated by ``|``."
 msgstr "Изрази в избора са разделени с ``|``."
 
 # 53db26f1690e4cf9949ca2894f29311a
-#: ../../regular_expressions.rst:345
+#: ../../regular_expressions.rst:344
 msgid ""
 "So ``fee|fie|foe`` will match any of ``fee``, ``fie``, or ``foe`` in the "
 "target string (as would ``f(e|i|o)e``)."
@@ -1176,7 +1166,7 @@ msgstr ""
 " или `` foe`` в целевия низ (както би `` f (e | i | o) e) ``)."
 
 # c09cb5baa6db4ba2ab134ab5f802ed28
-#: ../../regular_expressions.rst:348
+#: ../../regular_expressions.rst:347
 msgid ""
 "The first expression includes everything from the last pattern delimiter "
 "(``(``, ``[``, or the beginning of the pattern) up to the first ``|``, "
@@ -1189,7 +1179,7 @@ msgstr ""
 "шаблона."
 
 # 27b3c5ea2ba340f0a3d9520b5d40340b
-#: ../../regular_expressions.rst:353
+#: ../../regular_expressions.rst:352
 msgid ""
 "Sounds a little complicated, so it’s common practice to include the "
 "choice in parentheses, to minimize confusion about where it starts and "
@@ -1200,7 +1190,7 @@ msgstr ""
 "свършва."
 
 # f7cae1d84f62420995c4e62f147435ed
-#: ../../regular_expressions.rst:357
+#: ../../regular_expressions.rst:356
 msgid ""
 "Expressions in the choice are tried from left to right, so the first "
 "expression that matches, is the one that is chosen."
@@ -1209,7 +1199,7 @@ msgstr ""
 " съвпада, е този, който е избран."
 
 # 4095691034c44d6ea37b7475617f2a87
-#: ../../regular_expressions.rst:360
+#: ../../regular_expressions.rst:359
 msgid ""
 "For example, regular expression ``foo|foot`` in string ``barefoot`` will "
 "match ``foo``. Just a first expression that matches."
@@ -1219,7 +1209,7 @@ msgstr ""
 "израз, който съвпада."
 
 # d3676b2be0f14118bb8a817b1a66baf1
-#: ../../regular_expressions.rst:363
+#: ../../regular_expressions.rst:362
 msgid ""
 "Also remember that ``|`` is interpreted as a literal within square "
 "brackets, so if you write ``[fee|fie|foe]`` you’re really only matching "
@@ -1230,22 +1220,22 @@ msgstr ""
 "наистина съвпадате само `` [feio |] ``."
 
 # 9cda065341c6479b9f52ed879835ada9
-#: ../../regular_expressions.rst:370
+#: ../../regular_expressions.rst:369
 msgid "``foo(bar|foo)``"
 msgstr "`` Foo (бар | Foo) ``"
 
 # 393ef651c0b54a7db23db0f79b4c036f
-#: ../../regular_expressions.rst:370
+#: ../../regular_expressions.rst:369
 msgid "``foobar`` or ``foofoo``"
 msgstr "&quot;foobar&quot; или &quot;foofoo&quot;"
 
 # 431cc1f67eeb44fa9c23c04df800ac7c
-#: ../../regular_expressions.rst:376
+#: ../../regular_expressions.rst:375
 msgid "Subexpressions"
 msgstr "Subexpressions"
 
 # d1dbe14395174e32b657cf1feaf96122
-#: ../../regular_expressions.rst:378
+#: ../../regular_expressions.rst:377
 msgid ""
 "The brackets ``( ... )`` may also be used to define regular expression "
 "subexpressions."
@@ -1254,7 +1244,7 @@ msgstr ""
 "на регулярни изрази."
 
 # 6b2c7cc757674efd99dde5fca1841e27
-#: ../../regular_expressions.rst:384
+#: ../../regular_expressions.rst:383
 msgid ""
 "Subexpression positions, lengths and actual values will be in `MatchPos "
 "<tregexpr.html#matchpos>`_, `MatchLen <tregexpr.html#matchlen>`_ and "
@@ -1265,14 +1255,14 @@ msgstr ""
 "<tregexpr.html#matchlen>`_ и` Match <tregexpr.html#match>`_."
 
 # 3eb04109316c4fb6b4cd767867493c74
-#: ../../regular_expressions.rst:389
+#: ../../regular_expressions.rst:388
 msgid "You can substitute them with `Substitute <tregexpr.html#substitute>`_."
 msgstr ""
 "Можете да ги замените с &quot;Заместник&quot; "
 "<tregexpr.html#substitute>`_."
 
 # a3e63f713a504632a249db145207dd81
-#: ../../regular_expressions.rst:392
+#: ../../regular_expressions.rst:391
 msgid ""
 "Subexpressions are numbered from left to right by their opening "
 "parenthesis (including nested subexpressions)."
@@ -1281,7 +1271,7 @@ msgstr ""
 "(включително вложени вдъхновения)."
 
 # af00f4ea0c4d42bc8ee63b3d9edf3cda
-#: ../../regular_expressions.rst:395
+#: ../../regular_expressions.rst:394
 msgid ""
 "First subexpression has number ``1``. Whole regular expression has number"
 " ``0``."
@@ -1290,49 +1280,49 @@ msgstr ""
 "число &quot;0&quot;."
 
 # 50f6cb3f8142450285ea90db5841dc9d
-#: ../../regular_expressions.rst:398
+#: ../../regular_expressions.rst:397
 msgid ""
 "For example for input string ``foobar`` regular expression ``(foo(bar))``"
 " will find:"
 msgstr "Например за входен низ ``foobar`` редовен израз ``(foo(bar)) `` ще намери:"
 
 # 60e4c08683524a3db7f7464a452bde93
-#: ../../regular_expressions.rst:402
+#: ../../regular_expressions.rst:401
 msgid "subexpression"
 msgstr "subexpression"
 
 # bb76c13365e543dba541c5378843eff6
-#: ../../regular_expressions.rst:402
+#: ../../regular_expressions.rst:401
 msgid "value"
 msgstr "стойност"
 
 # e815ea8a72484c39a04f1868a6e4fb15
-#: ../../regular_expressions.rst:404
+#: ../../regular_expressions.rst:403
 msgid "``0``"
 msgstr "``0``"
 
 # e9545855b2d64365b5e648876f2b9d84
-#: ../../regular_expressions.rst:405
+#: ../../regular_expressions.rst:404
 msgid "``1``"
 msgstr "``1``"
 
 # b68af957d116453b8309acf35f5163a2
-#: ../../regular_expressions.rst:406
+#: ../../regular_expressions.rst:405
 msgid "``2``"
 msgstr "``2``"
 
 # e8aac654c8d94e09b570034fa3a40f11
-#: ../../regular_expressions.rst:406
+#: ../../regular_expressions.rst:405
 msgid "``bar``"
 msgstr "``bar``"
 
 # 46ab6e07151e434e86258b44c60d74d6
-#: ../../regular_expressions.rst:410
+#: ../../regular_expressions.rst:409
 msgid "Backreferences"
 msgstr "Backreferences"
 
 # 84c84b6c556c41c39c0aa251581dbf96
-#: ../../regular_expressions.rst:412
+#: ../../regular_expressions.rst:411
 msgid ""
 "Metacharacters ``\\1`` through ``\\9`` are interpreted as backreferences."
 " ``\\n`` matches previously matched subexpression ``n``."
@@ -1341,27 +1331,27 @@ msgstr ""
 "съвпада с предварително съвпадащата субекспресия ``n``."
 
 # 89d606adebd74c70830b482fe1afbbc4
-#: ../../regular_expressions.rst:418
+#: ../../regular_expressions.rst:417
 msgid "``(.)\\1+``"
 msgstr "``(.)\\1+``"
 
 # ca575268a0d8414c8af6afa3de4a1c1a
-#: ../../regular_expressions.rst:418
+#: ../../regular_expressions.rst:417
 msgid "``aaaa`` and ``cc``"
 msgstr "&quot;aaaa&quot; и &quot;cc&quot;"
 
 # 04e980a6c73b401fa80de30dd6191c69
-#: ../../regular_expressions.rst:419
+#: ../../regular_expressions.rst:418
 msgid "``(.+)\\1+``"
 msgstr "``. (+) \\ 1 + ``"
 
 # 77f03494aee84aa995715f14d1dd252d
-#: ../../regular_expressions.rst:419
+#: ../../regular_expressions.rst:418
 msgid "also ``abab`` and ``123123``"
 msgstr "също &quot;abab&quot; и &quot;123123&quot;"
 
 # 430b055c42c14d6ead536d4c5d39542b
-#: ../../regular_expressions.rst:422
+#: ../../regular_expressions.rst:421
 msgid ""
 "``(['\"]?)(\\d+)\\1`` matchs ``\"13\"`` (in double quotes), or ``'4'`` "
 "(in single quotes) or ``77`` (without quotes) etc"
@@ -1371,17 +1361,17 @@ msgstr ""
 " кавички) и т.н."
 
 # 15b014f2e5674824bd8d4ede7fa8aae0
-#: ../../regular_expressions.rst:426
+#: ../../regular_expressions.rst:425
 msgid "Modifiers"
 msgstr "Модификатори"
 
 # 03a18a8759034bd784f7f51917115493
-#: ../../regular_expressions.rst:428
+#: ../../regular_expressions.rst:427
 msgid "Modifiers are for changing behaviour of regular expressions."
 msgstr "Модификаторите са за промяна на поведението на регулярните изрази."
 
 # 14d973c088994a7fa576462f00df8ea7
-#: ../../regular_expressions.rst:430
+#: ../../regular_expressions.rst:429
 msgid ""
 "You can set modifiers globally in your system or change inside the the "
 "regular expression using the `(?imsxr-imsxr) <#inlinemodifiers>`_."
@@ -1391,7 +1381,7 @@ msgstr ""
 "<#inlinemodifiers>`_."
 
 # fe4189b6ddd346929a3a5d167b3c4460
-#: ../../regular_expressions.rst:436
+#: ../../regular_expressions.rst:435
 msgid ""
 "To change modifiers use `ModifierStr <tregexpr.html#modifierstr>`__ or "
 "appropriate ``TRegExpr`` properties `Modifier* "
@@ -1402,7 +1392,7 @@ msgstr ""
 "Модификатор * <tregexpr.html#modifieri>`__."
 
 # a8f5a6740bfb448baf2a08d4faf2ab43
-#: ../../regular_expressions.rst:441
+#: ../../regular_expressions.rst:440
 msgid ""
 "The default values are defined in `global variables <tregexpr.html"
 "#global-constants>`_. For example global variable ``RegExprModifierX`` "
@@ -1413,12 +1403,12 @@ msgstr ""
 "RegExprModifierX`` определя стойността по подразбиране за `` ModifierX``."
 
 # 31715311d8434a6ea50ecf919375802d
-#: ../../regular_expressions.rst:448
+#: ../../regular_expressions.rst:447
 msgid "i, case-insensitive"
 msgstr "i, без чувствителност"
 
 # b8ab86f2c0224eb2bb841eca385b80bc
-#: ../../regular_expressions.rst:450
+#: ../../regular_expressions.rst:449
 msgid ""
 "Case-insensitive. Use installed in you system locale settings, see also "
 "`InvertCase <tregexpr.html#invertcase>`__."
@@ -1427,12 +1417,12 @@ msgstr ""
 "настройки, вижте също `InvertCase <tregexpr.html#invertcase>`__."
 
 # 5c95dc3174984dcdbbf3f528d4c23af5
-#: ../../regular_expressions.rst:457
+#: ../../regular_expressions.rst:456
 msgid "m, multi-line strings"
 msgstr "м, многолинейни низове"
 
 # 88c296668011426292ea263315691a16
-#: ../../regular_expressions.rst:459
+#: ../../regular_expressions.rst:458
 msgid ""
 "Treat string as multiple lines. So ``^`` and ``$`` matches the start or "
 "end of any line anywhere within the string."
@@ -1441,17 +1431,17 @@ msgstr ""
 "или края на всяка линия навсякъде в низ."
 
 # 5105b7e73e574a03a8ddfeef54df32ba
-#: ../../regular_expressions.rst:462
+#: ../../regular_expressions.rst:461
 msgid "See also `Line Boundaries <#lineseparators>`__."
 msgstr "Вижте също `Линии на границите <#lineseparators>`__."
 
 # 310f5edee26f4a24ad038e7582f710ad
-#: ../../regular_expressions.rst:467
+#: ../../regular_expressions.rst:466
 msgid "s, single line strings"
 msgstr "s, единични низове"
 
 # 577b7356bbb84529b615c65bc44004cd
-#: ../../regular_expressions.rst:469
+#: ../../regular_expressions.rst:468
 msgid ""
 "Treat string as single line. So ``.`` matches any character whatsoever, "
 "even a line separators."
@@ -1460,7 +1450,7 @@ msgstr ""
 "знак, дори и на линейни разделители."
 
 # 98e95360c86b47ab897f3f49d80fcf45
-#: ../../regular_expressions.rst:472
+#: ../../regular_expressions.rst:471
 msgid ""
 "See also `Line Boundaries <#lineseparators>`__, which it normally would "
 "not match."
@@ -1469,17 +1459,17 @@ msgstr ""
 "биха съответствали."
 
 # 3b8481ca09f14a71a00906bf00fdb725
-#: ../../regular_expressions.rst:478
+#: ../../regular_expressions.rst:477
 msgid "g, greediness"
 msgstr "g, алчност"
 
 # b845f5b9e0b546aca305bc083a00bd9d
-#: ../../regular_expressions.rst:481 ../../regular_expressions.rst:526
+#: ../../regular_expressions.rst:480 ../../regular_expressions.rst:525
 msgid "`TRegExpr <tregexpr.html>`__ only modifier."
 msgstr "`TRegExpr <tregexpr.html>`__ само модификатор."
 
 # 676ee32fcfd74df6b7f2f090ce8769dd
-#: ../../regular_expressions.rst:483
+#: ../../regular_expressions.rst:482
 msgid ""
 "Switching it ``Off`` you’ll switch `quantifiers <#iterator>`__ into `non-"
 "greedy <#greedy>`__ mode."
@@ -1488,7 +1478,7 @@ msgstr ""
 "`не-алчен <#gred&gt;&gt; __ режим."
 
 # 200404b3eb98465cbeef4e215fb4cf6d
-#: ../../regular_expressions.rst:486
+#: ../../regular_expressions.rst:485
 msgid ""
 "So, if modifier ``/g`` is ``Off`` then ``+`` works as ``+?``, ``*`` as "
 "``*?`` and so on."
@@ -1497,24 +1487,24 @@ msgstr ""
 "+?"
 
 # 57e7659badb14cd1a078b11d3df83abc
-#: ../../regular_expressions.rst:489
+#: ../../regular_expressions.rst:488
 msgid "By default this modifier is ``On``."
 msgstr "По подразбиране този модификатор е ``On``."
 
 # 9fcb117cd484445aa38cee46815910db
-#: ../../regular_expressions.rst:494
+#: ../../regular_expressions.rst:493
 msgid "x, eXtended syntax"
 msgstr "x, разширен синтаксис"
 
 # 05e5de050b954cf7954bfa1f2c9e528b
-#: ../../regular_expressions.rst:496
+#: ../../regular_expressions.rst:495
 msgid ""
 "Allows to comment regular expression and break them up into multiple "
 "lines."
 msgstr "Позволява да коментирате нормален израз и да ги разделяте на няколко реда."
 
 # 9ddb24cd609e4d51956af5ea98e67497
-#: ../../regular_expressions.rst:499
+#: ../../regular_expressions.rst:498
 msgid ""
 "If the modifier is ``On`` we ignore all whitespaces that is neither "
 "backslashed nor within a character class."
@@ -1523,12 +1513,12 @@ msgstr ""
 "не са нито обратни, нито в рамките на клас знаци."
 
 # 10fbf85fec8f4784972b17ef19252b02
-#: ../../regular_expressions.rst:502
+#: ../../regular_expressions.rst:501
 msgid "And the ``#`` character separates comments."
 msgstr "А символът ``#`` отделя коментарите."
 
 # da404120ec6f4e8bbb10095618bf05da
-#: ../../regular_expressions.rst:504
+#: ../../regular_expressions.rst:503
 msgid ""
 "Notice that you can use empty lines to format regular expression for "
 "better readability:"
@@ -1537,7 +1527,7 @@ msgstr ""
 "регулярния израз за по-добра четливост:"
 
 # 31cab5eb0d8d4e7f852cebb6bae52ae1
-#: ../../regular_expressions.rst:507
+#: ../../regular_expressions.rst:506
 msgid ""
 "(\n"
 "(abc) # comment 1\n"
@@ -1547,7 +1537,7 @@ msgid ""
 msgstr "((abc) # коментар 1 # (efg) # коментар 2)"
 
 # 02fd5b33cf244968850606ece07d6e24
-#: ../../regular_expressions.rst:515
+#: ../../regular_expressions.rst:514
 msgid ""
 "This also means that if you want real whitespace or ``#`` characters in "
 "the pattern (outside a character class, where they are unaffected by "
@@ -1560,12 +1550,12 @@ msgstr ""
 "шестнадесетична бягства."
 
 # 05c2a5229cc24116a884b9e61b419153
-#: ../../regular_expressions.rst:523
+#: ../../regular_expressions.rst:522
 msgid "r, Russian ranges"
 msgstr "r, руски диапазони"
 
 # 191f08d9703c47ddaf92ebe4776a9d1a
-#: ../../regular_expressions.rst:528
+#: ../../regular_expressions.rst:527
 msgid ""
 "In Russian ASCII table characters ``ё``/``Ё`` are placed separately from "
 "others."
@@ -1574,7 +1564,7 @@ msgstr ""
 "другите."
 
 # 4fb5bbe4354c44799893473ad308b617
-#: ../../regular_expressions.rst:531
+#: ../../regular_expressions.rst:530
 msgid ""
 "Big and small Russian characters are in separated ranges, this is the "
 "same as with English characters but nevertheless I wanted some short "
@@ -1584,7 +1574,7 @@ msgstr ""
 " английски символи, но въпреки това исках някаква кратка форма."
 
 # fbaca213008240dcad8f59e3c1ff81a2
-#: ../../regular_expressions.rst:534
+#: ../../regular_expressions.rst:533
 msgid ""
 "With this modifier instead of ``[а-яА-ЯёЁ]`` you can write ``[а-Я]`` if "
 "you need all Russian characters."
@@ -1593,57 +1583,57 @@ msgstr ""
 "[а-Я] `` ако имате нужда от всички руски символи."
 
 # 25a4b62acb87428cb27ad65c6029fcde
-#: ../../regular_expressions.rst:537
+#: ../../regular_expressions.rst:536
 msgid "When the modifier is ``On``:"
 msgstr "Когато модификаторът е `` On``:"
 
 # 751c7744a6444ab0bba2190f28e26434
-#: ../../regular_expressions.rst:542
+#: ../../regular_expressions.rst:541
 msgid "``а-я``"
 msgstr "`` А-я``"
 
 # ba57f0d76e214f13b5fa92fa69cde5fe
-#: ../../regular_expressions.rst:542
+#: ../../regular_expressions.rst:541
 msgid "chars from ``а`` to ``я`` and ``ё``"
 msgstr "символи от ``а`` до ``я`` и `` ```"
 
 # 414f8837037444ee85204d8ff59bced3
-#: ../../regular_expressions.rst:543
+#: ../../regular_expressions.rst:542
 msgid "``А-Я``"
 msgstr "`` А-Я``"
 
 # 381d318606c944649b4ee833de4bd60e
-#: ../../regular_expressions.rst:543
+#: ../../regular_expressions.rst:542
 msgid "chars from ``А`` to ``Я`` and ``Ё``"
 msgstr "символи от ``А`` до ``Я`` и ``Ё``"
 
 # 4523408c164f4b0d90fe3be1d417840a
-#: ../../regular_expressions.rst:544
+#: ../../regular_expressions.rst:543
 msgid "``а-Я``"
 msgstr "`` А-Я``"
 
 # c60473a53c774b40823aa03710fe58e8
-#: ../../regular_expressions.rst:544
+#: ../../regular_expressions.rst:543
 msgid "all russian symbols"
 msgstr "всички руски символи"
 
 # dc749321c7ed4c5183afee8480a2b771
-#: ../../regular_expressions.rst:547
+#: ../../regular_expressions.rst:546
 msgid "The modifier is set `On` by default."
 msgstr "Модификаторът е зададен по подразбиране &quot;On&quot;."
 
 # 7fc5996736f34887a3aee7e00b0a126e
-#: ../../regular_expressions.rst:550
+#: ../../regular_expressions.rst:549
 msgid "Extensions"
 msgstr "Разширения"
 
 # 349e118b5c9d4a55a3f15541d29fa994
-#: ../../regular_expressions.rst:555
+#: ../../regular_expressions.rst:554
 msgid "(?=<lookahead>)"
 msgstr "(= <lookahead> )"
 
 # 6422787749d54f0f812a28eb1e4ea553
-#: ../../regular_expressions.rst:557
+#: ../../regular_expressions.rst:556
 msgid ""
 "``Look ahead`` assertion. It checks input for the regular expression "
 "``<look-ahead>``, but do not capture it."
@@ -1652,12 +1642,12 @@ msgstr ""
 "регулярния израз `` <look-ahead>``, но не го улавяйте."
 
 # 303846940463483295bcdc2d3bc4bacf
-#: ../../regular_expressions.rst:563
+#: ../../regular_expressions.rst:562
 msgid "Look-ahead is not implemented in TRegExpr."
 msgstr "Поглед напред не се прилага в TRegExpr."
 
 # bd56e6432cc94e3985e4190f2cc87419
-#: ../../regular_expressions.rst:565
+#: ../../regular_expressions.rst:564
 msgid ""
 "In many cases you can replace ``look ahead`` with `Sub-expression "
 "<#subexpression>`_ and just ignore what will be captured in this "
@@ -1668,7 +1658,7 @@ msgstr ""
 "тази подекспресия."
 
 # 3d3585ccbf4d412cafd3c72e24da97ad
-#: ../../regular_expressions.rst:569
+#: ../../regular_expressions.rst:568
 msgid ""
 "For example ``(blah)(?=foobar)(blah)`` is the same as "
 "``(blah)(foobar)(blah)``. But in the latter version you have to exclude "
@@ -1681,7 +1671,7 @@ msgstr ""
 "`` Match [2] ``."
 
 # 1efdab2408964b5583160fa580db64ca
-#: ../../regular_expressions.rst:573
+#: ../../regular_expressions.rst:572
 msgid ""
 "This is just not so convenient as in the former version where you can use"
 " whole ``Match[0]`` because captured by ``look ahead`` part would not be "
@@ -1692,51 +1682,51 @@ msgstr ""
 "част няма да бъде включена в съвпадение на регулярния израз."
 
 # 62685881522e4d34bdfc7b1d8428af28
-#: ../../regular_expressions.rst:581
+#: ../../regular_expressions.rst:580
 msgid "(?:<non-capturing group>)"
 msgstr ""
 
 # 0ffa11a391f44013bda7b77cbf2ac353
-#: ../../regular_expressions.rst:583
+#: ../../regular_expressions.rst:582
 msgid ""
 "``?:`` is used when you want to group an expression, but you do not want "
 "to save it as a matched/captured portion of the string."
 msgstr ""
 
 # 3873f57cd1d8417c81fd9220110669bd
-#: ../../regular_expressions.rst:586
+#: ../../regular_expressions.rst:585
 msgid ""
 "So this is just a way to organize your regex into subexpressions without "
 "overhead of capturing result:"
 msgstr ""
 
 # 8eced9c1199c438999e233dcf6e30f1d
-#: ../../regular_expressions.rst:592
+#: ../../regular_expressions.rst:591
 msgid "``(https?|ftp)://([^/\\r\\n]+)``"
 msgstr ""
 
 # 1002052a75114af7a1fb879b50192efd
-#: ../../regular_expressions.rst:592
+#: ../../regular_expressions.rst:591
 msgid "in ``https://sorokin.engineer`` matches ``https`` and ``sorokin.engineer``"
 msgstr ""
 
 # c2ff69dda0da4c20a71e977ef838d5fd
-#: ../../regular_expressions.rst:594
+#: ../../regular_expressions.rst:593
 msgid "``(?:https?|ftp)://([^/\\r\\n]+)``"
 msgstr ""
 
 # 742c55367266404d88a2ee3e68411f2c
-#: ../../regular_expressions.rst:594
+#: ../../regular_expressions.rst:593
 msgid "in ``https://sorokin.engineer`` matches only ``sorokin.engineer``"
 msgstr ""
 
 # cabfb9452776486ca0842461115e1c29
-#: ../../regular_expressions.rst:599
+#: ../../regular_expressions.rst:598
 msgid "(?imsgxr-imsgxr)"
 msgstr "(?imsgxr-imsgxr)"
 
 # ebe5d1ea983149ca82f21737d2563503
-#: ../../regular_expressions.rst:601
+#: ../../regular_expressions.rst:600
 msgid ""
 "You may use it inside regular expression for modifying modifiers by the "
 "fly."
@@ -1745,7 +1735,7 @@ msgstr ""
 "модификаторите от муха."
 
 # 6bb339c072454a83970236feb73c5357
-#: ../../regular_expressions.rst:603
+#: ../../regular_expressions.rst:602
 msgid ""
 "This can be especially handy because it has local scope in a regular "
 "expression. It affects only that part of regular expression that follows "
@@ -1756,7 +1746,7 @@ msgstr ""
 "Imsgxr-imsgxr) `` оператора."
 
 # 2df6904506a54a5bacf82333cfb9bd4e
-#: ../../regular_expressions.rst:607
+#: ../../regular_expressions.rst:606
 msgid ""
 "And if it's inside subexpression it will affect only this subexpression -"
 " specifically the part of the subexpression that follows after the "
@@ -1771,57 +1761,57 @@ msgstr ""
 "petersburg`` ,"
 
 # 89f5423961704062b785f444080c1e15
-#: ../../regular_expressions.rst:616
+#: ../../regular_expressions.rst:615
 msgid "``(?i)Saint-Petersburg``"
 msgstr "`` (? I) Saint-Petersburg``"
 
 # ccfa3009619943d4bf9bc9bf88cd7b10
-#: ../../regular_expressions.rst:616
+#: ../../regular_expressions.rst:615
 msgid "``Saint-petersburg`` and ``Saint-Petersburg``"
 msgstr "`` Saint-petersburg`` и `` Санкт Петербург``"
 
 # cf27bafc24124553bd843df5e0820da1
-#: ../../regular_expressions.rst:617
+#: ../../regular_expressions.rst:616
 msgid "``(?i)Saint-(?-i)Petersburg``"
 msgstr "`` Свети (К) - (- и) Petersburg``"
 
 # a9bb7d5a3613472982ef74d2e36b66ca
-#: ../../regular_expressions.rst:617
+#: ../../regular_expressions.rst:616
 msgid "``Saint-Petersburg`` but not ``Saint-petersburg``"
 msgstr "&quot;Санкт Петербург&quot;, но не и &quot;Санкт-Петербург&quot;"
 
 # 93bff5a9b0324beeb8d21ab7343069ee
-#: ../../regular_expressions.rst:618
+#: ../../regular_expressions.rst:617
 msgid "``(?i)(Saint-)?Petersburg``"
 msgstr "`` (Saint -) (К)? Petersburg``"
 
 # dd66457f1f024d25aea9c43b45e75258
-#: ../../regular_expressions.rst:618
+#: ../../regular_expressions.rst:617
 msgid "``Saint-petersburg`` and ``saint-petersburg``"
 msgstr "`` Saint-petersburg`` и ``saint-petersburg``"
 
 # 5febbb9e98db419083f86422ac40f60f
-#: ../../regular_expressions.rst:619
+#: ../../regular_expressions.rst:618
 msgid "``((?i)Saint-)?Petersburg``"
 msgstr "`` (? (И) Saint -) Petersburg``?"
 
 # 695ea4ba70e040bf8b980f49c82a9d93
-#: ../../regular_expressions.rst:619
+#: ../../regular_expressions.rst:618
 msgid "``saint-Petersburg``, but not ``saint-petersburg``"
 msgstr "`` Санкт Петербург``, но не ``saint-petersburg``"
 
 # 45d0dbe578e049f5b0832f613b7dfe28
-#: ../../regular_expressions.rst:623
+#: ../../regular_expressions.rst:622
 msgid "(?#text)"
 msgstr "(?#текст)"
 
 # d28d8ac2d191484bab5081b0978c7b8a
-#: ../../regular_expressions.rst:625
+#: ../../regular_expressions.rst:624
 msgid "A comment, the text is ignored."
 msgstr "Коментар, текстът се игнорира."
 
 # 5733c704aa6f467b8c42b130d71ca526
-#: ../../regular_expressions.rst:627
+#: ../../regular_expressions.rst:626
 msgid ""
 "Note that the comment is closed by the nearest ``)``, so there is no way "
 "to put a literal ``)`` in the comment."
@@ -1830,12 +1820,12 @@ msgstr ""
 "начин да се сложи буквален ``) в коментара."
 
 # f3821f5b5b1944a99306bb7bd8b5ace8
-#: ../../regular_expressions.rst:632
+#: ../../regular_expressions.rst:631
 msgid "Afterword"
 msgstr "послеслов"
 
 # fa0a65a515904079a698c0d38acb1bee
-#: ../../regular_expressions.rst:634
+#: ../../regular_expressions.rst:633
 msgid ""
 "In this `ancient blog post from previous century "
 "<https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html>`__"
@@ -1849,18 +1839,62 @@ msgstr ""
 #~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 #~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 
-# 01e078b0b8fd44a38e50d4a0eeb5a5c9
+# 2e843a74c12b4db5815c32b90e8b2216
 #~ msgid ""
 #~ msgstr ""
 
+# f861afc1fd674a8ea890836e77efd551
+#~ msgid "``\\tfoobar``"
+#~ msgstr "``\\tfoobar``"
+
+# 50138bdc51004464a071cdfc76794e4e
+#~ msgid "``foobar`` preceded by TAB"
+#~ msgstr "``foobar``, предшествано от TAB"
+
+# 7b96b0a75c1045ea990f25164362ac0f
+#~ msgid "Control Escape Sequence (``Ctrl-x``)"
+#~ msgstr ""
+
+# 4c1e5ea3f9fc42d58dd64698d720abd4
+#~ msgid "For example, ``\\ci`` matches the target sequence"
+#~ msgstr ""
+
+# 87218694eec54e45bead46dd146e0eec
+#~ msgid "``\\x09``, because ``ctrl-i`` has the value ``0x09``"
+#~ msgstr ""
+
 # be112ef05e4f43afb2a13b85b94d07a8
+#~ msgid "horizontal whitespace. the tab and all characters"
+#~ msgstr ""
+
+# be112ef05e4f43afb2a13b85b94d07a8
+#~ msgid "in the \"space separator\" Unicode category."
+#~ msgstr ""
+
+# 2e843a74c12b4db5815c32b90e8b2216
+#~ msgid "vertical whitespace. all characters treated as"
+#~ msgstr ""
+
+# 2e843a74c12b4db5815c32b90e8b2216
+#~ msgid "line breaks in the Unicode standard."
+#~ msgstr ""
+
+# 44fc44b707f940ebb83c8e472b669de3
+#~ msgid ""
+#~ "Control Escape Sequence (``Ctrl-x``) For "
+#~ "example, ``\\ci`` matches the target "
+#~ "sequence ``\\x09``, because ``ctrl-i`` has "
+#~ "the value ``0x09``"
+#~ msgstr ""
+
+# 6d49b1c2fa0b48e191bb58c659871df7
 #~ msgid ""
 #~ "horizontal whitespace. the tab and all"
 #~ " characters in the \"space separator\" "
 #~ "Unicode category."
 #~ msgstr ""
 
-# 2e843a74c12b4db5815c32b90e8b2216
+# cdb94f3f457b4daab487c675e1dc4b50
 #~ msgid ""
 #~ "vertical whitespace. all characters treated"
 #~ " as line breaks in the Unicode "
