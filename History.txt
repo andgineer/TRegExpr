@@ -5,7 +5,8 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
- v. 0.959 2019.12.01
+ v. 0.960 2019.12.03
+ -=- (+) Support \V, \H (counterparts to \v, \h). By Alexey Torgashin.
  -=- (+) Support control escape sequences \cA...\cZ. By Alexey Torgashin.
  -=- (+) Expression can contain NULL chars. By Alexey Torgashin.
 
