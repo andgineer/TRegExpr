@@ -37,5 +37,5 @@ before_install:
   - Xvfb $DISPLAY &
 
 script:
-  - lazbuild $LAZ_OPT test/testregexpr.lpi             # Build project
-  - $LAZ_ENV test/testregexpr --all --format=plain # Run testsuite
+  - lazbuild $LAZ_OPT test/test_fpc.lpi         # Build project
+  - $LAZ_ENV test/test_fpc --all --format=plain # Run testsuite
