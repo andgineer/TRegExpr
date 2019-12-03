@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-26 16:03+0300\n"
-"PO-Revision-Date: 2019-10-27 13:53+0000\n"
+"PO-Revision-Date: 2019-11-29 05:25+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/index/"
 "ru/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.9.1-dev\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # bcceb9ddb03f415580d4b5e55290527d
@@ -211,8 +211,8 @@ msgid ""
 "The documentation is available in English and `Russian "
 "<https://regexpr.sorokin.engineer/ru/latest/>`_."
 msgstr ""
-"Документация доступна на `английском "
-"<https://regexpr.sorokin.engineer/en/latest/>`_ и русском  языках. "
+"Документация доступна на `английском <https://regexpr.sorokin.engineer/en/"
+"latest/>`_ и русском языках."
 
 # 6db169b8d43c4484b5cc08a93a5d311d
 #: ../../index.rst:81

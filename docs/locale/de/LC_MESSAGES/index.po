@@ -5,30 +5,32 @@
 #
 # Translators:
 # Andrey Sorokin <filbert@yandex.ru>, 2019
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-26 16:03+0300\n"
-"PO-Revision-Date: 2019-05-08 09:13+0000\n"
-"Last-Translator: Andrey Sorokin <filbert@yandex.ru>, 2019\n"
-"Language-Team: German "
-"(https://www.transifex.com/masterAndrey/teams/98461/de/)\n"
+"PO-Revision-Date: 2019-11-26 11:43+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/tregexpr/index/de/"
+">\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # bcceb9ddb03f415580d4b5e55290527d
 #: ../../index.rst:6
 msgid "English"
-msgstr ""
+msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 
 # 54ebc251eff34812b1ee36830f7dc863
 #: ../../index.rst:7
 msgid "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
-msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html> __"
+msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
 
 # 2d2ce49cc5d9419eb0b14fc888a6c42c
 #: ../../index.rst:8
@@ -38,17 +40,17 @@ msgstr "Deutsch"
 # a93b59bc459140358ce5d55c2374e488
 #: ../../index.rst:9
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html> __"
+msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
 
 # efc050cad2b549edbc16be95d6eaa025
 #: ../../index.rst:10
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html> __"
+msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
 
 # e0ee4837c5ce459bb0f114816a1916ba
 #: ../../index.rst:11
 msgid "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
-msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html> __"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
 
 # 47015840eef94746af12ae2d485ec72d
 #: ../../index.rst:14
@@ -71,8 +73,8 @@ msgid ""
 "search and substitution and for template based text check."
 msgstr ""
 "Reguläre Ausdrücke sind ein benutzerfreundliches und leistungsfähiges "
-"Werkzeug für die anspruchsvolle Suche und Ersetzung sowie für "
-"textbasierte Textvorlagen."
+"Werkzeug für anspruchsvollere Such- und Ersetzungsaufgaben sowie für "
+"vorlagenbasiertes Überprüfen von Text."
 
 # 3459108fa31a4788ab3b8051340eff5a
 #: ../../index.rst:22
@@ -80,8 +82,8 @@ msgid ""
 "It is especially useful for user input validation in input forms - to "
 "validate e-mail addresses and so on."
 msgstr ""
-"Es ist besonders nützlich für die Überprüfung der Benutzereingaben in "
-"Eingabeformularen - zum Überprüfen von E-Mail-Adressen usw."
+"Besonders nützlich sind sie zum Prüfen von Benutzereingaben in "
+"Eingabemasken, zum Validieren von E-Mail-Adressen usw."
 
 # 486bb59e358b43a58f0f35d3fadb79be
 #: ../../index.rst:25
@@ -91,10 +93,11 @@ msgid ""
 "imagine. Rules (templates) can be changed without your program "
 "recompilation."
 msgstr ""
-"Sie können auch Telefonnummern, Postleitzahlen usw. aus Webseiten oder "
-"Dokumenten extrahieren, nach komplexen Mustern in Protokolldateien suchen"
-" und alles, was Sie sich vorstellen können. Regeln (Vorlagen) können ohne"
-" Neuprogrammierung des Programms geändert werden."
+"Auch können Sie damit Telefonnummern, Postleitzahlen usw. aus Webseiten oder "
+"Dokumenten extrahieren, nach komplexen Mustern in Protokolldateien suchen "
+"und was Sie sich sonst noch in der Art vorstellen können. Die Regeln "
+"(Vorlagen) lassen sich ändern, ohne die gesamte Anwendung neu kompilieren zu "
+"müssen."
 
 # 6b71a468aa3f4976a3c909b8fc98ee9e
 #: ../../index.rst:29
@@ -104,15 +107,15 @@ msgid ""
 "exists as separate library and can be compiled by Delphi 2-7, Borland C++"
 " Builder 3-6."
 msgstr ""
-"TRegExpr wird in reinem Pascal implementiert. Es ist in `Lazarus (Free "
-"Pascal) enthalten. <http://wiki.freepascal.org/Regexpr>`_ Projekt. Es ist"
-" aber auch als separate Bibliothek vorhanden und kann von Delphi 2-7, "
-"Borland C ++ Builder 3-6 kompiliert werden."
+"TRegExpr ist 100% in Pascal implementiert. Es ist Bestandteil von `Lazarus ("
+"Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ , aber auch als separate "
+"Bibliothek nutzbar und kann auch mit Delphi 2-7 oder dem Borland C ++ "
+"Builder 3-6 kompiliert werden."
 
 # b5eb9411c78749cb80cd15750a7bda79
 #: ../../index.rst:35
 msgid "Reviews"
-msgstr "Bewertungen"
+msgstr "Rezensionen"
 
 # 540dc5e7519749f8a49f668715cabf86
 #: ../../index.rst:37
@@ -120,8 +123,8 @@ msgid ""
 "`How good the library was met "
 "<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
 msgstr ""
-"`Wie gut war die Bibliothek getroffen? "
-"<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
+"Machen Sie sich ein Bild von der`Resonanz <https://sorokin.engineer/posts/en/"
+"regexpstudio_site_is_lunched.html>`_ bei den Anwendern."
 
 # 4991414b12c64f829b62f63e6954ed5c
 #: ../../index.rst:40
@@ -135,14 +138,15 @@ msgid ""
 "<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
 "you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
-"Um die Bibliothek zu verwenden, fügen Sie einfach die Quellen hinzu "
-"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ für"
-" Ihr Projekt und verwenden Sie die Klasse `TRegExpr <tregexpr.html>`_."
+"Um die Bibliothek zu verwenden, fügen Sie einfach `den Quelltext "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`__ Ihrem "
+"Projekt hinzu und verwenden Sie die Klasse `TRegExpr <tregexpr.html>`__."
 
 # 0d79895ebfb6444e9d3ff580b250cef6
 #: ../../index.rst:45
 msgid "In the `FAQ <faq.html>`_ you can learn from others users problems."
-msgstr "In den `FAQ <faq.html> Sie können von anderen Benutzern Probleme lernen."
+msgstr ""
+"In den `FAQ <faq.html>`__ können Sie aus den Problemen anderer Nutzer lernen."
 
 # 495db3fc133940d68ab0e306d9d90e89
 #: ../../index.rst:47
@@ -151,9 +155,9 @@ msgid ""
 "<https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__"
 " will help you learn and debug regular expressions."
 msgstr ""
-"Bereit zum Ausführen der Windows-Anwendung `REStudio "
-"<https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__"
-" hilft Ihnen, reguläre Ausdrücke zu lernen und zu debuggen."
+"Die benutzerfreundliche Windows-Anwendung `REStudio <https://github.com/"
+"andgineer/TRegExpr/releases/download/0.952b/restudio.zip>`__ hilft Ihnen "
+"dabei, reguläre Ausdrücke zu erlernen und zu debuggen."
 
 # 9cff298482634c6dbc386a8a027e2840
 #: ../../index.rst:52
@@ -166,8 +170,8 @@ msgid ""
 "If you see any problems, please `create the bug "
 "<https://github.com/andgineer/TRegExpr/issues>`_."
 msgstr ""
-"Wenn Sie Probleme sehen, erstellen Sie den Fehler "
-"<https://github.com/andgineer/TRegExpr/issues>`_."
+"Wenn Sie auf ein Problem stoßen, erstellen Sie bitte einen `Fehlerbericht "
+"<https://github.com/andgineer/TRegExpr/issues>`__."
 
 # e4726e8b8e7e4509bb7791a0c1815055
 #: ../../index.rst:58
@@ -177,7 +181,7 @@ msgstr "Quellcode"
 # 898ff6a3cafd4362a456612766b2b726
 #: ../../index.rst:59
 msgid "Pure Object Pascal."
-msgstr "Pure Object Pascal."
+msgstr "Ausschließlich Object Pascal."
 
 # 737ca1e7359545caa65cb89240868a3f
 #: ../../index.rst:61
@@ -190,9 +194,8 @@ msgid ""
 "`FreePascal fork (GitHub mirror of the SubVersion) "
 "<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>`_"
 msgstr ""
-"`FreePascal-Gabel (GitHub-Spiegel der Subversion) "
-"<https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas>"
-" _"
+"`FreePascal-Fork (GitHub-Spiegel der Subversion) <https://github.com/graemeg/"
+"freepascal/blob/master/packages/regexpr/src/regexpr.pas>`__"
 
 # bfbc7bfded90471e851d3b8093cbc999
 #: ../../index.rst:65
@@ -210,8 +213,8 @@ msgid ""
 "The documentation is available in English and `Russian "
 "<https://regexpr.sorokin.engineer/ru/latest/>`_."
 msgstr ""
-"Die Dokumentation ist in Englisch und Russisch verfügbar "
-"<https://regexpr.sorokin.engineer/ru/latest/>`_."
+"Die Dokumentation ist in `Englisch verfügbar <https://regexpr.sorokin."
+"engineer/en/latest/>`__."
 
 # 6db169b8d43c4484b5cc08a93a5d311d
 #: ../../index.rst:81
@@ -227,15 +230,13 @@ msgstr ""
 
 # 20d0dc3b43624e2c97772a2714b57edc
 #: ../../index.rst:84
-#, fuzzy
 msgid ""
 "New translations are based on `GetText "
 "<https://en.wikipedia.org/wiki/Gettext>`_ and can be edited with `Weblate"
 " <https://hosted.weblate.org/projects/tregexpr/>`_."
 msgstr ""
-"Neue Übersetzungen basieren auf GetText "
-"<https://en.wikipedia.org/wiki/Gettext>`_ und kann mit` transifex.com "
-"bearbeitet werden "
+"Neue Übersetzungen basieren auf GetText <https://en.wikipedia.org/wiki/"
+"Gettext>`_ und kann mit` transifex.com bearbeitet werden "
 "<https://www.transifex.com/masterAndrey/tregexpr/dashboard/>`_."
 
 # bed34ff5ee4148a7b9dd8cd37c9db579
@@ -274,7 +275,7 @@ msgstr ""
 #: ../../index.rst:100
 msgid "Guido Muehlwitz - found and fixed ugly bug in big string processing"
 msgstr ""
-"Guido Muehlwitz - hässlicher Fehler in der Verarbeitung großer Saiten "
+"Guido Muehlwitz - hässlicher Fehler in der Verarbeitung großer Seiten "
 "gefunden und behoben"
 
 # 7f5bfc14b9ac4064b3ae3a150933960f
@@ -295,8 +296,8 @@ msgid ""
 "Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) - German "
 "translation, usefull suggestions"
 msgstr ""
-"Martin Baur (www.mindpower.com) <http://www.mindpower.com>`__) - deutsche"
-" Übersetzung, nützliche Vorschläge"
+"Martin Baur (`www.mindpower.com) <http://www.mindpower.com>`__) - deutsche "
+"Übersetzung, nützliche Vorschläge"
 
 # 587479db44134d4bad81d5f1294044ee
 #: ../../index.rst:106
@@ -347,4 +348,3 @@ msgstr "Diego Calp, Argentinien - spanische Übersetzung"
 # ab7f160cdf66442c921786c514900fef
 #~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
 #~ msgstr "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
-

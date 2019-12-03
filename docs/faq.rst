@@ -180,13 +180,3 @@ don't like r.e. like ``\\w+\\\\w+\\.\\w+`` you can redefine the constant ``EscCh
 For example ``EscChar = "/"``. Then you can write ``/w+/w+/./w+``,
 looks unusual but more readable.
 
-Why TRegExpr does not work with strings with #0 inside?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-**Answer**
-
-The TRegExpr parser convert all strings to PChars and internally all processing
-are based on #0k-terminated PChars.
-
-To make it work with #0 chars we need a big effort. Are you going to volunteer
-to fix that?
