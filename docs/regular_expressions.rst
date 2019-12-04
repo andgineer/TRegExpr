@@ -154,8 +154,10 @@ RegEx      Matches
 ``\S``     a non space
 ``\h``     | horizontal whitespace. the tab and all characters
            | in the "space separator" Unicode category.
+``\H``     not a horizontal whitespace
 ``\v``     | vertical whitespace. all characters treated as
            | line breaks in the Unicode standard.
+``\V``     not a vertical whitespace
 ======     ==============================================
 
 You may use ``\w``, ``\d`` and ``\s`` within
