@@ -750,10 +750,10 @@ begin
   if (Ch >= 'a') and (Ch <= 'z') then
   begin
     Dec(Result, 32);
-    EXIT;
+    Exit;
   end;
   if Ord(Ch) < 128 then
-    EXIT;
+    Exit;
 
   {$IFDEF FPC}
     {$IFDEF UniCode}
@@ -778,10 +778,10 @@ begin
   if (Ch >= 'A') and (Ch <= 'Z') then
   begin
     Inc(Result, 32);
-    EXIT;
+    Exit;
   end;
   if Ord(Ch) < 128 then
-    EXIT;
+    Exit;
 
   {$IFDEF FPC}
     {$IFDEF UniCode}
@@ -1361,15 +1361,15 @@ begin
   if (Ch >= 'a') and (Ch <= 'z') then
   begin
     Dec(Result, 32);
-    EXIT;
+    Exit;
   end;
   if (Ch >= 'A') and (Ch <= 'Z') then
   begin
     Inc(Result, 32);
-    EXIT;
+    Exit;
   end;
   if Ord(Ch) < 128 then
-    EXIT;
+    Exit;
 
   {$IFDEF FPC}
   Result := _UpperCase(Ch);
@@ -1507,7 +1507,7 @@ begin
     else
       begin
         Result := False;
-        EXIT;
+        Exit;
       end;
     end;
     if IsOn then
@@ -1546,7 +1546,7 @@ begin
   else
     begin
       Error(reeModifierUnsupported);
-      EXIT;
+      Exit;
     end;
   end;
   Result := (fModifiers and Mask) <> 0;
@@ -1573,7 +1573,7 @@ begin
   else
     begin
       Error(reeModifierUnsupported);
-      EXIT;
+      Exit;
     end;
   end;
   if ASet then
@@ -1678,7 +1678,7 @@ begin
   if fExpression = '' then
   begin // No Expression assigned
     Error(reeNoExpression);
-    EXIT;
+    Exit;
   end;
   CompileRegExpr(PRegExprChar(fExpression));
 end; { of procedure TRegExpr.Compile
@@ -1709,7 +1709,7 @@ begin
 
   // check [re]compiled programm
   if programm = nil then
-    EXIT // error was set/raised by Compile (was reeExecAfterCompErr)
+    Exit // error was set/raised by Compile (was reeExecAfterCompErr)
   else if programm[0] <> MAGIC // Program corrupted.
   then
     Error(reeCorruptedProgram)
@@ -1726,13 +1726,13 @@ var
   // i : int64;
 begin
   if p = @regdummy then
-    EXIT;
+    Exit;
   // Find last node.
   scan := p;
   repeat
     temp := regnext(scan);
     if temp = nil then
-      BREAK;
+      Break;
     scan := temp;
   until False;
   // Set Next 'pointer'
@@ -1755,7 +1755,7 @@ procedure TRegExpr.OpTail(p: PRegExprChar; val: PRegExprChar);
 begin
   // "Operandless" and "op != BRANCH" are synonymous in practice.
   if (p = nil) or (p = @regdummy) or (PREOp(p)^ <> BRANCH) then
-    EXIT;
+    Exit;
   Tail(p + REOpSz + RENextOffSz, val); // ###0.933
 end; { of procedure TRegExpr.OpTail
   -------------------------------------------------------------- }
@@ -1808,7 +1808,7 @@ begin
   if regcode = @regdummy then
   begin
     Inc(regsize, sz);
-    EXIT;
+    Exit;
   end;
   // move code behind insert position
   src := regcode;
@@ -1850,7 +1850,7 @@ begin
     scan2 := s2;
     while scan2 < end2 do
       if scan1^ = scan2^ then
-        EXIT
+        Exit
       else
         Inc(scan2);
     Inc(Result);
@@ -1937,7 +1937,7 @@ begin
     if exp = nil then
     begin
       Error(reeCompNullArgument);
-      EXIT;
+      Exit;
     end;
 
     fProgModifiers := fModifiers;
@@ -1952,7 +1952,7 @@ begin
     regcode := @regdummy;
     EmitC(MAGIC);
     if ParseReg(0, flags) = nil then
-      EXIT;
+      Exit;
 
     // Allocate space.
     GetMem(programm, regsize * SizeOf(REChar));
@@ -1965,7 +1965,7 @@ begin
     regcode := programm;
     EmitC(MAGIC);
     if ParseReg(0, flags) = nil then
-      EXIT;
+      Exit;
 
     // Dig out information for optimizations.
     {$IFDEF UseFirstCharSet} // ###0.929
@@ -2029,7 +2029,7 @@ end; { of function TRegExpr.CompileRegExpr
 procedure TRegExpr.SetUseOsLineEndOnReplace(AValue: boolean);
 begin
   if FUseOsLineEndOnReplace = AValue then
-    EXIT;
+    Exit;
   FUseOsLineEndOnReplace := AValue;
   if FUseOsLineEndOnReplace then
     FReplaceLineEnd := sLineBreak
@@ -2061,7 +2061,7 @@ begin
     if regnpar >= NSUBEXP then
     begin
       Error(reeCompParseRegTooManyBrackets);
-      EXIT;
+      Exit;
     end;
     parno := regnpar;
     Inc(regnpar);
@@ -2075,7 +2075,7 @@ begin
   if br = nil then
   begin
     Result := nil;
-    EXIT;
+    Exit;
   end;
   if ret <> nil then
     Tail(ret, br) // OPEN -> first.
@@ -2091,7 +2091,7 @@ begin
     if br = nil then
     begin
       Result := nil;
-      EXIT;
+      Exit;
     end;
     Tail(ret, br); // BRANCH -> BRANCH.
     if (flags and flag_HasWidth) = 0 then
@@ -2119,7 +2119,7 @@ begin
     if regparse^ <> ')' then
     begin
       Error(reeCompParseRegUnmatchedBrackets);
-      EXIT;
+      Exit;
     end
     else
       Inc(regparse); // skip trailing ')'
@@ -2129,7 +2129,7 @@ begin
       Error(reeCompParseRegUnmatchedBrackets2)
     else
       Error(reeCompParseRegJunkOnEnd);
-    EXIT;
+    Exit;
   end;
   fCompModifiers := SavedModifiers; // restore modifiers of parent
   Result := ret;
@@ -2154,7 +2154,7 @@ begin
     if latest = nil then
     begin
       Result := nil;
-      EXIT;
+      Exit;
     end;
     flagp := flagp or flags and flag_HasWidth;
     if chain = nil // First piece.
@@ -2184,7 +2184,7 @@ function TRegExpr.ParsePiece(var flagp: integer): PRegExprChar;
     if AEnd - AStart + 1 > 8 then
     begin // prevent stupid scanning
       Error(reeBRACESArgTooBig);
-      EXIT;
+      Exit;
     end;
     while AStart <= AEnd do
     begin
@@ -2194,7 +2194,7 @@ function TRegExpr.ParsePiece(var flagp: integer): PRegExprChar;
     if (Result > MaxBracesArg) or (Result < 0) then
     begin
       Error(reeBRACESArgTooBig);
-      EXIT;
+      Exit;
     end;
   end;
 
@@ -2268,18 +2268,18 @@ begin
   flags := 0;
   Result := ParseAtom(flags);
   if Result = nil then
-    EXIT;
+    Exit;
 
   op := regparse^;
   if not((op = '*') or (op = '+') or (op = '?') or (op = '{')) then
   begin
     flagp := flags;
-    EXIT;
+    Exit;
   end;
   if ((flags and flag_HasWidth) = 0) and (op <> '?') then
   begin
     Error(reePlusStarOperandCouldBeEmpty);
-    EXIT;
+    Exit;
   end;
 
   case op of
@@ -2388,7 +2388,7 @@ begin
         begin
           regparse := savedparse;
           flagp := flags;
-          EXIT;
+          Exit;
         end;
         BracesMin := parsenum(p, regparse - 1);
         if regparse^ = ',' then
@@ -2400,7 +2400,7 @@ begin
           if regparse^ <> '}' then
           begin
             regparse := savedparse;
-            EXIT;
+            Exit;
           end;
           if p = regparse then
             Bracesmax := MaxBracesArg
@@ -2412,7 +2412,7 @@ begin
         if BracesMin > Bracesmax then
         begin
           Error(reeBracesMinParamGreaterMax);
-          EXIT;
+          Exit;
         end;
         if BracesMin > 0 then
           flagp := flag_Worst;
@@ -2438,7 +2438,7 @@ begin
     (regparse^ = '{') then
   begin
     Error(reeNestedSQP);
-    EXIT;
+    Exit;
   end;
 end; { of function TRegExpr.ParsePiece
   -------------------------------------------------------------- }
@@ -2451,7 +2451,7 @@ begin
   if (Ch < '0') or (Ch > 'F') or ((Ch > '9') and (Ch < 'A')) then
   begin
     Error(reeBadHexDigit);
-    EXIT;
+    Exit;
   end;
   Result := Ord(Ch) - Ord('0');
   if Ch >= 'A' then
@@ -2481,7 +2481,7 @@ begin
         if APtr >= fRegexEnd then
         begin
           Error(reeNoLetterAfterBSlashC);
-          EXIT;
+          Exit;
         end;
         Ch := APtr^;
         if (Ch >= 'a') and (Ch <= 'z') then // fast UpCase
@@ -2489,7 +2489,7 @@ begin
         if (Ch < 'A') or (Ch > 'Z') then
         begin
           Error(reeNoLetterAfterBSlashC);
-          EXIT;
+          Exit;
         end;
         Result := REChar(Ord(Ch) - Ord('A') + 1);
       end;
@@ -2500,7 +2500,7 @@ begin
         if APtr >= fRegexEnd then
         begin
           Error(reeNoHexCodeAfterBSlashX);
-          EXIT;
+          Exit;
         end;
         if APtr^ = '{' then
         begin // \x{nnnn} //###0.936
@@ -2509,20 +2509,20 @@ begin
             if APtr >= fRegexEnd then
             begin
               Error(reeNoHexCodeAfterBSlashX);
-              EXIT;
+              Exit;
             end;
             if APtr^ <> '}' then
             begin
               if (Ord(Result) ShR (SizeOf(REChar) * 8 - 4)) and $F <> 0 then
               begin
                 Error(reeHexCodeAfterBSlashXTooBig);
-                EXIT;
+                Exit;
               end;
               Result := REChar((Ord(Result) ShL 4) or HexDig(APtr^));
               // HexDig will cause Error if bad hex digit found
             end
             else
-              BREAK;
+              Break;
           until False;
         end
         else
@@ -2533,7 +2533,7 @@ begin
           if APtr >= fRegexEnd then
           begin
             Error(reeNoHexCodeAfterBSlashX);
-            EXIT;
+            Exit;
           end;
           Result := REChar((Ord(Result) ShL 4) or HexDig(APtr^));
           // HexDig will cause Error if bad hex digit found
@@ -2619,7 +2619,7 @@ var
   procedure EmitRangeCPrim(b: REChar); // ###0.930
   begin
     if b in RangeSet then
-      EXIT;
+      Exit;
     Inc(RangeLen);
     if b < RangeChMin then
       RangeChMin := b;
@@ -2658,7 +2658,7 @@ var
         if regcode = @regdummy then
         begin
           regsize := RangePCodeIdx + TinySetLen; // RangeChMin/Max !!!
-          EXIT;
+          Exit;
         end;
         regcode := RangePCodeBeg;
         for Ch := RangeChMin to RangeChMax do // ###0.930
@@ -2684,7 +2684,7 @@ var
         if regcode = @regdummy then
         begin
           regsize := RangePCodeIdx + SizeOf(TSetOfREChar);
-          EXIT;
+          Exit;
         end;
         if (RangePCodeBeg - REOpSz - RENextOffSz)^ = ANYBUTTINYSET then
           RangeSet := [#0 .. #255] - RangeSet;
@@ -2797,7 +2797,7 @@ begin
               begin
               {$ENDIF}
                 EmitRangeC('-'); // or treat as error ?!!
-                CONTINUE;
+                Continue;
               end;
               Inc(regparse);
               RangeEnd := UnQuoteChar(regparse);
@@ -2825,7 +2825,7 @@ begin
               if RangeBeg > RangeEnd then
               begin
                 Error(reeInvalidRange);
-                EXIT;
+                Exit;
               end;
               Inc(RangeBeg);
               EmitRangeC(RangeEnd); // prevent infinite loop if RangeEnd=$ff
@@ -2845,7 +2845,7 @@ begin
               if regparse >= fRegexEnd then
               begin
                 Error(reeParseAtomTrailingBackSlash);
-                EXIT;
+                Exit;
               end;
               case regparse^ of // r.e.extensions
                 'd':
@@ -2871,7 +2871,7 @@ begin
         if regparse^ <> ']' then
         begin
           Error(reeUnmatchedSqBrackets);
-          EXIT;
+          Exit;
         end;
         Inc(regparse);
         flagp := flagp or flag_HasWidth or flag_Simple;
@@ -2888,7 +2888,7 @@ begin
             if ret = nil then
             begin
               Result := nil;
-              EXIT;
+              Exit;
             end;
             flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
           end
@@ -2902,7 +2902,7 @@ begin
               if regparse^ <> ')' then
               begin
                 Error(reeUnclosedComment);
-                EXIT;
+                Exit;
               end;
               Inc(regparse); // skip ')'
               ret := EmitNode(COMMENT); // comment
@@ -2918,12 +2918,12 @@ begin
                 fCompModifiers) then
               begin
                 Error(reeUrecognizedModifier);
-                EXIT;
+                Exit;
               end;
               Inc(regparse); // skip ')'
               ret := EmitNode(COMMENT); // comment
               // Error (reeQPSBFollowsNothing);
-              // EXIT;
+              // Exit;
             end;
         end
         else
@@ -2940,7 +2940,7 @@ begin
           if ret = nil then
           begin
             Result := nil;
-            EXIT;
+            Exit;
           end;
           flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
         end;
@@ -2948,19 +2948,19 @@ begin
     '|', ')':
       begin // Supposed to be caught earlier.
         Error(reeInternalUrp);
-        EXIT;
+        Exit;
       end;
     '?', '+', '*':
       begin
         Error(reeQPSBFollowsNothing);
-        EXIT;
+        Exit;
       end;
     EscChar:
       begin
         if regparse >= fRegexEnd then
         begin
           Error(reeTrailingBackSlash);
-          EXIT;
+          Exit;
         end;
         case regparse^ of // r.e.extensions
           'b':
@@ -3102,7 +3102,7 @@ begin
           if regparse^ <> '{' then
           begin
             Error(reeRarseAtomInternalDisaster);
-            EXIT;
+            Exit;
           end
           else
             Len := FindInitLen(regparse + 1, fMetaStart, fRegexEnd, fMetaEnd) +
@@ -3144,7 +3144,7 @@ function TRegExpr.GetCompilerErrorPos: PtrInt;
 begin
   Result := 0;
   if (regexpbeg = nil) or (regparse = nil) then
-    EXIT; // not in compiling mode ?
+    Exit; // not in compiling mode ?
   Result := regparse - regexpbeg;
 end; { of function TRegExpr.GetCompilerErrorPos
   -------------------------------------------------------------- }
@@ -3222,19 +3222,19 @@ begin
       begin // ###0.936
         ArrayIndex := FSubExprIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
-          EXIT;
+          Exit;
         sestart := startp[ArrayIndex];
         if sestart = nil then
-          EXIT;
+          Exit;
         seend := endp[ArrayIndex];
         if seend = nil then
-          EXIT;
+          Exit;
         repeat
           opnd := sestart;
           while opnd < seend do
           begin
             if (scan >= fInputEnd) or (scan^ <> opnd^) then
-              EXIT;
+              Exit;
             Inc(scan);
             Inc(opnd);
           end;
@@ -3246,20 +3246,20 @@ begin
       begin // ###0.936
         ArrayIndex := FSubExprIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
-          EXIT;
+          Exit;
         sestart := startp[ArrayIndex];
         if sestart = nil then
-          EXIT;
+          Exit;
         seend := endp[ArrayIndex];
         if seend = nil then
-          EXIT;
+          Exit;
         repeat
           opnd := sestart;
           while opnd < seend do
           begin
             if (scan >= fInputEnd) or
               ((scan^ <> opnd^) and (scan^ <> InvertCase(opnd^))) then
-              EXIT;
+              Exit;
             Inc(scan);
             Inc(opnd);
           end;
@@ -3387,7 +3387,7 @@ begin
     begin // Oh dear. Called inappropriately.
       Result := 0; // Best compromise.
       Error(reeRegRepeatCalledInappropriately);
-      EXIT;
+      Exit;
     end;
   end; { of case }
   reginput := scan;
@@ -3402,7 +3402,7 @@ begin
   if p = @regdummy then
   begin
     Result := nil;
-    EXIT;
+    Exit;
   end;
   offset := PRENextOff(AlignToPtr(p + REOpSz))^; // ###0.933 inlined NEXT
   if offset = 0 then
@@ -3457,14 +3457,14 @@ begin
           (reginput < fInputEnd) and IsWordChar(reginput^) or
           (reginput <> fInputStart) and IsWordChar((reginput - 1)^) and
           ((reginput = fInputEnd) or not IsWordChar(reginput^))) then
-          EXIT;
+          Exit;
 
       BOL:
         if reginput <> fInputStart then
-          EXIT;
+          Exit;
       EOL:
         if reginput < fInputEnd then
-          EXIT;
+          Exit;
       BOLML:
         if reginput > fInputStart then
         begin
@@ -3475,7 +3475,7 @@ begin
           begin
             if (nextch = fLinePairedSeparatorHead) and
               (reginput^ = fLinePairedSeparatorTail) then
-              EXIT; // don't stop between paired separator
+              Exit; // don't stop between paired separator
             if
               {$IFNDEF UniCode}
               not (nextch in fLineSeparatorsSet)
@@ -3483,7 +3483,7 @@ begin
               (Pos(nextch, fLineSeparators) <= 0)
               {$ENDIF}
             then
-              EXIT;
+              Exit;
           end;
         end;
       EOLML:
@@ -3495,7 +3495,7 @@ begin
           begin
             if (nextch = fLinePairedSeparatorTail) and (reginput > fInputStart)
               and ((reginput - 1)^ = fLinePairedSeparatorHead) then
-              EXIT; // don't stop between paired separator
+              Exit; // don't stop between paired separator
             if
               {$IFNDEF UniCode}
               not (nextch in fLineSeparatorsSet)
@@ -3503,13 +3503,13 @@ begin
               (Pos(nextch, fLineSeparators) <= 0)
               {$ENDIF}
             then
-              EXIT;
+              Exit;
           end;
         end;
       ANY:
         begin
           if reginput = fInputEnd then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       ANYML:
@@ -3523,19 +3523,19 @@ begin
             (Pos(reginput^, fLineSeparators) > 0)
             {$ENDIF}
           then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       ANYDIGIT:
         begin
           if (reginput = fInputEnd) or Not IsDigit(reginput) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       NOTDIGIT:
         begin
           if (reginput = fInputEnd) or IsDigit(reginput) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       {$IFNDEF UseSetOfChar} // ###0.929
@@ -3543,53 +3543,53 @@ begin
         begin
           if (reginput = fInputEnd) or not IsWordChar(reginput^) // ###0.943
           then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       NOTLETTER:
         begin
           if (reginput = fInputEnd) or IsWordChar(reginput^) // ###0.943
           then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       ANYSPACE:
         begin
           if (reginput = fInputEnd) or not IsSpaceChar(reginput) // ###0.943
           then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       NOTSPACE:
         begin
           if (reginput = fInputEnd) or IsSpaceChar(reginput) // ###0.943
           then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       {$ENDIF}
       ANYVERTSEP:
         begin
           if (reginput = fInputEnd) or not IsLineSeparator(reginput^) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       NOTVERTSEP:
         begin
           if (reginput = fInputEnd) or IsLineSeparator(reginput^) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       ANYHORZSEP:
         begin
           if (reginput = fInputEnd) or not IsHorzSeparator(reginput^) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       NOTHORZSEP:
         begin
           if (reginput = fInputEnd) or IsHorzSeparator(reginput^) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       EXACTLYCI:
@@ -3597,7 +3597,7 @@ begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
           // Inline the first character, for speed.
           if (opnd^ <> reginput^) and (InvertCase(opnd^) <> reginput^) then
-            EXIT;
+            Exit;
           Len := strlen(opnd);
           // ###0.929 begin
           no := Len;
@@ -3607,7 +3607,7 @@ begin
             Inc(save);
             Inc(opnd);
             if (opnd^ <> save^) and (InvertCase(opnd^) <> save^) then
-              EXIT;
+              Exit;
             Dec(no);
           end;
           // ###0.929 end
@@ -3618,7 +3618,7 @@ begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
           // Inline the first character, for speed.
           if opnd^ <> reginput^ then
-            EXIT;
+            Exit;
           Len := strlen(opnd);
           // ###0.929 begin
           no := Len;
@@ -3628,7 +3628,7 @@ begin
             Inc(save);
             Inc(opnd);
             if opnd^ <> save^ then
-              EXIT;
+              Exit;
             Dec(no);
           end;
           // ###0.929 end
@@ -3639,17 +3639,17 @@ begin
           no := Ord((scan + REOpSz + RENextOffSz)^);
           no := FSubExprIndexes[no];
           if no < 0 then
-            EXIT;
+            Exit;
           if startp[no] = nil then
-            EXIT;
+            Exit;
           if endp[no] = nil then
-            EXIT;
+            Exit;
           save := reginput;
           opnd := startp[no];
           while opnd < endp[no] do
           begin
             if (save >= fInputEnd) or (save^ <> opnd^) then
-              EXIT;
+              Exit;
             Inc(save);
             Inc(opnd);
           end;
@@ -3660,18 +3660,18 @@ begin
           no := Ord((scan + REOpSz + RENextOffSz)^);
           no := FSubExprIndexes[no];
           if no < 0 then
-            EXIT;
+            Exit;
           if startp[no] = nil then
-            EXIT;
+            Exit;
           if endp[no] = nil then
-            EXIT;
+            Exit;
           save := reginput;
           opnd := startp[no];
           while opnd < endp[no] do
           begin
             if (save >= fInputEnd) or
               ((save^ <> opnd^) and (save^ <> InvertCase(opnd^))) then
-              EXIT;
+              Exit;
             Inc(save);
             Inc(opnd);
           end;
@@ -3683,7 +3683,7 @@ begin
             ((reginput^ <> (scan + REOpSz + RENextOffSz)^) and
             (reginput^ <> (scan + REOpSz + RENextOffSz + 1)^) and
             (reginput^ <> (scan + REOpSz + RENextOffSz + 2)^)) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       ANYBUTTINYSET:
@@ -3692,7 +3692,7 @@ begin
             (reginput^ = (scan + REOpSz + RENextOffSz)^) or
             (reginput^ = (scan + REOpSz + RENextOffSz + 1)^) or
             (reginput^ = (scan + REOpSz + RENextOffSz + 2)^) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       {$IFDEF UseSetOfChar} // ###0.929
@@ -3700,7 +3700,7 @@ begin
         begin
           if (reginput = fInputEnd) or
             not(reginput^ in PSetOfREChar(scan + REOpSz + RENextOffSz)^) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       {$ELSE}
@@ -3708,28 +3708,28 @@ begin
         begin
           if (reginput = fInputEnd) or
             (StrScan(scan + REOpSz + RENextOffSz, reginput^) = nil) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       ANYBUT:
         begin
           if (reginput = fInputEnd) or
             (StrScan(scan + REOpSz + RENextOffSz, reginput^) <> nil) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       ANYOFCI:
         begin
           if (reginput = fInputEnd) or
             (StrScanCI(scan + REOpSz + RENextOffSz, reginput^) = nil) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       ANYBUTCI:
         begin
           if (reginput = fInputEnd) or
             (StrScanCI(scan + REOpSz + RENextOffSz, reginput^) <> nil) then
-            EXIT;
+            Exit;
           Inc(reginput);
         end;
       {$ENDIF}
@@ -3753,7 +3753,7 @@ begin
           // then startp [no] := save;
           // Don't set startp if some later invocation of the same
           // parentheses already has.
-          EXIT;
+          Exit;
         end;
       Succ(CLOSE) .. TREOp(Ord(CLOSE) + NSUBEXP - 1):
         begin // ###0.929
@@ -3769,7 +3769,7 @@ begin
           // then endp [no] := save;
           // Don't set endp if some later invocation of the same
           // parentheses already has.
-          EXIT;
+          Exit;
         end;
       BRANCH:
         begin
@@ -3782,11 +3782,11 @@ begin
               save := reginput;
               Result := MatchPrim(scan + REOpSz + RENextOffSz);
               if Result then
-                EXIT;
+                Exit;
               reginput := save;
               scan := regnext(scan);
             until (scan = nil) or (scan^ <> BRANCH);
-            EXIT;
+            Exit;
           end;
         end;
       {$IFDEF ComplexBraces}
@@ -3797,23 +3797,23 @@ begin
           if LoopStackIdx > LoopStackMax then
           begin
             Error(reeLoopStackExceeded);
-            EXIT;
+            Exit;
           end;
           save := reginput;
           LoopStack[LoopStackIdx] := 0; // init loop counter
           Result := MatchPrim(next); // execute LOOP
           LoopStackIdx := no; // cleanup
           if Result then
-            EXIT;
+            Exit;
           reginput := save;
-          EXIT;
+          Exit;
         end;
       LOOP, LOOPNG:
         begin // ###0.940
           if LoopStackIdx <= 0 then
           begin
             Error(reeLoopWithoutEntry);
-            EXIT;
+            Exit;
           end;
           opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + 2 *
             REBracesArgSz))^;
@@ -3834,21 +3834,21 @@ begin
                 Result := MatchPrim(opnd);
                 LoopStackIdx := no;
                 if Result then
-                  EXIT;
+                  Exit;
                 reginput := save;
               end;
               Dec(LoopStackIdx); // Fail. May be we are too greedy? ;)
               Result := MatchPrim(next);
               if not Result then
                 reginput := save;
-              EXIT;
+              Exit;
             end
             else
             begin
               // non-greedy - try just now
               Result := MatchPrim(next);
               if Result then
-                EXIT
+                Exit
               else
                 reginput := save; // failed - move next and try again
               if LoopStack[LoopStackIdx] < Bracesmax then
@@ -3858,11 +3858,11 @@ begin
                 Result := MatchPrim(opnd);
                 LoopStackIdx := no;
                 if Result then
-                  EXIT;
+                  Exit;
                 reginput := save;
               end;
               Dec(LoopStackIdx); // Failed - back up
-              EXIT;
+              Exit;
             end
           end
           else
@@ -3872,10 +3872,10 @@ begin
             Result := MatchPrim(opnd);
             LoopStackIdx := no;
             if Result then
-              EXIT;
+              Exit;
             Dec(LoopStack[LoopStackIdx]);
             reginput := save;
-            EXIT;
+            Exit;
           end;
         end;
       {$ENDIF}
@@ -3927,7 +3927,7 @@ begin
                 if MatchPrim(next) then
                 begin
                   Result := True;
-                  EXIT;
+                  Exit;
                 end;
                 {$IFDEF ComplexBraces}
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
@@ -3936,7 +3936,7 @@ begin
               end;
               Inc(no); // Couldn't or didn't - move forward.
             end; { of while }
-            EXIT;
+            Exit;
           end
           else
           begin // greedy mode
@@ -3954,7 +3954,7 @@ begin
                 if MatchPrim(next) then
                 begin
                   Result := True;
-                  EXIT;
+                  Exit;
                 end;
                 {$IFDEF ComplexBraces}
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
@@ -3964,18 +3964,18 @@ begin
               Dec(no); // Couldn't or didn't - back up.
               reginput := save + no;
             end; { of while }
-            EXIT;
+            Exit;
           end;
         end;
       EEND:
         begin
           Result := True; // Success!
-          EXIT;
+          Exit;
         end;
     else
       begin
         Error(reeMatchPrimMemoryCorruption);
-        EXIT;
+        Exit;
       end;
     end; { of case scan^ }
     scan := next;
@@ -4005,12 +4005,12 @@ begin
         begin // ###0.938
           FirstCharSet := [#0 .. #255]; // :((( we cannot
           // optimize r.e. if it starts with back reference
-          EXIT;
+          Exit;
         end;
       BOL, BOLML:
-        ; // EXIT; //###0.937
+        ; // Exit; //###0.937
       EOL, EOLML:
-        begin // ###0.948 was empty in 0.947, was EXIT in 0.937
+        begin // ###0.948 was empty in 0.947, was Exit in 0.937
           Include(FirstCharSet, #0);
           if ModifierM then
           begin
@@ -4021,62 +4021,62 @@ begin
               Inc(opnd);
             end;
           end;
-          EXIT;
+          Exit;
         end;
       BOUND, NOTBOUND:
         ; // ###0.943 ?!!
       ANY, ANYML:
         begin // we can better define ANYML !!!
           FirstCharSet := [#0 .. #255]; // ###0.930
-          EXIT;
+          Exit;
         end;
       ANYDIGIT:
         begin
           FirstCharSet := FirstCharSet + ['0' .. '9'];
-          EXIT;
+          Exit;
         end;
       NOTDIGIT:
         begin
           FirstCharSet := FirstCharSet + ([#0 .. #255] - ['0' .. '9']);
           // ###0.948 FirstCharSet was forgotten
-          EXIT;
+          Exit;
         end;
       ANYVERTSEP:
         begin
           FirstCharSet := FirstCharSet + [#$d, #$a, #$b, #$c];
-          EXIT;
+          Exit;
         end;
       NOTVERTSEP:
         begin
           FirstCharSet := FirstCharSet + ([#0 .. #255] - [#$d, #$a, #$b, #$c]);
-          EXIT;
+          Exit;
         end;
       ANYHORZSEP:
         begin
           FirstCharSet := FirstCharSet + [#9, #$20, #$A0];
-          EXIT;
+          Exit;
         end;
       NOTHORZSEP:
         begin
           FirstCharSet := FirstCharSet + ([#0 .. #255] - [#9, #$20, #$A0]);
-          EXIT;
+          Exit;
         end;
       EXACTLYCI:
         begin
           Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
           Include(FirstCharSet, InvertCase((scan + REOpSz + RENextOffSz)^));
-          EXIT;
+          Exit;
         end;
       EXACTLY:
         begin
           Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
-          EXIT;
+          Exit;
         end;
       ANYOFFULLSET:
         begin
           FirstCharSet := FirstCharSet +
             PSetOfREChar(scan + REOpSz + RENextOffSz)^;
-          EXIT;
+          Exit;
         end;
       ANYOFTINYSET:
         begin
@@ -4085,7 +4085,7 @@ begin
           Include(FirstCharSet, (scan + REOpSz + RENextOffSz + 1)^);
           Include(FirstCharSet, (scan + REOpSz + RENextOffSz + 2)^);
           // ...                                                      // up to TinySetLen
-          EXIT;
+          Exit;
         end;
       ANYBUTTINYSET:
         begin
@@ -4095,7 +4095,7 @@ begin
             (scan + REOpSz + RENextOffSz)^, (scan + REOpSz + RENextOffSz + 1)^,
             (scan + REOpSz + RENextOffSz + 2)^]);
           // ...                                                      // up to TinySetLen
-          EXIT;
+          Exit;
         end;
       NOTHING:
         ;
@@ -4106,12 +4106,12 @@ begin
       Succ(OPEN) .. TREOp(Ord(OPEN) + NSUBEXP - 1):
         begin // ###0.929
           FillFirstCharSet(next);
-          EXIT;
+          Exit;
         end;
       Succ(CLOSE) .. TREOp(Ord(CLOSE) + NSUBEXP - 1):
         begin // ###0.929
           FillFirstCharSet(next);
-          EXIT;
+          Exit;
         end;
       BRANCH:
         begin
@@ -4124,7 +4124,7 @@ begin
               FillFirstCharSet(scan + REOpSz + RENextOffSz);
               scan := regnext(scan);
             until (scan = nil) or (PREOp(scan)^ <> BRANCH);
-            EXIT;
+            Exit;
           end;
         end;
       {$IFDEF ComplexBraces}
@@ -4132,7 +4132,7 @@ begin
         begin // ###0.925
           // LoopStack [LoopStackIdx] := 0; //###0.940 line removed
           FillFirstCharSet(next); // execute LOOP
-          EXIT;
+          Exit;
         end;
       LOOP, LOOPNG:
         begin // ###0.940
@@ -4142,7 +4142,7 @@ begin
           FillFirstCharSet(opnd);
           if min_cnt = 0 then
             FillFirstCharSet(next);
-          EXIT;
+          Exit;
         end;
       {$ENDIF}
       STAR, STARNG: // ###0.940
@@ -4150,7 +4150,7 @@ begin
       PLUS, PLUSNG:
         begin // ###0.940
           FillFirstCharSet(scan + REOpSz + RENextOffSz);
-          EXIT;
+          Exit;
         end;
       BRACES, BRACESNG:
         begin // ###0.940
@@ -4159,17 +4159,17 @@ begin
           // BRACES
           FillFirstCharSet(opnd);
           if min_cnt > 0 then
-            EXIT;
+            Exit;
         end;
       EEND:
         begin
           FirstCharSet := [#0 .. #255]; // ###0.948
-          EXIT;
+          Exit;
         end;
     else
       begin
         Error(reeMatchPrimMemoryCorruption);
-        EXIT;
+        Exit;
       end;
     end; { of case scan^ }
     scan := next;
@@ -4246,27 +4246,27 @@ begin
 
   if not IsProgrammOk // ###0.929
   then
-    EXIT;
+    Exit;
 
   // Check InputString presence
   if fInputString = '' then
   begin
     Error(reeNoInputStringSpecified);
-    EXIT;
+    Exit;
   end;
 
   // Check that the start position is not negative
   if AOffset < 1 then
   begin
     Error(reeOffsetMustBeGreaterThen0);
-    EXIT;
+    Exit;
   end;
   // Check that the start position is not longer than the line
   // If so then exit with nothing found
   if AOffset > (length(fInputString) + 1)
   // for matching empty string after last char.
   then
-    EXIT;
+    Exit;
 
   StartPtr := fInputStart + AOffset - 1;
 
@@ -4279,13 +4279,13 @@ begin
       if s <> nil then
       begin
         if StrLComp(s, regmust, regmlen) = 0 then
-          BREAK; // Found it.
+          Break; // Found it.
         Inc(s);
       end;
     until s = nil;
     if s = nil // Not present.
     then
-      EXIT;
+      Exit;
   end;
 
   {$IFDEF ComplexBraces}
@@ -4296,7 +4296,7 @@ begin
   if reganch <> #0 then
   begin
     Result := RegMatch(StartPtr);
-    EXIT;
+    Exit;
   end;
 
   // Messy cases:  unanchored match.
@@ -4308,7 +4308,7 @@ begin
       begin
         Result := RegMatch(s);
         if Result then
-          EXIT
+          Exit
         else
           ClearMatchs; // ###0.949
         Inc(s);
@@ -4326,7 +4326,7 @@ begin
       if Result or (s = fInputEnd)
       // Exit on a match or after testing the end-of-string.
       then
-        EXIT
+        Exit
       else
         ClearMatchs; // ###0.949
       Inc(s);
@@ -4364,7 +4364,7 @@ begin
   if not Assigned(startp[0]) or not Assigned(endp[0]) then
   begin
     Error(reeExecNextWithoutExec);
-    EXIT;
+    Exit;
   end;
   // Offset := MatchPos [0] + MatchLen [0];
   // if MatchLen [0] = 0
@@ -4414,7 +4414,7 @@ begin
       // it's impossible for our 'one-point' checking to support
       // two chars separator for identical chars
       Error(reeBadLinePairedSeparator);
-      EXIT;
+      Exit;
     end;
     if not fLinePairedSeparatorAssigned or (AStr[1] <> fLinePairedSeparatorHead)
       or (AStr[2] <> fLinePairedSeparatorTail) then
@@ -4506,18 +4506,18 @@ var
 begin
   // Check programm and input string
   if not IsProgrammOk then
-    EXIT;
+    Exit;
   if fInputString = '' then
   begin
     Error(reeNoInputStringSpecified);
-    EXIT;
+    Exit;
   end;
   // Prepare for working
   TemplateLen := length(ATemplate);
   if TemplateLen = 0 then
   begin // prevent nil pointers
     Result := '';
-    EXIT;
+    Exit;
   end;
   TemplateBeg := Pointer(ATemplate);
   TemplateEnd := TemplateBeg + TemplateLen;
@@ -4571,7 +4571,7 @@ begin
   if ResultLen = 0 then
   begin
     Result := '';
-    EXIT;
+    Exit;
   end;
   // SetString (Result, nil, ResultLen);
   SetLength(Result, ResultLen);
@@ -4871,7 +4871,7 @@ var
 begin
   if not IsProgrammOk // ###0.929
   then
-    EXIT;
+    Exit;
 
   op := EXACTLY;
   Result := '';
