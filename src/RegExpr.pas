@@ -614,27 +614,22 @@ type
 
     {$IFDEF UnicodeWordDetection}
     // If set to true, in addition to using WordChars, a heuristic to detect unicode word letters is used for \w
-    property UseUnicodeWordDetection: boolean Read FUseUnicodeWordDetection
-      Write FUseUnicodeWordDetection;
+    property UseUnicodeWordDetection: boolean read FUseUnicodeWordDetection write FUseUnicodeWordDetection;
     {$ENDIF}
     // line separators (like \n in Unix)
-    property LineSeparators: RegExprString read fLineSeparators
-      write SetLineSeparators; // ###0.941
+    property LineSeparators: RegExprString read fLineSeparators write SetLineSeparators; // ###0.941
 
     // paired line separator (like \r\n in DOS and Windows).
     // must contain exactly two chars or no chars at all
-    property LinePairedSeparator: RegExprString read GetLinePairedSeparator
-      write SetLinePairedSeparator; // ###0.941
+    property LinePairedSeparator: RegExprString read GetLinePairedSeparator write SetLinePairedSeparator; // ###0.941
 
     // Set this property if you want to override case-insensitive functionality.
     // Create set it to RegExprInvertCaseFunction (InvertCaseFunction by default)
-    property InvertCase: TRegExprInvertCaseFunction read fInvertCase
-      write fInvertCase; // ##0.935
+    property InvertCase: TRegExprInvertCaseFunction read fInvertCase write fInvertCase; // ##0.935
 
     // Use OS line end on replace or not. Default is True for backwards compatibility.
     // Set to false to use #10.
-    Property UseOsLineEndOnReplace: boolean Read FUseOsLineEndOnReplace
-      Write SetUseOsLineEndOnReplace;
+    property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
   end;
 
   ERegExpr = class(Exception)
