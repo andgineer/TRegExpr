@@ -1601,7 +1601,11 @@ end; { of procedure TRegExpr.SetModifier
   {$ELSE}
   function IsUnicodeWordChar(AChar: WideChar): boolean; inline;
   begin
+    {$IFDEF D2009}
     Result := System.Character.IsLetterOrDigit(AChar);
+    {$ELSE}
+    Result := False;
+    {$ENDIF}
   end;
   {$ENDIF}
 {$ENDIF}
