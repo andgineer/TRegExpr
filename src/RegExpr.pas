@@ -112,7 +112,11 @@ type
   {$IFDEF FPC}
   RegExprString = UnicodeString;
   {$ELSE}
-  RegExprString = WideString;
+    {$IFDEF D2009}
+    RegExprString = UnicodeString;
+    {$ELSE}
+    RegExprString = WideString;
+    {$ENDIF}
   {$ENDIF}
   REChar = WideChar;
   {$ELSE}
