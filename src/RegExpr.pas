@@ -1731,12 +1731,12 @@ begin
     EXIT;
   // Find last node.
   scan := p;
-  REPEAT
+  repeat
     temp := regnext(scan);
     if temp = nil then
       BREAK;
     scan := temp;
-  UNTIL False;
+  until False;
   // Set Next 'pointer'
   if val < scan then
     PRENextOff(AlignToPtr(scan + REOpSz))^ := -(scan - val) // ###0.948
@@ -2506,7 +2506,7 @@ begin
         end;
         if APtr^ = '{' then
         begin // \x{nnnn} //###0.936
-          REPEAT
+          repeat
             Inc(APtr);
             if APtr >= fRegexEnd then
             begin
@@ -2525,7 +2525,7 @@ begin
             end
             else
               BREAK;
-          UNTIL False;
+          until False;
         end
         else
         begin
@@ -3231,7 +3231,7 @@ begin
         seend := endp[ArrayIndex];
         if seend = nil then
           EXIT;
-        REPEAT
+        repeat
           opnd := sestart;
           while opnd < seend do
           begin
@@ -3242,7 +3242,7 @@ begin
           end;
           Inc(Result);
           reginput := scan;
-        UNTIL Result >= AMax;
+        until Result >= AMax;
       end;
     BSUBEXPCI:
       begin // ###0.936
@@ -3255,7 +3255,7 @@ begin
         seend := endp[ArrayIndex];
         if seend = nil then
           EXIT;
-        REPEAT
+        repeat
           opnd := sestart;
           while opnd < seend do
           begin
@@ -3267,7 +3267,7 @@ begin
           end;
           Inc(Result);
           reginput := scan;
-        UNTIL Result >= AMax;
+        until Result >= AMax;
       end;
     ANYDIGIT:
       while (Result < TheMax) and IsDigit(scan) do
@@ -3780,14 +3780,14 @@ begin
             next := scan + REOpSz + RENextOffSz // Avoid recursion
           else
           begin
-            REPEAT
+            repeat
               save := reginput;
               Result := MatchPrim(scan + REOpSz + RENextOffSz);
               if Result then
                 EXIT;
               reginput := save;
               scan := regnext(scan);
-            UNTIL (scan = nil) or (scan^ <> BRANCH);
+            until (scan = nil) or (scan^ <> BRANCH);
             EXIT;
           end;
         end;
@@ -4122,10 +4122,10 @@ begin
             next := scan + REOpSz + RENextOffSz // Avoid recursion.
           else
           begin
-            REPEAT
+            repeat
               FillFirstCharSet(scan + REOpSz + RENextOffSz);
               scan := regnext(scan);
-            UNTIL (scan = nil) or (PREOp(scan)^ <> BRANCH);
+            until (scan = nil) or (PREOp(scan)^ <> BRANCH);
             EXIT;
           end;
         end;
@@ -4276,7 +4276,7 @@ begin
   if regmust <> nil then
   begin
     s := StartPtr;
-    REPEAT
+    repeat
       s := StrScan(s, regmust[0]);
       if s <> nil then
       begin
@@ -4284,7 +4284,7 @@ begin
           BREAK; // Found it.
         Inc(s);
       end;
-    UNTIL s = nil;
+    until s = nil;
     if s = nil // Not present.
     then
       EXIT;
@@ -4304,7 +4304,7 @@ begin
   // Messy cases:  unanchored match.
   s := StartPtr;
   if regstart <> #0 then // We know what char it must start with.
-    REPEAT
+    repeat
       s := StrScan(s, regstart);
       if s <> nil then
       begin
@@ -4315,7 +4315,7 @@ begin
           ClearMatchs; // ###0.949
         Inc(s);
       end;
-    UNTIL s = nil
+    until s = nil
   else
   begin // We don't - general case.
     repeat // ###0.948
@@ -4336,20 +4336,21 @@ begin
     (* optimized and fixed by Martin Fuller - empty strings
       were not allowed to pass through in UseFirstCharSet mode
       {$IFDEF UseFirstCharSet} //###0.929
-      while s < fInputEnd do begin
-      if s^ in FirstCharSet
-      then Result := RegMatch (s);
-      if Result
-      then EXIT;
-      inc (s);
+      while s < fInputEnd do
+      begin
+        if s^ in FirstCharSet then
+          Result := RegMatch (s);
+        if Result
+          then exit;
+        Inc(s);
       end;
       {$ELSE}
-      REPEAT
-      Result := RegMatch (s);
-      if Result
-      then EXIT;
-      inc (s);
-      UNTIL s = fInputEnd;
+      repeat
+        Result := RegMatch (s);
+        if Result
+          then exit;
+        Inc(s);
+      until s = fInputEnd;
       {$ENDIF}
     *)
   end;
@@ -4684,10 +4685,10 @@ var
 begin
   PrevPos := 1;
   if Exec(AInputStr) then
-    REPEAT
+    repeat
       APieces.Add(System.Copy(AInputStr, PrevPos, MatchPos[0] - PrevPos));
       PrevPos := MatchPos[0] + MatchLen[0];
-    UNTIL not ExecNext;
+    until not ExecNext;
   APieces.Add(System.Copy(AInputStr, PrevPos, MaxInt)); // Tail
 end; { of procedure TRegExpr.Split
   -------------------------------------------------------------- }
@@ -4701,7 +4702,7 @@ begin
   Result := '';
   PrevPos := 1;
   if Exec(AInputStr) then
-    REPEAT
+    repeat
       Result := Result + System.Copy(AInputStr, PrevPos, MatchPos[0] - PrevPos);
       if AUseSubstitution // ###0.946
       then
@@ -4709,7 +4710,7 @@ begin
       else
         Result := Result + AReplaceStr;
       PrevPos := MatchPos[0] + MatchLen[0];
-    UNTIL not ExecNext;
+    until not ExecNext;
   Result := Result + System.Copy(AInputStr, PrevPos, MaxInt); // Tail
 end; { of function TRegExpr.Replace
   -------------------------------------------------------------- }
@@ -4722,11 +4723,11 @@ begin
   Result := '';
   PrevPos := 1;
   if Exec(AInputStr) then
-    REPEAT
+    repeat
       Result := Result + System.Copy(AInputStr, PrevPos, MatchPos[0] - PrevPos)
         + AReplaceFunc(Self);
       PrevPos := MatchPos[0] + MatchLen[0];
-    UNTIL not ExecNext;
+    until not ExecNext;
   Result := Result + System.Copy(AInputStr, PrevPos, MaxInt); // Tail
 end; { of function TRegExpr.ReplaceEx
   -------------------------------------------------------------- }
