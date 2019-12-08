@@ -69,6 +69,7 @@ interface
 {$ENDIF}
 // ======== Define options for TRegExpr engine
 { off $DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
+{ off $DEFINE UnicodeWordDetection}
 {$IFDEF FPC_OS_UNICODE}
   {$DEFINE UNICODE}
 {$ENDIF}
@@ -84,9 +85,6 @@ interface
 {$ENDIF}
 {$IFDEF UseSetOfChar}
   {$DEFINE UseFirstCharSet} // Fast skip between matches for r.e. that starts with determined set of chars
-{$ENDIF}
-{$IFDEF UNICODE}
-  {$DEFINE UnicodeWordDetection}
 {$ENDIF}
 // ======== Define Pascal-language options
 // Define 'UseAsserts' option (do not edit this definitions).
@@ -1601,11 +1599,7 @@ end; { of procedure TRegExpr.SetModifier
   {$ELSE}
   function IsUnicodeWordChar(AChar: WideChar): boolean; inline;
   begin
-    {$IFDEF D2009}
     Result := System.Character.IsLetterOrDigit(AChar);
-    {$ELSE}
-    Result := False;
-    {$ENDIF}
   end;
   {$ENDIF}
 {$ENDIF}
