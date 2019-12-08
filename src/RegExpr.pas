@@ -710,7 +710,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   TRegExprVersionMajor: integer = 0;
-  TRegExprVersionMinor: integer = 960;
+  TRegExprVersionMinor: integer = 962;
 
   MaskModI = 1; // modifier /i bit in fModifiers
   MaskModR = 2; // -"- /r

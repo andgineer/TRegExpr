@@ -5,6 +5,13 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
+ v. 0.962 2019.12.08
+ -=- (^) Ifdef UnicodeWordDetection works also on Delphi 2009+.
+  By Alexey Torgashin.
+ -=- (^) Property UseUnicodeWordDetection default changed to True.
+ -=- (^) In Unicode mode on Delphi 2009+, UnicodeString type is used. 
+ -=- (^) Formatted regexpr.pas using Embarcadero Delphi Formatter.exe. 
+
  v. 0.960 2019.12.03
  -=- (+) Support \V, \H (counterparts to \v, \h). By Alexey Torgashin.
  -=- (+) Support control escape sequences \cA...\cZ. By Alexey Torgashin.
