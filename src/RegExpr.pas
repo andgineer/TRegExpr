@@ -48,9 +48,6 @@ unit RegExpr;
 interface
 
 { off $DEFINE DebugSynRegExpr }
-{$IFDEF FPC}
-  {$DEFINE UnicodeWordDetection}
-{$ENDIF}
 // ======== Determine compiler
 {$I regexpr_compilers.inc}
 // ======== Define base compiler options
@@ -71,7 +68,7 @@ interface
   {$INLINE ON}
 {$ENDIF}
 // ======== Define options for TRegExpr engine
-{ off $DEFINE UniCode } // Unicode support
+{ off $DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
 {$IFDEF FPC_OS_UNICODE}
   {$DEFINE UNICODE}
 {$ENDIF}
@@ -88,8 +85,8 @@ interface
 {$IFDEF UseSetOfChar}
   {$DEFINE UseFirstCharSet} // Fast skip between matches for r.e. that starts with determined set of chars
 {$ENDIF}
-{$IFNDEF UNICODE}
-  {$UNDEF UnicodeWordDetection}
+{$IFDEF UNICODE}
+  {$DEFINE UnicodeWordDetection}
 {$ENDIF}
 // ======== Define Pascal-language options
 // Define 'UseAsserts' option (do not edit this definitions).
@@ -109,11 +106,6 @@ interface
 uses
   Classes, // TStrings in Split method
   SysUtils; // Exception
-
-{$IFNDEF FPC}
-const
-  LOW_SURROGATE_BEGIN = Word($DC00);
-{$ENDIF}
 
 type
   {$IFNDEF FPC}
@@ -313,7 +305,6 @@ type
     {$ENDIF}
     {$IFDEF UnicodeWordDetection}
     FUseUnicodeWordDetection: boolean;
-    function IsUnicodeWordChar(AChar: REChar): boolean;
     {$ENDIF}
     procedure ClearInternalIndexes;
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -1320,9 +1311,6 @@ begin
 
   regexpbeg := nil;
   fExprIsCompiled := False;
-  {$IFDEF UnicodeWordDetection}
-  FUseUnicodeWordDetection := False;
-  {$ENDIF}
   ModifierI := RegExprModifierI;
   ModifierR := RegExprModifierR;
   ModifierS := RegExprModifierS;
@@ -1341,6 +1329,10 @@ begin
 
   fMetaStart := PRegExprChar(META);
   fMetaEnd := fMetaStart + length(META);
+
+  {$IFDEF UnicodeWordDetection}
+  FUseUnicodeWordDetection := True;
+  {$ENDIF}
 end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
 
@@ -1596,27 +1588,29 @@ end; { of procedure TRegExpr.SetModifier
 { ============================================================= }
 
 {$IFDEF UnicodeWordDetection}
-function TRegExpr.IsUnicodeWordChar(AChar: REChar): boolean;
-var
-  NType: byte;
-begin
-  if Ord(AChar) < 128 then
-    EXIT(False)
-  else if Ord(AChar) >= LOW_SURROGATE_BEGIN then
-    EXIT(False)
-  else
+  {$IFDEF FPC}
+  function IsUnicodeWordChar(AChar: WideChar): boolean; inline;
+  var
+    NType: byte;
   begin
+    if Ord(AChar) >= LOW_SURROGATE_BEGIN then
+      Exit(False);
     NType := GetProps(Ord(AChar))^.Category;
     Result := (NType <= UGC_OtherNumber);
   end;
-end;
+  {$ELSE}
+  function IsUnicodeWordChar(AChar: WideChar): boolean; inline;
+  begin
+    Result := System.Character.IsLetterOfDigit(AChar);
+  end;
+  {$ENDIF}
 {$ENDIF}
 
 function TRegExpr.IsWordChar(AChar: REChar): boolean;
 begin
   Result := Pos(AChar, fWordChars) > 0;
   {$IFDEF UnicodeWordDetection}
-  if not Result and UseUnicodeWordDetection then
+  if not Result and (Ord(AChar) >= 128) and UseUnicodeWordDetection then
     Result := IsUnicodeWordChar(AChar);
   {$ENDIF}
 end;
