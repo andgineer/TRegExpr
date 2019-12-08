@@ -4736,8 +4736,7 @@ end; { of function TRegExpr.ReplaceEx
 function TRegExpr.Replace(const AInputStr: RegExprString;
   AReplaceFunc: TRegExprReplaceFunction): RegExprString;
 begin
-  {$IFDEF FPC}Result := {$ENDIF}
-  ReplaceEx(AInputStr, AReplaceFunc);
+  Result := ReplaceEx(AInputStr, AReplaceFunc);
 end; { of function TRegExpr.Replace
   -------------------------------------------------------------- }
 {$ENDIF}
