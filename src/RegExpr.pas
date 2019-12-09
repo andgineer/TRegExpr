@@ -83,6 +83,9 @@ interface
 {$IFDEF UseSetOfChar}
   {$DEFINE UseFirstCharSet} // Fast skip between matches for r.e. that starts with determined set of chars
 {$ENDIF}
+{$IFNDEF UniCode}
+  {$UNDEF UnicodeWordDetection}
+{$ENDIF}
 // ======== Define Pascal-language options
 // Define 'UseAsserts' option (do not edit this definitions).
 // Asserts used to catch 'strange bugs' in TRegExpr implementation (when something goes
