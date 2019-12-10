@@ -94,6 +94,7 @@ interface
 {$IFDEF FPC} {$DEFINE UseAsserts} {$ENDIF}
 // Define 'use subroutine parameters default values' option (do not edit this definition).
 {$IFDEF D4} {$DEFINE DefParam} {$ENDIF}
+{$IFDEF FPC} {$DEFINE DefParam} {$ENDIF}
 // Define 'OverMeth' options, to use method overloading (do not edit this definitions).
 {$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
 {$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
@@ -459,13 +460,13 @@ type
 
     // Split AInputStr into APieces by r.e. occurencies
     // Internally calls Exec[Next]
-    procedure Split(Const AInputStr: RegExprString; APieces: TStrings);
+    procedure Split(const AInputStr: RegExprString; APieces: TStrings);
 
-    function Replace(Const AInputStr: RegExprString;
+    function Replace(const AInputStr: RegExprString;
       const AReplaceStr: RegExprString;
       AUseSubstitution: boolean{$IFDEF DefParam} = False{$ENDIF}) // ###0.946
       : RegExprString; {$IFDEF OverMeth} overload;
-    function Replace(Const AInputStr: RegExprString;
+    function Replace(const AInputStr: RegExprString;
       AReplaceFunc: TRegExprReplaceFunction): RegExprString; overload;
     {$ENDIF}
     // Returns AInputStr with r.e. occurencies replaced by AReplaceStr
@@ -480,7 +481,7 @@ type
     // Internally calls Exec[Next]
     // Overloaded version and ReplaceEx operate with call-back function,
     // so you can implement really complex functionality.
-    function ReplaceEx(Const AInputStr: RegExprString;
+    function ReplaceEx(const AInputStr: RegExprString;
       AReplaceFunc: TRegExprReplaceFunction): RegExprString;
 
     // Returns ID of last error, 0 if no errors (unusable if
@@ -4675,7 +4676,7 @@ begin
 end; { of function TRegExpr.Substitute
   -------------------------------------------------------------- }
 
-procedure TRegExpr.Split(Const AInputStr: RegExprString; APieces: TStrings);
+procedure TRegExpr.Split(const AInputStr: RegExprString; APieces: TStrings);
 var
   PrevPos: PtrInt;
 begin
@@ -4689,7 +4690,7 @@ begin
 end; { of procedure TRegExpr.Split
   -------------------------------------------------------------- }
 
-function TRegExpr.Replace(Const AInputStr: RegExprString;
+function TRegExpr.Replace(const AInputStr: RegExprString;
   const AReplaceStr: RegExprString;
   AUseSubstitution: boolean{$IFDEF DefParam} = False{$ENDIF}): RegExprString;
 var
@@ -4711,7 +4712,7 @@ begin
 end; { of function TRegExpr.Replace
   -------------------------------------------------------------- }
 
-function TRegExpr.ReplaceEx(Const AInputStr: RegExprString;
+function TRegExpr.ReplaceEx(const AInputStr: RegExprString;
   AReplaceFunc: TRegExprReplaceFunction): RegExprString;
 var
   PrevPos: PtrInt;
