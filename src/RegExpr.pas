@@ -2987,7 +2987,7 @@ begin
               EmitRangeStr(SpaceChars);
               EmitRangeC(#0);
               {$ELSE}
-              ret := EmitNode(ANYSPACE);
+              ret := EmitNode(OP_ANYSPACE);
               {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
@@ -2998,7 +2998,7 @@ begin
               EmitRangeStr(SpaceChars);
               EmitRangeC(#0);
               {$ELSE}
-              ret := EmitNode(NOTSPACE);
+              ret := EmitNode(OP_NOTSPACE);
               {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
@@ -3009,7 +3009,7 @@ begin
               EmitRangeStr(WordChars);
               EmitRangeC(#0);
               {$ELSE}
-              ret := EmitNode(ANYLETTER);
+              ret := EmitNode(OP_ANYLETTER);
               {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
@@ -3020,7 +3020,7 @@ begin
               EmitRangeStr(WordChars);
               EmitRangeC(#0);
               {$ELSE}
-              ret := EmitNode(NOTLETTER);
+              ret := EmitNode(OP_NOTLETTER);
               {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
@@ -3279,25 +3279,25 @@ begin
         Inc(scan);
       end;
     {$IFNDEF UseSetOfChar} // ###0.929
-    ANYLETTER:
+    OP_ANYLETTER:
       while (Result < TheMax) and IsWordChar(scan^) do // ###0.940
       begin
         Inc(Result);
         Inc(scan);
       end;
-    NOTLETTER:
+    OP_NOTLETTER:
       while (Result < TheMax) and not IsWordChar(scan^) do // ###0.940
       begin
         Inc(Result);
         Inc(scan);
       end;
-    ANYSPACE:
+    OP_ANYSPACE:
       while (Result < TheMax) and IsSpaceChar(scan) do
       begin
         Inc(Result);
         Inc(scan);
       end;
-    NOTSPACE:
+    OP_NOTSPACE:
       while (Result < TheMax) and Not IsSpaceChar(scan) do
       begin
         Inc(Result);
@@ -3357,25 +3357,25 @@ begin
         end;
       end;
     {$ELSE}
-    ANYOF:
+    OP_ANYOF:
       while (Result < TheMax) and (StrScan(opnd, scan^) <> nil) do
       begin
         Inc(Result);
         Inc(scan);
       end;
-    ANYBUT:
+    OP_ANYBUT:
       while (Result < TheMax) and (StrScan(opnd, scan^) = nil) do
       begin
         Inc(Result);
         Inc(scan);
       end;
-    ANYOFCI:
+    OP_ANYOFCI:
       while (Result < TheMax) and (StrScanCI(opnd, scan^) <> nil) do
       begin
         Inc(Result);
         Inc(scan);
       end;
-    ANYBUTCI:
+    OP_ANYBUTCI:
       while (Result < TheMax) and (StrScanCI(opnd, scan^) = nil) do
       begin
         Inc(Result);
@@ -3538,28 +3538,28 @@ begin
           Inc(reginput);
         end;
       {$IFNDEF UseSetOfChar} // ###0.929
-      ANYLETTER:
+      OP_ANYLETTER:
         begin
           if (reginput = fInputEnd) or not IsWordChar(reginput^) // ###0.943
           then
             Exit;
           Inc(reginput);
         end;
-      NOTLETTER:
+      OP_NOTLETTER:
         begin
           if (reginput = fInputEnd) or IsWordChar(reginput^) // ###0.943
           then
             Exit;
           Inc(reginput);
         end;
-      ANYSPACE:
+      OP_ANYSPACE:
         begin
           if (reginput = fInputEnd) or not IsSpaceChar(reginput) // ###0.943
           then
             Exit;
           Inc(reginput);
         end;
-      NOTSPACE:
+      OP_NOTSPACE:
         begin
           if (reginput = fInputEnd) or IsSpaceChar(reginput) // ###0.943
           then
@@ -3703,28 +3703,28 @@ begin
           Inc(reginput);
         end;
       {$ELSE}
-      ANYOF:
+      OP_ANYOF:
         begin
           if (reginput = fInputEnd) or
             (StrScan(scan + REOpSz + RENextOffSz, reginput^) = nil) then
             Exit;
           Inc(reginput);
         end;
-      ANYBUT:
+      OP_ANYBUT:
         begin
           if (reginput = fInputEnd) or
             (StrScan(scan + REOpSz + RENextOffSz, reginput^) <> nil) then
             Exit;
           Inc(reginput);
         end;
-      ANYOFCI:
+      OP_ANYOFCI:
         begin
           if (reginput = fInputEnd) or
             (StrScanCI(scan + REOpSz + RENextOffSz, reginput^) = nil) then
             Exit;
           Inc(reginput);
         end;
-      ANYBUTCI:
+      OP_ANYBUTCI:
         begin
           if (reginput = fInputEnd) or
             (StrScanCI(scan + REOpSz + RENextOffSz, reginput^) <> nil) then
