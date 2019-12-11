@@ -12,7 +12,7 @@ unit tests;
 {$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
 {$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
 
-{ off $DEFINE Unicode}
+{off $DEFINE Unicode}
 
 interface
 
@@ -639,15 +639,19 @@ end;
 
 {$IFDEF Unicode}
 procedure TTestRegexpr.TestUnicode1;
+const
+  sTest: string = 'пપ2 ϦϨ3';
 var
   R: TRegExpr;
 begin
   R:= TRegExpr.Create;
   try
-    R.Expression:= '\w+';
-    R.InputString:= 'ϪϚϮпро тст23';
-    R.ExecPos(1);
-    AreEqual('Unicode finder failed', 1, R.MatchPos[0]);
+    R.ModifierR:= True;
+    R.Expression:= '\w+ \w+';
+    R.InputString:= UTF8Decode(string(sTest));
+    IsTrue('Unicode find failed', R.ExecPos(1));
+    AreEqual('Unicode pos failed', 1, R.MatchPos[0]);
+    AreEqual('Unicode len failed', 7, R.MatchLen[0]);
   finally
     FreeAndNil(R);
   end;
