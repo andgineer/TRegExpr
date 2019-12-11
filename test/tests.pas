@@ -12,6 +12,8 @@ unit tests;
 {$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
 {$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
 
+{off $DEFINE Unicode}
+
 interface
 
 uses
@@ -86,6 +88,9 @@ type
     Procedure RunTest36;
     Procedure RunTest37;
     Procedure TestGroups;
+    {$IFDEF Unicode}
+    procedure TestUnicode1;
+    {$ENDIF}
   end;
 
 implementation
@@ -631,6 +636,27 @@ begin
     FreeAndNil(R);
   end;
 end;
+
+{$IFDEF Unicode}
+procedure TTestRegexpr.TestUnicode1;
+const
+  sTest: string = 'пપ2 ϦϨ3';
+var
+  R: TRegExpr;
+begin
+  R:= TRegExpr.Create;
+  try
+    R.ModifierR:= True;
+    R.Expression:= '\w+ \w+';
+    R.InputString:= UTF8Decode(string(sTest));
+    IsTrue('Unicode find failed', R.ExecPos(1));
+    AreEqual('Unicode pos failed', 1, R.MatchPos[0]);
+    AreEqual('Unicode len failed', 7, R.MatchLen[0]);
+  finally
+    FreeAndNil(R);
+  end;
+end;
+{$ENDIF}
 
 Class function TTestRegexpr.PrintableString(AString: string): string;
 
