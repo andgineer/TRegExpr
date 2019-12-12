@@ -5,6 +5,11 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
+ v. 0.964 2019.12.12
+ -=- (^) Add define UseWordChars (off by default): allows property WordChars.
+ -=- (^) Add define UseSpaceChars (off by default): allows property SpaceChars.
+  By Alexey Torgashin.
+
  v. 0.962 2019.12.08
  -=- (^) Ifdef UnicodeWordDetection works also on Delphi 2009+.
   By Alexey Torgashin.
