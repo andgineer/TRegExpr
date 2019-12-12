@@ -70,6 +70,7 @@ interface
 // ======== Define options for TRegExpr engine
 { off $DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
+{ off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
 {$DEFINE RegExpPCodeDump} // p-code dumping (see Dump method)
 {$IFNDEF FPC} // the option is not supported in FreePascal
@@ -170,8 +171,10 @@ const
   RegExprModifierG: boolean = True; // default value for ModifierG
   RegExprModifierM: boolean = False; // default value for ModifierM
   RegExprModifierX: boolean = False; // default value for ModifierX
+  {$IFDEF UseSpaceChars}
   RegExprSpaceChars: RegExprString = // default value for SpaceChars
     ' '#$9#$A#$D#$C;
+  {$ENDIF}
   {$IFDEF UseWordChars}
   RegExprWordChars: RegExprString = // default value for WordChars
     '0123456789' // ###0.940
@@ -302,7 +305,9 @@ type
     fCompModifiers: integer; // compiler's copy of modifiers
     fProgModifiers: integer; // modifiers values from last programm compilation
 
+    {$IFDEF UseSpaceChars}
     fSpaceChars: RegExprString; // ###0.927
+    {$ENDIF}
     {$IFDEF UseWordChars}
     fWordChars: RegExprString; // ###0.929
     {$ENDIF}
@@ -605,10 +610,12 @@ type
     // Useful for error diagnostics
     property CompilerErrorPos: PtrInt read GetCompilerErrorPos;
 
+    {$IFDEF UseSpaceChars}
     // Contains chars, treated as /s (initially filled with RegExprSpaceChars
     // global constant)
     property SpaceChars: RegExprString read fSpaceChars write fSpaceChars;
     // ###0.927
+    {$ENDIF}
 
     {$IFDEF UseWordChars}
     // Contains chars, treated as /w (initially filled with RegExprWordChars
@@ -1331,7 +1338,9 @@ begin
   ModifierG := RegExprModifierG;
   ModifierM := RegExprModifierM; // ###0.940
 
+  {$IFDEF UseSpaceChars}
   SpaceChars := RegExprSpaceChars; // ###0.927
+  {$ENDIF}
   {$IFDEF UseWordChars}
   WordChars := RegExprWordChars; // ###0.929
   {$ENDIF}
@@ -1644,7 +1653,16 @@ end;
 
 function TRegExpr.IsSpaceChar(AChar: PRegExprChar): boolean;
 begin
+  {$IFDEF UseSpaceChars}
   Result := Pos(AChar^, fSpaceChars) > 0;
+  {$ELSE}
+  case AChar^ of
+    ' ', #$9, #$A, #$D, #$C:
+      Result := True
+    else
+      Result := False;
+  end;
+  {$ENDIF}
 end;
 
 function TRegExpr.IsDigit(AChar: PRegExprChar): boolean;
@@ -2880,7 +2898,11 @@ begin
                   EmitNode(OP_ANYLETTER);
                   {$ENDIF}
                 's':
+                  {$IFDEF UseSpaceChars}
                   EmitRangeStr(SpaceChars);
+                  {$ELSE}
+                  EmitNode(OP_ANYSPACE);
+                  {$ENDIF}
                 'v':
                   EmitRangeStr(RegExprLineSeparators);
                 'h':
