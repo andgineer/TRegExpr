@@ -1651,7 +1651,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsSpaceChar(AChar: PRegExprChar): boolean;
+function TRegExpr.IsSpaceChar(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   {$IFDEF UseSpaceChars}
   Result := Pos(AChar^, fSpaceChars) > 0;
@@ -1665,7 +1665,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsDigit(AChar: PRegExprChar): boolean;
+function TRegExpr.IsDigit(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar^ of
     '0' .. '9':
@@ -2422,8 +2422,7 @@ begin
         // Filip Jirsak's note - what will happen, when we are at the end of regparse?
         Inc(regparse);
         p := regparse;
-        while Pos(regparse^, '0123456789') > 0 // <min> MUST appear
-          do
+        while IsDigit(regparse) do // <min> MUST appear
           Inc(regparse);
         if (regparse^ <> '}') and (regparse^ <> ',') or (p = regparse) then
         begin
@@ -2436,7 +2435,7 @@ begin
         begin
           Inc(regparse);
           p := regparse;
-          while Pos(regparse^, '0123456789') > 0 do
+          while IsDigit(regparse) do
             Inc(regparse);
           if regparse^ <> '}' then
           begin
