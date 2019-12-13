@@ -69,7 +69,9 @@ interface
 {$ENDIF}
 // ======== Define options for TRegExpr engine
 { off $DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
-{ off $DEFINE UnicodeWordDetection}
+{ off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
+{ off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
+{ off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
 {$DEFINE RegExpPCodeDump} // p-code dumping (see Dump method)
 {$IFNDEF FPC} // the option is not supported in FreePascal
   {$DEFINE reRealExceptionAddr} // exceptions will point to appropriate source line, not to Error procedure
@@ -85,6 +87,10 @@ interface
 {$ENDIF}
 {$IFNDEF UniCode}
   {$UNDEF UnicodeWordDetection}
+{$ENDIF}
+{$IFNDEF UseWordChars}
+  {$UNDEF UseSetOfChar}
+  {$UNDEF UseFirstCharSet}
 {$ENDIF}
 // ======== Define Pascal-language options
 // Define 'UseAsserts' option (do not edit this definitions).
@@ -165,11 +171,15 @@ const
   RegExprModifierG: boolean = True; // default value for ModifierG
   RegExprModifierM: boolean = False; // default value for ModifierM
   RegExprModifierX: boolean = False; // default value for ModifierX
+  {$IFDEF UseSpaceChars}
   RegExprSpaceChars: RegExprString = // default value for SpaceChars
     ' '#$9#$A#$D#$C;
+  {$ENDIF}
+  {$IFDEF UseWordChars}
   RegExprWordChars: RegExprString = // default value for WordChars
     '0123456789' // ###0.940
     + 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+  {$ENDIF}
   RegExprLineSeparators: RegExprString = // default value for LineSeparators
     #$d#$a#$b#$c {$IFDEF UniCode} + #$2028#$2029#$85{$ENDIF};
   RegExprLinePairedSeparator: RegExprString =
@@ -295,8 +305,12 @@ type
     fCompModifiers: integer; // compiler's copy of modifiers
     fProgModifiers: integer; // modifiers values from last programm compilation
 
+    {$IFDEF UseSpaceChars}
     fSpaceChars: RegExprString; // ###0.927
+    {$ENDIF}
+    {$IFDEF UseWordChars}
     fWordChars: RegExprString; // ###0.929
+    {$ENDIF}
     fInvertCase: TRegExprInvertCaseFunction; // ###0.927
 
     fLineSeparators: RegExprString; // ###0.941
@@ -596,15 +610,19 @@ type
     // Useful for error diagnostics
     property CompilerErrorPos: PtrInt read GetCompilerErrorPos;
 
+    {$IFDEF UseSpaceChars}
     // Contains chars, treated as /s (initially filled with RegExprSpaceChars
     // global constant)
     property SpaceChars: RegExprString read fSpaceChars write fSpaceChars;
     // ###0.927
+    {$ENDIF}
 
+    {$IFDEF UseWordChars}
     // Contains chars, treated as /w (initially filled with RegExprWordChars
     // global constant)
     property WordChars: RegExprString read fWordChars write fWordChars;
     // ###0.929
+    {$ENDIF}
 
     {$IFDEF UnicodeWordDetection}
     // If set to true, in addition to using WordChars, a heuristic to detect unicode word letters is used for \w
@@ -714,7 +732,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   TRegExprVersionMajor: integer = 0;
-  TRegExprVersionMinor: integer = 962;
+  TRegExprVersionMinor: integer = 964;
 
   MaskModI = 1; // modifier /i bit in fModifiers
   MaskModR = 2; // -"- /r
@@ -1320,8 +1338,12 @@ begin
   ModifierG := RegExprModifierG;
   ModifierM := RegExprModifierM; // ###0.940
 
+  {$IFDEF UseSpaceChars}
   SpaceChars := RegExprSpaceChars; // ###0.927
+  {$ENDIF}
+  {$IFDEF UseWordChars}
   WordChars := RegExprWordChars; // ###0.929
+  {$ENDIF}
   fInvertCase := RegExprInvertCaseFunction; // ###0.927
 
   fLineSeparators := RegExprLineSeparators; // ###0.941
@@ -1611,7 +1633,18 @@ end; { of procedure TRegExpr.SetModifier
 
 function TRegExpr.IsWordChar(AChar: REChar): boolean;
 begin
+  {$IFDEF UseWordChars}
   Result := Pos(AChar, fWordChars) > 0;
+  {$ELSE}
+  case AChar of
+    'a' .. 'z',
+    'A' .. 'Z',
+    '0' .. '9', '_':
+      Result := True
+    else
+      Result := False;
+  end;
+  {$ENDIF}
   {$IFDEF UnicodeWordDetection}
   if not Result and (Ord(AChar) >= 128) and UseUnicodeWordDetection then
     Result := IsUnicodeWordChar(AChar);
@@ -1620,7 +1653,16 @@ end;
 
 function TRegExpr.IsSpaceChar(AChar: PRegExprChar): boolean;
 begin
+  {$IFDEF UseSpaceChars}
   Result := Pos(AChar^, fSpaceChars) > 0;
+  {$ELSE}
+  case AChar^ of
+    ' ', #$9, #$A, #$D, #$C:
+      Result := True
+    else
+      Result := False;
+  end;
+  {$ENDIF}
 end;
 
 function TRegExpr.IsDigit(AChar: PRegExprChar): boolean;
@@ -2850,9 +2892,17 @@ begin
                 'd':
                   EmitRangeStr('0123456789');
                 'w':
+                  {$IFDEF UseWordChars}
                   EmitRangeStr(WordChars);
+                  {$ELSE}
+                  EmitNode(OP_ANYLETTER);
+                  {$ENDIF}
                 's':
+                  {$IFDEF UseSpaceChars}
                   EmitRangeStr(SpaceChars);
+                  {$ELSE}
+                  EmitNode(OP_ANYSPACE);
+                  {$ENDIF}
                 'v':
                   EmitRangeStr(RegExprLineSeparators);
                 'h':
