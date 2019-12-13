@@ -2760,6 +2760,20 @@ var
       EmitRangeC(s[i]);
   end;
 
+  function _IsMetaChar(ch: REChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+  begin
+    case ch of
+      'd', 'D',
+      's', 'S',
+      'w', 'W',
+      'v', 'V',
+      'h', 'H':
+        Result := True
+      else
+        Result := False;
+    end;
+  end;
+
 begin
   Result := nil;
   flags := 0;
@@ -2827,16 +2841,8 @@ begin
             RangeEnd := regparse^;
             if RangeEnd = EscChar then
             begin
-              {$IFDEF UniCode} // ###0.935
-              if (Ord((regparse + 1)^) < 256) and
-                (Char((regparse + 1)^) in ['d', 'D', 's', 'S', 'w', 'W', 'v',
-                'V', 'h', 'H']) then
+              if _IsMetaChar((regparse + 1)^) then
               begin
-              {$ELSE}
-              if (regparse + 1)^ in ['d', 'D', 's', 'S', 'w', 'W', 'v', 'V',
-                'h', 'H'] then
-              begin
-              {$ENDIF}
                 EmitRangeC('-'); // or treat as error ?!!
                 Continue;
               end;
