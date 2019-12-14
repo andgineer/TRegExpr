@@ -1651,7 +1651,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsSpaceChar(AChar: PRegExprChar): boolean;
+function TRegExpr.IsSpaceChar(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   {$IFDEF UseSpaceChars}
   Result := Pos(AChar^, fSpaceChars) > 0;
@@ -1665,7 +1665,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsDigit(AChar: PRegExprChar): boolean;
+function TRegExpr.IsDigit(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar^ of
     '0' .. '9':
@@ -2422,8 +2422,7 @@ begin
         // Filip Jirsak's note - what will happen, when we are at the end of regparse?
         Inc(regparse);
         p := regparse;
-        while Pos(regparse^, '0123456789') > 0 // <min> MUST appear
-          do
+        while IsDigit(regparse) do // <min> MUST appear
           Inc(regparse);
         if (regparse^ <> '}') and (regparse^ <> ',') or (p = regparse) then
         begin
@@ -2436,7 +2435,7 @@ begin
         begin
           Inc(regparse);
           p := regparse;
-          while Pos(regparse^, '0123456789') > 0 do
+          while IsDigit(regparse) do
             Inc(regparse);
           if regparse^ <> '}' then
           begin
@@ -2760,6 +2759,20 @@ var
       EmitRangeC(s[i]);
   end;
 
+  function _IsMetaChar(ch: REChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+  begin
+    case ch of
+      'd', 'D',
+      's', 'S',
+      'w', 'W',
+      'v', 'V',
+      'h', 'H':
+        Result := True
+      else
+        Result := False;
+    end;
+  end;
+
 begin
   Result := nil;
   flags := 0;
@@ -2827,16 +2840,8 @@ begin
             RangeEnd := regparse^;
             if RangeEnd = EscChar then
             begin
-              {$IFDEF UniCode} // ###0.935
-              if (Ord((regparse + 1)^) < 256) and
-                (Char((regparse + 1)^) in ['d', 'D', 's', 'S', 'w', 'W', 'v',
-                'V', 'h', 'H']) then
+              if _IsMetaChar((regparse + 1)^) then
               begin
-              {$ELSE}
-              if (regparse + 1)^ in ['d', 'D', 's', 'S', 'w', 'W', 'v', 'V',
-                'h', 'H'] then
-              begin
-              {$ENDIF}
                 EmitRangeC('-'); // or treat as error ?!!
                 Continue;
               end;
