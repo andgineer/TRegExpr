@@ -10,13 +10,16 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-04 06:23+0300\n"
-"PO-Revision-Date: 2019-11-28 15:11+0000\n"
+"PO-Revision-Date: 2019-12-17 07:30+0000\n"
 "Last-Translator: Elmar Dolgener <elmar.dolgener@fau.de>\n"
-"Language-Team: German "
-"<https://hosted.weblate.org/projects/tregexpr/regular_expressions/de/>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/tregexpr/"
+"regular_expressions/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 2301c624bdbc4514a3ba3deafe4768d2
@@ -158,7 +161,7 @@ msgstr "RegEx"
 #: ../../regular_expressions.rst:417 ../../regular_expressions.rst:541
 #: ../../regular_expressions.rst:591 ../../regular_expressions.rst:615
 msgid "Matches"
-msgstr "Streichhölzer"
+msgstr "passt auf"
 
 # 05cebc1522c4416b849b07c5466a117a
 # 6f46369e518745949f8ea11b2e6a7592
@@ -214,7 +217,7 @@ msgstr "`` foo \\ x20bar``"
 # 857299fa5cb44cbdbe422824a72f3ecb
 #: ../../regular_expressions.rst:55
 msgid "``foo bar`` (note space in the middle)"
-msgstr "``foo bar`` (Notizfeld in der Mitte)"
+msgstr "``foo bar`` (Beachten Sie das Leerzeichen in der Mitte)"
 
 # 581e89445b62427d9111cc81019a2a77
 #: ../../regular_expressions.rst:58
@@ -222,8 +225,8 @@ msgid ""
 "There are a number of predefined ``escape-codes`` for non-printable "
 "characters, just like in ``C`` language:"
 msgstr ""
-"Es gibt eine Reihe von vordefinierten &quot;Escape-Codes&quot; für nicht "
-"druckbare Zeichen, genau wie in der Sprache &quot;C&quot;:"
+"Es gibt eine Reihe vordefinierter ``Escape-Codes`` für nicht druckbare "
+"Zeichen, genau wie in der Sprache ``C``:"
 
 # 123a3df65b1b400d84e2c274e6d1e800
 #: ../../regular_expressions.rst:64
@@ -233,7 +236,7 @@ msgstr "`` \\ t``"
 # cf1af6648f214194bc5585ba5ab2ac5f
 #: ../../regular_expressions.rst:64
 msgid "tab (HT/TAB), same as ``\\x09``"
-msgstr "Registerkarte (HT / TAB), identisch mit ``\\x09``"
+msgstr "(Horizontal-)Tabulator (HT / TAB), identisch mit ``\\x09``"
 
 # 8cb41a724855432e9a8bba83f7ef7382
 #: ../../regular_expressions.rst:65
@@ -243,7 +246,7 @@ msgstr "``\\n``"
 # 9a0e075d94a6410ca698377d6251f49b
 #: ../../regular_expressions.rst:65
 msgid "newline (NL), same as ``\\x0a``"
-msgstr "Newline (NL), wie `` \\ x0a``"
+msgstr "Zeilenschaltung (Newline, NL), wie `` \\ x0a``"
 
 # f23757a5244b4e6c954f76fc28e46ddd
 #: ../../regular_expressions.rst:66
@@ -253,7 +256,7 @@ msgstr "`` \\ r``"
 # 5ab3ad07bc484774bc2c32046eb6bdc7
 #: ../../regular_expressions.rst:66
 msgid "car.return (CR), same as ``\\x0d``"
-msgstr "car.return (CR), das gleiche wie `` \\ x0d``"
+msgstr "Wagenrücklauf (carrier return, CR), das gleiche wie `` \\ x0d``"
 
 # ae32df2f37f44dc6ac68f42138eeb416
 #: ../../regular_expressions.rst:67
@@ -268,7 +271,7 @@ msgstr "Formularvorschub (FF), wie `` \\ x0c``"
 # 12342186bfae40cc84c6889021ad35e4
 #: ../../regular_expressions.rst:68
 msgid "``\\a``"
-msgstr "`` \\ a``"
+msgstr "``\\a``"
 
 # 6b17367c02184e0083a94195fbe26c7d
 #: ../../regular_expressions.rst:68
@@ -294,22 +297,22 @@ msgstr "`` \\ xnn``"
 # 32eddeb2f4bb49edbb98f32b03ec0b1b
 #: ../../regular_expressions.rst
 msgid "Control Escape Sequence (``Ctrl-x``)"
-msgstr ""
+msgstr "Kontrolltasten-Kombination (``Ctrl-x``)"
 
 # 44fc44b707f940ebb83c8e472b669de3
 #: ../../regular_expressions.rst
 msgid "For example, ``\\ci`` matches the target sequence"
-msgstr ""
+msgstr "Beispielsweise passt ``\\ci`` auf die Zielsequenz"
 
 # 44fc44b707f940ebb83c8e472b669de3
 #: ../../regular_expressions.rst
 msgid "``\\x09``, because ``ctrl-i`` has the value ``0x09``"
-msgstr ""
+msgstr "``\\x09``, weil ``ctrl-i`` dem Wert ``0x09`` entspricht"
 
 # 7e35e7f2e1254b7ba12a76e202ca9b9a
 #: ../../regular_expressions.rst:79
 msgid "Escaping"
-msgstr "Flucht"
+msgstr "Maskierung (Escaping)"
 
 # 95162b9fd89d454181ba6648918a1cd3
 #: ../../regular_expressions.rst:81
@@ -339,8 +342,7 @@ msgstr "``\\^FooBarPtr``"
 #: ../../regular_expressions.rst:90
 msgid "``^FooBarPtr`` this is ``^`` and not `start of line <#lineseparators>`__"
 msgstr ""
-"`` ^ FooBarPtr`` Dies ist ``^`` und nicht `Zeilenanfang "
-"<#lineseparators>`__"
+"``^FooBarPtr`` Dies ist ``^`` und nicht `Zeilenanfang <#lineseparators>`__"
 
 # 9426d648293d4b4fbde0d4b165424745
 #: ../../regular_expressions.rst:91
@@ -355,12 +357,12 @@ msgstr "`` [a] `` Dies ist keine `Zeichenklasse <#userclass>`__"
 # 0647bc139a1e44e88ab4fca36da2dcc2
 #: ../../regular_expressions.rst:95
 msgid "Character Classes"
-msgstr "Charakterklassen"
+msgstr "Zeichenklassen"
 
 # a2465c9c491e426abd723d39ef28c7be
 #: ../../regular_expressions.rst:100
 msgid "User Character Classes"
-msgstr "Benutzerzeichenklassen"
+msgstr "Benutzerdefinierte Zeichenklassen"
 
 # cda7014241084ffc801a314b5c29742c
 #: ../../regular_expressions.rst:102
@@ -368,8 +370,8 @@ msgid ""
 "Character class is a list of characters inside ``[]``. The class matches "
 "any **one** character listed in this class."
 msgstr ""
-"Die Zeichenklasse ist eine Liste von Zeichen in ``[]``. Die Klasse "
-"entspricht einem beliebigen ** Zeichen in dieser Klasse."
+"Eine Zeichenklasse ist eine Liste von Zeichen in ``[]``. Die Klasse steht "
+"für genau **ein** beliebiges Zeichen aus dieser Liste."
 
 # 29b9f34a3f794799996491af9a220658
 #: ../../regular_expressions.rst:108
@@ -379,7 +381,7 @@ msgstr "`` foob [aeiou] r``"
 # 5aca24add0ac4aedad65d7ee3ba4459a
 #: ../../regular_expressions.rst:108
 msgid "``foobar``, ``foober`` etc but not ``foobbr``, ``foobcr`` etc"
-msgstr "``foobar``, ``foober`` usw., aber nicht ``foobbr``, ``foobcr`` etc"
+msgstr "``foobar``, ``foober`` usw., nicht aber ``foobbr``, ``foobcr`` etc."
 
 # 49139725730f49109f96cc7aab17f520
 #: ../../regular_expressions.rst:111
@@ -388,9 +390,9 @@ msgid ""
 "``^``, then the class matches any character **but** characters listed in "
 "the class."
 msgstr ""
-"Sie können die Klasse „umkehren“ - wenn das erste Zeichen nach dem ``[`` "
-"`` `` `` ist, dann entspricht die Klasse einem beliebigen Zeichen **, "
-"aber ** Zeichen, die in der Klasse aufgeführt sind."
+"Sie können die Klasse „invertieren“ - wenn als erstes Zeichen nach dem ``[`` "
+"ein ``^`` steht, dann steht die Klasse ebenfalls für **ein** beliebiges "
+"Zeichen, allerdings eines, das **nicht** in der Liste vorkommt."
 
 # c1a092c15ffe4280a4de1ba80a73c942
 #: ../../regular_expressions.rst:118
@@ -408,9 +410,9 @@ msgid ""
 "Within a list, the ``-`` character is used to specify a range, so that "
 "``a-z`` represents all characters between ``a`` and ``z``, inclusive."
 msgstr ""
-"Innerhalb einer Liste wird das Zeichen ``--`` verwendet, um einen Bereich"
-" anzugeben, so dass ``az`` alle Zeichen zwischen ``a`` und ``z`` "
-"einschließlich darstellt."
+"Innerhalb einer Liste wird der Bindestrich ``-`` verwendet, um einen Bereich "
+"anzugeben, z.B. passt ``a-z`` für jedes Zeichen von ``a`` bis ``z`` "
+"(einschließlich)."
 
 # 6e3b251955144e319b558e0b0c7242cb
 #: ../../regular_expressions.rst:124
@@ -418,9 +420,9 @@ msgid ""
 "If you want ``-`` itself to be a member of a class, put it at the start "
 "or end of the list, or `escape <#escape>`__ it with a backslash."
 msgstr ""
-"Wenn Sie möchten, dass ``-`` selbst Mitglied einer Klasse ist, setzen Sie"
-" es an den Anfang oder das Ende der Liste oder `escape <#escape>`__ mit "
-"einem Backslash."
+"Wenn ein Bindestrich ``-`` selbst Bestandteil der Klasse sein soll, "
+"schreiben Sie ihn an den Anfang oder das Ende der Liste oder `maskieren "
+"<#escape>`_ ihn per vorangestelltem Rückwärtsschrägstrich ``\\`` (Backslash)."
 
 # 7516c007a6aa4f7fa8cb6823e33e5df2
 #: ../../regular_expressions.rst:127
@@ -428,8 +430,8 @@ msgid ""
 "If you want ``]`` or ``[`` you may place it at the start of list or "
 "escape it with a backslash."
 msgstr ""
-"Wenn Sie ``]`` oder ``[`` möchten, können Sie es an den Anfang der Liste "
-"setzen oder es mit einem Backslash entkommen."
+"Sollen eckige Klammern (``]`` oder ``[``) zur Klasse gehören, schreiben Sie "
+"sie an den Anfang der Liste oder es maskieren sie via Rückwärtsschrägstrich."
 
 # 269e7a24531f42df8f3dc05e74fb9ec4
 #: ../../regular_expressions.rst:133
@@ -451,7 +453,7 @@ msgstr "``[az-]``"
 # c022cffa3ef642a2825070f3a30e7b74
 #: ../../regular_expressions.rst:135
 msgid "``[a\\-z]``"
-msgstr "`` [a \\ -z] ``"
+msgstr "``[a\\-z]``"
 
 # 1342d8b4627e4ab38e88c86bad243c42
 #: ../../regular_expressions.rst:136
@@ -484,8 +486,8 @@ msgid ""
 "There are a number of predefined character classes that keeps regular "
 "expressions more compact."
 msgstr ""
-"Es gibt eine Reihe vordefinierter Zeichenklassen, die reguläre Ausdrücke "
-"kompakter halten."
+"Es gibt eine Reihe vordefinierter Zeichenklassen, die es erlauben, reguläre "
+"Ausdrücke übersichtlich zu halten."
 
 # 85fa17d40c55412aa3b44963ef808ea4
 #: ../../regular_expressions.rst:149
@@ -505,7 +507,7 @@ msgstr "``\\W``"
 # 27e54276b17045d7a1bfc8382ff78db5
 #: ../../regular_expressions.rst:150
 msgid "a nonalphanumeric"
-msgstr "eine nichtalphanumerische"
+msgstr "ein nichtalphanumerisches Zeichen"
 
 # 9cda84725980412a917e9703864047a9
 #: ../../regular_expressions.rst:151
@@ -515,7 +517,7 @@ msgstr "``\\d``"
 # 0a90c7e21cf64799915875086b066d32
 #: ../../regular_expressions.rst:151
 msgid "a numeric character (same as ``[0123456789]``)"
-msgstr "ein numerisches Zeichen (dasselbe wie `[0123456789]` `)"
+msgstr "ein numerisches Zeichen (dasselbe wie ``[0123456789]``)"
 
 # fb3731fe7c8f4daa85519e1624f6806a
 #: ../../regular_expressions.rst:152
@@ -525,7 +527,7 @@ msgstr "`` \\ D``"
 # 1df9d045c0fe4bf5853a2d01dd7a58fb
 #: ../../regular_expressions.rst:152
 msgid "a non-numeric"
-msgstr "eine nicht numerische"
+msgstr "ein nicht numerisches Zeichen"
 
 # 9848a35031e842bc80deda00ddcd5a4d
 #: ../../regular_expressions.rst:153
@@ -535,7 +537,7 @@ msgstr "``s``"
 # 431f2a7edce64db393daf3c5cbcdb9c0
 #: ../../regular_expressions.rst:153
 msgid "any space (same as ``[ \\t\\n\\r\\f]``)"
-msgstr "ein beliebiges Leerzeichen (dasselbe wie `[\\ t \\ n \\ r \\ f]` `)"
+msgstr "ein beliebiger Leerraum (dasselbe wie ``[\\ t \\ n \\ r \\ f]``)"
 
 # b50e51df4f1d47c981af98f4bfcf6c19
 #: ../../regular_expressions.rst:154
@@ -545,7 +547,7 @@ msgstr "`` \\ S``"
 # 5d994221a5394bfbb7b27772b9c52caa
 #: ../../regular_expressions.rst:154
 msgid "a non space"
-msgstr "ein Nichtraum"
+msgstr "ein Zeichen, das keinen Leerraum ergibt"
 
 # 4e9eb1e0d9a04d5b81760cc2e7217900
 #: ../../regular_expressions.rst:155
@@ -556,7 +558,7 @@ msgstr "``\\w``"
 # 6d49b1c2fa0b48e191bb58c659871df7
 #: ../../regular_expressions.rst
 msgid "horizontal whitespace. the tab and all characters"
-msgstr ""
+msgstr "Horizontaler Leerraum, d.h. ein Horizontaltabulator oder jedes Zeichen"
 
 # 6d49b1c2fa0b48e191bb58c659871df7
 #: ../../regular_expressions.rst
@@ -572,7 +574,7 @@ msgstr "``\\w``"
 # e4f8bd680c0c4ee4a86c0d0a47f6d1e1
 #: ../../regular_expressions.rst:157
 msgid "not a horizontal whitespace"
-msgstr ""
+msgstr "jedes Zeichen, das kein horizontaler Leerraum ist"
 
 # 144b4226cbd64fc984c35892e85565f0
 #: ../../regular_expressions.rst:158
@@ -583,12 +585,13 @@ msgstr "``\\w``"
 # cdb94f3f457b4daab487c675e1dc4b50
 #: ../../regular_expressions.rst
 msgid "vertical whitespace. all characters treated as"
-msgstr ""
+msgstr "vertikaler Leerraum, jedes Zeichen, das"
 
 # cdb94f3f457b4daab487c675e1dc4b50
 #: ../../regular_expressions.rst
 msgid "line breaks in the Unicode standard."
 msgstr ""
+"zur Unicode-Kategorie ``Trenner, Abstand (space separator)`` gerechnet wird."
 
 # 144b4226cbd64fc984c35892e85565f0
 #: ../../regular_expressions.rst:160
@@ -600,6 +603,7 @@ msgstr "``\\w``"
 #: ../../regular_expressions.rst:160
 msgid "not a vertical whitespace"
 msgstr ""
+"jedes Zeichen, das nicht in die Unicode-Kategorie ``Trenner, Abstand`` fällt"
 
 # 308467b8235f4d0588ece5b4de390555
 #: ../../regular_expressions.rst:163
@@ -607,13 +611,13 @@ msgid ""
 "You may use ``\\w``, ``\\d`` and ``\\s`` within `user character classes "
 "<User Character Classes_>`_."
 msgstr ""
-"Sie können ``\\w``, ``\\d`` und ``\\s`` innerhalb von "
-"]Benutzerzeichenklassen verwenden <User Character Classes_>`_."
+"Sie können ``\\w``, ``\\d`` und ``\\s`` innerhalb von `benutzerdefinierten "
+"Zeichenklassen <User Character Classes_>`_ verwenden."
 
 # 262b22ec4c6943739dcc30675868ff5a
 #: ../../regular_expressions.rst:169
 msgid "``foob\\dr``"
-msgstr "`` foob \\ dr``"
+msgstr "``foob\\dr``"
 
 # 50ce579845274e42a5874da6c8d2700e
 #: ../../regular_expressions.rst:169
@@ -639,7 +643,7 @@ msgstr ""
 #: ../../regular_expressions.rst:236 ../../regular_expressions.rst:383
 #: ../../regular_expressions.rst:435 ../../regular_expressions.rst:562
 msgid "`TRegExpr <tregexpr.html>`__"
-msgstr "`TRegExpr <tregexpr.html> __"
+msgstr "`TRegExpr <tregexpr.html>`__"
 
 # 61e21b8174424ca08c41b6118c1ccb66
 #: ../../regular_expressions.rst:176
@@ -655,7 +659,7 @@ msgstr ""
 # f9c6029030844b37b8552e55daa8d7a6
 #: ../../regular_expressions.rst:181
 msgid "So you can redefine this classes."
-msgstr "So können Sie diese Klassen neu definieren."
+msgstr "Sie können diese Klassen also auch neu definieren."
 
 # 022540e086e94486a9ff10fa18f33672
 #: ../../regular_expressions.rst:184
@@ -685,7 +689,7 @@ msgstr "``$``"
 # b6adc0903a7146a192b1f0dee9f18fe1
 #: ../../regular_expressions.rst:195
 msgid "end of line"
-msgstr "Ende der Linie"
+msgstr "Zeilenende"
 
 # 6c9023afcf524111a688df2acb22962d
 #: ../../regular_expressions.rst:196
@@ -695,7 +699,7 @@ msgstr "`` \\ A``"
 # 67de088835aa45349cc1f941e4f29f8c
 #: ../../regular_expressions.rst:196
 msgid "start of text"
-msgstr "Beginn des Textes"
+msgstr "Beginn des Textes (Stringanfang)"
 
 # f2ab5e4785ab4a459f53a89b362fec90
 #: ../../regular_expressions.rst:197
@@ -705,7 +709,7 @@ msgstr "`` \\ Z``"
 # cbcf225dfbc648afaed7d3099f76b35a
 #: ../../regular_expressions.rst:197
 msgid "end of text"
-msgstr "Ende des Textes"
+msgstr "Ende der Zeichenkette"
 
 # 8537fa30ca3b40eaaf9bb4775edbe7e5
 #: ../../regular_expressions.rst:198
@@ -715,7 +719,7 @@ msgstr "``.``"
 # f0ff397f34c440afb1843674b47b23a7
 #: ../../regular_expressions.rst:198
 msgid "any character in line"
-msgstr "ein beliebiges Zeichen in einer Reihe"
+msgstr "ein beliebiges Zeichen (innerhalb derselben Zeile)"
 
 # b4f1467b393d49a68957f8c0dbbd39c9
 #: ../../regular_expressions.rst:199
@@ -730,7 +734,7 @@ msgstr "``foobar`` nur, wenn es am Anfang der Zeile steht"
 # 84b607d07b754118abcc5d67126990c3
 #: ../../regular_expressions.rst:200
 msgid "``foobar$``"
-msgstr "`` foobar $ ``"
+msgstr "``foobar$``"
 
 # 0dcddba362784018a432851e84b8967d
 #: ../../regular_expressions.rst:200
@@ -740,7 +744,7 @@ msgstr "``foobar`` nur wenn es am Zeilenende ist"
 # 41daf48ac4244ae3bb977d4d0642136a
 #: ../../regular_expressions.rst:201
 msgid "``^foobar$``"
-msgstr "`` ^ foobar $ ``"
+msgstr "``^foobar$``"
 
 # dd8507fa51044e01b812624f988b455b
 #: ../../regular_expressions.rst:201
@@ -750,7 +754,7 @@ msgstr "``foobar`` nur, wenn es die einzige Saite in der Reihe ist"
 # b4bc24fd68154e02b44e755885b74b05
 #: ../../regular_expressions.rst:202
 msgid "``foob.r``"
-msgstr "`` foob.r``"
+msgstr "``foob.r``"
 
 # 4c31a4ac43ba4ca2b0e763e1b3f65ea8
 #: ../../regular_expressions.rst:202
@@ -763,8 +767,8 @@ msgid ""
 "``^`` metacharacter by default match the beginning of the input string. "
 "``$`` - the end."
 msgstr ""
-"``^`` Metazeichen entsprechen standardmäßig dem Anfang der "
-"Eingabezeichenfolge. ``$`` - das Ende."
+"Das Metazeichen``^`` passt auf den Anfang ,``$`` auf das Ende der "
+"Zeichenkette."
 
 # 22c074afe0084dee80f38a9f745ef98b
 #: ../../regular_expressions.rst:208
@@ -774,11 +778,10 @@ msgid ""
 "match before any line separator. You can do this by switching `modifier "
 "/m <#m>`_."
 msgstr ""
-"Möglicherweise möchten Sie jedoch eine Zeichenfolge als mehrzeiligen Text"
-" behandeln, so dass ``^`` nach einem beliebigen Trennzeichen innerhalb "
-"der Zeichenfolge und &#39;`` `` vor jedem Zeilentrennzeichen "
-"übereinstimmt. Sie können dies tun, indem Sie `modifier / m <#m>`_ "
-"wechseln."
+"Eventuell wollen Sie jedoch eine Zeichenfolge als mehrzeiligen Text "
+"behandeln, in dem ``^`` auch innerhalb nach jedem Zeilenende und ``$`` vor "
+"jedem Zeilenende passt. Sie können dies mit dem Schalter`modifier / m <#m>`_ "
+"erreichen."
 
 # 17b4892999f54a11bce5f41de7f7b39a
 #: ../../regular_expressions.rst:213
@@ -794,9 +797,9 @@ msgid ""
 "``^``/``$`` also matches ``\\x2028``, ``\\x2029``, ``\\x0B``, ``\\x0C`` "
 "or ``\\x85``."
 msgstr ""
-"Wenn Sie die Unicode-Version verwenden <tregexpr.html#unicode>`__, dann` "
-"`^` `/``$`` stimmt auch mit` `\\ x2028``,` \\ x2029``, `\\ x0B``,` `\\ "
-"x0C`` oder` `\\ x85` überein `."
+"Wenn Sie die `Unicode-Version <tregexpr.html#unicode>`__ verwenden, dann "
+"stimmen ``^``/``$`` auch mit``\\x2028``, ``\\x2029``, ``\\x0B``, ``\\x0C`` "
+"or ``\\x85`` überein."
 
 # d87185060f5543a681304125a948f648
 #: ../../regular_expressions.rst:222
@@ -804,9 +807,9 @@ msgid ""
 "The ``\\A`` and ``\\Z`` are just like ``^`` and ``$``, except that they "
 "won’t match multiple times when the `modifier /m <#m>`_ is used."
 msgstr ""
-"`` A&#39;` und `` \\ Z`` sind genau wie ``^`` und `` `` `, außer dass sie"
-" nicht mehrmals übereinstimmen, wenn der` Modifier / m <#m>`_ wird "
-"eingesetzt."
+"Die Anker ``\\A`` und ``\\Z`` funktionieren genau wie ``^`` and ``$``, außer "
+"dass sie auch dann nicht mehrmals übereinstimmen, wenn der Schalter `"
+"modifier /m <#m>`_ genutzt wird."
 
 # 955b620b6d904b24a171f61f47267552
 #: ../../regular_expressions.rst:226
@@ -815,9 +818,9 @@ msgid ""
 "switch ``Off`` the `modifier /s <#s>`_, then ``.`` won’t match line "
 "separators inside the string."
 msgstr ""
-"Das `` .``-Metazeichen entspricht standardmäßig jedem Zeichen, aber wenn "
-"Sie ``Off`` mit dem `Modifier / s <#s>`_ ausschalten, stimmt `` .`` nicht"
-" mit den Trennzeichen in der Zeichenfolge überein."
+"Das Metazeichen`` .`` passt von Haus aus auf jedes Zeichen, solange jedoch "
+"der Schalter `Modifier / s <#s>`_ ``Off`` ist, dann mit Ausnahme "
+"innenliegender Zeilenschaltungen."
 
 # 2df380939c8e41c9acee849f36bbc0af
 #: ../../regular_expressions.rst:230
@@ -827,8 +830,8 @@ msgid ""
 "string within the sequence ``\\x0A\\x0D`` because this is just wrong "
 "order to be treated as line separator."
 msgstr ""
-"Beachten Sie, dass ``^.*$`` Nicht mit einer Zeichenfolge zwischen `` \\ "
-"x0D \\ x0A`` übereinstimmt, da dies ein unzerbrechlicher Trenner ist. Er "
+"Beachten Sie, dass ``^.*$`` nicht mit einer Zeichenfolge zwischen ``\\x0D\\"
+"x0A`` übereinstimmt, da dies für einen untrennbaren Zeilentrenner steht. Er "
 "stimmt jedoch mit der leeren Zeichenfolge in der Sequenz ``\\x0A\\x0D`` "
 "überein, da dies einfach eine falsche Reihenfolge ist, um als "
 "Zeilentrennzeichen behandelt zu werden."
@@ -840,9 +843,9 @@ msgid ""
 "<tregexpr.html#lineseparators>`__ and `LinePairedSeparator "
 "<tregexpr.html#linepairedseparator>`_."
 msgstr ""
-"Die mehrzeilige Verarbeitung kann mit den Eigenschaften LineSeparators "
-"abgestimmt werden <tregexpr.html#lineseparators>`__ und` "
-"LinePairedSeparator <tregexpr.html#linepairedseparator>`_."
+"Feinheiten der mehrzeiligen Verarbeitung können mit den Eigenschaften `"
+"LineSeparators  <tregexpr.html#lineseparators>`__ und `LinePairedSeparator "
+"<tregexpr.html#linepairedseparator>`_ justiert werden."
 
 # 603dc8124e0c48f08a341019fa393adc
 #: ../../regular_expressions.rst:242
@@ -851,9 +854,9 @@ msgid ""
 "``\\r\\n`` or mix them together (as in described above default "
 "behaviour)."
 msgstr ""
-"Sie können also die Unix-Stil-Trennzeichen ``\\n`` oder den DOS / "
-"Windows-Stil ``\\r\\n`` verwenden oder sie zusammenmischen (wie oben "
-"beschrieben, Standardverhalten)."
+"Sie können also Zeilenschaltungen im Unix-Stil ``\\n"
+"`` oder im DOS / Windows-Stil ``\\r\\n"
+"`` verwenden oder beides (Standardverhalten, wie oben beschrieben)."
 
 # 9fb6e50653944ac0a95d98361e3fe39b
 #: ../../regular_expressions.rst:245
@@ -888,7 +891,7 @@ msgstr "``\\B``"
 # fabf37e6dc454de5a0d41df2ecc41767
 #: ../../regular_expressions.rst:256
 msgid "a non-word boundary"
-msgstr "eine Nicht-Wortgrenze"
+msgstr "keine Wortgrenze"
 
 # 7a4c9476d9f645a3ba7bf5187dec6fe4
 #: ../../regular_expressions.rst:259
@@ -897,9 +900,8 @@ msgid ""
 "``\\w`` on one side of it and a ``\\W`` on the other side of it (in "
 "either order)."
 msgstr ""
-"Eine Wortgrenze &quot;\\ b&quot; ist eine Stelle zwischen zwei Zeichen, "
-"die auf einer Seite ein &quot;\\ w&quot; und auf der anderen Seite ein "
-"&quot;\\ W&quot; (in beliebiger Reihenfolge) hat."
+"Eine Wortgrenze ``\\b`` ist eine Stelle zwischen zwei Zeichen, von denen "
+"eines ``\\w`` und das andere ein ``\\W`` ist (Reihenfolge egal)."
 
 # eb75d0eb144b4ba8be0801dd42baa438
 #: ../../regular_expressions.rst:266
@@ -1319,8 +1321,8 @@ msgid ""
 "For example for input string ``foobar`` regular expression ``(foo(bar))``"
 " will find:"
 msgstr ""
-"Zum Beispiel für die Eingabezeichenfolge ``foobar`` wird der reguläre "
-"Ausdruck ``(foo(bar)) `` gefunden:"
+"Zum Beispiel wird für die Eingabezeichenfolge ``foobar`` der reguläre "
+"Ausdruck ``(foo(bar)) `` finden:"
 
 # 60e4c08683524a3db7f7464a452bde93
 #: ../../regular_expressions.rst:403
@@ -1584,10 +1586,10 @@ msgid ""
 "``/x``), you’ll either have to escape them or encode them using octal or "
 "hex escapes."
 msgstr ""
-"Dies bedeutet auch, dass, wenn Sie echte Whitespace- oder ``#`` Zeichen "
+"Dies bedeutet auch, dass, wenn Sie literale Whitespace- oder ``#`` Zeichen "
 "in dem Muster (außerhalb einer Zeichenklasse, wo sie nicht von ``/x`` "
-"betroffen sind) möchten, diese entweder entkommen oder sie mit codieren "
-"müssen Oktal- oder Hex-Fluchten."
+"betroffen sind) angeben möchten, diese entweder maskieren oder als Oktal- "
+"oder Hex-Codes schreiben müssen."
 
 # 05c2a5229cc24116a884b9e61b419153
 #: ../../regular_expressions.rst:524
@@ -1706,10 +1708,10 @@ msgid ""
 "the middle sub-expression manually - use ``Match[1] + Match[3]`` and "
 "ignore ``Match[2]``."
 msgstr ""
-"Zum Beispiel ist `(blah) (? = Foobar) (blah)` `dasselbe wie` `(blah) "
-"(foobar) (blah)` `. In der letzteren Version müssen Sie jedoch den "
-"mittleren Unterausdruck manuell ausschließen - verwenden Sie `` Match [1]"
-" + Match [3] `` und ignorieren Sie ``Match[2]``."
+"Zum Beispiel arbeitet ``(blah) (? = foobar) (blah)` `prinzipiell genauso wie`"
+" `(blah) (foobar) (blah)` `. In der letzteren Variante müssen Sie jedoch den "
+"mittleren Unterausdruck manuell ausschließen - verwenden Sie `` Match [1] + "
+"Match [3] `` und ignorieren Sie ``Match[2]``."
 
 # 1efdab2408964b5583160fa580db64ca
 #: ../../regular_expressions.rst:574
@@ -1920,4 +1922,3 @@ msgstr ""
 # 2e843a74c12b4db5815c32b90e8b2216
 #~ msgid "line breaks in the Unicode standard."
 #~ msgstr ""
-
