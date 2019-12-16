@@ -325,8 +325,8 @@ type
     {$ENDIF}
     procedure ClearInternalIndexes;
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    function IsSpaceChar(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline; {$ENDIF}
-    function IsDigit(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function IsDigitChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsHorzSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline; {$ENDIF}
     function IsLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline; {$ENDIF}
     // Mark programm as having to be [re]compiled
@@ -428,7 +428,7 @@ type
 
   public
     constructor Create; {$IFDEF OverMeth} overload;
-    constructor Create(AExpression: string); overload;
+    constructor Create(const AExpression: RegExprString); overload;
     {$ENDIF}
     destructor Destroy; override;
 
@@ -1362,8 +1362,7 @@ end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
-
-constructor TRegExpr.Create(AExpression: string);
+constructor TRegExpr.Create(const AExpression: RegExprString);
 begin
   Create;
   Expression := AExpression;
@@ -1651,12 +1650,12 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsSpaceChar(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   {$IFDEF UseSpaceChars}
   Result := Pos(AChar^, fSpaceChars) > 0;
   {$ELSE}
-  case AChar^ of
+  case AChar of
     ' ', #$9, #$A, #$D, #$C:
       Result := True
     else
@@ -1665,9 +1664,9 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsDigit(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.IsDigitChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
-  case AChar^ of
+  case AChar of
     '0' .. '9':
       Result := True;
   else
@@ -2285,7 +2284,7 @@ var
     Tail(Result, NextNode); // OP_LOOPENTRY -> OP_LOOP
     if regcode <> @regdummy then
       Tail(Result + REOpSz + RENextOffSz, NextNode); // Atom -> OP_LOOP
-{$ENDIF}
+    {$ENDIF}
   end;
 
   procedure EmitSimpleBraces(ABracesMin, ABracesMax: TREBracesArg;
@@ -2422,7 +2421,7 @@ begin
         // Filip Jirsak's note - what will happen, when we are at the end of regparse?
         Inc(regparse);
         p := regparse;
-        while IsDigit(regparse) do // <min> MUST appear
+        while IsDigitChar(regparse^) do // <min> MUST appear
           Inc(regparse);
         if (regparse^ <> '}') and (regparse^ <> ',') or (p = regparse) then
         begin
@@ -2435,7 +2434,7 @@ begin
         begin
           Inc(regparse);
           p := regparse;
-          while IsDigit(regparse) do
+          while IsDigitChar(regparse^) do
             Inc(regparse);
           if regparse^ <> '}' then
           begin
@@ -3322,13 +3321,13 @@ begin
         until Result >= AMax;
       end;
     OP_ANYDIGIT:
-      while (Result < TheMax) and IsDigit(scan) do
+      while (Result < TheMax) and IsDigitChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_NOTDIGIT:
-      while (Result < TheMax) and not IsDigit(scan) do
+      while (Result < TheMax) and not IsDigitChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -3347,13 +3346,13 @@ begin
         Inc(scan);
       end;
     OP_ANYSPACE:
-      while (Result < TheMax) and IsSpaceChar(scan) do
+      while (Result < TheMax) and IsSpaceChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_NOTSPACE:
-      while (Result < TheMax) and Not IsSpaceChar(scan) do
+      while (Result < TheMax) and not IsSpaceChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -3436,7 +3435,7 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-{$ENDIF}
+    {$ENDIF}
   else
     begin // Oh dear. Called inappropriately.
       Result := 0; // Best compromise.
@@ -3582,13 +3581,13 @@ begin
         end;
       OP_ANYDIGIT:
         begin
-          if (reginput = fInputEnd) or Not IsDigit(reginput) then
+          if (reginput = fInputEnd) or not IsDigitChar(reginput^) then
             Exit;
           Inc(reginput);
         end;
       OP_NOTDIGIT:
         begin
-          if (reginput = fInputEnd) or IsDigit(reginput) then
+          if (reginput = fInputEnd) or IsDigitChar(reginput^) then
             Exit;
           Inc(reginput);
         end;
@@ -3609,14 +3608,14 @@ begin
         end;
       OP_ANYSPACE:
         begin
-          if (reginput = fInputEnd) or not IsSpaceChar(reginput) // ###0.943
+          if (reginput = fInputEnd) or not IsSpaceChar(reginput^) // ###0.943
           then
             Exit;
           Inc(reginput);
         end;
       OP_NOTSPACE:
         begin
-          if (reginput = fInputEnd) or IsSpaceChar(reginput) // ###0.943
+          if (reginput = fInputEnd) or IsSpaceChar(reginput^) // ###0.943
           then
             Exit;
           Inc(reginput);
@@ -4542,7 +4541,7 @@ var
     if (p < TemplateEnd) and (p^ = '&') then
       Inc(p) // this is '$&' or '${&}'
     else
-      while (p < TemplateEnd) and IsDigit(p) do
+      while (p < TemplateEnd) and IsDigitChar(p^) do
       begin
         Result := Result * 10 + (Ord(p^) - Ord('0')); // ###0.939
         Inc(p);
