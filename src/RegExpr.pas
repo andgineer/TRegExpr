@@ -326,9 +326,6 @@ type
     procedure ClearInternalIndexes;
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    function IsDigitChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    function IsHorzSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline; {$ENDIF}
-    function IsLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline; {$ENDIF}
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
 
@@ -1664,7 +1661,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsDigitChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function IsDigitChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
     '0' .. '9':
@@ -1674,7 +1671,7 @@ begin
   end;
 end;
 
-function TRegExpr.IsHorzSeparator(AChar: REChar): boolean;
+function IsHorzSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   // Tab and Unicode categoty "Space Separator": https://www.compart.com/en/unicode/category/Zs
   case AChar of
@@ -1689,7 +1686,7 @@ begin
   end;
 end;
 
-function TRegExpr.IsLineSeparator(AChar: REChar): boolean;
+function IsLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
     #$d, #$a, #$b, #$c:
