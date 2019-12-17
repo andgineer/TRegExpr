@@ -325,10 +325,7 @@ type
     {$ENDIF}
     procedure ClearInternalIndexes;
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    function IsSpaceChar(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline; {$ENDIF}
-    function IsDigit(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    function IsHorzSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline; {$ENDIF}
-    function IsLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline; {$ENDIF}
+    function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
 
@@ -428,7 +425,7 @@ type
 
   public
     constructor Create; {$IFDEF OverMeth} overload;
-    constructor Create(AExpression: string); overload;
+    constructor Create(const AExpression: RegExprString); overload;
     {$ENDIF}
     destructor Destroy; override;
 
@@ -1362,8 +1359,7 @@ end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
-
-constructor TRegExpr.Create(AExpression: string);
+constructor TRegExpr.Create(const AExpression: RegExprString);
 begin
   Create;
   Expression := AExpression;
@@ -1651,12 +1647,12 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsSpaceChar(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   {$IFDEF UseSpaceChars}
   Result := Pos(AChar^, fSpaceChars) > 0;
   {$ELSE}
-  case AChar^ of
+  case AChar of
     ' ', #$9, #$A, #$D, #$C:
       Result := True
     else
@@ -1665,9 +1661,9 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsDigit(AChar: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function IsDigitChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
-  case AChar^ of
+  case AChar of
     '0' .. '9':
       Result := True;
   else
@@ -1675,7 +1671,7 @@ begin
   end;
 end;
 
-function TRegExpr.IsHorzSeparator(AChar: REChar): boolean;
+function IsHorzSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   // Tab and Unicode categoty "Space Separator": https://www.compart.com/en/unicode/category/Zs
   case AChar of
@@ -1690,7 +1686,7 @@ begin
   end;
 end;
 
-function TRegExpr.IsLineSeparator(AChar: REChar): boolean;
+function IsLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
     #$d, #$a, #$b, #$c:
@@ -2205,7 +2201,7 @@ begin
       Tail(chain, latest);
     chain := latest;
   end;
-  if chain = nil // OP_LOOP ran zero times.
+  if chain = nil // Loop ran zero times.
   then
     EmitNode(OP_NOTHING);
   Result := ret;
@@ -2216,7 +2212,7 @@ function TRegExpr.ParsePiece(var flagp: integer): PRegExprChar;
 // something followed by possible [*+?{]
 // Note that the branching code sequences used for ? and the general cases
 // of * and + and { are somewhat optimized:  they use the same OP_NOTHING node as
-// both the endmarker for their OP_BRANCH list and the body of the last OP_BRANCH.
+// both the endmarker for their branch list and the body of the last branch.
 // It might seem that this node could be dispensed with entirely, but the
 // endmarker role is not redundant.
   function parsenum(AStart, AEnd: PRegExprChar): TREBracesArg;
@@ -2267,7 +2263,7 @@ var
     if regcode <> @regdummy then
     begin
       off := (Result + REOpSz + RENextOffSz) - (regcode - REOpSz - RENextOffSz);
-      // OP_BACK to Atom after OP_LOOPENTRY
+      // back to Atom after OP_LOOPENTRY
       PREBracesArg(AlignToInt(regcode))^ := ABracesMin;
       Inc(regcode, REBracesArgSz);
       PREBracesArg(AlignToInt(regcode))^ := ABracesMax;
@@ -2285,7 +2281,7 @@ var
     Tail(Result, NextNode); // OP_LOOPENTRY -> OP_LOOP
     if regcode <> @regdummy then
       Tail(Result + REOpSz + RENextOffSz, NextNode); // Atom -> OP_LOOP
-{$ENDIF}
+    {$ENDIF}
   end;
 
   procedure EmitSimpleBraces(ABracesMin, ABracesMax: TREBracesArg;
@@ -2338,8 +2334,8 @@ begin
           else
           begin // Emit x* as (x&|), where & means "self".
             InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz); // Either x
-            OpTail(Result, EmitNode(OP_BACK)); // and OP_LOOP
-            OpTail(Result, Result); // OP_BACK
+            OpTail(Result, EmitNode(OP_BACK)); // and loop
+            OpTail(Result, Result); // back
             Tail(Result, EmitNode(OP_BRANCH)); // or
             Tail(Result, EmitNode(OP_NOTHING)); // nil.
           end
@@ -2372,7 +2368,7 @@ begin
           begin // Emit x+ as x(&|), where & means "self".
             NextNode := EmitNode(OP_BRANCH); // Either
             Tail(Result, NextNode);
-            Tail(EmitNode(OP_BACK), Result); // OP_LOOP OP_BACK
+            Tail(EmitNode(OP_BACK), Result); // loop back
             Tail(NextNode, EmitNode(OP_BRANCH)); // or
             Tail(Result, EmitNode(OP_NOTHING)); // nil.
           end
@@ -2422,7 +2418,7 @@ begin
         // Filip Jirsak's note - what will happen, when we are at the end of regparse?
         Inc(regparse);
         p := regparse;
-        while IsDigit(regparse) do // <min> MUST appear
+        while IsDigitChar(regparse^) do // <min> MUST appear
           Inc(regparse);
         if (regparse^ <> '}') and (regparse^ <> ',') or (p = regparse) then
         begin
@@ -2435,7 +2431,7 @@ begin
         begin
           Inc(regparse);
           p := regparse;
-          while IsDigit(regparse) do
+          while IsDigitChar(regparse^) do
             Inc(regparse);
           if regparse^ <> '}' then
           begin
@@ -2802,10 +2798,10 @@ begin
       begin // not /s, so emit [^:LineSeparators:]
         ret := EmitNode(OP_ANYML);
         flagp := flagp or flag_HasWidth; // not so simple ;)
-        // ret := EmitRange (OP_ANYBUT);
-        // EmitRangeStr (LineSeparators); //###0.941
-        // EmitRangeStr (LinePairedSeparator); // !!! isn't correct if have to accept only paired
-        // EmitRangeC (#0);
+        // ret := EmitRange(OP_ANYBUT);
+        // EmitRangeStr(LineSeparators); //###0.941
+        // EmitRangeStr(LinePairedSeparator); // !!! isn't correct if have to accept only paired
+        // EmitRangeC(#0);
         // flagp := flagp or flag_HasWidth or flag_Simple;
       end;
     '[':
@@ -2874,7 +2870,7 @@ begin
                 Exit;
               end;
               Inc(RangeBeg);
-              EmitRangeC(RangeEnd); // prevent infinite OP_LOOP if RangeEnd=$ff
+              EmitRangeC(RangeEnd); // prevent infinite loop if RangeEnd=$ff
               while RangeBeg < RangeEnd do
               begin // ###0.929
                 EmitRangeC(RangeBeg);
@@ -2949,7 +2945,7 @@ begin
           else
             // check for extended Perl syntax : (?..)
             if (regparse + 1)^ = '#' then
-            begin // (?#OP_COMMENT)
+            begin // (?#comment)
               Inc(regparse, 2); // find closing ')'
               while (regparse < fRegexEnd) and (regparse^ <> ')') do
                 Inc(regparse);
@@ -2959,7 +2955,7 @@ begin
                 Exit;
               end;
               Inc(regparse); // skip ')'
-              ret := EmitNode(OP_COMMENT); // OP_COMMENT
+              ret := EmitNode(OP_COMMENT); // comment
             end
             else
             begin // modifiers ?
@@ -2975,7 +2971,7 @@ begin
                 Exit;
               end;
               Inc(regparse); // skip ')'
-              ret := EmitNode(OP_COMMENT); // OP_COMMENT
+              ret := EmitNode(OP_COMMENT); // comment
               // Error (reeQPSBFollowsNothing);
               // Exit;
             end;
@@ -3026,7 +3022,7 @@ begin
           'Z':
             ret := EmitNode(OP_EOL); // ###0.941
           'd':
-            begin // r.e.extension - OP_ANY digit ('0' .. '9')
+            begin // r.e.extension - any digit ('0' .. '9')
               ret := EmitNode(OP_ANYDIGIT);
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
@@ -3036,7 +3032,7 @@ begin
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           's':
-            begin // r.e.extension - OP_ANY space char
+            begin // r.e.extension - any space char
               {$IFDEF UseSetOfChar}
               ret := EmitRange(OP_ANYOF);
               EmitRangeStr(SpaceChars);
@@ -3058,7 +3054,7 @@ begin
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'w':
-            begin // r.e.extension - OP_ANY english char / digit / '_'
+            begin // r.e.extension - any english char / digit / '_'
               {$IFDEF UseSetOfChar}
               ret := EmitRange(OP_ANYOF);
               EmitRangeStr(WordChars);
@@ -3126,13 +3122,13 @@ begin
         )) then
       begin // ###0.941 \x
         if regparse^ = '#' then
-        begin // Skip eXtended OP_COMMENT
-          // find OP_COMMENT terminator (group of \n and/or \r)
+        begin // Skip eXtended comment
+          // find comment terminator (group of \n and/or \r)
           while (regparse < fRegexEnd) and (regparse^ <> #$d) and
             (regparse^ <> #$a) do
             Inc(regparse);
           while (regparse^ = #$d) or (regparse^ = #$a)
-          // skip OP_COMMENT terminator
+          // skip comment terminator
             do
             Inc(regparse);
           // attempt to support different type of line separators
@@ -3147,7 +3143,7 @@ begin
             do
             Inc(regparse);
         end;
-        ret := EmitNode(OP_COMMENT); // OP_COMMENT
+        ret := EmitNode(OP_COMMENT); // comment
       end
       else
       begin
@@ -3164,7 +3160,7 @@ begin
         ender := (regparse + Len)^;
         if (Len > 1) and ((ender = '*') or (ender = '+') or (ender = '?') or
           (ender = '{')) then
-          Dec(Len); // OP_BACK off clear of ?+*{ operand.
+          Dec(Len); // back off clear of ?+*{ operand.
         flagp := flagp or flag_HasWidth;
         if Len = 1 then
           flagp := flagp or flag_Simple;
@@ -3186,7 +3182,7 @@ begin
           Dec(Len);
         end;
         EmitC(#0);
-      end; { of if not OP_COMMENT }
+      end; { of if not comment }
     end; { of case else }
   end; { of case }
 
@@ -3322,13 +3318,13 @@ begin
         until Result >= AMax;
       end;
     OP_ANYDIGIT:
-      while (Result < TheMax) and IsDigit(scan) do
+      while (Result < TheMax) and IsDigitChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_NOTDIGIT:
-      while (Result < TheMax) and not IsDigit(scan) do
+      while (Result < TheMax) and not IsDigitChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -3347,13 +3343,13 @@ begin
         Inc(scan);
       end;
     OP_ANYSPACE:
-      while (Result < TheMax) and IsSpaceChar(scan) do
+      while (Result < TheMax) and IsSpaceChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_NOTSPACE:
-      while (Result < TheMax) and Not IsSpaceChar(scan) do
+      while (Result < TheMax) and not IsSpaceChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -3436,7 +3432,7 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-{$ENDIF}
+    {$ENDIF}
   else
     begin // Oh dear. Called inappropriately.
       Result := 0; // Best compromise.
@@ -3472,7 +3468,7 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // node matches, call self recursively to see whether the rest matches,
 // and then act accordingly. In practice we make some effort to avoid
 // recursion, in particular by going through "ordinary" nodes (that don't
-// need to know whether the rest of the match failed) by a OP_LOOP instead of
+// need to know whether the rest of the match failed) by a loop instead of
 // by recursion.
 Type
   TLoopStack = array [1 .. LoopStackMax] of integer;
@@ -3582,13 +3578,13 @@ begin
         end;
       OP_ANYDIGIT:
         begin
-          if (reginput = fInputEnd) or Not IsDigit(reginput) then
+          if (reginput = fInputEnd) or not IsDigitChar(reginput^) then
             Exit;
           Inc(reginput);
         end;
       OP_NOTDIGIT:
         begin
-          if (reginput = fInputEnd) or IsDigit(reginput) then
+          if (reginput = fInputEnd) or IsDigitChar(reginput^) then
             Exit;
           Inc(reginput);
         end;
@@ -3609,14 +3605,14 @@ begin
         end;
       OP_ANYSPACE:
         begin
-          if (reginput = fInputEnd) or not IsSpaceChar(reginput) // ###0.943
+          if (reginput = fInputEnd) or not IsSpaceChar(reginput^) // ###0.943
           then
             Exit;
           Inc(reginput);
         end;
       OP_NOTSPACE:
         begin
-          if (reginput = fInputEnd) or IsSpaceChar(reginput) // ###0.943
+          if (reginput = fInputEnd) or IsSpaceChar(reginput^) // ###0.943
           then
             Exit;
           Inc(reginput);
@@ -3854,8 +3850,8 @@ begin
             Exit;
           end;
           save := reginput;
-          LoopStack[LoopStackIdx] := 0; // init OP_LOOP counter
-          Result := MatchPrim(next); // execute OP_LOOP
+          LoopStack[LoopStackIdx] := 0; // init loop counter
+          Result := MatchPrim(next); // execute loop
           LoopStackIdx := no; // cleanup
           if Result then
             Exit;
@@ -3915,7 +3911,7 @@ begin
                   Exit;
                 reginput := save;
               end;
-              Dec(LoopStackIdx); // Failed - OP_BACK up
+              Dec(LoopStackIdx); // Failed - back up
               Exit;
             end
           end
@@ -3940,13 +3936,13 @@ begin
           nextch := #0;
           if next^ = OP_EXACTLY then
             nextch := (next + REOpSz + RENextOffSz)^;
-          Bracesmax := MaxInt; // infinite OP_LOOP for * and + //###0.92
+          Bracesmax := MaxInt; // infinite loop for * and + //###0.92
           if (scan^ = OP_STAR) or (scan^ = OP_STARNG) then
-            BracesMin := 0 // OP_STAR
+            BracesMin := 0 // star
           else if (scan^ = OP_PLUS) or (scan^ = OP_PLUSNG) then
-            BracesMin := 1 // OP_PLUS
+            BracesMin := 1 // plus
           else
-          begin // OP_BRACES
+          begin // braces
             BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
             Bracesmax :=
               PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz +
@@ -3965,7 +3961,7 @@ begin
             // Now we know real Max limit to move forward (for recursion 'back up')
             // In some cases it can be faster to check only Min positions first,
             // but after that we have to check every position separtely instead
-            // of fast scannig in OP_LOOP.
+            // of fast scannig in loop.
             no := BracesMin;
             while no <= Bracesmax do
             begin
@@ -4015,7 +4011,7 @@ begin
                 LoopStackIdx := SavedLoopStackIdx;
                 {$ENDIF}
               end;
-              Dec(no); // Couldn't or didn't - OP_BACK up.
+              Dec(no); // Couldn't or didn't - back up.
               reginput := save + no;
             end; { of while }
             Exit;
@@ -4058,7 +4054,7 @@ begin
       OP_BSUBEXP, OP_BSUBEXPCI:
         begin // ###0.938
           FirstCharSet := [#0 .. #255]; // :((( we cannot
-          // optimize r.e. if it starts with OP_BACK reference
+          // optimize r.e. if it starts with back reference
           Exit;
         end;
       OP_BOL, OP_BOLML:
@@ -4185,7 +4181,7 @@ begin
       OP_LOOPENTRY:
         begin // ###0.925
           // LoopStack [LoopStackIdx] := 0; //###0.940 line removed
-          FillFirstCharSet(next); // execute OP_LOOP
+          FillFirstCharSet(next); // execute loop
           Exit;
         end;
       OP_LOOP, OP_LOOPNG:
@@ -4210,7 +4206,7 @@ begin
         begin // ###0.940
           opnd := scan + REOpSz + RENextOffSz + REBracesArgSz * 2;
           min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-          // OP_BRACES
+          // braces
           FillFirstCharSet(opnd);
           if min_cnt > 0 then
             Exit;
@@ -4316,7 +4312,7 @@ begin
     Exit;
   end;
   // Check that the start position is not longer than the line
-  // If so then exit with OP_NOTHING found
+  // If so then exit with nothing found
   if AOffset > (length(fInputString) + 1)
   // for matching empty string after last char.
   then
@@ -4529,7 +4525,7 @@ var
 
   function ParseVarName(var APtr: PRegExprChar): PtrInt;
   // extract name of variable (digits, may be enclosed with
-  // curly OP_BRACES) from APtr^, uses TemplateEnd !!!
+  // curly braces) from APtr^, uses TemplateEnd !!!
   var
     p: PRegExprChar;
     Delimited: boolean;
@@ -4542,7 +4538,7 @@ var
     if (p < TemplateEnd) and (p^ = '&') then
       Inc(p) // this is '$&' or '${&}'
     else
-      while (p < TemplateEnd) and IsDigit(p) do
+      while (p < TemplateEnd) and IsDigitChar(p^) do
       begin
         Result := Result * 10 + (Ord(p^) - Ord('0')); // ###0.939
         Inc(p);
@@ -4599,7 +4595,7 @@ begin
         case Ch of
           'n':
             Inc(ResultLen, length(FReplaceLineEnd));
-          'u', 'l', 'U', 'L': { OP_NOTHING }
+          'u', 'l', 'U', 'L': { nothing }
             ;
           'x':
             begin
@@ -4985,7 +4981,7 @@ begin
     {$ENDIF}
     if (op = OP_BRACES) or (op = OP_BRACESNG) then
     begin // ###0.941
-      // show min/max argument of OP_BRACES operator
+      // show min/max argument of braces operator
       Result := Result + Format('{%d,%d}', [PREBracesArg(AlignToInt(s))^,
         PREBracesArg(AlignToInt(s + REBracesArgSz))^]);
       Inc(s, REBracesArgSz * 2);
