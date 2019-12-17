@@ -388,7 +388,7 @@ type
     // something followed by possible [*+?]
     function ParsePiece(var flagp: integer): PRegExprChar;
 
-    function HexDig(Ch: REChar): PtrInt;
+    function HexDig(Ch: REChar): integer;
 
     function UnQuoteChar(var APtr: PRegExprChar): REChar;
 
@@ -2496,19 +2496,21 @@ begin
 end; { of function TRegExpr.ParsePiece
   -------------------------------------------------------------- }
 
-function TRegExpr.HexDig(Ch: REChar): PtrInt;
+function TRegExpr.HexDig(Ch: REChar): integer;
 begin
-  Result := 0;
-  if (Ch >= 'a') and (Ch <= 'f') then
-    Ch := REChar(Ord(Ch) - (Ord('a') - Ord('A')));
-  if (Ch < '0') or (Ch > 'F') or ((Ch > '9') and (Ch < 'A')) then
-  begin
-    Error(reeBadHexDigit);
-    Exit;
+  case Ch of
+    '0' .. '9':
+      Result := Ord(Ch) - Ord('0');
+    'a' .. 'f':
+      Result := Ord(Ch) - Ord('a') + 10;
+    'A' .. 'F':
+      Result := Ord(Ch) - Ord('A') + 10;
+    else
+      begin
+        Result := 0;
+        Error(reeBadHexDigit);
+      end;
   end;
-  Result := Ord(Ch) - Ord('0');
-  if Ch >= 'A' then
-    Result := Result - (Ord('A') - Ord('9') - 1);
 end;
 
 function TRegExpr.UnQuoteChar(var APtr: PRegExprChar): REChar;
