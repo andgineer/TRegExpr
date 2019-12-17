@@ -171,15 +171,11 @@ const
   RegExprModifierG: boolean = True; // default value for ModifierG
   RegExprModifierM: boolean = False; // default value for ModifierM
   RegExprModifierX: boolean = False; // default value for ModifierX
-  {$IFDEF UseSpaceChars}
   RegExprSpaceChars: RegExprString = // default value for SpaceChars
     ' '#$9#$A#$D#$C;
-  {$ENDIF}
-  {$IFDEF UseWordChars}
   RegExprWordChars: RegExprString = // default value for WordChars
     '0123456789' // ###0.940
     + 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
-  {$ENDIF}
   RegExprLineSeparators: RegExprString = // default value for LineSeparators
     #$d#$a#$b#$c {$IFDEF UniCode} + #$2028#$2029#$85{$ENDIF};
   RegExprLinePairedSeparator: RegExprString =
@@ -2903,17 +2899,11 @@ begin
                 'd':
                   EmitRangeStr('0123456789');
                 'w':
-                  {$IFDEF UseWordChars}
-                  EmitRangeStr(WordChars);
-                  {$ELSE}
-                  EmitNode(OP_ANYLETTER);
-                  {$ENDIF}
+                  // cannot replace this with EmitNode(OP_ANYLETTER) !
+                  EmitRangeStr(RegExprWordChars);
                 's':
-                  {$IFDEF UseSpaceChars}
-                  EmitRangeStr(SpaceChars);
-                  {$ELSE}
-                  EmitNode(OP_ANYSPACE);
-                  {$ENDIF}
+                  // cannot replace this with EmitNode(OP_ANYSPACE) !
+                  EmitRangeStr(RegExprSpaceChars);
                 'v':
                   EmitRangeStr(RegExprLineSeparators);
                 'h':

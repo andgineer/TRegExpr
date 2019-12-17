@@ -405,7 +405,7 @@ const
     ),
     // 38
     (
-    expression: '[[w]+ []w]+';
+    expression: '[[\w]+ []\w]+';
     inputText: '  ww[ww w]www';
     substitutionText: '';
     expectedResult: 'ww[ww w]www';
