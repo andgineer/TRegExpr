@@ -762,6 +762,16 @@ begin
   {$ENDIF}
 end;
 
+function IsSquareBracket(Ch: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case Ch of
+    '[', ']':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
 function _UpperCase(Ch: REChar): REChar;
 begin
   Result := Ch;
@@ -1007,9 +1017,9 @@ begin
             // comment beginning!
             i0 := i;
             Inc(i);
-            if ARegExpr[i] = ']' // cannot be 'emty' ranges - this interpretes
+            if IsSquareBracket(ARegExpr[i]) // cannot be 'empty' ranges - interpret bracket as is
             then
-              Inc(i); // as ']' by itself
+              Inc(i);
             while (i <= Len) and (ARegExpr[i] <> ']') do
               if ARegExpr[i] = EscChar // ###0.942
               then
@@ -2821,9 +2831,9 @@ begin
 
         CanBeRange := False;
 
-        if (regparse^ = ']') then
+        if IsSquareBracket(regparse^) then
         begin
-          EmitSimpleRangeC(regparse^); // []-a] -> ']' .. 'a'
+          EmitSimpleRangeC(regparse^); // first square bracket inside [] treated as simple char
           Inc(regparse);
         end;
 

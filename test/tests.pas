@@ -87,6 +87,7 @@ type
     Procedure RunTest35;
     Procedure RunTest36;
     Procedure RunTest37;
+    Procedure RunTest38;
     Procedure TestGroups;
     {$IFDEF Unicode}
     procedure TestUnicode1;
@@ -105,7 +106,8 @@ Type
   end;
 
 const
-  testCases: array [1..37] of TRegExTest = (
+  testCases: array [1..38] of TRegExTest = (
+    // 1
     (
     expression: '\nd';
     inputText: 'abc'#13#10'def';
@@ -113,6 +115,7 @@ const
     expectedResult: 'abc'#13#10#16#13'\ef';
     MatchStart: 0
     ),
+    // 2
     (
     expression: '(\w*)';
     inputText: 'name.ext';
@@ -120,6 +123,7 @@ const
     expectedResult: 'name.new.new.ext.new.new';
     MatchStart: 0
     ),
+    // 3
     (
     expression: #$d'('#$a')';
     inputText: 'word'#$d#$a;
@@ -127,6 +131,7 @@ const
     expectedResult: 'word'#$a;
     MatchStart: 0
     ),
+    // 4
     (
     expression: '(word)';
     inputText: 'word';
@@ -134,6 +139,7 @@ const
     expectedResult: 'WORD\r';
     MatchStart: 0
     ),
+    // 5
     (
     expression: '(word)';
     inputText: 'word';
@@ -141,6 +147,7 @@ const
     expectedResult: 'word'#$a;
     MatchStart: 0
     ),
+    // 6
     (
     expression: '[A-Z]';
     inputText: '234578923457823659GHJK38';
@@ -148,6 +155,7 @@ const
     expectedResult: 'G';
     matchStart: 19;
     ),
+    // 7
     (
     expression: '[A-Z]*?';
     inputText: '234578923457823659ARTZU38';
@@ -155,6 +163,7 @@ const
     expectedResult: '';
     matchStart: 1
     ),
+    // 8
     (
     expression: '[A-Z]+';
     inputText: '234578923457823659ARTZU38';
@@ -162,6 +171,7 @@ const
     expectedResult: 'ARTZU';
     matchStart: 19
     ),
+    // 9
     (
     expression: '[A-Z][A-Z]*';
     inputText: '234578923457823659ARTZU38';
@@ -169,6 +179,7 @@ const
     expectedResult: 'ARTZU';
     matchStart: 19
     ),
+    // 10
     (
     expression: '[A-Z][A-Z]?';
     inputText: '234578923457823659ARTZU38';
@@ -176,6 +187,7 @@ const
     expectedResult: 'AR';
     matchStart: 19
     ),
+    // 11
     (
     expression: '[^\d]+';
     inputText: '234578923457823659ARTZU38';
@@ -183,6 +195,7 @@ const
     expectedResult: 'ARTZU';
     matchStart: 19
     ),
+    // 12
     (
     expression: '[A-Z][A-Z]?[A-Z]';
     inputText: '234578923457823659ARTZU38';
@@ -190,6 +203,7 @@ const
     expectedResult: 'ART';
     matchStart: 19
     ),
+    // 13
     (
     expression: '[A-Z][A-Z]*[0-9]';
     inputText: '234578923457823659ARTZU38';
@@ -197,6 +211,7 @@ const
     expectedResult: 'ARTZU3';
     matchStart: 19
     ),
+    // 14
     (
     expression: '[A-Z]+[0-9]';
     inputText: '234578923457823659ARTZU38';
@@ -204,6 +219,7 @@ const
     expectedResult: 'ARTZU3';
     matchStart: 19
     ),
+    // 15
     (
     expression: '(?i)[A-Z]';
     inputText: '234578923457823659a38';
@@ -211,6 +227,7 @@ const
     expectedResult: 'a';
     matchStart: 19
     ),
+    // 16
     (
     expression: '(?i)[a-z]';
     inputText: '234578923457823659A38';
@@ -218,6 +235,7 @@ const
     expectedResult: 'A';
     matchStart: 19
     ),
+    // 17
     (
     expression: '(foo)1234';
     inputText: '1234   foo1234XXXX';
@@ -225,6 +243,7 @@ const
     expectedResult: 'foo1234';
     matchStart: 8
     ),
+    // 18
     (
     expression: '(((foo)))1234';
     inputText: '1234   foo1234XXXX';
@@ -232,6 +251,7 @@ const
     expectedResult: 'foo1234';
     matchStart: 8
     ),
+    // 19
     (
     expression: '(foo)(1234)';
     inputText: '1234   foo1234XXXX';
@@ -239,6 +259,7 @@ const
     expectedResult: 'foo1234';
     matchStart: 8
     ),
+    // 20
     (
     expression: 'nofoo|foo';
     inputText: '1234   foo1234XXXX';
@@ -246,6 +267,7 @@ const
     expectedResult: 'foo';
     matchStart: 8
     ),
+    // 21
     (
     expression: '(nofoo|foo)1234';
     inputText: '1234   nofoo1234XXXX';
@@ -253,6 +275,7 @@ const
     expectedResult: 'nofoo1234';
     matchStart: 8
     ),
+    // 22
     (
     expression: '(nofoo|foo|anotherfoo)1234';
     inputText: '1234   nofoo1234XXXX';
@@ -260,6 +283,7 @@ const
     expectedResult: 'nofoo1234';
     matchStart: 8
     ),
+    // 23
     (
     expression: 'nofoo1234|foo1234';
     inputText: '1234   foo1234XXXX';
@@ -267,6 +291,7 @@ const
     expectedResult: 'foo1234';
     matchStart: 8
     ),
+    // 24
     (
     expression: '(\w*)';
     inputText: 'name.ext';
@@ -274,6 +299,7 @@ const
     expectedResult: 'name';
     matchStart: 1
     ),
+    // 25
     (
     expression: '\r(\n)';
     inputText: #$d#$a;
@@ -281,6 +307,7 @@ const
     expectedResult: #$d#$a;
     matchStart: 1
     ),
+    // 26
     (
     expression: '\r(\n)';
     inputText: #$d#$a;
@@ -288,6 +315,7 @@ const
     expectedResult: #$a;
     matchStart: 1
     ),
+    // 27
     (
     expression: '(?m)Test:\s*(.*?)\s;';
     inputText: 'Test: hel'#$d#$a'lo ;';
@@ -295,6 +323,7 @@ const
     expectedResult: 'Test: hel'#$d#$a'lo ;';
     matchStart: 1
     ),
+    // 28
     (
     expression: '(?:\w+)=\w+;(\w+)=\w+;(?:\w+)=\w+;(\w+)=\w+;';
     inputText: 'skip1=11;needed1=22;skip2=33;needed2=44;';
@@ -302,6 +331,7 @@ const
     expectedResult: 'needed1 needed2';
     matchStart: 0
     ),
+    // 29
     (
     expression: '.*?\b(https?|ftp)://(?:\w+)\.(?:\w+)\.(\w+)';
     inputText: '>>ftp://www.name.com';
@@ -309,6 +339,7 @@ const
     expectedResult: 'ftp com';
     matchStart: 0
     ),
+    // 30
     (
     expression: '\v';
     inputText: 'aaa'#10'bbb'#13'ccc'#$c'ddd'#$b'eee';
@@ -316,6 +347,7 @@ const
     expectedResult: 'aaa-bbb-ccc-ddd-eee';
     matchStart: 0
     ),
+    // 31
     (
     expression: '\h+';
     inputText: #9'aaa  bbb '#9' ccc  '#$A0#9;
@@ -323,6 +355,7 @@ const
     expectedResult: '-aaa-bbb-ccc-';
     matchStart: 0
     ),
+    // 32
     (
     expression: '\w+';
     inputText: 'abc XY 12.,';
@@ -330,6 +363,7 @@ const
     expectedResult: 'abc xy 12.,';
     matchStart: 0
     ),
+    // 33
     (
     expression: '\w+';
     inputText: 'abc XY 12.,';
@@ -337,6 +371,7 @@ const
     expectedResult: 'ABC XY 12.,';
     matchStart: 0
     ),
+    // 34
     ( // NULL chars in InputString
     expression: #0+'?[2-5]+(\s+)([xyz\$\#]{3,})\1'+#0+'+.+';
     inputText: '.:'+#0+'ab'+#0+'_34  z$x  '+#0+'end';
@@ -344,6 +379,7 @@ const
     expectedResult: '34  z$x  '+#0+'end';
     matchStart: 8
     ),
+    // 35
     (
     expression: '\w\cA\cz\cb\w';
     inputText: '..abc'#1#26#2'test';
@@ -351,6 +387,7 @@ const
     expectedResult: 'c'#1#26#2't';
     matchStart: 5
     ),
+    // 36
     (
     expression: '\V+';
     inputText: '.,,'#10'aB2'#13'cc()'#$c'$%'#$b'[]';
@@ -358,12 +395,21 @@ const
     expectedResult: '-'#10'-'#13'-'#$c'-'#$b'-';
     matchStart: 0
     ),
+    // 37
     (
     expression: '\H+';
     inputText: #9'.,;  aB2 '#9' ^&()  '#$A0#9;
     substitutionText: '-';
     expectedResult: #9'-  - '#9' -  '#$A0#9;
     matchStart: 0
+    ),
+    // 38
+    (
+    expression: '[[w]+ []w]+';
+    inputText: '  ww[ww w]www';
+    substitutionText: '';
+    expectedResult: 'ww[ww w]www';
+    matchStart: 3
     )
   );
 
@@ -619,6 +665,11 @@ end;
 procedure TTestRegexpr.RunTest37;
 begin
   RunRETest(37);
+end;
+
+procedure TTestRegexpr.RunTest38;
+begin
+  RunRETest(38);
 end;
 
 procedure TTestRegexpr.TestGroups;
