@@ -163,32 +163,43 @@ type
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
 
 const
+  // Escape char ('\' in common r.e.) used for escaping metachars (\w, \d etc)
   EscChar = '\';
-  // 'Escape'-char ('\' in common r.e.) used for escaping metachars (\w, \d etc).
+
   RegExprModifierI: boolean = False; // default value for ModifierI
   RegExprModifierR: boolean = True; // default value for ModifierR
   RegExprModifierS: boolean = True; // default value for ModifierS
   RegExprModifierG: boolean = True; // default value for ModifierG
   RegExprModifierM: boolean = False; // default value for ModifierM
   RegExprModifierX: boolean = False; // default value for ModifierX
-  RegExprSpaceChars: RegExprString = // default value for SpaceChars
-    ' '#$9#$A#$D#$C;
-  RegExprWordChars: RegExprString = // default value for WordChars
-    '0123456789' // ###0.940
-    + 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
-  RegExprLineSeparators: RegExprString = // default value for LineSeparators
-    #$d#$a#$b#$c {$IFDEF UniCode} + #$2028#$2029#$85{$ENDIF};
-  RegExprLinePairedSeparator: RegExprString =
+
+  // default value for SpaceChars
+  RegExprSpaceChars: RegExprString = ' '#$9#$A#$D#$C;
+
+  // default value for WordChars
+  RegExprWordChars: RegExprString = '0123456789'
+    + 'abcdefghijklmnopqrstuvwxyz'
+    + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+
+  // default value for LineSeparators
+  RegExprLineSeparators: RegExprString = #$d#$a#$b#$c
+    {$IFDEF UniCode}
+    + #$2028#$2029#$85
+    {$ENDIF};
+
   // default value for LinePairedSeparator
-    #$d#$a;
+  RegExprLinePairedSeparator: RegExprString = #$d#$a;
   { if You need Unix-styled line separators (only \n), then use:
     RegExprLineSeparators = #$a;
     RegExprLinePairedSeparator = '';
   }
-  // Tab and Unicode categoty "Space Separator": https://www.compart.com/en/unicode/category/Zs
+
+  // Tab and Unicode category "Space Separator":
+  // https://www.compart.com/en/unicode/category/Zs
   RegExprHorzSeparators: RegExprString = #9#$20#$A0
-  {$IFDEF UniCode} +
-    #$1680#$2000#$2001#$2002#$2003#$2004#$2005#$2006#$2007#$2008#$2009#$200A#$202F#$205F#$3000{$ENDIF};
+    {$IFDEF UniCode}
+    + #$1680#$2000#$2001#$2002#$2003#$2004#$2005#$2006#$2007#$2008#$2009#$200A#$202F#$205F#$3000
+    {$ENDIF};
 
 const
   NSUBEXP = 90; // max number of subexpression //###0.929
