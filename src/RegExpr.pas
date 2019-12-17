@@ -758,9 +758,9 @@ begin
   {$ENDIF}
 end;
 
-function IsSquareBracket(Ch: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function IsSquareBracket(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
-  case Ch of
+  case AChar of
     '[', ']':
       Result := True;
     else
@@ -1656,7 +1656,7 @@ end;
 function TRegExpr.IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   {$IFDEF UseSpaceChars}
-  Result := Pos(AChar^, fSpaceChars) > 0;
+  Result := Pos(AChar, fSpaceChars) > 0;
   {$ELSE}
   case AChar of
     ' ', #$9, #$A, #$D, #$C:
@@ -2899,11 +2899,19 @@ begin
                 'd':
                   EmitRangeStr('0123456789');
                 'w':
+                  {$IFDEF UseWordChars}
+                  EmitRangeStr(WordChars);
+                  {$ELSE}
                   // cannot replace this with EmitNode(OP_ANYLETTER) !
                   EmitRangeStr(RegExprWordChars);
+                  {$ENDIF}
                 's':
+                  {$IFDEF UseSpaceChars}
+                  EmitRangeStr(SpaceChars);
+                  {$ELSE}
                   // cannot replace this with EmitNode(OP_ANYSPACE) !
                   EmitRangeStr(RegExprSpaceChars);
+                  {$ENDIF}
                 'v':
                   EmitRangeStr(RegExprLineSeparators);
                 'h':
