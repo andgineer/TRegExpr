@@ -422,10 +422,6 @@ type
     function GetMatch(Idx: integer): RegExprString;
 
     procedure SetInputString(const AInputString: RegExprString);
-
-    {$IFNDEF UseSetOfChar}
-    function StrScanCI(s: PRegExprChar; Ch: REChar): PRegExprChar; // ###0.928
-    {$ENDIF}
     procedure SetLineSeparators(const AStr: RegExprString);
     procedure SetLinePairedSeparator(const AStr: RegExprString);
     function GetLinePairedSeparator: RegExprString;
@@ -745,6 +741,9 @@ const
   MaskModM = 16; // -"- /m
   MaskModX = 32; // -"- /x
 
+  OpKind_End = REChar(1);
+  OpKind_Char = REChar(2);
+
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
@@ -827,6 +826,40 @@ begin
     Result := AnsiLowerCase(Ch)[1];
     {$ENDIF}
   {$ENDIF}
+end;
+
+function FindInMetaClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
+// Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
+// and Data depends on Kind
+var
+  ch: REChar;
+begin
+  repeat
+    case ABuffer^ of
+      OpKind_End:
+        begin
+          Result := False;
+          Exit;
+        end;
+      OpKind_Char:
+        begin
+          Inc(ABuffer);
+          ch := ABuffer^;
+          Inc(ABuffer);
+          if ch = AChar then
+          begin
+            Result := True;
+            Exit;
+          end;
+          if AIgnoreCase then
+            if _UpperCase(ch) = _UpperCase(AChar) then
+            begin
+              Result := True;
+              Exit;
+            end;
+        end;
+    end;
+  until False; // assume that Buffer is ended correctly
 end;
 
 { ============================================================= }
@@ -2756,6 +2789,7 @@ var
   procedure EmitSimpleRangeC(b: REChar);
   begin
     RangeBeg := b;
+    EmitRangeC(OpKind_Char);
     EmitRangeC(b);
     CanBeRange := True;
   end;
@@ -2765,7 +2799,10 @@ var
     i: integer;
   begin
     for i := 1 to length(s) do
+    begin
+      EmitRangeC(OpKind_Char);
       EmitRangeC(s[i]);
+    end;
   end;
 
   function _IsMetaChar(ch: REChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -2851,6 +2888,7 @@ begin
             begin
               if _IsMetaChar((regparse + 1)^) then
               begin
+                EmitRangeC(OpKind_Char);
                 EmitRangeC('-'); // or treat as error ?!!
                 Continue;
               end;
@@ -2883,9 +2921,11 @@ begin
                 Exit;
               end;
               Inc(RangeBeg);
+              EmitRangeC(OpKind_Char);
               EmitRangeC(RangeEnd); // prevent infinite loop if RangeEnd=$ff
               while RangeBeg < RangeEnd do
               begin // ###0.929
+                EmitRangeC(OpKind_Char);
                 EmitRangeC(RangeBeg);
                 Inc(RangeBeg);
               end;
@@ -2932,7 +2972,8 @@ begin
             Inc(regparse);
           end;
         end; { of while }
-        EmitRangeC(#0);
+        EmitRangeC(OpKind_End);
+        EmitRangeC(#255);
         if regparse^ <> ']' then
         begin
           Error(reeUnmatchedSqBrackets);
@@ -3202,20 +3243,6 @@ end; { of function TRegExpr.GetCompilerErrorPos
 { ===================== Matching section ====================== }
 { ============================================================= }
 
-{$IFNDEF UseSetOfChar}
-function TRegExpr.StrScanCI(s: PRegExprChar; Ch: REChar): PRegExprChar;
-// ###0.928 - now method of TRegExpr
-begin
-  while (s^ <> #0) and (s^ <> Ch) and (s^ <> InvertCase(Ch)) do
-    Inc(s);
-  if s^ <> #0 then
-    Result := s
-  else
-    Result := nil;
-end; { of function TRegExpr.StrScanCI
-  -------------------------------------------------------------- }
-{$ENDIF}
-
 function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
 // repeatedly match something simple, report how many
 var
@@ -3408,25 +3435,25 @@ begin
       end;
     {$ELSE}
     OP_ANYOF:
-      while (Result < TheMax) and (StrScan(opnd, scan^) <> nil) do
+      while (Result < TheMax) and FindInMetaClass(opnd, scan^, False) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYBUT:
-      while (Result < TheMax) and (StrScan(opnd, scan^) = nil) do
+      while (Result < TheMax) and not FindInMetaClass(opnd, scan^, False) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYOFCI:
-      while (Result < TheMax) and (StrScanCI(opnd, scan^) <> nil) do
+      while (Result < TheMax) and FindInMetaClass(opnd, scan^, True) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYBUTCI:
-      while (Result < TheMax) and (StrScanCI(opnd, scan^) = nil) do
+      while (Result < TheMax) and not FindInMetaClass(opnd, scan^, True) do
       begin
         Inc(Result);
         Inc(scan);
@@ -3756,28 +3783,28 @@ begin
       OP_ANYOF:
         begin
           if (reginput = fInputEnd) or
-            (StrScan(scan + REOpSz + RENextOffSz, reginput^) = nil) then
+            not FindInMetaClass(scan + REOpSz + RENextOffSz, reginput^, False) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYBUT:
         begin
           if (reginput = fInputEnd) or
-            (StrScan(scan + REOpSz + RENextOffSz, reginput^) <> nil) then
+            FindInMetaClass(scan + REOpSz + RENextOffSz, reginput^, False) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYOFCI:
         begin
           if (reginput = fInputEnd) or
-            (StrScanCI(scan + REOpSz + RENextOffSz, reginput^) = nil) then
+            not FindInMetaClass(scan + REOpSz + RENextOffSz, reginput^, True) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYBUTCI:
         begin
           if (reginput = fInputEnd) or
-            (StrScanCI(scan + REOpSz + RENextOffSz, reginput^) <> nil) then
+            FindInMetaClass(scan + REOpSz + RENextOffSz, reginput^, True) then
             Exit;
           Inc(reginput);
         end;
