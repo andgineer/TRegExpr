@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-04 06:23+0300\n"
-"PO-Revision-Date: 2019-12-18 07:01+0000\n"
+"PO-Revision-Date: 2019-12-18 13:46+0000\n"
 "Last-Translator: Elmar Dolgener <elmar.dolgener@fau.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/tregexpr/"
 "regular_expressions/de/>\n"
@@ -25,9 +25,7 @@ msgstr ""
 # 2301c624bdbc4514a3ba3deafe4768d2
 #: ../../regular_expressions.rst:6
 msgid "English"
-msgstr ""
-"`English "
-"<https://regex.sorokin.engineer/en/latest/rgular_expressions.html>`__"
+msgstr "Englisch"
 
 # 38ccada9eb69459494d1bb00f808a636
 #: ../../regular_expressions.rst:7
@@ -290,9 +288,8 @@ msgstr "Escape (ESC), genauso wie ``\\x1b``"
 
 # 85fa17d40c55412aa3b44963ef808ea4
 #: ../../regular_expressions.rst:70
-#, fuzzy
 msgid "``\\cx``"
-msgstr "`` \\ xnn``"
+msgstr "``\\cx``"
 
 # 32eddeb2f4bb49edbb98f32b03ec0b1b
 #: ../../regular_expressions.rst
@@ -401,7 +398,7 @@ msgstr ""
 # c1a092c15ffe4280a4de1ba80a73c942
 #: ../../regular_expressions.rst:118
 msgid "``foob[^aeiou]r``"
-msgstr "``foob[^ aeiou]r``"
+msgstr "``foob[^aeiou]r``"
 
 # 06bde9a597004d619e4c77e419455ac2
 #: ../../regular_expressions.rst:118
@@ -601,9 +598,8 @@ msgstr "in die Unicode-Kategorie ``Trenner, Abstand (space separator)`` gehört.
 
 # 144b4226cbd64fc984c35892e85565f0
 #: ../../regular_expressions.rst:160
-#, fuzzy
 msgid "``\\V``"
-msgstr "``\\w``"
+msgstr "``\\V``"
 
 # 3a5b9fb5bb8847b7bf7a54ea825a2fdd
 #: ../../regular_expressions.rst:160
@@ -659,7 +655,7 @@ msgid ""
 msgstr ""
 "Die Zeichenklassen ``\\w``, ``\\W``, ``\\s`` und ``\\S`` sind in den "
 "Properties `SpaceChars <tregexpr.html#spacechars>`_ und `WordChars "
-"<tregexpr.html#wordchars>`_  definiert."
+"<tregexpr.html#wordchars>`_ definiert."
 
 # f9c6029030844b37b8552e55daa8d7a6
 #: ../../regular_expressions.rst:181
@@ -728,7 +724,6 @@ msgstr "ein beliebiges Zeichen (innerhalb derselben Zeile)"
 
 # b4f1467b393d49a68957f8c0dbbd39c9
 #: ../../regular_expressions.rst:199
-#, fuzzy
 msgid "``^foobar``"
 msgstr "``^foobar``"
 
@@ -775,7 +770,7 @@ msgid ""
 "``^`` metacharacter by default match the beginning of the input string. "
 "``$`` - the end."
 msgstr ""
-"Das Metazeichen``^`` passt auf den Anfang ,``$`` auf das Ende der "
+"Das Metazeichen ``^`` passt auf den Anfang ,``$`` auf das Ende der "
 "Zeichenkette."
 
 # 22c074afe0084dee80f38a9f745ef98b
@@ -786,9 +781,9 @@ msgid ""
 "match before any line separator. You can do this by switching `modifier "
 "/m <#m>`_."
 msgstr ""
-"Eventuell wollen Sie eine Zeichenfolge als *m*ehrzeiligen Text behandeln, in "
+"Eventuell wollen Sie eine Zeichenfolge als mehrzeiligen Text behandeln, in "
 "dem ``^`` auch nach jedem internen Zeilenende und ``$`` vor jedem Zeilenende "
-"passt. Dieses Verhalten erhalten Sie mit dem Schalter`modifier / m <#m>`_ ."
+"passt. Dieses Verhalten erhalten Sie mit dem Schalter `modifier / m <#m>`_ ."
 
 # 17b4892999f54a11bce5f41de7f7b39a
 #: ../../regular_expressions.rst:213
@@ -851,7 +846,7 @@ msgid ""
 "<tregexpr.html#linepairedseparator>`_."
 msgstr ""
 "Feinheiten der mehrzeiligen Verarbeitung können mit den Eigenschaften `"
-"LineSeparators  <tregexpr.html#lineseparators>`__ und `LinePairedSeparator "
+"LineSeparators <tregexpr.html#lineseparators>`__ und `LinePairedSeparator "
 "<tregexpr.html#linepairedseparator>`_ justiert werden."
 
 # 603dc8124e0c48f08a341019fa393adc
@@ -979,7 +974,7 @@ msgstr "``+``"
 # 8fd43575f11d48078853401babd80e80
 #: ../../regular_expressions.rst:281
 msgid "one or more, similar to ``{1,}``"
-msgstr "mindestens einmal vorkommend,  alternative Notation:  ``{1,}``"
+msgstr "mindestens einmal vorkommend, alternative Notation: ``{1,}``"
 
 # 222cbbc98dc34a6d9a017e54de271358
 #: ../../regular_expressions.rst:282
@@ -989,7 +984,7 @@ msgstr "``?``"
 # c5a7616d27db453ab06d565b01b82a96
 #: ../../regular_expressions.rst:282
 msgid "zero or one, similar to ``{0,1}``"
-msgstr "höchstens einmal vorkommend, alternative Notation:  ``{0,1}``"
+msgstr "höchstens einmal vorkommend, alternative Notation: ``{0,1}``"
 
 # 16f6dd1e3998493f89f82e13e21ef164
 #: ../../regular_expressions.rst:285
@@ -997,7 +992,7 @@ msgid ""
 "So, digits in curly brackets ``{n,m}``, specify the minimum number of "
 "times to match ``n`` and the maximum ``m``."
 msgstr ""
-"Innerhalb der geschweiften Klammern ``{n, m}``geben Sie also die Mindest-( "
+"Innerhalb der geschweiften Klammern ``{n, m}`` geben Sie also die Mindest-( "
 "``n`` ) und Höchstanzahl ( ``m`` ) für das Vorkommen des voranstehenden "
 "Elements an."
 
@@ -1011,7 +1006,7 @@ msgstr ""
 # 4896bdacdf2b4c6cbc82527295b6ec29
 #: ../../regular_expressions.rst:290
 msgid "The ``{n,}`` matches ``n`` or more times."
-msgstr "Das `` {n,} `` entspricht mehr als ``n``."
+msgstr "Das ``{n,}`` entspricht „mindestens ``n`` Mal“."
 
 # 0288258e8c2d4245a43e5ec788016a6c
 #: ../../regular_expressions.rst:292
@@ -1122,7 +1117,7 @@ msgid ""
 "By default all quantifiers are ``greedy``. Use ``?`` to make any "
 "quantifier ``non-greedy``."
 msgstr ""
-"Standardmäßig verhalten sich alle Quantifizierer `` gierig``. Durch Anhängen "
+"Standardmäßig verhalten sich alle Quantifizierer ``gierig``. Durch Anhängen "
 "eines Fragezeichens ``?`` kann man sie jedoch ``träge`` machen."
 
 # 3bc09341788d4ee3933a36ad5c97e621
@@ -1187,8 +1182,8 @@ msgid ""
 "<#g>`_, below we use `in-line modifier change <#inlinemodifiers>`_)."
 msgstr ""
 "Alle Quantifizierer können Sie in den ``trägen`` (``non-greedy``) Modus "
-"umschalten (`modifier / g <#g>`_)), im nachfolgenden Beispiel als Inline-"
-"Modifikator ` <#inlinemodifiers>`_) gezeigt."
+"umschalten (`modifier / g <#g>`_), im nachfolgenden Beispiel als `Inline-"
+"Modifikation <#inlinemodifiers>`_) gezeigt."
 
 # 2991e6b3bd1143469cafe95e38a0ad9c
 #: ../../regular_expressions.rst:338
@@ -1223,8 +1218,8 @@ msgid ""
 "next pattern delimiter."
 msgstr ""
 "Zum ersten Ausdruck zählt alles vom letzten Musterbegrenzer (``(``, ``[`` "
-"oder dem Anfang des Musters) bis vor das erste `` | `, und der letzte "
-"Ausdruck umfasst alles nach dem letzten``|`` zum nächsten Musterbegrenzer."
+"oder dem Anfang des Musters) bis vor das erste ``| ``, und der letzte "
+"Ausdruck umfasst alles nach dem letzten ``|`` zum nächsten Musterbegrenzer."
 
 # 27b3c5ea2ba340f0a3d9520b5d40340b
 #: ../../regular_expressions.rst:354
@@ -1234,8 +1229,8 @@ msgid ""
 "ends."
 msgstr ""
 "Klingt etwas kompliziert, daher setzt man üblicherweise die "
-"Alternativausdrücke in Klammern, um ihren Anfang und Ende deutlicher zu "
-"machen."
+"Alternativausdrücke in Klammern, um damit ihren Anfang und das Ende "
+"deutlicher erkennbar zu machen."
 
 # f7cae1d84f62420995c4e62f147435ed
 #: ../../regular_expressions.rst:358
@@ -1264,8 +1259,8 @@ msgid ""
 "``[feio|]``."
 msgstr ""
 "Denken Sie auch daran, dass ``|`` innerhalb eckiger Klammern als Literal "
-"interpretiert wird. Wenn Sie also `` [fee | fie | foe] `` schreiben, "
-"bedeutet das wirklich nur die Zeichenklasse ``[efio |]``."
+"interpretiert wird. Wenn Sie also ``[fee|fie|foe]`` schreiben, bedeutet das "
+"wirklich nur die Zeichenklasse ``[efio |]``."
 
 # 9cda065341c6479b9f52ed879835ada9
 #: ../../regular_expressions.rst:371
@@ -1438,7 +1433,7 @@ msgid ""
 msgstr ""
 "Um den Wert eines Modifikators festzulegen, verwenden Sie entweder `"
 "ModifierStr <tregexpr.html#modifierstr>`__ oder die entsprechende "
-"``TRegExpr``-Eigenschaft namens ` Modifier* <tregexpr.html#modifieri> __."
+"``TRegExpr``-Eigenschaft namens `Modifier* <tregexpr.html#modifieri> __."
 
 # a8f5a6740bfb448baf2a08d4faf2ab43
 #: ../../regular_expressions.rst:442
@@ -1525,7 +1520,7 @@ msgid ""
 "greedy <#greedy>`__ mode."
 msgstr ""
 "Wenn Sie auf ``Off`` umschalten, bringen Sie alle `Quantifier <#iterator>`__ "
-"vom gierigen (greedy) in den `trägen (non-greedy)<#greedy>`__-Modus."
+"vom gierigen (greedy) in den ``trägen (non-greedy)<#greedy>`__-Modus."
 
 # 200404b3eb98465cbeef4e215fb4cf6d
 #: ../../regular_expressions.rst:487
@@ -1533,7 +1528,7 @@ msgid ""
 "So, if modifier ``/g`` is ``Off`` then ``+`` works as ``+?``, ``*`` as "
 "``*?`` and so on."
 msgstr ""
-"Wenn also der Modifikator ``/g`` ``Off`` ist, funktioniert ``+`` als``+?``, "
+"Wenn also der Modifikator ``/g`` ``Off`` ist, funktioniert ``+`` als ``+?``, "
 "``*`` als ``*?`` und so weiter."
 
 # 57e7659badb14cd1a078b11d3df83abc
@@ -1724,10 +1719,10 @@ msgid ""
 "the middle sub-expression manually - use ``Match[1] + Match[3]`` and "
 "ignore ``Match[2]``."
 msgstr ""
-"Zum Beispiel arbeitet ``(blah) (? = foobar) (blah)``prinzipiell genauso "
-"wie``(blah) (foobar) (blah)``. In der letzteren Variante müssen Sie "
-"lediglich den mittleren Unterausdruck ausschließen - verwenden Sie also den "
-"Ausdruck`` Match [1] + Match [3] `` und ignorieren Sie ``Match[2]``."
+"Zum Beispiel arbeitet ``(blah) (? = foobar) (blah)`` prinzipiell genauso wie "
+"``(blah) (foobar) (blah)``. In der letzteren Variante müssen Sie lediglich "
+"den mittleren Unterausdruck ausschließen - verwenden Sie also den Ausdruck ``"
+"Match [1] + Match [3]`` und ignorieren Sie ``Match[2]``."
 
 # 1efdab2408964b5583160fa580db64ca
 #: ../../regular_expressions.rst:574
@@ -1736,9 +1731,10 @@ msgid ""
 " whole ``Match[0]`` because captured by ``look ahead`` part would not be "
 "included in the regular expression match."
 msgstr ""
-"Dies ist nur nicht ganz so praktisch wie in der oberen Version, in welcher "
-"Sie den gesamten ``Match[0]`` `verwenden könnten, weil der von``Look Ahead`` "
-"erfasste Teil zwar gesucht, aber nicht in das Ergebnis mit einbezogen würde."
+"Dies ist lediglich ein bisschen unpraktischer als in einer look-ahead-"
+"Version, in welcher Sie den gesamten ``Match[0]`` verwenden könnten, weil "
+"der vom ``look ahead`` erfasste Teil zwar gesucht, aber nicht in das "
+"Ergebnis mit einbezogen würde."
 
 # 62685881522e4d34bdfc7b1d8428af28
 #: ../../regular_expressions.rst:582
@@ -1760,9 +1756,9 @@ msgid ""
 "So this is just a way to organize your regex into subexpressions without "
 "overhead of capturing result:"
 msgstr ""
-"Dies ist also eine Möglichkeit, Ihren Regex in Unterausdrücke zu gliedern, "
-"ohne Aufwand (Speicherplatz und Verarbeitungszeit) für die Ergebniserfassung "
-"zu treiben:"
+"Auf diese Weise können Sie Ihren Regex in Unterausdrücke gliedern, ohne "
+"unnötig Speicherplatz und Verarbeitungszeit für die Ergebniserfassung zu "
+"verschwenden:"
 
 # 8eced9c1199c438999e233dcf6e30f1d
 #: ../../regular_expressions.rst:593
@@ -1809,9 +1805,9 @@ msgid ""
 "expression. It affects only that part of regular expression that follows "
 "``(?imsgxr-imsgxr)`` operator."
 msgstr ""
-"Dies kann deshalb besonders praktisch sein, weil die Änderung direkt im "
-"Regex nur lokalen Gültigkeitsbereich hat. Sie betrifft sogar nur den Anteil "
-"des regulären Ausdrucks, der auf den Operator ``(?imsgxr-imsgxr)`` folgt."
+"Das Praktische daran kann sein, dass die Änderung direkt im Regex nur "
+"lokalen Gültigkeitsbereich hat. Sie betrifft sogar nur denjenigen Anteil des "
+"regulären Ausdrucks, der auf den Operator ``(?imsgxr-imsgxr)`` folgt."
 
 # 2df6904506a54a5bacf82333cfb9bd4e
 #: ../../regular_expressions.rst:608
@@ -1876,7 +1872,7 @@ msgstr "(?#Text)"
 # d28d8ac2d191484bab5081b0978c7b8a
 #: ../../regular_expressions.rst:626
 msgid "A comment, the text is ignored."
-msgstr "Ein Kommentar (der Text wird ignoriert)."
+msgstr "Ein Kommentar („Text“ wird ignoriert)."
 
 # 5733c704aa6f467b8c42b130d71ca526
 #: ../../regular_expressions.rst:628
@@ -1885,8 +1881,8 @@ msgid ""
 "to put a literal ``)`` in the comment."
 msgstr ""
 "Beachten Sie, dass der Kommentar durch die nächstfolgende ``)`` geschlossen "
-"wird. Es gibt also keine Möglichkeit, ein Literal ``)`` in den Kommentar "
-"einzufügen."
+"wird. Es gibt also keine Möglichkeit, eine schließende runde Klammer ``)`` "
+"in den Kommentar einzufügen."
 
 # f3821f5b5b1944a99306bb7bd8b5ace8
 #: ../../regular_expressions.rst:633
@@ -1900,9 +1896,9 @@ msgid ""
 "<https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html>`__"
 " I illustrate some usages of regular expressions."
 msgstr ""
-"In diesem `alten Blogeintrag aus dem vorigen Jahrhundert "
-"<https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html>`__"
-" Ich erläutere einige Verwendungen von regulären Ausdrücken."
+"In diesem `alten Blogeintrag aus dem vorigen Jahrhundert <https://sorokin."
+"engineer/posts/en/text_processing_from_birds_eye_view.html>`__ erläutere ich "
+"einige Anwendungsfälle von regulären Ausdrücken."
 
 # 33fa7ef366574502aff1eff05b18dc7e
 #~ msgid "`English <https://regex.sorokin.engineer/en/latest/index.html>`__"
