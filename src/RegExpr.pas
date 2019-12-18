@@ -733,7 +733,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   TRegExprVersionMajor: integer = 0;
-  TRegExprVersionMinor: integer = 966;
+  TRegExprVersionMinor: integer = 967;
 
   MaskModI = 1; // modifier /i bit in fModifiers
   MaskModR = 2; // -"- /r
@@ -745,6 +745,7 @@ const
   OpKind_End = REChar(1);
   OpKind_Char = REChar(2);
   OpKind_Range = REChar(3);
+  OpKind_MetaClass = REChar(4);
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1959,6 +1960,7 @@ function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreC
 // and Data depends on Kind
 var
   ch, ch2: REChar;
+  ok: boolean;
 begin
   if AIgnoreCase then
     AChar := _UpperCase(AChar);
@@ -1998,6 +2000,41 @@ begin
           begin
             Result := True;
             Exit;
+          end;
+        end;
+      OpKind_MetaClass:
+        begin
+          Inc(ABuffer);
+          ch := ABuffer^;
+          Inc(ABuffer);
+          case ch of
+            'w':
+              ok := IsWordChar(AChar);
+            'W':
+              ok := not IsWordChar(AChar);
+            's':
+              ok := IsSpaceChar(AChar);
+            'S':
+              ok := not IsSpaceChar(AChar);
+            'd':
+              ok := IsDigitChar(AChar);
+            'D':
+              ok := not IsDigitChar(AChar);
+            'v':
+              ok := IsLineSeparator(AChar);
+            'V':
+              ok := not IsLineSeparator(AChar);
+            'h':
+              ok := IsHorzSeparator(AChar);
+            'H':
+              ok := not IsHorzSeparator(AChar);
+            else
+              ok := False;
+          end;
+          if ok then
+          begin
+            Result := True;
+            Exit
           end;
         end
       else
@@ -2974,6 +3011,17 @@ begin
                 Error(reeParseAtomTrailingBackSlash);
                 Exit;
               end;
+              if _IsMetaChar(regparse^) then
+              begin
+                EmitRangeC(OpKind_MetaClass);
+                EmitRangeC(regparse^);
+              end
+              else
+              begin
+                EmitSimpleRangeC(UnQuoteChar(regparse));
+              end;
+              (*
+              // old code, emits in [] entire string for meta-class
               case regparse^ of // r.e.extensions
                 'd':
                   EmitRangeStr('0123456789');
@@ -2998,6 +3046,7 @@ begin
               else
                 EmitSimpleRangeC(UnQuoteChar(regparse));
               end; { of case }
+              *)
             end
             else
               EmitSimpleRangeC(regparse^);
