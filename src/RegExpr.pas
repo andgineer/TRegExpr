@@ -255,7 +255,7 @@ type
     reganch: REChar; // is the match anchored (at beginning-of-line only)?
     regmust: PRegExprChar;
     // string (pointer into program) that match must include, or nil
-    regmlen: PtrInt; // length of regmust string
+    regmlen: integer; // length of regmust string
     // Regstart and reganch permit very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
@@ -278,10 +278,10 @@ type
 
     // work variables for compiler's routines
     regparse: PRegExprChar; // Input-scan pointer.
-    regnpar: PtrInt; // count.
+    regnpar: integer; // Count of () brackets.
     regdummy: Char;
     regcode: PRegExprChar; // Code-emit pointer; @regdummy = don't.
-    regsize: PtrInt; // Code size.
+    regsize: integer; // Total programm size in REChars.
 
     regexpbeg: PRegExprChar; // only for error handling. Contains
     // pointer to beginning of r.e. while compiling
@@ -403,7 +403,7 @@ type
     {$ENDIF}
     { ===================== Matching section =================== }
     // repeatedly match something simple, report how many
-    function regrepeat(p: PRegExprChar; AMax: PtrInt): PtrInt;
+    function regrepeat(p: PRegExprChar; AMax: integer): integer;
 
     // dig the "next" pointer out of a node
     function regnext(p: PRegExprChar): PRegExprChar;
@@ -412,7 +412,7 @@ type
     function MatchPrim(prog: PRegExprChar): boolean;
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: PtrInt): boolean;
+    function ExecPrim(AOffset: integer): boolean;
 
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
@@ -443,11 +443,11 @@ type
     // !!! Exec store AInputString into InputString property
     // For Delphi 5 and higher available overloaded versions - first without
     // parameter (uses already assigned to InputString property value)
-    // and second that has PtrInt parameter and is same as ExecPos
+    // and second that has int parameter and is same as ExecPos
     function Exec(const AInputString: RegExprString): boolean;
     {$IFDEF OverMeth} overload;
     function Exec: boolean; overload; // ###0.949
-    function Exec(AOffset: PtrInt): boolean; overload; // ###0.949
+    function Exec(AOffset: integer): boolean; overload; // ###0.949
     {$ENDIF}
     // find next match:
     // ExecNext;
@@ -462,7 +462,7 @@ type
 
     // find match for InputString starting from AOffset position
     // (AOffset=1 - first char of InputString)
-    function ExecPos(AOffset: PtrInt {$IFDEF DefParam} = 1{$ENDIF}): boolean;
+    function ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 
     // Returns ATemplate with '$&' or '$0' replaced by whole r.e.
     // occurence and '$n' replaced by occurence of subexpression #n.
@@ -717,7 +717,7 @@ function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
 // corresponding opening '('.
 // If Result <> 0, then ASubExpr can contain empty items or illegal ones
 function RegExprSubExpressions(const ARegExpr: string; ASubExprs: TStrings;
-  AExtendedSyntax: boolean{$IFDEF DefParam} = False{$ENDIF}): PtrInt;
+  AExtendedSyntax: boolean{$IFDEF DefParam} = False{$ENDIF}): integer;
 
 implementation
 
@@ -901,7 +901,7 @@ const
 function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
 var
   MetaAll: RegExprString; // Very similar to META, but slighly changed.
-  i, i0, Len: PtrInt;
+  i, i0, Len: integer;
 begin
   Result := '';
   MetaAll := META + ']}';
@@ -922,7 +922,7 @@ end; { of function QuoteRegExprMetaChars
   -------------------------------------------------------------- }
 
 function RegExprSubExpressions(const ARegExpr: string; ASubExprs: TStrings;
-  AExtendedSyntax: boolean{$IFDEF DefParam} = False{$ENDIF}): PtrInt;
+  AExtendedSyntax: boolean{$IFDEF DefParam} = False{$ENDIF}): integer;
 type
   TStackItemRec = record // ###0.945
     SubExprIdx: integer;
@@ -931,11 +931,11 @@ type
 
   TStackArray = packed array [0 .. NSUBEXPMAX - 1] of TStackItemRec;
 var
-  Len, SubExprLen: PtrInt;
-  i, i0: PtrInt;
+  Len, SubExprLen: integer;
+  i, i0: integer;
   Modif: integer;
   Stack: ^TStackArray; // ###0.945
-  StackIdx, StackSz: PtrInt;
+  StackIdx, StackSz: integer;
 begin
   Result := 0; // no unbalanced brackets found at this very moment
   Modif := 0;
@@ -953,8 +953,8 @@ begin
       Inc(StackSz);
   // SetLength (Stack, StackSz); //###0.945
   GetMem(Stack, SizeOf(TStackItemRec) * StackSz);
-  try
 
+  try
     StackIdx := 0;
     i := 1;
     while (i <= Len) do
@@ -1881,7 +1881,7 @@ begin
 end; { of procedure TRegExpr.InsertOperator
   -------------------------------------------------------------- }
 
-function FindInitLen(s1, s2, end1, end2: PRegExprChar): PtrInt;
+function FindInitLen(s1, s2, end1, end2: PRegExprChar): integer;
 // find length of initial segment of s1 consisting
 // entirely of characters not from s2
 var
@@ -1960,7 +1960,7 @@ function TRegExpr.CompileRegExpr(exp: PRegExprChar): boolean;
 // of the structure of the compiled regexp.
 var
   scan, longest: PRegExprChar;
-  Len: PtrUInt;
+  Len: integer;
   flags: integer;
 begin
   Result := False; // life too dark
@@ -2600,16 +2600,16 @@ var
   flags: integer;
   RangeBeg, RangeEnd: REChar;
   CanBeRange: boolean;
-  Len: PtrInt;
+  Len: integer;
   ender: REChar;
   begmodfs: PRegExprChar;
 
   {$IFDEF UseSetOfChar} // ###0.930
   RangePCodeBeg: PRegExprChar;
-  RangePCodeIdx: PtrInt;
+  RangePCodeIdx: integer;
   RangeIsCI: boolean;
   RangeSet: TSetOfREChar;
-  RangeLen: PtrInt;
+  RangeLen: integer;
   RangeChMin, RangeChMax: REChar;
   {$ENDIF}
 
@@ -2626,7 +2626,7 @@ var
 
   procedure EmitStr(const s: RegExprString);
   var
-    i: PtrInt;
+    i: integer;
   begin
     for i := 1 to length(s) do
       EmitC(s[i]);
@@ -2758,7 +2758,7 @@ var
 
   procedure EmitRangeStr(const s: RegExprString);
   var
-    i: PtrInt;
+    i: integer;
   begin
     for i := 1 to length(s) do
       EmitRangeC(s[i]);
@@ -3228,7 +3228,7 @@ end; { of function TRegExpr.StrScanCI
   -------------------------------------------------------------- }
 {$ENDIF}
 
-function TRegExpr.regrepeat(p: PRegExprChar; AMax: PtrInt): PtrInt;
+function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
 // repeatedly match something simple, report how many
 var
   scan: PRegExprChar;
@@ -4253,21 +4253,20 @@ begin
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
-function TRegExpr.Exec(AOffset: PtrInt): boolean;
+function TRegExpr.Exec(AOffset: integer): boolean;
 begin
   Result := ExecPrim(AOffset);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 {$ENDIF}
 
-function TRegExpr.ExecPos(AOffset: PtrInt
-  {$IFDEF DefParam} = 1{$ENDIF}): boolean;
+function TRegExpr.ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 begin
   Result := ExecPrim(AOffset);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
 
-function TRegExpr.ExecPrim(AOffset: PtrInt): boolean;
+function TRegExpr.ExecPrim(AOffset: integer): boolean;
   procedure ClearMatchs;
   // Clears matchs array
   var
@@ -4439,7 +4438,7 @@ end; { of function TRegExpr.ExecNext
 
 procedure TRegExpr.SetInputString(const AInputString: RegExprString);
 var
-  i: PtrInt;
+  i: integer;
 begin
   // clear Match* - before next Exec* call it's undefined
   for i := 0 to NSUBEXP - 1 do
@@ -4525,16 +4524,16 @@ type
   TSubstMode = (smodeNormal, smodeOneUpper, smodeOneLower, smodeAllUpper,
     smodeAllLower);
 var
-  TemplateLen: PtrInt;
+  TemplateLen: integer;
   TemplateBeg, TemplateEnd: PRegExprChar;
   p, p0, p1, ResultPtr: PRegExprChar;
-  ResultLen: PtrInt;
-  n: PtrInt;
+  ResultLen: integer;
+  n: integer;
   Ch: REChar;
   Mode: TSubstMode;
   QuotedChar: REChar;
 
-  function ParseVarName(var APtr: PRegExprChar): PtrInt;
+  function ParseVarName(var APtr: PRegExprChar): integer;
   // extract name of variable (digits, may be enclosed with
   // curly braces) from APtr^, uses TemplateEnd !!!
   var
@@ -4916,11 +4915,12 @@ var
   s: PRegExprChar;
   op: TREOp; // Arbitrary non-END op.
   next: PRegExprChar;
-  i: PtrInt;
+  i: integer;
   Diff: PtrInt;
   {$IFDEF UseSetOfChar} // ###0.929
   Ch: REChar;
   {$ENDIF}
+
   function PrintableChar(AChar: REChar): string; {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     if AChar < ' ' then
