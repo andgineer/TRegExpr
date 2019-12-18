@@ -828,7 +828,7 @@ begin
   {$ENDIF}
 end;
 
-function FindInMetaClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
+function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
 // Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
 // and Data depends on Kind
 var
@@ -3435,25 +3435,25 @@ begin
       end;
     {$ELSE}
     OP_ANYOF:
-      while (Result < TheMax) and FindInMetaClass(opnd, scan^, False) do
+      while (Result < TheMax) and FindInCharClass(opnd, scan^, False) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYBUT:
-      while (Result < TheMax) and not FindInMetaClass(opnd, scan^, False) do
+      while (Result < TheMax) and not FindInCharClass(opnd, scan^, False) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYOFCI:
-      while (Result < TheMax) and FindInMetaClass(opnd, scan^, True) do
+      while (Result < TheMax) and FindInCharClass(opnd, scan^, True) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYBUTCI:
-      while (Result < TheMax) and not FindInMetaClass(opnd, scan^, True) do
+      while (Result < TheMax) and not FindInCharClass(opnd, scan^, True) do
       begin
         Inc(Result);
         Inc(scan);
@@ -3783,28 +3783,28 @@ begin
       OP_ANYOF:
         begin
           if (reginput = fInputEnd) or
-            not FindInMetaClass(scan + REOpSz + RENextOffSz, reginput^, False) then
+            not FindInCharClass(scan + REOpSz + RENextOffSz, reginput^, False) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYBUT:
         begin
           if (reginput = fInputEnd) or
-            FindInMetaClass(scan + REOpSz + RENextOffSz, reginput^, False) then
+            FindInCharClass(scan + REOpSz + RENextOffSz, reginput^, False) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYOFCI:
         begin
           if (reginput = fInputEnd) or
-            not FindInMetaClass(scan + REOpSz + RENextOffSz, reginput^, True) then
+            not FindInCharClass(scan + REOpSz + RENextOffSz, reginput^, True) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYBUTCI:
         begin
           if (reginput = fInputEnd) or
-            FindInMetaClass(scan + REOpSz + RENextOffSz, reginput^, True) then
+            FindInCharClass(scan + REOpSz + RENextOffSz, reginput^, True) then
             Exit;
           Inc(reginput);
         end;
