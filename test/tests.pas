@@ -745,12 +745,9 @@ begin
 end;
 
 procedure TTestRegexpr.RunRETest(aIndex: Integer);
-
-
 var
   T: TRegExTest;
   act : String;
-
 begin
   T:=testCases[aIndex];
 {$IFDEF DUMPTESTS}
@@ -758,16 +755,16 @@ begin
 {$ENDIF}
   CompileRE(T.Expression);
   if (T.SubstitutionText <> '') then
-    begin
+  begin
     act:=RE.Replace(T.InputText,T.SubstitutionText,True);
     AreEqual('Replace failed', PrintableString(T.ExpectedResult),PrintableString(Act))
-    end
+  end
   else
-    begin
+  begin
     RE.Exec(T.inputText);
     AreEqual('Search position',T.MatchStart,RE.MatchPos[0]);
     AreEqual('Matched text',PrintableString(T.ExpectedResult),PrintableString(RE.Match[0]));
-    end;
+  end;
 end;
 
 initialization
