@@ -331,6 +331,7 @@ type
     FUseUnicodeWordDetection: boolean;
     {$ENDIF}
     procedure ClearInternalIndexes;
+    function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     // Mark programm as having to be [re]compiled
@@ -841,55 +842,6 @@ begin
     Result := AnsiLowerCase(Ch)[1];
     {$ENDIF}
   {$ENDIF}
-end;
-
-function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
-// Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
-// and Data depends on Kind
-var
-  ch, ch2: REChar;
-begin
-  repeat
-    case ABuffer^ of
-      OpKind_End:
-        begin
-          Result := False;
-          Exit;
-        end;
-      OpKind_Char:
-        begin
-          Inc(ABuffer);
-          ch := ABuffer^;
-          Inc(ABuffer);
-          if ch = AChar then
-          begin
-            Result := True;
-            Exit;
-          end;
-          if AIgnoreCase then
-            if _UpperCase(ch) = _UpperCase(AChar) then
-            begin
-              Result := True;
-              Exit;
-            end;
-        end;
-      OpKind_Range:
-        begin
-          Inc(ABuffer);
-          ch := ABuffer^;
-          Inc(ABuffer, 2);
-          ch2 := ABuffer^;
-          Inc(ABuffer);
-          if (AChar >= ch) and (AChar <= ch2) then
-          begin
-            Result := True;
-            Exit;
-          end;
-        end
-      else
-        Inc(ABuffer, 2);
-    end;
-  until False; // assume that Buffer is ended correctly
 end;
 
 { ============================================================= }
@@ -2001,6 +1953,56 @@ const
   RusRangeHiLow = 'А';
   RusRangeHiHigh = 'Я';
   {$ENDIF}
+
+function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
+// Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
+// and Data depends on Kind
+var
+  ch, ch2: REChar;
+begin
+  repeat
+    case ABuffer^ of
+      OpKind_End:
+        begin
+          Result := False;
+          Exit;
+        end;
+      OpKind_Char:
+        begin
+          Inc(ABuffer);
+          ch := ABuffer^;
+          Inc(ABuffer);
+          if ch = AChar then
+          begin
+            Result := True;
+            Exit;
+          end;
+          if AIgnoreCase then
+            if _UpperCase(ch) = _UpperCase(AChar) then
+            begin
+              Result := True;
+              Exit;
+            end;
+        end;
+      OpKind_Range:
+        begin
+          Inc(ABuffer);
+          ch := ABuffer^;
+          Inc(ABuffer, 2);
+          ch2 := ABuffer^;
+          Inc(ABuffer);
+          if (AChar >= ch) and (AChar <= ch2) then
+          begin
+            Result := True;
+            Exit;
+          end;
+        end
+      else
+        Inc(ABuffer, 2);
+    end;
+  until False; // assume that Buffer is ended correctly
+end;
+
 
 procedure TRegExpr.ClearInternalIndexes;
 var
