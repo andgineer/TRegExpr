@@ -5,6 +5,11 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
+ v. 0.966 2019.12.18
+ -=- (^) Reworked opcode for char-classes [], now opcode is stored as char pairs
+  (Kind,Data) without null-terminator, which allows to have null-char in char-classes,
+  and later have meta-chars like \W \D \S in char-classes. By Alexey Torgashin.
+
  v. 0.964 2019.12.12
  -=- (^) Add define UseWordChars (off by default): allows property WordChars.
  -=- (^) Add define UseSpaceChars (off by default): allows property SpaceChars.
