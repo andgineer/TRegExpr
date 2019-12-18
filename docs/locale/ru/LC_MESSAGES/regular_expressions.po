@@ -10,16 +10,17 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-18 16:45+0300\n"
-"PO-Revision-Date: 2019-12-04 03:50+0000\n"
+"PO-Revision-Date: 2019-12-18 14:15+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
+"regular_expressions/ru/>\n"
 "Language: ru\n"
-"Language-Team: Russian "
-"<https://hosted.weblate.org/projects/tregexpr/regular_expressions/ru/>\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.10-dev\n"
 "Generated-By: Babel 2.6.0\n"
 
 # c78ea9c703114f288d7bf3e609787c2a
@@ -413,13 +414,12 @@ msgstr ""
 
 # 8326fed543454049bdf3ae0171c7eaf1
 #: ../../regular_expressions.rst:127
-#, fuzzy
 msgid ""
 "If you want ``]`` as part of the class you may place it at the start of "
 "list or `escape <#escape>`__ it with a backslash."
 msgstr ""
-"Если вы хотите буквально использовать символы ``]`` или ``[``, поместите "
-"их в начало списка или `escape <#escape>`__ обратной косой чертой."
+"Если вы хотите буквально использовать символ ``]`` поместите его в начало "
+"списка или `escape <#escape>`__ обратной косой чертой."
 
 # c7c28ff2525d47fe95f6a5cbae3628be
 #: ../../regular_expressions.rst:133
@@ -1896,4 +1896,3 @@ msgstr ""
 # 2e843a74c12b4db5815c32b90e8b2216
 #~ msgid "line breaks in the Unicode standard."
 #~ msgstr ""
-
