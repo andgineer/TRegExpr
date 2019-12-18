@@ -278,6 +278,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/RegExpr.pas">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../bombard/docs/.tx/config">
           <value>
             <set />
@@ -323,6 +328,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../masterandrey.com/posts/ru/_posts/2019-05-09-doc_tests_in_unit_tests.md">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../regexpstudio.com/404.md">
           <value>
             <set />
@@ -364,6 +374,81 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../regexpstudio.com/pages/ru/regexp_syntax.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/.dockerignore">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/.gitignore">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/README.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/config/dev.env">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/docker-compose.yml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/docker-compose_debug.yml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/docker-compose_dev.yml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/docker/Dockerfile_debug">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/docker/Dockerfile_dev">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/migrations/README">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/migrations/README.md">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/src/account/models.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/src/controllers/auth/sberid.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/src/profile/models.py">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/work/bc/sso-be/tests/conftest.py">
           <value>
             <set />
           </value>
