@@ -2675,13 +2675,15 @@ var
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
-  procedure EmitStr(const s: RegExprString);
+  (*
+  procedure EmitStr(const S: RegExprString);
   var
     i: integer;
   begin
-    for i := 1 to length(s) do
-      EmitC(s[i]);
+    for i := 1 to Length(S) do
+      EmitC(S[i]);
   end;
+  *)
 
   function EmitRange(AOpCode: REChar): PRegExprChar;
   begin
