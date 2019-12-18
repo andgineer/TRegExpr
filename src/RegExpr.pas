@@ -2727,7 +2727,7 @@ var
   end;
   {$ENDIF}
 
-  procedure EmitRangeC(b: REChar);
+  procedure EmitRangeC(b: REChar); {$IFNDEF UseSetOfChar} {$IFDEF InlineFuncs}inline;{$ENDIF} {$ENDIF}
   {$IFDEF UseSetOfChar}
   var
     Ch: REChar;
