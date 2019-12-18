@@ -745,11 +745,15 @@ const
   MaskModM = 16; // -"- /m
   MaskModX = 32; // -"- /x
 
-  {$IFDEF UniCode}
-  XIgnoredChars = ' '#9#$d#$a;
-  {$ELSE}
-  XIgnoredChars = [' ', #9, #$d, #$a];
-  {$ENDIF}
+function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case AChar of
+    ' ', #9, #$d, #$a:
+      Result := True
+    else
+      Result := False;
+  end;
+end;
 
 function AlignToPtr(const p: Pointer): Pointer; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -3124,13 +3128,7 @@ begin
     begin
       Dec(regparse);
       if ((fCompModifiers and MaskModX) <> 0) and // check for eXtended syntax
-        ((regparse^ = '#') or (
-        {$IFDEF UniCode}
-        StrScan(XIgnoredChars, regparse^) <> nil // ###0.947
-        {$ELSE}
-        regparse^ in XIgnoredChars
-        {$ENDIF}
-        )) then
+        ((regparse^ = '#') or IsIgnoredChar(regparse^)) then
       begin // ###0.941 \x
         if regparse^ = '#' then
         begin // Skip eXtended comment
@@ -3146,12 +3144,7 @@ begin
         end
         else
         begin // Skip the blanks!
-          while {$IFDEF UniCode}
-                StrScan(XIgnoredChars, regparse^) <> nil // ###0.947
-                {$ELSE}
-                regparse^ in XIgnoredChars
-                {$ENDIF}
-            do
+          while IsIgnoredChar(regparse^) do
             Inc(regparse);
         end;
         ret := EmitNode(OP_COMMENT); // comment
@@ -3182,12 +3175,7 @@ begin
         while (Len > 0) and (((fCompModifiers and MaskModX) = 0) or
           (regparse^ <> '#')) do
         begin
-          if ((fCompModifiers and MaskModX) = 0) or not( // ###0.941
-            {$IFDEF UniCode}
-            StrScan(XIgnoredChars, regparse^) <> nil // ###0.947
-            {$ELSE}
-            regparse^ in XIgnoredChars
-            {$ENDIF} ) then
+          if ((fCompModifiers and MaskModX) = 0) or not IsIgnoredChar(regparse^) then
             EmitC(regparse^);
           Inc(regparse);
           Dec(Len);

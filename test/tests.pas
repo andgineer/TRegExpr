@@ -36,7 +36,6 @@ type
   private
     RE: TRegExpr;
   protected
-    class function PrintableString(AString: string): string;
     Procedure RunRETest(aIndex : Integer);
     procedure CompileRE(AExpression: string);
     procedure IsNotNull(ArrorMessage: string; AObjectToCheck: TObject);
@@ -104,6 +103,23 @@ Type
     ExpectedResult: RegExprString;
     MatchStart: integer;
   end;
+
+function PrintableString(const S: string): string;
+var
+  ch: char;
+  i: integer;
+begin
+  Result := '';
+  for i := 1 to Length(S) do
+  begin
+    ch := S[i];
+    if Ord(ch) < 31 then
+      Result := Result + '#' + IntToStr(Ord(ch))
+    else
+      Result := Result + ch;
+  end;
+end;
+
 
 const
   testCases: array [1..38] of TRegExTest = (
@@ -709,20 +725,6 @@ begin
 end;
 {$ENDIF}
 
-Class function TTestRegexpr.PrintableString(AString: string): string;
-
-var
-    ch: Char;
-
-begin
-  Result := '';
-  for ch in AString do
-    if ch < #31 then
-      Result := Result + '#' + IntToStr(Ord(ch))
-    else
-      Result := Result + ch;
-end;
-
 procedure TTestRegexpr.CompileRE(AExpression: string);
 begin
   if (RE = Nil) then begin
@@ -743,12 +745,9 @@ begin
 end;
 
 procedure TTestRegexpr.RunRETest(aIndex: Integer);
-
-
 var
   T: TRegExTest;
   act : String;
-
 begin
   T:=testCases[aIndex];
 {$IFDEF DUMPTESTS}
@@ -756,16 +755,16 @@ begin
 {$ENDIF}
   CompileRE(T.Expression);
   if (T.SubstitutionText <> '') then
-    begin
+  begin
     act:=RE.Replace(T.InputText,T.SubstitutionText,True);
     AreEqual('Replace failed', PrintableString(T.ExpectedResult),PrintableString(Act))
-    end
+  end
   else
-    begin
+  begin
     RE.Exec(T.inputText);
     AreEqual('Search position',T.MatchStart,RE.MatchPos[0]);
     AreEqual('Matched text',PrintableString(T.ExpectedResult),PrintableString(RE.Match[0]));
-    end;
+  end;
 end;
 
 initialization
