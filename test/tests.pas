@@ -36,7 +36,6 @@ type
   private
     RE: TRegExpr;
   protected
-    class function PrintableString(AString: string): string;
     Procedure RunRETest(aIndex : Integer);
     procedure CompileRE(AExpression: string);
     procedure IsNotNull(ArrorMessage: string; AObjectToCheck: TObject);
@@ -104,6 +103,19 @@ Type
     ExpectedResult: RegExprString;
     MatchStart: integer;
   end;
+
+function PrintableString(const AString: string): string;
+var
+    ch: Char;
+begin
+  Result := '';
+  for ch in AString do
+    if ch < #31 then
+      Result := Result + '#' + IntToStr(Ord(ch))
+    else
+      Result := Result + ch;
+end;
+
 
 const
   testCases: array [1..38] of TRegExTest = (
@@ -708,20 +720,6 @@ begin
   end;
 end;
 {$ENDIF}
-
-Class function TTestRegexpr.PrintableString(AString: string): string;
-
-var
-    ch: Char;
-
-begin
-  Result := '';
-  for ch in AString do
-    if ch < #31 then
-      Result := Result + '#' + IntToStr(Ord(ch))
-    else
-      Result := Result + ch;
-end;
 
 procedure TTestRegexpr.CompileRE(AExpression: string);
 begin
