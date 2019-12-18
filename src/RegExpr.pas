@@ -847,7 +847,7 @@ function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: bool
 // Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
 // and Data depends on Kind
 var
-  ch: REChar;
+  ch, ch2: REChar;
 begin
   repeat
     case ABuffer^ of
@@ -873,6 +873,21 @@ begin
               Exit;
             end;
         end;
+      OpKind_Range:
+        begin
+          Inc(ABuffer);
+          ch := ABuffer^;
+          Inc(ABuffer, 2);
+          ch2 := ABuffer^;
+          Inc(ABuffer);
+          if (AChar >= ch) and (AChar <= ch2) then
+          begin
+            Result := True;
+            Exit;
+          end;
+        end
+      else
+        Inc(ABuffer, 2);
     end;
   until False; // assume that Buffer is ended correctly
 end;
@@ -2925,6 +2940,12 @@ begin
                 Error(reeInvalidRange);
                 Exit;
               end;
+              EmitRangeC(OpKind_Range);
+              EmitRangeC(RangeBeg);
+              EmitRangeC(OpKind_Range);
+              EmitRangeC(RangeEnd);
+              (*
+              // old code, added all chars RangeBeg..RangeEnd
               Inc(RangeBeg);
               EmitRangeC(OpKind_Char);
               EmitRangeC(RangeEnd); // prevent infinite loop if RangeEnd=$ff
@@ -2934,6 +2955,7 @@ begin
                 EmitRangeC(RangeBeg);
                 Inc(RangeBeg);
               end;
+              *)
             end;
             Inc(regparse);
           end
