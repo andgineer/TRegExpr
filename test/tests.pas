@@ -104,16 +104,20 @@ Type
     MatchStart: integer;
   end;
 
-function PrintableString(const AString: string): string;
+function PrintableString(const S: string): string;
 var
-    ch: Char;
+  ch: char;
+  i: integer;
 begin
   Result := '';
-  for ch in AString do
-    if ch < #31 then
+  for i := 1 to Length(S) do
+  begin
+    ch := S[i];
+    if Ord(ch) < 31 then
       Result := Result + '#' + IntToStr(Ord(ch))
     else
       Result := Result + ch;
+  end;
 end;
 
 
