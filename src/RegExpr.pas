@@ -1960,6 +1960,8 @@ function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreC
 var
   ch, ch2: REChar;
 begin
+  if AIgnoreCase then
+    AChar := _UpperCase(AChar);
   repeat
     case ABuffer^ of
       OpKind_End:
@@ -1972,17 +1974,13 @@ begin
           Inc(ABuffer);
           ch := ABuffer^;
           Inc(ABuffer);
+          if AIgnoreCase then
+            ch := _UpperCase(ch);
           if ch = AChar then
           begin
             Result := True;
             Exit;
           end;
-          if AIgnoreCase then
-            if _UpperCase(ch) = _UpperCase(AChar) then
-            begin
-              Result := True;
-              Exit;
-            end;
         end;
       OpKind_Range:
         begin
@@ -1991,6 +1989,11 @@ begin
           Inc(ABuffer, 2);
           ch2 := ABuffer^;
           Inc(ABuffer);
+          if AIgnoreCase then
+          begin
+            ch := _UpperCase(ch);
+            ch2 := _UpperCase(ch2);
+          end;
           if (AChar >= ch) and (AChar <= ch2) then
           begin
             Result := True;
