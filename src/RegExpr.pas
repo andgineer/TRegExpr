@@ -754,6 +754,20 @@ begin
   end;
 end;
 
+function _IsMetaChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case AChar of
+    'd', 'D',
+    's', 'S',
+    'w', 'W',
+    'v', 'V',
+    'h', 'H':
+      Result := True
+    else
+      Result := False;
+  end;
+end;
+
 function AlignToPtr(const p: Pointer): Pointer; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   {$IFDEF FPC_REQUIRES_PROPER_ALIGNMENT}
@@ -2786,7 +2800,7 @@ var
     {$ENDIF}
   end;
 
-  procedure EmitSimpleRangeC(b: REChar);
+  procedure EmitSimpleRangeC(b: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     RangeBeg := b;
     EmitRangeC(OpKind_Char);
@@ -2794,7 +2808,7 @@ var
     CanBeRange := True;
   end;
 
-  procedure EmitRangeStr(const s: RegExprString);
+  procedure EmitRangeStr(const s: RegExprString); {$IFDEF InlineFuncs}inline;{$ENDIF}
   var
     i: integer;
   begin
@@ -2802,20 +2816,6 @@ var
     begin
       EmitRangeC(OpKind_Char);
       EmitRangeC(s[i]);
-    end;
-  end;
-
-  function _IsMetaChar(ch: REChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-  begin
-    case ch of
-      'd', 'D',
-      's', 'S',
-      'w', 'W',
-      'v', 'V',
-      'h', 'H':
-        Result := True
-      else
-        Result := False;
     end;
   end;
 
