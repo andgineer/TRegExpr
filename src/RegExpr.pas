@@ -743,6 +743,7 @@ const
 
   OpKind_End = REChar(1);
   OpKind_Char = REChar(2);
+  OpKind_Range = REChar(3);
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1244,6 +1245,7 @@ const
   reeQPSBFollowsNothing = 115;
   reeTrailingBackSlash = 116;
   reeNoLetterAfterBSlashC = 117;
+  reeMetaCharAfterMinusInRange = 118;
   reeRarseAtomInternalDisaster = 119;
   reeBRACESArgTooBig = 122;
   reeBracesMinParamGreaterMax = 124;
@@ -1297,6 +1299,8 @@ begin
       Result := 'TRegExpr(comp): No Hex Code After \x';
     reeNoLetterAfterBSlashC:
       Result := 'TRegExpr(comp): No Letter "A".."Z" After \c';
+    reeMetaCharAfterMinusInRange:
+      Result := 'TRegExpr(comp): MetaChar After "-" in [] Range';
     reeHexCodeAfterBSlashXTooBig:
       Result := 'TRegExpr(comp): Hex Code After \x Is Too Big';
     reeUnmatchedSqBrackets:
@@ -2890,9 +2894,8 @@ begin
             begin
               if _IsMetaChar((regparse + 1)^) then
               begin
-                EmitRangeC(OpKind_Char);
-                EmitRangeC('-'); // or treat as error ?!!
-                Continue;
+                Error(reeMetaCharAfterMinusInRange);
+                Exit;
               end;
               Inc(regparse);
               RangeEnd := UnQuoteChar(regparse);
