@@ -203,22 +203,10 @@ const
   {$IFDEF ComplexBraces}
   LoopStackMax = 10; // max depth of loops stack //###0.925
   {$ENDIF}
-  TinySetLen = 3;
-  // if range includes more then TinySetLen chars, //###0.934
-  // then use full (32 bytes) ANYOFFULL instead of ANYOF[BUT]TINYSET
-  // !!! Attension ! If you change TinySetLen, you must
-  // change code marked as "//!!!TinySet"
 
 type
-
-  {$IFDEF UseSetOfChar}
-  PSetOfREChar = ^TSetOfREChar;
-  TSetOfREChar = set of REChar;
-  {$ENDIF}
   TRegExpr = class;
-
-  TRegExprReplaceFunction = function(ARegExpr: TRegExpr)
-    : RegExprString of object;
+  TRegExprReplaceFunction = function(ARegExpr: TRegExpr): RegExprString of object;
 
   { TRegExpr }
 
@@ -1108,12 +1096,6 @@ const
   // Min and Max are TREBracesArg
   // Node - next node in sequence,
   // LoopEntryJmp - associated LOOPENTRY node addr
-  OP_ANYOFTINYSET = TREOp(25);
-  // Chrs Match any one char from Chrs (exactly TinySetLen chars)
-  OP_ANYBUTTINYSET = TREOp(26);
-  // Chrs Match any one char not in Chrs (exactly TinySetLen chars)
-  OP_ANYOFFULLSET = TREOp(27); // Set  Match any one char from set of char
-  // - very fast (one CPU instruction !) but takes 32 bytes of p-code
   OP_BSUBEXP = TREOp(28);
   // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
   OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
@@ -2713,15 +2695,6 @@ var
   ender: REChar;
   begmodfs: PRegExprChar;
 
-  {$IFDEF UseSetOfChar} // ###0.930
-  RangePCodeBeg: PRegExprChar;
-  RangePCodeIdx: integer;
-  RangeIsCI: boolean;
-  RangeSet: TSetOfREChar;
-  RangeLen: integer;
-  RangeChMin, RangeChMax: REChar;
-  {$ENDIF}
-
   procedure EmitExactly(Ch: REChar);
   begin
     if (fCompModifiers and MaskModI) <> 0 then
@@ -3047,46 +3020,22 @@ begin
             end;
           's':
             begin // r.e.extension - any space char
-              {$IFDEF UseSetOfChar}
-              ret := EmitRange(OP_ANYOF);
-              EmitRangeStr(SpaceChars);
-              EmitRangeC(#0);
-              {$ELSE}
               ret := EmitNode(OP_ANYSPACE);
-              {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'S':
             begin // r.e.extension - not space char
-              {$IFDEF UseSetOfChar}
-              ret := EmitRange(OP_ANYBUT);
-              EmitRangeStr(SpaceChars);
-              EmitRangeC(#0);
-              {$ELSE}
               ret := EmitNode(OP_NOTSPACE);
-              {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'w':
             begin // r.e.extension - any english char / digit / '_'
-              {$IFDEF UseSetOfChar}
-              ret := EmitRange(OP_ANYOF);
-              EmitRangeStr(WordChars);
-              EmitRangeC(#0);
-              {$ELSE}
               ret := EmitNode(OP_ANYLETTER);
-              {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'W':
             begin // r.e.extension - not english char / digit / '_'
-              {$IFDEF UseSetOfChar}
-              ret := EmitRange(OP_ANYBUT);
-              EmitRangeStr(WordChars);
-              EmitRangeC(#0);
-              {$ELSE}
               ret := EmitNode(OP_NOTLETTER);
-              {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'v':
@@ -3313,7 +3262,6 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-    {$IFNDEF UseSetOfChar} // ###0.929
     OP_ANYLETTER:
       while (Result < TheMax) and IsWordChar(scan^) do // ###0.940
       begin
@@ -3338,7 +3286,6 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-    {$ENDIF}
     OP_ANYVERTSEP:
       while (Result < TheMax) and IsLineSeparator(scan^) do
       begin
@@ -3363,35 +3310,6 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-    OP_ANYOFTINYSET:
-      begin
-        while (Result < TheMax) and // !!!TinySet
-          ((scan^ = opnd^) or (scan^ = (opnd + 1)^) or (scan^ = (opnd + 2)^)) do
-        begin
-          Inc(Result);
-          Inc(scan);
-        end;
-      end;
-    OP_ANYBUTTINYSET:
-      begin
-        while (Result < TheMax) and // !!!TinySet
-          (scan^ <> opnd^) and (scan^ <> (opnd + 1)^) and
-          (scan^ <> (opnd + 2)^) do
-        begin
-          Inc(Result);
-          Inc(scan);
-        end;
-      end;
-    {$IFDEF UseSetOfChar} // ###0.929
-    OP_ANYOFFULLSET:
-      begin
-        while (Result < TheMax) and (scan^ in PSetOfREChar(opnd)^) do
-        begin
-          Inc(Result);
-          Inc(scan);
-        end;
-      end;
-    {$ELSE}
     OP_ANYOF:
       while (Result < TheMax) and FindInCharClass(opnd, scan^, False) do
       begin
@@ -3416,7 +3334,6 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-    {$ENDIF}
   else
     begin // Oh dear. Called inappropriately.
       Result := 0; // Best compromise.
@@ -3484,7 +3401,7 @@ begin
       next := scan + Len;
 
     case scan^ of
-      OP_NOTBOUND, // ###0.943 //!!! think about UseSetOfChar !!!
+      OP_NOTBOUND,
       OP_BOUND:
         if (scan^ = OP_BOUND)
           xor (((reginput = fInputStart) or not IsWordChar((reginput - 1)^)) and
@@ -3572,7 +3489,6 @@ begin
             Exit;
           Inc(reginput);
         end;
-      {$IFNDEF UseSetOfChar} // ###0.929
       OP_ANYLETTER:
         begin
           if (reginput = fInputEnd) or not IsWordChar(reginput^) // ###0.943
@@ -3601,7 +3517,6 @@ begin
             Exit;
           Inc(reginput);
         end;
-      {$ENDIF}
       OP_ANYVERTSEP:
         begin
           if (reginput = fInputEnd) or not IsLineSeparator(reginput^) then
@@ -3711,33 +3626,6 @@ begin
           end;
           reginput := save;
         end;
-      OP_ANYOFTINYSET:
-        begin
-          if (reginput = fInputEnd) or // !!!TinySet
-            ((reginput^ <> (scan + REOpSz + RENextOffSz)^) and
-            (reginput^ <> (scan + REOpSz + RENextOffSz + 1)^) and
-            (reginput^ <> (scan + REOpSz + RENextOffSz + 2)^)) then
-            Exit;
-          Inc(reginput);
-        end;
-      OP_ANYBUTTINYSET:
-        begin
-          if (reginput = fInputEnd) or // !!!TinySet
-            (reginput^ = (scan + REOpSz + RENextOffSz)^) or
-            (reginput^ = (scan + REOpSz + RENextOffSz + 1)^) or
-            (reginput^ = (scan + REOpSz + RENextOffSz + 2)^) then
-            Exit;
-          Inc(reginput);
-        end;
-      {$IFDEF UseSetOfChar} // ###0.929
-      OP_ANYOFFULLSET:
-        begin
-          if (reginput = fInputEnd) or
-            not(reginput^ in PSetOfREChar(scan + REOpSz + RENextOffSz)^) then
-            Exit;
-          Inc(reginput);
-        end;
-      {$ELSE}
       OP_ANYOF:
         begin
           if (reginput = fInputEnd) or
@@ -3766,7 +3654,6 @@ begin
             Exit;
           Inc(reginput);
         end;
-      {$ENDIF}
       OP_NOTHING:
         ;
       OP_COMMENT:
@@ -4020,197 +3907,6 @@ begin
   Error(reeMatchPrimCorruptedPointers);
 end; { of function TRegExpr.MatchPrim
   -------------------------------------------------------------- }
-
-{$IFDEF UseFirstCharSet}
-// ###0.929
-procedure TRegExpr.FillFirstCharSet(prog: PRegExprChar);
-var
-  scan: PRegExprChar; // Current node.
-  next: PRegExprChar; // Next node.
-  opnd: PRegExprChar;
-  min_cnt: integer;
-begin
-  scan := prog;
-  while scan <> nil do
-  begin
-    next := regnext(scan);
-    case PREOp(scan)^ of
-      OP_BSUBEXP, OP_BSUBEXPCI:
-        begin // ###0.938
-          FirstCharSet := [#0 .. #255]; // :((( we cannot
-          // optimize r.e. if it starts with back reference
-          Exit;
-        end;
-      OP_BOL, OP_BOLML:
-        ; // Exit; //###0.937
-      OP_EOL, OP_EOLML:
-        begin // ###0.948 was empty in 0.947, was Exit in 0.937
-          Include(FirstCharSet, #0);
-          if ModifierM then
-          begin
-            opnd := PRegExprChar(LineSeparators);
-            while opnd^ <> #0 do
-            begin
-              Include(FirstCharSet, opnd^);
-              Inc(opnd);
-            end;
-          end;
-          Exit;
-        end;
-      OP_BOUND, OP_NOTBOUND:
-        ; // ###0.943 ?!!
-      OP_ANY, OP_ANYML:
-        begin // we can better define OP_ANYML !!!
-          FirstCharSet := [#0 .. #255]; // ###0.930
-          Exit;
-        end;
-      OP_ANYDIGIT:
-        begin
-          FirstCharSet := FirstCharSet + ['0' .. '9'];
-          Exit;
-        end;
-      OP_NOTDIGIT:
-        begin
-          FirstCharSet := FirstCharSet + ([#0 .. #255] - ['0' .. '9']);
-          // ###0.948 FirstCharSet was forgotten
-          Exit;
-        end;
-      OP_ANYVERTSEP:
-        begin
-          FirstCharSet := FirstCharSet + [#$d, #$a, #$b, #$c];
-          Exit;
-        end;
-      OP_NOTVERTSEP:
-        begin
-          FirstCharSet := FirstCharSet + ([#0 .. #255] - [#$d, #$a, #$b, #$c]);
-          Exit;
-        end;
-      OP_ANYHORZSEP:
-        begin
-          FirstCharSet := FirstCharSet + [#9, #$20, #$A0];
-          Exit;
-        end;
-      OP_NOTHORZSEP:
-        begin
-          FirstCharSet := FirstCharSet + ([#0 .. #255] - [#9, #$20, #$A0]);
-          Exit;
-        end;
-      OP_EXACTLYCI:
-        begin
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
-          Include(FirstCharSet, InvertCase((scan + REOpSz + RENextOffSz)^));
-          Exit;
-        end;
-      OP_EXACTLY:
-        begin
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
-          Exit;
-        end;
-      OP_ANYOFFULLSET:
-        begin
-          FirstCharSet := FirstCharSet +
-            PSetOfREChar(scan + REOpSz + RENextOffSz)^;
-          Exit;
-        end;
-      OP_ANYOFTINYSET:
-        begin
-          // !!!TinySet
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz + 1)^);
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz + 2)^);
-          // ...                                                      // up to TinySetLen
-          Exit;
-        end;
-      OP_ANYBUTTINYSET:
-        begin
-          // !!!TinySet
-          FirstCharSet := FirstCharSet + ([#0 .. #255] - [
-            // ###0.948 FirstCharSet was forgotten
-            (scan + REOpSz + RENextOffSz)^, (scan + REOpSz + RENextOffSz + 1)^,
-            (scan + REOpSz + RENextOffSz + 2)^]);
-          // ...                                                      // up to TinySetLen
-          Exit;
-        end;
-      OP_NOTHING:
-        ;
-      OP_COMMENT:
-        ;
-      OP_BACK:
-        ;
-      Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1):
-        begin // ###0.929
-          FillFirstCharSet(next);
-          Exit;
-        end;
-      Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
-        begin // ###0.929
-          FillFirstCharSet(next);
-          Exit;
-        end;
-      OP_BRANCH:
-        begin
-          if (PREOp(next)^ <> OP_BRANCH) // No choice.
-          then
-            next := scan + REOpSz + RENextOffSz // Avoid recursion.
-          else
-          begin
-            repeat
-              FillFirstCharSet(scan + REOpSz + RENextOffSz);
-              scan := regnext(scan);
-            until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
-            Exit;
-          end;
-        end;
-      {$IFDEF ComplexBraces}
-      OP_LOOPENTRY:
-        begin // ###0.925
-          // LoopStack [LoopStackIdx] := 0; //###0.940 line removed
-          FillFirstCharSet(next); // execute loop
-          Exit;
-        end;
-      OP_LOOP, OP_LOOPNG:
-        begin // ###0.940
-          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz +
-            REBracesArgSz * 2))^;
-          min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-          FillFirstCharSet(opnd);
-          if min_cnt = 0 then
-            FillFirstCharSet(next);
-          Exit;
-        end;
-      {$ENDIF}
-      OP_STAR, OP_STARNG: // ###0.940
-        FillFirstCharSet(scan + REOpSz + RENextOffSz);
-      OP_PLUS, OP_PLUSNG:
-        begin // ###0.940
-          FillFirstCharSet(scan + REOpSz + RENextOffSz);
-          Exit;
-        end;
-      OP_BRACES, OP_BRACESNG:
-        begin // ###0.940
-          opnd := scan + REOpSz + RENextOffSz + REBracesArgSz * 2;
-          min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-          // braces
-          FillFirstCharSet(opnd);
-          if min_cnt > 0 then
-            Exit;
-        end;
-      OP_EEND:
-        begin
-          FirstCharSet := [#0 .. #255]; // ###0.948
-          Exit;
-        end;
-    else
-      begin
-        Error(reeMatchPrimMemoryCorruption);
-        Exit;
-      end;
-    end; { of case scan^ }
-    scan := next;
-  end; { of while scan <> nil }
-end; { of procedure FillFirstCharSet
-  -------------------------------------------------------------- }
-{$ENDIF}
 
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
@@ -4861,14 +4557,6 @@ begin
     OP_LOOPNG:
       Result := 'LOOPNG'; // ###0.940
     {$ENDIF}
-    OP_ANYOFTINYSET:
-      Result := 'ANYOFTINYSET';
-    OP_ANYBUTTINYSET:
-      Result := 'ANYBUTTINYSET';
-    {$IFDEF UseSetOfChar} // ###0.929
-    OP_ANYOFFULLSET:
-      Result := 'ANYOFFULLSET';
-    {$ENDIF}
     OP_STARNG:
       Result := 'STARNG'; // ###0.940
     OP_PLUSNG:
@@ -4890,9 +4578,6 @@ var
   next: PRegExprChar;
   i: integer;
   Diff: PtrInt;
-  {$IFDEF UseSetOfChar} // ###0.929
-  Ch: REChar;
-  {$ENDIF}
 
   function PrintableChar(AChar: REChar): string; {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
@@ -4941,28 +4626,11 @@ begin
       end;
       Inc(s);
     end;
-    if (op = OP_ANYOFTINYSET) or (op = OP_ANYBUTTINYSET) then
-    begin
-      for i := 1 to TinySetLen do
-      begin
-        Result := Result + s^;
-        Inc(s);
-      end;
-    end;
     if (op = OP_BSUBEXP) or (op = OP_BSUBEXPCI) then
     begin
       Result := Result + ' \' + IntToStr(Ord(s^));
       Inc(s);
     end;
-    {$IFDEF UseSetOfChar} // ###0.929
-    if op = OP_ANYOFFULLSET then
-    begin
-      for Ch := #0 to #255 do
-        if Ch in PSetOfREChar(s)^ then
-          Result := Result + PrintableChar(Ch);
-      Inc(s, SizeOf(TSetOfREChar));
-    end;
-    {$ENDIF}
     if (op = OP_BRACES) or (op = OP_BRACESNG) then
     begin // ###0.941
       // show min/max argument of braces operator
