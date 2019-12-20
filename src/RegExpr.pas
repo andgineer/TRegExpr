@@ -77,20 +77,8 @@ interface
   {$DEFINE reRealExceptionAddr} // exceptions will point to appropriate source line, not to Error procedure
 {$ENDIF}
 {$DEFINE ComplexBraces} // support braces in complex cases
-{$IFNDEF UniCode} // the option applicable only for non-UniCode mode
-  {$IFNDEF FPC_REQUIRES_PROPER_ALIGNMENT}  // sets have to be aligned
-    {$DEFINE UseSetOfChar} // Significant optimization by using set of char
-  {$ENDIF}
-{$ENDIF}
-{$IFDEF UseSetOfChar}
-  {$DEFINE UseFirstCharSet} // Fast skip between matches for r.e. that starts with determined set of chars
-{$ENDIF}
 {$IFNDEF UniCode}
   {$UNDEF UnicodeWordDetection}
-{$ENDIF}
-{$IFNDEF UseWordChars}
-  {$UNDEF UseSetOfChar}
-  {$UNDEF UseFirstCharSet}
 {$ENDIF}
 // ======== Define Pascal-language options
 // Define 'UseAsserts' option (do not edit this definitions).
@@ -743,9 +731,9 @@ const
   MaskModX = 32; // -"- /x
 
   OpKind_End = REChar(1);
-  OpKind_Char = REChar(2);
+  OpKind_MetaClass = REChar(2);
   OpKind_Range = REChar(3);
-  OpKind_MetaClass = REChar(4);
+  OpKind_Char = REChar(6); // OpKind_Char must be maximal of all OpKind_nnn
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1849,7 +1837,6 @@ end; { of function TRegExpr.EmitNode
   -------------------------------------------------------------- }
 
 procedure TRegExpr.EmitC(b: REChar);
-// emit a byte to code
 begin
   if regcode <> @regdummy then
   begin
@@ -1961,6 +1948,7 @@ function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreC
 var
   ch, ch2: REChar;
   ok: boolean;
+  N, i: integer;
 begin
   if AIgnoreCase then
     AChar := _UpperCase(AChar);
@@ -1971,24 +1959,12 @@ begin
           Result := False;
           Exit;
         end;
-      OpKind_Char:
-        begin
-          Inc(ABuffer);
-          ch := ABuffer^;
-          Inc(ABuffer);
-          if AIgnoreCase then
-            ch := _UpperCase(ch);
-          if ch = AChar then
-          begin
-            Result := True;
-            Exit;
-          end;
-        end;
+
       OpKind_Range:
         begin
           Inc(ABuffer);
           ch := ABuffer^;
-          Inc(ABuffer, 2);
+          Inc(ABuffer);
           ch2 := ABuffer^;
           Inc(ABuffer);
           if AIgnoreCase then
@@ -2002,6 +1978,7 @@ begin
             Exit;
           end;
         end;
+
       OpKind_MetaClass:
         begin
           Inc(ABuffer);
@@ -2036,9 +2013,28 @@ begin
             Result := True;
             Exit
           end;
-        end
+        end;
+
+      OpKind_Char .. High(REChar):
+        begin
+          N := Ord(ABuffer^) - Ord(OpKind_Char);
+          Inc(ABuffer);
+          for i := 1 to N do
+          begin
+            ch := ABuffer^;
+            Inc(ABuffer);
+            if AIgnoreCase then
+              ch := _UpperCase(ch);
+            if ch = AChar then
+            begin
+              Result := True;
+              Exit;
+            end;
+          end;
+        end;
+
       else
-        Inc(ABuffer, 2);
+        raise Exception.Create('TRegExpr: invalid opcode in char range');
     end;
   until False; // assume that Buffer is ended correctly
 end;
@@ -2712,6 +2708,7 @@ var
   flags: integer;
   RangeBeg, RangeEnd: REChar;
   CanBeRange: boolean;
+  AddrOfString: PRegExprChar;
   Len: integer;
   ender: REChar;
   begmodfs: PRegExprChar;
@@ -2736,156 +2733,48 @@ var
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
-  (*
-  procedure EmitStr(const S: RegExprString);
-  var
-    i: integer;
+  function EmitRange(AOpCode: TREOp): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
-    for i := 1 to Length(S) do
-      EmitC(S[i]);
-  end;
-  *)
-
-  function EmitRange(AOpCode: REChar): PRegExprChar;
-  begin
-    {$IFDEF UseSetOfChar}
-    case AOpCode of
-      OP_ANYBUTCI, OP_ANYBUT:
-        Result := EmitNode(OP_ANYBUTTINYSET);
-    else // OP_ANYOFCI, OP_ANYOF
-      Result := EmitNode(OP_ANYOFTINYSET);
-    end;
-    case AOpCode of
-      OP_ANYBUTCI, OP_ANYOFCI:
-        RangeIsCI := True;
-    else // OP_ANYBUT, OP_ANYOF
-      RangeIsCI := False;
-    end;
-    RangePCodeBeg := regcode;
-    RangePCodeIdx := regsize;
-    RangeLen := 0;
-    RangeSet := [];
-    RangeChMin := #255;
-    RangeChMax := #0;
-    {$ELSE}
     Result := EmitNode(AOpCode);
-    // ToDo:
-    // !!!!!!!!!!!!! Implement ANYOF[BUT]TINYSET generation for UniCode !!!!!!!!!!
-    {$ENDIF}
-  end;
-
-  {$IFDEF UseSetOfChar}
-  procedure EmitRangeCPrim(b: REChar); // ###0.930
-  begin
-    if b in RangeSet then
-      Exit;
-    Inc(RangeLen);
-    if b < RangeChMin then
-      RangeChMin := b;
-    if b > RangeChMax then
-      RangeChMax := b;
-    Include(RangeSet, b);
-  end;
-  {$ENDIF}
-
-  procedure EmitRangeC(b: REChar); {$IFNDEF UseSetOfChar} {$IFDEF InlineFuncs}inline;{$ENDIF} {$ENDIF}
-  {$IFDEF UseSetOfChar}
-  var
-    Ch: REChar;
-  {$ENDIF}
-  begin
-    CanBeRange := False;
-    {$IFDEF UseSetOfChar}
-    if b <> #0 then
-    begin
-      EmitRangeCPrim(b); // ###0.930
-      if RangeIsCI then
-        EmitRangeCPrim(InvertCase(b)); // ###0.930
-    end
-    else
-    begin
-      {$IFDEF UseAsserts}
-      Assert(RangeLen > 0,
-        'TRegExpr.ParseAtom(subroutine EmitRangeC): empty range');
-      // impossible, but who knows..
-      Assert(RangeChMin <= RangeChMax,
-        'TRegExpr.ParseAtom(subroutine EmitRangeC): RangeChMin > RangeChMax');
-      // impossible, but who knows..
-      {$ENDIF}
-      if RangeLen <= TinySetLen then
-      begin // emit "tiny set"
-        if regcode = @regdummy then
-        begin
-          regsize := RangePCodeIdx + TinySetLen; // RangeChMin/Max !!!
-          Exit;
-        end;
-        regcode := RangePCodeBeg;
-        for Ch := RangeChMin to RangeChMax do // ###0.930
-          if Ch in RangeSet then
-          begin
-            regcode^ := Ch;
-            Inc(regcode);
-          end;
-        // fill rest:
-        while regcode < RangePCodeBeg + TinySetLen do
-        begin
-          regcode^ := RangeChMax;
-          Inc(regcode);
-        end;
-        {$IFDEF DebugSynRegExpr}
-        if regcode - programm > regsize then
-          raise Exception.Create
-            ('TRegExpr.ParseAtom.EmitRangeC TinySetLen buffer overrun');
-        {$ENDIF}
-      end
-      else
-      begin
-        if regcode = @regdummy then
-        begin
-          regsize := RangePCodeIdx + SizeOf(TSetOfREChar);
-          Exit;
-        end;
-        if (RangePCodeBeg - REOpSz - RENextOffSz)^ = OP_ANYBUTTINYSET then
-          RangeSet := [#0 .. #255] - RangeSet;
-        PREOp(RangePCodeBeg - REOpSz - RENextOffSz)^ := OP_ANYOFFULLSET;
-        regcode := RangePCodeBeg;
-        Move(RangeSet, regcode^, SizeOf(TSetOfREChar));
-        Inc(regcode, SizeOf(TSetOfREChar));
-        {$IFDEF DebugSynRegExpr}
-        if regcode - programm > regsize then
-          raise Exception.Create
-            ('TRegExpr.ParseAtom.EmitRangeC non TinySetLen buffer overrun');
-        {$ENDIF}
-      end;
-    end;
-    {$ELSE}
-    EmitC(b);
-    {$ENDIF}
   end;
 
   procedure EmitSimpleRangeC(b: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     RangeBeg := b;
-    EmitRangeC(OpKind_Char);
-    EmitRangeC(b);
+    if AddrOfString = nil then
+    begin
+      AddrOfString := regcode;
+      EmitC(OpKind_Char);
+    end;
+    Inc(AddrOfString^);
+    EmitC(b);
     CanBeRange := True;
   end;
 
-  procedure EmitRangeStr(const s: RegExprString); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitRangeStr(const S: RegExprString); {$IFDEF InlineFuncs}inline;{$ENDIF}
   var
     i: integer;
   begin
-    for i := 1 to length(s) do
-    begin
-      EmitRangeC(OpKind_Char);
-      EmitRangeC(s[i]);
-    end;
+    AddrOfString := nil;
+    EmitC(REChar(Ord(OpKind_Char) + Length(S)));
+    for i := 1 to Length(S) do
+      EmitC(S[i]);
+  end;
+
+  procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  begin
+    AddrOfString := nil;
+    CanBeRange := False;
+    EmitC(OpKind_Range);
+    EmitC(ch1);
+    EmitC(ch2);
   end;
 
 begin
   Result := nil;
   flags := 0;
-  flagp := flag_Worst; // Tentatively.
+  flagp := flag_Worst;
+  AddrOfString := nil;
 
   Inc(regparse);
   case (regparse - 1)^ of
@@ -2982,22 +2871,7 @@ begin
                 Error(reeInvalidRange);
                 Exit;
               end;
-              EmitRangeC(OpKind_Range);
-              EmitRangeC(RangeBeg);
-              EmitRangeC(OpKind_Range);
-              EmitRangeC(RangeEnd);
-              (*
-              // old code, added all chars RangeBeg..RangeEnd
-              Inc(RangeBeg);
-              EmitRangeC(OpKind_Char);
-              EmitRangeC(RangeEnd); // prevent infinite loop if RangeEnd=$ff
-              while RangeBeg < RangeEnd do
-              begin // ###0.929
-                EmitRangeC(OpKind_Char);
-                EmitRangeC(RangeBeg);
-                Inc(RangeBeg);
-              end;
-              *)
+              EmitRangePacked(RangeBeg, RangeEnd);
             end;
             Inc(regparse);
           end
@@ -3013,8 +2887,10 @@ begin
               end;
               if _IsMetaChar(regparse^) then
               begin
-                EmitRangeC(OpKind_MetaClass);
-                EmitRangeC(regparse^);
+                AddrOfString := nil;
+                CanBeRange := False;
+                EmitC(OpKind_MetaClass);
+                EmitC(regparse^);
               end
               else
               begin
@@ -3053,8 +2929,9 @@ begin
             Inc(regparse);
           end;
         end; { of while }
-        EmitRangeC(OpKind_End);
-        EmitRangeC(#255);
+        AddrOfString := nil;
+        CanBeRange := False;
+        EmitC(OpKind_End);
         if regparse^ <> ']' then
         begin
           Error(reeUnmatchedSqBrackets);
