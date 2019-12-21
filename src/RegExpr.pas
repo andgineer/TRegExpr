@@ -2869,33 +2869,6 @@ begin
               begin
                 EmitSimpleRangeC(UnQuoteChar(regparse));
               end;
-              (*
-              // old code, emits in [] entire string for meta-class
-              case regparse^ of // r.e.extensions
-                'd':
-                  EmitRangeStr('0123456789');
-                'w':
-                  {$IFDEF UseWordChars}
-                  EmitRangeStr(WordChars);
-                  {$ELSE}
-                  // cannot replace this with EmitNode(OP_ANYLETTER) !
-                  EmitRangeStr(RegExprWordChars);
-                  {$ENDIF}
-                's':
-                  {$IFDEF UseSpaceChars}
-                  EmitRangeStr(SpaceChars);
-                  {$ELSE}
-                  // cannot replace this with EmitNode(OP_ANYSPACE) !
-                  EmitRangeStr(RegExprSpaceChars);
-                  {$ENDIF}
-                'v':
-                  EmitRangeStr(RegExprLineSeparators);
-                'h':
-                  EmitRangeStr(RegExprHorzSeparators);
-              else
-                EmitSimpleRangeC(UnQuoteChar(regparse));
-              end; { of case }
-              *)
             end
             else
               EmitSimpleRangeC(regparse^);
