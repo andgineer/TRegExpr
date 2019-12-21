@@ -2820,18 +2820,8 @@ begin
               RangeEnd := UnQuoteChar(regparse);
             end;
 
-            // r.e.ranges extension for russian
+            // special handling for Russian range a-YA, add 2 ranges: a-ya and A-YA
             if ((fCompModifiers and MaskModR) <> 0) and
-              (RangeBeg = RusRangeLoLow) and (RangeEnd = RusRangeLoHigh) then
-            begin
-              EmitRangePacked(RangeBeg, RangeEnd);
-            end
-            else if ((fCompModifiers and MaskModR) <> 0) and
-              (RangeBeg = RusRangeHiLow) and (RangeEnd = RusRangeHiHigh) then
-            begin
-              EmitRangePacked(RangeBeg, RangeEnd);
-            end
-            else if ((fCompModifiers and MaskModR) <> 0) and
               (RangeBeg = RusRangeLoLow) and (RangeEnd = RusRangeHiHigh) then
             begin
               EmitRangePacked(RusRangeLoLow, RusRangeLoHigh);
