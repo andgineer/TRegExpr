@@ -12,8 +12,8 @@ object Form1: TForm1
   LCLVersion = '2.1.0.0'
   object ListDump: TListBox
     Left = 6
-    Height = 365
-    Top = 210
+    Height = 349
+    Top = 226
     Width = 792
     Align = alClient
     BorderSpacing.Around = 6
@@ -25,7 +25,7 @@ object Form1: TForm1
   object ListRes: TListBox
     Left = 6
     Height = 120
-    Top = 84
+    Top = 100
     Width = 792
     Align = alTop
     BorderSpacing.Around = 6
@@ -36,17 +36,17 @@ object Form1: TForm1
   end
   object Panel1: TPanel
     Left = 0
-    Height = 39
+    Height = 55
     Top = 0
     Width = 804
     Align = alTop
     BevelOuter = bvNone
-    ClientHeight = 39
+    ClientHeight = 55
     ClientWidth = 804
     TabOrder = 0
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Control = EditRegex
       AnchorSideTop.Side = asrCenter
       Left = 6
       Height = 17
@@ -60,7 +60,6 @@ object Form1: TForm1
       AnchorSideLeft.Control = Label1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
       Left = 90
@@ -69,15 +68,67 @@ object Form1: TForm1
       Width = 708
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
       BorderSpacing.Right = 6
       OnChange = EditRegexChange
       TabOrder = 0
+    end
+    object chk_c: TCheckBox
+      AnchorSideLeft.Control = EditRegex
+      AnchorSideTop.Control = EditRegex
+      AnchorSideTop.Side = asrBottom
+      Left = 90
+      Height = 24
+      Top = 33
+      Width = 122
+      Caption = 'c (case-insens)'
+      OnChange = chk_cChange
+      TabOrder = 1
+    end
+    object chk_x: TCheckBox
+      AnchorSideLeft.Control = chk_c
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = chk_c
+      Left = 218
+      Height = 24
+      Top = 33
+      Width = 118
+      BorderSpacing.Left = 6
+      Caption = 'x (comments)'
+      OnChange = chk_cChange
+      TabOrder = 2
+    end
+    object chk_r: TCheckBox
+      AnchorSideLeft.Control = chk_x
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = chk_c
+      Left = 342
+      Height = 24
+      Top = 33
+      Width = 66
+      BorderSpacing.Left = 6
+      Caption = 'r (rus)'
+      OnChange = chk_cChange
+      TabOrder = 3
+    end
+    object chk_s: TCheckBox
+      AnchorSideLeft.Control = chk_r
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = chk_c
+      Left = 414
+      Height = 24
+      Top = 33
+      Width = 149
+      BorderSpacing.Left = 6
+      Caption = 's (dot matches all)'
+      OnChange = chk_cChange
+      TabOrder = 4
     end
   end
   object Panel2: TPanel
     Left = 0
     Height = 39
-    Top = 39
+    Top = 55
     Width = 804
     Align = alTop
     BevelOuter = bvNone

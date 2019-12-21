@@ -12,6 +12,10 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    chk_s: TCheckBox;
+    chk_c: TCheckBox;
+    chk_x: TCheckBox;
+    chk_r: TCheckBox;
     EditRegex: TEdit;
     EditText: TEdit;
     Label1: TLabel;
@@ -20,6 +24,7 @@ type
     ListRes: TListBox;
     Panel1: TPanel;
     Panel2: TPanel;
+    procedure chk_cChange(Sender: TObject);
     procedure EditRegexChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -53,6 +58,10 @@ begin
 
   try
     reg.Expression:= EditRegex.Text;
+    reg.ModifierI:= chk_c.Checked;
+    reg.ModifierX:= chk_x.Checked;
+    reg.ModifierR:= chk_r.Checked;
+    reg.ModifierS:= chk_s.Checked;
     ListDump.Items.AddText(reg.Dump);
   except
     on e: Exception do
@@ -78,6 +87,11 @@ begin
     on e: Exception do
       ListRes.Items.Add(e.Message);
   end;
+end;
+
+procedure TForm1.chk_cChange(Sender: TObject);
+begin
+  EditRegexChange(Self);
 end;
 
 end.
