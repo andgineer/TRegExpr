@@ -77,20 +77,8 @@ interface
   {$DEFINE reRealExceptionAddr} // exceptions will point to appropriate source line, not to Error procedure
 {$ENDIF}
 {$DEFINE ComplexBraces} // support braces in complex cases
-{$IFNDEF UniCode} // the option applicable only for non-UniCode mode
-  {$IFNDEF FPC_REQUIRES_PROPER_ALIGNMENT}  // sets have to be aligned
-    {$DEFINE UseSetOfChar} // Significant optimization by using set of char
-  {$ENDIF}
-{$ENDIF}
-{$IFDEF UseSetOfChar}
-  {$DEFINE UseFirstCharSet} // Fast skip between matches for r.e. that starts with determined set of chars
-{$ENDIF}
 {$IFNDEF UniCode}
   {$UNDEF UnicodeWordDetection}
-{$ENDIF}
-{$IFNDEF UseWordChars}
-  {$UNDEF UseSetOfChar}
-  {$UNDEF UseFirstCharSet}
 {$ENDIF}
 // ======== Define Pascal-language options
 // Define 'UseAsserts' option (do not edit this definitions).
@@ -215,22 +203,10 @@ const
   {$IFDEF ComplexBraces}
   LoopStackMax = 10; // max depth of loops stack //###0.925
   {$ENDIF}
-  TinySetLen = 3;
-  // if range includes more then TinySetLen chars, //###0.934
-  // then use full (32 bytes) ANYOFFULL instead of ANYOF[BUT]TINYSET
-  // !!! Attension ! If you change TinySetLen, you must
-  // change code marked as "//!!!TinySet"
 
 type
-
-  {$IFDEF UseSetOfChar}
-  PSetOfREChar = ^TSetOfREChar;
-  TSetOfREChar = set of REChar;
-  {$ENDIF}
   TRegExpr = class;
-
-  TRegExprReplaceFunction = function(ARegExpr: TRegExpr)
-    : RegExprString of object;
+  TRegExprReplaceFunction = function(ARegExpr: TRegExpr): RegExprString of object;
 
   { TRegExpr }
 
@@ -331,6 +307,7 @@ type
     FUseUnicodeWordDetection: boolean;
     {$ENDIF}
     procedure ClearInternalIndexes;
+    function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     // Mark programm as having to be [re]compiled
@@ -422,10 +399,6 @@ type
     function GetMatch(Idx: integer): RegExprString;
 
     procedure SetInputString(const AInputString: RegExprString);
-
-    {$IFNDEF UseSetOfChar}
-    function StrScanCI(s: PRegExprChar; Ch: REChar): PRegExprChar; // ###0.928
-    {$ENDIF}
     procedure SetLineSeparators(const AStr: RegExprString);
     procedure SetLinePairedSeparator(const AStr: RegExprString);
     function GetLinePairedSeparator: RegExprString;
@@ -736,7 +709,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   TRegExprVersionMajor: integer = 0;
-  TRegExprVersionMinor: integer = 964;
+  TRegExprVersionMinor: integer = 967;
 
   MaskModI = 1; // modifier /i bit in fModifiers
   MaskModR = 2; // -"- /r
@@ -745,10 +718,29 @@ const
   MaskModM = 16; // -"- /m
   MaskModX = 32; // -"- /x
 
+  OpKind_End = REChar(1);
+  OpKind_MetaClass = REChar(2);
+  OpKind_Range = REChar(3);
+  OpKind_Char = REChar(6); // OpKind_Char must be maximal of all OpKind_nnn
+
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
     ' ', #9, #$d, #$a:
+      Result := True
+    else
+      Result := False;
+  end;
+end;
+
+function _IsMetaChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case AChar of
+    'd', 'D',
+    's', 'S',
+    'w', 'W',
+    'v', 'V',
+    'h', 'H':
       Result := True
     else
       Result := False;
@@ -1104,12 +1096,6 @@ const
   // Min and Max are TREBracesArg
   // Node - next node in sequence,
   // LoopEntryJmp - associated LOOPENTRY node addr
-  OP_ANYOFTINYSET = TREOp(25);
-  // Chrs Match any one char from Chrs (exactly TinySetLen chars)
-  OP_ANYBUTTINYSET = TREOp(26);
-  // Chrs Match any one char not in Chrs (exactly TinySetLen chars)
-  OP_ANYOFFULLSET = TREOp(27); // Set  Match any one char from set of char
-  // - very fast (one CPU instruction !) but takes 32 bytes of p-code
   OP_BSUBEXP = TREOp(28);
   // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
   OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
@@ -1197,6 +1183,7 @@ const
   reeQPSBFollowsNothing = 115;
   reeTrailingBackSlash = 116;
   reeNoLetterAfterBSlashC = 117;
+  reeMetaCharAfterMinusInRange = 118;
   reeRarseAtomInternalDisaster = 119;
   reeBRACESArgTooBig = 122;
   reeBracesMinParamGreaterMax = 124;
@@ -1250,6 +1237,8 @@ begin
       Result := 'TRegExpr(comp): No Hex Code After \x';
     reeNoLetterAfterBSlashC:
       Result := 'TRegExpr(comp): No Letter "A".."Z" After \c';
+    reeMetaCharAfterMinusInRange:
+      Result := 'TRegExpr(comp): MetaChar After "-" in [] Range';
     reeHexCodeAfterBSlashXTooBig:
       Result := 'TRegExpr(comp): Hex Code After \x Is Too Big';
     reeUnmatchedSqBrackets:
@@ -1830,7 +1819,6 @@ end; { of function TRegExpr.EmitNode
   -------------------------------------------------------------- }
 
 procedure TRegExpr.EmitC(b: REChar);
-// emit a byte to code
 begin
   if regcode <> @regdummy then
   begin
@@ -1935,6 +1923,104 @@ const
   RusRangeHiLow = 'А';
   RusRangeHiHigh = 'Я';
   {$ENDIF}
+
+function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
+// Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
+// and Data depends on Kind
+var
+  ch, ch2: REChar;
+  ok: boolean;
+  N, i: integer;
+begin
+  if AIgnoreCase then
+    AChar := _UpperCase(AChar);
+  repeat
+    case ABuffer^ of
+      OpKind_End:
+        begin
+          Result := False;
+          Exit;
+        end;
+
+      OpKind_Range:
+        begin
+          Inc(ABuffer);
+          ch := ABuffer^;
+          Inc(ABuffer);
+          ch2 := ABuffer^;
+          Inc(ABuffer);
+          if AIgnoreCase then
+          begin
+            ch := _UpperCase(ch);
+            ch2 := _UpperCase(ch2);
+          end;
+          if (AChar >= ch) and (AChar <= ch2) then
+          begin
+            Result := True;
+            Exit;
+          end;
+        end;
+
+      OpKind_MetaClass:
+        begin
+          Inc(ABuffer);
+          ch := ABuffer^;
+          Inc(ABuffer);
+          case ch of
+            'w':
+              ok := IsWordChar(AChar);
+            'W':
+              ok := not IsWordChar(AChar);
+            's':
+              ok := IsSpaceChar(AChar);
+            'S':
+              ok := not IsSpaceChar(AChar);
+            'd':
+              ok := IsDigitChar(AChar);
+            'D':
+              ok := not IsDigitChar(AChar);
+            'v':
+              ok := IsLineSeparator(AChar);
+            'V':
+              ok := not IsLineSeparator(AChar);
+            'h':
+              ok := IsHorzSeparator(AChar);
+            'H':
+              ok := not IsHorzSeparator(AChar);
+            else
+              ok := False;
+          end;
+          if ok then
+          begin
+            Result := True;
+            Exit
+          end;
+        end;
+
+      OpKind_Char .. High(REChar):
+        begin
+          N := Ord(ABuffer^) - Ord(OpKind_Char);
+          Inc(ABuffer);
+          for i := 1 to N do
+          begin
+            ch := ABuffer^;
+            Inc(ABuffer);
+            if AIgnoreCase then
+              ch := _UpperCase(ch);
+            if ch = AChar then
+            begin
+              Result := True;
+              Exit;
+            end;
+          end;
+        end;
+
+      else
+        raise Exception.Create('TRegExpr: invalid opcode in char range');
+    end;
+  until False; // assume that Buffer is ended correctly
+end;
+
 
 procedure TRegExpr.ClearInternalIndexes;
 var
@@ -2604,18 +2690,10 @@ var
   flags: integer;
   RangeBeg, RangeEnd: REChar;
   CanBeRange: boolean;
+  AddrOfString: PRegExprChar;
   Len: integer;
   ender: REChar;
   begmodfs: PRegExprChar;
-
-  {$IFDEF UseSetOfChar} // ###0.930
-  RangePCodeBeg: PRegExprChar;
-  RangePCodeIdx: integer;
-  RangeIsCI: boolean;
-  RangeSet: TSetOfREChar;
-  RangeLen: integer;
-  RangeChMin, RangeChMax: REChar;
-  {$ENDIF}
 
   procedure EmitExactly(Ch: REChar);
   begin
@@ -2628,164 +2706,48 @@ var
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
-  procedure EmitStr(const s: RegExprString);
-  var
-    i: integer;
+  function EmitRange(AOpCode: TREOp): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
-    for i := 1 to length(s) do
-      EmitC(s[i]);
-  end;
-
-  function EmitRange(AOpCode: REChar): PRegExprChar;
-  begin
-    {$IFDEF UseSetOfChar}
-    case AOpCode of
-      OP_ANYBUTCI, OP_ANYBUT:
-        Result := EmitNode(OP_ANYBUTTINYSET);
-    else // OP_ANYOFCI, OP_ANYOF
-      Result := EmitNode(OP_ANYOFTINYSET);
-    end;
-    case AOpCode of
-      OP_ANYBUTCI, OP_ANYOFCI:
-        RangeIsCI := True;
-    else // OP_ANYBUT, OP_ANYOF
-      RangeIsCI := False;
-    end;
-    RangePCodeBeg := regcode;
-    RangePCodeIdx := regsize;
-    RangeLen := 0;
-    RangeSet := [];
-    RangeChMin := #255;
-    RangeChMax := #0;
-    {$ELSE}
     Result := EmitNode(AOpCode);
-    // ToDo:
-    // !!!!!!!!!!!!! Implement ANYOF[BUT]TINYSET generation for UniCode !!!!!!!!!!
-    {$ENDIF}
   end;
 
-  {$IFDEF UseSetOfChar}
-  procedure EmitRangeCPrim(b: REChar); // ###0.930
-  begin
-    if b in RangeSet then
-      Exit;
-    Inc(RangeLen);
-    if b < RangeChMin then
-      RangeChMin := b;
-    if b > RangeChMax then
-      RangeChMax := b;
-    Include(RangeSet, b);
-  end;
-  {$ENDIF}
-
-  procedure EmitRangeC(b: REChar);
-  {$IFDEF UseSetOfChar}
-  var
-    Ch: REChar;
-  {$ENDIF}
-  begin
-    CanBeRange := False;
-    {$IFDEF UseSetOfChar}
-    if b <> #0 then
-    begin
-      EmitRangeCPrim(b); // ###0.930
-      if RangeIsCI then
-        EmitRangeCPrim(InvertCase(b)); // ###0.930
-    end
-    else
-    begin
-      {$IFDEF UseAsserts}
-      Assert(RangeLen > 0,
-        'TRegExpr.ParseAtom(subroutine EmitRangeC): empty range');
-      // impossible, but who knows..
-      Assert(RangeChMin <= RangeChMax,
-        'TRegExpr.ParseAtom(subroutine EmitRangeC): RangeChMin > RangeChMax');
-      // impossible, but who knows..
-      {$ENDIF}
-      if RangeLen <= TinySetLen then
-      begin // emit "tiny set"
-        if regcode = @regdummy then
-        begin
-          regsize := RangePCodeIdx + TinySetLen; // RangeChMin/Max !!!
-          Exit;
-        end;
-        regcode := RangePCodeBeg;
-        for Ch := RangeChMin to RangeChMax do // ###0.930
-          if Ch in RangeSet then
-          begin
-            regcode^ := Ch;
-            Inc(regcode);
-          end;
-        // fill rest:
-        while regcode < RangePCodeBeg + TinySetLen do
-        begin
-          regcode^ := RangeChMax;
-          Inc(regcode);
-        end;
-        {$IFDEF DebugSynRegExpr}
-        if regcode - programm > regsize then
-          raise Exception.Create
-            ('TRegExpr.ParseAtom.EmitRangeC TinySetLen buffer overrun');
-        {$ENDIF}
-      end
-      else
-      begin
-        if regcode = @regdummy then
-        begin
-          regsize := RangePCodeIdx + SizeOf(TSetOfREChar);
-          Exit;
-        end;
-        if (RangePCodeBeg - REOpSz - RENextOffSz)^ = OP_ANYBUTTINYSET then
-          RangeSet := [#0 .. #255] - RangeSet;
-        PREOp(RangePCodeBeg - REOpSz - RENextOffSz)^ := OP_ANYOFFULLSET;
-        regcode := RangePCodeBeg;
-        Move(RangeSet, regcode^, SizeOf(TSetOfREChar));
-        Inc(regcode, SizeOf(TSetOfREChar));
-        {$IFDEF DebugSynRegExpr}
-        if regcode - programm > regsize then
-          raise Exception.Create
-            ('TRegExpr.ParseAtom.EmitRangeC non TinySetLen buffer overrun');
-        {$ENDIF}
-      end;
-    end;
-    {$ELSE}
-    EmitC(b);
-    {$ENDIF}
-  end;
-
-  procedure EmitSimpleRangeC(b: REChar);
+  procedure EmitSimpleRangeC(b: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     RangeBeg := b;
-    EmitRangeC(b);
+    if AddrOfString = nil then
+    begin
+      AddrOfString := regcode;
+      EmitC(OpKind_Char);
+    end;
+    Inc(AddrOfString^);
+    EmitC(b);
     CanBeRange := True;
   end;
 
-  procedure EmitRangeStr(const s: RegExprString);
+  procedure EmitRangeStr(const S: RegExprString); {$IFDEF InlineFuncs}inline;{$ENDIF}
   var
     i: integer;
   begin
-    for i := 1 to length(s) do
-      EmitRangeC(s[i]);
+    AddrOfString := nil;
+    EmitC(REChar(Ord(OpKind_Char) + Length(S)));
+    for i := 1 to Length(S) do
+      EmitC(S[i]);
   end;
 
-  function _IsMetaChar(ch: REChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
-    case ch of
-      'd', 'D',
-      's', 'S',
-      'w', 'W',
-      'v', 'V',
-      'h', 'H':
-        Result := True
-      else
-        Result := False;
-    end;
+    AddrOfString := nil;
+    CanBeRange := False;
+    EmitC(OpKind_Range);
+    EmitC(ch1);
+    EmitC(ch2);
   end;
 
 begin
   Result := nil;
   flags := 0;
-  flagp := flag_Worst; // Tentatively.
+  flagp := flag_Worst;
+  AddrOfString := nil;
 
   Inc(regparse);
   case (regparse - 1)^ of
@@ -2851,8 +2813,8 @@ begin
             begin
               if _IsMetaChar((regparse + 1)^) then
               begin
-                EmitRangeC('-'); // or treat as error ?!!
-                Continue;
+                Error(reeMetaCharAfterMinusInRange);
+                Exit;
               end;
               Inc(regparse);
               RangeEnd := UnQuoteChar(regparse);
@@ -2882,13 +2844,7 @@ begin
                 Error(reeInvalidRange);
                 Exit;
               end;
-              Inc(RangeBeg);
-              EmitRangeC(RangeEnd); // prevent infinite loop if RangeEnd=$ff
-              while RangeBeg < RangeEnd do
-              begin // ###0.929
-                EmitRangeC(RangeBeg);
-                Inc(RangeBeg);
-              end;
+              EmitRangePacked(RangeBeg, RangeEnd);
             end;
             Inc(regparse);
           end
@@ -2902,6 +2858,19 @@ begin
                 Error(reeParseAtomTrailingBackSlash);
                 Exit;
               end;
+              if _IsMetaChar(regparse^) then
+              begin
+                AddrOfString := nil;
+                CanBeRange := False;
+                EmitC(OpKind_MetaClass);
+                EmitC(regparse^);
+              end
+              else
+              begin
+                EmitSimpleRangeC(UnQuoteChar(regparse));
+              end;
+              (*
+              // old code, emits in [] entire string for meta-class
               case regparse^ of // r.e.extensions
                 'd':
                   EmitRangeStr('0123456789');
@@ -2926,13 +2895,16 @@ begin
               else
                 EmitSimpleRangeC(UnQuoteChar(regparse));
               end; { of case }
+              *)
             end
             else
               EmitSimpleRangeC(regparse^);
             Inc(regparse);
           end;
         end; { of while }
-        EmitRangeC(#0);
+        AddrOfString := nil;
+        CanBeRange := False;
+        EmitC(OpKind_End);
         if regparse^ <> ']' then
         begin
           Error(reeUnmatchedSqBrackets);
@@ -3048,46 +3020,22 @@ begin
             end;
           's':
             begin // r.e.extension - any space char
-              {$IFDEF UseSetOfChar}
-              ret := EmitRange(OP_ANYOF);
-              EmitRangeStr(SpaceChars);
-              EmitRangeC(#0);
-              {$ELSE}
               ret := EmitNode(OP_ANYSPACE);
-              {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'S':
             begin // r.e.extension - not space char
-              {$IFDEF UseSetOfChar}
-              ret := EmitRange(OP_ANYBUT);
-              EmitRangeStr(SpaceChars);
-              EmitRangeC(#0);
-              {$ELSE}
               ret := EmitNode(OP_NOTSPACE);
-              {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'w':
             begin // r.e.extension - any english char / digit / '_'
-              {$IFDEF UseSetOfChar}
-              ret := EmitRange(OP_ANYOF);
-              EmitRangeStr(WordChars);
-              EmitRangeC(#0);
-              {$ELSE}
               ret := EmitNode(OP_ANYLETTER);
-              {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'W':
             begin // r.e.extension - not english char / digit / '_'
-              {$IFDEF UseSetOfChar}
-              ret := EmitRange(OP_ANYBUT);
-              EmitRangeStr(WordChars);
-              EmitRangeC(#0);
-              {$ELSE}
               ret := EmitNode(OP_NOTLETTER);
-              {$ENDIF}
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           'v':
@@ -3202,20 +3150,6 @@ end; { of function TRegExpr.GetCompilerErrorPos
 { ===================== Matching section ====================== }
 { ============================================================= }
 
-{$IFNDEF UseSetOfChar}
-function TRegExpr.StrScanCI(s: PRegExprChar; Ch: REChar): PRegExprChar;
-// ###0.928 - now method of TRegExpr
-begin
-  while (s^ <> #0) and (s^ <> Ch) and (s^ <> InvertCase(Ch)) do
-    Inc(s);
-  if s^ <> #0 then
-    Result := s
-  else
-    Result := nil;
-end; { of function TRegExpr.StrScanCI
-  -------------------------------------------------------------- }
-{$ENDIF}
-
 function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
 // repeatedly match something simple, report how many
 var
@@ -3328,7 +3262,6 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-    {$IFNDEF UseSetOfChar} // ###0.929
     OP_ANYLETTER:
       while (Result < TheMax) and IsWordChar(scan^) do // ###0.940
       begin
@@ -3353,7 +3286,6 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-    {$ENDIF}
     OP_ANYVERTSEP:
       while (Result < TheMax) and IsLineSeparator(scan^) do
       begin
@@ -3378,60 +3310,30 @@ begin
         Inc(Result);
         Inc(scan);
       end;
-    OP_ANYOFTINYSET:
-      begin
-        while (Result < TheMax) and // !!!TinySet
-          ((scan^ = opnd^) or (scan^ = (opnd + 1)^) or (scan^ = (opnd + 2)^)) do
-        begin
-          Inc(Result);
-          Inc(scan);
-        end;
-      end;
-    OP_ANYBUTTINYSET:
-      begin
-        while (Result < TheMax) and // !!!TinySet
-          (scan^ <> opnd^) and (scan^ <> (opnd + 1)^) and
-          (scan^ <> (opnd + 2)^) do
-        begin
-          Inc(Result);
-          Inc(scan);
-        end;
-      end;
-    {$IFDEF UseSetOfChar} // ###0.929
-    OP_ANYOFFULLSET:
-      begin
-        while (Result < TheMax) and (scan^ in PSetOfREChar(opnd)^) do
-        begin
-          Inc(Result);
-          Inc(scan);
-        end;
-      end;
-    {$ELSE}
     OP_ANYOF:
-      while (Result < TheMax) and (StrScan(opnd, scan^) <> nil) do
+      while (Result < TheMax) and FindInCharClass(opnd, scan^, False) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYBUT:
-      while (Result < TheMax) and (StrScan(opnd, scan^) = nil) do
+      while (Result < TheMax) and not FindInCharClass(opnd, scan^, False) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYOFCI:
-      while (Result < TheMax) and (StrScanCI(opnd, scan^) <> nil) do
+      while (Result < TheMax) and FindInCharClass(opnd, scan^, True) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_ANYBUTCI:
-      while (Result < TheMax) and (StrScanCI(opnd, scan^) = nil) do
+      while (Result < TheMax) and not FindInCharClass(opnd, scan^, True) do
       begin
         Inc(Result);
         Inc(scan);
       end;
-    {$ENDIF}
   else
     begin // Oh dear. Called inappropriately.
       Result := 0; // Best compromise.
@@ -3499,7 +3401,7 @@ begin
       next := scan + Len;
 
     case scan^ of
-      OP_NOTBOUND, // ###0.943 //!!! think about UseSetOfChar !!!
+      OP_NOTBOUND,
       OP_BOUND:
         if (scan^ = OP_BOUND)
           xor (((reginput = fInputStart) or not IsWordChar((reginput - 1)^)) and
@@ -3587,7 +3489,6 @@ begin
             Exit;
           Inc(reginput);
         end;
-      {$IFNDEF UseSetOfChar} // ###0.929
       OP_ANYLETTER:
         begin
           if (reginput = fInputEnd) or not IsWordChar(reginput^) // ###0.943
@@ -3616,7 +3517,6 @@ begin
             Exit;
           Inc(reginput);
         end;
-      {$ENDIF}
       OP_ANYVERTSEP:
         begin
           if (reginput = fInputEnd) or not IsLineSeparator(reginput^) then
@@ -3726,62 +3626,34 @@ begin
           end;
           reginput := save;
         end;
-      OP_ANYOFTINYSET:
-        begin
-          if (reginput = fInputEnd) or // !!!TinySet
-            ((reginput^ <> (scan + REOpSz + RENextOffSz)^) and
-            (reginput^ <> (scan + REOpSz + RENextOffSz + 1)^) and
-            (reginput^ <> (scan + REOpSz + RENextOffSz + 2)^)) then
-            Exit;
-          Inc(reginput);
-        end;
-      OP_ANYBUTTINYSET:
-        begin
-          if (reginput = fInputEnd) or // !!!TinySet
-            (reginput^ = (scan + REOpSz + RENextOffSz)^) or
-            (reginput^ = (scan + REOpSz + RENextOffSz + 1)^) or
-            (reginput^ = (scan + REOpSz + RENextOffSz + 2)^) then
-            Exit;
-          Inc(reginput);
-        end;
-      {$IFDEF UseSetOfChar} // ###0.929
-      OP_ANYOFFULLSET:
-        begin
-          if (reginput = fInputEnd) or
-            not(reginput^ in PSetOfREChar(scan + REOpSz + RENextOffSz)^) then
-            Exit;
-          Inc(reginput);
-        end;
-      {$ELSE}
       OP_ANYOF:
         begin
           if (reginput = fInputEnd) or
-            (StrScan(scan + REOpSz + RENextOffSz, reginput^) = nil) then
+            not FindInCharClass(scan + REOpSz + RENextOffSz, reginput^, False) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYBUT:
         begin
           if (reginput = fInputEnd) or
-            (StrScan(scan + REOpSz + RENextOffSz, reginput^) <> nil) then
+            FindInCharClass(scan + REOpSz + RENextOffSz, reginput^, False) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYOFCI:
         begin
           if (reginput = fInputEnd) or
-            (StrScanCI(scan + REOpSz + RENextOffSz, reginput^) = nil) then
+            not FindInCharClass(scan + REOpSz + RENextOffSz, reginput^, True) then
             Exit;
           Inc(reginput);
         end;
       OP_ANYBUTCI:
         begin
           if (reginput = fInputEnd) or
-            (StrScanCI(scan + REOpSz + RENextOffSz, reginput^) <> nil) then
+            FindInCharClass(scan + REOpSz + RENextOffSz, reginput^, True) then
             Exit;
           Inc(reginput);
         end;
-      {$ENDIF}
       OP_NOTHING:
         ;
       OP_COMMENT:
@@ -4035,197 +3907,6 @@ begin
   Error(reeMatchPrimCorruptedPointers);
 end; { of function TRegExpr.MatchPrim
   -------------------------------------------------------------- }
-
-{$IFDEF UseFirstCharSet}
-// ###0.929
-procedure TRegExpr.FillFirstCharSet(prog: PRegExprChar);
-var
-  scan: PRegExprChar; // Current node.
-  next: PRegExprChar; // Next node.
-  opnd: PRegExprChar;
-  min_cnt: integer;
-begin
-  scan := prog;
-  while scan <> nil do
-  begin
-    next := regnext(scan);
-    case PREOp(scan)^ of
-      OP_BSUBEXP, OP_BSUBEXPCI:
-        begin // ###0.938
-          FirstCharSet := [#0 .. #255]; // :((( we cannot
-          // optimize r.e. if it starts with back reference
-          Exit;
-        end;
-      OP_BOL, OP_BOLML:
-        ; // Exit; //###0.937
-      OP_EOL, OP_EOLML:
-        begin // ###0.948 was empty in 0.947, was Exit in 0.937
-          Include(FirstCharSet, #0);
-          if ModifierM then
-          begin
-            opnd := PRegExprChar(LineSeparators);
-            while opnd^ <> #0 do
-            begin
-              Include(FirstCharSet, opnd^);
-              Inc(opnd);
-            end;
-          end;
-          Exit;
-        end;
-      OP_BOUND, OP_NOTBOUND:
-        ; // ###0.943 ?!!
-      OP_ANY, OP_ANYML:
-        begin // we can better define OP_ANYML !!!
-          FirstCharSet := [#0 .. #255]; // ###0.930
-          Exit;
-        end;
-      OP_ANYDIGIT:
-        begin
-          FirstCharSet := FirstCharSet + ['0' .. '9'];
-          Exit;
-        end;
-      OP_NOTDIGIT:
-        begin
-          FirstCharSet := FirstCharSet + ([#0 .. #255] - ['0' .. '9']);
-          // ###0.948 FirstCharSet was forgotten
-          Exit;
-        end;
-      OP_ANYVERTSEP:
-        begin
-          FirstCharSet := FirstCharSet + [#$d, #$a, #$b, #$c];
-          Exit;
-        end;
-      OP_NOTVERTSEP:
-        begin
-          FirstCharSet := FirstCharSet + ([#0 .. #255] - [#$d, #$a, #$b, #$c]);
-          Exit;
-        end;
-      OP_ANYHORZSEP:
-        begin
-          FirstCharSet := FirstCharSet + [#9, #$20, #$A0];
-          Exit;
-        end;
-      OP_NOTHORZSEP:
-        begin
-          FirstCharSet := FirstCharSet + ([#0 .. #255] - [#9, #$20, #$A0]);
-          Exit;
-        end;
-      OP_EXACTLYCI:
-        begin
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
-          Include(FirstCharSet, InvertCase((scan + REOpSz + RENextOffSz)^));
-          Exit;
-        end;
-      OP_EXACTLY:
-        begin
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
-          Exit;
-        end;
-      OP_ANYOFFULLSET:
-        begin
-          FirstCharSet := FirstCharSet +
-            PSetOfREChar(scan + REOpSz + RENextOffSz)^;
-          Exit;
-        end;
-      OP_ANYOFTINYSET:
-        begin
-          // !!!TinySet
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz + 1)^);
-          Include(FirstCharSet, (scan + REOpSz + RENextOffSz + 2)^);
-          // ...                                                      // up to TinySetLen
-          Exit;
-        end;
-      OP_ANYBUTTINYSET:
-        begin
-          // !!!TinySet
-          FirstCharSet := FirstCharSet + ([#0 .. #255] - [
-            // ###0.948 FirstCharSet was forgotten
-            (scan + REOpSz + RENextOffSz)^, (scan + REOpSz + RENextOffSz + 1)^,
-            (scan + REOpSz + RENextOffSz + 2)^]);
-          // ...                                                      // up to TinySetLen
-          Exit;
-        end;
-      OP_NOTHING:
-        ;
-      OP_COMMENT:
-        ;
-      OP_BACK:
-        ;
-      Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1):
-        begin // ###0.929
-          FillFirstCharSet(next);
-          Exit;
-        end;
-      Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
-        begin // ###0.929
-          FillFirstCharSet(next);
-          Exit;
-        end;
-      OP_BRANCH:
-        begin
-          if (PREOp(next)^ <> OP_BRANCH) // No choice.
-          then
-            next := scan + REOpSz + RENextOffSz // Avoid recursion.
-          else
-          begin
-            repeat
-              FillFirstCharSet(scan + REOpSz + RENextOffSz);
-              scan := regnext(scan);
-            until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
-            Exit;
-          end;
-        end;
-      {$IFDEF ComplexBraces}
-      OP_LOOPENTRY:
-        begin // ###0.925
-          // LoopStack [LoopStackIdx] := 0; //###0.940 line removed
-          FillFirstCharSet(next); // execute loop
-          Exit;
-        end;
-      OP_LOOP, OP_LOOPNG:
-        begin // ###0.940
-          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz +
-            REBracesArgSz * 2))^;
-          min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-          FillFirstCharSet(opnd);
-          if min_cnt = 0 then
-            FillFirstCharSet(next);
-          Exit;
-        end;
-      {$ENDIF}
-      OP_STAR, OP_STARNG: // ###0.940
-        FillFirstCharSet(scan + REOpSz + RENextOffSz);
-      OP_PLUS, OP_PLUSNG:
-        begin // ###0.940
-          FillFirstCharSet(scan + REOpSz + RENextOffSz);
-          Exit;
-        end;
-      OP_BRACES, OP_BRACESNG:
-        begin // ###0.940
-          opnd := scan + REOpSz + RENextOffSz + REBracesArgSz * 2;
-          min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-          // braces
-          FillFirstCharSet(opnd);
-          if min_cnt > 0 then
-            Exit;
-        end;
-      OP_EEND:
-        begin
-          FirstCharSet := [#0 .. #255]; // ###0.948
-          Exit;
-        end;
-    else
-      begin
-        Error(reeMatchPrimMemoryCorruption);
-        Exit;
-      end;
-    end; { of case scan^ }
-    scan := next;
-  end; { of while scan <> nil }
-end; { of procedure FillFirstCharSet
-  -------------------------------------------------------------- }
-{$ENDIF}
 
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
@@ -4876,14 +4557,6 @@ begin
     OP_LOOPNG:
       Result := 'LOOPNG'; // ###0.940
     {$ENDIF}
-    OP_ANYOFTINYSET:
-      Result := 'ANYOFTINYSET';
-    OP_ANYBUTTINYSET:
-      Result := 'ANYBUTTINYSET';
-    {$IFDEF UseSetOfChar} // ###0.929
-    OP_ANYOFFULLSET:
-      Result := 'ANYOFFULLSET';
-    {$ENDIF}
     OP_STARNG:
       Result := 'STARNG'; // ###0.940
     OP_PLUSNG:
@@ -4905,9 +4578,6 @@ var
   next: PRegExprChar;
   i: integer;
   Diff: PtrInt;
-  {$IFDEF UseSetOfChar} // ###0.929
-  Ch: REChar;
-  {$ENDIF}
 
   function PrintableChar(AChar: REChar): string; {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
@@ -4956,28 +4626,11 @@ begin
       end;
       Inc(s);
     end;
-    if (op = OP_ANYOFTINYSET) or (op = OP_ANYBUTTINYSET) then
-    begin
-      for i := 1 to TinySetLen do
-      begin
-        Result := Result + s^;
-        Inc(s);
-      end;
-    end;
     if (op = OP_BSUBEXP) or (op = OP_BSUBEXPCI) then
     begin
       Result := Result + ' \' + IntToStr(Ord(s^));
       Inc(s);
     end;
-    {$IFDEF UseSetOfChar} // ###0.929
-    if op = OP_ANYOFFULLSET then
-    begin
-      for Ch := #0 to #255 do
-        if Ch in PSetOfREChar(s)^ then
-          Result := Result + PrintableChar(Ch);
-      Inc(s, SizeOf(TSetOfREChar));
-    end;
-    {$ENDIF}
     if (op = OP_BRACES) or (op = OP_BRACESNG) then
     begin // ###0.941
       // show min/max argument of braces operator

@@ -87,6 +87,7 @@ type
     Procedure RunTest36;
     Procedure RunTest37;
     Procedure RunTest38;
+    Procedure RunTest39;
     Procedure TestGroups;
     {$IFDEF Unicode}
     procedure TestUnicode1;
@@ -122,7 +123,7 @@ end;
 
 
 const
-  testCases: array [1..38] of TRegExTest = (
+  testCases: array [1..39] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -420,11 +421,19 @@ const
     matchStart: 0
     ),
     // 38
-    (
+    ( // brackets just after [
     expression: '[[\w]+ []\w]+';
     inputText: '  ww[ww w]www';
     substitutionText: '';
     expectedResult: 'ww[ww w]www';
+    matchStart: 3
+    ),
+    // 39
+    ( // NULL in expression, negative \W \S \D in []
+    expression: '([\x00\d]+ )+ [\W]+ [\S\x00-\x10]+ [\D]+';
+    inputText: '  22'#0'33 '#0'33  .& w#'#5#0' w#';
+    substitutionText: '';
+    expectedResult: '22'#0'33 '#0'33  .& w#'#5#0' w#';
     matchStart: 3
     )
   );
@@ -686,6 +695,11 @@ end;
 procedure TTestRegexpr.RunTest38;
 begin
   RunRETest(38);
+end;
+
+procedure TTestRegexpr.RunTest39;
+begin
+  RunRETest(39);
 end;
 
 procedure TTestRegexpr.TestGroups;
