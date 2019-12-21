@@ -4576,7 +4576,7 @@ var
   s: PRegExprChar;
   op: TREOp; // Arbitrary non-END op.
   next: PRegExprChar;
-  i: integer;
+  i, NLen: integer;
   Diff: PtrInt;
 
   function PrintableChar(AChar: REChar): string; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -4615,8 +4615,44 @@ begin
       Result := Result + Format(' (%d) ', [(s - programm) + Diff]);
     end;
     Inc(s, REOpSz + RENextOffSz);
-    if (op = OP_ANYOF) or (op = OP_ANYOFCI) or (op = OP_ANYBUT) or (op = OP_ANYBUTCI) or
-      (op = OP_EXACTLY) or (op = OP_EXACTLYCI) then
+    if (op = OP_ANYOF) or (op = OP_ANYOFCI) or (op = OP_ANYBUT) or (op = OP_ANYBUTCI) then
+    begin
+      repeat
+        case s^ of
+          OpKind_End:
+            begin
+              Inc(s);
+              Break;
+            end;
+          OpKind_Range:
+            begin
+              Result := Result + 'Rng(';
+              Inc(s);
+              Result := Result + PrintableChar(s^) + '-';
+              Inc(s);
+              Result := Result + PrintableChar(s^);
+              Result := Result + ') ';
+              Inc(s);
+            end;
+          OpKind_MetaClass:
+            begin
+              Result := Result + '\';
+              Inc(s);
+              Result := Result + PrintableChar(s^) + ' ';
+              Inc(s);
+            end;
+          OpKind_Char .. High(REChar):
+            begin
+              NLen := Ord(s^) - Ord(OpKind_Char);
+              Result := Result + 'Chr(' + IntToStr(NLen) + ') ';
+              Inc(s, NLen+1);
+            end;
+          else
+            raise Exception.Create('TRegExpr: unknown opcode in char class');
+        end;
+      until false;
+    end;
+    if (op = OP_EXACTLY) or (op = OP_EXACTLYCI) then
     begin
       // Literal string, where present.
       while s^ <> #0 do

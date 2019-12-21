@@ -63,8 +63,8 @@ begin
   end;
 
   try
-    reg.InputString:= EditText.Text;
-    if reg.Exec then
+    if EditText.Text='' then exit;
+    if reg.Exec(EditText.Text) then
     begin
       ListRes.Items.Add(
         'Found at pos: '+IntToStr(reg.MatchPos[0])+
