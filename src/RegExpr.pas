@@ -1903,25 +1903,15 @@ const
   flag_Worst = 0; // Worst case.
 
   {$IFDEF UniCode}
-  RusRangeLo: array [0 .. 33] of REChar = (#$430, #$431, #$432, #$433, #$434,
-    #$435, #$451, #$436, #$437, #$438, #$439, #$43A, #$43B, #$43C, #$43D, #$43E,
-    #$43F, #$440, #$441, #$442, #$443, #$444, #$445, #$446, #$447, #$448, #$449,
-    #$44A, #$44B, #$44C, #$44D, #$44E, #$44F, #0);
-  RusRangeHi: array [0 .. 33] of REChar = (#$410, #$411, #$412, #$413, #$414,
-    #$415, #$401, #$416, #$417, #$418, #$419, #$41A, #$41B, #$41C, #$41D, #$41E,
-    #$41F, #$420, #$421, #$422, #$423, #$424, #$425, #$426, #$427, #$428, #$429,
-    #$42A, #$42B, #$42C, #$42D, #$42E, #$42F, #0);
-  RusRangeLoLow = #$430 { 'а' };
-  RusRangeLoHigh = #$44F { 'я' };
-  RusRangeHiLow = #$410 { 'А' };
-  RusRangeHiHigh = #$42F { 'Я' };
+  RusRangeLoLow = #$430; // 'а'
+  RusRangeLoHigh = #$44F; // 'я'
+  RusRangeHiLow = #$410; // 'А'
+  RusRangeHiHigh = #$42F; // 'Я'
   {$ELSE}
-  RusRangeLo = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
-  RusRangeHi = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
-  RusRangeLoLow = 'а';
-  RusRangeLoHigh = 'я';
-  RusRangeHiLow = 'А';
-  RusRangeHiHigh = 'Я';
+  RusRangeLoLow = #$E0; // 'а' in cp1251
+  RusRangeLoHigh = #$FF; // 'я' in cp1251
+  RusRangeHiLow = #$C0; // 'А' in cp1251
+  RusRangeHiHigh = #$DF; // 'Я' in cp1251
   {$ENDIF}
 
 function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
@@ -2820,22 +2810,12 @@ begin
               RangeEnd := UnQuoteChar(regparse);
             end;
 
-            // r.e.ranges extension for russian
+            // special handling for Russian range a-YA, add 2 ranges: a-ya and A-YA
             if ((fCompModifiers and MaskModR) <> 0) and
-              (RangeBeg = RusRangeLoLow) and (RangeEnd = RusRangeLoHigh) then
-            begin
-              EmitRangeStr(RusRangeLo);
-            end
-            else if ((fCompModifiers and MaskModR) <> 0) and
-              (RangeBeg = RusRangeHiLow) and (RangeEnd = RusRangeHiHigh) then
-            begin
-              EmitRangeStr(RusRangeHi);
-            end
-            else if ((fCompModifiers and MaskModR) <> 0) and
               (RangeBeg = RusRangeLoLow) and (RangeEnd = RusRangeHiHigh) then
             begin
-              EmitRangeStr(RusRangeLo);
-              EmitRangeStr(RusRangeHi);
+              EmitRangePacked(RusRangeLoLow, RusRangeLoHigh);
+              EmitRangePacked(RusRangeHiLow, RusRangeHiHigh);
             end
             else
             begin // standard r.e. handling
@@ -2869,33 +2849,6 @@ begin
               begin
                 EmitSimpleRangeC(UnQuoteChar(regparse));
               end;
-              (*
-              // old code, emits in [] entire string for meta-class
-              case regparse^ of // r.e.extensions
-                'd':
-                  EmitRangeStr('0123456789');
-                'w':
-                  {$IFDEF UseWordChars}
-                  EmitRangeStr(WordChars);
-                  {$ELSE}
-                  // cannot replace this with EmitNode(OP_ANYLETTER) !
-                  EmitRangeStr(RegExprWordChars);
-                  {$ENDIF}
-                's':
-                  {$IFDEF UseSpaceChars}
-                  EmitRangeStr(SpaceChars);
-                  {$ELSE}
-                  // cannot replace this with EmitNode(OP_ANYSPACE) !
-                  EmitRangeStr(RegExprSpaceChars);
-                  {$ENDIF}
-                'v':
-                  EmitRangeStr(RegExprLineSeparators);
-                'h':
-                  EmitRangeStr(RegExprHorzSeparators);
-              else
-                EmitSimpleRangeC(UnQuoteChar(regparse));
-              end; { of case }
-              *)
             end
             else
               EmitSimpleRangeC(regparse^);
@@ -4576,7 +4529,7 @@ var
   s: PRegExprChar;
   op: TREOp; // Arbitrary non-END op.
   next: PRegExprChar;
-  i: integer;
+  i, NLen: integer;
   Diff: PtrInt;
 
   function PrintableChar(AChar: REChar): string; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -4615,8 +4568,49 @@ begin
       Result := Result + Format(' (%d) ', [(s - programm) + Diff]);
     end;
     Inc(s, REOpSz + RENextOffSz);
-    if (op = OP_ANYOF) or (op = OP_ANYOFCI) or (op = OP_ANYBUT) or (op = OP_ANYBUTCI) or
-      (op = OP_EXACTLY) or (op = OP_EXACTLYCI) then
+    if (op = OP_ANYOF) or (op = OP_ANYOFCI) or (op = OP_ANYBUT) or (op = OP_ANYBUTCI) then
+    begin
+      repeat
+        case s^ of
+          OpKind_End:
+            begin
+              Inc(s);
+              Break;
+            end;
+          OpKind_Range:
+            begin
+              Result := Result + 'Rng(';
+              Inc(s);
+              Result := Result + PrintableChar(s^) + '-';
+              Inc(s);
+              Result := Result + PrintableChar(s^);
+              Result := Result + ') ';
+              Inc(s);
+            end;
+          OpKind_MetaClass:
+            begin
+              Inc(s);
+              Result := Result + '\' + PrintableChar(s^) + ' ';
+              Inc(s);
+            end;
+          OpKind_Char .. High(REChar):
+            begin
+              NLen := Ord(s^) - Ord(OpKind_Char);
+              Result := Result + 'Ch(';
+              for i := 1 to NLen do
+              begin
+                Inc(s);
+                Result := Result + PrintableChar(s^);
+              end;
+              Result := Result + ') ';
+              Inc(s);
+            end;
+          else
+            raise Exception.Create('TRegExpr: unknown opcode in char class');
+        end;
+      until false;
+    end;
+    if (op = OP_EXACTLY) or (op = OP_EXACTLYCI) then
     begin
       // Literal string, where present.
       while s^ <> #0 do
