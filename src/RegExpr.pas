@@ -4636,16 +4636,21 @@ begin
             end;
           OpKind_MetaClass:
             begin
-              Result := Result + '\';
               Inc(s);
-              Result := Result + PrintableChar(s^) + ' ';
+              Result := Result + '\' + PrintableChar(s^) + ' ';
               Inc(s);
             end;
           OpKind_Char .. High(REChar):
             begin
               NLen := Ord(s^) - Ord(OpKind_Char);
-              Result := Result + 'Chr(' + IntToStr(NLen) + ') ';
-              Inc(s, NLen+1);
+              Result := Result + 'Ch(';
+              for i := 1 to NLen do
+              begin
+                Inc(s);
+                Result := Result + PrintableChar(s^);
+              end;
+              Result := Result + ') ';
+              Inc(s);
             end;
           else
             raise Exception.Create('TRegExpr: unknown opcode in char class');
