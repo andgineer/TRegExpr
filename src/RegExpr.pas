@@ -1999,7 +1999,7 @@ begin
 end;
 
 
-procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharset);
+procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
 {$IFDEF UseWordChars}
 var
   i: integer;
@@ -2019,7 +2019,7 @@ begin
   {$ENDIF}
 end;
 
-procedure TRegExpr.GetCharSetFromSpaceChars(var ARes: TRegExprCharset);
+procedure TRegExpr.GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
 {$IFDEF UseSpaceChars}
 var
   i: integer;
