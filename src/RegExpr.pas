@@ -135,7 +135,7 @@ type
 
 const
   REOpSz = SizeOf(TREOp) div SizeOf(REChar);
-  // size of p-code in RegExprString units
+  // size of OP_ command in REChars
   {$IFDEF FPC_REQUIRES_PROPER_ALIGNMENT}
   // add space for aligning pointer
   // -1 is the correct max size but also needed for InsertOperator that needs a multiple of pointer size
@@ -144,9 +144,9 @@ const
   // add space for aligning pointer
   {$ELSE}
   RENextOffSz = (SizeOf(TRENextOff) div SizeOf(REChar));
-  // size of Next 'pointer' -"-
+  // size of Next pointer in REChars
   REBracesArgSz = SizeOf(TREBracesArg) div SizeOf(REChar);
-  // size of BRACES arguments -"-
+  // size of BRACES arguments in REChars
   {$ENDIF}
 
 type
