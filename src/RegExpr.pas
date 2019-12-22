@@ -230,15 +230,15 @@ type
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
     regstart: REChar; // char that must begin a match; '\0' if none obvious
-    reganch: REChar; // is the match anchored (at beginning-of-line only)?
+    reganchored: REChar; // is the match anchored (at beginning-of-line only)?
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
-    regmlen: integer; // length of regmust string
+    regmustlen: integer; // length of regmust string
     // Regstart and reganch permit very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
     // that regcomp() supplies a regmust only if the r.e. contains something
     // potentially expensive (at present, the only such thing detected is * or +
-    // at the start of the r.e., which can involve a lot of backup). Regmlen is
+    // at the start of the r.e., which can involve a lot of backup). regmustlen is
     // supplied because the test in regexec() needs it and regcomp() is computing
     // it anyway.
 
@@ -2247,9 +2247,9 @@ begin
     {$ENDIF}
 
     regstart := #0; // Worst-case defaults.
-    reganch := #0;
+    reganchored := #0;
     regmust := nil;
-    regmlen := 0;
+    regmustlen := 0;
     scan := programm + REOpSz; // First OP_BRANCH.
     if PREOp(regnext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
@@ -2259,7 +2259,7 @@ begin
       if PREOp(scan)^ = OP_EXACTLY then
         regstart := (scan + REOpSz + RENextOffSz)^
       else if PREOp(scan)^ = OP_BOL then
-        Inc(reganch);
+        Inc(reganchored);
 
       // If there's something expensive in the r.e., find the longest
       // literal string that must appear and make it the regmust. Resolve
@@ -2286,7 +2286,7 @@ begin
           scan := regnext(scan);
         end;
         regmust := longest;
-        regmlen := Len;
+        regmustlen := Len;
       end;
     end;
 
@@ -4094,7 +4094,7 @@ begin
       s := StrScan(s, regmust[0]);
       if s <> nil then
       begin
-        if StrLComp(s, regmust, regmlen) = 0 then
+        if StrLComp(s, regmust, regmustlen) = 0 then
           Break; // Found it.
         Inc(s);
       end;
@@ -4109,7 +4109,7 @@ begin
   LoopStackIdx := 0; // ###0.925
   {$ENDIF}
   // Simplest case:  anchored match need be tried only once.
-  if reganch <> #0 then
+  if reganchored <> #0 then
   begin
     Result := RegMatch(StartPtr);
     Exit;
@@ -5013,7 +5013,7 @@ begin
   // Header fields of interest.
   if regstart <> #0 then
     Result := Result + 'Start: ' + regstart + '  ';
-  if reganch <> #0 then
+  if reganchored <> #0 then
     Result := Result + 'Anchored  ';
   if regmust <> nil then
     Result := Result + 'Must have: ' + regmust + '  ';
@@ -5079,7 +5079,7 @@ end; { of procedure TRegExpr.Error
   programm, regsize
   regstart // -> programm
   reganch // -> programm
-  regmust, regmlen // -> programm
+  regmust, regmustlen // -> programm
   fExprIsCompiled
 *)
 
