@@ -843,7 +843,7 @@ var
 begin
   Result := True;
   IsOn := True;
-  for i := 1 to length(AStr) do
+  for i := 1 to Length(AStr) do
     case AStr[i] of
       '-':
         IsOn := False;
@@ -943,7 +943,7 @@ var
 begin
   Result := '';
   MetaAll := META + ']}';
-  Len := length(AStr);
+  Len := Length(AStr);
   i := 1;
   i0 := i;
   while i <= Len do
@@ -980,7 +980,7 @@ begin
   ASubExprs.Clear; // I don't think that adding to non empty list
   // can be useful, so I simplified algorithm to work only with empty list
 
-  Len := length(ARegExpr); // some optimization tricks
+  Len := Length(ARegExpr); // some optimization tricks
 
   // first we have to calculate number of subexpression to reserve
   // space in Stack array (may be we'll reserve more than needed, but
@@ -1385,7 +1385,7 @@ begin
   FReplaceLineEnd := sLineBreak;
 
   fMetaStart := PRegExprChar(META);
-  fMetaEnd := fMetaStart + length(META);
+  fMetaEnd := fMetaStart + Length(META);
 
   {$IFDEF UnicodeWordDetection}
   FUseUnicodeWordDetection := True;
@@ -1456,7 +1456,7 @@ begin
     fExpression := s;
     UniqueString(fExpression);
     fRegexStart := PRegExprChar(fExpression);
-    fRegexEnd := fRegexStart + length(fExpression);
+    fRegexEnd := fRegexStart + Length(fExpression);
     InvalidateProgramm; // ###0.941
   end;
 end; { of procedure TRegExpr.SetExpression
@@ -1492,7 +1492,7 @@ begin
   begin
     // SetString (Result, startp [idx], endp [idx] - startp [idx])
     SetLength(Result, endp[Idx] - startp[Idx]);
-    System.Move(startp[Idx]^, Result[1], length(Result) * SizeOf(REChar));
+    System.Move(startp[Idx]^, Result[1], Length(Result) * SizeOf(REChar));
   end;
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
@@ -1526,9 +1526,9 @@ begin
   else
     Result := Result + 'x';
 
-  if Result[length(Result)] = '-' // remove '-' if all modifiers are 'On'
+  if Result[Length(Result)] = '-' // remove '-' if all modifiers are 'On'
   then
-    System.Delete(Result, length(Result), 1);
+    System.Delete(Result, Length(Result), 1);
 end; { of function TRegExpr.GetModifierStr
   -------------------------------------------------------------- }
 
@@ -1702,7 +1702,7 @@ begin
   // can we optimize line separators by using sets?
   {$IFNDEF UniCode}
   fLineSeparatorsSet := [];
-  for i := 1 to length(fLineSeparators) do
+  for i := 1 to Length(fLineSeparators) do
     System.Include(fLineSeparatorsSet, fLineSeparators[i]);
   {$ENDIF}
   // [Re]compile if needed
@@ -3338,7 +3338,7 @@ var
 begin
   Result := False;
   scan := prog;
-  FillChar(SavedLoopStack[1], length(SavedLoopStack), 0);
+  FillChar(SavedLoopStack[1], Length(SavedLoopStack), 0);
   while scan <> nil do
   begin
     Len := PRENextOff(AlignToPtr(scan + 1))^; // ###0.932 inlined regnext
@@ -3939,7 +3939,7 @@ begin
   end;
   // Check that the start position is not longer than the line
   // If so then exit with nothing found
-  if AOffset > (length(fInputString) + 1)
+  if AOffset > (Length(fInputString) + 1)
   // for matching empty string after last char.
   then
     Exit;
@@ -4067,7 +4067,7 @@ begin
   UniqueString(fInputString);
 
   fInputStart := PRegExprChar(fInputString);
-  fInputEnd := fInputStart + length(fInputString);
+  fInputEnd := fInputStart + Length(fInputString);
 end; { of procedure TRegExpr.SetInputString
   -------------------------------------------------------------- }
 
@@ -4083,7 +4083,7 @@ end; { of procedure TRegExpr.SetLineSeparators
 
 procedure TRegExpr.SetLinePairedSeparator(const AStr: RegExprString);
 begin
-  if length(AStr) = 2 then
+  if Length(AStr) = 2 then
   begin
     if AStr[1] = AStr[2] then
     begin
@@ -4101,7 +4101,7 @@ begin
       InvalidateProgramm;
     end;
   end
-  else if length(AStr) = 0 then
+  else if Length(AStr) = 0 then
   begin
     if fLinePairedSeparatorAssigned then
     begin
@@ -4189,7 +4189,7 @@ begin
     Exit;
   end;
   // Prepare for working
-  TemplateLen := length(ATemplate);
+  TemplateLen := Length(ATemplate);
   if TemplateLen = 0 then
   begin // prevent nil pointers
     Result := '';
@@ -4220,7 +4220,7 @@ begin
         Inc(p);
         case Ch of
           'n':
-            Inc(ResultLen, length(FReplaceLineEnd));
+            Inc(ResultLen, Length(FReplaceLineEnd));
           'u', 'l', 'U', 'L': { nothing }
             ;
           'x':
@@ -4280,7 +4280,7 @@ begin
           'n':
             begin
               p0 := @FReplaceLineEnd[1];
-              p1 := p0 + length(FReplaceLineEnd);
+              p1 := p0 + Length(FReplaceLineEnd);
             end;
           'x', 't', 'r', 'f', 'a', 'e':
             begin
