@@ -4685,24 +4685,26 @@ begin
         end;
       OP_ANYOF:
         begin
-          GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, False, FirstCharSet);
+          GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, False, TempSet);
+          FirstCharSet := FirstCharSet + TempSet;
           Exit;
         end;
       OP_ANYBUT:
         begin
           GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, False, TempSet);
-          FirstCharSet := RegExprAllSet - TempSet;
+          FirstCharSet := FirstCharSet + (RegExprAllSet - TempSet);
           Exit;
         end;
       OP_ANYOFCI:
         begin
-          GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, True, FirstCharSet);
+          GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, True, TempSet);
+          FirstCharSet := FirstCharSet + TempSet;
           Exit;
         end;
       OP_ANYBUTCI:
         begin
           GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, True, TempSet);
-          FirstCharSet := RegExprAllSet - TempSet;
+          FirstCharSet := FirstCharSet + (RegExprAllSet - TempSet);
           Exit;
         end;
       OP_NOTHING:
