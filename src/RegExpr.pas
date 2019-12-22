@@ -2719,16 +2719,6 @@ var
     CanBeRange := True;
   end;
 
-  procedure EmitRangeStr(const S: RegExprString); {$IFDEF InlineFuncs}inline;{$ENDIF}
-  var
-    i: integer;
-  begin
-    AddrOfString := nil;
-    EmitC(REChar(Ord(OpKind_Char) + Length(S)));
-    for i := 1 to Length(S) do
-      EmitC(S[i]);
-  end;
-
   procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     AddrOfString := nil;
@@ -2768,11 +2758,6 @@ begin
       begin // not /s, so emit [^:LineSeparators:]
         ret := EmitNode(OP_ANYML);
         flagp := flagp or flag_HasWidth; // not so simple ;)
-        // ret := EmitRange(OP_ANYBUT);
-        // EmitRangeStr(LineSeparators); //###0.941
-        // EmitRangeStr(LinePairedSeparator); // !!! isn't correct if have to accept only paired
-        // EmitRangeC(#0);
-        // flagp := flagp or flag_HasWidth or flag_Simple;
       end;
     '[':
       begin
