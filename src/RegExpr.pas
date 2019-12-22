@@ -618,9 +618,7 @@ type
   end;
 
 const
-  // default for InvertCase property:
-  RegExprInvertCaseFunction: TRegExprInvertCaseFunction =
-    {$IFDEF FPC} nil {$ELSE} TRegExpr.InvertCaseFunction{$ENDIF};
+  RegExprInvertCaseFunction: TRegExprInvertCaseFunction = nil;
 
   // true if string AInputString match regular expression ARegExpr
   // ! will raise exeption if syntax errors in ARegExpr
@@ -1251,6 +1249,7 @@ const
   reeComplexBracesNotImplemented = 126;
   reeUnrecognizedModifier = 127;
   reeBadLinePairedSeparator = 128;
+  // Runtime errors must be >= 1000
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
   reeMatchPrimCorruptedPointers = 1002;
@@ -5088,12 +5087,8 @@ end; { of procedure TRegExpr.Error
 // be carefull - placed here code will be always compiled with
 // compiler optimization flag
 
-{$IFDEF FPC}
-
 initialization
 
-RegExprInvertCaseFunction := TRegExpr.InvertCaseFunction;
-
-{$ENDIF}
+  RegExprInvertCaseFunction := TRegExpr.InvertCaseFunction;
 
 end.
