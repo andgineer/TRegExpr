@@ -1229,6 +1229,7 @@ const
   reeNoLetterAfterBSlashC = 117;
   reeMetaCharAfterMinusInRange = 118;
   reeRarseAtomInternalDisaster = 119;
+  reeInvalidOpcodeInCharClass = 120;
   reeBRACESArgTooBig = 122;
   reeUnknownOpcodeInFillFirst = 123;
   reeBracesMinParamGreaterMax = 124;
@@ -1292,6 +1293,8 @@ begin
       Result := 'TRegExpr compile: trailing \';
     reeRarseAtomInternalDisaster:
       Result := 'TRegExpr compile: RarseAtom internal disaster';
+    reeInvalidOpcodeInCharClass:
+      Result := 'TRegExpr compile: invalid opcode in char class []';
     reeBRACESArgTooBig:
       Result := 'TRegExpr compile: BRACES argument too big';
     reeUnknownOpcodeInFillFirst:
@@ -1977,7 +1980,7 @@ begin
         end;
 
       else
-        raise Exception.Create('TRegExpr: invalid opcode in char range');
+        Error(reeInvalidOpcodeInCharClass);
     end;
   until False; // assume that Buffer is ended correctly
 end;
