@@ -3471,7 +3471,7 @@ var
   next: PRegExprChar; // Next node.
   Len: PtrInt;
   opnd: PRegExprChar;
-  no: PtrInt;
+  no: integer;
   save: PRegExprChar;
   nextch: REChar;
   BracesMin, Bracesmax: PtrInt;
