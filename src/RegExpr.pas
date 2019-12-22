@@ -5013,15 +5013,15 @@ begin
   end; { of while }
 
   // Header fields of interest.
-
   if regstart <> #0 then
-    Result := Result + 'start ' + regstart;
+    Result := Result + 'Start: ' + regstart + '  ';
   if reganch <> #0 then
-    Result := Result + 'anchored ';
+    Result := Result + 'Anchored  ';
   if regmust <> nil then
-    Result := Result + 'must have ' + regmust;
+    Result := Result + 'Must have: ' + regmust + '  ';
+
   {$IFDEF UseFirstCharSet} // ###0.929
-  Result := Result + #$d#$a'FirstCharSet: ';
+  Result := Result + #$d#$a'First charset: ';
   for Ch := #0 to #255 do
     if Ch in FirstCharSet then
     begin
