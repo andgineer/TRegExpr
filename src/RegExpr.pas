@@ -5024,6 +5024,12 @@ begin
 
   {$IFDEF UseFirstCharSet} // ###0.929
   Result := Result + #$d#$a'First charset: ';
+  if FirstCharSet = [] then
+    Result := Result + '<empty set>'
+  else
+  if FirstCharSet = RegExprAllSet then
+    Result := Result + '<all chars>'
+  else
   for Ch := #0 to #255 do
     if Ch in FirstCharSet then
     begin
