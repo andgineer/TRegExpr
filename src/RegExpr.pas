@@ -73,11 +73,11 @@ interface
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
 {$DEFINE UseFirstCharSet} // Enable optimization, which finds possible first chars of input string
-{$DEFINE RegExpPCodeDump} // p-code dumping (see Dump method)
-{$IFNDEF FPC} // the option is not supported in FreePascal
-  {$DEFINE reRealExceptionAddr} // exceptions will point to appropriate source line, not to Error procedure
+{$DEFINE RegExpPCodeDump} // Enable method Dump() to show opcode as string
+{$IFNDEF FPC} // Not supported in FreePascal
+  {$DEFINE reRealExceptionAddr} // Exceptions will point to appropriate source line, not to Error procedure
 {$ENDIF}
-{$DEFINE ComplexBraces} // support braces in complex cases
+{$DEFINE ComplexBraces} // Support braces in complex cases
 {$IFNDEF UniCode}
   {$UNDEF UnicodeWordDetection}
 {$ENDIF}
