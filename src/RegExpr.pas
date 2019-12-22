@@ -205,6 +205,30 @@ const
   {$ENDIF}
 
 type
+  TRegExprModifiers = record
+    I: boolean;
+       // Case-insensitive.
+    R: boolean;
+       // Extended syntax for Russian ranges in [].
+       // If True, then а-я additionally includes letter 'ё',
+       // А-Я additionally includes 'Ё', and а-Я includes all Russian letters.
+       // Turn it off if it interferes with your national alphabet.
+    S: boolean;
+       // Dot '.' matches any char, otherwise only [^\n].
+    G: boolean;
+       // Greedy. Switching it off switches all operators to non-greedy style,
+       // so if G=False, then '*' works like '*?', '+' works like '+?' and so on.
+    M: boolean;
+       // Treat string as multiple lines. It changes `^' and `$' from
+       // matching at only the very start/end of the string to the start/end
+       // of any line anywhere within the string.
+    X: boolean;
+       // Allow comments in regex using # char.
+  end;
+
+function IsModifiersEqual(const A, B: TRegExprModifiers): boolean;
+
+type
   TRegExpr = class;
   TRegExprReplaceFunction = function(ARegExpr: TRegExpr): RegExprString of object;
 
@@ -284,9 +308,9 @@ type
 
     fLastError: integer; // see Error, LastError
 
-    fModifiers: integer; // modifiers
-    fCompModifiers: integer; // compiler's copy of modifiers
-    fProgModifiers: integer; // modifiers values from last programm compilation
+    fModifiers: TRegExprModifiers; // modifiers
+    fCompModifiers: TRegExprModifiers; // compiler's copy of modifiers
+    fProgModifiers: TRegExprModifiers; // modifiers values from last programm compilation
 
     {$IFDEF UseSpaceChars}
     fSpaceChars: RegExprString; // ###0.927
@@ -320,14 +344,19 @@ type
     procedure SetExpression(const s: RegExprString);
 
     function GetModifierStr: RegExprString;
-    // Parse AModifiers string and return true and set AModifiersInt
-    // if it's in format 'ismxrg-ismxrg'.
-    class function ParseModifiersStr(const AModifiers: RegExprString;
-      var AModifiersInt: integer): boolean; // ###0.941 class function now
-    procedure SetModifierStr(const AModifiers: RegExprString);
-
-    function GetModifier(AIndex: integer): boolean;
-    procedure SetModifier(AIndex: integer; ASet: boolean);
+    procedure SetModifierStr(const AStr: RegExprString);
+    function GetModifierG: boolean;
+    function GetModifierI: boolean;
+    function GetModifierM: boolean;
+    function GetModifierR: boolean;
+    function GetModifierS: boolean;
+    function GetModifierX: boolean;
+    procedure SetModifierG(AValue: boolean);
+    procedure SetModifierI(AValue: boolean);
+    procedure SetModifierM(AValue: boolean);
+    procedure SetModifierR(AValue: boolean);
+    procedure SetModifierS(AValue: boolean);
+    procedure SetModifierX(AValue: boolean);
 
     // Default handler raises exception ERegExpr with
     // Message = ErrorMsg (AErrorID), ErrorCode = AErrorID
@@ -513,37 +542,13 @@ type
     property ModifierStr: RegExprString read GetModifierStr
       write SetModifierStr;
 
-    // Modifier /i - caseinsensitive, initialized from RegExprModifierI
-    property ModifierI: boolean index 1 read GetModifier write SetModifier;
+    property ModifierI: boolean read GetModifierI write SetModifierI;
+    property ModifierR: boolean read GetModifierR write SetModifierR;
+    property ModifierS: boolean read GetModifierS write SetModifierS;
+    property ModifierG: boolean read GetModifierG write SetModifierG;
+    property ModifierM: boolean read GetModifierM write SetModifierM;
+    property ModifierX: boolean read GetModifierX write SetModifierX;
 
-    // Modifier /r - use r.e.syntax extended for russian,
-    // (was property ExtSyntaxEnabled in previous versions)
-    // If true, then а-я  additional include russian letter 'ё',
-    // А-Я  additional include 'Ё', and а-Я include all russian symbols.
-    // You have to turn it off if it can interfere with you national alphabet.
-    // , initialized from RegExprModifierR
-    property ModifierR: boolean index 2 read GetModifier write SetModifier;
-
-    // Modifier /s - '.' works as any char (else as [^\n]),
-    // , initialized from RegExprModifierS
-    property ModifierS: boolean index 3 read GetModifier write SetModifier;
-
-    // Switching off modifier /g switchs all operators in
-    // non-greedy style, so if ModifierG = False, then
-    // all '*' works as '*?', all '+' as '+?' and so on.
-    // , initialized from RegExprModifierG
-    property ModifierG: boolean index 4 read GetModifier write SetModifier;
-
-    // Treat string as multiple lines. That is, change `^' and `$' from
-    // matching at only the very start or end of the string to the start
-    // or end of any line anywhere within the string.
-    // , initialized from RegExprModifierM
-    property ModifierM: boolean index 5 read GetModifier write SetModifier;
-
-    // Modifier /x - eXtended syntax, allow r.e. text formatting,
-    // see description in the help. Initialized from RegExprModifierX
-
-    property ModifierX: boolean index 6 read GetModifier write SetModifier;
     // returns current input string (from last Exec call or last assign
     // to this property).
     // Any assignment to this property clear Match* properties !
@@ -711,13 +716,6 @@ const
   TRegExprVersionMajor: integer = 0;
   TRegExprVersionMinor: integer = 967;
 
-  MaskModI = 1; // modifier /i bit in fModifiers
-  MaskModR = 2; // -"- /r
-  MaskModS = 4; // -"- /s
-  MaskModG = 8; // -"- /g
-  MaskModM = 16; // -"- /m
-  MaskModX = 32; // -"- /x
-
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
   OpKind_Range = REChar(3);
@@ -825,6 +823,50 @@ end;
 { ===================== Global functions ====================== }
 { ============================================================= }
 
+function IsModifiersEqual(const A, B: TRegExprModifiers): boolean;
+begin
+  Result :=
+    (A.I = B.I) and
+    (A.G = B.G) and
+    (A.M = B.M) and
+    (A.S = B.S) and
+    (A.R = B.R) and
+    (A.X = B.X);
+end;
+
+function ParseModifiersStr(const AStr: RegExprString;
+  var AValue: TRegExprModifiers): boolean;
+// Parse string and set AValue if it's in format 'ismxrg-ismxrg'
+var
+  IsOn: boolean;
+  i: integer;
+begin
+  Result := True;
+  IsOn := True;
+  for i := 1 to length(AStr) do
+    case AStr[i] of
+      '-':
+        IsOn := False;
+      'I', 'i':
+        AValue.I := IsOn;
+      'R', 'r':
+        AValue.R := IsOn;
+      'S', 's':
+        AValue.S := IsOn;
+      'G', 'g':
+        AValue.G := IsOn;
+      'M', 'm':
+        AValue.M := IsOn;
+      'X', 'x':
+        AValue.X := IsOn;
+    else
+      begin
+        Result := False;
+        Exit;
+      end;
+    end;
+end;
+
 function ExecRegExpr(const ARegExpr, AInputStr: RegExprString): boolean;
 var
   r: TRegExpr;
@@ -929,12 +971,12 @@ type
 var
   Len, SubExprLen: integer;
   i, i0: integer;
-  Modif: integer;
+  Modif: TRegExprModifiers;
   Stack: ^TStackArray; // ###0.945
   StackIdx, StackSz: integer;
 begin
   Result := 0; // no unbalanced brackets found at this very moment
-  Modif := 0;
+  FillChar(Modif, SizeOf(Modif), 0);
   ASubExprs.Clear; // I don't think that adding to non empty list
   // can be useful, so I simplified algorithm to work only with empty list
 
@@ -969,9 +1011,9 @@ begin
                 Inc(i);
               if i > Len then
                 Result := -1 // unbalansed '('
-              else if TRegExpr.ParseModifiersStr(System.Copy(ARegExpr, i,
+              else if ParseModifiersStr(System.Copy(ARegExpr, i,
                 i - i0), Modif) then
-                AExtendedSyntax := (Modif and MaskModX) <> 0;
+                AExtendedSyntax := Modif.X;
             end
             else
             begin // subexpression starts
@@ -1329,11 +1371,14 @@ begin
 
   regexpbeg := nil;
   fExprIsCompiled := False;
+
+  FillChar(fModifiers, SIzeOf(fModifiers), 0);
   ModifierI := RegExprModifierI;
   ModifierR := RegExprModifierR;
   ModifierS := RegExprModifierS;
   ModifierG := RegExprModifierG;
-  ModifierM := RegExprModifierM; // ###0.940
+  ModifierM := RegExprModifierM;
+  ModifierX := RegExprModifierX;
 
   {$IFDEF UseSpaceChars}
   SpaceChars := RegExprSpaceChars; // ###0.927
@@ -1497,111 +1542,41 @@ begin
 end; { of function TRegExpr.GetModifierStr
   -------------------------------------------------------------- }
 
-class function TRegExpr.ParseModifiersStr(const AModifiers: RegExprString;
-  var AModifiersInt: integer): boolean;
-// !!! Be carefull - this is class function and must not use object instance fields
-var
-  i: integer;
-  IsOn: boolean;
-  Mask: integer;
+procedure TRegExpr.SetModifierG(AValue: boolean);
 begin
-  Result := True;
-  IsOn := True;
-  Mask := 0; // prevent compiler warning
-  for i := 1 to length(AModifiers) do
-  begin
-    case AModifiers[i] of
-      '-':
-        IsOn := False;
-      'I', 'i':
-        Mask := MaskModI;
-      'R', 'r':
-        Mask := MaskModR;
-      'S', 's':
-        Mask := MaskModS;
-      'G', 'g':
-        Mask := MaskModG;
-      'M', 'm':
-        Mask := MaskModM;
-      'X', 'x':
-        Mask := MaskModX;
-    else
-      begin
-        Result := False;
-        Exit;
-      end;
-    end;
-    if IsOn then
-      AModifiersInt := AModifiersInt or Mask
-    else
-      AModifiersInt := AModifiersInt and not Mask;
-  end;
-end; { of function TRegExpr.ParseModifiersStr
-  -------------------------------------------------------------- }
+  fModifiers.G := AValue;
+end;
 
-procedure TRegExpr.SetModifierStr(const AModifiers: RegExprString);
+procedure TRegExpr.SetModifierI(AValue: boolean);
 begin
-  if not ParseModifiersStr(AModifiers, fModifiers) then
+  fModifiers.I := AValue;
+end;
+
+procedure TRegExpr.SetModifierM(AValue: boolean);
+begin
+  fModifiers.M := AValue;
+end;
+
+procedure TRegExpr.SetModifierR(AValue: boolean);
+begin
+  fModifiers.R := AValue;
+end;
+
+procedure TRegExpr.SetModifierS(AValue: boolean);
+begin
+  fModifiers.S := AValue;
+end;
+
+procedure TRegExpr.SetModifierX(AValue: boolean);
+begin
+  fModifiers.X := AValue;
+end;
+
+procedure TRegExpr.SetModifierStr(const AStr: RegExprString);
+begin
+  if not ParseModifiersStr(AStr, fModifiers) then
     Error(reeModifierUnsupported);
 end; { of procedure TRegExpr.SetModifierStr
-  -------------------------------------------------------------- }
-
-function TRegExpr.GetModifier(AIndex: integer): boolean;
-var
-  Mask: integer;
-begin
-  Result := False;
-  case AIndex of
-    1:
-      Mask := MaskModI;
-    2:
-      Mask := MaskModR;
-    3:
-      Mask := MaskModS;
-    4:
-      Mask := MaskModG;
-    5:
-      Mask := MaskModM;
-    6:
-      Mask := MaskModX;
-  else
-    begin
-      Error(reeModifierUnsupported);
-      Exit;
-    end;
-  end;
-  Result := (fModifiers and Mask) <> 0;
-end; { of function TRegExpr.GetModifier
-  -------------------------------------------------------------- }
-
-procedure TRegExpr.SetModifier(AIndex: integer; ASet: boolean);
-var
-  Mask: integer;
-begin
-  case AIndex of
-    1:
-      Mask := MaskModI;
-    2:
-      Mask := MaskModR;
-    3:
-      Mask := MaskModS;
-    4:
-      Mask := MaskModG;
-    5:
-      Mask := MaskModM;
-    6:
-      Mask := MaskModX;
-  else
-    begin
-      Error(reeModifierUnsupported);
-      Exit;
-    end;
-  end;
-  if ASet then
-    fModifiers := fModifiers or Mask
-  else
-    fModifiers := fModifiers and not Mask;
-end; { of procedure TRegExpr.SetModifier
   -------------------------------------------------------------- }
 
 { ============================================================= }
@@ -1730,7 +1705,7 @@ begin
   Result := False;
 
   // check modifiers
-  if fModifiers <> fProgModifiers // ###0.941
+  if not IsModifiersEqual(fModifiers, fProgModifiers) // ###0.941
   then
     InvalidateProgramm;
 
@@ -2011,6 +1986,35 @@ begin
   until False; // assume that Buffer is ended correctly
 end;
 
+function TRegExpr.GetModifierG: boolean;
+begin
+  Result := fModifiers.G;
+end;
+
+function TRegExpr.GetModifierI: boolean;
+begin
+  Result := fModifiers.I;
+end;
+
+function TRegExpr.GetModifierM: boolean;
+begin
+  Result := fModifiers.M;
+end;
+
+function TRegExpr.GetModifierR: boolean;
+begin
+  Result := fModifiers.R;
+end;
+
+function TRegExpr.GetModifierS: boolean;
+begin
+  Result := fModifiers.S;
+end;
+
+function TRegExpr.GetModifierX: boolean;
+begin
+  Result := fModifiers.X;
+end;
 
 procedure TRegExpr.ClearInternalIndexes;
 var
@@ -2171,7 +2175,7 @@ var
   ret, br, ender: PRegExprChar;
   parno: integer;
   flags: integer;
-  SavedModifiers: integer;
+  SavedModifiers: TRegExprModifiers;
 begin
   flags := 0;
   Result := nil;
@@ -2411,7 +2415,7 @@ begin
       begin
         flagp := flag_Worst or flag_SpecStart;
         NonGreedyCh := (regparse + 1)^ = '?'; // ###0.940
-        NonGreedyOp := NonGreedyCh or ((fCompModifiers and MaskModG) = 0);
+        NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         // ###0.940
         if (flags and flag_Simple) = 0 then
         begin
@@ -2444,7 +2448,7 @@ begin
       begin
         flagp := flag_Worst or flag_SpecStart or flag_HasWidth;
         NonGreedyCh := (regparse + 1)^ = '?'; // ###0.940
-        NonGreedyOp := NonGreedyCh or ((fCompModifiers and MaskModG) = 0);
+        NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         // ###0.940
         if (flags and flag_Simple) = 0 then
         begin
@@ -2477,7 +2481,7 @@ begin
       begin
         flagp := flag_Worst;
         NonGreedyCh := (regparse + 1)^ = '?'; // ###0.940
-        NonGreedyOp := NonGreedyCh or ((fCompModifiers and MaskModG) = 0);
+        NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         // ###0.940
         if NonGreedyOp then
         begin // ###0.940  // We emit x?? as x{0,1}?
@@ -2543,7 +2547,7 @@ begin
           flagp := flagp or flag_HasWidth or flag_SpecStart;
 
         NonGreedyCh := (regparse + 1)^ = '?'; // ###0.940
-        NonGreedyOp := NonGreedyCh or ((fCompModifiers and MaskModG) = 0);
+        NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         // ###0.940
         if (flags and flag_Simple) <> 0 then
           EmitSimpleBraces(BracesMin, Bracesmax, NonGreedyOp)
@@ -2687,7 +2691,7 @@ var
 
   procedure EmitExactly(Ch: REChar);
   begin
-    if (fCompModifiers and MaskModI) <> 0 then
+    if fCompModifiers.I then
       ret := EmitNode(OP_EXACTLYCI)
     else
       ret := EmitNode(OP_EXACTLY);
@@ -2742,19 +2746,19 @@ begin
   Inc(regparse);
   case (regparse - 1)^ of
     '^':
-      if ((fCompModifiers and MaskModM) = 0) or
+      if not fCompModifiers.M or
         ((fLineSeparators = '') and not fLinePairedSeparatorAssigned) then
         ret := EmitNode(OP_BOL)
       else
         ret := EmitNode(OP_BOLML);
     '$':
-      if ((fCompModifiers and MaskModM) = 0) or
+      if not fCompModifiers.M or
         ((fLineSeparators = '') and not fLinePairedSeparatorAssigned) then
         ret := EmitNode(OP_EOL)
       else
         ret := EmitNode(OP_EOLML);
     '.':
-      if (fCompModifiers and MaskModS) <> 0 then
+      if fCompModifiers.S then
       begin
         ret := EmitNode(OP_ANY);
         flagp := flagp or flag_HasWidth or flag_Simple;
@@ -2773,13 +2777,13 @@ begin
       begin
         if regparse^ = '^' then
         begin // Complement of range.
-          if (fCompModifiers and MaskModI) <> 0 then
+          if fCompModifiers.I then
             ret := EmitRange(OP_ANYBUTCI)
           else
             ret := EmitRange(OP_ANYBUT);
           Inc(regparse);
         end
-        else if (fCompModifiers and MaskModI) <> 0 then
+        else if fCompModifiers.I then
           ret := EmitRange(OP_ANYOFCI)
         else
           ret := EmitRange(OP_ANYOF);
@@ -2811,7 +2815,7 @@ begin
             end;
 
             // special handling for Russian range a-YA, add 2 ranges: a-ya and A-YA
-            if ((fCompModifiers and MaskModR) <> 0) and
+            if fCompModifiers.R and
               (RangeBeg = RusRangeLoLow) and (RangeEnd = RusRangeHiHigh) then
             begin
               EmitRangePacked(RusRangeLoLow, RusRangeLoHigh);
@@ -3013,7 +3017,7 @@ begin
             end;
           '1' .. '9':
             begin // ###0.936
-              if (fCompModifiers and MaskModI) <> 0 then
+              if fCompModifiers.I then
                 ret := EmitNode(OP_BSUBEXPCI)
               else
                 ret := EmitNode(OP_BSUBEXP);
@@ -3028,7 +3032,7 @@ begin
   else
     begin
       Dec(regparse);
-      if ((fCompModifiers and MaskModX) <> 0) and // check for eXtended syntax
+      if fCompModifiers.X and // check for eXtended syntax
         ((regparse^ = '#') or IsIgnoredChar(regparse^)) then
       begin // ###0.941 \x
         if regparse^ = '#' then
@@ -3069,14 +3073,14 @@ begin
         flagp := flagp or flag_HasWidth;
         if Len = 1 then
           flagp := flagp or flag_Simple;
-        if (fCompModifiers and MaskModI) <> 0 then
+        if fCompModifiers.I then
           ret := EmitNode(OP_EXACTLYCI)
         else
           ret := EmitNode(OP_EXACTLY);
-        while (Len > 0) and (((fCompModifiers and MaskModX) = 0) or
+        while (Len > 0) and ((not fCompModifiers.X) or
           (regparse^ <> '#')) do
         begin
-          if ((fCompModifiers and MaskModX) = 0) or not IsIgnoredChar(regparse^) then
+          if not fCompModifiers.X or not IsIgnoredChar(regparse^) then
             EmitC(regparse^);
           Inc(regparse);
           Dec(Len);
