@@ -3474,7 +3474,7 @@ var
   no: integer;
   save: PRegExprChar;
   nextch: REChar;
-  BracesMin, Bracesmax: PtrInt;
+  BracesMin, Bracesmax: integer;
   // we use integer instead of TREBracesArg for better support */+
   {$IFDEF ComplexBraces}
   SavedLoopStack: TLoopStack; // :(( very bad for recursion
@@ -3828,12 +3828,9 @@ begin
             Error(reeLoopWithoutEntry);
             Exit;
           end;
-          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + 2 *
-            REBracesArgSz))^;
+          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + 2 * REBracesArgSz))^;
           BracesMin := PREBracesArg(AlignToInt(scan + REOpSz + RENextOffSz))^;
-          Bracesmax :=
-            PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz +
-            REBracesArgSz))^;
+          Bracesmax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
           save := reginput;
           if LoopStack[LoopStackIdx] >= BracesMin then
           begin // Min alredy matched - we can work
@@ -3907,9 +3904,7 @@ begin
           else
           begin // braces
             BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-            Bracesmax :=
-              PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz +
-              REBracesArgSz))^;
+            Bracesmax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
           end;
           save := reginput;
           opnd := scan + REOpSz + RENextOffSz;
