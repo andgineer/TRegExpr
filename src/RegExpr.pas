@@ -126,28 +126,6 @@ type
   {$ENDIF}
   TREOp = REChar; // internal p-code type //###0.933
   PREOp = ^TREOp;
-  TRENextOff = PtrInt;
-  // internal Next "pointer" (offset to current p-code) //###0.933
-  PRENextOff = ^TRENextOff;
-  // used for extracting Next "pointers" from compiled r.e. //###0.933
-  TREBracesArg = integer; // type of {m,n} arguments
-  PREBracesArg = ^TREBracesArg;
-
-const
-  REOpSz = SizeOf(TREOp) div SizeOf(REChar);
-  // size of OP_ command in REChars
-  {$IFDEF FPC_REQUIRES_PROPER_ALIGNMENT}
-  // add space for aligning pointer
-  // -1 is the correct max size but also needed for InsertOperator that needs a multiple of pointer size
-  RENextOffSz = (2 * SizeOf(TRENextOff) div SizeOf(REChar)) - 1;
-  REBracesArgSz = (2 * SizeOf(TREBracesArg) div SizeOf(REChar));
-  // add space for aligning pointer
-  {$ELSE}
-  RENextOffSz = (SizeOf(TRENextOff) div SizeOf(REChar));
-  // size of Next pointer in REChars
-  REBracesArgSz = SizeOf(TREBracesArg) div SizeOf(REChar);
-  // size of BRACES arguments in REChars
-  {$ENDIF}
 
 type
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
@@ -192,14 +170,6 @@ const
     + #$1680#$2000#$2001#$2002#$2003#$2004#$2005#$2006#$2007#$2008#$2009#$200A#$202F#$205F#$3000
     {$ENDIF};
 
-  RegExprAllSet = [#0 .. #255];
-  RegExprWordSet = ['a' .. 'z', 'A' .. 'Z', '0' .. '9', '_'];
-  RegExprDigitSet = ['0' .. '9'];
-  RegExprSpaceSet = [' ', #$9, #$A, #$D, #$C];
-  RegExprLineSeparatorsSet = [#$d, #$a, #$b, #$c] {$IFDEF UniCode} + [#$85] {$ENDIF};
-  RegExprHorzSeparatorsSet = [#9, #$20, #$A0];
-
-
 const
   NSUBEXP = 90; // max number of subexpression //###0.929
   // Cannot be more than NSUBEXPMAX
@@ -208,8 +178,6 @@ const
   // Big NSUBEXP will cause more slow work and more stack required
   NSUBEXPMAX = 255; // Max possible value for NSUBEXP. //###0.945
   // Don't change it! It's defined by internal TRegExpr design.
-
-  MaxBracesArg = $7FFFFFFF - 1; // max value for {n,m} arguments //###0.933
 
   {$IFDEF ComplexBraces}
   LoopStackMax = 10; // max depth of loops stack //###0.925
@@ -642,6 +610,7 @@ type
     property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
   end;
 
+type
   ERegExpr = class(Exception)
   public
     ErrorCode: integer;
@@ -729,13 +698,46 @@ uses
 
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
-  TRegExprVersionMajor: integer = 0;
-  TRegExprVersionMinor: integer = 970;
+  REVersionMajor = 0;
+  REVersionMinor = 970;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
   OpKind_Range = REChar(3);
   OpKind_Char = REChar(6); // OpKind_Char must be maximal of all OpKind_nnn
+
+  RegExprAllSet = [#0 .. #255];
+  RegExprWordSet = ['a' .. 'z', 'A' .. 'Z', '0' .. '9', '_'];
+  RegExprDigitSet = ['0' .. '9'];
+  RegExprSpaceSet = [' ', #$9, #$A, #$D, #$C];
+  RegExprLineSeparatorsSet = [#$d, #$a, #$b, #$c] {$IFDEF UniCode} + [#$85] {$ENDIF};
+  RegExprHorzSeparatorsSet = [#9, #$20, #$A0];
+
+  MaxBracesArg = $7FFFFFFF - 1; // max value for {n,m} arguments //###0.933
+
+type
+  TRENextOff = PtrInt;
+  // internal Next "pointer" (offset to current p-code) //###0.933
+  PRENextOff = ^TRENextOff;
+  // used for extracting Next "pointers" from compiled r.e. //###0.933
+  TREBracesArg = integer; // type of {m,n} arguments
+  PREBracesArg = ^TREBracesArg;
+
+const
+  REOpSz = SizeOf(TREOp) div SizeOf(REChar);
+  // size of OP_ command in REChars
+  {$IFDEF FPC_REQUIRES_PROPER_ALIGNMENT}
+  // add space for aligning pointer
+  // -1 is the correct max size but also needed for InsertOperator that needs a multiple of pointer size
+  RENextOffSz = (2 * SizeOf(TRENextOff) div SizeOf(REChar)) - 1;
+  REBracesArgSz = (2 * SizeOf(TREBracesArg) div SizeOf(REChar));
+  // add space for aligning pointer
+  {$ELSE}
+  RENextOffSz = (SizeOf(TRENextOff) div SizeOf(REChar));
+  // size of Next pointer in REChars
+  REBracesArgSz = SizeOf(TREBracesArg) div SizeOf(REChar);
+  // size of BRACES arguments in REChars
+  {$ENDIF}
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1362,17 +1364,15 @@ end; { of function TRegExpr.LastError
 { ===================== Common section ======================== }
 { ============================================================= }
 
-class function TRegExpr.VersionMajor: integer; // ###0.944
+class function TRegExpr.VersionMajor: integer;
 begin
-  Result := TRegExprVersionMajor;
-end; { of class function TRegExpr.VersionMajor
-  -------------------------------------------------------------- }
+  Result := REVersionMajor;
+end;
 
-class function TRegExpr.VersionMinor: integer; // ###0.944
+class function TRegExpr.VersionMinor: integer;
 begin
-  Result := TRegExprVersionMinor;
-end; { of class function TRegExpr.VersionMinor
-  -------------------------------------------------------------- }
+  Result := REVersionMinor;
+end;
 
 constructor TRegExpr.Create;
 begin
