@@ -2116,12 +2116,10 @@ begin
             ch := ABuffer^;
             Inc(ABuffer);
             if Ord(ch) < $FF then
-              Include(ARes, AnsiChar(ch));
-            if AIgnoreCase then
             begin
-              ch := InvertCase(ch);
-              if Ord(ch) < $FF then
-                Include(ARes, AnsiChar(ch));
+              Include(ARes, AnsiChar(ch));
+              if AIgnoreCase then
+                Include(ARes, AnsiChar(InvertCase(ch)));
             end;
           end;
         end;
@@ -4670,10 +4668,10 @@ begin
         begin
           ch := (scan + REOpSz + RENextOffSz)^;
           if Ord(ch) <= $FF then
+          begin
             Include(FirstCharSet, AnsiChar(ch));
-          ch := InvertCase(ch);
-          if Ord(ch) <= $FF then
-            Include(FirstCharSet, AnsiChar(ch));
+            Include(FirstCharSet, AnsiChar(InvertCase(ch)));
+          end;
           Exit;
         end;
       OP_EXACTLY:
