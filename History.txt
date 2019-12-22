@@ -5,6 +5,13 @@
                                      (+) - new feature
                                      (-) - bugfix
                                      (^) - improvement
+
+ v. 0.970 2019.12.22
+ -=- (+) Restored work of FirstCharSet optimization (adapted to new opcode).
+  Now define UseFirstCharSet is on by default and works in Unicode mode too!
+  By Alexey Torgashin.
+ -=- (^) Fixed Dump() for new opcode in char classes.
+
  v. 0.967 2019.12.18
  -=- (+) Reworked opcode for char-classes [], now opcode is stored as pairs
   (Kind,Data), which allows to have null-char in char-classes, and have
