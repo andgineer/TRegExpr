@@ -306,6 +306,7 @@ type
     fExpression: RegExprString; // source of compiled r.e.
     fInputString: RegExprString; // input string
     fLastError: integer; // see Error, LastError
+    fLastErrorOpcode: TREOp;
 
     fModifiers: TRegExprModifiers; // modifiers
     fCompModifiers: TRegExprModifiers; // compiler's copy of modifiers
@@ -1294,7 +1295,7 @@ begin
     reeBRACESArgTooBig:
       Result := 'TRegExpr compile: BRACES argument too big';
     reeUnknownOpcodeInFillFirst:
-      Result := 'TRegExpr compile: unknown opcode in FillFirstCharSet';
+      Result := 'TRegExpr compile: unknown opcode in FillFirstCharSet ('+DumpOp(fLastErrorOpcode)+')';
     reeBracesMinParamGreaterMax:
       Result := 'TRegExpr compile: BRACE min param greater then max';
     reeUnclosedComment:
@@ -2048,9 +2049,10 @@ begin
   regexpbeg := ARegExp;
 
   ClearInternalIndexes;
+  fLastError := reeOk;
+  fLastErrorOpcode := TREOp(0);
 
   try
-
     if programm <> nil then
     begin
       FreeMem(programm);
@@ -4477,6 +4479,16 @@ begin
         FirstCharSet := FirstCharSet + ([#0 .. #255] - ['0' .. '9']);
         Exit;
       end;
+      OP_ANYLETTER:
+      begin
+        FirstCharSet := FirstCharSet + ['a' .. 'z', 'A' .. 'Z', '0' .. '9', '_'];
+        Exit;
+      end;
+      OP_NOTLETTER:
+      begin
+        FirstCharSet := FirstCharSet + ([#0 .. #255] - ['a' .. 'z', 'A' .. 'Z', '0' .. '9', '_']);
+        Exit;
+      end;
       OP_EXACTLYCI:
       begin
         Include(FirstCharSet, (scan + REOpSz + RENextOffSz)^);
@@ -4561,6 +4573,7 @@ begin
       end;
       else
       begin
+        fLastErrorOpcode := Oper;
         Error(reeUnknownOpcodeInFillFirst);
         Exit;
       end;
@@ -4845,9 +4858,9 @@ begin
   e.ErrorCode := AErrorID;
   e.CompilerErrorPos := CompilerErrorPos;
   raise e
-  {$IFDEF reRealExceptionAddr}
-    At ReturnAddr; // ###0.938
-  {$ENDIF}
+    {$IFDEF reRealExceptionAddr}
+    at ReturnAddr; // ###0.938
+    {$ENDIF}
 end; { of procedure TRegExpr.Error
   -------------------------------------------------------------- }
 
