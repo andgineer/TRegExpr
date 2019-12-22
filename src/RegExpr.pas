@@ -236,10 +236,9 @@ type
 
   TRegExpr = class
   private
-    FUseOsLineEndOnReplace: boolean;
-    startp: array [0 .. NSUBEXP - 1] of PRegExprChar;
-    // founded expr starting points
+    startp: array [0 .. NSUBEXP - 1] of PRegExprChar; // founded expr starting points
     endp: array [0 .. NSUBEXP - 1] of PRegExprChar; // founded expr end points
+
     FSubExprIndexes: array [0 .. NSUBEXP - 1] of integer;
     FSubExprCount: integer;
 
@@ -305,7 +304,6 @@ type
 
     fExpression: RegExprString; // source of compiled r.e.
     fInputString: RegExprString; // input string
-
     fLastError: integer; // see Error, LastError
 
     fModifiers: TRegExprModifiers; // modifiers
@@ -323,13 +321,16 @@ type
     fLineSeparators: RegExprString; // ###0.941
     fLinePairedSeparatorAssigned: boolean;
     fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
-    FReplaceLineEnd: String;
+    FReplaceLineEnd: string;
+    FUseOsLineEndOnReplace: boolean;
+
     {$IFNDEF UniCode}
     fLineSeparatorsSet: set of REChar;
     {$ENDIF}
     {$IFDEF UnicodeWordDetection}
     FUseUnicodeWordDetection: boolean;
     {$ENDIF}
+
     procedure ClearInternalIndexes;
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
