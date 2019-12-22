@@ -236,24 +236,23 @@ type
 
   TRegExpr = class
   private
-    startp: array [0 .. NSUBEXP - 1] of PRegExprChar; // founded expr starting points
-    endp: array [0 .. NSUBEXP - 1] of PRegExprChar; // founded expr end points
+    startp: array [0 .. NSUBEXP - 1] of PRegExprChar; // found expr start points
+    endp: array [0 .. NSUBEXP - 1] of PRegExprChar; // found expr end points
 
     FSubExprIndexes: array [0 .. NSUBEXP - 1] of integer;
     FSubExprCount: integer;
 
     {$IFDEF ComplexBraces}
-    LoopStack: array [1 .. LoopStackMax] of integer;
-    // state before entering loop
+    LoopStack: array [1 .. LoopStackMax] of integer; // state before entering loop
     LoopStackIdx: integer; // 0 - out of all loops
     {$ENDIF}
+
     // The "internal use only" fields to pass info from compile
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
     regstart: REChar; // char that must begin a match; '\0' if none obvious
     reganch: REChar; // is the match anchored (at beginning-of-line only)?
-    regmust: PRegExprChar;
-    // string (pointer into program) that match must include, or nil
+    regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmlen: integer; // length of regmust string
     // Regstart and reganch permit very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
@@ -263,10 +262,12 @@ type
     // at the start of the r.e., which can involve a lot of backup). Regmlen is
     // supplied because the test in regexec() needs it and regcomp() is computing
     // it anyway.
-    {$IFDEF UseFirstCharSet} // ###0.929
+
+    {$IFDEF UseFirstCharSet}
     FirstCharSet: TSetOfREChar;
     {$ENDIF}
-    // work variables for Exec's routins - save stack in recursion}
+
+    // work variables for Exec routines - save stack in recursion
     reginput: PRegExprChar; // String-input pointer.
     fInputStart: PRegExprChar; // Pointer to first char of input string.
     fInputEnd: PRegExprChar; // Pointer to char AFTER last char of input string
@@ -282,8 +283,7 @@ type
     regcode: PRegExprChar; // Code-emit pointer; @regdummy = don't.
     regsize: integer; // Total programm size in REChars.
 
-    regexpbeg: PRegExprChar; // only for error handling. Contains
-    // pointer to beginning of r.e. while compiling
+    regexpbeg: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
     fExprIsCompiled: boolean; // true if r.e. successfully compiled
     fSecondPass: boolean;
 
@@ -311,14 +311,14 @@ type
     fProgModifiers: TRegExprModifiers; // modifiers values from last programm compilation
 
     {$IFDEF UseSpaceChars}
-    fSpaceChars: RegExprString; // ###0.927
+    fSpaceChars: RegExprString;
     {$ENDIF}
     {$IFDEF UseWordChars}
-    fWordChars: RegExprString; // ###0.929
+    fWordChars: RegExprString;
     {$ENDIF}
-    fInvertCase: TRegExprInvertCaseFunction; // ###0.927
+    fInvertCase: TRegExprInvertCaseFunction;
 
-    fLineSeparators: RegExprString; // ###0.941
+    fLineSeparators: RegExprString;
     fLinePairedSeparatorAssigned: boolean;
     fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
     FReplaceLineEnd: string;
@@ -342,7 +342,7 @@ type
     // [re]compile it if something changed
     function IsProgrammOk: boolean; // ###0.941
 
-    procedure SetExpression(const s: RegExprString);
+    procedure SetExpression(const AStr: RegExprString);
 
     function GetModifierStr: RegExprString;
     procedure SetModifierStr(const AStr: RegExprString);
@@ -1449,12 +1449,12 @@ begin
 end; { of function TRegExpr.InvertCaseFunction
   -------------------------------------------------------------- }
 
-procedure TRegExpr.SetExpression(const s: RegExprString);
+procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
-  if (s <> fExpression) or not fExprIsCompiled then
+  if (AStr <> fExpression) or not fExprIsCompiled then
   begin
     fExprIsCompiled := False;
-    fExpression := s;
+    fExpression := AStr;
     UniqueString(fExpression);
     fRegexStart := PRegExprChar(fExpression);
     fRegexEnd := fRegexStart + Length(fExpression);
