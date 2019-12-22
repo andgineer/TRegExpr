@@ -73,56 +73,69 @@ object Form1: TForm1
       OnChange = EditRegexChange
       TabOrder = 0
     end
-    object chk_c: TCheckBox
+    object chk_i: TCheckBox
       AnchorSideLeft.Control = EditRegex
       AnchorSideTop.Control = EditRegex
       AnchorSideTop.Side = asrBottom
       Left = 90
       Height = 24
       Top = 33
-      Width = 122
-      Caption = 'c (case-insens)'
-      OnChange = chk_cChange
+      Width = 119
+      Caption = 'i (case-insens)'
+      OnChange = chk_iChange
       TabOrder = 1
     end
     object chk_x: TCheckBox
-      AnchorSideLeft.Control = chk_c
+      AnchorSideLeft.Control = chk_i
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = chk_c
-      Left = 218
+      AnchorSideTop.Control = chk_i
+      Left = 215
       Height = 24
       Top = 33
       Width = 118
       BorderSpacing.Left = 6
       Caption = 'x (comments)'
-      OnChange = chk_cChange
+      OnChange = chk_iChange
       TabOrder = 2
     end
     object chk_r: TCheckBox
       AnchorSideLeft.Control = chk_x
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = chk_c
-      Left = 342
+      AnchorSideTop.Control = chk_i
+      Left = 339
       Height = 24
       Top = 33
       Width = 66
       BorderSpacing.Left = 6
       Caption = 'r (rus)'
-      OnChange = chk_cChange
+      OnChange = chk_iChange
       TabOrder = 3
     end
     object chk_s: TCheckBox
       AnchorSideLeft.Control = chk_r
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = chk_c
-      Left = 414
+      AnchorSideTop.Control = chk_i
+      Left = 411
       Height = 24
       Top = 33
-      Width = 149
+      Width = 113
       BorderSpacing.Left = 6
-      Caption = 's (dot matches all)'
-      OnChange = chk_cChange
+      Caption = 's (dot for all)'
+      OnChange = chk_iChange
       TabOrder = 4
+    end
+    object chk_g: TCheckBox
+      AnchorSideLeft.Control = chk_s
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = chk_i
+      Left = 530
+      Height = 24
+      Top = 33
+      Width = 72
+      BorderSpacing.Left = 6
+      Caption = 'greedy'
+      OnChange = chk_iChange
+      TabOrder = 5
     end
   end
   object Panel2: TPanel

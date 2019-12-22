@@ -12,8 +12,9 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    chk_g: TCheckBox;
     chk_s: TCheckBox;
-    chk_c: TCheckBox;
+    chk_i: TCheckBox;
     chk_x: TCheckBox;
     chk_r: TCheckBox;
     EditRegex: TEdit;
@@ -24,7 +25,7 @@ type
     ListRes: TListBox;
     Panel1: TPanel;
     Panel2: TPanel;
-    procedure chk_cChange(Sender: TObject);
+    procedure chk_iChange(Sender: TObject);
     procedure EditRegexChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -47,6 +48,11 @@ begin
   EditRegex.Text:= '(\w+) (\d+)';
   EditText.Text:= '.. test 23';
   EditRegex.OnChange(nil);
+  chk_i.Checked:= RegExprModifierI;
+  chk_g.Checked:= RegExprModifierG;
+  chk_s.Checked:= RegExprModifierS;
+  chk_r.Checked:= RegExprModifierR;
+  chk_x.Checked:= RegExprModifierX;
 end;
 
 procedure TForm1.EditRegexChange(Sender: TObject);
@@ -58,10 +64,11 @@ begin
 
   try
     reg.Expression:= EditRegex.Text;
-    reg.ModifierI:= chk_c.Checked;
+    reg.ModifierI:= chk_i.Checked;
     reg.ModifierX:= chk_x.Checked;
     reg.ModifierR:= chk_r.Checked;
     reg.ModifierS:= chk_s.Checked;
+    reg.ModifierG:= chk_g.Checked;
     ListDump.Items.AddText(reg.Dump);
   except
     on e: Exception do
@@ -89,7 +96,7 @@ begin
   end;
 end;
 
-procedure TForm1.chk_cChange(Sender: TObject);
+procedure TForm1.chk_iChange(Sender: TObject);
 begin
   EditRegexChange(Self);
 end;
