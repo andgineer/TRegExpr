@@ -1229,7 +1229,6 @@ const
   reeNoLetterAfterBSlashC = 117;
   reeMetaCharAfterMinusInRange = 118;
   reeRarseAtomInternalDisaster = 119;
-  reeInvalidOpcodeInCharClass = 120;
   reeBRACESArgTooBig = 122;
   reeUnknownOpcodeInFillFirst = 123;
   reeBracesMinParamGreaterMax = 124;
@@ -1245,6 +1244,7 @@ const
   reeNoInputStringSpecified = 1005;
   reeOffsetMustBeGreaterThen0 = 1006;
   reeExecNextWithoutExec = 1007;
+  reeBadOpcodeInCharClass = 1008;
   reeDumpCorruptedOpcode = 1011;
   reeModifierUnsupported = 1013;
   reeLoopStackExceeded = 1014;
@@ -1293,8 +1293,6 @@ begin
       Result := 'TRegExpr compile: trailing \';
     reeRarseAtomInternalDisaster:
       Result := 'TRegExpr compile: RarseAtom internal disaster';
-    reeInvalidOpcodeInCharClass:
-      Result := 'TRegExpr compile: invalid opcode in char class []';
     reeBRACESArgTooBig:
       Result := 'TRegExpr compile: BRACES argument too big';
     reeUnknownOpcodeInFillFirst:
@@ -1326,6 +1324,8 @@ begin
       Result := 'TRegExpr exec: offset must be >0';
     reeExecNextWithoutExec:
       Result := 'TRegExpr exec: ExecNext without Exec(Pos)';
+    reeBadOpcodeInCharClass:
+      Result := 'TRegExpr exec: invalid opcode in char class';
     reeDumpCorruptedOpcode:
       Result := 'TRegExpr dump: corrupted opcode';
     reeLoopStackExceeded:
@@ -1980,7 +1980,7 @@ begin
         end;
 
       else
-        Error(reeInvalidOpcodeInCharClass);
+        Error(reeBadOpcodeInCharClass);
     end;
   until False; // assume that Buffer is ended correctly
 end;
