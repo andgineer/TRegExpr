@@ -45,14 +45,14 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   reg:= TRegExpr.Create;
-  EditRegex.Text:= '(\w+) (\d+)';
-  EditText.Text:= '.. test 23';
-  EditRegex.OnChange(nil);
   chk_i.Checked:= RegExprModifierI;
   chk_g.Checked:= RegExprModifierG;
   chk_s.Checked:= RegExprModifierS;
   chk_r.Checked:= RegExprModifierR;
   chk_x.Checked:= RegExprModifierX;
+  EditRegex.Text:= '(\w+) (\d+)';
+  EditText.Text:= '.. test 23';
+  EditRegex.OnChange(nil);
 end;
 
 procedure TForm1.EditRegexChange(Sender: TObject);
@@ -61,6 +61,7 @@ var
 begin
   ListRes.Items.Clear;
   ListDump.Items.Clear;
+  if EditRegex.Text='' then exit;
 
   try
     reg.Expression:= EditRegex.Text;
