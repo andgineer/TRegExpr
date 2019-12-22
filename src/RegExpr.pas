@@ -2187,8 +2187,8 @@ function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): boolean;
 // Beware that the optimization-preparation code in here knows about some
 // of the structure of the compiled regexp.
 var
-  scan, longest: PRegExprChar;
-  Len: integer;
+  scan, longest, longestTemp: PRegExprChar;
+  Len, LenTemp: integer;
   flags: integer;
 begin
   Result := False; // life too dark
@@ -2273,11 +2273,15 @@ begin
         Len := 0;
         while scan <> nil do
         begin
-          if (PREOp(scan)^ = OP_EXACTLY) and
-            (strlen(scan + REOpSz + RENextOffSz) >= PtrInt(Len)) then
+          if PREOp(scan)^ = OP_EXACTLY then
           begin
-            longest := scan + REOpSz + RENextOffSz;
-            Len := strlen(longest);
+            longestTemp := scan + REOpSz + RENextOffSz;
+            LenTemp := strlen(longestTemp);
+            if LenTemp >= Len then
+            begin
+              longest := longestTemp;
+              Len := LenTemp;
+            end;
           end;
           scan := regnext(scan);
         end;
