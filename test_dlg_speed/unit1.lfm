@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 1532
+  Left = 692
   Height = 618
-  Top = 188
+  Top = 120
   Width = 674
   BorderStyle = bsDialog
   Caption = 'RegEx speed test'

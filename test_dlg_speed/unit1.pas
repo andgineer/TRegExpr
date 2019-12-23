@@ -42,54 +42,63 @@ uses
 {$R *.lfm}
 
 const
-  Rules: array[0..7] of string = (
+  Rules: array[0..9] of string = (
     '//.*',
     '(?s)\{.*?\}',
-    '\d+(\.\d+)?',
+    '(?s)\(\*.*?\*\)',
+    '\d+(\.\d+)?([eE][\-\+]?\d+)?',
     '\w+',
     '\#\$[0-9a-fA-F]+',
+    '\$[0-9a-fA-F]+',
     '\#[0-9]+',
-    '[\-\+/\*\[\]\(\)\.,:=]+',
+    '[\-\+/\*\[\]\(\)\.,:;=<>@\^]+',
     '''.*?'''
     );
+
+function _IsSpace(ch: WideChar): boolean; inline;
+begin
+  case ch of
+    ' ', #9, #10, #13:
+      Result:= true
+    else
+      Result:= false;
+  end;
+end;
 
 procedure TForm1.Test_EC(const Subj: Unicodestring; AWithLog: boolean);
 var
   Obj: array[0..Length(Rules)-1] of TRegExpr;
   NPos, NLen: integer;
-  bRuleFound, bLastFound: boolean;
   IndexRule, TokenNum, i: integer;
-  ch: Widechar;
+  ch: WideChar;
 begin
   for i:= 0 to Length(Rules)-1 do
   begin
     Obj[i]:= TRegExpr.Create;
     Obj[i].Expression:= Rules[i];
-    Obj[i].InputString:= Subj;
     Obj[i].ModifierI:= false;
     Obj[i].ModifierS:= false; //don't catch all text by .*
     Obj[i].ModifierM:= true; //allow to work with ^$
     Obj[i].ModifierX:= false; //don't ingore spaces
+    Obj[i].Compile;
+    Obj[i].InputString:= Subj;
   end;
 
   NPos:= 1;
   NLen:= 1;
-  bLastFound:= false;
   TokenNum:= 0;
 
   repeat
     if NPos>Length(Subj) then Break;
-    bRuleFound:= false;
+    NLen:= 1;
 
     ch:= Subj[NPos];
-    if ((ch<>' ') and (ch<>#9)) then
+    if not _IsSpace(ch) then
       for IndexRule:= 0 to Length(Rules)-1 do
       begin
         if Obj[IndexRule].ExecPos(NPos, true) then
         begin
-          //Assert(Obj[IndexRule].MatchPos[0]=NPos, 'Strange MatchPos');
           NLen:= Obj[IndexRule].MatchLen[0];
-          bRuleFound:= true;
 
           if AWithLog then
           begin
@@ -101,24 +110,12 @@ begin
         end;
       end;
 
-    if not bRuleFound then
-    begin
-      Inc(NPos);
-    end
-    else
-    begin
-      Inc(NPos, NLen);
-    end;
-
-    bLastFound:= bRuleFound;
+    Inc(NPos, NLen);
   until false;
 
   for i:= 0 to Length(Rules)-1 do
     Obj[i].Free;
 end;
-
-
-{ TForm1 }
 
 procedure TForm1.DoMsg(const S: string);
 begin
