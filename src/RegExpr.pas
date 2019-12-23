@@ -129,7 +129,7 @@ type
 
 type
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
-  TRegExprCharset = set of AnsiChar;
+  TRegExprCharset = set of byte;
 
 const
   // Escape char ('\' in common r.e.) used for escaping metachars (\w, \d etc)
@@ -708,12 +708,12 @@ const
   OpKind_Range = REChar(3);
   OpKind_Char = REChar(6); // OpKind_Char must be maximal of all OpKind_nnn
 
-  RegExprAllSet = [#0 .. #255];
-  RegExprWordSet = ['a' .. 'z', 'A' .. 'Z', '0' .. '9', '_'];
-  RegExprDigitSet = ['0' .. '9'];
-  RegExprSpaceSet = [' ', #$9, #$A, #$D, #$C];
-  RegExprLineSeparatorsSet = [#$d, #$a, #$b, #$c] {$IFDEF UniCode} + [#$85] {$ENDIF};
-  RegExprHorzSeparatorsSet = [#9, #$20, #$A0];
+  RegExprAllSet = [0 .. 255];
+  RegExprWordSet = [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z'), Ord('0') .. Ord('9'), Ord('_')];
+  RegExprDigitSet = [Ord('0') .. Ord('9')];
+  RegExprSpaceSet = [Ord(' '), $9, $A, $D, $C];
+  RegExprLineSeparatorsSet = [$d, $a, $b, $c] {$IFDEF UniCode} + [$85] {$ENDIF};
+  RegExprHorzSeparatorsSet = [9, $20, $A0];
 
   MaxBracesArg = $7FFFFFFF - 1; // max value for {n,m} arguments //###0.933
 
@@ -2015,7 +2015,7 @@ begin
   begin
     ch := fWordChars[i];
     if Ord(ch) <= $FF then
-      Include(ARes, AnsiChar(ch));
+      Include(ARes, byte(ch));
   end;
   {$ELSE}
   ARes := RegExprWordSet;
@@ -2035,7 +2035,7 @@ begin
   begin
     ch := fSpaceChars[i];
     if Ord(ch) <= $FF then
-      Include(ARes, AnsiChar(ch));
+      Include(ARes, byte(ch));
   end;
   {$ELSE}
   ARes := RegExprSpaceSet;
@@ -2064,9 +2064,9 @@ begin
           Inc(ABuffer);
           for i := Ord(ch) to Min(Ord(ch2), $FF) do
           begin
-            Include(ARes, AnsiChar(i));
+            Include(ARes, byte(i));
             if AIgnoreCase then
-              Include(ARes, AnsiChar(InvertCase(AnsiChar(i))));
+              Include(ARes, byte(InvertCase(REChar(i))));
           end;
         end;
 
@@ -2121,9 +2121,9 @@ begin
             Inc(ABuffer);
             if Ord(ch) < $FF then
             begin
-              Include(ARes, AnsiChar(ch));
+              Include(ARes, byte(ch));
               if AIgnoreCase then
-                Include(ARes, AnsiChar(InvertCase(ch)));
+                Include(ARes, byte(InvertCase(ch)));
             end;
           end;
         end;
@@ -2250,7 +2250,7 @@ begin
     FirstCharSet := [];
     FillFirstCharSet(programm + REOpSz);
     for Len := 0 to 255 do
-      FirstCharArray[Len] := AnsiChar(Len) in FirstCharSet;
+      FirstCharArray[Len] := byte(Len) in FirstCharSet;
     {$ENDIF}
 
     regstart := #0; // Worst-case defaults.
@@ -4620,10 +4620,10 @@ begin
       OP_EOL,
       OP_EOLML:
         begin //###0.948 was empty in 0.947, was EXIT in 0.937
-          Include(FirstCharSet, #0);
+          Include(FirstCharSet, 0);
           if ModifierM then
             for i := 1 to Length(LineSeparators) do
-              Include(FirstCharSet, AnsiChar(LineSeparators[i]));
+              Include(FirstCharSet, byte(LineSeparators[i]));
           Exit;
         end;
       OP_BOUND,
@@ -4694,8 +4694,8 @@ begin
           ch := (scan + REOpSz + RENextOffSz)^;
           if Ord(ch) <= $FF then
           begin
-            Include(FirstCharSet, AnsiChar(ch));
-            Include(FirstCharSet, AnsiChar(InvertCase(ch)));
+            Include(FirstCharSet, byte(ch));
+            Include(FirstCharSet, byte(InvertCase(ch)));
           end;
           Exit;
         end;
@@ -4703,7 +4703,7 @@ begin
         begin
           ch := (scan + REOpSz + RENextOffSz)^;
           if Ord(ch) <= $FF then
-            Include(FirstCharSet, AnsiChar(ch));
+            Include(FirstCharSet, byte(ch));
           Exit;
         end;
       OP_ANYOF:
@@ -5054,7 +5054,7 @@ begin
     Result := Result + '<all chars>'
   else
   for Ch := #0 to #255 do
-    if Ch in FirstCharSet then
+    if byte(Ch) in FirstCharSet then
     begin
       if Ch < ' ' then
         Result := Result + PrintableChar(Ch) // ###0.948
