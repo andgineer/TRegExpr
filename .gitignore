@@ -15,4 +15,5 @@ lib/
 build/
 test_fpc
 test_delphi
+test_speed
 project1
