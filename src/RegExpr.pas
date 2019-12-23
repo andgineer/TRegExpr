@@ -68,7 +68,7 @@ interface
   {$INLINE ON}
 {$ENDIF}
 // ======== Define options for TRegExpr engine
-{ off $DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
+{$DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
