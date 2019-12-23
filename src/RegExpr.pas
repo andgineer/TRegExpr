@@ -1259,7 +1259,7 @@ const
   reeNoExpression = 1003;
   reeCorruptedProgram = 1004;
   reeNoInputStringSpecified = 1005;
-  reeOffsetMustBeGreaterThen0 = 1006;
+  reeOffsetMustBePositive = 1006;
   reeExecNextWithoutExec = 1007;
   reeBadOpcodeInCharClass = 1008;
   reeDumpCorruptedOpcode = 1011;
@@ -1337,7 +1337,7 @@ begin
       Result := 'TRegExpr exec: corrupted opcode (no magic byte)';
     reeNoInputStringSpecified:
       Result := 'TRegExpr exec: empty input string';
-    reeOffsetMustBeGreaterThen0:
+    reeOffsetMustBePositive:
       Result := 'TRegExpr exec: offset must be >0';
     reeExecNextWithoutExec:
       Result := 'TRegExpr exec: ExecNext without Exec(Pos)';
@@ -4085,7 +4085,7 @@ begin
   // Check that the start position is not negative
   if AOffset < 1 then
   begin
-    Error(reeOffsetMustBeGreaterThen0);
+    Error(reeOffsetMustBePositive);
     Exit;
   end;
 
