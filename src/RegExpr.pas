@@ -402,7 +402,7 @@ type
     function MatchPrim(prog: PRegExprChar): boolean;
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: integer): boolean;
+    function ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
@@ -449,6 +449,9 @@ type
     // find match for InputString starting from AOffset position
     // (AOffset=1 - first char of InputString)
     function ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
+    {$IFDEF OverMeth} overload;
+    function ExecPos(AOffset: integer; ATryOnce: boolean): boolean; overload;
+    {$ENDIF}
 
     // Returns ATemplate with '$&' or '$0' replaced by whole r.e.
     // occurence and '$n' replaced by occurence of subexpression #n.
@@ -3998,31 +4001,38 @@ end; { of function TRegExpr.MatchPrim
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
   InputString := AInputString;
-  Result := ExecPrim(1);
+  Result := ExecPrim(1, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
 function TRegExpr.Exec: boolean;
 begin
-  Result := ExecPrim(1);
+  Result := ExecPrim(1, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 function TRegExpr.Exec(AOffset: integer): boolean;
 begin
-  Result := ExecPrim(AOffset);
+  Result := ExecPrim(AOffset, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 {$ENDIF}
 
 function TRegExpr.ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 begin
-  Result := ExecPrim(AOffset);
+  Result := ExecPrim(AOffset, False);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
 
-function TRegExpr.ExecPrim(AOffset: integer): boolean;
+{$IFDEF OverMeth}
+function TRegExpr.ExecPos(AOffset: integer; ATryOnce: boolean): boolean;
+begin
+  Result := ExecPrim(AOffset, ATryOnce);
+end;
+{$ENDIF}
+
+function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
   procedure ClearMatchs;
   // Clears matchs array
   var
@@ -4108,14 +4118,15 @@ begin
   // no loops started
   LoopStackIdx := 0; // ###0.925
   {$ENDIF}
-  // Simplest case:  anchored match need be tried only once.
-  if reganchored <> #0 then
+
+  // Simplest case: anchored match need to be tried only once.
+  if ATryOnce or (reganchored <> #0) then
   begin
     Result := RegMatch(StartPtr);
     Exit;
   end;
 
-  // Messy cases:  unanchored match.
+  // Messy cases: unanchored match.
   s := StartPtr;
   if regstart <> #0 then // We know what char it must start with.
     repeat
@@ -4193,7 +4204,7 @@ begin
   if endp[0] = startp[0] // ###0.929
   then
     Inc(offset); // prevent infinite looping if empty string match r.e.
-  Result := ExecPrim(offset);
+  Result := ExecPrim(offset, False);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
