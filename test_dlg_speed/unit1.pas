@@ -94,7 +94,7 @@ begin
           if AWithLog then
           begin
             Inc(TokenNum);
-            DoMsg('['+IntToStr(TokenNum)+'] '+Copy(Subj, NPos, NLen));
+            DoMsg('['+IntToStr(TokenNum)+'] '+Obj[IndexRule].Match[0]);
           end;
 
           Break;
@@ -112,7 +112,6 @@ begin
 
     bLastFound:= bRuleFound;
   until false;
-
 
   for i:= 0 to Length(Rules)-1 do
     Obj[i].Free;
