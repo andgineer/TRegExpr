@@ -455,19 +455,19 @@ type
     {$ENDIF}
 
     // Returns ATemplate with '$&' or '$0' replaced by whole r.e.
-    // occurence and '$n' replaced by occurence of subexpression #n.
-    // Since v.0.929 '$' used instead of '\' (for future extensions
-    // and for more Perl-compatibility) and accept more then one digit.
-    // If you want place into template raw '$' or '\', use prefix '\'
+    // occurence and '$1'...'$nn' replaced by subexpression with given index.
+    // Symbol '$' is used instead of '\' (for future extensions
+    // and for more Perl-compatibility) and accepts more than one digit.
+    // If you want to place into template raw '$' or '\', use prefix '\'.
     // Example: '1\$ is $2\\rub\\' -> '1$ is <Match[2]>\rub\'
-    // If you want to place raw digit after '$n' you must delimit
-    // n with curly braces '{}'.
+    // If you want to place any number after '$' you must enclose it
+    // with curly braces: '${12}'.
     // Example: 'a$12bc' -> 'a<Match[12]>bc'
     // 'a${1}2bc' -> 'a<Match[1]>2bc'.
     function Substitute(const ATemplate: RegExprString): RegExprString;
 
-    // Split AInputStr into APieces by r.e. occurencies
-    // Internally calls Exec[Next]
+    // Splits AInputStr to list by positions of all r.e. occurencies.
+    // Internally calls Exec, ExecNext.
     procedure Split(const AInputStr: RegExprString; APieces: TStrings);
 
     function Replace(const AInputStr: RegExprString;
@@ -477,7 +477,7 @@ type
     function Replace(const AInputStr: RegExprString;
       AReplaceFunc: TRegExprReplaceFunction): RegExprString; overload;
     {$ENDIF}
-    // Returns AInputStr with r.e. occurencies replaced by AReplaceStr
+    // Returns AInputStr with r.e. occurencies replaced by AReplaceStr.
     // If AUseSubstitution is true, then AReplaceStr will be used
     // as template for Substitution methods.
     // For example:
@@ -486,8 +486,8 @@ type
     // will return:  def 'BLOCK' value 'test1'
     // Replace ('BLOCK( test1)', 'def "$1" value "$2"')
     // will return:  def "$1" value "$2"
-    // Internally calls Exec[Next]
-    // Overloaded version and ReplaceEx operate with call-back function,
+    // Internally calls Exec, ExecNext.
+    // Overloaded version and ReplaceEx operate with callback function,
     // so you can implement really complex functionality.
     function ReplaceEx(const AInputStr: RegExprString;
       AReplaceFunc: TRegExprReplaceFunction): RegExprString;
@@ -512,11 +512,12 @@ type
     // dump a compiled regexp in vaguely comprehensible form
     function Dump: RegExprString;
     {$ENDIF}
+
     // Regular expression.
     // For optimization, TRegExpr will automatically compiles it into 'P-code'
     // (You can see it with help of Dump method) and stores in internal
     // structures. Real [re]compilation occures only when it really needed -
-    // while calling Exec[Next], Substitute, Dump, etc
+    // while calling Exec, ExecNext, Substitute, Dump, etc
     // and only if Expression or other P-code affected properties was changed
     // after last [re]compilation.
     // If any errors while [re]compilation occures, Error method is called
@@ -527,8 +528,7 @@ type
     // r.e. (?ismx-ismx) will replace this default values.
     // If you try to set unsupported modifier, Error will be called
     // (by defaul Error raises exception ERegExpr).
-    property ModifierStr: RegExprString read GetModifierStr
-      write SetModifierStr;
+    property ModifierStr: RegExprString read GetModifierStr write SetModifierStr;
 
     property ModifierI: boolean read GetModifierI write SetModifierI;
     property ModifierR: boolean read GetModifierR write SetModifierR;
