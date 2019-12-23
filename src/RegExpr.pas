@@ -4087,17 +4087,17 @@ begin
     Error(reeOffsetMustBeGreaterThen0);
     Exit;
   end;
+
   // Check that the start position is not longer than the line
   // If so then exit with nothing found
-  if AOffset > (Length(fInputString) + 1)
-  // for matching empty string after last char.
+  if AOffset > (Length(fInputString) + 1) // for matching empty string after last char.
   then
     Exit;
 
   StartPtr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
-  if regmust <> nil then
+  if not ATryOnce and (regmust <> nil) then
   begin
     s := StartPtr;
     repeat
