@@ -4097,22 +4097,28 @@ begin
   StartPtr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
-  if not ATryOnce and (regmust <> nil) then
-  begin
-    s := StartPtr;
-    repeat
-      s := StrScan(s, regmust[0]);
-      if s <> nil then
-      begin
-        if StrLComp(s, regmust, regmustlen) = 0 then
-          Break; // Found it.
-        Inc(s);
-      end;
-    until s = nil;
-    if s = nil // Not present.
-    then
-      Exit;
-  end;
+  if (regmust <> nil) then
+    if ATryOnce then
+    begin
+      if StrLComp(StartPtr, regmust, regmustlen) <> 0 then
+        Exit;
+    end
+    else
+    begin
+      s := StartPtr;
+      repeat
+        s := StrScan(s, regmust[0]);
+        if s <> nil then
+        begin
+          if StrLComp(s, regmust, regmustlen) = 0 then
+            Break; // Found it.
+          Inc(s);
+        end;
+      until s = nil;
+      if s = nil // Not present.
+      then
+        Exit;
+    end;
 
   {$IFDEF ComplexBraces}
   // no loops started
