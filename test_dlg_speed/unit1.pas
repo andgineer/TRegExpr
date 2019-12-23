@@ -23,9 +23,9 @@ type
     procedure ButtonSpeedClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
-    SText: string;
+    TestStr: UnicodeString;
     procedure DoMsg(const S: string);
-    procedure Test_EC(const Subj: Unicodestring; AWithLog: boolean);
+    procedure DoTest(const Subj: Unicodestring; AWithLog: boolean);
     procedure UseFile(const fn: string);
   public
 
@@ -65,7 +65,7 @@ begin
   end;
 end;
 
-procedure TForm1.Test_EC(const Subj: Unicodestring; AWithLog: boolean);
+procedure TForm1.DoTest(const Subj: Unicodestring; AWithLog: boolean);
 var
   Obj: array[0..Length(Rules)-1] of TRegExpr;
   NPos, NLen: integer;
@@ -128,7 +128,7 @@ var
   t: QWord;
 begin
   t:= GetTickCount64;
-  Test_EC(UTF8Decode(SText), false);
+  DoTest(TestStr, false);
   t:= GetTickCount64-t;
   DoMsg(Format('Parsing by TRegExpr: %d ms', [t]));
 end;
@@ -142,7 +142,7 @@ end;
 
 procedure TForm1.ButtonFindAllClick(Sender: TObject);
 begin
-  Test_EC(UTF8Decode(SText), true);
+  DoTest(TestStr, true);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -151,8 +151,6 @@ var
 begin
   fn:= ExtractFileDir(ExtractFileDir(Application.ExeName))+
     DirectorySeparator+'src'+DirectorySeparator+'RegExpr.pas';
-
-  //fn:= ExtractFilePath(Application.ExeName)+DirectorySeparator+'unit1.pas';
 
   if not FileExists(fn) then
   begin
@@ -165,14 +163,20 @@ end;
 procedure TForm1.UseFile(const fn: string);
 var
   L: TStringList;
+  i: integer;
 begin
   L:= TStringList.Create;
   L.LoadFromFile(fn);
-  SText:= L.Text;
+  TestStr:= UTF8Decode(L.Text);
   L.Free;
 
+  //remove non ascii chars
+  for i:= 1 to Length(TestStr) do
+    if Ord(TestStr[i])>$FF then
+      TestStr[i]:= '?';
+
   ListBox1.Items.Add('Test file: '+fn);
-  ListBox1.Items.Add('Length: '+IntToStr(Length(SText)));
+  ListBox1.Items.Add('Length: '+IntToStr(Length(TestStr)));
 end;
 
 end.
