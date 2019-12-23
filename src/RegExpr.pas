@@ -426,8 +426,8 @@ type
     {$ENDIF}
     destructor Destroy; override;
 
-    class function VersionMajor: integer; // ###0.944
-    class function VersionMinor: integer; // ###0.944
+    class function VersionMajor: integer;
+    class function VersionMinor: integer;
 
     // match a programm against a string AInputString
     // !!! Exec store AInputString into InputString property
@@ -704,7 +704,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 970;
+  REVersionMinor = 973;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
