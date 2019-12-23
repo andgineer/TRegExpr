@@ -126,28 +126,6 @@ type
   {$ENDIF}
   TREOp = REChar; // internal p-code type //###0.933
   PREOp = ^TREOp;
-  TRENextOff = PtrInt;
-  // internal Next "pointer" (offset to current p-code) //###0.933
-  PRENextOff = ^TRENextOff;
-  // used for extracting Next "pointers" from compiled r.e. //###0.933
-  TREBracesArg = integer; // type of {m,n} arguments
-  PREBracesArg = ^TREBracesArg;
-
-const
-  REOpSz = SizeOf(TREOp) div SizeOf(REChar);
-  // size of OP_ command in REChars
-  {$IFDEF FPC_REQUIRES_PROPER_ALIGNMENT}
-  // add space for aligning pointer
-  // -1 is the correct max size but also needed for InsertOperator that needs a multiple of pointer size
-  RENextOffSz = (2 * SizeOf(TRENextOff) div SizeOf(REChar)) - 1;
-  REBracesArgSz = (2 * SizeOf(TREBracesArg) div SizeOf(REChar));
-  // add space for aligning pointer
-  {$ELSE}
-  RENextOffSz = (SizeOf(TRENextOff) div SizeOf(REChar));
-  // size of Next pointer in REChars
-  REBracesArgSz = SizeOf(TREBracesArg) div SizeOf(REChar);
-  // size of BRACES arguments in REChars
-  {$ENDIF}
 
 type
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
@@ -192,14 +170,6 @@ const
     + #$1680#$2000#$2001#$2002#$2003#$2004#$2005#$2006#$2007#$2008#$2009#$200A#$202F#$205F#$3000
     {$ENDIF};
 
-  RegExprAllSet = [#0 .. #255];
-  RegExprWordSet = ['a' .. 'z', 'A' .. 'Z', '0' .. '9', '_'];
-  RegExprDigitSet = ['0' .. '9'];
-  RegExprSpaceSet = [' ', #$9, #$A, #$D, #$C];
-  RegExprLineSeparatorsSet = [#$d, #$a, #$b, #$c] {$IFDEF UniCode} + [#$85] {$ENDIF};
-  RegExprHorzSeparatorsSet = [#9, #$20, #$A0];
-
-
 const
   NSUBEXP = 90; // max number of subexpression //###0.929
   // Cannot be more than NSUBEXPMAX
@@ -208,8 +178,6 @@ const
   // Big NSUBEXP will cause more slow work and more stack required
   NSUBEXPMAX = 255; // Max possible value for NSUBEXP. //###0.945
   // Don't change it! It's defined by internal TRegExpr design.
-
-  MaxBracesArg = $7FFFFFFF - 1; // max value for {n,m} arguments //###0.933
 
   {$IFDEF ComplexBraces}
   LoopStackMax = 10; // max depth of loops stack //###0.925
@@ -262,15 +230,15 @@ type
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
     regstart: REChar; // char that must begin a match; '\0' if none obvious
-    reganch: REChar; // is the match anchored (at beginning-of-line only)?
+    reganchored: REChar; // is the match anchored (at beginning-of-line only)?
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
-    regmlen: integer; // length of regmust string
+    regmustlen: integer; // length of regmust string
     // Regstart and reganch permit very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
     // that regcomp() supplies a regmust only if the r.e. contains something
     // potentially expensive (at present, the only such thing detected is * or +
-    // at the start of the r.e., which can involve a lot of backup). Regmlen is
+    // at the start of the r.e., which can involve a lot of backup). regmustlen is
     // supplied because the test in regexec() needs it and regcomp() is computing
     // it anyway.
 
@@ -642,6 +610,7 @@ type
     property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
   end;
 
+type
   ERegExpr = class(Exception)
   public
     ErrorCode: integer;
@@ -649,9 +618,7 @@ type
   end;
 
 const
-  // default for InvertCase property:
-  RegExprInvertCaseFunction: TRegExprInvertCaseFunction =
-    {$IFDEF FPC} nil {$ELSE} TRegExpr.InvertCaseFunction{$ENDIF};
+  RegExprInvertCaseFunction: TRegExprInvertCaseFunction = nil;
 
   // true if string AInputString match regular expression ARegExpr
   // ! will raise exeption if syntax errors in ARegExpr
@@ -729,13 +696,46 @@ uses
 
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
-  TRegExprVersionMajor: integer = 0;
-  TRegExprVersionMinor: integer = 970;
+  REVersionMajor = 0;
+  REVersionMinor = 970;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
   OpKind_Range = REChar(3);
   OpKind_Char = REChar(6); // OpKind_Char must be maximal of all OpKind_nnn
+
+  RegExprAllSet = [#0 .. #255];
+  RegExprWordSet = ['a' .. 'z', 'A' .. 'Z', '0' .. '9', '_'];
+  RegExprDigitSet = ['0' .. '9'];
+  RegExprSpaceSet = [' ', #$9, #$A, #$D, #$C];
+  RegExprLineSeparatorsSet = [#$d, #$a, #$b, #$c] {$IFDEF UniCode} + [#$85] {$ENDIF};
+  RegExprHorzSeparatorsSet = [#9, #$20, #$A0];
+
+  MaxBracesArg = $7FFFFFFF - 1; // max value for {n,m} arguments //###0.933
+
+type
+  TRENextOff = PtrInt;
+  // internal Next "pointer" (offset to current p-code) //###0.933
+  PRENextOff = ^TRENextOff;
+  // used for extracting Next "pointers" from compiled r.e. //###0.933
+  TREBracesArg = integer; // type of {m,n} arguments
+  PREBracesArg = ^TREBracesArg;
+
+const
+  REOpSz = SizeOf(TREOp) div SizeOf(REChar);
+  // size of OP_ command in REChars
+  {$IFDEF FPC_REQUIRES_PROPER_ALIGNMENT}
+  // add space for aligning pointer
+  // -1 is the correct max size but also needed for InsertOperator that needs a multiple of pointer size
+  RENextOffSz = (2 * SizeOf(TRENextOff) div SizeOf(REChar)) - 1;
+  REBracesArgSz = (2 * SizeOf(TREBracesArg) div SizeOf(REChar));
+  // add space for aligning pointer
+  {$ELSE}
+  RENextOffSz = (SizeOf(TRENextOff) div SizeOf(REChar));
+  // size of Next pointer in REChars
+  REBracesArgSz = SizeOf(TREBracesArg) div SizeOf(REChar);
+  // size of BRACES arguments in REChars
+  {$ENDIF}
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1249,6 +1249,7 @@ const
   reeComplexBracesNotImplemented = 126;
   reeUnrecognizedModifier = 127;
   reeBadLinePairedSeparator = 128;
+  // Runtime errors must be >= 1000
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
   reeMatchPrimCorruptedPointers = 1002;
@@ -1362,17 +1363,15 @@ end; { of function TRegExpr.LastError
 { ===================== Common section ======================== }
 { ============================================================= }
 
-class function TRegExpr.VersionMajor: integer; // ###0.944
+class function TRegExpr.VersionMajor: integer;
 begin
-  Result := TRegExprVersionMajor;
-end; { of class function TRegExpr.VersionMajor
-  -------------------------------------------------------------- }
+  Result := REVersionMajor;
+end;
 
-class function TRegExpr.VersionMinor: integer; // ###0.944
+class function TRegExpr.VersionMinor: integer;
 begin
-  Result := TRegExprVersionMinor;
-end; { of class function TRegExpr.VersionMinor
-  -------------------------------------------------------------- }
+  Result := REVersionMinor;
+end;
 
 constructor TRegExpr.Create;
 begin
@@ -2188,8 +2187,8 @@ function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): boolean;
 // Beware that the optimization-preparation code in here knows about some
 // of the structure of the compiled regexp.
 var
-  scan, longest: PRegExprChar;
-  Len: integer;
+  scan, longest, longestTemp: PRegExprChar;
+  Len, LenTemp: integer;
   flags: integer;
 begin
   Result := False; // life too dark
@@ -2248,9 +2247,9 @@ begin
     {$ENDIF}
 
     regstart := #0; // Worst-case defaults.
-    reganch := #0;
+    reganchored := #0;
     regmust := nil;
-    regmlen := 0;
+    regmustlen := 0;
     scan := programm + REOpSz; // First OP_BRANCH.
     if PREOp(regnext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
@@ -2260,7 +2259,7 @@ begin
       if PREOp(scan)^ = OP_EXACTLY then
         regstart := (scan + REOpSz + RENextOffSz)^
       else if PREOp(scan)^ = OP_BOL then
-        Inc(reganch);
+        Inc(reganchored);
 
       // If there's something expensive in the r.e., find the longest
       // literal string that must appear and make it the regmust. Resolve
@@ -2274,16 +2273,20 @@ begin
         Len := 0;
         while scan <> nil do
         begin
-          if (PREOp(scan)^ = OP_EXACTLY) and
-            (strlen(scan + REOpSz + RENextOffSz) >= PtrInt(Len)) then
+          if PREOp(scan)^ = OP_EXACTLY then
           begin
-            longest := scan + REOpSz + RENextOffSz;
-            Len := strlen(longest);
+            longestTemp := scan + REOpSz + RENextOffSz;
+            LenTemp := strlen(longestTemp);
+            if LenTemp >= Len then
+            begin
+              longest := longestTemp;
+              Len := LenTemp;
+            end;
           end;
           scan := regnext(scan);
         end;
         regmust := longest;
-        regmlen := Len;
+        regmustlen := Len;
       end;
     end;
 
@@ -3468,10 +3471,10 @@ var
   next: PRegExprChar; // Next node.
   Len: PtrInt;
   opnd: PRegExprChar;
-  no: PtrInt;
+  no: integer;
   save: PRegExprChar;
   nextch: REChar;
-  BracesMin, Bracesmax: PtrInt;
+  BracesMin, Bracesmax: integer;
   // we use integer instead of TREBracesArg for better support */+
   {$IFDEF ComplexBraces}
   SavedLoopStack: TLoopStack; // :(( very bad for recursion
@@ -3825,12 +3828,9 @@ begin
             Error(reeLoopWithoutEntry);
             Exit;
           end;
-          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + 2 *
-            REBracesArgSz))^;
+          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + 2 * REBracesArgSz))^;
           BracesMin := PREBracesArg(AlignToInt(scan + REOpSz + RENextOffSz))^;
-          Bracesmax :=
-            PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz +
-            REBracesArgSz))^;
+          Bracesmax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
           save := reginput;
           if LoopStack[LoopStackIdx] >= BracesMin then
           begin // Min alredy matched - we can work
@@ -3904,9 +3904,7 @@ begin
           else
           begin // braces
             BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-            Bracesmax :=
-              PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz +
-              REBracesArgSz))^;
+            Bracesmax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
           end;
           save := reginput;
           opnd := scan + REOpSz + RENextOffSz;
@@ -4096,7 +4094,7 @@ begin
       s := StrScan(s, regmust[0]);
       if s <> nil then
       begin
-        if StrLComp(s, regmust, regmlen) = 0 then
+        if StrLComp(s, regmust, regmustlen) = 0 then
           Break; // Found it.
         Inc(s);
       end;
@@ -4111,7 +4109,7 @@ begin
   LoopStackIdx := 0; // ###0.925
   {$ENDIF}
   // Simplest case:  anchored match need be tried only once.
-  if reganch <> #0 then
+  if reganchored <> #0 then
   begin
     Result := RegMatch(StartPtr);
     Exit;
@@ -5015,7 +5013,7 @@ begin
   // Header fields of interest.
   if regstart <> #0 then
     Result := Result + 'Start: ' + regstart + '  ';
-  if reganch <> #0 then
+  if reganchored <> #0 then
     Result := Result + 'Anchored  ';
   if regmust <> nil then
     Result := Result + 'Must have: ' + regmust + '  ';
@@ -5081,19 +5079,15 @@ end; { of procedure TRegExpr.Error
   programm, regsize
   regstart // -> programm
   reganch // -> programm
-  regmust, regmlen // -> programm
+  regmust, regmustlen // -> programm
   fExprIsCompiled
 *)
 
 // be carefull - placed here code will be always compiled with
 // compiler optimization flag
 
-{$IFDEF FPC}
-
 initialization
 
-RegExprInvertCaseFunction := TRegExpr.InvertCaseFunction;
-
-{$ENDIF}
+  RegExprInvertCaseFunction := TRegExpr.InvertCaseFunction;
 
 end.
