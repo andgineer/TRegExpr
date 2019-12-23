@@ -4157,7 +4157,6 @@ begin
       end;
     until s = nil
   else
-  begin // We don't - general case.
     repeat // ###0.948
       {$IFDEF UseFirstCharSet}
       if Ord(s^) <= $FF then
@@ -4178,28 +4177,6 @@ begin
         ClearMatchs; // ###0.949
       Inc(s);
     until False;
-    (* optimized and fixed by Martin Fuller - empty strings
-      were not allowed to pass through in UseFirstCharSet mode
-      {$IFDEF UseFirstCharSet} //###0.929
-      while s < fInputEnd do
-      begin
-        if s^ in FirstCharSet then
-          Result := RegMatch (s);
-        if Result
-          then exit;
-        Inc(s);
-      end;
-      {$ELSE}
-      repeat
-        Result := RegMatch (s);
-        if Result
-          then exit;
-        Inc(s);
-      until s = fInputEnd;
-      {$ENDIF}
-    *)
-  end;
-  // Failure
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
