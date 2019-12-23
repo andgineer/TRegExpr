@@ -365,6 +365,9 @@ type
     // emit (if appropriate) a byte of code
     procedure EmitC(b: REChar);
 
+    // emit LongInt value
+    procedure EmitInt(AValue: LongInt);
+
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
     procedure InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
@@ -706,7 +709,7 @@ const
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
   OpKind_Range = REChar(3);
-  OpKind_Char = REChar(6); // OpKind_Char must be maximal of all OpKind_nnn
+  OpKind_Char = REChar(4);
 
   RegExprAllSet = [0 .. 255];
   RegExprWordSet = [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z'), Ord('0') .. Ord('9'), Ord('_')];
@@ -740,6 +743,7 @@ const
   REBracesArgSz = SizeOf(TREBracesArg) div SizeOf(REChar);
   // size of BRACES arguments in REChars
   {$ENDIF}
+  RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1824,6 +1828,21 @@ begin
 end; { of procedure TRegExpr.EmitC
   -------------------------------------------------------------- }
 
+procedure TRegExpr.EmitInt(AValue: LongInt);
+begin
+  if regcode <> @regdummy then
+  begin
+    PLongInt(regcode)^ := AValue;
+    Inc(regcode, RENumberSz);
+    {$IFDEF DebugSynRegExpr}
+    if regcode - programm > regsize then
+      raise Exception.Create('TRegExpr.EmitInt buffer overrun');
+    {$ENDIF}
+  end
+  else
+    Inc(regsize, RENumberSz);
+end;
+
 procedure TRegExpr.InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
 // insert an operator in front of already-emitted operand
 // Means relocating the operand.
@@ -1977,10 +1996,11 @@ begin
           end;
         end;
 
-      OpKind_Char .. High(REChar):
+      OpKind_Char:
         begin
-          N := Ord(ABuffer^) - Ord(OpKind_Char);
           Inc(ABuffer);
+          N := PLongInt(ABuffer)^;
+          Inc(ABuffer, RENumberSz);
           for i := 1 to N do
           begin
             ch := ABuffer^;
@@ -2111,10 +2131,11 @@ begin
           end;
         end;
 
-      OpKind_Char .. High(REChar):
+      OpKind_Char:
         begin
-          N := Ord(ABuffer^) - Ord(OpKind_Char);
           Inc(ABuffer);
+          N := PLongInt(ABuffer)^;
+          Inc(ABuffer, RENumberSz);
           for i := 1 to N do
           begin
             ch := ABuffer^;
@@ -2841,7 +2862,7 @@ var
   flags: integer;
   RangeBeg, RangeEnd: REChar;
   CanBeRange: boolean;
-  AddrOfString: PRegExprChar;
+  AddrOfLen: PLongInt;
   Len: integer;
   ender: REChar;
   begmodfs: PRegExprChar;
@@ -2865,19 +2886,20 @@ var
   procedure EmitSimpleRangeC(b: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     RangeBeg := b;
-    if AddrOfString = nil then
+    if AddrOfLen = nil then
     begin
-      AddrOfString := regcode;
       EmitC(OpKind_Char);
+      Pointer(AddrOfLen) := regcode;
+      EmitInt(0);
     end;
-    Inc(AddrOfString^);
+    Inc(AddrOfLen^);
     EmitC(b);
     CanBeRange := True;
   end;
 
   procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
-    AddrOfString := nil;
+    AddrOfLen := nil;
     CanBeRange := False;
     EmitC(OpKind_Range);
     EmitC(ch1);
@@ -2888,7 +2910,7 @@ begin
   Result := nil;
   flags := 0;
   flagp := flag_Worst;
-  AddrOfString := nil;
+  AddrOfLen := nil;
 
   Inc(regparse);
   case (regparse - 1)^ of
@@ -2986,7 +3008,7 @@ begin
               end;
               if _IsMetaChar(regparse^) then
               begin
-                AddrOfString := nil;
+                AddrOfLen := nil;
                 CanBeRange := False;
                 EmitC(OpKind_MetaClass);
                 EmitC(regparse^);
@@ -3001,7 +3023,7 @@ begin
             Inc(regparse);
           end;
         end; { of while }
-        AddrOfString := nil;
+        AddrOfLen := nil;
         CanBeRange := False;
         EmitC(OpKind_End);
         if regparse^ <> ']' then
@@ -4961,17 +4983,18 @@ begin
               Result := Result + '\' + PrintableChar(s^) + ' ';
               Inc(s);
             end;
-          OpKind_Char .. High(REChar):
+          OpKind_Char:
             begin
-              NLen := Ord(s^) - Ord(OpKind_Char);
+              Inc(s);
+              NLen := PLongInt(s)^;
+              Inc(s, RENumberSz);
               Result := Result + 'Ch(';
               for i := 1 to NLen do
               begin
-                Inc(s);
                 Result := Result + PrintableChar(s^);
+                Inc(s);
               end;
               Result := Result + ') ';
-              Inc(s);
             end;
           else
             raise Exception.Create('TRegExpr: unknown opcode in char class');
