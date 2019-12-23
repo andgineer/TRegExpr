@@ -128,9 +128,12 @@ var
   t: QWord;
 begin
   t:= GetTickCount64;
-  DoTest(TestStr, false);
-  t:= GetTickCount64-t;
-  DoMsg(Format('Parsing by TRegExpr: %d ms', [t]));
+  try
+    DoTest(TestStr, false);
+  finally
+    t:= GetTickCount64-t;
+    DoMsg(Format('Parsing by TRegExpr: %d ms', [t]));
+  end;
 end;
 
 procedure TForm1.ButtonFileClick(Sender: TObject);
@@ -142,7 +145,12 @@ end;
 
 procedure TForm1.ButtonFindAllClick(Sender: TObject);
 begin
-  DoTest(TestStr, true);
+  ListBox1.Items.BeginUpdate;
+  try
+    DoTest(TestStr, true);
+  finally
+    ListBox1.Items.BeginUpdate;
+  end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
