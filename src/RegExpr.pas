@@ -2048,6 +2048,7 @@ var
   N, i: integer;
 begin
   ARes := [];
+  TempSet := [];
   repeat
     case ABuffer^ of
       OpKind_End:
@@ -4591,6 +4592,7 @@ var
   min_cnt, i: integer;
   TempSet: TRegExprCharset;
 begin
+  TempSet := [];
   scan := prog;
   while scan <> nil do
   begin
