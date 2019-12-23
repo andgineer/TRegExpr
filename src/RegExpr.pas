@@ -244,6 +244,7 @@ type
 
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
+    FirstCharArray: array[byte] of boolean;
     {$ENDIF}
 
     // work variables for Exec routines - save stack in recursion
@@ -2248,6 +2249,8 @@ begin
     {$IFDEF UseFirstCharSet} // ###0.929
     FirstCharSet := [];
     FillFirstCharSet(programm + REOpSz);
+    for Len := 0 to 255 do
+      FirstCharArray[Len] := AnsiChar(Len) in FirstCharSet;
     {$ENDIF}
 
     regstart := #0; // Worst-case defaults.
@@ -4129,6 +4132,11 @@ begin
   // Simplest case: anchored match need to be tried only once.
   if ATryOnce or (reganchored <> #0) then
   begin
+    {$IFDEF UseFirstCharSet}
+    if Ord(StartPtr^) <= $FF then
+      if not FirstCharArray[byte(StartPtr^)] then
+        Exit;
+    {$ENDIF}
     Result := RegMatch(StartPtr);
     Exit;
   end;
@@ -4154,7 +4162,7 @@ begin
       {$IFDEF UseFirstCharSet}
       if Ord(s^) <= $FF then
       begin
-        if AnsiChar(s^) in FirstCharSet then
+        if FirstCharArray[byte(s^)] then
           Result := RegMatch(s);
       end
       else
