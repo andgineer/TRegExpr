@@ -11,9 +11,8 @@ unit REStudioMain;
 
  (c) 1999-2004 Andrey V. Sorokin
   Saint Petersburg, Russia
-  anso@mail.ru, anso@paycash.ru
-  http://regexpstudio.com
-  http://anso.da.ru
+  https://sorokin.engineer/
+  andrey@sorokin.engineer
 }
 
 interface

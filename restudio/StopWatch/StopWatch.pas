@@ -22,7 +22,8 @@ unit StopWatch;
       versions of Delphi)
 
   (c) 2002 Andrey V. Sorokin
-   mailto:anso@mail.ru
+  https://sorokin.engineer/
+  andrey@sorokin.engineer
 
 ---------------------------------------------------------------
      Legal issues

@@ -13,8 +13,8 @@ unit HyperLinksDecorator;
  Uses TRegExpr library.
 
  (c) 2002 Andrey V. Sorokin, Saint Petersburg, Russia
-  mailto:anso@mail.ru
-  http://www.RegExpStudio.com
+  https://sorokin.engineer/
+  andrey@sorokin.engineer
 
  v. 0.101 2002.08.30 
   -=- (-) Missed closing tag </a>
