@@ -228,7 +228,6 @@ type
     // The "internal use only" fields to pass info from compile
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
-    regstart: REChar; // char that must begin a match; '\0' if none obvious
     reganchored: REChar; // is the match anchored (at beginning-of-line only)?
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
@@ -2296,7 +2295,6 @@ begin
       FirstCharArray[Len] := byte(Len) in FirstCharSet;
     {$ENDIF}
 
-    regstart := #0; // Worst-case defaults.
     reganchored := #0;
     regmust := nil;
     regmustlen := 0;
@@ -2308,9 +2306,10 @@ begin
       scan := scan + REOpSz + RENextOffSz;
 
       // Starting-point info.
-      if PREOp(scan)^ = OP_EXACTLY then
+      {if PREOp(scan)^ = OP_EXACTLY then
         regstart := (scan + REOpSz + RENextOffSz + RENumberSz)^
-      else if PREOp(scan)^ = OP_BOL then
+      else}
+      if PREOp(scan)^ = OP_BOL then
         Inc(reganchored);
 
       // If there's something expensive in the r.e., find the longest
@@ -4172,9 +4171,11 @@ begin
   // ATryOnce or anchored match (it needs to be tried only once).
   if ATryOnce or (reganchored <> #0) then
   begin
+    {
     if regstart <> #0 then
       if regstart <> StartPtr^ then
         Exit;
+        }
     {$IFDEF UseFirstCharSet}
     if Ord(StartPtr^) <= $FF then
       if not FirstCharArray[byte(StartPtr^)] then
@@ -4186,6 +4187,7 @@ begin
 
   // Messy cases: unanchored match.
   s := StartPtr;
+  {
   if regstart <> #0 then // We know what char it must start with.
     repeat
       // don't use StrScan to support Null chars in InputString
@@ -4201,7 +4203,8 @@ begin
       end;
     until s = nil
   else
-    repeat // ###0.948
+  }
+    repeat
       {$IFDEF UseFirstCharSet}
       if Ord(s^) <= $FF then
       begin
@@ -5061,8 +5064,8 @@ begin
   end; { of while }
 
   // Header fields of interest.
-  if regstart <> #0 then
-    Result := Result + 'Start char: ' + regstart + '; ';
+  //if regstart <> #0 then
+  //  Result := Result + 'Start char: ' + regstart + '; ';
   if reganchored <> #0 then
     Result := Result + 'Anchored; ';
   if regmustString <> '' then
