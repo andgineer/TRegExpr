@@ -232,7 +232,8 @@ type
     reganchored: REChar; // is the match anchored (at beginning-of-line only)?
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
-    // Regstart and reganch permit very fast decisions on suitable starting points
+    regmustString: RegExprString;
+    // Regstart and reganchored permit very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
     // that regcomp() supplies a regmust only if the r.e. contains something
@@ -2299,6 +2300,8 @@ begin
     reganchored := #0;
     regmust := nil;
     regmustlen := 0;
+    regmustString := '';
+
     scan := programm + REOpSz; // First OP_BRANCH.
     if PREOp(regnext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
@@ -2337,6 +2340,7 @@ begin
         regmust := longest;
         regmustlen := Len;
       end;
+      SetString(regmustString, regmust, regmustlen);
     end;
 
     Result := True;
@@ -4121,7 +4125,6 @@ function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 var
   s: PRegExprChar;
   StartPtr: PRegExprChar;
-  MustStr: RegExprString;
 begin
   Result := False;
 
@@ -4157,13 +4160,8 @@ begin
   StartPtr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
-  if (regmust <> nil) then
-  begin
-    // don't use StrScan to support Null chars in InputString
-    SetString(MustStr, regmust, regmustlen);
-    if Pos(MustStr, fInputString) = 0 then Exit;
-    MustStr := '';
-  end;
+  if regmustString <> '' then
+    if Pos(regmustString, fInputString) = 0 then Exit;
 
   {$IFDEF ComplexBraces}
   // no loops started
@@ -5063,11 +5061,11 @@ begin
 
   // Header fields of interest.
   if regstart <> #0 then
-    Result := Result + 'Start: ' + regstart + '  ';
+    Result := Result + 'Start char: ' + regstart + '; ';
   if reganchored <> #0 then
-    Result := Result + 'Anchored  ';
-  if regmust <> nil then
-    Result := Result + 'Must have: ' + regmust + '  ';
+    Result := Result + 'Anchored; ';
+  if regmustString <> '' then
+    Result := Result + 'Must have: "' + regmustString + '"; ';
 
   {$IFDEF UseFirstCharSet} // ###0.929
   Result := Result + #$d#$a'First charset: ';
