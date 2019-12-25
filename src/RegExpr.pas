@@ -178,9 +178,13 @@ const
   NSUBEXPMAX = 255; // Max possible value for NSUBEXP. //###0.945
   // Don't change it! It's defined by internal TRegExpr design.
 
-  {$IFDEF ComplexBraces}
+{$IFDEF ComplexBraces}
+const
   LoopStackMax = 10; // max depth of loops stack //###0.925
-  {$ENDIF}
+
+type
+  TRegExprLoopStack = array [1 .. LoopStackMax] of integer;
+{$ENDIF}
 
 type
   TRegExprModifiers = record
@@ -221,7 +225,7 @@ type
     FSubExprCount: integer;
 
     {$IFDEF ComplexBraces}
-    LoopStack: array [1 .. LoopStackMax] of integer; // state before entering loop
+    LoopStack: TRegExprLoopStack; // state before entering loop
     LoopStackIdx: integer; // 0 - out of all loops
     {$ENDIF}
 
@@ -3529,9 +3533,6 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // recursion, in particular by going through "ordinary" nodes (that don't
 // need to know whether the rest of the match failed) by a loop instead of
 // by recursion.
-type
-  TLoopStack = array [1 .. LoopStackMax] of integer;
-
 var
   scan: PRegExprChar; // Current node.
   next: PRegExprChar; // Next node.
@@ -3543,7 +3544,7 @@ var
   BracesMin, Bracesmax: integer;
   // we use integer instead of TREBracesArg for better support */+
   {$IFDEF ComplexBraces}
-  SavedLoopStack: TLoopStack; // :(( very bad for recursion
+  SavedLoopStack: TRegExprLoopStack; // :(( very bad for recursion
   SavedLoopStackIdx: integer; // ###0.925
   {$ENDIF}
   bound1, bound2: boolean;
