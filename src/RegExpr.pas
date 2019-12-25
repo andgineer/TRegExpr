@@ -4159,9 +4159,10 @@ begin
   // If there is a "must appear" string, look for it.
   if (regmust <> nil) then
   begin
-    // don't use StrScan() here to support Null chars in InputString
+    // don't use StrScan to support Null chars in InputString
     SetString(MustStr, regmust, regmustlen);
     if Pos(MustStr, fInputString) = 0 then Exit;
+    MustStr := '';
   end;
 
   {$IFDEF ComplexBraces}
@@ -4169,7 +4170,7 @@ begin
   LoopStackIdx := 0; // ###0.925
   {$ENDIF}
 
-  // Simplest case: anchored match need to be tried only once.
+  // ATryOnce or anchored match (it needs to be tried only once).
   if ATryOnce or (reganchored <> #0) then
   begin
     {$IFDEF UseFirstCharSet}
