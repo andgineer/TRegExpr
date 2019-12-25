@@ -1655,7 +1655,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.IsSpaceChar(AChar: REChar): boolean;
 begin
   {$IFDEF UseSpaceChars}
   Result := Pos(AChar, fSpaceChars) > 0;
