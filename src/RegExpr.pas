@@ -745,6 +745,20 @@ const
   {$ENDIF}
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
 
+function _FindCharInBuffer(SBegin, SEnd: PRegExprChar; Ch: REChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  while SBegin < SEnd do
+  begin
+    if SBegin^ = Ch then
+    begin
+      Result := SBegin;
+      Exit;
+    end;
+    Inc(SBegin);
+  end;
+  Result := nil;
+end;
+
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
@@ -4171,14 +4185,15 @@ begin
   s := StartPtr;
   if regstart <> #0 then // We know what char it must start with.
     repeat
-      s := StrScan(s, regstart);
+      // don't use StrScan to support Null chars in InputString
+      s := _FindCharInBuffer(s, fInputEnd, regstart);
       if s <> nil then
       begin
         Result := RegMatch(s);
         if Result then
           Exit
         else
-          ClearMatchs; // ###0.949
+          ClearMatchs;
         Inc(s);
       end;
     until s = nil
