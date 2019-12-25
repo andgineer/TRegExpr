@@ -2342,8 +2342,9 @@ begin
         end;
         regmust := longest;
         regmustlen := Len;
+        if regmustlen > 0 then
+          SetString(regmustString, regmust, regmustlen);
       end;
-      SetString(regmustString, regmust, regmustlen);
     end;
 
     Result := True;
