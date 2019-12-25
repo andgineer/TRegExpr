@@ -262,7 +262,6 @@ type
     regdummy: Char;
     regcode: PRegExprChar; // Code-emit pointer; @regdummy = don't.
     regsize: integer; // Total programm size in REChars.
-    regLastOpcode: TREOp;
     regExactlyLen: PLongInt;
 
     regexpbeg: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
@@ -1811,7 +1810,6 @@ function TRegExpr.EmitNode(op: TREOp): PRegExprChar; // ###0.933
 // emit a node, return location
 begin
   Result := regcode;
-  regLastOpcode := op;
   if Result <> @regdummy then
   begin
     PREOp(regcode)^ := op;
@@ -2244,7 +2242,6 @@ begin
   flags := 0;
   regparse := nil; // for correct error handling
   regexpbeg := ARegExp;
-  regLastOpcode := TREOp(0);
   regExactlyLen := nil;
 
   ClearInternalIndexes;
@@ -2342,7 +2339,7 @@ begin
         end;
         regmust := longest;
         regmustlen := Len;
-        if regmustlen > 1 then
+        if regmustlen > 1 then // don't use regmust if too short
           SetString(regmustString, regmust, regmustlen);
       end;
     end;
@@ -2897,23 +2894,12 @@ var
   begmodfs: PRegExprChar;
 
   procedure EmitExactly(Ch: REChar);
-  var
-    op: TREOp;
   begin
     if fCompModifiers.I then
-      op := OP_EXACTLYCI
+      ret := EmitNode(OP_EXACTLYCI)
     else
-      op := OP_EXACTLY;
-    if regLastOpcode = op then
-    begin
-      if regExactlyLen <> nil then
-        Inc(regExactlyLen^);
-    end
-    else
-    begin
-      ret := EmitNode(op);
-      EmitInt(1);
-    end;
+      ret := EmitNode(OP_EXACTLY);
+    EmitInt(1);
     EmitC(Ch);
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
