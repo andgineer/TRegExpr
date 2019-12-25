@@ -4107,6 +4107,7 @@ function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 var
   s: PRegExprChar;
   StartPtr: PRegExprChar;
+  MustStr: RegExprString;
 begin
   Result := False;
 
@@ -4144,19 +4145,9 @@ begin
   // If there is a "must appear" string, look for it.
   if (regmust <> nil) then
   begin
-    s := StartPtr;
-    repeat
-      s := StrScan(s, regmust[0]);
-      if s <> nil then
-      begin
-        if StrLComp(s, regmust, regmustlen) = 0 then
-          Break; // Found it.
-        Inc(s);
-      end;
-    until s = nil;
-    if s = nil // Not present.
-    then
-      Exit;
+    // don't use StrScan() here to support Null chars in InputString
+    SetString(MustStr, regmust, regmustlen);
+    if Pos(MustStr, fInputString) = 0 then Exit;
   end;
 
   {$IFDEF ComplexBraces}
