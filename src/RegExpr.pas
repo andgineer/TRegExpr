@@ -5028,7 +5028,7 @@ begin
               Result := Result + ') ';
             end;
           else
-            raise Exception.Create('TRegExpr: unknown opcode in char class');
+            Error(reeDumpCorruptedOpcode);
         end;
       until false;
     end;
