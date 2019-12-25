@@ -2,13 +2,10 @@
      To do
 ---------------------------------------------------------------
 
--=- put precalculated lengths into EXACTLY[CI] !
-
 -=- Add regstart optimization for case-insensitive mode ?
  Or complitely remove because FirstCharSet is faster ?
 
 -=- "Russian Ranges" --> National ranges (use property WordChars ?
  for ordering letters in ranges by its order in WordChars if modifier /r is On)
 
--=- p-code optimization (remove BRANCH-to-EEND, COMMENT, BACK(?)
- merge EXACTLY etc).
+-=- p-code optimization: remove BRANCH-to-EEND, COMMENT, BACK(?), merge EXACTLY
