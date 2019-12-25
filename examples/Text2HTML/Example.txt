@@ -1,5 +1,3 @@
 My name is Andrey Sorokin, I am software developer from Saint-Petersburg, Russia.
-
-My github page: https://github.com/masterandrey.
-
-Please, feel free to contact me filbert@yandex.ru.
+https://sorokin.engineer/
+andrey@sorokin.engineer

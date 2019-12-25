@@ -23,8 +23,8 @@ unit RegExpr;
   documentation would be an acknowledgement like
 
   Partial Copyright (c) 2004 Andrey V. Sorokin
-  http://RegExpStudio.com
-  mailto:anso@mail.ru
+  https://sorokin.engineer/
+  andrey@sorokin.engineer
 
   3. You may not have any income from distributing this source
   (or altered version of it) to other developers. When You
@@ -36,9 +36,8 @@ unit RegExpr;
   well as documentation is not part of the TRegExpr library
   and is not free for usage.
 
-  mailto:anso@mail.ru
-  http://RegExpStudio.com
-  http://anso.da.ru/
+  https://sorokin.engineer/
+  andrey@sorokin.engineer
 
   Option 2>
 

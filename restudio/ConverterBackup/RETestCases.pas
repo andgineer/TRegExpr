@@ -18,9 +18,8 @@ unit RETestCases;
 
  (c) 2002 Andrey V. Sorokin
   St-Petersburg, Russia
-  anso@mail.ru, anso@paycash.ru
-  http://anso.virtualave.net
-  http://anso.da.ru
+  https://sorokin.engineer/
+  andrey@sorokin.engineer
 }
 
 interface
