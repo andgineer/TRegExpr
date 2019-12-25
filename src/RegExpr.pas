@@ -4173,6 +4173,9 @@ begin
   // ATryOnce or anchored match (it needs to be tried only once).
   if ATryOnce or (reganchored <> #0) then
   begin
+    if regstart <> #0 then
+      if regstart <> StartPtr^ then
+        Exit;
     {$IFDEF UseFirstCharSet}
     if Ord(StartPtr^) <= $FF then
       if not FirstCharArray[byte(StartPtr^)] then
