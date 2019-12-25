@@ -1529,14 +1529,16 @@ function TRegExpr.GetMatch(Idx: integer): RegExprString;
 begin
   Result := '';
   Idx := FSubExprIndexes[Idx];
-  if (Idx >= 0) and (endp[Idx] > startp[Idx])
+  if (Idx >= 0) and (endp[Idx] > startp[Idx]) then
+    SetString(Result, startp[Idx], endp[Idx] - startp[Idx]);
+  {
   // then Result := copy (fInputString, MatchPos [Idx], MatchLen [Idx]) //###0.929
   then
   begin
-    // SetString (Result, startp [idx], endp [idx] - startp [idx])
     SetLength(Result, endp[Idx] - startp[Idx]);
     System.Move(startp[Idx]^, Result[1], Length(Result) * SizeOf(REChar));
   end;
+  }
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
 
@@ -1655,7 +1657,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsSpaceChar(AChar: REChar): boolean;
+function TRegExpr.IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   {$IFDEF UseSpaceChars}
   Result := Pos(AChar, fSpaceChars) > 0;
