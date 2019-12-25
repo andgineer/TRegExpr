@@ -261,6 +261,7 @@ type
     regdummy: Char;
     regcode: PRegExprChar; // Code-emit pointer; @regdummy = don't.
     regsize: integer; // Total programm size in REChars.
+    regExactlyLen: PLongInt;
 
     regexpbeg: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
     fExprIsCompiled: boolean; // true if r.e. successfully compiled
@@ -362,7 +363,7 @@ type
     function EmitNode(op: TREOp): PRegExprChar;
 
     // emit (if appropriate) a byte of code
-    procedure EmitC(b: REChar);
+    procedure EmitC(ch: REChar);
 
     // emit LongInt value
     procedure EmitInt(AValue: LongInt);
@@ -703,7 +704,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 973;
+  REVersionMinor = 974;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1800,6 +1801,12 @@ begin
     Inc(regcode, REOpSz);
     PRENextOff(AlignToPtr(regcode))^ := 0; // Next "pointer" := nil
     Inc(regcode, RENextOffSz);
+
+    if (op = OP_EXACTLY) or (op = OP_EXACTLYCI) then
+      regExactlyLen := PLongInt(regcode)
+    else
+      regExactlyLen := nil;
+
     {$IFDEF DebugSynRegExpr}
     if regcode - programm > regsize then
       raise Exception.Create('TRegExpr.EmitNode buffer overrun');
@@ -1807,15 +1814,15 @@ begin
   end
   else
     Inc(regsize, REOpSz + RENextOffSz);
-  // compute code size without code generation
+    // compute code size without code generation
 end; { of function TRegExpr.EmitNode
   -------------------------------------------------------------- }
 
-procedure TRegExpr.EmitC(b: REChar);
+procedure TRegExpr.EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   if regcode <> @regdummy then
   begin
-    regcode^ := b;
+    regcode^ := ch;
     Inc(regcode);
     {$IFDEF DebugSynRegExpr}
     if regcode - programm > regsize then
@@ -1827,7 +1834,7 @@ begin
 end; { of procedure TRegExpr.EmitC
   -------------------------------------------------------------- }
 
-procedure TRegExpr.EmitInt(AValue: LongInt);
+procedure TRegExpr.EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   if regcode <> @regdummy then
   begin
@@ -2220,6 +2227,7 @@ begin
   flags := 0;
   regparse := nil; // for correct error handling
   regexpbeg := ARegExp;
+  regExactlyLen := nil;
 
   ClearInternalIndexes;
   fLastError := reeOk;
@@ -2284,7 +2292,7 @@ begin
 
       // Starting-point info.
       if PREOp(scan)^ = OP_EXACTLY then
-        regstart := (scan + REOpSz + RENextOffSz)^
+        regstart := (scan + REOpSz + RENextOffSz + RENumberSz)^
       else if PREOp(scan)^ = OP_BOL then
         Inc(reganchored);
 
@@ -2302,8 +2310,8 @@ begin
         begin
           if PREOp(scan)^ = OP_EXACTLY then
           begin
-            longestTemp := scan + REOpSz + RENextOffSz;
-            LenTemp := strlen(longestTemp);
+            longestTemp := scan + REOpSz + RENextOffSz + RENumberSz;
+            LenTemp := PLongInt(scan + REOpSz + RENextOffSz)^;
             if LenTemp >= Len then
             begin
               longest := longestTemp;
@@ -2872,8 +2880,8 @@ var
       ret := EmitNode(OP_EXACTLYCI)
     else
       ret := EmitNode(OP_EXACTLY);
+    EmitInt(1);
     EmitC(Ch);
-    EmitC(#0);
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
@@ -3240,15 +3248,19 @@ begin
           ret := EmitNode(OP_EXACTLYCI)
         else
           ret := EmitNode(OP_EXACTLY);
+        EmitInt(0);
         while (Len > 0) and ((not fCompModifiers.X) or
           (regparse^ <> '#')) do
         begin
           if not fCompModifiers.X or not IsIgnoredChar(regparse^) then
+          begin
             EmitC(regparse^);
+            if regcode <> @regdummy then
+              Inc(regExactlyLen^);
+          end;
           Inc(regparse);
           Dec(Len);
         end;
-        EmitC(#0);
       end; { of if not comment }
     end; { of case else }
   end; { of case }
@@ -3275,7 +3287,7 @@ function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
 var
   scan: PRegExprChar;
   opnd: PRegExprChar;
-  TheMax: integer;
+  TheMax, NLen: integer;
   { Ch, } InvCh: REChar; // ###0.931
   sestart, seend: PRegExprChar; // ###0.936
   ArrayIndex: integer;
@@ -3296,7 +3308,10 @@ begin
       end;
     OP_EXACTLY:
       begin // in opnd can be only ONE char !!!
-        // Ch := opnd^; // store in register //###0.931
+        NLen := PLongInt(opnd)^;
+        if TheMax > NLen then
+          TheMax := NLen;
+        Inc(opnd, RENumberSz);
         while (Result < TheMax) and (opnd^ = scan^) do
         begin
           Inc(Result);
@@ -3305,7 +3320,10 @@ begin
       end;
     OP_EXACTLYCI:
       begin // in opnd can be only ONE char !!!
-        // Ch := opnd^; // store in register //###0.931
+        NLen := PLongInt(opnd)^;
+        if TheMax > NLen then
+          TheMax := NLen;
+        Inc(opnd, RENumberSz);
         while (Result < TheMax) and (opnd^ = scan^) do
         begin // prevent unneeded InvertCase //###0.931
           Inc(Result);
@@ -3664,10 +3682,11 @@ begin
       OP_EXACTLYCI:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
+          Len := PLongInt(opnd)^;
+          Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
           if (opnd^ <> reginput^) and (InvertCase(opnd^) <> reginput^) then
             Exit;
-          Len := strlen(opnd);
           // ###0.929 begin
           no := Len;
           save := reginput;
@@ -3685,10 +3704,11 @@ begin
       OP_EXACTLY:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
+          Len := PLongInt(opnd)^;
+          Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
           if opnd^ <> reginput^ then
             Exit;
-          Len := strlen(opnd);
           // ###0.929 begin
           no := Len;
           save := reginput;
@@ -3923,7 +3943,7 @@ begin
           // what character comes next.
           nextch := #0;
           if next^ = OP_EXACTLY then
-            nextch := (next + REOpSz + RENextOffSz)^;
+            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
           Bracesmax := MaxInt; // infinite loop for * and + //###0.92
           if (scan^ = OP_STAR) or (scan^ = OP_STARNG) then
             BracesMin := 0 // star
@@ -4689,7 +4709,7 @@ begin
         end;
       OP_EXACTLYCI:
         begin
-          ch := (scan + REOpSz + RENextOffSz)^;
+          ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
           if Ord(ch) <= $FF then
           begin
             Include(FirstCharSet, byte(ch));
@@ -4699,7 +4719,7 @@ begin
         end;
       OP_EXACTLY:
         begin
-          ch := (scan + REOpSz + RENextOffSz)^;
+          ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
           if Ord(ch) <= $FF then
             Include(FirstCharSet, byte(ch));
           Exit;
@@ -5003,12 +5023,13 @@ begin
     if (op = OP_EXACTLY) or (op = OP_EXACTLYCI) then
     begin
       // Literal string, where present.
-      while s^ <> #0 do
+      NLen := PLongInt(s)^;
+      Inc(s, RENumberSz);
+      for i := 1 to NLen do
       begin
         Result := Result + PrintableChar(s^);
         Inc(s);
       end;
-      Inc(s);
     end;
     if (op = OP_BSUBEXP) or (op = OP_BSUBEXPCI) then
     begin
