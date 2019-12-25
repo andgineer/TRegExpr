@@ -363,7 +363,7 @@ type
     function EmitNode(op: TREOp): PRegExprChar;
 
     // emit (if appropriate) a byte of code
-    procedure EmitC(b: REChar);
+    procedure EmitC(ch: REChar);
 
     // emit LongInt value
     procedure EmitInt(AValue: LongInt);
@@ -1818,11 +1818,11 @@ begin
 end; { of function TRegExpr.EmitNode
   -------------------------------------------------------------- }
 
-procedure TRegExpr.EmitC(b: REChar);
+procedure TRegExpr.EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   if regcode <> @regdummy then
   begin
-    regcode^ := b;
+    regcode^ := ch;
     Inc(regcode);
     {$IFDEF DebugSynRegExpr}
     if regcode - programm > regsize then
@@ -1834,7 +1834,7 @@ begin
 end; { of procedure TRegExpr.EmitC
   -------------------------------------------------------------- }
 
-procedure TRegExpr.EmitInt(AValue: LongInt);
+procedure TRegExpr.EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   if regcode <> @regdummy then
   begin
