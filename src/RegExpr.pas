@@ -129,7 +129,7 @@ type
 
 type
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
-  TRegExprCharset = set of AnsiChar;
+  TRegExprCharset = set of byte;
 
 const
   // Escape char ('\' in common r.e.) used for escaping metachars (\w, \d etc)
@@ -244,6 +244,7 @@ type
 
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
+    FirstCharArray: array[byte] of boolean;
     {$ENDIF}
 
     // work variables for Exec routines - save stack in recursion
@@ -364,6 +365,9 @@ type
     // emit (if appropriate) a byte of code
     procedure EmitC(b: REChar);
 
+    // emit LongInt value
+    procedure EmitInt(AValue: LongInt);
+
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
     procedure InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
@@ -402,7 +406,7 @@ type
     function MatchPrim(prog: PRegExprChar): boolean;
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: integer): boolean;
+    function ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
@@ -422,8 +426,8 @@ type
     {$ENDIF}
     destructor Destroy; override;
 
-    class function VersionMajor: integer; // ###0.944
-    class function VersionMinor: integer; // ###0.944
+    class function VersionMajor: integer;
+    class function VersionMinor: integer;
 
     // match a programm against a string AInputString
     // !!! Exec store AInputString into InputString property
@@ -449,21 +453,24 @@ type
     // find match for InputString starting from AOffset position
     // (AOffset=1 - first char of InputString)
     function ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
+    {$IFDEF OverMeth} overload;
+    function ExecPos(AOffset: integer; ATryOnce: boolean): boolean; overload;
+    {$ENDIF}
 
     // Returns ATemplate with '$&' or '$0' replaced by whole r.e.
-    // occurence and '$n' replaced by occurence of subexpression #n.
-    // Since v.0.929 '$' used instead of '\' (for future extensions
-    // and for more Perl-compatibility) and accept more then one digit.
-    // If you want place into template raw '$' or '\', use prefix '\'
+    // occurence and '$1'...'$nn' replaced by subexpression with given index.
+    // Symbol '$' is used instead of '\' (for future extensions
+    // and for more Perl-compatibility) and accepts more than one digit.
+    // If you want to place into template raw '$' or '\', use prefix '\'.
     // Example: '1\$ is $2\\rub\\' -> '1$ is <Match[2]>\rub\'
-    // If you want to place raw digit after '$n' you must delimit
-    // n with curly braces '{}'.
+    // If you want to place any number after '$' you must enclose it
+    // with curly braces: '${12}'.
     // Example: 'a$12bc' -> 'a<Match[12]>bc'
     // 'a${1}2bc' -> 'a<Match[1]>2bc'.
     function Substitute(const ATemplate: RegExprString): RegExprString;
 
-    // Split AInputStr into APieces by r.e. occurencies
-    // Internally calls Exec[Next]
+    // Splits AInputStr to list by positions of all r.e. occurencies.
+    // Internally calls Exec, ExecNext.
     procedure Split(const AInputStr: RegExprString; APieces: TStrings);
 
     function Replace(const AInputStr: RegExprString;
@@ -473,7 +480,7 @@ type
     function Replace(const AInputStr: RegExprString;
       AReplaceFunc: TRegExprReplaceFunction): RegExprString; overload;
     {$ENDIF}
-    // Returns AInputStr with r.e. occurencies replaced by AReplaceStr
+    // Returns AInputStr with r.e. occurencies replaced by AReplaceStr.
     // If AUseSubstitution is true, then AReplaceStr will be used
     // as template for Substitution methods.
     // For example:
@@ -482,8 +489,8 @@ type
     // will return:  def 'BLOCK' value 'test1'
     // Replace ('BLOCK( test1)', 'def "$1" value "$2"')
     // will return:  def "$1" value "$2"
-    // Internally calls Exec[Next]
-    // Overloaded version and ReplaceEx operate with call-back function,
+    // Internally calls Exec, ExecNext.
+    // Overloaded version and ReplaceEx operate with callback function,
     // so you can implement really complex functionality.
     function ReplaceEx(const AInputStr: RegExprString;
       AReplaceFunc: TRegExprReplaceFunction): RegExprString;
@@ -508,11 +515,12 @@ type
     // dump a compiled regexp in vaguely comprehensible form
     function Dump: RegExprString;
     {$ENDIF}
+
     // Regular expression.
     // For optimization, TRegExpr will automatically compiles it into 'P-code'
     // (You can see it with help of Dump method) and stores in internal
     // structures. Real [re]compilation occures only when it really needed -
-    // while calling Exec[Next], Substitute, Dump, etc
+    // while calling Exec, ExecNext, Substitute, Dump, etc
     // and only if Expression or other P-code affected properties was changed
     // after last [re]compilation.
     // If any errors while [re]compilation occures, Error method is called
@@ -523,8 +531,7 @@ type
     // r.e. (?ismx-ismx) will replace this default values.
     // If you try to set unsupported modifier, Error will be called
     // (by defaul Error raises exception ERegExpr).
-    property ModifierStr: RegExprString read GetModifierStr
-      write SetModifierStr;
+    property ModifierStr: RegExprString read GetModifierStr write SetModifierStr;
 
     property ModifierI: boolean read GetModifierI write SetModifierI;
     property ModifierR: boolean read GetModifierR write SetModifierR;
@@ -697,19 +704,19 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 970;
+  REVersionMinor = 973;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
   OpKind_Range = REChar(3);
-  OpKind_Char = REChar(6); // OpKind_Char must be maximal of all OpKind_nnn
+  OpKind_Char = REChar(4);
 
-  RegExprAllSet = [#0 .. #255];
-  RegExprWordSet = ['a' .. 'z', 'A' .. 'Z', '0' .. '9', '_'];
-  RegExprDigitSet = ['0' .. '9'];
-  RegExprSpaceSet = [' ', #$9, #$A, #$D, #$C];
-  RegExprLineSeparatorsSet = [#$d, #$a, #$b, #$c] {$IFDEF UniCode} + [#$85] {$ENDIF};
-  RegExprHorzSeparatorsSet = [#9, #$20, #$A0];
+  RegExprAllSet = [0 .. 255];
+  RegExprWordSet = [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z'), Ord('0') .. Ord('9'), Ord('_')];
+  RegExprDigitSet = [Ord('0') .. Ord('9')];
+  RegExprSpaceSet = [Ord(' '), $9, $A, $D, $C];
+  RegExprLineSeparatorsSet = [$d, $a, $b, $c] {$IFDEF UniCode} + [$85] {$ENDIF};
+  RegExprHorzSeparatorsSet = [9, $20, $A0];
 
   MaxBracesArg = $7FFFFFFF - 1; // max value for {n,m} arguments //###0.933
 
@@ -736,6 +743,7 @@ const
   REBracesArgSz = SizeOf(TREBracesArg) div SizeOf(REChar);
   // size of BRACES arguments in REChars
   {$ENDIF}
+  RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1256,7 +1264,7 @@ const
   reeNoExpression = 1003;
   reeCorruptedProgram = 1004;
   reeNoInputStringSpecified = 1005;
-  reeOffsetMustBeGreaterThen0 = 1006;
+  reeOffsetMustBePositive = 1006;
   reeExecNextWithoutExec = 1007;
   reeBadOpcodeInCharClass = 1008;
   reeDumpCorruptedOpcode = 1011;
@@ -1334,7 +1342,7 @@ begin
       Result := 'TRegExpr exec: corrupted opcode (no magic byte)';
     reeNoInputStringSpecified:
       Result := 'TRegExpr exec: empty input string';
-    reeOffsetMustBeGreaterThen0:
+    reeOffsetMustBePositive:
       Result := 'TRegExpr exec: offset must be >0';
     reeExecNextWithoutExec:
       Result := 'TRegExpr exec: ExecNext without Exec(Pos)';
@@ -1820,6 +1828,21 @@ begin
 end; { of procedure TRegExpr.EmitC
   -------------------------------------------------------------- }
 
+procedure TRegExpr.EmitInt(AValue: LongInt);
+begin
+  if regcode <> @regdummy then
+  begin
+    PLongInt(regcode)^ := AValue;
+    Inc(regcode, RENumberSz);
+    {$IFDEF DebugSynRegExpr}
+    if regcode - programm > regsize then
+      raise Exception.Create('TRegExpr.EmitInt buffer overrun');
+    {$ENDIF}
+  end
+  else
+    Inc(regsize, RENumberSz);
+end;
+
 procedure TRegExpr.InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
 // insert an operator in front of already-emitted operand
 // Means relocating the operand.
@@ -1973,10 +1996,11 @@ begin
           end;
         end;
 
-      OpKind_Char .. High(REChar):
+      OpKind_Char:
         begin
-          N := Ord(ABuffer^) - Ord(OpKind_Char);
           Inc(ABuffer);
+          N := PLongInt(ABuffer)^;
+          Inc(ABuffer, RENumberSz);
           for i := 1 to N do
           begin
             ch := ABuffer^;
@@ -2011,7 +2035,7 @@ begin
   begin
     ch := fWordChars[i];
     if Ord(ch) <= $FF then
-      Include(ARes, AnsiChar(ch));
+      Include(ARes, byte(ch));
   end;
   {$ELSE}
   ARes := RegExprWordSet;
@@ -2031,7 +2055,7 @@ begin
   begin
     ch := fSpaceChars[i];
     if Ord(ch) <= $FF then
-      Include(ARes, AnsiChar(ch));
+      Include(ARes, byte(ch));
   end;
   {$ELSE}
   ARes := RegExprSpaceSet;
@@ -2045,6 +2069,7 @@ var
   N, i: integer;
 begin
   ARes := [];
+  TempSet := [];
   repeat
     case ABuffer^ of
       OpKind_End:
@@ -2059,9 +2084,9 @@ begin
           Inc(ABuffer);
           for i := Ord(ch) to Min(Ord(ch2), $FF) do
           begin
-            Include(ARes, AnsiChar(i));
+            Include(ARes, byte(i));
             if AIgnoreCase then
-              Include(ARes, AnsiChar(InvertCase(AnsiChar(i))));
+              Include(ARes, byte(InvertCase(REChar(i))));
           end;
         end;
 
@@ -2106,19 +2131,20 @@ begin
           end;
         end;
 
-      OpKind_Char .. High(REChar):
+      OpKind_Char:
         begin
-          N := Ord(ABuffer^) - Ord(OpKind_Char);
           Inc(ABuffer);
+          N := PLongInt(ABuffer)^;
+          Inc(ABuffer, RENumberSz);
           for i := 1 to N do
           begin
             ch := ABuffer^;
             Inc(ABuffer);
             if Ord(ch) < $FF then
             begin
-              Include(ARes, AnsiChar(ch));
+              Include(ARes, byte(ch));
               if AIgnoreCase then
-                Include(ARes, AnsiChar(InvertCase(ch)));
+                Include(ARes, byte(InvertCase(ch)));
             end;
           end;
         end;
@@ -2244,6 +2270,8 @@ begin
     {$IFDEF UseFirstCharSet} // ###0.929
     FirstCharSet := [];
     FillFirstCharSet(programm + REOpSz);
+    for Len := 0 to 255 do
+      FirstCharArray[Len] := byte(Len) in FirstCharSet;
     {$ENDIF}
 
     regstart := #0; // Worst-case defaults.
@@ -2834,7 +2862,7 @@ var
   flags: integer;
   RangeBeg, RangeEnd: REChar;
   CanBeRange: boolean;
-  AddrOfString: PRegExprChar;
+  AddrOfLen: PLongInt;
   Len: integer;
   ender: REChar;
   begmodfs: PRegExprChar;
@@ -2858,19 +2886,20 @@ var
   procedure EmitSimpleRangeC(b: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     RangeBeg := b;
-    if AddrOfString = nil then
+    if AddrOfLen = nil then
     begin
-      AddrOfString := regcode;
       EmitC(OpKind_Char);
+      Pointer(AddrOfLen) := regcode;
+      EmitInt(0);
     end;
-    Inc(AddrOfString^);
+    Inc(AddrOfLen^);
     EmitC(b);
     CanBeRange := True;
   end;
 
   procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
-    AddrOfString := nil;
+    AddrOfLen := nil;
     CanBeRange := False;
     EmitC(OpKind_Range);
     EmitC(ch1);
@@ -2881,7 +2910,7 @@ begin
   Result := nil;
   flags := 0;
   flagp := flag_Worst;
-  AddrOfString := nil;
+  AddrOfLen := nil;
 
   Inc(regparse);
   case (regparse - 1)^ of
@@ -2979,7 +3008,7 @@ begin
               end;
               if _IsMetaChar(regparse^) then
               begin
-                AddrOfString := nil;
+                AddrOfLen := nil;
                 CanBeRange := False;
                 EmitC(OpKind_MetaClass);
                 EmitC(regparse^);
@@ -2994,7 +3023,7 @@ begin
             Inc(regparse);
           end;
         end; { of while }
-        AddrOfString := nil;
+        AddrOfLen := nil;
         CanBeRange := False;
         EmitC(OpKind_End);
         if regparse^ <> ']' then
@@ -3998,31 +4027,38 @@ end; { of function TRegExpr.MatchPrim
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
   InputString := AInputString;
-  Result := ExecPrim(1);
+  Result := ExecPrim(1, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
 function TRegExpr.Exec: boolean;
 begin
-  Result := ExecPrim(1);
+  Result := ExecPrim(1, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 function TRegExpr.Exec(AOffset: integer): boolean;
 begin
-  Result := ExecPrim(AOffset);
+  Result := ExecPrim(AOffset, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 {$ENDIF}
 
 function TRegExpr.ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 begin
-  Result := ExecPrim(AOffset);
+  Result := ExecPrim(AOffset, False);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
 
-function TRegExpr.ExecPrim(AOffset: integer): boolean;
+{$IFDEF OverMeth}
+function TRegExpr.ExecPos(AOffset: integer; ATryOnce: boolean): boolean;
+begin
+  Result := ExecPrim(AOffset, ATryOnce);
+end;
+{$ENDIF}
+
+function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
   procedure ClearMatchs;
   // Clears matchs array
   var
@@ -4074,48 +4110,60 @@ begin
   // Check that the start position is not negative
   if AOffset < 1 then
   begin
-    Error(reeOffsetMustBeGreaterThen0);
+    Error(reeOffsetMustBePositive);
     Exit;
   end;
+
   // Check that the start position is not longer than the line
   // If so then exit with nothing found
-  if AOffset > (Length(fInputString) + 1)
-  // for matching empty string after last char.
+  if AOffset > (Length(fInputString) + 1) // for matching empty string after last char.
   then
     Exit;
 
   StartPtr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
-  if regmust <> nil then
-  begin
-    s := StartPtr;
-    repeat
-      s := StrScan(s, regmust[0]);
-      if s <> nil then
-      begin
-        if StrLComp(s, regmust, regmustlen) = 0 then
-          Break; // Found it.
-        Inc(s);
-      end;
-    until s = nil;
-    if s = nil // Not present.
-    then
-      Exit;
-  end;
+  if (regmust <> nil) then
+    if ATryOnce then
+    begin
+      if StrLComp(StartPtr, regmust, regmustlen) <> 0 then
+        Exit;
+    end
+    else
+    begin
+      s := StartPtr;
+      repeat
+        s := StrScan(s, regmust[0]);
+        if s <> nil then
+        begin
+          if StrLComp(s, regmust, regmustlen) = 0 then
+            Break; // Found it.
+          Inc(s);
+        end;
+      until s = nil;
+      if s = nil // Not present.
+      then
+        Exit;
+    end;
 
   {$IFDEF ComplexBraces}
   // no loops started
   LoopStackIdx := 0; // ###0.925
   {$ENDIF}
-  // Simplest case:  anchored match need be tried only once.
-  if reganchored <> #0 then
+
+  // Simplest case: anchored match need to be tried only once.
+  if ATryOnce or (reganchored <> #0) then
   begin
+    {$IFDEF UseFirstCharSet}
+    if Ord(StartPtr^) <= $FF then
+      if not FirstCharArray[byte(StartPtr^)] then
+        Exit;
+    {$ENDIF}
     Result := RegMatch(StartPtr);
     Exit;
   end;
 
-  // Messy cases:  unanchored match.
+  // Messy cases: unanchored match.
   s := StartPtr;
   if regstart <> #0 then // We know what char it must start with.
     repeat
@@ -4131,12 +4179,11 @@ begin
       end;
     until s = nil
   else
-  begin // We don't - general case.
     repeat // ###0.948
       {$IFDEF UseFirstCharSet}
       if Ord(s^) <= $FF then
       begin
-        if AnsiChar(s^) in FirstCharSet then
+        if FirstCharArray[byte(s^)] then
           Result := RegMatch(s);
       end
       else
@@ -4152,28 +4199,6 @@ begin
         ClearMatchs; // ###0.949
       Inc(s);
     until False;
-    (* optimized and fixed by Martin Fuller - empty strings
-      were not allowed to pass through in UseFirstCharSet mode
-      {$IFDEF UseFirstCharSet} //###0.929
-      while s < fInputEnd do
-      begin
-        if s^ in FirstCharSet then
-          Result := RegMatch (s);
-        if Result
-          then exit;
-        Inc(s);
-      end;
-      {$ELSE}
-      repeat
-        Result := RegMatch (s);
-        if Result
-          then exit;
-        Inc(s);
-      until s = fInputEnd;
-      {$ENDIF}
-    *)
-  end;
-  // Failure
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
@@ -4193,7 +4218,7 @@ begin
   if endp[0] = startp[0] // ###0.929
   then
     Inc(offset); // prevent infinite looping if empty string match r.e.
-  Result := ExecPrim(offset);
+  Result := ExecPrim(offset, False);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
@@ -4574,6 +4599,7 @@ var
   min_cnt, i: integer;
   TempSet: TRegExprCharset;
 begin
+  TempSet := [];
   scan := prog;
   while scan <> nil do
   begin
@@ -4593,10 +4619,10 @@ begin
       OP_EOL,
       OP_EOLML:
         begin //###0.948 was empty in 0.947, was EXIT in 0.937
-          Include(FirstCharSet, #0);
+          Include(FirstCharSet, 0);
           if ModifierM then
             for i := 1 to Length(LineSeparators) do
-              Include(FirstCharSet, AnsiChar(LineSeparators[i]));
+              Include(FirstCharSet, byte(LineSeparators[i]));
           Exit;
         end;
       OP_BOUND,
@@ -4667,8 +4693,8 @@ begin
           ch := (scan + REOpSz + RENextOffSz)^;
           if Ord(ch) <= $FF then
           begin
-            Include(FirstCharSet, AnsiChar(ch));
-            Include(FirstCharSet, AnsiChar(InvertCase(ch)));
+            Include(FirstCharSet, byte(ch));
+            Include(FirstCharSet, byte(InvertCase(ch)));
           end;
           Exit;
         end;
@@ -4676,7 +4702,7 @@ begin
         begin
           ch := (scan + REOpSz + RENextOffSz)^;
           if Ord(ch) <= $FF then
-            Include(FirstCharSet, AnsiChar(ch));
+            Include(FirstCharSet, byte(ch));
           Exit;
         end;
       OP_ANYOF:
@@ -4957,17 +4983,18 @@ begin
               Result := Result + '\' + PrintableChar(s^) + ' ';
               Inc(s);
             end;
-          OpKind_Char .. High(REChar):
+          OpKind_Char:
             begin
-              NLen := Ord(s^) - Ord(OpKind_Char);
+              Inc(s);
+              NLen := PLongInt(s)^;
+              Inc(s, RENumberSz);
               Result := Result + 'Ch(';
               for i := 1 to NLen do
               begin
-                Inc(s);
                 Result := Result + PrintableChar(s^);
+                Inc(s);
               end;
               Result := Result + ') ';
-              Inc(s);
             end;
           else
             raise Exception.Create('TRegExpr: unknown opcode in char class');
@@ -5027,7 +5054,7 @@ begin
     Result := Result + '<all chars>'
   else
   for Ch := #0 to #255 do
-    if Ch in FirstCharSet then
+    if byte(Ch) in FirstCharSet then
     begin
       if Ch < ' ' then
         Result := Result + PrintableChar(Ch) // ###0.948

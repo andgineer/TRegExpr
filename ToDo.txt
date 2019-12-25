@@ -2,9 +2,6 @@
      To do
 ---------------------------------------------------------------
 
--=- VCL-version of TRegExpr - for dummies ;) and TRegExprEdit
- (replacement for TMaskEdit).
-
 -=- put precalculated lengths into EXACTLY[CI] !
 
 -=- Add regstart optimization for case-insensitive mode ?
@@ -13,10 +10,5 @@
 -=- "Russian Ranges" --> National ranges (use property WordChars ?
  for ordering letters in ranges by its order in WordChars if modifier /r is On)
 
--=- FirstCharSet as array [#0 .. #255] of REChar ?
- (2x faster then set of REChar)
-
 -=- p-code optimization (remove BRANCH-to-EEND, COMMENT, BACK(?)
  merge EXACTLY etc).
-
--=- There are no special command for files (Johan Smit).

@@ -1,0 +1,68 @@
+object Form1: TForm1
+  Left = 692
+  Height = 618
+  Top = 120
+  Width = 674
+  BorderStyle = bsDialog
+  Caption = 'RegEx speed test'
+  ClientHeight = 618
+  ClientWidth = 674
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  object ListBox1: TListBox
+    Left = 6
+    Height = 575
+    Top = 6
+    Width = 662
+    Align = alClient
+    BorderSpacing.Around = 6
+    ItemHeight = 0
+    ScrollWidth = 660
+    TabOrder = 0
+    TopIndex = -1
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 31
+    Top = 587
+    Width = 674
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 31
+    ClientWidth = 674
+    TabOrder = 1
+    object ButtonFile: TButton
+      Left = 8
+      Height = 25
+      Top = 0
+      Width = 160
+      Caption = 'Choose test file...'
+      OnClick = ButtonFileClick
+      TabOrder = 0
+    end
+    object ButtonSpeed: TButton
+      Left = 176
+      Height = 25
+      Top = 0
+      Width = 160
+      Caption = 'Speed test'
+      OnClick = ButtonSpeedClick
+      TabOrder = 1
+    end
+    object ButtonFindAll: TButton
+      Left = 344
+      Height = 25
+      Top = 0
+      Width = 160
+      Caption = 'Find all tokens'
+      OnClick = ButtonFindAllClick
+      TabOrder = 2
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = '*.pas;*.pp'
+    Left = 510
+    Top = 415
+  end
+end

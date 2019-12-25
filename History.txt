@@ -6,7 +6,12 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 0.970 2019.12.22
+ v. 0.973 2019.12.23
+ -=- (+) Added ExecPos(AOffset, ATryOnce) - new param ATryOnce is to try
+  matching at AOffset, without advancing to next positions. Useful for syntax
+  parsers like in CudaText. By Alexey Torgashin.
+ -=- (+) Added demo test_dlg to show Dump() result.
+ -=- (+) Added demo test_dlg_speed which shows goodness of ExecPos(..ATryOnce).
  -=- (+) Restored work of FirstCharSet optimization (adapted to new opcode).
   Now define UseFirstCharSet is on by default and works in Unicode mode too!
   By Alexey Torgashin.
