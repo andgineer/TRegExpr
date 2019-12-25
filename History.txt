@@ -6,7 +6,8 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 0.974 2019.12.25
+ v. 0.975 2019.12.25
+ -=- (^) Better support NULL chars in InputString.
  -=- (^) Improved opcode for EXACTLY: store length to opcode. 15 years old
   ToDo item. By Alexey Torgashin.
 

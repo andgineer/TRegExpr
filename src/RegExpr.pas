@@ -232,7 +232,8 @@ type
     reganchored: REChar; // is the match anchored (at beginning-of-line only)?
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
-    // Regstart and reganch permit very fast decisions on suitable starting points
+    regmustString: RegExprString;
+    // Regstart and reganchored permit very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
     // that regcomp() supplies a regmust only if the r.e. contains something
@@ -704,7 +705,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 974;
+  REVersionMinor = 975;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -744,6 +745,20 @@ const
   // size of BRACES arguments in REChars
   {$ENDIF}
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
+
+function _FindCharInBuffer(SBegin, SEnd: PRegExprChar; Ch: REChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  while SBegin < SEnd do
+  begin
+    if SBegin^ = Ch then
+    begin
+      Result := SBegin;
+      Exit;
+    end;
+    Inc(SBegin);
+  end;
+  Result := nil;
+end;
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -2285,6 +2300,8 @@ begin
     reganchored := #0;
     regmust := nil;
     regmustlen := 0;
+    regmustString := '';
+
     scan := programm + REOpSz; // First OP_BRANCH.
     if PREOp(regnext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
@@ -2323,6 +2340,7 @@ begin
         regmust := longest;
         regmustlen := Len;
       end;
+      SetString(regmustString, regmust, regmustlen);
     end;
 
     Result := True;
@@ -4142,37 +4160,20 @@ begin
   StartPtr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
-  if (regmust <> nil) then
-    if ATryOnce then
-    begin
-      if StrLComp(StartPtr, regmust, regmustlen) <> 0 then
-        Exit;
-    end
-    else
-    begin
-      s := StartPtr;
-      repeat
-        s := StrScan(s, regmust[0]);
-        if s <> nil then
-        begin
-          if StrLComp(s, regmust, regmustlen) = 0 then
-            Break; // Found it.
-          Inc(s);
-        end;
-      until s = nil;
-      if s = nil // Not present.
-      then
-        Exit;
-    end;
+  if regmustString <> '' then
+    if Pos(regmustString, fInputString) = 0 then Exit;
 
   {$IFDEF ComplexBraces}
   // no loops started
   LoopStackIdx := 0; // ###0.925
   {$ENDIF}
 
-  // Simplest case: anchored match need to be tried only once.
+  // ATryOnce or anchored match (it needs to be tried only once).
   if ATryOnce or (reganchored <> #0) then
   begin
+    if regstart <> #0 then
+      if regstart <> StartPtr^ then
+        Exit;
     {$IFDEF UseFirstCharSet}
     if Ord(StartPtr^) <= $FF then
       if not FirstCharArray[byte(StartPtr^)] then
@@ -4186,14 +4187,15 @@ begin
   s := StartPtr;
   if regstart <> #0 then // We know what char it must start with.
     repeat
-      s := StrScan(s, regstart);
+      // don't use StrScan to support Null chars in InputString
+      s := _FindCharInBuffer(s, fInputEnd, regstart);
       if s <> nil then
       begin
         Result := RegMatch(s);
         if Result then
           Exit
         else
-          ClearMatchs; // ###0.949
+          ClearMatchs;
         Inc(s);
       end;
     until s = nil
@@ -5059,11 +5061,11 @@ begin
 
   // Header fields of interest.
   if regstart <> #0 then
-    Result := Result + 'Start: ' + regstart + '  ';
+    Result := Result + 'Start char: ' + regstart + '; ';
   if reganchored <> #0 then
-    Result := Result + 'Anchored  ';
-  if regmust <> nil then
-    Result := Result + 'Must have: ' + regmust + '  ';
+    Result := Result + 'Anchored; ';
+  if regmustString <> '' then
+    Result := Result + 'Must have: "' + regmustString + '"; ';
 
   {$IFDEF UseFirstCharSet} // ###0.929
   Result := Result + #$d#$a'First charset: ';
