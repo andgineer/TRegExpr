@@ -3527,7 +3527,7 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // recursion, in particular by going through "ordinary" nodes (that don't
 // need to know whether the rest of the match failed) by a loop instead of
 // by recursion.
-Type
+type
   TLoopStack = array [1 .. LoopStackMax] of integer;
 
 var
@@ -3547,7 +3547,7 @@ var
 begin
   Result := False;
   scan := prog;
-  FillChar(SavedLoopStack[1], Length(SavedLoopStack), 0);
+  FillChar(SavedLoopStack[1], Length(SavedLoopStack)*SizeOf(integer), 0);
   while scan <> nil do
   begin
     Len := PRENextOff(AlignToPtr(scan + 1))^; // ###0.932 inlined regnext
