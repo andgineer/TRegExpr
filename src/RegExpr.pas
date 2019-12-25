@@ -3544,6 +3544,7 @@ var
   SavedLoopStack: TLoopStack; // :(( very bad for recursion
   SavedLoopStackIdx: integer; // ###0.925
   {$ENDIF}
+  bound1, bound2: boolean;
 begin
   Result := False;
   scan := prog;
@@ -3559,19 +3560,22 @@ begin
     case scan^ of
       OP_NOTBOUND,
       OP_BOUND:
-        if (scan^ = OP_BOUND)
-          xor (((reginput = fInputStart) or not IsWordChar((reginput - 1)^)) and
-          (reginput < fInputEnd) and IsWordChar(reginput^) or
-          (reginput <> fInputStart) and IsWordChar((reginput - 1)^) and
-          ((reginput = fInputEnd) or not IsWordChar(reginput^))) then
-          Exit;
-
+        begin
+          bound1 := (reginput = fInputStart) or not IsWordChar((reginput - 1)^);
+          bound2 := (reginput = fInputEnd) or not IsWordChar(reginput^);
+          if (scan^ = OP_BOUND) xor (bound1 <> bound2) then
+            Exit;
+        end;
       OP_BOL:
-        if reginput <> fInputStart then
-          Exit;
+        begin
+          if reginput <> fInputStart then
+            Exit;
+        end;
       OP_EOL:
-        if reginput < fInputEnd then
-          Exit;
+        begin
+          if reginput < fInputEnd then
+            Exit;
+        end;
       OP_BOLML:
         if reginput > fInputStart then
         begin
