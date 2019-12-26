@@ -976,15 +976,16 @@ end;
 {$ENDIF}
 
 const
-  META: RegExprString = '^$.[()|?+*' + EscChar + '{';
+  MetaChars_Init = '^$.[()|?+*' + EscChar + '{';
+  MetaChars: RegExprString = MetaChars_Init;
 
 function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
+const
+  MetaAll: RegExprString = MetaChars_Init + ']}'; // Very similar to MetaChars, but slighly changed.
 var
-  MetaAll: RegExprString; // Very similar to META, but slighly changed.
   i, i0, Len: integer;
 begin
   Result := '';
-  MetaAll := META + ']}';
   Len := Length(AStr);
   i := 1;
   i0 := i;
@@ -1431,8 +1432,8 @@ begin
   FUseOsLineEndOnReplace := True;
   FReplaceLineEnd := sLineBreak;
 
-  fMetaStart := PRegExprChar(META);
-  fMetaEnd := fMetaStart + Length(META);
+  fMetaStart := PRegExprChar(MetaChars);
+  fMetaEnd := fMetaStart + Length(MetaChars);
 
   {$IFDEF UnicodeWordDetection}
   FUseUnicodeWordDetection := True;
