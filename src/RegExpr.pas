@@ -236,7 +236,7 @@ type
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
     regmustString: RegExprString;
-    // Regstart and reganchored permit very fast decisions on suitable starting points
+    // reganchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
     // that regcomp() supplies a regmust only if the r.e. contains something
@@ -2312,9 +2312,6 @@ begin
       scan := scan + REOpSz + RENextOffSz;
 
       // Starting-point info.
-      {if PREOp(scan)^ = OP_EXACTLY then
-        regstart := (scan + REOpSz + RENextOffSz + RENumberSz)^
-      else}
       if PREOp(scan)^ = OP_BOL then
         Inc(reganchored);
 
@@ -4176,11 +4173,6 @@ begin
   // ATryOnce or anchored match (it needs to be tried only once).
   if ATryOnce or (reganchored <> #0) then
   begin
-    {
-    if regstart <> #0 then
-      if regstart <> StartPtr^ then
-        Exit;
-        }
     {$IFDEF UseFirstCharSet}
     if Ord(StartPtr^) <= $FF then
       if not FirstCharArray[byte(StartPtr^)] then
@@ -4192,24 +4184,7 @@ begin
 
   // Messy cases: unanchored match.
   s := StartPtr;
-  {
-  if regstart <> #0 then // We know what char it must start with.
-    repeat
-      // don't use StrScan to support Null chars in InputString
-      s := _FindCharInBuffer(s, fInputEnd, regstart);
-      if s <> nil then
-      begin
-        Result := RegMatch(s);
-        if Result then
-          Exit
-        else
-          ClearMatchs;
-        Inc(s);
-      end;
-    until s = nil
-  else
-  }
-    repeat
+  repeat
       {$IFDEF UseFirstCharSet}
       if Ord(s^) <= $FF then
       begin
@@ -4228,7 +4203,7 @@ begin
       else
         ClearMatchs; // ###0.949
       Inc(s);
-    until False;
+  until False;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
@@ -5069,8 +5044,6 @@ begin
   end; { of while }
 
   // Header fields of interest.
-  //if regstart <> #0 then
-  //  Result := Result + 'Start char: ' + regstart + '; ';
   if reganchored <> #0 then
     Result := Result + 'Anchored; ';
   if regmustString <> '' then
@@ -5135,8 +5108,7 @@ end; { of procedure TRegExpr.Error
   PCode persistence:
   FirstCharSet
   programm, regsize
-  regstart // -> programm
-  reganch // -> programm
+  reganchored // -> programm
   regmust, regmustlen // -> programm
   fExprIsCompiled
 *)
