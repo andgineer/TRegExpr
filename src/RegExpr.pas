@@ -1929,8 +1929,7 @@ end; { of procedure TRegExpr.InsertOperator
 
 function FindSkippedMetaLen(PStart, PEnd: PRegExprChar): integer; {$IFDEF InlineFuncs}inline;{$ENDIF}
 // find length of initial segment of PStart string consisting
-// entirely of characters not from SkipString.
-// SkipString must be ASCII only due to optimization.
+// entirely of characters not from IsMetaSymbol1.
 begin
   Result := 0;
   while PStart < PEnd do
