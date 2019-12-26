@@ -178,9 +178,13 @@ const
   NSUBEXPMAX = 255; // Max possible value for NSUBEXP. //###0.945
   // Don't change it! It's defined by internal TRegExpr design.
 
-  {$IFDEF ComplexBraces}
+{$IFDEF ComplexBraces}
+const
   LoopStackMax = 10; // max depth of loops stack //###0.925
-  {$ENDIF}
+
+type
+  TRegExprLoopStack = array [1 .. LoopStackMax] of integer;
+{$ENDIF}
 
 type
   TRegExprModifiers = record
@@ -221,14 +225,13 @@ type
     FSubExprCount: integer;
 
     {$IFDEF ComplexBraces}
-    LoopStack: array [1 .. LoopStackMax] of integer; // state before entering loop
+    LoopStack: TRegExprLoopStack; // state before entering loop
     LoopStackIdx: integer; // 0 - out of all loops
     {$ENDIF}
 
     // The "internal use only" fields to pass info from compile
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
-    regstart: REChar; // char that must begin a match; '\0' if none obvious
     reganchored: REChar; // is the match anchored (at beginning-of-line only)?
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
@@ -1530,14 +1533,16 @@ function TRegExpr.GetMatch(Idx: integer): RegExprString;
 begin
   Result := '';
   Idx := FSubExprIndexes[Idx];
-  if (Idx >= 0) and (endp[Idx] > startp[Idx])
+  if (Idx >= 0) and (endp[Idx] > startp[Idx]) then
+    SetString(Result, startp[Idx], endp[Idx] - startp[Idx]);
+  {
   // then Result := copy (fInputString, MatchPos [Idx], MatchLen [Idx]) //###0.929
   then
   begin
-    // SetString (Result, startp [idx], endp [idx] - startp [idx])
     SetLength(Result, endp[Idx] - startp[Idx]);
     System.Move(startp[Idx]^, Result[1], Length(Result) * SizeOf(REChar));
   end;
+  }
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
 
@@ -2296,7 +2301,6 @@ begin
       FirstCharArray[Len] := byte(Len) in FirstCharSet;
     {$ENDIF}
 
-    regstart := #0; // Worst-case defaults.
     reganchored := #0;
     regmust := nil;
     regmustlen := 0;
@@ -2308,9 +2312,10 @@ begin
       scan := scan + REOpSz + RENextOffSz;
 
       // Starting-point info.
-      if PREOp(scan)^ = OP_EXACTLY then
+      {if PREOp(scan)^ = OP_EXACTLY then
         regstart := (scan + REOpSz + RENextOffSz + RENumberSz)^
-      else if PREOp(scan)^ = OP_BOL then
+      else}
+      if PREOp(scan)^ = OP_BOL then
         Inc(reganchored);
 
       // If there's something expensive in the r.e., find the longest
@@ -2339,8 +2344,9 @@ begin
         end;
         regmust := longest;
         regmustlen := Len;
+        if regmustlen > 1 then // don't use regmust if too short
+          SetString(regmustString, regmust, regmustlen);
       end;
-      SetString(regmustString, regmust, regmustlen);
     end;
 
     Result := True;
@@ -3527,9 +3533,6 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // recursion, in particular by going through "ordinary" nodes (that don't
 // need to know whether the rest of the match failed) by a loop instead of
 // by recursion.
-Type
-  TLoopStack = array [1 .. LoopStackMax] of integer;
-
 var
   scan: PRegExprChar; // Current node.
   next: PRegExprChar; // Next node.
@@ -3541,13 +3544,14 @@ var
   BracesMin, Bracesmax: integer;
   // we use integer instead of TREBracesArg for better support */+
   {$IFDEF ComplexBraces}
-  SavedLoopStack: TLoopStack; // :(( very bad for recursion
+  SavedLoopStack: TRegExprLoopStack; // :(( very bad for recursion
   SavedLoopStackIdx: integer; // ###0.925
   {$ENDIF}
+  bound1, bound2: boolean;
 begin
   Result := False;
   scan := prog;
-  FillChar(SavedLoopStack[1], Length(SavedLoopStack), 0);
+  FillChar(SavedLoopStack[1], Length(SavedLoopStack)*SizeOf(integer), 0);
   while scan <> nil do
   begin
     Len := PRENextOff(AlignToPtr(scan + 1))^; // ###0.932 inlined regnext
@@ -3559,19 +3563,22 @@ begin
     case scan^ of
       OP_NOTBOUND,
       OP_BOUND:
-        if (scan^ = OP_BOUND)
-          xor (((reginput = fInputStart) or not IsWordChar((reginput - 1)^)) and
-          (reginput < fInputEnd) and IsWordChar(reginput^) or
-          (reginput <> fInputStart) and IsWordChar((reginput - 1)^) and
-          ((reginput = fInputEnd) or not IsWordChar(reginput^))) then
-          Exit;
-
+        begin
+          bound1 := (reginput = fInputStart) or not IsWordChar((reginput - 1)^);
+          bound2 := (reginput = fInputEnd) or not IsWordChar(reginput^);
+          if (scan^ = OP_BOUND) xor (bound1 <> bound2) then
+            Exit;
+        end;
       OP_BOL:
-        if reginput <> fInputStart then
-          Exit;
+        begin
+          if reginput <> fInputStart then
+            Exit;
+        end;
       OP_EOL:
-        if reginput < fInputEnd then
-          Exit;
+        begin
+          if reginput < fInputEnd then
+            Exit;
+        end;
       OP_BOLML:
         if reginput > fInputStart then
         begin
@@ -4171,9 +4178,11 @@ begin
   // ATryOnce or anchored match (it needs to be tried only once).
   if ATryOnce or (reganchored <> #0) then
   begin
+    {
     if regstart <> #0 then
       if regstart <> StartPtr^ then
         Exit;
+        }
     {$IFDEF UseFirstCharSet}
     if Ord(StartPtr^) <= $FF then
       if not FirstCharArray[byte(StartPtr^)] then
@@ -4185,6 +4194,7 @@ begin
 
   // Messy cases: unanchored match.
   s := StartPtr;
+  {
   if regstart <> #0 then // We know what char it must start with.
     repeat
       // don't use StrScan to support Null chars in InputString
@@ -4200,7 +4210,8 @@ begin
       end;
     until s = nil
   else
-    repeat // ###0.948
+  }
+    repeat
       {$IFDEF UseFirstCharSet}
       if Ord(s^) <= $FF then
       begin
@@ -5018,7 +5029,7 @@ begin
               Result := Result + ') ';
             end;
           else
-            raise Exception.Create('TRegExpr: unknown opcode in char class');
+            Error(reeDumpCorruptedOpcode);
         end;
       until false;
     end;
@@ -5060,8 +5071,8 @@ begin
   end; { of while }
 
   // Header fields of interest.
-  if regstart <> #0 then
-    Result := Result + 'Start char: ' + regstart + '; ';
+  //if regstart <> #0 then
+  //  Result := Result + 'Start char: ' + regstart + '; ';
   if reganchored <> #0 then
     Result := Result + 'Anchored; ';
   if regmustString <> '' then

@@ -42,11 +42,12 @@ uses
 {$R *.lfm}
 
 const
-  Rules: array[0..9] of string = (
+  Rules: array[0..10] of string = (
     '//.*',
     '(?s)\{.*?\}',
     '(?s)\(\*.*?\*\)',
     '\d+(\.\d+)?([eE][\-\+]?\d+)?',
+    '(?i)procedure|function|begin|end|if|then|else|case|for|while|repeat|until|do|is|as',
     '\w+',
     '\#\$[0-9a-fA-F]+',
     '\$[0-9a-fA-F]+',
