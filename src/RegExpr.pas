@@ -1774,7 +1774,6 @@ procedure TRegExpr.Tail(p: PRegExprChar; val: PRegExprChar);
 var
   scan: PRegExprChar;
   temp: PRegExprChar;
-  // i : int64;
 begin
   if p = @regdummy then
     Exit;
@@ -4185,24 +4184,23 @@ begin
   // Messy cases: unanchored match.
   s := StartPtr;
   repeat
-      {$IFDEF UseFirstCharSet}
-      if Ord(s^) <= $FF then
-      begin
-        if FirstCharArray[byte(s^)] then
-          Result := RegMatch(s);
-      end
-      else
+    {$IFDEF UseFirstCharSet}
+    if Ord(s^) <= $FF then
+    begin
+      if FirstCharArray[byte(s^)] then
         Result := RegMatch(s);
-      {$ELSE}
+    end
+    else
       Result := RegMatch(s);
-      {$ENDIF}
-      if Result or (s = fInputEnd)
-      // Exit on a match or after testing the end-of-string.
-      then
-        Exit
-      else
-        ClearMatchs; // ###0.949
-      Inc(s);
+    {$ELSE}
+    Result := RegMatch(s);
+    {$ENDIF}
+    if Result or (s >= fInputEnd) // Exit on a match or after testing the end-of-string.
+    then
+      Exit
+    else
+      ClearMatchs; // ###0.949
+    Inc(s);
   until False;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
