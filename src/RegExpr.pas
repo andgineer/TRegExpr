@@ -141,13 +141,17 @@ const
   RegExprModifierM: boolean = False; // default value for ModifierM
   RegExprModifierX: boolean = False; // default value for ModifierX
 
+  {$IFDEF UseSpaceChars}
   // default value for SpaceChars
   RegExprSpaceChars: RegExprString = ' '#$9#$A#$D#$C;
+  {$ENDIF}
 
+  {$IFDEF UseWordChars}
   // default value for WordChars
   RegExprWordChars: RegExprString = '0123456789'
     + 'abcdefghijklmnopqrstuvwxyz'
     + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+  {$ENDIF}
 
   // default value for LineSeparators
   RegExprLineSeparators: RegExprString = #$d#$a#$b#$c
