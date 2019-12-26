@@ -973,13 +973,35 @@ begin
 end;
 {$ENDIF}
 
+(*
 const
   MetaChars_Init = '^$.[()|?+*' + EscChar + '{';
   MetaChars = MetaChars_Init; // not needed to be a variable, const is faster
+  MetaAll = MetaChars_Init + ']}'; // Very similar to MetaChars, but slighly changed.
+*)
+
+function _IsMetaSymbol1(ch: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case ch of
+    '^', '$', '.', '[', '(', ')', '|', '?', '+', '*', EscChar, '{':
+      Result := True
+    else
+      Result := False
+  end;
+end;
+
+function _IsMetaSymbol2(ch: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case ch of
+    '^', '$', '.', '[', '(', ')', '|', '?', '+', '*', EscChar, '{',
+    ']', '}':
+      Result := True
+    else
+      Result := False
+  end;
+end;
 
 function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
-const
-  MetaAll = MetaChars_Init + ']}'; // Very similar to MetaChars, but slighly changed.
 var
   i, i0, Len: integer;
   ch: REChar;
@@ -991,7 +1013,7 @@ begin
   while i <= Len do
   begin
     ch := AStr[i];
-    if (Ord(ch) < 128) and (Pos(Chr(Ord(ch)), MetaAll) > 0) then // faster call Pos(char, string)
+    if _IsMetaSymbol2(ch) then
     begin
       Result := Result + System.Copy(AStr, i0, i - i0) + EscChar + ch;
       i0 := i + 1;
@@ -1905,7 +1927,7 @@ begin
 end; { of procedure TRegExpr.InsertOperator
   -------------------------------------------------------------- }
 
-function FindSkippedLen(PStart, PEnd: PRegExprChar; const SkipString: string): integer; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function FindSkippedMetaLen(PStart, PEnd: PRegExprChar): integer; {$IFDEF InlineFuncs}inline;{$ENDIF}
 // find length of initial segment of PStart string consisting
 // entirely of characters not from SkipString.
 // SkipString must be ASCII only due to optimization.
@@ -1913,7 +1935,7 @@ begin
   Result := 0;
   while PStart < PEnd do
   begin
-    if (Ord(PStart^) < 128) and (Pos(PStart^, SkipString) > 0) then
+    if _IsMetaSymbol1(PStart^) then
       Exit;
     Inc(Result);
     Inc(PStart)
@@ -3238,7 +3260,7 @@ begin
       end
       else
       begin
-        Len := FindSkippedLen(regparse, fRegexEnd, MetaChars);
+        Len := FindSkippedMetaLen(regparse, fRegexEnd);
         if Len <= 0 then
           if regparse^ <> '{' then
           begin
@@ -3246,7 +3268,7 @@ begin
             Exit;
           end
           else
-            Len := FindSkippedLen(regparse + 1, fRegexEnd, MetaChars) + 1;
+            Len := FindSkippedMetaLen(regparse + 1, fRegexEnd) + 1;
             // bad {n,m} - compile as EXACTLY
         ender := (regparse + Len)^;
         if (Len > 1) and ((ender = '*') or (ender = '+') or (ender = '?') or (ender = '{')) then
