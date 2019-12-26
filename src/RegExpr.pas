@@ -981,9 +981,10 @@ const
 
 function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
 const
-  MetaAll: RegExprString = MetaChars_Init + ']}'; // Very similar to MetaChars, but slighly changed.
+  MetaAll = MetaChars_Init + ']}'; // Very similar to MetaChars, but slighly changed.
 var
   i, i0, Len: integer;
+  ch: REChar;
 begin
   Result := '';
   Len := Length(AStr);
@@ -991,9 +992,10 @@ begin
   i0 := i;
   while i <= Len do
   begin
-    if Pos(AStr[i], MetaAll) > 0 then
+    ch := AStr[i];
+    if (Ord(ch) < 128) and (Pos(Chr(Ord(ch)), MetaAll) > 0) then // faster call Pos(char, string)
     begin
-      Result := Result + System.Copy(AStr, i0, i - i0) + EscChar + AStr[i];
+      Result := Result + System.Copy(AStr, i0, i - i0) + EscChar + ch;
       i0 := i + 1;
     end;
     Inc(i);
