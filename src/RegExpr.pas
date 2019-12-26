@@ -256,8 +256,6 @@ type
     fInputEnd: PRegExprChar; // Pointer to char AFTER last char of input string
     fRegexStart: PRegExprChar;
     fRegexEnd: PRegExprChar;
-    fMetaStart: PRegExprChar;
-    fMetaEnd: PRegExprChar;
 
     // work variables for compiler's routines
     regparse: PRegExprChar; // Input-scan pointer.
@@ -977,7 +975,7 @@ end;
 
 const
   MetaChars_Init = '^$.[()|?+*' + EscChar + '{';
-  MetaChars: RegExprString = MetaChars_Init;
+  MetaChars = MetaChars_Init; // not needed to be a variable, const is faster
 
 function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
 const
@@ -1433,9 +1431,6 @@ begin
 
   FUseOsLineEndOnReplace := True;
   FReplaceLineEnd := sLineBreak;
-
-  fMetaStart := PRegExprChar(MetaChars);
-  fMetaEnd := fMetaStart + Length(MetaChars);
 
   {$IFDEF UnicodeWordDetection}
   FUseUnicodeWordDetection := True;
@@ -1910,27 +1905,20 @@ begin
 end; { of procedure TRegExpr.InsertOperator
   -------------------------------------------------------------- }
 
-function FindInitLen(s1, s2, end1, end2: PRegExprChar): integer;
-// find length of initial segment of s1 consisting
-// entirely of characters not from s2
-var
-  scan1, scan2: PRegExprChar;
+function FindSkippedLen(PStart, PEnd: PRegExprChar; const SkipString: string): integer; {$IFDEF InlineFuncs}inline;{$ENDIF}
+// find length of initial segment of PStart string consisting
+// entirely of characters not from SkipString.
+// SkipString must be ASCII only due to optimization.
 begin
   Result := 0;
-  scan1 := s1;
-  while scan1 < end1 do
+  while PStart < PEnd do
   begin
-    scan2 := s2;
-    while scan2 < end2 do
-      if scan1^ = scan2^ then
-        Exit
-      else
-        Inc(scan2);
+    if (Ord(PStart^) < 128) and (Pos(PStart^, SkipString) > 0) then
+      Exit;
     Inc(Result);
-    Inc(scan1)
+    Inc(PStart)
   end;
-end; { of function strcspn
-  -------------------------------------------------------------- }
+end;
 
 const
   // Flags to be passed up and down.
@@ -3250,7 +3238,7 @@ begin
       end
       else
       begin
-        Len := FindInitLen(regparse, fMetaStart, fRegexEnd, fMetaEnd);
+        Len := FindSkippedLen(regparse, fRegexEnd, MetaChars);
         if Len <= 0 then
           if regparse^ <> '{' then
           begin
@@ -3258,7 +3246,7 @@ begin
             Exit;
           end
           else
-            Len := FindInitLen(regparse + 1, fMetaStart, fRegexEnd, fMetaEnd) + 1;
+            Len := FindSkippedLen(regparse + 1, fRegexEnd, MetaChars) + 1;
             // bad {n,m} - compile as EXACTLY
         ender := (regparse + Len)^;
         if (Len > 1) and ((ender = '*') or (ender = '+') or (ender = '?') or (ender = '{')) then
