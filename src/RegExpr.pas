@@ -3259,11 +3259,10 @@ begin
             Exit;
           end
           else
-            Len := FindInitLen(regparse + 1, fMetaStart, fRegexEnd, fMetaEnd) +
-              1; // bad {n,m} - compile as EXATLY
+            Len := FindInitLen(regparse + 1, fMetaStart, fRegexEnd, fMetaEnd) + 1;
+            // bad {n,m} - compile as EXACTLY
         ender := (regparse + Len)^;
-        if (Len > 1) and ((ender = '*') or (ender = '+') or (ender = '?') or
-          (ender = '{')) then
+        if (Len > 1) and ((ender = '*') or (ender = '+') or (ender = '?') or (ender = '{')) then
           Dec(Len); // back off clear of ?+*{ operand.
         flagp := flagp or flag_HasWidth;
         if Len = 1 then
@@ -3273,8 +3272,7 @@ begin
         else
           ret := EmitNode(OP_EXACTLY);
         EmitInt(0);
-        while (Len > 0) and ((not fCompModifiers.X) or
-          (regparse^ <> '#')) do
+        while (Len > 0) and ((not fCompModifiers.X) or (regparse^ <> '#')) do
         begin
           if not fCompModifiers.X or not IsIgnoredChar(regparse^) then
           begin
