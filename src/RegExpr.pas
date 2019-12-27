@@ -417,6 +417,7 @@ type
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
     {$ENDIF}
+    function GetSubExprCount: integer;
     function GetMatchPos(Idx: integer): PtrInt;
     function GetMatchLen(Idx: integer): PtrInt;
     function GetMatch(Idx: integer): RegExprString;
@@ -563,7 +564,7 @@ type
     // Exec ('23'): SubExprMatchCount=2, Match[0]='23', [1]='', [2]='3'
     // Exec ('2'): SubExprMatchCount=0, Match[0]='2'
     // Exec ('7') - return False: SubExprMatchCount=-1
-    property SubExprMatchCount: integer read FSubExprCount;
+    property SubExprMatchCount: integer read GetSubExprCount;
 
     // pos of entrance subexpr. #Idx into tested in last Exec*
     // string. First subexpr. has Idx=1, last - MatchCount,
@@ -1532,6 +1533,15 @@ begin
   end;
 end; { of procedure TRegExpr.SetExpression
   -------------------------------------------------------------- }
+
+function TRegExpr.GetSubExprCount: integer;
+begin
+  // if nothing found, we must return -1 per TRegExpr docs
+  if startp[0] = nil then
+    Result := -1
+  else
+    Result := FSubExprCount;
+end;
 
 function TRegExpr.GetMatchPos(Idx: integer): PtrInt;
 begin
