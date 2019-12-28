@@ -658,10 +658,18 @@ function ReplaceRegExpr(const ARegExpr, AInputStr, AReplaceStr: RegExprString;
 
 // Alternate form allowing to set more parameters.
 
-Type
-  TRegexReplaceOption = (rroModifierI, rroModifierR, rroModifierS, rroModifierG,
-    rroModifierM, rroModifierX, rroUseSubstitution, rroUseOsLineEnd);
-  TRegexReplaceOptions = Set of TRegexReplaceOption;
+type
+  TRegexReplaceOption = (
+    rroModifierI,
+    rroModifierR,
+    rroModifierS,
+    rroModifierG,
+    rroModifierM,
+    rroModifierX,
+    rroUseSubstitution,
+    rroUseOsLineEnd
+    );
+  TRegexReplaceOptions = set of TRegexReplaceOption;
 
 function ReplaceRegExpr(const ARegExpr, AInputStr, AReplaceStr: RegExprString;
   Options: TRegexReplaceOptions): RegExprString; overload;
