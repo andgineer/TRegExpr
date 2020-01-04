@@ -2,7 +2,7 @@
   {$apptype console}
 {$endif}
 
-program benchmark;
+program test;
 
 uses
   SysUtils,
@@ -48,50 +48,50 @@ const BenchmarkPatterns:array[0..14] of ansistring=('Twain',
 
 
 var i,j:integer;
-    s,p:ansistring;
+    stext,expr:ansistring;
     sl:TFileStream;
     t1,t2:longword;
-    RegExprInstance:TRegExpr;
+    Regex:TRegExpr;
 begin
  try
   sl:=TFileStream.Create('mtent12.txt',fmOpenRead);
   try
-   SetLength(s,sl.Size);
-   sl.Read(s[1],sl.Size);
+   SetLength(stext,sl.Size);
+   sl.Read(stext[1],sl.Size);
   finally
    sl.Free;
   end;
 
   writeln(' ':50,'      Time     | Match count');
-
   writeln('==============================================================================');
   writeln('RegExpr.pas:');
+
   for i:=low(BenchmarkPatterns) to high(BenchmarkPatterns) do begin
    try
-    p:=BenchmarkPatterns[i];
-    if pos('(?i)',p)=1 then begin
-     Delete(p,1,4);
+    expr:=BenchmarkPatterns[i];
+    if pos('(?i)',expr)=1 then begin
+     Delete(expr,1,4);
      j:=1;
     end else begin
      j:=0;
     end;
-    RegExprInstance:=TRegExpr.Create;
-    RegExprInstance.ModifierI:=j<>0;
-    RegExprInstance.Expression:=p;
-    RegExprInstance.Compile;
+    Regex:=TRegExpr.Create;
+    Regex.ModifierI:=j<>0;
+    Regex.Expression:=expr;
+    Regex.Compile;
     try
      write('/'+BenchmarkPatterns[i]+'/ : ':50);
      t1:=GetTickCount;
      j:=0;
-     if RegExprInstance.Exec(s) then begin
+     if Regex.Exec(stext) then begin
       repeat
        inc(j);
-      until not RegExprInstance.ExecNext;
+      until not Regex.ExecNext;
      end;
      t2:=GetTickCount;
      writeln(t2-t1:11,' ms |',j:12);
     finally
-     RegExprInstance.Free;
+     Regex.Free;
     end;
    except
     on e:Exception do begin
@@ -100,7 +100,7 @@ begin
    end;
   end;{}
  finally
-  s:='';
+  stext:='';
  end;
  readln;
 end.
