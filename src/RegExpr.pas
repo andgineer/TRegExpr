@@ -2939,11 +2939,6 @@ var
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
-  function EmitRange(AOpCode: TREOp): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
-  begin
-    Result := EmitNode(AOpCode);
-  end;
-
   procedure EmitSimpleRangeC(b: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     RangeBeg := b;
@@ -3003,15 +2998,15 @@ begin
         if regparse^ = '^' then
         begin // Complement of range.
           if fCompModifiers.I then
-            ret := EmitRange(OP_ANYBUTCI)
+            ret := EmitNode(OP_ANYBUTCI)
           else
-            ret := EmitRange(OP_ANYBUT);
+            ret := EmitNode(OP_ANYBUT);
           Inc(regparse);
         end
         else if fCompModifiers.I then
-          ret := EmitRange(OP_ANYOFCI)
+          ret := EmitNode(OP_ANYOFCI)
         else
-          ret := EmitRange(OP_ANYOF);
+          ret := EmitNode(OP_ANYOF);
 
         CanBeRange := False;
 
