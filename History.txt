@@ -6,6 +6,11 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.978 2020.01.06
+ -=- (^) Optimize opcode for [a-c] ranges: avoid redundant EXACTLY.
+  By Alexey Torgashin.
+ -=- (^) Added test_benchmark (for FreePascal). Taken from Lazarus forum.
+
  v. 0.975 2019.12.25
  -=- (^) Better support NULL chars in InputString.
  -=- (^) Improved opcode for EXACTLY: store length to opcode. 15 years old
