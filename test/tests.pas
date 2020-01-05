@@ -492,6 +492,7 @@ begin
   IsFalse('Exec must give False', RE.Exec(1));
   AreEqual('MatchPos[0] must fail', -1, RE.MatchPos[0]);
   AreEqual('MatchLen[0] must fail', -1, RE.MatchLen[0]);
+  AreEqual('SubExprCount must be -1', -1, RE.SubExprMatchCount);
 end;
 
 {$IFDEF OverMeth}

@@ -141,13 +141,17 @@ const
   RegExprModifierM: boolean = False; // default value for ModifierM
   RegExprModifierX: boolean = False; // default value for ModifierX
 
+  {$IFDEF UseSpaceChars}
   // default value for SpaceChars
   RegExprSpaceChars: RegExprString = ' '#$9#$A#$D#$C;
+  {$ENDIF}
 
+  {$IFDEF UseWordChars}
   // default value for WordChars
   RegExprWordChars: RegExprString = '0123456789'
     + 'abcdefghijklmnopqrstuvwxyz'
     + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+  {$ENDIF}
 
   // default value for LineSeparators
   RegExprLineSeparators: RegExprString = #$d#$a#$b#$c
@@ -236,7 +240,7 @@ type
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
     regmustString: RegExprString;
-    // Regstart and reganchored permit very fast decisions on suitable starting points
+    // reganchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
     // that regcomp() supplies a regmust only if the r.e. contains something
@@ -256,8 +260,6 @@ type
     fInputEnd: PRegExprChar; // Pointer to char AFTER last char of input string
     fRegexStart: PRegExprChar;
     fRegexEnd: PRegExprChar;
-    fMetaStart: PRegExprChar;
-    fMetaEnd: PRegExprChar;
 
     // work variables for compiler's routines
     regparse: PRegExprChar; // Input-scan pointer.
@@ -415,6 +417,7 @@ type
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
     {$ENDIF}
+    function GetSubExprCount: integer;
     function GetMatchPos(Idx: integer): PtrInt;
     function GetMatchLen(Idx: integer): PtrInt;
     function GetMatch(Idx: integer): RegExprString;
@@ -561,7 +564,7 @@ type
     // Exec ('23'): SubExprMatchCount=2, Match[0]='23', [1]='', [2]='3'
     // Exec ('2'): SubExprMatchCount=0, Match[0]='2'
     // Exec ('7') - return False: SubExprMatchCount=-1
-    property SubExprMatchCount: integer read FSubExprCount;
+    property SubExprMatchCount: integer read GetSubExprCount;
 
     // pos of entrance subexpr. #Idx into tested in last Exec*
     // string. First subexpr. has Idx=1, last - MatchCount,
@@ -655,10 +658,18 @@ function ReplaceRegExpr(const ARegExpr, AInputStr, AReplaceStr: RegExprString;
 
 // Alternate form allowing to set more parameters.
 
-Type
-  TRegexReplaceOption = (rroModifierI, rroModifierR, rroModifierS, rroModifierG,
-    rroModifierM, rroModifierX, rroUseSubstitution, rroUseOsLineEnd);
-  TRegexReplaceOptions = Set of TRegexReplaceOption;
+type
+  TRegexReplaceOption = (
+    rroModifierI,
+    rroModifierR,
+    rroModifierS,
+    rroModifierG,
+    rroModifierM,
+    rroModifierX,
+    rroUseSubstitution,
+    rroUseOsLineEnd
+    );
+  TRegexReplaceOptions = set of TRegexReplaceOption;
 
 function ReplaceRegExpr(const ARegExpr, AInputStr, AReplaceStr: RegExprString;
   Options: TRegexReplaceOptions): RegExprString; overload;
@@ -975,24 +986,49 @@ begin
 end;
 {$ENDIF}
 
+(*
 const
-  META: RegExprString = '^$.[()|?+*' + EscChar + '{';
+  MetaChars_Init = '^$.[()|?+*' + EscChar + '{';
+  MetaChars = MetaChars_Init; // not needed to be a variable, const is faster
+  MetaAll = MetaChars_Init + ']}'; // Very similar to MetaChars, but slighly changed.
+*)
+
+function _IsMetaSymbol1(ch: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case ch of
+    '^', '$', '.', '[', '(', ')', '|', '?', '+', '*', EscChar, '{':
+      Result := True
+    else
+      Result := False
+  end;
+end;
+
+function _IsMetaSymbol2(ch: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case ch of
+    '^', '$', '.', '[', '(', ')', '|', '?', '+', '*', EscChar, '{',
+    ']', '}':
+      Result := True
+    else
+      Result := False
+  end;
+end;
 
 function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
 var
-  MetaAll: RegExprString; // Very similar to META, but slighly changed.
   i, i0, Len: integer;
+  ch: REChar;
 begin
   Result := '';
-  MetaAll := META + ']}';
   Len := Length(AStr);
   i := 1;
   i0 := i;
   while i <= Len do
   begin
-    if Pos(AStr[i], MetaAll) > 0 then
+    ch := AStr[i];
+    if _IsMetaSymbol2(ch) then
     begin
-      Result := Result + System.Copy(AStr, i0, i - i0) + EscChar + AStr[i];
+      Result := Result + System.Copy(AStr, i0, i - i0) + EscChar + ch;
       i0 := i + 1;
     end;
     Inc(i);
@@ -1431,9 +1467,6 @@ begin
   FUseOsLineEndOnReplace := True;
   FReplaceLineEnd := sLineBreak;
 
-  fMetaStart := PRegExprChar(META);
-  fMetaEnd := fMetaStart + Length(META);
-
   {$IFDEF UnicodeWordDetection}
   FUseUnicodeWordDetection := True;
   {$ENDIF}
@@ -1508,6 +1541,15 @@ begin
   end;
 end; { of procedure TRegExpr.SetExpression
   -------------------------------------------------------------- }
+
+function TRegExpr.GetSubExprCount: integer;
+begin
+  // if nothing found, we must return -1 per TRegExpr docs
+  if startp[0] = nil then
+    Result := -1
+  else
+    Result := FSubExprCount;
+end;
 
 function TRegExpr.GetMatchPos(Idx: integer): PtrInt;
 begin
@@ -1774,7 +1816,6 @@ procedure TRegExpr.Tail(p: PRegExprChar; val: PRegExprChar);
 var
   scan: PRegExprChar;
   temp: PRegExprChar;
-  // i : int64;
 begin
   if p = @regdummy then
     Exit;
@@ -1908,27 +1949,19 @@ begin
 end; { of procedure TRegExpr.InsertOperator
   -------------------------------------------------------------- }
 
-function FindInitLen(s1, s2, end1, end2: PRegExprChar): integer;
-// find length of initial segment of s1 consisting
-// entirely of characters not from s2
-var
-  scan1, scan2: PRegExprChar;
+function FindSkippedMetaLen(PStart, PEnd: PRegExprChar): integer; {$IFDEF InlineFuncs}inline;{$ENDIF}
+// find length of initial segment of PStart string consisting
+// entirely of characters not from IsMetaSymbol1.
 begin
   Result := 0;
-  scan1 := s1;
-  while scan1 < end1 do
+  while PStart < PEnd do
   begin
-    scan2 := s2;
-    while scan2 < end2 do
-      if scan1^ = scan2^ then
-        Exit
-      else
-        Inc(scan2);
+    if _IsMetaSymbol1(PStart^) then
+      Exit;
     Inc(Result);
-    Inc(scan1)
+    Inc(PStart)
   end;
-end; { of function strcspn
-  -------------------------------------------------------------- }
+end;
 
 const
   // Flags to be passed up and down.
@@ -2312,9 +2345,6 @@ begin
       scan := scan + REOpSz + RENextOffSz;
 
       // Starting-point info.
-      {if PREOp(scan)^ = OP_EXACTLY then
-        regstart := (scan + REOpSz + RENextOffSz + RENumberSz)^
-      else}
       if PREOp(scan)^ = OP_BOL then
         Inc(reganchored);
 
@@ -3251,7 +3281,7 @@ begin
       end
       else
       begin
-        Len := FindInitLen(regparse, fMetaStart, fRegexEnd, fMetaEnd);
+        Len := FindSkippedMetaLen(regparse, fRegexEnd);
         if Len <= 0 then
           if regparse^ <> '{' then
           begin
@@ -3259,11 +3289,10 @@ begin
             Exit;
           end
           else
-            Len := FindInitLen(regparse + 1, fMetaStart, fRegexEnd, fMetaEnd) +
-              1; // bad {n,m} - compile as EXATLY
+            Len := FindSkippedMetaLen(regparse + 1, fRegexEnd) + 1;
+            // bad {n,m} - compile as EXACTLY
         ender := (regparse + Len)^;
-        if (Len > 1) and ((ender = '*') or (ender = '+') or (ender = '?') or
-          (ender = '{')) then
+        if (Len > 1) and ((ender = '*') or (ender = '+') or (ender = '?') or (ender = '{')) then
           Dec(Len); // back off clear of ?+*{ operand.
         flagp := flagp or flag_HasWidth;
         if Len = 1 then
@@ -3273,8 +3302,7 @@ begin
         else
           ret := EmitNode(OP_EXACTLY);
         EmitInt(0);
-        while (Len > 0) and ((not fCompModifiers.X) or
-          (regparse^ <> '#')) do
+        while (Len > 0) and ((not fCompModifiers.X) or (regparse^ <> '#')) do
         begin
           if not fCompModifiers.X or not IsIgnoredChar(regparse^) then
           begin
@@ -4178,11 +4206,6 @@ begin
   // ATryOnce or anchored match (it needs to be tried only once).
   if ATryOnce or (reganchored <> #0) then
   begin
-    {
-    if regstart <> #0 then
-      if regstart <> StartPtr^ then
-        Exit;
-        }
     {$IFDEF UseFirstCharSet}
     if Ord(StartPtr^) <= $FF then
       if not FirstCharArray[byte(StartPtr^)] then
@@ -4194,43 +4217,25 @@ begin
 
   // Messy cases: unanchored match.
   s := StartPtr;
-  {
-  if regstart <> #0 then // We know what char it must start with.
-    repeat
-      // don't use StrScan to support Null chars in InputString
-      s := _FindCharInBuffer(s, fInputEnd, regstart);
-      if s <> nil then
-      begin
+  repeat
+    {$IFDEF UseFirstCharSet}
+    if Ord(s^) <= $FF then
+    begin
+      if FirstCharArray[byte(s^)] then
         Result := RegMatch(s);
-        if Result then
-          Exit
-        else
-          ClearMatchs;
-        Inc(s);
-      end;
-    until s = nil
-  else
-  }
-    repeat
-      {$IFDEF UseFirstCharSet}
-      if Ord(s^) <= $FF then
-      begin
-        if FirstCharArray[byte(s^)] then
-          Result := RegMatch(s);
-      end
-      else
-        Result := RegMatch(s);
-      {$ELSE}
+    end
+    else
       Result := RegMatch(s);
-      {$ENDIF}
-      if Result or (s = fInputEnd)
-      // Exit on a match or after testing the end-of-string.
-      then
-        Exit
-      else
-        ClearMatchs; // ###0.949
-      Inc(s);
-    until False;
+    {$ELSE}
+    Result := RegMatch(s);
+    {$ENDIF}
+    if Result or (s >= fInputEnd) // Exit on a match or after testing the end-of-string.
+    then
+      Exit
+    else
+      ClearMatchs; // ###0.949
+    Inc(s);
+  until False;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
@@ -5071,8 +5076,6 @@ begin
   end; { of while }
 
   // Header fields of interest.
-  //if regstart <> #0 then
-  //  Result := Result + 'Start char: ' + regstart + '; ';
   if reganchored <> #0 then
     Result := Result + 'Anchored; ';
   if regmustString <> '' then
@@ -5137,8 +5140,7 @@ end; { of procedure TRegExpr.Error
   PCode persistence:
   FirstCharSet
   programm, regsize
-  regstart // -> programm
-  reganch // -> programm
+  reganchored // -> programm
   regmust, regmustlen // -> programm
   fExprIsCompiled
 *)
