@@ -2939,18 +2939,25 @@ var
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
-  procedure EmitSimpleRangeC(b: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitRangeChar(Ch: REChar; AStartOfRange: boolean); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
-    RangeBeg := b;
-    if AddrOfLen = nil then
+    CanBeRange := AStartOfRange;
+    if AStartOfRange then
     begin
-      EmitC(OpKind_Char);
-      Pointer(AddrOfLen) := regcode;
-      EmitInt(0);
+      AddrOfLen := nil;
+      RangeBeg := Ch;
+    end
+    else
+    begin
+      if AddrOfLen = nil then
+      begin
+        EmitC(OpKind_Char);
+        Pointer(AddrOfLen) := regcode;
+        EmitInt(0);
+      end;
+      Inc(AddrOfLen^);
+      EmitC(Ch);
     end;
-    Inc(AddrOfLen^);
-    EmitC(b);
-    CanBeRange := True;
   end;
 
   procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -2962,6 +2969,8 @@ var
     EmitC(ch2);
   end;
 
+var
+  TempChar: REChar;
 begin
   Result := nil;
   flags := 0;
@@ -3012,7 +3021,8 @@ begin
 
         if regparse^ = ']' then
         begin
-          EmitSimpleRangeC(regparse^); // first ']' inside [] treated as simple char, no need to check '['
+          // first ']' inside [] treated as simple char, no need to check '['
+          EmitRangeChar(regparse^, (regparse + 1)^ = '-');
           Inc(regparse);
         end;
 
@@ -3071,11 +3081,12 @@ begin
               end
               else
               begin
-                EmitSimpleRangeC(UnQuoteChar(regparse));
+                TempChar := UnQuoteChar(regparse);
+                EmitRangeChar(TempChar, (regparse + 1)^ = '-');
               end;
             end
             else
-              EmitSimpleRangeC(regparse^);
+              EmitRangeChar(regparse^, (regparse + 1)^ = '-');
             Inc(regparse);
           end;
         end; { of while }
