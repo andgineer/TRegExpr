@@ -218,7 +218,7 @@ type
   TRegExpr = class;
   TRegExprReplaceFunction = function(ARegExpr: TRegExpr): RegExprString of object;
   TRegExprCharChecker = function(ch: REChar): boolean of object;
-  TRegExprCharCheckerArray = array[0..40] of TRegExprCharChecker;
+  TRegExprCharCheckerArray = array[0 .. 30] of TRegExprCharChecker;
 
   { TRegExpr }
 
@@ -333,8 +333,10 @@ type
     CheckerIndex_NotVertSep: byte;
 
     procedure InitCharCheckers;
-    function CharChecker_NotSpace(ch: REChar): boolean;
+    function CharChecker_Word(ch: REChar): boolean;
     function CharChecker_NotWord(ch: REChar): boolean;
+    function CharChecker_Space(ch: REChar): boolean;
+    function CharChecker_NotSpace(ch: REChar): boolean;
     function CharChecker_Digit(ch: REChar): boolean;
     function CharChecker_NotDigit(ch: REChar): boolean;
     function CharChecker_HorzSep(ch: REChar): boolean;
@@ -4907,9 +4909,10 @@ var
 begin
   Cnt := 0;
   FillChar(CharCheckers, SizeOf(CharCheckers), 0);
-  CheckerIndex_Word:= Add(IsWordChar);
+
+  CheckerIndex_Word:= Add(CharChecker_Word);
   CheckerIndex_NotWord:= Add(CharChecker_NotWord);
-  CheckerIndex_Space:= Add(IsSpaceChar);
+  CheckerIndex_Space:= Add(CharChecker_Space);
   CheckerIndex_NotSpace:= Add(CharChecker_NotSpace);
   CheckerIndex_Digit:= Add(CharChecker_Digit);
   CheckerIndex_NotDigit:= Add(CharChecker_NotDigit);
@@ -4919,9 +4922,19 @@ begin
   CheckerIndex_NotHorzSep:= Add(CharChecker_NotHorzSep);
 end;
 
+function TRegExpr.CharChecker_Word(ch: REChar): boolean;
+begin
+  Result := IsWordChar(ch);
+end;
+
 function TRegExpr.CharChecker_NotWord(ch: REChar): boolean;
 begin
   Result := not IsWordChar(ch);
+end;
+
+function TRegExpr.CharChecker_Space(ch: REChar): boolean;
+begin
+  Result := IsSpaceChar(ch);
 end;
 
 function TRegExpr.CharChecker_NotSpace(ch: REChar): boolean;
