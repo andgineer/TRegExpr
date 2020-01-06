@@ -2085,8 +2085,11 @@ begin
           begin
             ch := ABuffer^;
             Inc(ABuffer);
+            {
+            // already upcased in opcode
             if AIgnoreCase then
               ch := _UpperCase(ch);
+            }
             if ch = AChar then
             begin
               Result := True;
@@ -2985,6 +2988,8 @@ var
   procedure EmitRangeChar(Ch: REChar; AStartOfRange: boolean); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     CanBeRange := AStartOfRange;
+    if fCompModifiers.I then
+      Ch := _UpperCase(Ch);
     if AStartOfRange then
     begin
       AddrOfLen := nil;
