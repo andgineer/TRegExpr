@@ -2853,11 +2853,9 @@ begin
   end; { of case op }
 
   Inc(regparse);
-  if (regparse^ = '*') or (regparse^ = '+') or (regparse^ = '?') or (regparse^ = '{') then
-  begin
+  op := regparse^;
+  if (op = '*') or (op = '+') or (op = '?') or (op = '{') then
     Error(reeNestedSQP);
-    Exit;
-  end;
 end; { of function TRegExpr.ParsePiece
   -------------------------------------------------------------- }
 
