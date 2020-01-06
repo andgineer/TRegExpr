@@ -219,6 +219,11 @@ type
   TRegExprReplaceFunction = function(ARegExpr: TRegExpr): RegExprString of object;
   TRegExprCharChecker = function(ch: REChar): boolean of object;
   TRegExprCharCheckerArray = array[0 .. 30] of TRegExprCharChecker;
+  TRegExprCharCheckerInfo = record
+    CharBegin, CharEnd: REChar;
+    CheckerIndex: integer;
+  end;
+  TRegExprCharCheckerInfos = array of TRegExprCharCheckerInfo;
 
   { TRegExpr }
 
@@ -321,6 +326,7 @@ type
     {$ENDIF}
 
     CharCheckers: TRegExprCharCheckerArray;
+    CharCheckerInfos: TRegExprCharCheckerInfos;
     CheckerIndex_Word: byte;
     CheckerIndex_NotWord: byte;
     CheckerIndex_Digit: byte;
@@ -331,6 +337,9 @@ type
     CheckerIndex_NotHorzSep: byte;
     CheckerIndex_VertSep: byte;
     CheckerIndex_NotVertSep: byte;
+    CheckerIndex_AllAZ: byte;
+    CheckerIndex_LowerAZ: byte;
+    CheckerIndex_UpperAZ: byte;
 
     procedure InitCharCheckers;
     function CharChecker_Word(ch: REChar): boolean;
@@ -343,6 +352,9 @@ type
     function CharChecker_NotHorzSep(ch: REChar): boolean;
     function CharChecker_VertSep(ch: REChar): boolean;
     function CharChecker_NotVertSep(ch: REChar): boolean;
+    function CharChecker_AllAZ(ch: REChar): boolean;
+    function CharChecker_LowerAZ(ch: REChar): boolean;
+    function CharChecker_UpperAZ(ch: REChar): boolean;
 
     procedure ClearInternalIndexes;
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
@@ -2037,11 +2049,14 @@ begin
           Inc(ABuffer);
           ch2 := ABuffer^;
           Inc(ABuffer);
+          {
+          // if AIgnoreCase, ch, ch2 are upcased in opcode
           if AIgnoreCase then
           begin
             ch := _UpperCase(ch);
             ch2 := _UpperCase(ch2);
           end;
+          }
           if (AChar >= ch) and (AChar <= ch2) then
           begin
             Result := True;
@@ -2202,6 +2217,22 @@ begin
           else
           if N = CheckerIndex_NotHorzSep then
             ARes := ARes + (RegExprAllSet - RegExprHorzSeparatorsSet)
+          else
+          if N = CheckerIndex_LowerAZ then
+          begin
+            if AIgnoreCase then
+              ARes := ARes + [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z')]
+            else
+              ARes := ARes + [Ord('a') .. Ord('z')];
+          end
+          else
+          if N = CheckerIndex_UpperAZ then
+          begin
+            if AIgnoreCase then
+              ARes := ARes + [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z')]
+            else
+              ARes := ARes + [Ord('A') .. Ord('Z')];
+          end
           else
             Error(reeBadOpcodeInCharClass);
         end;
@@ -2973,9 +3004,27 @@ var
   end;
 
   procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  var
+    ChkIndex: integer;
   begin
     AddrOfLen := nil;
     CanBeRange := False;
+
+    if fCompModifiers.I then
+    begin
+      ch1 := _UpperCase(ch1);
+      ch2 := _UpperCase(ch2);
+    end;
+
+    for ChkIndex := Low(CharCheckerInfos) to High(CharCheckerInfos) do
+      if (CharCheckerInfos[ChkIndex].CharBegin = ch1) and
+        (CharCheckerInfos[ChkIndex].CharEnd = ch2) then
+      begin
+        EmitC(OpKind_MetaClass);
+        EmitC(REChar(CharCheckerInfos[ChkIndex].CheckerIndex));
+        Exit;
+      end;
+
     EmitC(OpKind_Range);
     EmitC(ch1);
     EmitC(ch2);
@@ -3124,7 +3173,9 @@ begin
               end;
             end
             else
+            begin
               EmitRangeChar(regparse^, (regparse + 1)^ = '-');
+            end;
             Inc(regparse);
           end;
         end; { of while }
@@ -4910,16 +4961,39 @@ begin
   Cnt := 0;
   FillChar(CharCheckers, SizeOf(CharCheckers), 0);
 
-  CheckerIndex_Word:= Add(CharChecker_Word);
-  CheckerIndex_NotWord:= Add(CharChecker_NotWord);
-  CheckerIndex_Space:= Add(CharChecker_Space);
-  CheckerIndex_NotSpace:= Add(CharChecker_NotSpace);
-  CheckerIndex_Digit:= Add(CharChecker_Digit);
-  CheckerIndex_NotDigit:= Add(CharChecker_NotDigit);
-  CheckerIndex_VertSep:= Add(CharChecker_VertSep);
-  CheckerIndex_NotVertSep:= Add(CharChecker_NotVertSep);
-  CheckerIndex_HorzSep:= Add(CharChecker_HorzSep);
-  CheckerIndex_NotHorzSep:= Add(CharChecker_NotHorzSep);
+  CheckerIndex_Word := Add(CharChecker_Word);
+  CheckerIndex_NotWord := Add(CharChecker_NotWord);
+  CheckerIndex_Space := Add(CharChecker_Space);
+  CheckerIndex_NotSpace := Add(CharChecker_NotSpace);
+  CheckerIndex_Digit := Add(CharChecker_Digit);
+  CheckerIndex_NotDigit := Add(CharChecker_NotDigit);
+  CheckerIndex_VertSep := Add(CharChecker_VertSep);
+  CheckerIndex_NotVertSep := Add(CharChecker_NotVertSep);
+  CheckerIndex_HorzSep := Add(CharChecker_HorzSep);
+  CheckerIndex_NotHorzSep := Add(CharChecker_NotHorzSep);
+  //CheckerIndex_AllAZ := Add(CharChecker_AllAZ);
+  CheckerIndex_LowerAZ := Add(CharChecker_LowerAZ);
+  CheckerIndex_UpperAZ := Add(CharChecker_UpperAZ);
+
+  SetLength(CharCheckerInfos, 3);
+  with CharCheckerInfos[0] do
+  begin
+    CharBegin := 'a';
+    CharEnd:= 'z';
+    CheckerIndex := CheckerIndex_LowerAZ;
+  end;
+  with CharCheckerInfos[1] do
+  begin
+    CharBegin := 'A';
+    CharEnd := 'Z';
+    CheckerIndex := CheckerIndex_UpperAZ;
+  end;
+  with CharCheckerInfos[2] do
+  begin
+    CharBegin := '0';
+    CharEnd := '9';
+    CheckerIndex := CheckerIndex_Digit;
+  end;
 end;
 
 function TRegExpr.CharChecker_Word(ch: REChar): boolean;
@@ -4971,6 +5045,38 @@ function TRegExpr.CharChecker_NotHorzSep(ch: REChar): boolean;
 begin
   Result := not IsHorzSeparator(ch);
 end;
+
+function TRegExpr.CharChecker_AllAZ(ch: REChar): boolean;
+begin
+  case ch of
+    'a' .. 'z',
+    'A' .. 'Z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
+function TRegExpr.CharChecker_LowerAZ(ch: REChar): boolean;
+begin
+  case ch of
+    'a' .. 'z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
+function TRegExpr.CharChecker_UpperAZ(ch: REChar): boolean;
+begin
+  case ch of
+    'A' .. 'Z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
 
 {$IFDEF RegExpPCodeDump}
 
