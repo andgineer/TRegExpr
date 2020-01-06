@@ -2905,14 +2905,15 @@ begin
           Exit;
         end;
         Ch := APtr^;
-        if (Ch >= 'a') and (Ch <= 'z') then // fast UpCase
-          Dec(Ch, 32);
-        if (Ch < 'A') or (Ch > 'Z') then
-        begin
-          Error(reeNoLetterAfterBSlashC);
-          Exit;
+        case Ch of
+          'a' .. 'z':
+            Result := REChar(Ord(Ch) - Ord('a') + 1);
+          'A' .. 'Z':
+            Result := REChar(Ord(Ch) - Ord('A') + 1);
+          else
+            Error(reeNoLetterAfterBSlashC);
         end;
-        Result := REChar(Ord(Ch) - Ord('A') + 1);
+        Exit;
       end;
     'x':
       begin // \x: hex char
