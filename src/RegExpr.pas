@@ -2934,13 +2934,9 @@ function TRegExpr.ParseAtom(var flagp: integer): PRegExprChar;
 // separate node; the code is simpler that way and it's not worth fixing.
 var
   ret: PRegExprChar;
-  flags: integer;
   RangeBeg, RangeEnd: REChar;
   CanBeRange: boolean;
   AddrOfLen: PLongInt;
-  Len: integer;
-  ender: REChar;
-  begmodfs: PRegExprChar;
 
   procedure EmitExactly(Ch: REChar);
   begin
@@ -2984,6 +2980,10 @@ var
   end;
 
 var
+  flags: integer;
+  Len: integer;
+  begmodfs: PRegExprChar;
+  ender: REChar;
   TempChar: REChar;
 begin
   Result := nil;
