@@ -2974,7 +2974,7 @@ var
   CanBeRange: boolean;
   AddrOfLen: PLongInt;
 
-  procedure EmitExactly(Ch: REChar);
+  procedure EmitExactly(Ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     if fCompModifiers.I then
       ret := EmitNode(OP_EXACTLYCI)
