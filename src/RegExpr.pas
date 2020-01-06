@@ -913,7 +913,8 @@ begin
     (A.X = B.X);
 end;
 
-function ParseModifiersStr(const AStr: RegExprString;
+function ParseModifiers(const APtr: PRegExprChar;
+  ALen: integer;
   var AValue: TRegExprModifiers): boolean;
 // Parse string and set AValue if it's in format 'ismxrg-ismxrg'
 var
@@ -922,8 +923,8 @@ var
 begin
   Result := True;
   IsOn := True;
-  for i := 1 to Length(AStr) do
-    case AStr[i] of
+  for i := 0 to ALen-1 do
+    case APtr[i] of
       '-':
         IsOn := False;
       'I', 'i':
@@ -1115,8 +1116,9 @@ begin
                 Inc(i);
               if i > Len then
                 Result := -1 // unbalansed '('
-              else if ParseModifiersStr(System.Copy(ARegExpr, i,
-                i - i0), Modif) then
+              else
+              if ParseModifiers(@ARegExpr[i0], i - i0, Modif) then
+                // Alexey-T: original code had copy from i, not from i0
                 AExtendedSyntax := Modif.X;
             end
             else
@@ -1683,7 +1685,7 @@ end;
 
 procedure TRegExpr.SetModifierStr(const AStr: RegExprString);
 begin
-  if not ParseModifiersStr(AStr, fModifiers) then
+  if not ParseModifiers(PRegExprChar(AStr), Length(AStr), fModifiers) then
     Error(reeModifierUnsupported);
 end; { of procedure TRegExpr.SetModifierStr
   -------------------------------------------------------------- }
@@ -2982,7 +2984,7 @@ var
 var
   flags: integer;
   Len: integer;
-  begmodfs: PRegExprChar;
+  SavedPtr: PRegExprChar;
   TempChar: REChar;
 begin
   Result := nil;
@@ -3171,12 +3173,11 @@ begin
             else
             begin // modifiers ?
               Inc(regparse); // skip '?'
-              begmodfs := regparse;
+              SavedPtr := regparse;
               while (regparse < fRegexEnd) and (regparse^ <> ')') do
                 Inc(regparse);
               if (regparse^ <> ')') or
-                not ParseModifiersStr(Copy(begmodfs, 1, (regparse - begmodfs)),
-                fCompModifiers) then
+                not ParseModifiers(SavedPtr, regparse - SavedPtr, fCompModifiers) then
               begin
                 Error(reeUnrecognizedModifier);
                 Exit;
