@@ -2985,7 +2985,7 @@ var
   flags: integer;
   Len: integer;
   SavedPtr: PRegExprChar;
-  TempChar: REChar;
+  EnderChar, TempChar: REChar;
 begin
   Result := nil;
   flags := 0;
@@ -3334,8 +3334,8 @@ begin
           else
             Len := FindSkippedMetaLen(regparse + 1, fRegexEnd) + 1;
             // bad {n,m} - compile as EXACTLY
-        TempChar := (regparse + Len)^;
-        if (Len > 1) and ((TempChar = '*') or (TempChar = '+') or (TempChar = '?') or (TempChar = '{')) then
+        EnderChar := (regparse + Len)^;
+        if (Len > 1) and ((EnderChar = '*') or (EnderChar = '+') or (EnderChar = '?') or (EnderChar = '{')) then
           Dec(Len); // back off clear of ?+*{ operand.
         flagp := flagp or flag_HasWidth;
         if Len = 1 then
