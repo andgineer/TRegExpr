@@ -2900,10 +2900,7 @@ begin
       begin // \cK => code for Ctrl+K
         Inc(APtr);
         if APtr >= fRegexEnd then
-        begin
           Error(reeNoLetterAfterBSlashC);
-          Exit;
-        end;
         Ch := APtr^;
         case Ch of
           'a' .. 'z':
@@ -2913,7 +2910,6 @@ begin
           else
             Error(reeNoLetterAfterBSlashC);
         end;
-        Exit;
       end;
     'x':
       begin // \x: hex char
