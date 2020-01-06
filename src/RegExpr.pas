@@ -2853,8 +2853,7 @@ begin
   end; { of case op }
 
   Inc(regparse);
-  if (regparse^ = '*') or (regparse^ = '+') or (regparse^ = '?') or
-    (regparse^ = '{') then
+  if (regparse^ = '*') or (regparse^ = '+') or (regparse^ = '?') or (regparse^ = '{') then
   begin
     Error(reeNestedSQP);
     Exit;
