@@ -767,6 +767,9 @@ const
   RegExprAllSet = [0 .. 255];
   RegExprWordSet = [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z'), Ord('0') .. Ord('9'), Ord('_')];
   RegExprDigitSet = [Ord('0') .. Ord('9')];
+  RegExprLowerAzSet = [Ord('a') .. Ord('z')];
+  RegExprUpperAzSet = [Ord('A') .. Ord('Z')];
+  RegExprAllAzSet = RegExprLowerAzSet + RegExprUpperAzSet;
   RegExprSpaceSet = [Ord(' '), $9, $A, $D, $C];
   RegExprLineSeparatorsSet = [$d, $a, $b, $c] {$IFDEF UniCode} + [$85] {$ENDIF};
   RegExprHorzSeparatorsSet = [9, $20, $A0];
@@ -2224,17 +2227,17 @@ begin
           if N = CheckerIndex_LowerAZ then
           begin
             if AIgnoreCase then
-              ARes := ARes + [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z')]
+              ARes := ARes + RegExprAllAzSet
             else
-              ARes := ARes + [Ord('a') .. Ord('z')];
+              ARes := ARes + RegExprLowerAzSet;
           end
           else
           if N = CheckerIndex_UpperAZ then
           begin
             if AIgnoreCase then
-              ARes := ARes + [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z')]
+              ARes := ARes + RegExprAllAzSet
             else
-              ARes := ARes + [Ord('A') .. Ord('Z')];
+              ARes := ARes + RegExprUpperAzSet;
           end
           else
             Error(reeBadOpcodeInCharClass);
