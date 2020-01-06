@@ -217,6 +217,8 @@ function IsModifiersEqual(const A, B: TRegExprModifiers): boolean;
 type
   TRegExpr = class;
   TRegExprReplaceFunction = function(ARegExpr: TRegExpr): RegExprString of object;
+  TRegExprCharChecker = function(ch: REChar): boolean of object;
+  TRegExprCharCheckerArray = array[0 .. 30] of TRegExprCharChecker;
 
   { TRegExpr }
 
@@ -317,6 +319,30 @@ type
     {$IFDEF UnicodeWordDetection}
     FUseUnicodeWordDetection: boolean;
     {$ENDIF}
+
+    CharCheckers: TRegExprCharCheckerArray;
+    CheckerIndex_Word: byte;
+    CheckerIndex_NotWord: byte;
+    CheckerIndex_Digit: byte;
+    CheckerIndex_NotDigit: byte;
+    CheckerIndex_Space: byte;
+    CheckerIndex_NotSpace: byte;
+    CheckerIndex_HorzSep: byte;
+    CheckerIndex_NotHorzSep: byte;
+    CheckerIndex_VertSep: byte;
+    CheckerIndex_NotVertSep: byte;
+
+    procedure InitCharCheckers;
+    function CharChecker_Word(ch: REChar): boolean;
+    function CharChecker_NotWord(ch: REChar): boolean;
+    function CharChecker_Space(ch: REChar): boolean;
+    function CharChecker_NotSpace(ch: REChar): boolean;
+    function CharChecker_Digit(ch: REChar): boolean;
+    function CharChecker_NotDigit(ch: REChar): boolean;
+    function CharChecker_HorzSep(ch: REChar): boolean;
+    function CharChecker_NotHorzSep(ch: REChar): boolean;
+    function CharChecker_VertSep(ch: REChar): boolean;
+    function CharChecker_NotVertSep(ch: REChar): boolean;
 
     procedure ClearInternalIndexes;
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
@@ -719,7 +745,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 975;
+  REVersionMinor = 978;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1470,6 +1496,8 @@ begin
   {$IFDEF UnicodeWordDetection}
   FUseUnicodeWordDetection := True;
   {$ENDIF}
+
+  InitCharCheckers;
 end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
 
@@ -2022,33 +2050,9 @@ begin
       OpKind_MetaClass:
         begin
           Inc(ABuffer);
-          ch := ABuffer^;
+          N := Ord(ABuffer^);
           Inc(ABuffer);
-          case ch of
-            'w':
-              ok := IsWordChar(AChar);
-            'W':
-              ok := not IsWordChar(AChar);
-            's':
-              ok := IsSpaceChar(AChar);
-            'S':
-              ok := not IsSpaceChar(AChar);
-            'd':
-              ok := IsDigitChar(AChar);
-            'D':
-              ok := not IsDigitChar(AChar);
-            'v':
-              ok := IsLineSeparator(AChar);
-            'V':
-              ok := not IsLineSeparator(AChar);
-            'h':
-              ok := IsHorzSeparator(AChar);
-            'H':
-              ok := not IsHorzSeparator(AChar);
-            else
-              ok := False;
-          end;
-          if ok then
+          if CharCheckers[N](AChar) then
           begin
             Result := True;
             Exit
@@ -2152,42 +2156,52 @@ begin
       OpKind_MetaClass:
         begin
           Inc(ABuffer);
-          ch := ABuffer^;
+          N := Ord(ABuffer^);
           Inc(ABuffer);
-          case ch of
-            'w':
-              begin
-                GetCharSetFromWordChars(TempSet);
-                ARes := ARes + TempSet;
-              end;
-            'W':
-              begin
-                GetCharSetFromWordChars(TempSet);
-                ARes := ARes + (RegExprAllSet - TempSet);
-              end;
-            's':
-              begin
-                GetCharSetFromSpaceChars(TempSet);
-                ARes := ARes + TempSet;
-              end;
-            'S':
-              begin
-                GetCharSetFromSpaceChars(TempSet);
-                ARes := ARes + (RegExprAllSet - TempSet);
-              end;
-            'd':
-              ARes := ARes + RegExprDigitSet;
-            'D':
-              ARes := ARes + (RegExprAllSet - RegExprDigitSet);
-            'v':
-              ARes := ARes + RegExprLineSeparatorsSet;
-            'V':
-              ARes := ARes + (RegExprAllSet - RegExprLineSeparatorsSet);
-            'h':
-              ARes := ARes + RegExprHorzSeparatorsSet;
-            'H':
-              ARes := ARes + (RegExprAllSet - RegExprHorzSeparatorsSet);
-          end;
+
+          if N = CheckerIndex_Word then
+          begin
+            GetCharSetFromWordChars(TempSet);
+            ARes := ARes + TempSet;
+          end
+          else
+          if N = CheckerIndex_NotWord then
+          begin
+            GetCharSetFromWordChars(TempSet);
+            ARes := ARes + (RegExprAllSet - TempSet);
+          end
+          else
+          if N = CheckerIndex_Space then
+          begin
+            GetCharSetFromSpaceChars(TempSet);
+            ARes := ARes + TempSet;
+          end
+          else
+          if N = CheckerIndex_NotSpace then
+          begin
+            GetCharSetFromSpaceChars(TempSet);
+            ARes := ARes + (RegExprAllSet - TempSet);
+          end
+          else
+          if N = CheckerIndex_Digit then
+            ARes := ARes + RegExprDigitSet
+          else
+          if N = CheckerIndex_NotDigit then
+            ARes := ARes + (RegExprAllSet - RegExprDigitSet)
+          else
+          if N = CheckerIndex_VertSep then
+            ARes := ARes + RegExprLineSeparatorsSet
+          else
+          if N = CheckerIndex_NotVertSep then
+            ARes := ARes + (RegExprAllSet - RegExprLineSeparatorsSet)
+          else
+          if N = CheckerIndex_HorzSep then
+            ARes := ARes + RegExprHorzSeparatorsSet
+          else
+          if N = CheckerIndex_NotHorzSep then
+            ARes := ARes + (RegExprAllSet - RegExprHorzSeparatorsSet)
+          else
+            Error(reeBadOpcodeInCharClass);
         end;
 
       OpKind_Char:
@@ -2939,23 +2953,25 @@ var
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
-  function EmitRange(AOpCode: TREOp): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitRangeChar(Ch: REChar; AStartOfRange: boolean); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
-    Result := EmitNode(AOpCode);
-  end;
-
-  procedure EmitSimpleRangeC(b: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
-  begin
-    RangeBeg := b;
-    if AddrOfLen = nil then
+    CanBeRange := AStartOfRange;
+    if AStartOfRange then
     begin
-      EmitC(OpKind_Char);
-      Pointer(AddrOfLen) := regcode;
-      EmitInt(0);
+      AddrOfLen := nil;
+      RangeBeg := Ch;
+    end
+    else
+    begin
+      if AddrOfLen = nil then
+      begin
+        EmitC(OpKind_Char);
+        Pointer(AddrOfLen) := regcode;
+        EmitInt(0);
+      end;
+      Inc(AddrOfLen^);
+      EmitC(Ch);
     end;
-    Inc(AddrOfLen^);
-    EmitC(b);
-    CanBeRange := True;
   end;
 
   procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -2967,6 +2983,8 @@ var
     EmitC(ch2);
   end;
 
+var
+  TempChar: REChar;
 begin
   Result := nil;
   flags := 0;
@@ -3003,21 +3021,22 @@ begin
         if regparse^ = '^' then
         begin // Complement of range.
           if fCompModifiers.I then
-            ret := EmitRange(OP_ANYBUTCI)
+            ret := EmitNode(OP_ANYBUTCI)
           else
-            ret := EmitRange(OP_ANYBUT);
+            ret := EmitNode(OP_ANYBUT);
           Inc(regparse);
         end
         else if fCompModifiers.I then
-          ret := EmitRange(OP_ANYOFCI)
+          ret := EmitNode(OP_ANYOFCI)
         else
-          ret := EmitRange(OP_ANYOF);
+          ret := EmitNode(OP_ANYOF);
 
         CanBeRange := False;
 
         if regparse^ = ']' then
         begin
-          EmitSimpleRangeC(regparse^); // first ']' inside [] treated as simple char, no need to check '['
+          // first ']' inside [] treated as simple char, no need to check '['
+          EmitRangeChar(regparse^, (regparse + 1)^ = '-');
           Inc(regparse);
         end;
 
@@ -3072,15 +3091,39 @@ begin
                 AddrOfLen := nil;
                 CanBeRange := False;
                 EmitC(OpKind_MetaClass);
-                EmitC(regparse^);
+                case regparse^ of
+                  'w':
+                    EmitC(REChar(CheckerIndex_Word));
+                  'W':
+                    EmitC(REChar(CheckerIndex_NotWord));
+                  's':
+                    EmitC(REChar(CheckerIndex_Space));
+                  'S':
+                    EmitC(REChar(CheckerIndex_NotSpace));
+                  'd':
+                    EmitC(REChar(CheckerIndex_Digit));
+                  'D':
+                    EmitC(REChar(CheckerIndex_NotDigit));
+                  'v':
+                    EmitC(REChar(CheckerIndex_VertSep));
+                  'V':
+                    EmitC(REChar(CheckerIndex_NotVertSep));
+                  'h':
+                    EmitC(REChar(CheckerIndex_HorzSep));
+                  'H':
+                    EmitC(REChar(CheckerIndex_NotHorzSep));
+                  else
+                    Error(reeBadOpcodeInCharClass);
+                end;
               end
               else
               begin
-                EmitSimpleRangeC(UnQuoteChar(regparse));
+                TempChar := UnQuoteChar(regparse);
+                EmitRangeChar(TempChar, (regparse + 1)^ = '-');
               end;
             end
             else
-              EmitSimpleRangeC(regparse^);
+              EmitRangeChar(regparse^, (regparse + 1)^ = '-');
             Inc(regparse);
           end;
         end; { of while }
@@ -4849,6 +4892,85 @@ begin
 end; { of procedure FillFirstCharSet
 --------------------------------------------------------------}
 {$ENDIF}
+
+procedure TRegExpr.InitCharCheckers;
+var
+  Cnt: integer;
+  //
+  function Add(AChecker: TRegExprCharChecker): byte;
+  begin
+    Inc(Cnt);
+    if Cnt > High(CharCheckers) then
+      raise Exception.Create('Too small CharCheckers array');
+    CharCheckers[Cnt - 1] := AChecker;
+    Result := Cnt - 1;
+  end;
+  //
+begin
+  Cnt := 0;
+  FillChar(CharCheckers, SizeOf(CharCheckers), 0);
+
+  CheckerIndex_Word:= Add(CharChecker_Word);
+  CheckerIndex_NotWord:= Add(CharChecker_NotWord);
+  CheckerIndex_Space:= Add(CharChecker_Space);
+  CheckerIndex_NotSpace:= Add(CharChecker_NotSpace);
+  CheckerIndex_Digit:= Add(CharChecker_Digit);
+  CheckerIndex_NotDigit:= Add(CharChecker_NotDigit);
+  CheckerIndex_VertSep:= Add(CharChecker_VertSep);
+  CheckerIndex_NotVertSep:= Add(CharChecker_NotVertSep);
+  CheckerIndex_HorzSep:= Add(CharChecker_HorzSep);
+  CheckerIndex_NotHorzSep:= Add(CharChecker_NotHorzSep);
+end;
+
+function TRegExpr.CharChecker_Word(ch: REChar): boolean;
+begin
+  Result := IsWordChar(ch);
+end;
+
+function TRegExpr.CharChecker_NotWord(ch: REChar): boolean;
+begin
+  Result := not IsWordChar(ch);
+end;
+
+function TRegExpr.CharChecker_Space(ch: REChar): boolean;
+begin
+  Result := IsSpaceChar(ch);
+end;
+
+function TRegExpr.CharChecker_NotSpace(ch: REChar): boolean;
+begin
+  Result := not IsSpaceChar(ch);
+end;
+
+function TRegExpr.CharChecker_Digit(ch: REChar): boolean;
+begin
+  Result := IsDigitChar(ch);
+end;
+
+function TRegExpr.CharChecker_NotDigit(ch: REChar): boolean;
+begin
+  Result := not IsDigitChar(ch);
+end;
+
+function TRegExpr.CharChecker_VertSep(ch: REChar): boolean;
+begin
+  Result := IsLineSeparator(ch);
+end;
+
+function TRegExpr.CharChecker_NotVertSep(ch: REChar): boolean;
+begin
+  Result := not IsLineSeparator(ch);
+end;
+
+function TRegExpr.CharChecker_HorzSep(ch: REChar): boolean;
+begin
+  Result := IsHorzSeparator(ch);
+end;
+
+function TRegExpr.CharChecker_NotHorzSep(ch: REChar): boolean;
+begin
+  Result := not IsHorzSeparator(ch);
+end;
 
 {$IFDEF RegExpPCodeDump}
 
