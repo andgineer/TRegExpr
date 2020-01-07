@@ -2667,8 +2667,7 @@ var
     {$ENDIF}
   end;
 
-  procedure EmitSimpleBraces(ABracesMin, ABracesMax: TREBracesArg;
-    ANonGreedyOp: boolean); // ###0.940
+  procedure EmitSimpleBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp: boolean); // ###0.940
   begin
     if ANonGreedyOp // ###0.940
     then
@@ -2679,8 +2678,7 @@ var
     if regcode <> @regdummy then
     begin
       PREBracesArg(AlignToInt(Result + REOpSz + RENextOffSz))^ := ABracesMin;
-      PREBracesArg(AlignToInt(Result + REOpSz + RENextOffSz + REBracesArgSz))^
-        := ABracesMax;
+      PREBracesArg(AlignToInt(Result + REOpSz + RENextOffSz + REBracesArgSz))^ := ABracesMax;
     end;
   end;
 
