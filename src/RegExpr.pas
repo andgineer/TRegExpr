@@ -4438,19 +4438,8 @@ end; { of function TRegExpr.GetLinePairedSeparator
 
 function TRegExpr.Substitute(const ATemplate: RegExprString): RegExprString;
 // perform substitutions after a regexp match
-// completely rewritten in 0.929
-type
-  TSubstMode = (smodeNormal, smodeOneUpper, smodeOneLower, smodeAllUpper,
-    smodeAllLower);
 var
-  TemplateLen: integer;
   TemplateBeg, TemplateEnd: PRegExprChar;
-  p, p0, p1, ResultPtr: PRegExprChar;
-  ResultLen: integer;
-  n: integer;
-  Ch: REChar;
-  Mode: TSubstMode;
-  QuotedChar: REChar;
 
   function ParseVarName(var APtr: PRegExprChar): integer;
   // extract name of variable (digits, may be enclosed with
@@ -4482,6 +4471,13 @@ var
     APtr := p;
   end;
 
+type
+  TSubstMode = (smodeNormal, smodeOneUpper, smodeOneLower, smodeAllUpper, smodeAllLower);
+var
+  Mode: TSubstMode;
+  p, p0, p1, ResultPtr: PRegExprChar;
+  TemplateLen, ResultLen, n: integer;
+  Ch, QuotedChar: REChar;
 begin
   // Check programm and input string
   if not IsProgrammOk then
