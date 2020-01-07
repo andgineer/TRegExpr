@@ -219,6 +219,11 @@ type
   TRegExprReplaceFunction = function(ARegExpr: TRegExpr): RegExprString of object;
   TRegExprCharChecker = function(ch: REChar): boolean of object;
   TRegExprCharCheckerArray = array[0 .. 30] of TRegExprCharChecker;
+  TRegExprCharCheckerInfo = record
+    CharBegin, CharEnd: REChar;
+    CheckerIndex: integer;
+  end;
+  TRegExprCharCheckerInfos = array of TRegExprCharCheckerInfo;
 
   { TRegExpr }
 
@@ -321,6 +326,7 @@ type
     {$ENDIF}
 
     CharCheckers: TRegExprCharCheckerArray;
+    CharCheckerInfos: TRegExprCharCheckerInfos;
     CheckerIndex_Word: byte;
     CheckerIndex_NotWord: byte;
     CheckerIndex_Digit: byte;
@@ -331,6 +337,9 @@ type
     CheckerIndex_NotHorzSep: byte;
     CheckerIndex_VertSep: byte;
     CheckerIndex_NotVertSep: byte;
+    CheckerIndex_AllAZ: byte;
+    CheckerIndex_LowerAZ: byte;
+    CheckerIndex_UpperAZ: byte;
 
     procedure InitCharCheckers;
     function CharChecker_Word(ch: REChar): boolean;
@@ -343,6 +352,9 @@ type
     function CharChecker_NotHorzSep(ch: REChar): boolean;
     function CharChecker_VertSep(ch: REChar): boolean;
     function CharChecker_NotVertSep(ch: REChar): boolean;
+    function CharChecker_AllAZ(ch: REChar): boolean;
+    function CharChecker_LowerAZ(ch: REChar): boolean;
+    function CharChecker_UpperAZ(ch: REChar): boolean;
 
     procedure ClearInternalIndexes;
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
@@ -745,7 +757,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 978;
+  REVersionMinor = 980;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -755,6 +767,9 @@ const
   RegExprAllSet = [0 .. 255];
   RegExprWordSet = [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z'), Ord('0') .. Ord('9'), Ord('_')];
   RegExprDigitSet = [Ord('0') .. Ord('9')];
+  RegExprLowerAzSet = [Ord('a') .. Ord('z')];
+  RegExprUpperAzSet = [Ord('A') .. Ord('Z')];
+  RegExprAllAzSet = RegExprLowerAzSet + RegExprUpperAzSet;
   RegExprSpaceSet = [Ord(' '), $9, $A, $D, $C];
   RegExprLineSeparatorsSet = [$d, $a, $b, $c] {$IFDEF UniCode} + [$85] {$ENDIF};
   RegExprHorzSeparatorsSet = [9, $20, $A0];
@@ -913,7 +928,8 @@ begin
     (A.X = B.X);
 end;
 
-function ParseModifiersStr(const AStr: RegExprString;
+function ParseModifiers(const APtr: PRegExprChar;
+  ALen: integer;
   var AValue: TRegExprModifiers): boolean;
 // Parse string and set AValue if it's in format 'ismxrg-ismxrg'
 var
@@ -922,8 +938,8 @@ var
 begin
   Result := True;
   IsOn := True;
-  for i := 1 to Length(AStr) do
-    case AStr[i] of
+  for i := 0 to ALen-1 do
+    case APtr[i] of
       '-':
         IsOn := False;
       'I', 'i':
@@ -1115,8 +1131,9 @@ begin
                 Inc(i);
               if i > Len then
                 Result := -1 // unbalansed '('
-              else if ParseModifiersStr(System.Copy(ARegExpr, i,
-                i - i0), Modif) then
+              else
+              if ParseModifiers(@ARegExpr[i0], i - i0, Modif) then
+                // Alexey-T: original code had copy from i, not from i0
                 AExtendedSyntax := Modif.X;
             end
             else
@@ -1683,7 +1700,7 @@ end;
 
 procedure TRegExpr.SetModifierStr(const AStr: RegExprString);
 begin
-  if not ParseModifiersStr(AStr, fModifiers) then
+  if not ParseModifiers(PRegExprChar(AStr), Length(AStr), fModifiers) then
     Error(reeModifierUnsupported);
 end; { of procedure TRegExpr.SetModifierStr
   -------------------------------------------------------------- }
@@ -2035,11 +2052,14 @@ begin
           Inc(ABuffer);
           ch2 := ABuffer^;
           Inc(ABuffer);
+          {
+          // if AIgnoreCase, ch, ch2 are upcased in opcode
           if AIgnoreCase then
           begin
             ch := _UpperCase(ch);
             ch2 := _UpperCase(ch2);
           end;
+          }
           if (AChar >= ch) and (AChar <= ch2) then
           begin
             Result := True;
@@ -2068,8 +2088,11 @@ begin
           begin
             ch := ABuffer^;
             Inc(ABuffer);
+            {
+            // already upcased in opcode
             if AIgnoreCase then
               ch := _UpperCase(ch);
+            }
             if ch = AChar then
             begin
               Result := True;
@@ -2200,6 +2223,22 @@ begin
           else
           if N = CheckerIndex_NotHorzSep then
             ARes := ARes + (RegExprAllSet - RegExprHorzSeparatorsSet)
+          else
+          if N = CheckerIndex_LowerAZ then
+          begin
+            if AIgnoreCase then
+              ARes := ARes + RegExprAllAzSet
+            else
+              ARes := ARes + RegExprLowerAzSet;
+          end
+          else
+          if N = CheckerIndex_UpperAZ then
+          begin
+            if AIgnoreCase then
+              ARes := ARes + RegExprAllAzSet
+            else
+              ARes := ARes + RegExprUpperAzSet;
+          end
           else
             Error(reeBadOpcodeInCharClass);
         end;
@@ -2814,12 +2853,9 @@ begin
   end; { of case op }
 
   Inc(regparse);
-  if (regparse^ = '*') or (regparse^ = '+') or (regparse^ = '?') or
-    (regparse^ = '{') then
-  begin
+  op := regparse^;
+  if (op = '*') or (op = '+') or (op = '?') or (op = '{') then
     Error(reeNestedSQP);
-    Exit;
-  end;
 end; { of function TRegExpr.ParsePiece
   -------------------------------------------------------------- }
 
@@ -2861,19 +2897,16 @@ begin
       begin // \cK => code for Ctrl+K
         Inc(APtr);
         if APtr >= fRegexEnd then
-        begin
           Error(reeNoLetterAfterBSlashC);
-          Exit;
-        end;
         Ch := APtr^;
-        if (Ch >= 'a') and (Ch <= 'z') then // fast UpCase
-          Dec(Ch, 32);
-        if (Ch < 'A') or (Ch > 'Z') then
-        begin
-          Error(reeNoLetterAfterBSlashC);
-          Exit;
+        case Ch of
+          'a' .. 'z':
+            Result := REChar(Ord(Ch) - Ord('a') + 1);
+          'A' .. 'Z':
+            Result := REChar(Ord(Ch) - Ord('A') + 1);
+          else
+            Error(reeNoLetterAfterBSlashC);
         end;
-        Result := REChar(Ord(Ch) - Ord('A') + 1);
       end;
     'x':
       begin // \x: hex char
@@ -2934,15 +2967,11 @@ function TRegExpr.ParseAtom(var flagp: integer): PRegExprChar;
 // separate node; the code is simpler that way and it's not worth fixing.
 var
   ret: PRegExprChar;
-  flags: integer;
   RangeBeg, RangeEnd: REChar;
   CanBeRange: boolean;
   AddrOfLen: PLongInt;
-  Len: integer;
-  ender: REChar;
-  begmodfs: PRegExprChar;
 
-  procedure EmitExactly(Ch: REChar);
+  procedure EmitExactly(Ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     if fCompModifiers.I then
       ret := EmitNode(OP_EXACTLYCI)
@@ -2956,6 +2985,8 @@ var
   procedure EmitRangeChar(Ch: REChar; AStartOfRange: boolean); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     CanBeRange := AStartOfRange;
+    if fCompModifiers.I then
+      Ch := _UpperCase(Ch);
     if AStartOfRange then
     begin
       AddrOfLen := nil;
@@ -2975,16 +3006,37 @@ var
   end;
 
   procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  var
+    ChkIndex: integer;
   begin
     AddrOfLen := nil;
     CanBeRange := False;
+
+    if fCompModifiers.I then
+    begin
+      ch1 := _UpperCase(ch1);
+      ch2 := _UpperCase(ch2);
+    end;
+
+    for ChkIndex := Low(CharCheckerInfos) to High(CharCheckerInfos) do
+      if (CharCheckerInfos[ChkIndex].CharBegin = ch1) and
+        (CharCheckerInfos[ChkIndex].CharEnd = ch2) then
+      begin
+        EmitC(OpKind_MetaClass);
+        EmitC(REChar(CharCheckerInfos[ChkIndex].CheckerIndex));
+        Exit;
+      end;
+
     EmitC(OpKind_Range);
     EmitC(ch1);
     EmitC(ch2);
   end;
 
 var
-  TempChar: REChar;
+  flags: integer;
+  Len: integer;
+  SavedPtr: PRegExprChar;
+  EnderChar, TempChar: REChar;
 begin
   Result := nil;
   flags := 0;
@@ -3123,7 +3175,9 @@ begin
               end;
             end
             else
+            begin
               EmitRangeChar(regparse^, (regparse + 1)^ = '-');
+            end;
             Inc(regparse);
           end;
         end; { of while }
@@ -3172,12 +3226,11 @@ begin
             else
             begin // modifiers ?
               Inc(regparse); // skip '?'
-              begmodfs := regparse;
+              SavedPtr := regparse;
               while (regparse < fRegexEnd) and (regparse^ <> ')') do
                 Inc(regparse);
               if (regparse^ <> ')') or
-                not ParseModifiersStr(Copy(begmodfs, 1, (regparse - begmodfs)),
-                fCompModifiers) then
+                not ParseModifiers(SavedPtr, regparse - SavedPtr, fCompModifiers) then
               begin
                 Error(reeUnrecognizedModifier);
                 Exit;
@@ -3334,8 +3387,8 @@ begin
           else
             Len := FindSkippedMetaLen(regparse + 1, fRegexEnd) + 1;
             // bad {n,m} - compile as EXACTLY
-        ender := (regparse + Len)^;
-        if (Len > 1) and ((ender = '*') or (ender = '+') or (ender = '?') or (ender = '{')) then
+        EnderChar := (regparse + Len)^;
+        if (Len > 1) and ((EnderChar = '*') or (EnderChar = '+') or (EnderChar = '?') or (EnderChar = '{')) then
           Dec(Len); // back off clear of ?+*{ operand.
         flagp := flagp or flag_HasWidth;
         if Len = 1 then
@@ -4910,16 +4963,39 @@ begin
   Cnt := 0;
   FillChar(CharCheckers, SizeOf(CharCheckers), 0);
 
-  CheckerIndex_Word:= Add(CharChecker_Word);
-  CheckerIndex_NotWord:= Add(CharChecker_NotWord);
-  CheckerIndex_Space:= Add(CharChecker_Space);
-  CheckerIndex_NotSpace:= Add(CharChecker_NotSpace);
-  CheckerIndex_Digit:= Add(CharChecker_Digit);
-  CheckerIndex_NotDigit:= Add(CharChecker_NotDigit);
-  CheckerIndex_VertSep:= Add(CharChecker_VertSep);
-  CheckerIndex_NotVertSep:= Add(CharChecker_NotVertSep);
-  CheckerIndex_HorzSep:= Add(CharChecker_HorzSep);
-  CheckerIndex_NotHorzSep:= Add(CharChecker_NotHorzSep);
+  CheckerIndex_Word := Add(CharChecker_Word);
+  CheckerIndex_NotWord := Add(CharChecker_NotWord);
+  CheckerIndex_Space := Add(CharChecker_Space);
+  CheckerIndex_NotSpace := Add(CharChecker_NotSpace);
+  CheckerIndex_Digit := Add(CharChecker_Digit);
+  CheckerIndex_NotDigit := Add(CharChecker_NotDigit);
+  CheckerIndex_VertSep := Add(CharChecker_VertSep);
+  CheckerIndex_NotVertSep := Add(CharChecker_NotVertSep);
+  CheckerIndex_HorzSep := Add(CharChecker_HorzSep);
+  CheckerIndex_NotHorzSep := Add(CharChecker_NotHorzSep);
+  //CheckerIndex_AllAZ := Add(CharChecker_AllAZ);
+  CheckerIndex_LowerAZ := Add(CharChecker_LowerAZ);
+  CheckerIndex_UpperAZ := Add(CharChecker_UpperAZ);
+
+  SetLength(CharCheckerInfos, 3);
+  with CharCheckerInfos[0] do
+  begin
+    CharBegin := 'a';
+    CharEnd:= 'z';
+    CheckerIndex := CheckerIndex_LowerAZ;
+  end;
+  with CharCheckerInfos[1] do
+  begin
+    CharBegin := 'A';
+    CharEnd := 'Z';
+    CheckerIndex := CheckerIndex_UpperAZ;
+  end;
+  with CharCheckerInfos[2] do
+  begin
+    CharBegin := '0';
+    CharEnd := '9';
+    CheckerIndex := CheckerIndex_Digit;
+  end;
 end;
 
 function TRegExpr.CharChecker_Word(ch: REChar): boolean;
@@ -4971,6 +5047,38 @@ function TRegExpr.CharChecker_NotHorzSep(ch: REChar): boolean;
 begin
   Result := not IsHorzSeparator(ch);
 end;
+
+function TRegExpr.CharChecker_AllAZ(ch: REChar): boolean;
+begin
+  case ch of
+    'a' .. 'z',
+    'A' .. 'Z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
+function TRegExpr.CharChecker_LowerAZ(ch: REChar): boolean;
+begin
+  case ch of
+    'a' .. 'z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
+function TRegExpr.CharChecker_UpperAZ(ch: REChar): boolean;
+begin
+  case ch of
+    'A' .. 'Z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
 
 {$IFDEF RegExpPCodeDump}
 

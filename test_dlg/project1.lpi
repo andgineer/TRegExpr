@@ -70,6 +70,9 @@
       <Item>
         <Name Value="EFOpenError"/>
       </Item>
+      <Item>
+        <Name Value="ERegExpr"/>
+      </Item>
     </Exceptions>
   </Debugging>
 </CONFIG>
