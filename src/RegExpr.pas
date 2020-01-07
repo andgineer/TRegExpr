@@ -3436,7 +3436,7 @@ var
   opnd: PRegExprChar;
   TheMax, NLen: integer;
   InvChar: REChar; // ###0.931
-  sestart, seend: PRegExprChar; // ###0.936
+  GrpStart, GrpEnd: PRegExprChar; // ###0.936
   ArrayIndex: integer;
 begin
   Result := 0;
@@ -3491,15 +3491,15 @@ begin
         ArrayIndex := FSubExprIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
           Exit;
-        sestart := startp[ArrayIndex];
-        if sestart = nil then
+        GrpStart := startp[ArrayIndex];
+        if GrpStart = nil then
           Exit;
-        seend := endp[ArrayIndex];
-        if seend = nil then
+        GrpEnd := endp[ArrayIndex];
+        if GrpEnd = nil then
           Exit;
         repeat
-          opnd := sestart;
-          while opnd < seend do
+          opnd := GrpStart;
+          while opnd < GrpEnd do
           begin
             if (scan >= fInputEnd) or (scan^ <> opnd^) then
               Exit;
@@ -3515,15 +3515,15 @@ begin
         ArrayIndex := FSubExprIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
           Exit;
-        sestart := startp[ArrayIndex];
-        if sestart = nil then
+        GrpStart := startp[ArrayIndex];
+        if GrpStart = nil then
           Exit;
-        seend := endp[ArrayIndex];
-        if seend = nil then
+        GrpEnd := endp[ArrayIndex];
+        if GrpEnd = nil then
           Exit;
         repeat
-          opnd := sestart;
-          while opnd < seend do
+          opnd := GrpStart;
+          while opnd < GrpEnd do
           begin
             if (scan >= fInputEnd) or
               ((scan^ <> opnd^) and (scan^ <> InvertCase(opnd^))) then
