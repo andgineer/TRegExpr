@@ -271,7 +271,7 @@ type
     // work variables for compiler's routines
     regparse: PRegExprChar; // Input-scan pointer.
     regnpar: integer; // Count of () brackets.
-    regdummy: Char;
+    regdummy: REChar;
     regcode: PRegExprChar; // Code-emit pointer; @regdummy = don't.
     regsize: integer; // Total programm size in REChars.
     regExactlyLen: PLongInt;
