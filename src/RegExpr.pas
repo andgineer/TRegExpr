@@ -2599,7 +2599,7 @@ function TRegExpr.ParsePiece(var flagp: integer): PRegExprChar;
 // It might seem that this node could be dispensed with entirely, but the
 // endmarker role is not redundant.
 
-  function parsenum(AStart, AEnd: PRegExprChar): TREBracesArg;
+  function ParseNumber(AStart, AEnd: PRegExprChar): TREBracesArg;
   begin
     Result := 0;
     if AEnd - AStart + 1 > 8 then
@@ -2808,7 +2808,7 @@ begin
           flagp := flags;
           Exit;
         end;
-        BracesMin := parsenum(p, regparse - 1);
+        BracesMin := ParseNumber(p, regparse - 1);
         if regparse^ = ',' then
         begin
           Inc(regparse);
@@ -2823,7 +2823,7 @@ begin
           if p = regparse then
             Bracesmax := MaxBracesArg
           else
-            Bracesmax := parsenum(p, regparse - 1);
+            Bracesmax := ParseNumber(p, regparse - 1);
         end
         else
           Bracesmax := BracesMin; // {n} == {n,n}
