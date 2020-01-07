@@ -275,9 +275,8 @@ type
     regcode: PRegExprChar; // Code-emit pointer; @regdummy = don't.
     regsize: integer; // Total programm size in REChars.
     regExactlyLen: PLongInt;
-
-    regexpbeg: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
-    fExprIsCompiled: boolean; // true if r.e. successfully compiled
+    regexpBegin: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
+    regexpCompiled: boolean; // true if r.e. successfully compiled
     fSecondPass: boolean;
 
     // programm is essentially a linear encoding
@@ -1485,8 +1484,8 @@ begin
   fExpression := '';
   fInputString := '';
 
-  regexpbeg := nil;
-  fExprIsCompiled := False;
+  regexpBegin := nil;
+  regexpCompiled := False;
 
   FillChar(fModifiers, SIzeOf(fModifiers), 0);
   ModifierI := RegExprModifierI;
@@ -1575,9 +1574,9 @@ end; { of function TRegExpr.InvertCaseFunction
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
-  if (AStr <> fExpression) or not fExprIsCompiled then
+  if (AStr <> fExpression) or not regexpCompiled then
   begin
-    fExprIsCompiled := False;
+    regexpCompiled := False;
     fExpression := AStr;
     UniqueString(fExpression);
     fRegexStart := PRegExprChar(fExpression);
@@ -2332,7 +2331,7 @@ begin
   Result := False; // life too dark
   flags := 0;
   regparse := nil; // for correct error handling
-  regexpbeg := ARegExp;
+  regexpBegin := ARegExp;
   regExactlyLen := nil;
 
   ClearInternalIndexes;
@@ -2438,8 +2437,8 @@ begin
     begin
       if not Result then
         InvalidateProgramm;
-      regexpbeg := nil;
-      fExprIsCompiled := Result; // ###0.944
+      regexpBegin := nil;
+      regexpCompiled := Result; // ###0.944
     end;
   end;
 
@@ -3419,9 +3418,9 @@ end; { of function TRegExpr.ParseAtom
 function TRegExpr.GetCompilerErrorPos: PtrInt;
 begin
   Result := 0;
-  if (regexpbeg = nil) or (regparse = nil) then
+  if (regexpBegin = nil) or (regparse = nil) then
     Exit; // not in compiling mode ?
-  Result := regparse - regexpbeg;
+  Result := regparse - regexpBegin;
 end; { of function TRegExpr.GetCompilerErrorPos
   -------------------------------------------------------------- }
 
