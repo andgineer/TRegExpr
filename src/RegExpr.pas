@@ -2598,6 +2598,7 @@ function TRegExpr.ParsePiece(var flagp: integer): PRegExprChar;
 // both the endmarker for their branch list and the body of the last branch.
 // It might seem that this node could be dispensed with entirely, but the
 // endmarker role is not redundant.
+
   function parsenum(AStart, AEnd: PRegExprChar): TREBracesArg;
   begin
     Result := 0;
@@ -2619,13 +2620,8 @@ function TRegExpr.ParsePiece(var flagp: integer): PRegExprChar;
   end;
 
 var
-  op: REChar;
-  NonGreedyOp, NonGreedyCh: boolean; // ###0.940
-  TheOp: TREOp; // ###0.940
+  TheOp: TREOp;
   NextNode: PRegExprChar;
-  flags: integer;
-  BracesMin, Bracesmax: TREBracesArg;
-  p, savedparse: PRegExprChar;
 
   procedure EmitComplexBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp: boolean); // ###0.940
   {$IFDEF ComplexBraces}
@@ -2681,6 +2677,12 @@ var
     end;
   end;
 
+var
+  op: REChar;
+  NonGreedyOp, NonGreedyCh: boolean; // ###0.940
+  flags: integer;
+  BracesMin, Bracesmax: TREBracesArg;
+  p, savedparse: PRegExprChar;
 begin
   flags := 0;
   Result := ParseAtom(flags);
