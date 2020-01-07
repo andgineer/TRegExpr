@@ -2627,8 +2627,7 @@ var
   BracesMin, Bracesmax: TREBracesArg;
   p, savedparse: PRegExprChar;
 
-  procedure EmitComplexBraces(ABracesMin, ABracesMax: TREBracesArg;
-    ANonGreedyOp: boolean); // ###0.940
+  procedure EmitComplexBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp: boolean); // ###0.940
   {$IFDEF ComplexBraces}
   var
     off: TRENextOff;
@@ -2689,7 +2688,7 @@ begin
     Exit;
 
   op := regparse^;
-  if not((op = '*') or (op = '+') or (op = '?') or (op = '{')) then
+  if not ((op = '*') or (op = '+') or (op = '?') or (op = '{')) then
   begin
     flagp := flags;
     Exit;
