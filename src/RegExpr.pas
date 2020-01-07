@@ -3435,7 +3435,7 @@ var
   scan: PRegExprChar;
   opnd: PRegExprChar;
   TheMax, NLen: integer;
-  { Ch, } InvCh: REChar; // ###0.931
+  InvChar: REChar; // ###0.931
   sestart, seend: PRegExprChar; // ###0.936
   ArrayIndex: integer;
 begin
@@ -3478,8 +3478,8 @@ begin
         end;
         if Result < TheMax then
         begin // ###0.931
-          InvCh := InvertCase(opnd^); // store in register
-          while (Result < TheMax) and ((opnd^ = scan^) or (InvCh = scan^)) do
+          InvChar := InvertCase(opnd^); // store in register
+          while (Result < TheMax) and ((opnd^ = scan^) or (InvChar = scan^)) do
           begin
             Inc(Result);
             Inc(scan);
