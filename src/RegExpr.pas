@@ -756,7 +756,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 980;
+  REVersionMinor = 982;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
