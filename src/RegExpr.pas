@@ -448,6 +448,9 @@ type
     // recursively matching routine
     function MatchPrim(prog: PRegExprChar): boolean;
 
+    // match at specific position only, called from ExecPrim
+    function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+
     // Exec for stored InputString
     function ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 
@@ -4223,9 +4226,21 @@ begin
 end;
 {$ENDIF}
 
+function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  // ###0.949 removed clearing of start\endp
+  reginput := APos;
+  Result := MatchPrim(programm + REOpSz);
+  if Result then
+  begin
+    startp[0] := APos;
+    endp[0] := reginput;
+  end;
+end;
+
 function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
+
   procedure ClearMatchs;
-  // Clears matchs array
   var
     i: integer;
   begin
@@ -4235,19 +4250,6 @@ function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
       endp[i] := nil;
     end;
   end; { of procedure ClearMatchs;
-  .............................................................. }
-  function RegMatch(str: PRegExprChar): boolean;
-  // try match at specific point
-  begin
-    // ###0.949 removed clearing of start\endp
-    reginput := str;
-    Result := MatchPrim(programm + REOpSz);
-    if Result then
-    begin
-      startp[0] := str;
-      endp[0] := reginput;
-    end;
-  end; { of function RegMatch
   .............................................................. }
 
 var
@@ -4304,7 +4306,7 @@ begin
       if not FirstCharArray[byte(StartPtr^)] then
         Exit;
     {$ENDIF}
-    Result := RegMatch(StartPtr);
+    Result := MatchAtOnePos(StartPtr);
     Exit;
   end;
 
@@ -4315,10 +4317,10 @@ begin
     if Ord(s^) <= $FF then
     begin
       if FirstCharArray[byte(s^)] then
-        Result := RegMatch(s);
+        Result := MatchAtOnePos(s);
     end
     else
-      Result := RegMatch(s);
+      Result := MatchAtOnePos(s);
     {$ELSE}
     Result := RegMatch(s);
     {$ENDIF}
