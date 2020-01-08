@@ -4236,9 +4236,8 @@ begin
 end;
 {$ENDIF}
 
-function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean;
 begin
-  // ###0.949 removed clearing of start\endp
   reginput := APos;
   Result := MatchPrim(programm + REOpSz);
   if Result then
