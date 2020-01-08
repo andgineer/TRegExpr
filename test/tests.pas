@@ -38,14 +38,16 @@ type
   protected
     Procedure RunRETest(aIndex : Integer);
     procedure CompileRE(AExpression: string);
-    procedure IsNotNull(ArrorMessage: string; AObjectToCheck: TObject);
+    procedure IsNotNull(AErrorMessage: string; AObjectToCheck: TObject);
     procedure IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
     procedure IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
-    procedure AreEqual(ArrorMessage: string; s1,s2: string); overload;
-    procedure AreEqual(ArrorMessage: string; i1,i2: integer); overload;
+    procedure AreEqual(AErrorMessage: string; s1,s2: string); overload;
+    procedure AreEqual(AErrorMessage: string; i1,i2: integer); overload;
+    procedure TestBadRegex(const AErrorMessage, AExpression: string);
   published
     procedure TestEmpty;
     procedure TestNotFound;
+    procedure TestBads;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -452,31 +454,45 @@ begin
   {$ENDIF}
 end;
 
-procedure TTestRegexpr.IsNotNull(ArrorMessage: string; AObjectToCheck: TObject);
+procedure TTestRegexpr.IsNotNull(AErrorMessage: string; AObjectToCheck: TObject
+  );
 begin
   {$IFDEF FPC}
-  AssertNotNull(ArrorMessage, AObjectToCheck);
+  AssertNotNull(AErrorMessage, AObjectToCheck);
   {$ELSE}
-  CheckNotNull(AObjectToCheck, ArrorMessage)
+  CheckNotNull(AObjectToCheck, AErrorMessage)
   {$ENDIF}
 end;
 
-procedure TTestRegexpr.AreEqual(ArrorMessage: string; s1,s2: string);
+procedure TTestRegexpr.AreEqual(AErrorMessage: string; s1, s2: string);
 begin
   {$IFDEF FPC}
-  AssertEquals(ArrorMessage, s1,s2);
+  AssertEquals(AErrorMessage, s1,s2);
   {$ELSE}
-  CheckEquals(s1,s2, ArrorMessage)
+  CheckEquals(s1,s2, AErrorMessage)
   {$ENDIF}
 end;
 
-procedure TTestRegexpr.AreEqual(ArrorMessage: string; i1,i2: integer);
+procedure TTestRegexpr.AreEqual(AErrorMessage: string; i1, i2: integer);
 begin
   {$IFDEF FPC}
-  AssertEquals(ArrorMessage, i1,i2);
+  AssertEquals(AErrorMessage, i1,i2);
   {$ELSE}
-  CheckEquals(i1,i2, ArrorMessage)
+  CheckEquals(i1,i2, AErrorMessage)
   {$ENDIF}
+end;
+
+procedure TTestRegexpr.TestBadRegex(const AErrorMessage, AExpression: string);
+var
+  ok: boolean;
+begin
+  try
+    CompileRE(AExpression);
+    ok := False;
+  except
+    ok := True;
+  end;
+  IsTrue(AErrorMessage, ok);
 end;
 
 procedure TTestRegexpr.TestEmpty;
@@ -505,6 +521,13 @@ begin
   AssertEquals('Replace failed', PrintableString(#$a), PrintableString(Act))
 end;
 {$ENDIF}
+
+procedure TTestRegexpr.TestBads;
+begin
+  TestBadRegex('No Error for bad braces', 'd{');
+  TestBadRegex('No Error for bad braces', 'd{22');
+  TestBadRegex('No Error for bad braces', 'd{}');
+end;
 
 procedure TTestRegexpr.RunTest1;
 begin

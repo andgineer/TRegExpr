@@ -448,6 +448,9 @@ type
     // recursively matching routine
     function MatchPrim(prog: PRegExprChar): boolean;
 
+    // match at specific position only, called from ExecPrim
+    function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+
     // Exec for stored InputString
     function ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 
@@ -2122,7 +2125,9 @@ begin
   for i := 1 to Length(fWordChars) do
   begin
     ch := fWordChars[i];
+    {$IFDEF UniCode}
     if Ord(ch) <= $FF then
+    {$ENDIF}
       Include(ARes, byte(ch));
   end;
   {$ELSE}
@@ -2142,7 +2147,9 @@ begin
   for i := 1 to Length(fSpaceChars) do
   begin
     ch := fSpaceChars[i];
+    {$IFDEF UniCode}
     if Ord(ch) <= $FF then
+    {$ENDIF}
       Include(ARes, byte(ch));
   end;
   {$ELSE}
@@ -2170,7 +2177,8 @@ begin
           Inc(ABuffer);
           ch2 := ABuffer^;
           Inc(ABuffer);
-          for i := Ord(ch) to Min(Ord(ch2), $FF) do
+          for i := Ord(ch) to
+            {$IFDEF UniCode} Min(Ord(ch2), $FF) {$ELSE} Ord(ch2) {$ENDIF} do
           begin
             Include(ARes, byte(i));
             if AIgnoreCase then
@@ -2254,7 +2262,9 @@ begin
           begin
             ch := ABuffer^;
             Inc(ABuffer);
-            if Ord(ch) < $FF then
+            {$IFDEF UniCode}
+            if Ord(ch) <= $FF then
+            {$ENDIF}
             begin
               Include(ARes, byte(ch));
               if AIgnoreCase then
@@ -4223,9 +4233,21 @@ begin
 end;
 {$ENDIF}
 
+function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  // ###0.949 removed clearing of start\endp
+  reginput := APos;
+  Result := MatchPrim(programm + REOpSz);
+  if Result then
+  begin
+    startp[0] := APos;
+    endp[0] := reginput;
+  end;
+end;
+
 function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
-  procedure ClearMatchs;
-  // Clears matchs array
+
+  procedure ClearMatches;
   var
     i: integer;
   begin
@@ -4236,19 +4258,6 @@ function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
     end;
   end; { of procedure ClearMatchs;
   .............................................................. }
-  function RegMatch(str: PRegExprChar): boolean;
-  // try match at specific point
-  begin
-    // ###0.949 removed clearing of start\endp
-    reginput := str;
-    Result := MatchPrim(programm + REOpSz);
-    if Result then
-    begin
-      startp[0] := str;
-      endp[0] := reginput;
-    end;
-  end; { of function RegMatch
-  .............................................................. }
 
 var
   s: PRegExprChar;
@@ -4256,13 +4265,12 @@ var
 begin
   Result := False;
 
-  ClearMatchs; // ###0.949
+  ClearMatches;
   // ensure that Match cleared either if optimization tricks or some error
   // will lead to leaving ExecPrim without actual search. That is
-  // importent for ExecNext logic and so on.
+  // important for ExecNext logic and so on.
 
-  if not IsProgrammOk // ###0.929
-  then
+  if not IsProgrammOk then
     Exit;
 
   // Check InputString presence
@@ -4300,11 +4308,13 @@ begin
   if ATryOnce or (reganchored <> #0) then
   begin
     {$IFDEF UseFirstCharSet}
+    {$IFDEF UniCode}
     if Ord(StartPtr^) <= $FF then
+    {$ENDIF}
       if not FirstCharArray[byte(StartPtr^)] then
         Exit;
     {$ENDIF}
-    Result := RegMatch(StartPtr);
+    Result := MatchAtOnePos(StartPtr);
     Exit;
   end;
 
@@ -4312,21 +4322,24 @@ begin
   s := StartPtr;
   repeat
     {$IFDEF UseFirstCharSet}
-    if Ord(s^) <= $FF then
-    begin
+      {$IFDEF UniCode}
+      if Ord(s^) <= $FF then
+      begin
+        if FirstCharArray[byte(s^)] then
+          Result := MatchAtOnePos(s);
+      end
+      else
+        Result := MatchAtOnePos(s);
+      {$ELSE}
       if FirstCharArray[byte(s^)] then
-        Result := RegMatch(s);
-    end
-    else
-      Result := RegMatch(s);
+        Result := MatchAtOnePos(s);
+      {$ENDIF}
     {$ELSE}
     Result := RegMatch(s);
     {$ENDIF}
-    if Result or (s >= fInputEnd) // Exit on a match or after testing the end-of-string.
-    then
-      Exit
-    else
-      ClearMatchs; // ###0.949
+    // Exit on a match or after testing the end-of-string
+    if Result or (s >= fInputEnd) then
+      Exit;
     Inc(s);
   until False;
 end; { of function TRegExpr.ExecPrim
@@ -4817,7 +4830,9 @@ begin
       OP_EXACTLYCI:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
+          {$IFDEF UniCode}
           if Ord(ch) <= $FF then
+          {$ENDIF}
           begin
             Include(FirstCharSet, byte(ch));
             Include(FirstCharSet, byte(InvertCase(ch)));
@@ -4827,7 +4842,9 @@ begin
       OP_EXACTLY:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
+          {$IFDEF UniCode}
           if Ord(ch) <= $FF then
+          {$ENDIF}
             Include(FirstCharSet, byte(ch));
           Exit;
         end;
