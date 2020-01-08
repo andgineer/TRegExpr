@@ -318,7 +318,7 @@ type
     FUseOsLineEndOnReplace: boolean;
 
     {$IFNDEF UniCode}
-    fLineSeparatorsSet: set of REChar;
+    fLineSeparatorsSet: set of AnsiChar;
     {$ENDIF}
     {$IFDEF UnicodeWordDetection}
     FUseUnicodeWordDetection: boolean;
@@ -2041,7 +2041,6 @@ function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreC
 // and Data depends on Kind
 var
   ch, ch2: REChar;
-  ok: boolean;
   N, i: integer;
 begin
   if AIgnoreCase then
