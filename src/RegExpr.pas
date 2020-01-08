@@ -355,7 +355,8 @@ type
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
 
-    procedure ClearInternalIndexes;
+    procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: boolean; var ARes: TRegExprCharset);
     procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset);
@@ -1846,14 +1847,16 @@ begin
   for i := 1 to Length(fLineSeparators) do
     System.Include(fLineSeparatorsSet, fLineSeparators[i]);
   {$ENDIF}
+
   // [Re]compile if needed
   if programm = nil then
     Compile; // ###0.941
 
-  // check [re]compiled programm
+  // Check [re]compiled programm
   if programm = nil then
-    Exit // error was set/raised by Compile (was reeExecAfterCompErr)
-  else if programm[0] <> OP_MAGIC // Program corrupted.
+    Exit; // error was set/raised by Compile (was reeExecAfterCompErr)
+
+  if programm[0] <> OP_MAGIC // Program corrupted.
   then
     Error(reeCorruptedProgram)
   else
@@ -4245,33 +4248,36 @@ begin
   end;
 end;
 
-function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
-
-  procedure ClearMatches;
-  var
-    i: integer;
+procedure TRegExpr.ClearMatches;
+var
+  i: integer;
+begin
+  for i := 0 to NSUBEXP - 1 do
   begin
-    for i := 0 to NSUBEXP - 1 do
-    begin
-      startp[i] := nil;
-      endp[i] := nil;
-    end;
-  end; { of procedure ClearMatchs;
-  .............................................................. }
+    startp[i] := nil;
+    endp[i] := nil;
+  end;
+end;
 
+function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 var
   s: PRegExprChar;
   StartPtr: PRegExprChar;
 begin
   Result := False;
 
-  ClearMatches;
-  // ensure that Match cleared either if optimization tricks or some error
+  // Ensure that Match cleared either if optimization tricks or some error
   // will lead to leaving ExecPrim without actual search. That is
   // important for ExecNext logic and so on.
+  ClearMatches;
 
-  if not IsProgrammOk then
-    Exit;
+  // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
+  if programm = nil then
+  begin
+    Compile;
+    if programm = nil then
+      Exit;
+  end;
 
   // Check InputString presence
   if fInputString = '' then
@@ -5208,8 +5214,7 @@ var
   end;
 
 begin
-  if not IsProgrammOk // ###0.929
-  then
+  if not IsProgrammOk then
     Exit;
 
   op := OP_EXACTLY;
