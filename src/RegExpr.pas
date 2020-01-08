@@ -232,8 +232,8 @@ type
     startp: array [0 .. NSUBEXP - 1] of PRegExprChar; // found expr start points
     endp: array [0 .. NSUBEXP - 1] of PRegExprChar; // found expr end points
 
-    FSubExprIndexes: array [0 .. NSUBEXP - 1] of integer;
-    FSubExprCount: integer;
+    GrpIndexes: array [0 .. NSUBEXP - 1] of integer;
+    GrpCount: integer;
 
     {$IFDEF ComplexBraces}
     LoopStack: TRegExprLoopStack; // state before entering loop
@@ -1595,12 +1595,12 @@ begin
   if startp[0] = nil then
     Result := -1
   else
-    Result := FSubExprCount;
+    Result := GrpCount;
 end;
 
 function TRegExpr.GetMatchPos(Idx: integer): PtrInt;
 begin
-  Idx := FSubExprIndexes[Idx];
+  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (startp[Idx] <> nil) then
     Result := startp[Idx] - fInputStart + 1
   else
@@ -1610,7 +1610,7 @@ end; { of function TRegExpr.GetMatchPos
 
 function TRegExpr.GetMatchLen(Idx: integer): PtrInt;
 begin
-  Idx := FSubExprIndexes[Idx];
+  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (startp[Idx] <> nil) then
     Result := endp[Idx] - startp[Idx]
   else
@@ -1621,7 +1621,7 @@ end; { of function TRegExpr.GetMatchLen
 function TRegExpr.GetMatch(Idx: integer): RegExprString;
 begin
   Result := '';
-  Idx := FSubExprIndexes[Idx];
+  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (endp[Idx] > startp[Idx]) then
     SetString(Result, startp[Idx], endp[Idx] - startp[Idx]);
   {
@@ -2308,10 +2308,10 @@ begin
   begin
     startp[i] := nil;
     endp[i] := nil;
-    FSubExprIndexes[i] := -1;
+    GrpIndexes[i] := -1;
   end;
-  FSubExprIndexes[0] := 0;
-  FSubExprCount := 0;
+  GrpIndexes[0] := 0;
+  GrpCount := 0;
 end;
 
 function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): boolean;
@@ -3243,10 +3243,10 @@ begin
           // normal (capturing) group
           if fSecondPass then
           // must skip this block for one of passes, to not double groups count
-            if FSubExprCount < NSUBEXP - 1 then
+            if GrpCount < NSUBEXP - 1 then
             begin
-              Inc(FSubExprCount);
-              FSubExprIndexes[FSubExprCount] := regnpar;
+              Inc(GrpCount);
+              GrpIndexes[GrpCount] := regnpar;
             end;
           ret := ParseReg(1, flags);
           if ret = nil then
@@ -3486,7 +3486,7 @@ begin
       end;
     OP_BSUBEXP:
       begin // ###0.936
-        ArrayIndex := FSubExprIndexes[Ord(opnd^)];
+        ArrayIndex := GrpIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
           Exit;
         GrpStart := startp[ArrayIndex];
@@ -3510,7 +3510,7 @@ begin
       end;
     OP_BSUBEXPCI:
       begin // ###0.936
-        ArrayIndex := FSubExprIndexes[Ord(opnd^)];
+        ArrayIndex := GrpIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
           Exit;
         GrpStart := startp[ArrayIndex];
@@ -3872,7 +3872,7 @@ begin
       OP_BSUBEXP:
         begin // ###0.936
           no := Ord((scan + REOpSz + RENextOffSz)^);
-          no := FSubExprIndexes[no];
+          no := GrpIndexes[no];
           if no < 0 then
             Exit;
           if startp[no] = nil then
@@ -3893,7 +3893,7 @@ begin
       OP_BSUBEXPCI:
         begin // ###0.936
           no := Ord((scan + REOpSz + RENextOffSz)^);
-          no := FSubExprIndexes[no];
+          no := GrpIndexes[no];
           if no < 0 then
             Exit;
           if startp[no] = nil then
@@ -4501,7 +4501,7 @@ begin
     Ch := p^;
     Inc(p);
     if Ch = '$' then
-      n := FSubExprIndexes[ParseVarName(p)]
+      n := GrpIndexes[ParseVarName(p)]
     else
       n := -1;
     if n >= 0 then
@@ -4558,7 +4558,7 @@ begin
     Inc(p);
     p1 := p;
     if Ch = '$' then
-      n := FSubExprIndexes[ParseVarName(p)]
+      n := GrpIndexes[ParseVarName(p)]
     else
       n := -1;
     if (n >= 0) then
