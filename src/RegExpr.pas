@@ -4351,21 +4351,21 @@ end; { of function TRegExpr.ExecPrim
 
 function TRegExpr.ExecNext: boolean;
 var
-  offset: PtrInt;
+  Offset: PtrInt;
 begin
   Result := False;
-  if not Assigned(startp[0]) or not Assigned(endp[0]) then
+  if (startp[0] = nil) or (endp[0] = nil) then
   begin
     Error(reeExecNextWithoutExec);
     Exit;
   end;
   // Offset := MatchPos [0] + MatchLen [0];
   // if MatchLen [0] = 0
-  offset := endp[0] - fInputStart + 1; // ###0.929
+  Offset := endp[0] - fInputStart + 1; // ###0.929
   if endp[0] = startp[0] // ###0.929
   then
-    Inc(offset); // prevent infinite looping if empty string match r.e.
-  Result := ExecPrim(offset, False);
+    Inc(Offset); // prevent infinite looping if empty string match r.e.
+  Result := ExecPrim(Offset, False);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
