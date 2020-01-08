@@ -364,6 +364,8 @@ type
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsCustomLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure InitLineSepArray;
+
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
 
@@ -1521,6 +1523,7 @@ begin
   FUseUnicodeWordDetection := True;
   {$ENDIF}
 
+  InitLineSepArray;
   InitCharCheckers;
 end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
@@ -1828,10 +1831,6 @@ end; { of procedure TRegExpr.InvalidateProgramm
   -------------------------------------------------------------- }
 
 procedure TRegExpr.Compile;
-{$IFNDEF UniCode}
-var
-  i: integer;
-{$ENDIF}
 begin
   if fExpression = '' then
   begin
@@ -1839,15 +1838,22 @@ begin
     Exit;
   end;
 
+  CompileRegExpr(PRegExprChar(fExpression));
+end; { of procedure TRegExpr.Compile
+  -------------------------------------------------------------- }
+
+procedure TRegExpr.InitLineSepArray;
+{$IFNDEF UniCode}
+var
+  i: integer;
+{$ENDIF}
+begin
   {$IFNDEF UniCode}
   FillChar(fLineSepArray, SizeOf(fLineSepArray), 0);
   for i := 1 to Length(fLineSeparators) do
     fLineSepArray[byte(fLineSeparators[i])] := True;
   {$ENDIF}
-
-  CompileRegExpr(PRegExprChar(fExpression));
-end; { of procedure TRegExpr.Compile
-  -------------------------------------------------------------- }
+end;
 
 function TRegExpr.IsProgrammOk: boolean;
 begin
@@ -4379,6 +4385,7 @@ begin
   if AStr <> fLineSeparators then
   begin
     fLineSeparators := AStr;
+    InitLineSepArray;
     InvalidateProgramm;
   end;
 end; { of procedure TRegExpr.SetLineSeparators
