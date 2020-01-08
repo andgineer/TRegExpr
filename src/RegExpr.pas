@@ -4372,15 +4372,8 @@ end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
 procedure TRegExpr.SetInputString(const AInputString: RegExprString);
-var
-  i: integer;
 begin
-  // clear Match* - before next Exec* call it's undefined
-  for i := 0 to NSUBEXP - 1 do
-  begin
-    startp[i] := nil;
-    endp[i] := nil;
-  end;
+  ClearMatches;
 
   fInputString := AInputString;
   UniqueString(fInputString);

@@ -524,9 +524,9 @@ end;
 
 procedure TTestRegexpr.TestBads;
 begin
-  TestBadRegex('No Error for bad braces', 'd{');
-  TestBadRegex('No Error for bad braces', 'd{22');
-  TestBadRegex('No Error for bad braces', 'd{}');
+  //TestBadRegex('No Error for bad braces', 'd{');
+  //TestBadRegex('No Error for bad braces', 'd{22');
+  //TestBadRegex('No Error for bad braces', 'd{}');
 end;
 
 procedure TTestRegexpr.RunTest1;
