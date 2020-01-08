@@ -1818,28 +1818,16 @@ end; { of procedure TRegExpr.InvalidateProgramm
   -------------------------------------------------------------- }
 
 procedure TRegExpr.Compile; // ###0.941
+{$IFNDEF UniCode}
+var
+  i: integer;
+{$ENDIF}
 begin
   if fExpression = '' then
   begin // No Expression assigned
     Error(reeNoExpression);
     Exit;
   end;
-  CompileRegExpr(PRegExprChar(fExpression));
-end; { of procedure TRegExpr.Compile
-  -------------------------------------------------------------- }
-
-function TRegExpr.IsProgrammOk: boolean;
-{$IFNDEF UniCode}
-var
-  i: integer;
-{$ENDIF}
-begin
-  Result := False;
-
-  // check modifiers
-  if not IsModifiersEqual(fModifiers, fProgModifiers) // ###0.941
-  then
-    InvalidateProgramm;
 
   // can we optimize line separators by using sets?
   {$IFNDEF UniCode}
@@ -1847,6 +1835,19 @@ begin
   for i := 1 to Length(fLineSeparators) do
     System.Include(fLineSeparatorsSet, fLineSeparators[i]);
   {$ENDIF}
+
+  CompileRegExpr(PRegExprChar(fExpression));
+end; { of procedure TRegExpr.Compile
+  -------------------------------------------------------------- }
+
+function TRegExpr.IsProgrammOk: boolean;
+begin
+  Result := False;
+
+  // check modifiers
+  if not IsModifiersEqual(fModifiers, fProgModifiers) // ###0.941
+  then
+    InvalidateProgramm;
 
   // [Re]compile if needed
   if programm = nil then

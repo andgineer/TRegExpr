@@ -146,11 +146,11 @@ end;
 
 procedure TForm1.ButtonFindAllClick(Sender: TObject);
 begin
-  //ListBox1.Items.BeginUpdate;
+  ListBox1.Items.BeginUpdate;
   try
     DoTest(TestStr, true);
   finally
-    //ListBox1.Items.BeginUpdate;
+    ListBox1.Items.BeginUpdate;
   end;
 end;
 
