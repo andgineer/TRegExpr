@@ -67,7 +67,7 @@ interface
   {$INLINE ON}
 {$ENDIF}
 // ======== Define options for TRegExpr engine
-{ off $DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
+{$DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
@@ -2125,7 +2125,9 @@ begin
   for i := 1 to Length(fWordChars) do
   begin
     ch := fWordChars[i];
+    {$IFDEF UniCode}
     if Ord(ch) <= $FF then
+    {$ENDIF}
       Include(ARes, byte(ch));
   end;
   {$ELSE}
@@ -2145,7 +2147,9 @@ begin
   for i := 1 to Length(fSpaceChars) do
   begin
     ch := fSpaceChars[i];
+    {$IFDEF UniCode}
     if Ord(ch) <= $FF then
+    {$ENDIF}
       Include(ARes, byte(ch));
   end;
   {$ELSE}
@@ -2173,7 +2177,8 @@ begin
           Inc(ABuffer);
           ch2 := ABuffer^;
           Inc(ABuffer);
-          for i := Ord(ch) to Min(Ord(ch2), $FF) do
+          for i := Ord(ch) to
+            {$IFDEF UniCode} Min(Ord(ch2), $FF) {$ELSE} Ord(ch2) {$ENDIF} do
           begin
             Include(ARes, byte(i));
             if AIgnoreCase then
@@ -2257,7 +2262,9 @@ begin
           begin
             ch := ABuffer^;
             Inc(ABuffer);
-            if Ord(ch) < $FF then
+            {$IFDEF UniCode}
+            if Ord(ch) <= $FF then
+            {$ENDIF}
             begin
               Include(ARes, byte(ch));
               if AIgnoreCase then
@@ -4302,7 +4309,9 @@ begin
   if ATryOnce or (reganchored <> #0) then
   begin
     {$IFDEF UseFirstCharSet}
+    {$IFDEF UniCode}
     if Ord(StartPtr^) <= $FF then
+    {$ENDIF}
       if not FirstCharArray[byte(StartPtr^)] then
         Exit;
     {$ENDIF}
@@ -4314,13 +4323,18 @@ begin
   s := StartPtr;
   repeat
     {$IFDEF UseFirstCharSet}
-    if Ord(s^) <= $FF then
-    begin
+      {$IFDEF UniCode}
+      if Ord(s^) <= $FF then
+      begin
+        if FirstCharArray[byte(s^)] then
+          Result := MatchAtOnePos(s);
+      end
+      else
+        Result := MatchAtOnePos(s);
+      {$ELSE}
       if FirstCharArray[byte(s^)] then
         Result := MatchAtOnePos(s);
-    end
-    else
-      Result := MatchAtOnePos(s);
+      {$ENDIF}
     {$ELSE}
     Result := RegMatch(s);
     {$ENDIF}
@@ -4819,7 +4833,9 @@ begin
       OP_EXACTLYCI:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
+          {$IFDEF UniCode}
           if Ord(ch) <= $FF then
+          {$ENDIF}
           begin
             Include(FirstCharSet, byte(ch));
             Include(FirstCharSet, byte(InvertCase(ch)));
@@ -4829,7 +4845,9 @@ begin
       OP_EXACTLY:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
+          {$IFDEF UniCode}
           if Ord(ch) <= $FF then
+          {$ENDIF}
             Include(FirstCharSet, byte(ch));
           Exit;
         end;
