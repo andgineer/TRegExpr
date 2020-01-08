@@ -232,8 +232,8 @@ type
     startp: array [0 .. NSUBEXP - 1] of PRegExprChar; // found expr start points
     endp: array [0 .. NSUBEXP - 1] of PRegExprChar; // found expr end points
 
-    FSubExprIndexes: array [0 .. NSUBEXP - 1] of integer;
-    FSubExprCount: integer;
+    GrpIndexes: array [0 .. NSUBEXP - 1] of integer;
+    GrpCount: integer;
 
     {$IFDEF ComplexBraces}
     LoopStack: TRegExprLoopStack; // state before entering loop
@@ -271,13 +271,12 @@ type
     // work variables for compiler's routines
     regparse: PRegExprChar; // Input-scan pointer.
     regnpar: integer; // Count of () brackets.
-    regdummy: Char;
+    regdummy: REChar;
     regcode: PRegExprChar; // Code-emit pointer; @regdummy = don't.
     regsize: integer; // Total programm size in REChars.
     regExactlyLen: PLongInt;
-
-    regexpbeg: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
-    fExprIsCompiled: boolean; // true if r.e. successfully compiled
+    regexpBegin: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
+    regexpIsCompiled: boolean; // true if r.e. successfully compiled
     fSecondPass: boolean;
 
     // programm is essentially a linear encoding
@@ -757,7 +756,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 980;
+  REVersionMinor = 982;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1347,6 +1346,7 @@ const
   reeNoLetterAfterBSlashC = 117;
   reeMetaCharAfterMinusInRange = 118;
   reeRarseAtomInternalDisaster = 119;
+  reeIncorrectBraces = 121;
   reeBRACESArgTooBig = 122;
   reeUnknownOpcodeInFillFirst = 123;
   reeBracesMinParamGreaterMax = 124;
@@ -1412,16 +1412,18 @@ begin
       Result := 'TRegExpr compile: trailing \';
     reeRarseAtomInternalDisaster:
       Result := 'TRegExpr compile: RarseAtom internal disaster';
+    reeIncorrectBraces:
+      Result := 'TRegExpr compile: incorrect {} braces';
     reeBRACESArgTooBig:
-      Result := 'TRegExpr compile: BRACES argument too big';
+      Result := 'TRegExpr compile: braces {} argument too big';
     reeUnknownOpcodeInFillFirst:
       Result := 'TRegExpr compile: unknown opcode in FillFirstCharSet ('+DumpOp(fLastErrorOpcode)+')';
     reeBracesMinParamGreaterMax:
-      Result := 'TRegExpr compile: BRACE min param greater then max';
+      Result := 'TRegExpr compile: braces {} min param greater then max';
     reeUnclosedComment:
       Result := 'TRegExpr compile: unclosed (?#comment)';
     reeComplexBracesNotImplemented:
-      Result := 'TRegExpr compile: if you use BRACES ''{min,max}'' and non-greedy ops ''*?'', ''+?'', ''??'' for complex cases, enable {$DEFINE ComplexBraces}';
+      Result := 'TRegExpr compile: if you use braces {} and non-greedy ops *?, +?, ?? for complex cases, enable {$DEFINE ComplexBraces}';
     reeUnrecognizedModifier:
       Result := 'TRegExpr compile: unrecognized modifier';
     reeBadLinePairedSeparator:
@@ -1485,8 +1487,8 @@ begin
   fExpression := '';
   fInputString := '';
 
-  regexpbeg := nil;
-  fExprIsCompiled := False;
+  regexpBegin := nil;
+  regexpIsCompiled := False;
 
   FillChar(fModifiers, SIzeOf(fModifiers), 0);
   ModifierI := RegExprModifierI;
@@ -1575,9 +1577,9 @@ end; { of function TRegExpr.InvertCaseFunction
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
-  if (AStr <> fExpression) or not fExprIsCompiled then
+  if (AStr <> fExpression) or not regexpIsCompiled then
   begin
-    fExprIsCompiled := False;
+    regexpIsCompiled := False;
     fExpression := AStr;
     UniqueString(fExpression);
     fRegexStart := PRegExprChar(fExpression);
@@ -1593,12 +1595,12 @@ begin
   if startp[0] = nil then
     Result := -1
   else
-    Result := FSubExprCount;
+    Result := GrpCount;
 end;
 
 function TRegExpr.GetMatchPos(Idx: integer): PtrInt;
 begin
-  Idx := FSubExprIndexes[Idx];
+  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (startp[Idx] <> nil) then
     Result := startp[Idx] - fInputStart + 1
   else
@@ -1608,7 +1610,7 @@ end; { of function TRegExpr.GetMatchPos
 
 function TRegExpr.GetMatchLen(Idx: integer): PtrInt;
 begin
-  Idx := FSubExprIndexes[Idx];
+  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (startp[Idx] <> nil) then
     Result := endp[Idx] - startp[Idx]
   else
@@ -1619,7 +1621,7 @@ end; { of function TRegExpr.GetMatchLen
 function TRegExpr.GetMatch(Idx: integer): RegExprString;
 begin
   Result := '';
-  Idx := FSubExprIndexes[Idx];
+  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (endp[Idx] > startp[Idx]) then
     SetString(Result, startp[Idx], endp[Idx] - startp[Idx]);
   {
@@ -2306,10 +2308,10 @@ begin
   begin
     startp[i] := nil;
     endp[i] := nil;
-    FSubExprIndexes[i] := -1;
+    GrpIndexes[i] := -1;
   end;
-  FSubExprIndexes[0] := 0;
-  FSubExprCount := 0;
+  GrpIndexes[0] := 0;
+  GrpCount := 0;
 end;
 
 function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): boolean;
@@ -2332,7 +2334,7 @@ begin
   Result := False; // life too dark
   flags := 0;
   regparse := nil; // for correct error handling
-  regexpbeg := ARegExp;
+  regexpBegin := ARegExp;
   regExactlyLen := nil;
 
   ClearInternalIndexes;
@@ -2438,8 +2440,8 @@ begin
     begin
       if not Result then
         InvalidateProgramm;
-      regexpbeg := nil;
-      fExprIsCompiled := Result; // ###0.944
+      regexpBegin := nil;
+      regexpIsCompiled := Result; // ###0.944
     end;
   end;
 
@@ -2598,7 +2600,8 @@ function TRegExpr.ParsePiece(var flagp: integer): PRegExprChar;
 // both the endmarker for their branch list and the body of the last branch.
 // It might seem that this node could be dispensed with entirely, but the
 // endmarker role is not redundant.
-  function parsenum(AStart, AEnd: PRegExprChar): TREBracesArg;
+
+  function ParseNumber(AStart, AEnd: PRegExprChar): TREBracesArg;
   begin
     Result := 0;
     if AEnd - AStart + 1 > 8 then
@@ -2619,16 +2622,10 @@ function TRegExpr.ParsePiece(var flagp: integer): PRegExprChar;
   end;
 
 var
-  op: REChar;
-  NonGreedyOp, NonGreedyCh: boolean; // ###0.940
-  TheOp: TREOp; // ###0.940
+  TheOp: TREOp;
   NextNode: PRegExprChar;
-  flags: integer;
-  BracesMin, Bracesmax: TREBracesArg;
-  p, savedparse: PRegExprChar;
 
-  procedure EmitComplexBraces(ABracesMin, ABracesMax: TREBracesArg;
-    ANonGreedyOp: boolean); // ###0.940
+  procedure EmitComplexBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp: boolean); // ###0.940
   {$IFDEF ComplexBraces}
   var
     off: TRENextOff;
@@ -2667,8 +2664,7 @@ var
     {$ENDIF}
   end;
 
-  procedure EmitSimpleBraces(ABracesMin, ABracesMax: TREBracesArg;
-    ANonGreedyOp: boolean); // ###0.940
+  procedure EmitSimpleBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp: boolean); // ###0.940
   begin
     if ANonGreedyOp // ###0.940
     then
@@ -2679,11 +2675,16 @@ var
     if regcode <> @regdummy then
     begin
       PREBracesArg(AlignToInt(Result + REOpSz + RENextOffSz))^ := ABracesMin;
-      PREBracesArg(AlignToInt(Result + REOpSz + RENextOffSz + REBracesArgSz))^
-        := ABracesMax;
+      PREBracesArg(AlignToInt(Result + REOpSz + RENextOffSz + REBracesArgSz))^ := ABracesMax;
     end;
   end;
 
+var
+  op: REChar;
+  NonGreedyOp, NonGreedyCh: boolean; // ###0.940
+  flags: integer;
+  BracesMin, Bracesmax: TREBracesArg;
+  p: PRegExprChar;
 begin
   flags := 0;
   Result := ParseAtom(flags);
@@ -2691,7 +2692,7 @@ begin
     Exit;
 
   op := regparse^;
-  if not((op = '*') or (op = '+') or (op = '?') or (op = '{')) then
+  if not ((op = '*') or (op = '+') or (op = '?') or (op = '{')) then
   begin
     flagp := flags;
     Exit;
@@ -2796,20 +2797,16 @@ begin
       end; { of case '?' }
     '{':
       begin
-        savedparse := regparse;
-        // !!!!!!!!!!!!
-        // Filip Jirsak's note - what will happen, when we are at the end of regparse?
         Inc(regparse);
         p := regparse;
         while IsDigitChar(regparse^) do // <min> MUST appear
           Inc(regparse);
         if (regparse^ <> '}') and (regparse^ <> ',') or (p = regparse) then
         begin
-          regparse := savedparse;
-          flagp := flags;
+          Error(reeIncorrectBraces);
           Exit;
         end;
-        BracesMin := parsenum(p, regparse - 1);
+        BracesMin := ParseNumber(p, regparse - 1);
         if regparse^ = ',' then
         begin
           Inc(regparse);
@@ -2818,13 +2815,13 @@ begin
             Inc(regparse);
           if regparse^ <> '}' then
           begin
-            regparse := savedparse;
+            Error(reeIncorrectBraces);
             Exit;
           end;
           if p = regparse then
             Bracesmax := MaxBracesArg
           else
-            Bracesmax := parsenum(p, regparse - 1);
+            Bracesmax := ParseNumber(p, regparse - 1);
         end
         else
           Bracesmax := BracesMin; // {n} == {n,n}
@@ -3246,10 +3243,10 @@ begin
           // normal (capturing) group
           if fSecondPass then
           // must skip this block for one of passes, to not double groups count
-            if FSubExprCount < NSUBEXP - 1 then
+            if GrpCount < NSUBEXP - 1 then
             begin
-              Inc(FSubExprCount);
-              FSubExprIndexes[FSubExprCount] := regnpar;
+              Inc(GrpCount);
+              GrpIndexes[GrpCount] := regnpar;
             end;
           ret := ParseReg(1, flags);
           if ret = nil then
@@ -3420,9 +3417,9 @@ end; { of function TRegExpr.ParseAtom
 function TRegExpr.GetCompilerErrorPos: PtrInt;
 begin
   Result := 0;
-  if (regexpbeg = nil) or (regparse = nil) then
+  if (regexpBegin = nil) or (regparse = nil) then
     Exit; // not in compiling mode ?
-  Result := regparse - regexpbeg;
+  Result := regparse - regexpBegin;
 end; { of function TRegExpr.GetCompilerErrorPos
   -------------------------------------------------------------- }
 
@@ -3436,8 +3433,8 @@ var
   scan: PRegExprChar;
   opnd: PRegExprChar;
   TheMax, NLen: integer;
-  { Ch, } InvCh: REChar; // ###0.931
-  sestart, seend: PRegExprChar; // ###0.936
+  InvChar: REChar; // ###0.931
+  GrpStart, GrpEnd: PRegExprChar; // ###0.936
   ArrayIndex: integer;
 begin
   Result := 0;
@@ -3479,8 +3476,8 @@ begin
         end;
         if Result < TheMax then
         begin // ###0.931
-          InvCh := InvertCase(opnd^); // store in register
-          while (Result < TheMax) and ((opnd^ = scan^) or (InvCh = scan^)) do
+          InvChar := InvertCase(opnd^); // store in register
+          while (Result < TheMax) and ((opnd^ = scan^) or (InvChar = scan^)) do
           begin
             Inc(Result);
             Inc(scan);
@@ -3489,18 +3486,18 @@ begin
       end;
     OP_BSUBEXP:
       begin // ###0.936
-        ArrayIndex := FSubExprIndexes[Ord(opnd^)];
+        ArrayIndex := GrpIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
           Exit;
-        sestart := startp[ArrayIndex];
-        if sestart = nil then
+        GrpStart := startp[ArrayIndex];
+        if GrpStart = nil then
           Exit;
-        seend := endp[ArrayIndex];
-        if seend = nil then
+        GrpEnd := endp[ArrayIndex];
+        if GrpEnd = nil then
           Exit;
         repeat
-          opnd := sestart;
-          while opnd < seend do
+          opnd := GrpStart;
+          while opnd < GrpEnd do
           begin
             if (scan >= fInputEnd) or (scan^ <> opnd^) then
               Exit;
@@ -3513,18 +3510,18 @@ begin
       end;
     OP_BSUBEXPCI:
       begin // ###0.936
-        ArrayIndex := FSubExprIndexes[Ord(opnd^)];
+        ArrayIndex := GrpIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
           Exit;
-        sestart := startp[ArrayIndex];
-        if sestart = nil then
+        GrpStart := startp[ArrayIndex];
+        if GrpStart = nil then
           Exit;
-        seend := endp[ArrayIndex];
-        if seend = nil then
+        GrpEnd := endp[ArrayIndex];
+        if GrpEnd = nil then
           Exit;
         repeat
-          opnd := sestart;
-          while opnd < seend do
+          opnd := GrpStart;
+          while opnd < GrpEnd do
           begin
             if (scan >= fInputEnd) or
               ((scan^ <> opnd^) and (scan^ <> InvertCase(opnd^))) then
@@ -3875,7 +3872,7 @@ begin
       OP_BSUBEXP:
         begin // ###0.936
           no := Ord((scan + REOpSz + RENextOffSz)^);
-          no := FSubExprIndexes[no];
+          no := GrpIndexes[no];
           if no < 0 then
             Exit;
           if startp[no] = nil then
@@ -3896,7 +3893,7 @@ begin
       OP_BSUBEXPCI:
         begin // ###0.936
           no := Ord((scan + REOpSz + RENextOffSz)^);
-          no := FSubExprIndexes[no];
+          no := GrpIndexes[no];
           if no < 0 then
             Exit;
           if startp[no] = nil then
@@ -4438,19 +4435,8 @@ end; { of function TRegExpr.GetLinePairedSeparator
 
 function TRegExpr.Substitute(const ATemplate: RegExprString): RegExprString;
 // perform substitutions after a regexp match
-// completely rewritten in 0.929
-type
-  TSubstMode = (smodeNormal, smodeOneUpper, smodeOneLower, smodeAllUpper,
-    smodeAllLower);
 var
-  TemplateLen: integer;
   TemplateBeg, TemplateEnd: PRegExprChar;
-  p, p0, p1, ResultPtr: PRegExprChar;
-  ResultLen: integer;
-  n: integer;
-  Ch: REChar;
-  Mode: TSubstMode;
-  QuotedChar: REChar;
 
   function ParseVarName(var APtr: PRegExprChar): integer;
   // extract name of variable (digits, may be enclosed with
@@ -4482,6 +4468,13 @@ var
     APtr := p;
   end;
 
+type
+  TSubstMode = (smodeNormal, smodeOneUpper, smodeOneLower, smodeAllUpper, smodeAllLower);
+var
+  Mode: TSubstMode;
+  p, p0, p1, ResultPtr: PRegExprChar;
+  TemplateLen, ResultLen, n: integer;
+  Ch, QuotedChar: REChar;
 begin
   // Check programm and input string
   if not IsProgrammOk then
@@ -4508,7 +4501,7 @@ begin
     Ch := p^;
     Inc(p);
     if Ch = '$' then
-      n := FSubExprIndexes[ParseVarName(p)]
+      n := GrpIndexes[ParseVarName(p)]
     else
       n := -1;
     if n >= 0 then
@@ -4565,7 +4558,7 @@ begin
     Inc(p);
     p1 := p;
     if Ch = '$' then
-      n := FSubExprIndexes[ParseVarName(p)]
+      n := GrpIndexes[ParseVarName(p)]
     else
       n := -1;
     if (n >= 0) then

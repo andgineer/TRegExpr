@@ -6,7 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 0.978 2020.01.06
+ v. 0.982 2020.01.08
+ -=- (^) Raise error if incorrect {} braces were found in expression.
+  By Alexey Torgashin.
  -=- (^) Optimize opcode for [a-c] ranges: avoid redundant EXACTLY.
   By Alexey Torgashin.
  -=- (^) Added test_benchmark (for FreePascal). Taken from Lazarus forum.
