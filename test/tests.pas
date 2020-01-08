@@ -39,8 +39,8 @@ type
     Procedure RunRETest(aIndex : Integer);
     procedure CompileRE(AExpression: string);
     procedure IsNotNull(ArrorMessage: string; AObjectToCheck: TObject);
-    procedure IsTrue(ArrorMessage: string; AConditionToCheck: boolean);
-    procedure IsFalse(ArrorMessage: string; AConditionToCheck: boolean);
+    procedure IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
+    procedure IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
     procedure AreEqual(ArrorMessage: string; s1,s2: string); overload;
     procedure AreEqual(ArrorMessage: string; i1,i2: integer); overload;
   published
@@ -438,17 +438,17 @@ const
     )
   );
 
-procedure TTestRegexpr.IsFalse(ArrorMessage: string; AConditionToCheck: boolean);
+procedure TTestRegexpr.IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
 begin
-  IsTrue(ArrorMessage, not AConditionToCheck)
+  IsTrue(AErrorMessage, not AConditionToCheck)
 end;
 
-procedure TTestRegexpr.IsTrue(ArrorMessage: string; AConditionToCheck: boolean);
+procedure TTestRegexpr.IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
 begin
   {$IFDEF FPC}
-  AssertTrue(ArrorMessage, AConditionToCheck);
+  AssertTrue(AErrorMessage, AConditionToCheck);
   {$ELSE}
-  CheckTrue(AConditionToCheck, ArrorMessage)
+  CheckTrue(AConditionToCheck, AErrorMessage)
   {$ENDIF}
 end;
 
@@ -497,14 +497,12 @@ end;
 
 {$IFDEF OverMeth}
 procedure TTestRegexpr.TestReplaceOverload;
-
 var
-  act : String;
-
+  act: string;
 begin
-    CompileRE('A\r(\n)'); // just to print compiled re - it will be recompiled below
-    act:=ReplaceRegExpr('A\r(\n)', 'a'#$d#$a, '\n', [rroModifierI, rroUseSubstitution]);
-    AssertEquals('Replace failed', PrintableString(#$a), PrintableString(Act))
+  CompileRE('A\r(\n)'); // just to print compiled re - it will be recompiled below
+  act:=ReplaceRegExpr('A\r(\n)', 'a'#$d#$a, '\n', [rroModifierI, rroUseSubstitution]);
+  AssertEquals('Replace failed', PrintableString(#$a), PrintableString(Act))
 end;
 {$ENDIF}
 
