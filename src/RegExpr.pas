@@ -4247,7 +4247,7 @@ end;
 
 function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 
-  procedure ClearMatchs;
+  procedure ClearMatches;
   var
     i: integer;
   begin
@@ -4265,13 +4265,12 @@ var
 begin
   Result := False;
 
-  ClearMatchs; // ###0.949
+  ClearMatches;
   // ensure that Match cleared either if optimization tricks or some error
   // will lead to leaving ExecPrim without actual search. That is
-  // importent for ExecNext logic and so on.
+  // important for ExecNext logic and so on.
 
-  if not IsProgrammOk // ###0.929
-  then
+  if not IsProgrammOk then
     Exit;
 
   // Check InputString presence
@@ -4338,11 +4337,9 @@ begin
     {$ELSE}
     Result := RegMatch(s);
     {$ENDIF}
-    if Result or (s >= fInputEnd) // Exit on a match or after testing the end-of-string.
-    then
-      Exit
-    else
-      ClearMatchs; // ###0.949
+    // Exit on a match or after testing the end-of-string
+    if Result or (s >= fInputEnd) then
+      Exit;
     Inc(s);
   until False;
 end; { of function TRegExpr.ExecPrim
