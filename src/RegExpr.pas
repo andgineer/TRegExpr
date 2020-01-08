@@ -1346,6 +1346,7 @@ const
   reeNoLetterAfterBSlashC = 117;
   reeMetaCharAfterMinusInRange = 118;
   reeRarseAtomInternalDisaster = 119;
+  reeIncorrectBraces = 121;
   reeBRACESArgTooBig = 122;
   reeUnknownOpcodeInFillFirst = 123;
   reeBracesMinParamGreaterMax = 124;
@@ -1411,16 +1412,18 @@ begin
       Result := 'TRegExpr compile: trailing \';
     reeRarseAtomInternalDisaster:
       Result := 'TRegExpr compile: RarseAtom internal disaster';
+    reeIncorrectBraces:
+      Result := 'TRegExpr compile: incorrect {} braces';
     reeBRACESArgTooBig:
-      Result := 'TRegExpr compile: BRACES argument too big';
+      Result := 'TRegExpr compile: braces {} argument too big';
     reeUnknownOpcodeInFillFirst:
       Result := 'TRegExpr compile: unknown opcode in FillFirstCharSet ('+DumpOp(fLastErrorOpcode)+')';
     reeBracesMinParamGreaterMax:
-      Result := 'TRegExpr compile: BRACE min param greater then max';
+      Result := 'TRegExpr compile: braces {} min param greater then max';
     reeUnclosedComment:
       Result := 'TRegExpr compile: unclosed (?#comment)';
     reeComplexBracesNotImplemented:
-      Result := 'TRegExpr compile: if you use BRACES ''{min,max}'' and non-greedy ops ''*?'', ''+?'', ''??'' for complex cases, enable {$DEFINE ComplexBraces}';
+      Result := 'TRegExpr compile: if you use braces {} and non-greedy ops *?, +?, ?? for complex cases, enable {$DEFINE ComplexBraces}';
     reeUnrecognizedModifier:
       Result := 'TRegExpr compile: unrecognized modifier';
     reeBadLinePairedSeparator:
@@ -2681,7 +2684,7 @@ var
   NonGreedyOp, NonGreedyCh: boolean; // ###0.940
   flags: integer;
   BracesMin, Bracesmax: TREBracesArg;
-  p, savedparse: PRegExprChar;
+  p: PRegExprChar;
 begin
   flags := 0;
   Result := ParseAtom(flags);
@@ -2794,17 +2797,13 @@ begin
       end; { of case '?' }
     '{':
       begin
-        savedparse := regparse;
-        // !!!!!!!!!!!!
-        // Filip Jirsak's note - what will happen, when we are at the end of regparse?
         Inc(regparse);
         p := regparse;
         while IsDigitChar(regparse^) do // <min> MUST appear
           Inc(regparse);
         if (regparse^ <> '}') and (regparse^ <> ',') or (p = regparse) then
         begin
-          regparse := savedparse;
-          flagp := flags;
+          Error(reeIncorrectBraces);
           Exit;
         end;
         BracesMin := ParseNumber(p, regparse - 1);
@@ -2816,7 +2815,7 @@ begin
             Inc(regparse);
           if regparse^ <> '}' then
           begin
-            regparse := savedparse;
+            Error(reeIncorrectBraces);
             Exit;
           end;
           if p = regparse then
