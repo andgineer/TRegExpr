@@ -3685,7 +3685,6 @@ var
 begin
   Result := False;
   scan := prog;
-  FillChar(SavedLoopStack[1], Length(SavedLoopStack)*SizeOf(integer), 0);
   while scan <> nil do
   begin
     Len := PRENextOff(AlignToPtr(scan + 1))^; // ###0.932 inlined regnext
