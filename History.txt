@@ -6,7 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 0.982 2020.01.08
+ v. 0.984 2020.01.08
+ -=- (^) Fixed big slowdown in Exec/ExecPos (calling IsProgrammOk), 
+  which affected test_benchmark a lot. By Alexey Torgashin.
  -=- (^) Raise error if incorrect {} braces were found in expression.
   By Alexey Torgashin.
  -=- (^) Optimize opcode for [a-c] ranges: avoid redundant EXACTLY.
