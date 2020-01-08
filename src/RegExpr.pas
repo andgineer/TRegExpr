@@ -1866,11 +1866,12 @@ begin
 
   // [Re]compile if needed
   if programm = nil then
+  begin
     Compile; // ###0.941
-
-  // Check [re]compiled programm
-  if programm = nil then
-    Exit; // error was set/raised by Compile (was reeExecAfterCompErr)
+    // Check [re]compiled programm
+    if programm = nil then
+      Exit; // error was set/raised by Compile (was reeExecAfterCompErr)
+  end;
 
   if programm[0] <> OP_MAGIC // Program corrupted.
   then
