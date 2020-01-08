@@ -4339,7 +4339,7 @@ begin
         Result := MatchAtOnePos(s);
       {$ENDIF}
     {$ELSE}
-    Result := RegMatch(s);
+    Result := MatchAtOnePos(s);
     {$ENDIF}
     // Exit on a match or after testing the end-of-string
     if Result or (s >= fInputEnd) then
