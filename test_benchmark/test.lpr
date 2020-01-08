@@ -102,6 +102,5 @@ begin
  finally
   stext:='';
  end;
- readln;
 end.
 

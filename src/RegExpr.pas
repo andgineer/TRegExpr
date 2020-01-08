@@ -318,7 +318,7 @@ type
     FUseOsLineEndOnReplace: boolean;
 
     {$IFNDEF UniCode}
-    fLineSeparatorsSet: set of AnsiChar;
+    fLineSepArray: array[byte] of boolean;
     {$ENDIF}
     {$IFDEF UnicodeWordDetection}
     FUseUnicodeWordDetection: boolean;
@@ -1774,7 +1774,7 @@ begin
   {$IFDEF UniCode}
   Result := Pos(AChar, fLineSeparators) > 0;
   {$ELSE}
-  Result := AChar in fLineSeparatorsSet;
+  Result := fLineSepArray[byte(AChar)];
   {$ENDIF}
 end;
 
@@ -1827,23 +1827,22 @@ begin
 end; { of procedure TRegExpr.InvalidateProgramm
   -------------------------------------------------------------- }
 
-procedure TRegExpr.Compile; // ###0.941
+procedure TRegExpr.Compile;
 {$IFNDEF UniCode}
 var
   i: integer;
 {$ENDIF}
 begin
   if fExpression = '' then
-  begin // No Expression assigned
+  begin
     Error(reeNoExpression);
     Exit;
   end;
 
-  // can we optimize line separators by using sets?
   {$IFNDEF UniCode}
-  fLineSeparatorsSet := [];
+  FillChar(fLineSepArray, SizeOf(fLineSepArray), 0);
   for i := 1 to Length(fLineSeparators) do
-    System.Include(fLineSeparatorsSet, fLineSeparators[i]);
+    fLineSepArray[byte(fLineSeparators[i])] := True;
   {$ENDIF}
 
   CompileRegExpr(PRegExprChar(fExpression));
