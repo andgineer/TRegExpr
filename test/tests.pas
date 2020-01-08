@@ -49,6 +49,7 @@ type
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
+    procedure TestBadBraces;
     Procedure RunTest1;
     Procedure RunTest2;
     Procedure RunTest3;
@@ -505,6 +506,36 @@ begin
   AssertEquals('Replace failed', PrintableString(#$a), PrintableString(Act))
 end;
 {$ENDIF}
+
+procedure TTestRegexpr.TestBadBraces;
+var
+  ok: boolean;
+begin
+  try
+    CompileRE('d{');
+    ok := False;
+  except
+    ok := True;
+  end;
+  IsTrue('Not raised Error for bad braces', ok);
+
+  try
+    CompileRE('d{22');
+    ok := False;
+  except
+    ok := True;
+  end;
+  IsTrue('Not raised Error for bad braces', ok);
+
+  try
+    CompileRE('d{}');
+    ok := False;
+  except
+    ok := True;
+  end;
+  IsTrue('Not raised Error for bad braces', ok);
+end;
+
 
 procedure TTestRegexpr.RunTest1;
 begin
