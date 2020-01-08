@@ -363,6 +363,7 @@ type
     procedure GetCharSetFromWordChars(var ARes: TRegExprCharSet);
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function IsCustomLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
 
@@ -1754,7 +1755,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.IsSpaceChar(AChar: REChar): boolean;
 begin
   {$IFDEF UseSpaceChars}
   Result := Pos(AChar, fSpaceChars) > 0;
@@ -1765,6 +1766,15 @@ begin
     else
       Result := False;
   end;
+  {$ENDIF}
+end;
+
+function TRegExpr.IsCustomLineSeparator(AChar: REChar): boolean;
+begin
+  {$IFDEF UniCode}
+  Result := Pos(AChar, fLineSeparators) > 0;
+  {$ELSE}
+  Result := AChar in fLineSeparatorsSet;
   {$ENDIF}
 end;
 
@@ -3723,13 +3733,7 @@ begin
             if (nextch = fLinePairedSeparatorHead) and
               (reginput^ = fLinePairedSeparatorTail) then
               Exit; // don't stop between paired separator
-            if
-              {$IFNDEF UniCode}
-              not (nextch in fLineSeparatorsSet)
-              {$ELSE}
-              (Pos(nextch, fLineSeparators) <= 0)
-              {$ENDIF}
-            then
+            if not IsCustomLineSeparator(nextch) then
               Exit;
           end;
         end;
@@ -3743,13 +3747,7 @@ begin
             if (nextch = fLinePairedSeparatorTail) and (reginput > fInputStart)
               and ((reginput - 1)^ = fLinePairedSeparatorHead) then
               Exit; // don't stop between paired separator
-            if
-              {$IFNDEF UniCode}
-              not (nextch in fLineSeparatorsSet)
-              {$ELSE}
-              (Pos(nextch, fLineSeparators) <= 0)
-              {$ENDIF}
-            then
+            if not IsCustomLineSeparator(nextch) then
               Exit;
           end;
         end;
@@ -3764,11 +3762,7 @@ begin
           if (reginput = fInputEnd) or
             ((reginput^ = fLinePairedSeparatorHead) and
             ((reginput + 1)^ = fLinePairedSeparatorTail)) or
-            {$IFNDEF UniCode}
-            (reginput^ in fLineSeparatorsSet)
-            {$ELSE}
-            (Pos(reginput^, fLineSeparators) > 0)
-            {$ENDIF}
+            IsCustomLineSeparator(reginput^)
           then
             Exit;
           Inc(reginput);
