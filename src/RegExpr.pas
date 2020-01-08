@@ -276,7 +276,7 @@ type
     regsize: integer; // Total programm size in REChars.
     regExactlyLen: PLongInt;
     regexpBegin: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
-    regexpCompiled: boolean; // true if r.e. successfully compiled
+    regexpIsCompiled: boolean; // true if r.e. successfully compiled
     fSecondPass: boolean;
 
     // programm is essentially a linear encoding
@@ -1488,7 +1488,7 @@ begin
   fInputString := '';
 
   regexpBegin := nil;
-  regexpCompiled := False;
+  regexpIsCompiled := False;
 
   FillChar(fModifiers, SIzeOf(fModifiers), 0);
   ModifierI := RegExprModifierI;
@@ -1577,9 +1577,9 @@ end; { of function TRegExpr.InvertCaseFunction
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
-  if (AStr <> fExpression) or not regexpCompiled then
+  if (AStr <> fExpression) or not regexpIsCompiled then
   begin
-    regexpCompiled := False;
+    regexpIsCompiled := False;
     fExpression := AStr;
     UniqueString(fExpression);
     fRegexStart := PRegExprChar(fExpression);
@@ -2441,7 +2441,7 @@ begin
       if not Result then
         InvalidateProgramm;
       regexpBegin := nil;
-      regexpCompiled := Result; // ###0.944
+      regexpIsCompiled := Result; // ###0.944
     end;
   end;
 
