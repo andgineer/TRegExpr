@@ -4267,8 +4267,7 @@ end;
 
 function TRegExpr.ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
 var
-  s: PRegExprChar;
-  StartPtr: PRegExprChar;
+  Ptr: PRegExprChar;
 begin
   Result := False;
 
@@ -4305,7 +4304,7 @@ begin
   then
     Exit;
 
-  StartPtr := fInputStart + AOffset - 1;
+  Ptr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
@@ -4322,38 +4321,37 @@ begin
   begin
     {$IFDEF UseFirstCharSet}
     {$IFDEF UniCode}
-    if Ord(StartPtr^) <= $FF then
+    if Ord(Ptr^) <= $FF then
     {$ENDIF}
-      if not FirstCharArray[byte(StartPtr^)] then
+      if not FirstCharArray[byte(Ptr^)] then
         Exit;
     {$ENDIF}
-    Result := MatchAtOnePos(StartPtr);
+    Result := MatchAtOnePos(Ptr);
     Exit;
   end;
 
   // Messy cases: unanchored match.
-  s := StartPtr;
   repeat
     {$IFDEF UseFirstCharSet}
       {$IFDEF UniCode}
-      if Ord(s^) <= $FF then
+      if Ord(Ptr^) <= $FF then
       begin
-        if FirstCharArray[byte(s^)] then
-          Result := MatchAtOnePos(s);
+        if FirstCharArray[byte(Ptr^)] then
+          Result := MatchAtOnePos(Ptr);
       end
       else
-        Result := MatchAtOnePos(s);
+        Result := MatchAtOnePos(Ptr);
       {$ELSE}
-      if FirstCharArray[byte(s^)] then
-        Result := MatchAtOnePos(s);
+      if FirstCharArray[byte(Ptr^)] then
+        Result := MatchAtOnePos(Ptr);
       {$ENDIF}
     {$ELSE}
-    Result := MatchAtOnePos(s);
+    Result := MatchAtOnePos(Ptr);
     {$ENDIF}
     // Exit on a match or after testing the end-of-string
-    if Result or (s >= fInputEnd) then
+    if Result or (Ptr >= fInputEnd) then
       Exit;
-    Inc(s);
+    Inc(Ptr);
   until False;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
