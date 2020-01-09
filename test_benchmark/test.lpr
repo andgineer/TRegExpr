@@ -75,10 +75,14 @@ begin
     end else begin
      j:=0;
     end;
+
     Regex:=TRegExpr.Create;
     Regex.ModifierI:=j<>0;
+    Regex.ModifierS:=false;
     Regex.Expression:=expr;
     Regex.Compile;
+    Regex.SlowChecksSizeMax:=0;
+
     try
      write('/'+BenchmarkPatterns[i]+'/ : ':50);
      t1:=GetTickCount;
