@@ -318,7 +318,7 @@ type
     FUseOsLineEndOnReplace: boolean;
 
     {$IFNDEF UniCode}
-    fLineSeparatorsSet: set of REChar;
+    fLineSepArray: array[byte] of boolean;
     {$ENDIF}
     {$IFDEF UnicodeWordDetection}
     FUseUnicodeWordDetection: boolean;
@@ -355,13 +355,17 @@ type
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
 
-    procedure ClearInternalIndexes;
+    procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: boolean; var ARes: TRegExprCharset);
     procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset);
     procedure GetCharSetFromWordChars(var ARes: TRegExprCharSet);
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function IsCustomLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure InitLineSepArray;
+
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
 
@@ -759,7 +763,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 982;
+  REVersionMinor = 984;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1519,6 +1523,7 @@ begin
   FUseUnicodeWordDetection := True;
   {$ENDIF}
 
+  InitLineSepArray;
   InitCharCheckers;
 end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
@@ -1753,7 +1758,7 @@ begin
   {$ENDIF}
 end;
 
-function TRegExpr.IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.IsSpaceChar(AChar: REChar): boolean;
 begin
   {$IFDEF UseSpaceChars}
   Result := Pos(AChar, fSpaceChars) > 0;
@@ -1764,6 +1769,15 @@ begin
     else
       Result := False;
   end;
+  {$ENDIF}
+end;
+
+function TRegExpr.IsCustomLineSeparator(AChar: REChar): boolean;
+begin
+  {$IFDEF UniCode}
+  Result := Pos(AChar, fLineSeparators) > 0;
+  {$ELSE}
+  Result := fLineSepArray[byte(AChar)];
   {$ENDIF}
 end;
 
@@ -1816,22 +1830,32 @@ begin
 end; { of procedure TRegExpr.InvalidateProgramm
   -------------------------------------------------------------- }
 
-procedure TRegExpr.Compile; // ###0.941
+procedure TRegExpr.Compile;
 begin
   if fExpression = '' then
-  begin // No Expression assigned
+  begin
     Error(reeNoExpression);
     Exit;
   end;
+
   CompileRegExpr(PRegExprChar(fExpression));
 end; { of procedure TRegExpr.Compile
   -------------------------------------------------------------- }
 
-function TRegExpr.IsProgrammOk: boolean;
+procedure TRegExpr.InitLineSepArray;
 {$IFNDEF UniCode}
 var
   i: integer;
 {$ENDIF}
+begin
+  {$IFNDEF UniCode}
+  FillChar(fLineSepArray, SizeOf(fLineSepArray), 0);
+  for i := 1 to Length(fLineSeparators) do
+    fLineSepArray[byte(fLineSeparators[i])] := True;
+  {$ENDIF}
+end;
+
+function TRegExpr.IsProgrammOk: boolean;
 begin
   Result := False;
 
@@ -1840,20 +1864,16 @@ begin
   then
     InvalidateProgramm;
 
-  // can we optimize line separators by using sets?
-  {$IFNDEF UniCode}
-  fLineSeparatorsSet := [];
-  for i := 1 to Length(fLineSeparators) do
-    System.Include(fLineSeparatorsSet, fLineSeparators[i]);
-  {$ENDIF}
   // [Re]compile if needed
   if programm = nil then
+  begin
     Compile; // ###0.941
+    // Check [re]compiled programm
+    if programm = nil then
+      Exit; // error was set/raised by Compile (was reeExecAfterCompErr)
+  end;
 
-  // check [re]compiled programm
-  if programm = nil then
-    Exit // error was set/raised by Compile (was reeExecAfterCompErr)
-  else if programm[0] <> OP_MAGIC // Program corrupted.
+  if programm[0] <> OP_MAGIC // Program corrupted.
   then
     Error(reeCorruptedProgram)
   else
@@ -2037,7 +2057,6 @@ function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreC
 // and Data depends on Kind
 var
   ch, ch2: REChar;
-  ok: boolean;
   N, i: integer;
 begin
   if AIgnoreCase then
@@ -3682,7 +3701,6 @@ var
 begin
   Result := False;
   scan := prog;
-  FillChar(SavedLoopStack[1], Length(SavedLoopStack)*SizeOf(integer), 0);
   while scan <> nil do
   begin
     Len := PRENextOff(AlignToPtr(scan + 1))^; // ###0.932 inlined regnext
@@ -3721,13 +3739,7 @@ begin
             if (nextch = fLinePairedSeparatorHead) and
               (reginput^ = fLinePairedSeparatorTail) then
               Exit; // don't stop between paired separator
-            if
-              {$IFNDEF UniCode}
-              not (nextch in fLineSeparatorsSet)
-              {$ELSE}
-              (Pos(nextch, fLineSeparators) <= 0)
-              {$ENDIF}
-            then
+            if not IsCustomLineSeparator(nextch) then
               Exit;
           end;
         end;
@@ -3741,13 +3753,7 @@ begin
             if (nextch = fLinePairedSeparatorTail) and (reginput > fInputStart)
               and ((reginput - 1)^ = fLinePairedSeparatorHead) then
               Exit; // don't stop between paired separator
-            if
-              {$IFNDEF UniCode}
-              not (nextch in fLineSeparatorsSet)
-              {$ELSE}
-              (Pos(nextch, fLineSeparators) <= 0)
-              {$ENDIF}
-            then
+            if not IsCustomLineSeparator(nextch) then
               Exit;
           end;
         end;
@@ -3762,11 +3768,7 @@ begin
           if (reginput = fInputEnd) or
             ((reginput^ = fLinePairedSeparatorHead) and
             ((reginput + 1)^ = fLinePairedSeparatorTail)) or
-            {$IFNDEF UniCode}
-            (reginput^ in fLineSeparatorsSet)
-            {$ELSE}
-            (Pos(reginput^, fLineSeparators) > 0)
-            {$ENDIF}
+            IsCustomLineSeparator(reginput^)
           then
             Exit;
           Inc(reginput);
@@ -4233,9 +4235,8 @@ begin
 end;
 {$ENDIF}
 
-function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean;
 begin
-  // ###0.949 removed clearing of start\endp
   reginput := APos;
   Result := MatchPrim(programm + REOpSz);
   if Result then
@@ -4245,33 +4246,36 @@ begin
   end;
 end;
 
-function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
-
-  procedure ClearMatches;
-  var
-    i: integer;
+procedure TRegExpr.ClearMatches;
+var
+  i: integer;
+begin
+  for i := 0 to NSUBEXP - 1 do
   begin
-    for i := 0 to NSUBEXP - 1 do
-    begin
-      startp[i] := nil;
-      endp[i] := nil;
-    end;
-  end; { of procedure ClearMatchs;
-  .............................................................. }
+    startp[i] := nil;
+    endp[i] := nil;
+  end;
+end;
 
+function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
 var
   s: PRegExprChar;
   StartPtr: PRegExprChar;
 begin
   Result := False;
 
-  ClearMatches;
-  // ensure that Match cleared either if optimization tricks or some error
+  // Ensure that Match cleared either if optimization tricks or some error
   // will lead to leaving ExecPrim without actual search. That is
   // important for ExecNext logic and so on.
+  ClearMatches;
 
-  if not IsProgrammOk then
-    Exit;
+  // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
+  if programm = nil then
+  begin
+    Compile;
+    if programm = nil then
+      Exit;
+  end;
 
   // Check InputString presence
   if fInputString = '' then
@@ -4335,7 +4339,7 @@ begin
         Result := MatchAtOnePos(s);
       {$ENDIF}
     {$ELSE}
-    Result := RegMatch(s);
+    Result := MatchAtOnePos(s);
     {$ENDIF}
     // Exit on a match or after testing the end-of-string
     if Result or (s >= fInputEnd) then
@@ -4347,34 +4351,27 @@ end; { of function TRegExpr.ExecPrim
 
 function TRegExpr.ExecNext: boolean;
 var
-  offset: PtrInt;
+  Offset: PtrInt;
 begin
   Result := False;
-  if not Assigned(startp[0]) or not Assigned(endp[0]) then
+  if (startp[0] = nil) or (endp[0] = nil) then
   begin
     Error(reeExecNextWithoutExec);
     Exit;
   end;
   // Offset := MatchPos [0] + MatchLen [0];
   // if MatchLen [0] = 0
-  offset := endp[0] - fInputStart + 1; // ###0.929
+  Offset := endp[0] - fInputStart + 1; // ###0.929
   if endp[0] = startp[0] // ###0.929
   then
-    Inc(offset); // prevent infinite looping if empty string match r.e.
-  Result := ExecPrim(offset, False);
+    Inc(Offset); // prevent infinite looping if empty string match r.e.
+  Result := ExecPrim(Offset, False);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
 procedure TRegExpr.SetInputString(const AInputString: RegExprString);
-var
-  i: integer;
 begin
-  // clear Match* - before next Exec* call it's undefined
-  for i := 0 to NSUBEXP - 1 do
-  begin
-    startp[i] := nil;
-    endp[i] := nil;
-  end;
+  ClearMatches;
 
   fInputString := AInputString;
   UniqueString(fInputString);
@@ -4389,6 +4386,7 @@ begin
   if AStr <> fLineSeparators then
   begin
     fLineSeparators := AStr;
+    InitLineSepArray;
     InvalidateProgramm;
   end;
 end; { of procedure TRegExpr.SetLineSeparators
@@ -5208,8 +5206,7 @@ var
   end;
 
 begin
-  if not IsProgrammOk // ###0.929
-  then
+  if not IsProgrammOk then
     Exit;
 
   op := OP_EXACTLY;

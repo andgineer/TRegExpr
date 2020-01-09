@@ -26,7 +26,6 @@
       <Unit>
         <Filename Value="test.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="benchmark"/>
       </Unit>
       <Unit>
         <Filename Value="../src/RegExpr.pas"/>
