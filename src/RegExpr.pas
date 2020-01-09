@@ -314,7 +314,7 @@ type
     fLineSeparators: RegExprString;
     fLinePairedSeparatorAssigned: boolean;
     fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
-    FReplaceLineEnd: string;
+    FReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
     FUseOsLineEndOnReplace: boolean;
 
     {$IFNDEF UniCode}
@@ -4557,7 +4557,6 @@ begin
     Result := '';
     Exit;
   end;
-  // SetString (Result, nil, ResultLen);
   SetLength(Result, ResultLen);
   // Fill Result
   ResultPtr := Pointer(Result);
@@ -4587,7 +4586,7 @@ begin
         case Ch of
           'n':
             begin
-              p0 := @FReplaceLineEnd[1];
+              p0 := PRegExprChar(FReplaceLineEnd);
               p1 := p0 + Length(FReplaceLineEnd);
             end;
           'x', 't', 'r', 'f', 'a', 'e':
