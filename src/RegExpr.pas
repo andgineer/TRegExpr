@@ -456,7 +456,7 @@ type
     function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
+    function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
 
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
@@ -487,9 +487,11 @@ type
     // and second that has int parameter and is same as ExecPos
     function Exec(const AInputString: RegExprString): boolean;
     {$IFDEF OverMeth} overload;
-    function Exec: boolean; overload; // ###0.949
-    function Exec(AOffset: integer): boolean; overload; // ###0.949
+    function Exec: boolean; overload;
+    function Exec(AOffset: integer): boolean; overload;
+    function Exec(ASlowChecks: boolean): boolean; overload;
     {$ENDIF}
+
     // find next match:
     // ExecNext;
     // works the same as
@@ -4204,34 +4206,40 @@ end; { of function TRegExpr.MatchPrim
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
   InputString := AInputString;
-  Result := ExecPrim(1, False);
+  Result := ExecPrim(1, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
+function TRegExpr.Exec(ASlowChecks: boolean): boolean;
+begin
+  Result := ExecPrim(1, False, ASlowChecks);
+end; { of function TRegExpr.Exec
+  -------------------------------------------------------------- }
+
 function TRegExpr.Exec: boolean;
 begin
-  Result := ExecPrim(1, False);
+  Result := ExecPrim(1, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 function TRegExpr.Exec(AOffset: integer): boolean;
 begin
-  Result := ExecPrim(AOffset, False);
+  Result := ExecPrim(AOffset, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 {$ENDIF}
 
 function TRegExpr.ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 begin
-  Result := ExecPrim(AOffset, False);
+  Result := ExecPrim(AOffset, False, False);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
 function TRegExpr.ExecPos(AOffset: integer; ATryOnce: boolean): boolean;
 begin
-  Result := ExecPrim(AOffset, ATryOnce);
+  Result := ExecPrim(AOffset, ATryOnce, False);
 end;
 {$ENDIF}
 
@@ -4257,7 +4265,7 @@ begin
   end;
 end;
 
-function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
+function TRegExpr.ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
 var
   s: PRegExprChar;
   StartPtr: PRegExprChar;
@@ -4300,8 +4308,9 @@ begin
   StartPtr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
-  if regmustString <> '' then
-    if Pos(regmustString, fInputString) = 0 then Exit;
+  if ASlowChecks then
+    if regmustString <> '' then
+      if Pos(regmustString, fInputString) = 0 then Exit;
 
   {$IFDEF ComplexBraces}
   // no loops started
@@ -4365,7 +4374,7 @@ begin
   if endp[0] = startp[0] // ###0.929
   then
     Inc(Offset); // prevent infinite looping if empty string match r.e.
-  Result := ExecPrim(Offset, False);
+  Result := ExecPrim(Offset, False, False);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
