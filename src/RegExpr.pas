@@ -2331,20 +2331,6 @@ begin
   Result := fModifiers.X;
 end;
 
-procedure TRegExpr.ClearInternalIndexes;
-var
-  i: integer;
-begin
-  for i := 0 to NSUBEXP - 1 do
-  begin
-    startp[i] := nil;
-    endp[i] := nil;
-    GrpIndexes[i] := -1;
-  end;
-  GrpIndexes[0] := 0;
-  GrpCount := 0;
-end;
-
 function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): boolean;
 // Compile a regular expression into internal code
 // We can't allocate space until we know how big the compiled form will be,
@@ -4255,14 +4241,21 @@ begin
 end;
 
 procedure TRegExpr.ClearMatches;
+begin
+  FillChar(startp, SizeOf(startp), 0);
+  FillChar(endp, SizeOf(endp), 0);
+end;
+
+procedure TRegExpr.ClearInternalIndexes;
 var
   i: integer;
 begin
+  FillChar(startp, SizeOf(startp), 0);
+  FillChar(endp, SizeOf(endp), 0);
   for i := 0 to NSUBEXP - 1 do
-  begin
-    startp[i] := nil;
-    endp[i] := nil;
-  end;
+    GrpIndexes[i] := -1;
+  GrpIndexes[0] := 0;
+  GrpCount := 0;
 end;
 
 function TRegExpr.ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
