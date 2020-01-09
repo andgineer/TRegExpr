@@ -4632,21 +4632,23 @@ begin
       while p0 < p1 do
       begin
         case Mode of
-          smodeOneLower, smodeAllLower:
+          smodeOneLower:
             begin
-              Ch := p0^;
-              Ch := _LowerCase(Ch);
-              ResultPtr^ := Ch;
-              if Mode = smodeOneLower then
-                Mode := smodeNormal;
+              ResultPtr^ := _LowerCase(p0^);
+              Mode := smodeNormal;
             end;
-          smodeOneUpper, smodeAllUpper:
+          smodeAllLower:
             begin
-              Ch := p0^;
-              Ch := _UpperCase(Ch);
-              ResultPtr^ := Ch;
-              if Mode = smodeOneUpper then
-                Mode := smodeNormal;
+              ResultPtr^ := _LowerCase(p0^);
+            end;
+          smodeOneUpper:
+            begin
+              ResultPtr^ := _UpperCase(p0^);
+              Mode := smodeNormal;
+            end;
+          smodeAllUpper:
+            begin
+              ResultPtr^ := _UpperCase(p0^);
             end;
         else
           ResultPtr^ := p0^;
