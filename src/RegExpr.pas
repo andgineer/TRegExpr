@@ -4352,13 +4352,12 @@ var
   PtrBegin, PtrEnd: PRegExprChar;
   Offset: PtrInt;
 begin
-  Result := False;
-
   PtrBegin := startp[0];
   PtrEnd := endp[0];
   if (PtrBegin = nil) or (PtrEnd = nil) then
   begin
     Error(reeExecNextWithoutExec);
+    Result := False;
     Exit;
   end;
 
