@@ -340,7 +340,6 @@ type
     CheckerIndex_NotHorzSep: byte;
     CheckerIndex_VertSep: byte;
     CheckerIndex_NotVertSep: byte;
-    CheckerIndex_AllAZ: byte;
     CheckerIndex_LowerAZ: byte;
     CheckerIndex_UpperAZ: byte;
 
@@ -355,7 +354,6 @@ type
     function CharChecker_NotHorzSep(ch: REChar): boolean;
     function CharChecker_VertSep(ch: REChar): boolean;
     function CharChecker_NotVertSep(ch: REChar): boolean;
-    function CharChecker_AllAZ(ch: REChar): boolean;
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
 
@@ -5063,17 +5061,6 @@ end;
 function TRegExpr.CharChecker_NotHorzSep(ch: REChar): boolean;
 begin
   Result := not IsHorzSeparator(ch);
-end;
-
-function TRegExpr.CharChecker_AllAZ(ch: REChar): boolean;
-begin
-  case ch of
-    'a' .. 'z',
-    'A' .. 'Z':
-      Result := True;
-    else
-      Result := False;
-  end;
 end;
 
 function TRegExpr.CharChecker_LowerAZ(ch: REChar): boolean;
