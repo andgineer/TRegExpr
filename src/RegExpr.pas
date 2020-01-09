@@ -4326,42 +4326,30 @@ begin
       if not FirstCharArray[byte(Ptr^)] then
         Exit;
     {$ENDIF}
+
     Result := MatchAtOnePos(Ptr);
     Exit;
   end;
 
   // Messy cases: unanchored match.
+  Dec(Ptr);
   repeat
-    {$IFDEF UseFirstCharSet}
-      {$IFDEF UniCode}
-      if Ord(Ptr^) <= $FF then
-      begin
-        if FirstCharArray[byte(Ptr^)] then
-        begin
-          Result := MatchAtOnePos(Ptr);
-          if Result then Exit;
-        end
-      end
-      else
-      begin
-        Result := MatchAtOnePos(Ptr);
-        if Result then Exit;
-      end;
-      {$ELSE}
-      if FirstCharArray[byte(Ptr^)] then
-      begin
-        Result := MatchAtOnePos(Ptr);
-        if Result then Exit;
-      end;
-      {$ENDIF}
-    {$ELSE}
-    Result := MatchAtOnePos(Ptr);
-    if Result then Exit;
-    {$ENDIF}
-    // Exit on a match or after testing the end-of-string
-    if Ptr >= fInputEnd then
-      Exit;
     Inc(Ptr);
+    if Ptr > fInputEnd then
+      Exit;
+
+    {$IFDEF UseFirstCharSet}
+    {$IFDEF UniCode}
+    if Ord(Ptr^) <= $FF then
+    {$ENDIF}
+      if not FirstCharArray[byte(Ptr^)] then
+        Continue;
+    {$ENDIF}
+
+    Result := MatchAtOnePos(Ptr);
+    // Exit on a match or after testing the end-of-string
+    if Result then
+      Exit;
   until False;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
