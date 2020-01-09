@@ -4349,20 +4349,24 @@ end; { of function TRegExpr.ExecPrim
 
 function TRegExpr.ExecNext: boolean;
 var
+  PtrBegin, PtrEnd: PRegExprChar;
   Offset: PtrInt;
 begin
   Result := False;
-  if (startp[0] = nil) or (endp[0] = nil) then
+
+  PtrBegin := startp[0];
+  PtrEnd := endp[0];
+  if (PtrBegin = nil) or (PtrEnd = nil) then
   begin
     Error(reeExecNextWithoutExec);
     Exit;
   end;
-  // Offset := MatchPos [0] + MatchLen [0];
-  // if MatchLen [0] = 0
-  Offset := endp[0] - fInputStart + 1; // ###0.929
-  if endp[0] = startp[0] // ###0.929
-  then
-    Inc(Offset); // prevent infinite looping if empty string match r.e.
+
+  Offset := PtrEnd - fInputStart + 1;
+  // prevent infinite looping if empty string matches r.e.
+  if PtrBegin = PtrEnd then
+    Inc(Offset);
+
   Result := ExecPrim(Offset, False, False);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
