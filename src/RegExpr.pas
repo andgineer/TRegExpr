@@ -4485,7 +4485,7 @@ type
 var
   Mode: TSubstMode;
   p, p0, p1, ResultPtr: PRegExprChar;
-  TemplateLen, ResultLen, n: integer;
+  ResultLen, n: integer;
   Ch, QuotedChar: REChar;
 begin
   // Check programm and input string
@@ -4497,14 +4497,13 @@ begin
     Exit;
   end;
   // Prepare for working
-  TemplateLen := Length(ATemplate);
-  if TemplateLen = 0 then
+  if ATemplate = '' then
   begin // prevent nil pointers
     Result := '';
     Exit;
   end;
-  TemplateBeg := Pointer(ATemplate);
-  TemplateEnd := TemplateBeg + TemplateLen;
+  TemplateBeg := PRegExprChar(ATemplate);
+  TemplateEnd := TemplateBeg + Length(ATemplate);
   // Count result length for speed optimization.
   ResultLen := 0;
   p := TemplateBeg;
