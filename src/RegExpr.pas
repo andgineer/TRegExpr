@@ -4337,19 +4337,29 @@ begin
       if Ord(Ptr^) <= $FF then
       begin
         if FirstCharArray[byte(Ptr^)] then
+        begin
           Result := MatchAtOnePos(Ptr);
+          if Result then Exit;
+        end
       end
       else
+      begin
         Result := MatchAtOnePos(Ptr);
+        if Result then Exit;
+      end;
       {$ELSE}
       if FirstCharArray[byte(Ptr^)] then
+      begin
         Result := MatchAtOnePos(Ptr);
+        if Result then Exit;
+      end;
       {$ENDIF}
     {$ELSE}
     Result := MatchAtOnePos(Ptr);
+    if Result then Exit;
     {$ENDIF}
     // Exit on a match or after testing the end-of-string
-    if Result or (Ptr >= fInputEnd) then
+    if Ptr >= fInputEnd then
       Exit;
     Inc(Ptr);
   until False;
