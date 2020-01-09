@@ -314,8 +314,9 @@ type
     fLineSeparators: RegExprString;
     fLinePairedSeparatorAssigned: boolean;
     fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
+
     FReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
-    FUseOsLineEndOnReplace: boolean;
+    FUseOsLineEndOnReplace: boolean; // use OS LineBreak chars (LF or CRLF) for FReplaceLineEnd
 
     {$IFNDEF UniCode}
     fLineSepArray: array[byte] of boolean;
