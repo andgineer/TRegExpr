@@ -318,8 +318,9 @@ type
     FReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
     FUseOsLineEndOnReplace: boolean; // use OS LineBreak chars (LF or CRLF) for FReplaceLineEnd
 
-    fSlowChecksSizeMin: integer;
     fSlowChecksSizeMax: integer;
+    // use ASlowChecks=True in Exec() only when Length(InputString)<SlowChecksSizeMax
+    // ASlowChecks enables to use regmustString optimization
 
     {$IFNDEF UniCode}
     fLineSepArray: array[byte] of boolean;
@@ -670,7 +671,6 @@ type
     // Set to false to use #10.
     property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
 
-    property SlowChecksSizeMin: integer read fSlowChecksSizeMin write fSlowChecksSizeMin;
     property SlowChecksSizeMax: integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
   end;
 
@@ -1529,7 +1529,6 @@ begin
   FUseUnicodeWordDetection := True;
   {$ENDIF}
 
-  fSlowChecksSizeMin := 20;
   fSlowChecksSizeMax := 2000;
 
   InitLineSepArray;
@@ -4206,11 +4205,9 @@ end; { of function TRegExpr.Exec
 {$IFDEF OverMeth}
 function TRegExpr.Exec: boolean;
 var
-  Len: integer;
   SlowChecks: boolean;
 begin
-  Len := Length(fInputString);
-  SlowChecks := (Len >= fSlowChecksSizeMin) and (Len < fSlowChecksSizeMax);
+  SlowChecks := Length(fInputString) < fSlowChecksSizeMax;
   Result := ExecPrim(1, False, SlowChecks);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
