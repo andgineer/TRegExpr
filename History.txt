@@ -6,7 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 0.984 2020.01.08
+ v. 0.987 2020.01.09
+ -=- (+) Added properties SlowChecksSizeMin, SlowChecksSizeMax. Slow checks
+  are used only in Exec(), and not in Exec(AOffset), ExecPos(), ExecNext.
  -=- (^) Fixed big slowdown in Exec/ExecPos (calling IsProgrammOk), 
   which affected test_benchmark a lot. By Alexey Torgashin.
  -=- (^) Raise error if incorrect {} braces were found in expression.

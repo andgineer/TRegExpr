@@ -314,8 +314,13 @@ type
     fLineSeparators: RegExprString;
     fLinePairedSeparatorAssigned: boolean;
     fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
-    FReplaceLineEnd: string;
-    FUseOsLineEndOnReplace: boolean;
+
+    FReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
+    FUseOsLineEndOnReplace: boolean; // use OS LineBreak chars (LF or CRLF) for FReplaceLineEnd
+
+    fSlowChecksSizeMax: integer;
+    // use ASlowChecks=True in Exec() only when Length(InputString)<SlowChecksSizeMax
+    // ASlowChecks enables to use regmustString optimization
 
     {$IFNDEF UniCode}
     fLineSepArray: array[byte] of boolean;
@@ -336,7 +341,6 @@ type
     CheckerIndex_NotHorzSep: byte;
     CheckerIndex_VertSep: byte;
     CheckerIndex_NotVertSep: byte;
-    CheckerIndex_AllAZ: byte;
     CheckerIndex_LowerAZ: byte;
     CheckerIndex_UpperAZ: byte;
 
@@ -351,7 +355,6 @@ type
     function CharChecker_NotHorzSep(ch: REChar): boolean;
     function CharChecker_VertSep(ch: REChar): boolean;
     function CharChecker_NotVertSep(ch: REChar): boolean;
-    function CharChecker_AllAZ(ch: REChar): boolean;
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
 
@@ -456,7 +459,7 @@ type
     function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
+    function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
 
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
@@ -487,9 +490,10 @@ type
     // and second that has int parameter and is same as ExecPos
     function Exec(const AInputString: RegExprString): boolean;
     {$IFDEF OverMeth} overload;
-    function Exec: boolean; overload; // ###0.949
-    function Exec(AOffset: integer): boolean; overload; // ###0.949
+    function Exec: boolean; overload;
+    function Exec(AOffset: integer): boolean; overload;
     {$ENDIF}
+
     // find next match:
     // ExecNext;
     // works the same as
@@ -666,6 +670,8 @@ type
     // Use OS line end on replace or not. Default is True for backwards compatibility.
     // Set to false to use #10.
     property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
+
+    property SlowChecksSizeMax: integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
   end;
 
 type
@@ -763,7 +769,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 984;
+  REVersionMinor = 987;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1522,6 +1528,8 @@ begin
   {$IFDEF UnicodeWordDetection}
   FUseUnicodeWordDetection := True;
   {$ENDIF}
+
+  fSlowChecksSizeMax := 2000;
 
   InitLineSepArray;
   InitCharCheckers;
@@ -2327,20 +2335,6 @@ end;
 function TRegExpr.GetModifierX: boolean;
 begin
   Result := fModifiers.X;
-end;
-
-procedure TRegExpr.ClearInternalIndexes;
-var
-  i: integer;
-begin
-  for i := 0 to NSUBEXP - 1 do
-  begin
-    startp[i] := nil;
-    endp[i] := nil;
-    GrpIndexes[i] := -1;
-  end;
-  GrpIndexes[0] := 0;
-  GrpCount := 0;
 end;
 
 function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): boolean;
@@ -4204,34 +4198,37 @@ end; { of function TRegExpr.MatchPrim
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
   InputString := AInputString;
-  Result := ExecPrim(1, False);
+  Result := ExecPrim(1, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
 function TRegExpr.Exec: boolean;
+var
+  SlowChecks: boolean;
 begin
-  Result := ExecPrim(1, False);
+  SlowChecks := Length(fInputString) < fSlowChecksSizeMax;
+  Result := ExecPrim(1, False, SlowChecks);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 function TRegExpr.Exec(AOffset: integer): boolean;
 begin
-  Result := ExecPrim(AOffset, False);
+  Result := ExecPrim(AOffset, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 {$ENDIF}
 
 function TRegExpr.ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 begin
-  Result := ExecPrim(AOffset, False);
+  Result := ExecPrim(AOffset, False, False);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
 function TRegExpr.ExecPos(AOffset: integer; ATryOnce: boolean): boolean;
 begin
-  Result := ExecPrim(AOffset, ATryOnce);
+  Result := ExecPrim(AOffset, ATryOnce, False);
 end;
 {$ENDIF}
 
@@ -4247,20 +4244,26 @@ begin
 end;
 
 procedure TRegExpr.ClearMatches;
+begin
+  FillChar(startp, SizeOf(startp), 0);
+  FillChar(endp, SizeOf(endp), 0);
+end;
+
+procedure TRegExpr.ClearInternalIndexes;
 var
   i: integer;
 begin
+  FillChar(startp, SizeOf(startp), 0);
+  FillChar(endp, SizeOf(endp), 0);
   for i := 0 to NSUBEXP - 1 do
-  begin
-    startp[i] := nil;
-    endp[i] := nil;
-  end;
+    GrpIndexes[i] := -1;
+  GrpIndexes[0] := 0;
+  GrpCount := 0;
 end;
 
-function TRegExpr.ExecPrim(AOffset: integer; ATryOnce: boolean): boolean;
+function TRegExpr.ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
 var
-  s: PRegExprChar;
-  StartPtr: PRegExprChar;
+  Ptr: PRegExprChar;
 begin
   Result := False;
 
@@ -4297,11 +4300,12 @@ begin
   then
     Exit;
 
-  StartPtr := fInputStart + AOffset - 1;
+  Ptr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
-  if regmustString <> '' then
-    if Pos(regmustString, fInputString) = 0 then Exit;
+  if ASlowChecks then
+    if regmustString <> '' then
+      if Pos(regmustString, fInputString) = 0 then Exit;
 
   {$IFDEF ComplexBraces}
   // no loops started
@@ -4313,59 +4317,59 @@ begin
   begin
     {$IFDEF UseFirstCharSet}
     {$IFDEF UniCode}
-    if Ord(StartPtr^) <= $FF then
+    if Ord(Ptr^) <= $FF then
     {$ENDIF}
-      if not FirstCharArray[byte(StartPtr^)] then
+      if not FirstCharArray[byte(Ptr^)] then
         Exit;
     {$ENDIF}
-    Result := MatchAtOnePos(StartPtr);
+
+    Result := MatchAtOnePos(Ptr);
     Exit;
   end;
 
   // Messy cases: unanchored match.
-  s := StartPtr;
+  Dec(Ptr);
   repeat
-    {$IFDEF UseFirstCharSet}
-      {$IFDEF UniCode}
-      if Ord(s^) <= $FF then
-      begin
-        if FirstCharArray[byte(s^)] then
-          Result := MatchAtOnePos(s);
-      end
-      else
-        Result := MatchAtOnePos(s);
-      {$ELSE}
-      if FirstCharArray[byte(s^)] then
-        Result := MatchAtOnePos(s);
-      {$ENDIF}
-    {$ELSE}
-    Result := MatchAtOnePos(s);
-    {$ENDIF}
-    // Exit on a match or after testing the end-of-string
-    if Result or (s >= fInputEnd) then
+    Inc(Ptr);
+    if Ptr > fInputEnd then
       Exit;
-    Inc(s);
+
+    {$IFDEF UseFirstCharSet}
+    {$IFDEF UniCode}
+    if Ord(Ptr^) <= $FF then
+    {$ENDIF}
+      if not FirstCharArray[byte(Ptr^)] then
+        Continue;
+    {$ENDIF}
+
+    Result := MatchAtOnePos(Ptr);
+    // Exit on a match or after testing the end-of-string
+    if Result then
+      Exit;
   until False;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
 function TRegExpr.ExecNext: boolean;
 var
+  PtrBegin, PtrEnd: PRegExprChar;
   Offset: PtrInt;
 begin
-  Result := False;
-  if (startp[0] = nil) or (endp[0] = nil) then
+  PtrBegin := startp[0];
+  PtrEnd := endp[0];
+  if (PtrBegin = nil) or (PtrEnd = nil) then
   begin
     Error(reeExecNextWithoutExec);
+    Result := False;
     Exit;
   end;
-  // Offset := MatchPos [0] + MatchLen [0];
-  // if MatchLen [0] = 0
-  Offset := endp[0] - fInputStart + 1; // ###0.929
-  if endp[0] = startp[0] // ###0.929
-  then
-    Inc(Offset); // prevent infinite looping if empty string match r.e.
-  Result := ExecPrim(Offset, False);
+
+  Offset := PtrEnd - fInputStart + 1;
+  // prevent infinite looping if empty string matches r.e.
+  if PtrBegin = PtrEnd then
+    Inc(Offset);
+
+  Result := ExecPrim(Offset, False, False);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
@@ -4484,7 +4488,7 @@ type
 var
   Mode: TSubstMode;
   p, p0, p1, ResultPtr: PRegExprChar;
-  TemplateLen, ResultLen, n: integer;
+  ResultLen, n: integer;
   Ch, QuotedChar: REChar;
 begin
   // Check programm and input string
@@ -4496,14 +4500,13 @@ begin
     Exit;
   end;
   // Prepare for working
-  TemplateLen := Length(ATemplate);
-  if TemplateLen = 0 then
+  if ATemplate = '' then
   begin // prevent nil pointers
     Result := '';
     Exit;
   end;
-  TemplateBeg := Pointer(ATemplate);
-  TemplateEnd := TemplateBeg + TemplateLen;
+  TemplateBeg := PRegExprChar(ATemplate);
+  TemplateEnd := TemplateBeg + Length(ATemplate);
   // Count result length for speed optimization.
   ResultLen := 0;
   p := TemplateBeg;
@@ -4556,7 +4559,6 @@ begin
     Result := '';
     Exit;
   end;
-  // SetString (Result, nil, ResultLen);
   SetLength(Result, ResultLen);
   // Fill Result
   ResultPtr := Pointer(Result);
@@ -4586,7 +4588,7 @@ begin
         case Ch of
           'n':
             begin
-              p0 := @FReplaceLineEnd[1];
+              p0 := PRegExprChar(FReplaceLineEnd);
               p1 := p0 + Length(FReplaceLineEnd);
             end;
           'x', 't', 'r', 'f', 'a', 'e':
@@ -4632,21 +4634,23 @@ begin
       while p0 < p1 do
       begin
         case Mode of
-          smodeOneLower, smodeAllLower:
+          smodeOneLower:
             begin
-              Ch := p0^;
-              Ch := _LowerCase(Ch);
-              ResultPtr^ := Ch;
-              if Mode = smodeOneLower then
-                Mode := smodeNormal;
+              ResultPtr^ := _LowerCase(p0^);
+              Mode := smodeNormal;
             end;
-          smodeOneUpper, smodeAllUpper:
+          smodeAllLower:
             begin
-              Ch := p0^;
-              Ch := _UpperCase(Ch);
-              ResultPtr^ := Ch;
-              if Mode = smodeOneUpper then
-                Mode := smodeNormal;
+              ResultPtr^ := _LowerCase(p0^);
+            end;
+          smodeOneUpper:
+            begin
+              ResultPtr^ := _UpperCase(p0^);
+              Mode := smodeNormal;
+            end;
+          smodeAllUpper:
+            begin
+              ResultPtr^ := _UpperCase(p0^);
             end;
         else
           ResultPtr^ := p0^;
@@ -5054,17 +5058,6 @@ end;
 function TRegExpr.CharChecker_NotHorzSep(ch: REChar): boolean;
 begin
   Result := not IsHorzSeparator(ch);
-end;
-
-function TRegExpr.CharChecker_AllAZ(ch: REChar): boolean;
-begin
-  case ch of
-    'a' .. 'z',
-    'A' .. 'Z':
-      Result := True;
-    else
-      Result := False;
-  end;
 end;
 
 function TRegExpr.CharChecker_LowerAZ(ch: REChar): boolean;
