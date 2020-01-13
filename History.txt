@@ -7,9 +7,9 @@
                                      (^) - improvement
 
  v. 0.987 2020.01.09
- -=- (+) Added properties SlowChecksSizeMin, SlowChecksSizeMax. Slow checks
-  are used only in Exec(), and not in Exec(AOffset), ExecPos(), ExecNext.
- -=- (^) Fixed big slowdown in Exec/ExecPos (calling IsProgrammOk), 
+ -=- (+) Added property SlowChecksSizeMax. Slow checks are used only
+  in Exec(), and not in Exec(AOffset), ExecPos(), ExecNext.
+ -=- (^) Fixed big slowdown in Exec/ExecPos (call of IsProgrammOk),
   which affected test_benchmark a lot. By Alexey Torgashin.
  -=- (^) Raise error if incorrect {} braces were found in expression.
   By Alexey Torgashin.
@@ -47,8 +47,8 @@
  -=- (^) Ifdef UnicodeWordDetection works also on Delphi 2009+.
   By Alexey Torgashin.
  -=- (^) Property UseUnicodeWordDetection default changed to True.
- -=- (^) In Unicode mode on Delphi 2009+, UnicodeString type is used. 
- -=- (^) Formatted regexpr.pas using Embarcadero Delphi Formatter.exe. 
+ -=- (^) In Unicode mode on Delphi 2009+, UnicodeString type is used.
+ -=- (^) Formatted regexpr.pas using Embarcadero Delphi Formatter.exe.
 
  v. 0.960 2019.12.03
  -=- (+) Support \V, \H (counterparts to \v, \h). By Alexey Torgashin.
