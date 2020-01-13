@@ -76,6 +76,7 @@ begin
   for i:= 0 to Length(Rules)-1 do
   begin
     Obj[i]:= TRegExpr.Create;
+    Obj[i].SlowChecksSizeMax:= 0;
     Obj[i].Expression:= Rules[i];
     Obj[i].ModifierI:= false;
     Obj[i].ModifierS:= false; //don't catch all text by .*
