@@ -20,3 +20,7 @@ before_install:
 script:
   - lazbuild test/test_fpc.lpi         # Build project
   - test/test_fpc --all --format=plain # Run testsuite
+  - lazbuild -r --bm=Unicode test/test_fpc.lpi
+  - test/test_fpc --all --format=plain
+  - lazbuild -r --bm=UnicodeAndChars test/test_fpc.lpi
+  - test/test_fpc --all --format=plain
