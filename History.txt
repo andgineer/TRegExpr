@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.988 2020.02.15
+ -=- (^) Don't raise error "empty input string", it breaks some apps.
+  By Alexey Torgashin.
+
  v. 0.987 2020.01.09
  -=- (+) Added property SlowChecksSizeMax. Slow checks are used only
   in Exec(), and not in Exec(AOffset), ExecPos(), ExecNext.

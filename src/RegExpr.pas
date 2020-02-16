@@ -769,7 +769,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 987;
+  REVersionMinor = 988;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1373,7 +1373,7 @@ const
   reeMatchPrimCorruptedPointers = 1002;
   reeNoExpression = 1003;
   reeCorruptedProgram = 1004;
-  reeNoInputStringSpecified = 1005;
+  //reeNoInputStringSpecified = 1005;
   reeOffsetMustBePositive = 1006;
   reeExecNextWithoutExec = 1007;
   reeBadOpcodeInCharClass = 1008;
@@ -1452,8 +1452,8 @@ begin
       Result := 'TRegExpr exec: empty expression';
     reeCorruptedProgram:
       Result := 'TRegExpr exec: corrupted opcode (no magic byte)';
-    reeNoInputStringSpecified:
-      Result := 'TRegExpr exec: empty input string';
+    //reeNoInputStringSpecified:
+    //  Result := 'TRegExpr exec: empty input string';
     reeOffsetMustBePositive:
       Result := 'TRegExpr exec: offset must be >0';
     reeExecNextWithoutExec:
@@ -4283,7 +4283,7 @@ begin
   // Check InputString presence
   if fInputString = '' then
   begin
-    Error(reeNoInputStringSpecified);
+    //Error(reeNoInputStringSpecified); // better don't raise error, breaks some apps
     Exit;
   end;
 
@@ -4494,11 +4494,14 @@ begin
   // Check programm and input string
   if not IsProgrammOk then
     Exit;
+  {
+  // don't check for empty, user needs to replace regex "\b", zero length
   if fInputString = '' then
   begin
     Error(reeNoInputStringSpecified);
     Exit;
   end;
+  }
   // Prepare for working
   if ATemplate = '' then
   begin // prevent nil pointers
