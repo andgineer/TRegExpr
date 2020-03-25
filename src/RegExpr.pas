@@ -762,7 +762,7 @@ uses
 {$ELSE}
 {$IFDEF D2009}
 uses
-  System.Character; // System.Character exists since Delphi 2009
+  {$IFDEF D2010}System.{$ENDIF}Character; // unit exists since Delphi 2009
 {$ENDIF}
 {$ENDIF}
 
