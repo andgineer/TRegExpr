@@ -5183,6 +5183,14 @@ begin
 end; { of function TRegExpr.DumpOp
   -------------------------------------------------------------- }
 
+function PrintableChar(AChar: REChar): RegExprString; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  if AChar < ' ' then
+    Result := '#' + IntToStr(Ord(AChar))
+  else
+    Result := AChar;
+end;
+
 function TRegExpr.Dump: RegExprString;
 // dump a regexp in vaguely comprehensible form
 var
@@ -5191,16 +5199,7 @@ var
   next: PRegExprChar;
   i, NLen: integer;
   Diff: PtrInt;
-  Ch: AnsiChar;
-
-  function PrintableChar(AChar: REChar): string; {$IFDEF InlineFuncs}inline;{$ENDIF}
-  begin
-    if AChar < ' ' then
-      Result := '#' + IntToStr(Ord(AChar))
-    else
-      Result := AChar;
-  end;
-
+  iByte: byte;
 begin
   if not IsProgrammOk then
     Exit;
@@ -5322,14 +5321,9 @@ begin
   if FirstCharSet = RegExprAllSet then
     Result := Result + '<all chars>'
   else
-  for Ch := #0 to #255 do
-    if byte(Ch) in FirstCharSet then
-    begin
-      if Ch < ' ' then
-        Result := Result + PrintableChar(Ch) // ###0.948
-      else
-        Result := Result + Ch;
-    end;
+  for iByte := 0 to 255 do
+    if iByte in FirstCharSet then
+      Result := Result + PrintableChar(REChar(iByte));
   {$ENDIF}
   Result := Result + #$d#$a;
 end; { of function TRegExpr.Dump
