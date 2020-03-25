@@ -2991,7 +2991,7 @@ var
   CanBeRange: boolean;
   AddrOfLen: PLongInt;
 
-  procedure EmitExactly(Ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitExactly(Ch: REChar);
   begin
     if fCompModifiers.I then
       ret := EmitNode(OP_EXACTLYCI)
@@ -3002,7 +3002,7 @@ var
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
-  procedure EmitRangeChar(Ch: REChar; AStartOfRange: boolean); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitRangeChar(Ch: REChar; AStartOfRange: boolean);
   begin
     CanBeRange := AStartOfRange;
     if fCompModifiers.I then
@@ -3025,7 +3025,7 @@ var
     end;
   end;
 
-  procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitRangePacked(ch1, ch2: REChar);
   var
     ChkIndex: integer;
   begin
