@@ -362,8 +362,8 @@ type
     procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: boolean; var ARes: TRegExprCharset);
-    procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset);
-    procedure GetCharSetFromWordChars(var ARes: TRegExprCharSet);
+    procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure GetCharSetFromWordChars(var ARes: TRegExprCharSet); {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsCustomLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -413,10 +413,10 @@ type
     function EmitNode(op: TREOp): PRegExprChar;
 
     // emit (if appropriate) a byte of code
-    procedure EmitC(ch: REChar);
+    procedure EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // emit LongInt value
-    procedure EmitInt(AValue: LongInt);
+    procedure EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
@@ -1957,7 +1957,7 @@ begin
 end; { of function TRegExpr.EmitNode
   -------------------------------------------------------------- }
 
-procedure TRegExpr.EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+procedure TRegExpr.EmitC(ch: REChar);
 begin
   if regcode <> @regdummy then
   begin
@@ -1973,7 +1973,7 @@ begin
 end; { of procedure TRegExpr.EmitC
   -------------------------------------------------------------- }
 
-procedure TRegExpr.EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
+procedure TRegExpr.EmitInt(AValue: LongInt);
 begin
   if regcode <> @regdummy then
   begin
@@ -2140,7 +2140,7 @@ begin
 end;
 
 
-procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
+procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharset);
 {$IFDEF UseWordChars}
 var
   i: integer;
@@ -2162,7 +2162,7 @@ begin
   {$ENDIF}
 end;
 
-procedure TRegExpr.GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
+procedure TRegExpr.GetCharSetFromSpaceChars(var ARes: TRegExprCharset);
 {$IFDEF UseSpaceChars}
 var
   i: integer;
