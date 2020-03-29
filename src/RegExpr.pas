@@ -763,7 +763,7 @@ uses
 {$IFDEF D2009}
 uses
   // unit exists since Delphi 2009
-  {$IFDEF D2010}
+  {$IFDEF D_XE2}
   System.Character;
   {$ELSE}
   Character;
