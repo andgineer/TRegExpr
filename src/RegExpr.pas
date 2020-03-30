@@ -362,8 +362,8 @@ type
     procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: boolean; var ARes: TRegExprCharset);
-    procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset);
-    procedure GetCharSetFromWordChars(var ARes: TRegExprCharSet);
+    procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure GetCharSetFromWordChars(var ARes: TRegExprCharSet); {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsCustomLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -413,10 +413,10 @@ type
     function EmitNode(op: TREOp): PRegExprChar;
 
     // emit (if appropriate) a byte of code
-    procedure EmitC(ch: REChar);
+    procedure EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // emit LongInt value
-    procedure EmitInt(AValue: LongInt);
+    procedure EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
@@ -762,14 +762,19 @@ uses
 {$ELSE}
 {$IFDEF D2009}
 uses
-  System.Character; // System.Character exists since Delphi 2009
+  // unit exists since Delphi 2009
+  {$IFDEF D_XE2}
+  System.Character;
+  {$ELSE}
+  Character;
+  {$ENDIF}
 {$ENDIF}
 {$ENDIF}
 
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 988;
+  REVersionMinor = 989;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1957,7 +1962,7 @@ begin
 end; { of function TRegExpr.EmitNode
   -------------------------------------------------------------- }
 
-procedure TRegExpr.EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+procedure TRegExpr.EmitC(ch: REChar);
 begin
   if regcode <> @regdummy then
   begin
@@ -1973,7 +1978,7 @@ begin
 end; { of procedure TRegExpr.EmitC
   -------------------------------------------------------------- }
 
-procedure TRegExpr.EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
+procedure TRegExpr.EmitInt(AValue: LongInt);
 begin
   if regcode <> @regdummy then
   begin
@@ -2140,7 +2145,7 @@ begin
 end;
 
 
-procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
+procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharset);
 {$IFDEF UseWordChars}
 var
   i: integer;
@@ -2162,7 +2167,7 @@ begin
   {$ENDIF}
 end;
 
-procedure TRegExpr.GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
+procedure TRegExpr.GetCharSetFromSpaceChars(var ARes: TRegExprCharset);
 {$IFDEF UseSpaceChars}
 var
   i: integer;
@@ -2991,7 +2996,7 @@ var
   CanBeRange: boolean;
   AddrOfLen: PLongInt;
 
-  procedure EmitExactly(Ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitExactly(Ch: REChar);
   begin
     if fCompModifiers.I then
       ret := EmitNode(OP_EXACTLYCI)
@@ -3002,7 +3007,7 @@ var
     flagp := flagp or flag_HasWidth or flag_Simple;
   end;
 
-  procedure EmitRangeChar(Ch: REChar; AStartOfRange: boolean); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitRangeChar(Ch: REChar; AStartOfRange: boolean);
   begin
     CanBeRange := AStartOfRange;
     if fCompModifiers.I then
@@ -3025,7 +3030,7 @@ var
     end;
   end;
 
-  procedure EmitRangePacked(ch1, ch2: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure EmitRangePacked(ch1, ch2: REChar);
   var
     ChkIndex: integer;
   begin
@@ -5183,6 +5188,14 @@ begin
 end; { of function TRegExpr.DumpOp
   -------------------------------------------------------------- }
 
+function PrintableChar(AChar: REChar): RegExprString; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  if AChar < ' ' then
+    Result := '#' + IntToStr(Ord(AChar))
+  else
+    Result := AChar;
+end;
+
 function TRegExpr.Dump: RegExprString;
 // dump a regexp in vaguely comprehensible form
 var
@@ -5191,16 +5204,7 @@ var
   next: PRegExprChar;
   i, NLen: integer;
   Diff: PtrInt;
-  Ch: AnsiChar;
-
-  function PrintableChar(AChar: REChar): string; {$IFDEF InlineFuncs}inline;{$ENDIF}
-  begin
-    if AChar < ' ' then
-      Result := '#' + IntToStr(Ord(AChar))
-    else
-      Result := AChar;
-  end;
-
+  iByte: byte;
 begin
   if not IsProgrammOk then
     Exit;
@@ -5322,14 +5326,9 @@ begin
   if FirstCharSet = RegExprAllSet then
     Result := Result + '<all chars>'
   else
-  for Ch := #0 to #255 do
-    if byte(Ch) in FirstCharSet then
-    begin
-      if Ch < ' ' then
-        Result := Result + PrintableChar(Ch) // ###0.948
-      else
-        Result := Result + Ch;
-    end;
+  for iByte := 0 to 255 do
+    if iByte in FirstCharSet then
+      Result := Result + PrintableChar(REChar(iByte));
   {$ENDIF}
   Result := Result + #$d#$a;
 end; { of function TRegExpr.Dump

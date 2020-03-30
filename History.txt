@@ -6,6 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.989 2020.03.26
+ -=- (-) Fixed compilation on D2009
+
  v. 0.988 2020.02.15
  -=- (^) Don't raise error "empty input string", it breaks some apps.
   By Alexey Torgashin.
