@@ -1,4 +1,4 @@
-unit RegExpr;
+﻿unit RegExpr;
 
 {
   TRegExpr class library
@@ -893,8 +893,12 @@ begin
     {$ENDIF}
   {$ELSE}
     {$IFDEF UniCode}
-    {$IFDEF D2009}
+      {$IFDEF D_XE4}
+    Result := Ch.ToUpper;
+      {$ELSE}
+      {$IFDEF D2009}
     Result := TCharacter.ToUpper(Ch);
+      {$ENDIF}
     {$ENDIF}
     {$ELSE}
     Result := AnsiUpperCase(Ch)[1];
@@ -921,8 +925,12 @@ begin
     {$ENDIF}
   {$ELSE}
     {$IFDEF UniCode}
-    {$IFDEF D2009}
+      {$IFDEF D_XE4}
+    Result := Ch.ToLower;
+      {$ELSE}
+      {$IFDEF D2009}
     Result := TCharacter.ToLower(Ch);
+      {$ENDIF}
     {$ENDIF}
     {$ELSE}
     Result := AnsiLowerCase(Ch)[1];
@@ -1581,11 +1589,18 @@ begin
     Result := _LowerCase(Ch);
   {$ELSE}
   {$IFDEF UniCode}
-  {$IFDEF D2009}
+    {$IFDEF D_XE4}
+  if Ch.IsUpper then
+    Result := Ch.ToLower
+  else
+    Result := Ch.ToUpper;
+    {$ELSE}
+    {$IFDEF D2009}
   if TCharacter.IsUpper(Ch) then
     Result := TCharacter.ToLower(Ch)
   else
     Result := TCharacter.ToUpper(Ch);
+    {$ENDIF}
   {$ENDIF}
   {$ELSE}
   Result := _UpperCase(Ch);
@@ -2920,6 +2935,7 @@ begin
       Result := #$1b; // \e => escape (ESC)
     'c':
       begin // \cK => code for Ctrl+K
+        Result := #0;
         Inc(APtr);
         if APtr >= fRegexEnd then
           Error(reeNoLetterAfterBSlashC);
