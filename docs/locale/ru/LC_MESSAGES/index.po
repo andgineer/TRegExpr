@@ -123,7 +123,7 @@ msgid ""
 "<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
 msgstr ""
 "`Как библиотека была встречена "
-"<https://sorokin.engineer/posts/ru/regexpstudio_site_is_lunched.html>`_."
+"<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
 
 # 4991414b12c64f829b62f63e6954ed5c
 #: ../../index.rst:40

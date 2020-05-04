@@ -116,7 +116,7 @@ procedure TfmTestCases.LoadREs (const AFileName : string);
    end;
 
   RegularExpressions := XMLDocument.GetDocBinding ('regularExpressions', TXMLRegularExpressionsType,
-   'http:/'+'/www.RegExpStudio.com/re') as IXMLRegularExpressionsType;
+   'https://sorokin.engineer/en/index.html') as IXMLRegularExpressionsType;
 
   for i := 0 to RegularExpressions.Count - 1 do begin
     tvCases.Items.Add (nil, RegularExpressions [i].Name);

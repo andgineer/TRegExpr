@@ -123,8 +123,7 @@ msgid ""
 "`How good the library was met "
 "<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_."
 msgstr ""
-"Machen Sie sich ein Bild von der `Resonanz <https://sorokin.engineer/posts/"
-"en/regexpstudio_site_is_lunched.html>`_ bei den Anwendern."
+"Machen Sie sich ein Bild von der `Resonanz <https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>`_ bei den Anwendern."
 
 # 4991414b12c64f829b62f63e6954ed5c
 #: ../../index.rst:40
