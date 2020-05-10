@@ -90,6 +90,8 @@ type
     Procedure RunTest37;
     Procedure RunTest38;
     Procedure RunTest39;
+    Procedure RunTest40;
+    Procedure RunTest41;
     Procedure TestGroups;
     {$IFDEF Unicode}
     procedure TestUnicode1;
@@ -125,7 +127,7 @@ end;
 
 
 const
-  testCases: array [1..39] of TRegExTest = (
+  testCases: array [1..41] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -437,6 +439,22 @@ const
     substitutionText: '';
     expectedResult: '22'#0'33 '#0'33  .& w#'#5#0' w#';
     matchStart: 3
+    ),
+    // 40
+    ( // find 1+ simple chars
+    expression: 'd+';
+    inputText: '  ddddee  ';
+    substitutionText: '';
+    expectedResult: 'dddd';
+    matchStart: 3
+    ),
+    // 41
+    ( // find {N,M} spaces
+    expression: ' {4,}';
+    inputText: 'dd      dd';
+    substitutionText: '';
+    expectedResult: '      ';
+    matchStart: 3
     )
   );
 
@@ -722,6 +740,16 @@ end;
 procedure TTestRegexpr.RunTest39;
 begin
   RunRETest(39);
+end;
+
+procedure TTestRegexpr.RunTest40;
+begin
+  RunRETest(40);
+end;
+
+procedure TTestRegexpr.RunTest41;
+begin
+  RunRETest(41);
 end;
 
 procedure TTestRegexpr.TestGroups;
