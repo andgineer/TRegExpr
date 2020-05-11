@@ -93,6 +93,8 @@ type
     Procedure RunTest40;
     Procedure RunTest41;
     Procedure RunTest42;
+    Procedure RunTest43;
+    Procedure RunTest44;
     Procedure TestGroups;
     {$IFDEF Unicode}
     procedure TestUnicode1;
@@ -128,7 +130,7 @@ end;
 
 
 const
-  testCases: array [1..42] of TRegExTest = (
+  testCases: array [1..44] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -464,6 +466,22 @@ const
     substitutionText: '$1 $2 $3';
     expectedResult: '- - .';
     matchStart: 0
+    ),
+    // 43
+    ( // valid regex set
+    expression: '([.\-])';
+    inputText: 'Pictures-2018-Spain.Madrid';
+    substitutionText: '$1 $2 $3';
+    expectedResult: '- - .';
+    matchStart: 0
+    ),
+    // 44
+    ( // valid regex set
+    expression: '[.-](Test)[.-]';
+    inputText: 'This.Is.A.Test.1234_Test_abc';
+    substitutionText: '$1';
+    expectedResult: 'Test';
+    matchStart: 0
     )
   );
 
@@ -764,6 +782,16 @@ end;
 procedure TTestRegexpr.RunTest42;
 begin
   RunRETest(42);
+end;
+
+procedure TTestRegexpr.RunTest43;
+begin
+  RunRETest(43);
+end;
+
+procedure TTestRegexpr.RunTest43;
+begin
+  RunRETest(43);
 end;
 
 procedure TTestRegexpr.TestGroups;
