@@ -103,8 +103,9 @@ uses
 
 type
   {$IFNDEF FPC}
-  PtrInt = integer;
-  PtrUInt = cardinal;
+  // Delphi doesn't have PtrInt but has NativeInt
+  PtrInt = NativeInt;
+  PtrUInt = NativeInt;
   {$ENDIF}
   {$IFDEF UniCode}
   PRegExprChar = PWideChar;
@@ -774,7 +775,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 989;
+  REVersionMinor = 990;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -3476,7 +3477,8 @@ function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
 var
   scan: PRegExprChar;
   opnd: PRegExprChar;
-  TheMax, NLen: integer;
+  TheMax: PtrInt; // PtrInt, gets diff of 2 pointers
+  //NLen: integer;
   InvChar: REChar; // ###0.931
   GrpStart, GrpEnd: PRegExprChar; // ###0.936
   ArrayIndex: integer;
@@ -3497,9 +3499,12 @@ begin
       end;
     OP_EXACTLY:
       begin // in opnd can be only ONE char !!!
+        {
+        // Alexey: commented because of https://github.com/andgineer/TRegExpr/issues/145
         NLen := PLongInt(opnd)^;
         if TheMax > NLen then
           TheMax := NLen;
+        }
         Inc(opnd, RENumberSz);
         while (Result < TheMax) and (opnd^ = scan^) do
         begin
@@ -3509,9 +3514,12 @@ begin
       end;
     OP_EXACTLYCI:
       begin // in opnd can be only ONE char !!!
+        {
+        // Alexey: commented because of https://github.com/andgineer/TRegExpr/issues/145
         NLen := PLongInt(opnd)^;
         if TheMax > NLen then
           TheMax := NLen;
+        }
         Inc(opnd, RENumberSz);
         while (Result < TheMax) and (opnd^ = scan^) do
         begin // prevent unneeded InvertCase //###0.931

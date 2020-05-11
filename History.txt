@@ -6,6 +6,11 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.990 2020.05.11
+ -=- (-) Fixed finding some count of simple chars, e.g. "a+", "a{2,5}".
+ -=- (-) Fixed PtrInt type for Delphi, should be NativeInt.
+  By Alexey Torgashin.
+
  v. 0.989 2020.03.26
  -=- (-) Fixed compilation on D2009
 
