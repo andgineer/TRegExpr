@@ -789,9 +789,9 @@ begin
   RunRETest(43);
 end;
 
-procedure TTestRegexpr.RunTest43;
+procedure TTestRegexpr.RunTest44;
 begin
-  RunRETest(43);
+  RunRETest(44);
 end;
 
 procedure TTestRegexpr.TestGroups;
