@@ -124,8 +124,8 @@ Within a list, the ``-`` character is used to specify a range, so that
 If you want ``-`` itself to be a member of a class, put it at the start
 or end of the list, or `escape <#escape>`__ it with a backslash.
 
-If you want ``]`` or ``[`` you may place it at the start of list or escape it
-with a backslash.
+If you want ``]`` as part of the class you may place it at the start of list or
+`escape <#escape>`__ it with a backslash.
 
 ============= ==================================
 RegEx         Matches
@@ -154,8 +154,10 @@ RegEx      Matches
 ``\S``     a non space
 ``\h``     | horizontal whitespace. the tab and all characters
            | in the "space separator" Unicode category.
+``\H``     not a horizontal whitespace
 ``\v``     | vertical whitespace. all characters treated as
            | line breaks in the Unicode standard.
+``\V``     not a vertical whitespace
 ======     ==============================================
 
 You may use ``\w``, ``\d`` and ``\s`` within

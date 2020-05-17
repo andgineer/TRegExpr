@@ -36,7 +36,7 @@ TDecorateURLsFlags = (
  // describes, which parts of hyper-link must be included
  // into VISIBLE part of the link:
   durlProto, // Protocol (like 'ftp://' or 'http://')
-  durlAddr,  // TCP address or domain name (like 'RegExpStudio.com')
+  durlAddr,  // TCP address or domain name (like 'sorokin.engineer')
   durlPort,  // Port number if specified (like ':8080')
   durlPath,  // Path to document (like 'index.html')
   durlBMark, // Book mark (like '#mark')
@@ -56,8 +56,8 @@ function DecorateURLs (
   AFlags : TDecorateURLsFlagSet = [durlAddr, durlPath]
  // Which part of hyper-links found must be included into visible
  // part of URL, for example if [durlAddr] then hyper link
- // 'www.RegExpStudio.com/contacts.html' will be decorated as
- // '<a href="http://www.RegExpStudio.com/contacts.html">www.RegExpStudio.com</a>'
+ // 'https://sorokin.engineer/en/index.html' will be decorated as
+ // '<a href="https://sorokin.engineer/en/index.html">https://sorokin.engineer</a>'
 
   ) : string;
  // Returns input text with decorated hyper links

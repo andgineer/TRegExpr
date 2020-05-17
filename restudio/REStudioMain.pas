@@ -166,7 +166,7 @@ uses
   PCode;
 
 const
- ProductHomePage = 'www.RegExpStudio.com';
+ ProductHomePage = 'https://regex.sorokin.engineer';
 
 procedure TfmREDebuggerMain.FormCreate(Sender: TObject);
  begin
