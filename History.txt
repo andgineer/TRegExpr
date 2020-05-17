@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.991 2020.05.15
+ -=- (-) Fixed incorrect opcode for correct regex "[.-]".
+  By Alexey Torgashin.
+
  v. 0.990 2020.05.11
  -=- (-) Fixed finding some count of simple chars, e.g. "a+", "a{2,5}".
  -=- (-) Fixed PtrInt type for Delphi, should be NativeInt.
