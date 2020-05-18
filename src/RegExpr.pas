@@ -775,7 +775,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 990;
+  REVersionMinor = 991;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -3136,8 +3136,28 @@ begin
 
         while (regparse < fRegexEnd) and (regparse^ <> ']') do
         begin
+          // char before '-]' treated as simple char, not start of range
+          if ((regparse + 2) < fRegexEnd) and
+            ((regparse + 1)^ = '-') and
+            ((regparse + 2)^ = ']') then
+          begin
+            EmitRangeChar(regparse^, False);
+            EmitRangeChar('-', False);
+            Inc(regparse, 2);
+            Break;
+          end;
+
+          // last '-' inside [] treated as simple dash
           if (regparse^ = '-') and ((regparse + 1) < fRegexEnd) and
-            ((regparse + 1)^ <> ']') and CanBeRange then
+            ((regparse + 1)^ = ']') then
+          begin
+            EmitRangeChar('-', False);
+            Inc(regparse);
+            Break;
+          end;
+
+          // char '-' which makes a range
+          if (regparse^ = '-') and ((regparse + 1) < fRegexEnd) and CanBeRange then
           begin
             Inc(regparse);
             RangeEnd := regparse^;
