@@ -545,7 +545,7 @@ begin
   //TestBadRegex('No Error for bad braces', 'd{');
   //TestBadRegex('No Error for bad braces', 'd{22');
   //TestBadRegex('No Error for bad braces', 'd{}');
-  //TestBadRegex('Invalid char class after dash in []', '[._-\s]((19|20)\d{2})');
+  TestBadRegex('Invalid char class after dash in []', '[._-\s]((19|20)\d{2})');
 end;
 
 procedure TTestRegexpr.RunTest1;
