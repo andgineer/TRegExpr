@@ -460,27 +460,27 @@ const
     matchStart: 3
     ),
     // 42
-    ( // valid regex set
-    expression: '([.-])';
+    ( // valid regex set [.-]
+    expression: '\w+([.-])\d+([.-])\w+([.-])\w+';
     inputText: 'Pictures-2018-Spain.Madrid';
     substitutionText: '$1 $2 $3';
     expectedResult: '- - .';
     matchStart: 0
     ),
     // 43
-    ( // valid regex set
-    expression: '([.\-])';
-    inputText: 'Pictures-2018-Spain.Madrid';
+    ( // valid regex set combinaton if escaping
+    expression: '\w+([.\-])\d+([\.-])\w+([\.\-])\w+';
+    inputText: 'Pictures-2018.Spain-Madrid';
     substitutionText: '$1 $2 $3';
-    expectedResult: '- - .';
+    expectedResult: '- . -';
     matchStart: 0
     ),
     // 44
     ( // valid regex set
-    expression: '[.-](Test)[.-]';
+    expression: '([.-]Test[.-])';
     inputText: 'This.Is.A.Test.1234_Test_abc';
     substitutionText: '$1';
-    expectedResult: 'Test';
+    expectedResult: '.Test.';
     matchStart: 0
     )
   );
