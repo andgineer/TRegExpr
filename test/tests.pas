@@ -455,6 +455,30 @@ const
     substitutionText: '';
     expectedResult: '      ';
     matchStart: 3
+    ),
+    // 42
+    ( // valid regex set [.-]
+    expression: '\w+([.-])\d+([.-])\w+([.-])\w+';
+    inputText: 'Pictures-2018-Spain.Madrid';
+    substitutionText: '$1 $2 $3';
+    expectedResult: '- - .';
+    matchStart: 0
+    ),
+    // 43
+    ( // valid regex set combinaton if escaping
+    expression: '\w+([.\-])\d+([\.-])\w+([\.\-])\w+';
+    inputText: 'Pictures-2018.Spain-Madrid';
+    substitutionText: '$1 $2 $3';
+    expectedResult: '- . -';
+    matchStart: 0
+    ),
+    // 44
+    ( // valid regex set
+    expression: '([.-]Test[.-])';
+    inputText: 'This.Is.A.Test.1234_Test_abc';
+    substitutionText: '$1';
+    expectedResult: '.Test.';
+    matchStart: 0
     )
   );
 
