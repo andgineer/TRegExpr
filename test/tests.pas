@@ -478,9 +478,9 @@ const
     // 44
     ( // valid regex set
     expression: '.*?([.-]Test[.-])';
-    inputText: 'This.Is.A.Test.1234_Test_abc';
+    inputText: 'This.Is.A_Test_1234.Test.abc';
     substitutionText: '$1';
-    expectedResult: '.Test.';
+    expectedResult: '.Test.abc';
     matchStart: 0
     )
   );
