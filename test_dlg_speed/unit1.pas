@@ -98,7 +98,7 @@ begin
     if not _IsSpace(ch) then
       for IndexRule:= 0 to Length(Rules)-1 do
       begin
-        if Obj[IndexRule].ExecPos(NPos, true) then
+        if Obj[IndexRule].ExecPos(NPos, true, false) then
         begin
           NLen:= Obj[IndexRule].MatchLen[0];
 
