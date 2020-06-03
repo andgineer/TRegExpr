@@ -58,10 +58,13 @@
           </SearchPaths>
           <CodeGeneration>
             <SmartLinkUnit Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="0"/>
+            </Optimizations>
           </CodeGeneration>
           <Linking>
             <Debugging>
-              <DebugInfoType Value="dsDwarf2Set"/>
+              <DebugInfoType Value="dsDwarf2"/>
               <UseExternalDbgSyms Value="True"/>
             </Debugging>
             <LinkSmart Value="True"/>
@@ -70,9 +73,6 @@
             <CustomOptions Value="-dUniCode
 -dUseWordChars
 -dUseSpaceChars"/>
-            <OtherDefines Count="1">
-              <Define0 Value="UniCode"/>
-            </OtherDefines>
           </Other>
         </CompilerOptions>
       </Item3>

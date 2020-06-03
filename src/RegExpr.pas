@@ -460,7 +460,7 @@ type
     function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
+    function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean): boolean;
 
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
@@ -504,13 +504,13 @@ type
     // Raises exception if used without preceeding SUCCESSFUL call to
     // Exec* (Exec, ExecPos, ExecNext). So You always must use something like
     // if Exec (InputString) then repeat { proceed results} until not ExecNext;
-    function ExecNext: boolean;
+    function ExecNext(ABackward: boolean {$IFDEF DefParam} = False{$ENDIF}): boolean;
 
     // find match for InputString starting from AOffset position
     // (AOffset=1 - first char of InputString)
     function ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
     {$IFDEF OverMeth} overload;
-    function ExecPos(AOffset: integer; ATryOnce: boolean): boolean; overload;
+    function ExecPos(AOffset: integer; ATryOnce, ABackward: boolean): boolean; overload;
     {$ENDIF}
 
     // Returns ATemplate with '$&' or '$0' replaced by whole r.e.
@@ -775,7 +775,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 991;
+  REVersionMinor = 992;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4248,7 +4248,7 @@ end; { of function TRegExpr.MatchPrim
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
   InputString := AInputString;
-  Result := ExecPrim(1, False, False);
+  Result := ExecPrim(1, False, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
@@ -4258,27 +4258,27 @@ var
   SlowChecks: boolean;
 begin
   SlowChecks := Length(fInputString) < fSlowChecksSizeMax;
-  Result := ExecPrim(1, False, SlowChecks);
+  Result := ExecPrim(1, False, SlowChecks, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 function TRegExpr.Exec(AOffset: integer): boolean;
 begin
-  Result := ExecPrim(AOffset, False, False);
+  Result := ExecPrim(AOffset, False, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 {$ENDIF}
 
 function TRegExpr.ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 begin
-  Result := ExecPrim(AOffset, False, False);
+  Result := ExecPrim(AOffset, False, False, False);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
-function TRegExpr.ExecPos(AOffset: integer; ATryOnce: boolean): boolean;
+function TRegExpr.ExecPos(AOffset: integer; ATryOnce, ABackward: boolean): boolean;
 begin
-  Result := ExecPrim(AOffset, ATryOnce, False);
+  Result := ExecPrim(AOffset, ATryOnce, False, ABackward);
 end;
 {$ENDIF}
 
@@ -4311,7 +4311,8 @@ begin
   GrpCount := 0;
 end;
 
-function TRegExpr.ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
+function TRegExpr.ExecPrim(AOffset: integer;
+  ATryOnce, ASlowChecks, ABackward: boolean): boolean;
 var
   Ptr: PRegExprChar;
 begin
@@ -4378,11 +4379,23 @@ begin
   end;
 
   // Messy cases: unanchored match.
-  Dec(Ptr);
+  if ABackward then
+    Inc(Ptr, 2)
+  else
+    Dec(Ptr);
   repeat
-    Inc(Ptr);
-    if Ptr > fInputEnd then
-      Exit;
+    if ABackward then
+    begin
+      Dec(Ptr);
+      if Ptr < fInputStart then
+        Exit;
+    end
+    else
+    begin
+      Inc(Ptr);
+      if Ptr > fInputEnd then
+        Exit;
+    end;
 
     {$IFDEF UseFirstCharSet}
     {$IFDEF UniCode}
@@ -4400,7 +4413,7 @@ begin
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
-function TRegExpr.ExecNext: boolean;
+function TRegExpr.ExecNext(ABackward: boolean {$IFDEF DefParam} = False{$ENDIF}): boolean;
 var
   PtrBegin, PtrEnd: PRegExprChar;
   Offset: PtrInt;
@@ -4419,7 +4432,7 @@ begin
   if PtrBegin = PtrEnd then
     Inc(Offset);
 
-  Result := ExecPrim(Offset, False, False);
+  Result := ExecPrim(Offset, False, False, ABackward);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 

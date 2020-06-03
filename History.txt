@@ -6,6 +6,11 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.992 2020.06.01
+ -=- (-) Added backward search possibility: ABackward param in
+  ExecPrim, ExecPos, ExecNext. It was tested in CudaText editor.
+  By Alexey Torgashin.
+
  v. 0.991 2020.05.15
  -=- (-) Fixed incorrect opcode for correct regex "[.-]".
   By Alexey Torgashin.
