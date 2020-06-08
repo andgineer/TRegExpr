@@ -4580,10 +4580,13 @@ begin
   begin
     Ch := p^;
     Inc(p);
-    if (Ch = '$') and (p+1 < TemplateEnd) then
-      n := GrpIndexes[ParseVarName(p)]
-    else
-      n := -1;
+    n := -1;
+    if Ch = '$' then
+    begin
+      n := ParseVarName(p);
+      if (n >= 0) and (n <= High(GrpIndexes)) then
+        n := GrpIndexes[n];
+    end;
     if n >= 0 then
     begin
       Inc(ResultLen, endp[n] - startp[n]);
@@ -4636,10 +4639,13 @@ begin
     p0 := p;
     Inc(p);
     p1 := p;
-    if (Ch = '$') and (p+1 < TemplateEnd) then
-      n := GrpIndexes[ParseVarName(p)]
-    else
-      n := -1;
+    n := -1;
+    if Ch = '$' then
+    begin
+      n := ParseVarName(p);
+      if (n >= 0) and (n <= High(GrpIndexes)) then
+        n := GrpIndexes[n];
+    end;
     if (n >= 0) then
     begin
       p0 := startp[n];
