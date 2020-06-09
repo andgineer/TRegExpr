@@ -775,7 +775,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 992;
+  REVersionMinor = 993;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4580,10 +4580,13 @@ begin
   begin
     Ch := p^;
     Inc(p);
+    n := -1;
     if Ch = '$' then
-      n := GrpIndexes[ParseVarName(p)]
-    else
-      n := -1;
+    begin
+      n := ParseVarName(p);
+      if (n >= 0) and (n <= High(GrpIndexes)) then
+        n := GrpIndexes[n];
+    end;
     if n >= 0 then
     begin
       Inc(ResultLen, endp[n] - startp[n]);
@@ -4636,10 +4639,13 @@ begin
     p0 := p;
     Inc(p);
     p1 := p;
+    n := -1;
     if Ch = '$' then
-      n := GrpIndexes[ParseVarName(p)]
-    else
-      n := -1;
+    begin
+      n := ParseVarName(p);
+      if (n >= 0) and (n <= High(GrpIndexes)) then
+        n := GrpIndexes[n];
+    end;
     if (n >= 0) then
     begin
       p0 := startp[n];
