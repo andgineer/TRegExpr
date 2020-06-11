@@ -98,7 +98,7 @@ const
     False, // $005C
     False, // $005D
     False, // $005E
-    False, // $005F
+    True, // $005F
     False, // $0060
     True, // $0061
     True, // $0062

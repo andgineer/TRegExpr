@@ -27,12 +27,16 @@ uses
 
 {$R *.lfm}
 
-function IsUnicodeWordChar(AChar: WideChar): boolean; inline;
+function IsUnicodeWordChar(AChar: WideChar): boolean;
 var
   NType: byte;
 begin
+  if AChar='_' then
+    Exit(true);
+
   if Ord(AChar) >= LOW_SURROGATE_BEGIN then
     Exit(False);
+
   NType := GetProps(Ord(AChar))^.Category;
   Result := (NType <= UGC_OtherNumber);
 end;
