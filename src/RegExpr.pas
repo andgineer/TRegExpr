@@ -71,6 +71,7 @@ interface
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
+{$DEFINE FastUnicodeData} // Use arrays for UpperCase/LowerCase/IsWordChar, they take 320K more memory
 {$DEFINE UseFirstCharSet} // Enable optimization, which finds possible first chars of input string
 {$DEFINE RegExpPCodeDump} // Enable method Dump() to show opcode as string
 {$IFNDEF FPC} // Not supported in FreePascal
@@ -78,6 +79,10 @@ interface
 {$ENDIF}
 {$DEFINE ComplexBraces} // Support braces in complex cases
 {$IFNDEF UniCode}
+  {$UNDEF UnicodeWordDetection}
+  {$UNDEF FastUnicodeData}
+{$ENDIF}
+{$IFDEF FastUnicodeData}
   {$UNDEF UnicodeWordDetection}
 {$ENDIF}
 // ======== Define Pascal-language options
@@ -760,6 +765,10 @@ implementation
 uses
   UnicodeData;
 {$ENDIF}
+{$IFDEF FastUnicodeData}
+uses
+  RegExpr_UnicodeData;
+{$ENDIF}
 {$ELSE}
 {$IFDEF D2009}
 uses
@@ -775,7 +784,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 993;
+  REVersionMinor = 994;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -875,6 +884,17 @@ begin
   {$ENDIF}
 end;
 
+{$IFDEF FastUnicodeData}
+function _UpperCase(Ch: REChar): REChar; inline;
+begin
+  Result := CharUpperArray[Ord(Ch)];
+end;
+
+function _LowerCase(Ch: REChar): REChar; inline;
+begin
+  Result := CharLowerArray[Ord(Ch)];
+end;
+{$ELSE}
 function _UpperCase(Ch: REChar): REChar;
 begin
   Result := Ch;
@@ -938,6 +958,7 @@ begin
     {$ENDIF}
   {$ENDIF}
 end;
+{$ENDIF}
 
 { ============================================================= }
 { ===================== Global functions ====================== }
@@ -1568,6 +1589,14 @@ begin
 end; { of destructor TRegExpr.Destroy
   -------------------------------------------------------------- }
 
+{$IFDEF FastUnicodeData}
+class function TRegExpr.InvertCaseFunction(const Ch: REChar): REChar;
+begin
+  Result := _UpperCase(Ch);
+  if Result = Ch then
+    Result := _LowerCase(Ch);
+end;
+{$ELSE}
 class function TRegExpr.InvertCaseFunction(const Ch: REChar): REChar;
 begin
   Result := Ch;
@@ -1611,6 +1640,7 @@ begin
   {$ENDIF}
 end; { of function TRegExpr.InvertCaseFunction
   -------------------------------------------------------------- }
+{$ENDIF}
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
@@ -1767,6 +1797,12 @@ end; { of procedure TRegExpr.SetModifierStr
   {$ENDIF}
 {$ENDIF}
 
+{$IFDEF FastUnicodeData}
+function TRegExpr.IsWordChar(AChar: REChar): boolean;
+begin
+  Result := WordDetectArray[Ord(AChar)];
+end;
+{$ELSE}
 function TRegExpr.IsWordChar(AChar: REChar): boolean;
 begin
   {$IFDEF UseWordChars}
@@ -1786,6 +1822,7 @@ begin
     Result := IsUnicodeWordChar(AChar);
   {$ENDIF}
 end;
+{$ENDIF}
 
 function TRegExpr.IsSpaceChar(AChar: REChar): boolean;
 begin

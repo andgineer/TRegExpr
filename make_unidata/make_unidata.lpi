@@ -5,11 +5,11 @@
     <General>
       <Flags>
         <MainUnitHasCreateFormStatements Value="False"/>
-        <MainUnitHasTitleStatement Value="False"/>
         <MainUnitHasScaledStatement Value="False"/>
+        <UseDefaultCompilerOptions Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="Benchmark"/>
+      <Title Value="My Application"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
@@ -25,11 +25,7 @@
     </RunParams>
     <Units>
       <Unit>
-        <Filename Value="test.lpr"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="../src/RegExpr.pas"/>
+        <Filename Value="make_unidata.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>
@@ -37,25 +33,11 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="test"/>
+      <Filename Value="make_unidata"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="../src"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
-    <CodeGeneration>
-      <SmartLinkUnit Value="True"/>
-      <Optimizations>
-        <OptimizationLevel Value="4"/>
-      </Optimizations>
-    </CodeGeneration>
-    <Linking>
-      <Debugging>
-        <GenerateDebugInfo Value="False"/>
-      </Debugging>
-      <LinkSmart Value="True"/>
-    </Linking>
   </CompilerOptions>
   <Debugging>
     <Exceptions>
@@ -67,6 +49,36 @@
       </Item>
       <Item>
         <Name Value="EFOpenError"/>
+      </Item>
+      <Item>
+        <Name Value="EPyNameError"/>
+      </Item>
+      <Item>
+        <Name Value="EPySyntaxError"/>
+      </Item>
+      <Item>
+        <Name Value="EPyImportError"/>
+      </Item>
+      <Item>
+        <Name Value="Exception"/>
+      </Item>
+      <Item>
+        <Name Value="EScannerError"/>
+      </Item>
+      <Item>
+        <Name Value="RunError(216)"/>
+      </Item>
+      <Item>
+        <Name Value="EPyTypeError"/>
+      </Item>
+      <Item>
+        <Name Value="EPyAttributeError"/>
+      </Item>
+      <Item>
+        <Name Value="ERegExpr"/>
+      </Item>
+      <Item>
+        <Name Value="EPyNotImplementedError"/>
       </Item>
     </Exceptions>
   </Debugging>

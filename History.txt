@@ -6,12 +6,18 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.994 2020.06.11
+ -=- (+) Added define FastUnicodeData, which uses additional arrays
+  (size=320K) to speedup unicode functions in Unicode mode.
+  Added unit regexpr_unicodedata.
+  By Alexey Torgashin.
+
  v. 0.993 2020.06.08
  -=- (-) Fixed crash in Substitute() if template str is just '$'.
   By Alexey Torgashin.
 
  v. 0.992 2020.06.01
- -=- (-) Added backward search possibility: ABackward param in
+ -=- (+) Added backward search possibility: ABackward param in
   ExecPrim, ExecPos, ExecNext. It was tested in CudaText editor.
   By Alexey Torgashin.
 
