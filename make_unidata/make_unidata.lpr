@@ -1,31 +1,12 @@
-unit Unit1;
+program make_unidata;
 
 {$mode objfpc}{$H+}
 
-interface
-
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs;
-
-type
-  TForm1 = class(TForm)
-    procedure FormCreate(Sender: TObject);
-  private
-
-  public
-
-  end;
-
-var
-  Form1: TForm1;
-
-implementation
-
-uses
+  Classes, SysUtils,
+  fpwidestring,
   StrUtils,
   unicodedata;
-
-{$R *.lfm}
 
 function IsUnicodeWordChar(AChar: WideChar): boolean;
 var
@@ -41,7 +22,6 @@ begin
   Result := (NType <= UGC_OtherNumber);
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
 var
   i: integer;
   sl: tstringlist;
@@ -75,7 +55,5 @@ begin
 
   sl.SaveToFile('regexpr_unicodedata.pas');
   sl.free;
-end;
 
 end.
-

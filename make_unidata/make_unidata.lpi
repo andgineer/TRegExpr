@@ -3,15 +3,15 @@
   <ProjectOptions>
     <Version Value="12"/>
     <General>
+      <Flags>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasScaledStatement Value="False"/>
+        <UseDefaultCompilerOptions Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="project1"/>
-      <Scaled Value="True"/>
+      <Title Value="My Application"/>
+      <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
-      <UseXPManifest Value="True"/>
-      <XPManifest>
-        <DpiAware Value="True"/>
-      </XPManifest>
-      <Icon Value="0"/>
     </General>
     <BuildModes>
       <Item Name="Default" Default="True"/>
@@ -23,45 +23,21 @@
     <RunParams>
       <FormatVersion Value="2"/>
     </RunParams>
-    <RequiredPackages>
-      <Item>
-        <PackageName Value="atsynedit_package"/>
-      </Item>
-      <Item>
-        <PackageName Value="LCL"/>
-      </Item>
-    </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="project1.lpr"/>
+        <Filename Value="make_unidata.lpr"/>
         <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="unit1.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="Form1"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Unit1"/>
       </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="project1"/>
+      <Filename Value="make_unidata"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
-    <Linking>
-      <Options>
-        <Win32>
-          <GraphicApplication Value="True"/>
-        </Win32>
-      </Options>
-    </Linking>
   </CompilerOptions>
   <Debugging>
     <Exceptions>
@@ -73,6 +49,36 @@
       </Item>
       <Item>
         <Name Value="EFOpenError"/>
+      </Item>
+      <Item>
+        <Name Value="EPyNameError"/>
+      </Item>
+      <Item>
+        <Name Value="EPySyntaxError"/>
+      </Item>
+      <Item>
+        <Name Value="EPyImportError"/>
+      </Item>
+      <Item>
+        <Name Value="Exception"/>
+      </Item>
+      <Item>
+        <Name Value="EScannerError"/>
+      </Item>
+      <Item>
+        <Name Value="RunError(216)"/>
+      </Item>
+      <Item>
+        <Name Value="EPyTypeError"/>
+      </Item>
+      <Item>
+        <Name Value="EPyAttributeError"/>
+      </Item>
+      <Item>
+        <Name Value="ERegExpr"/>
+      </Item>
+      <Item>
+        <Name Value="EPyNotImplementedError"/>
       </Item>
     </Exceptions>
   </Debugging>
