@@ -133,7 +133,6 @@ type
   PREOp = ^TREOp;
 
 type
-  TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
   TRegExprCharset = set of byte;
 
 const
@@ -315,7 +314,6 @@ type
     {$IFDEF UseWordChars}
     fWordChars: RegExprString;
     {$ENDIF}
-    fInvertCase: TRegExprInvertCaseFunction;
 
     fLineSeparators: RegExprString;
     fLinePairedSeparatorAssigned: boolean;
@@ -564,10 +562,6 @@ type
     // Returns Error message for error with ID = AErrorID.
     function ErrorMsg(AErrorID: integer): RegExprString; virtual;
 
-    // Converts Ch into upper case if it in lower case or in lower
-    // if it in upper (uses current system local setings)
-    class function InvertCaseFunction(const Ch: REChar): REChar;
-
     // [Re]compile r.e. Useful for example for GUI r.e. editors (to check
     // all properties validity).
     procedure Compile; // ###0.941
@@ -669,10 +663,6 @@ type
     // must contain exactly two chars or no chars at all
     property LinePairedSeparator: RegExprString read GetLinePairedSeparator write SetLinePairedSeparator; // ###0.941
 
-    // Set this property if you want to override case-insensitive functionality.
-    // Create set it to RegExprInvertCaseFunction (InvertCaseFunction by default)
-    property InvertCase: TRegExprInvertCaseFunction read fInvertCase write fInvertCase; // ##0.935
-
     // Use OS line end on replace or not. Default is True for backwards compatibility.
     // Set to false to use #10.
     property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
@@ -686,9 +676,6 @@ type
     ErrorCode: integer;
     CompilerErrorPos: PtrInt;
   end;
-
-const
-  RegExprInvertCaseFunction: TRegExprInvertCaseFunction = nil;
 
   // true if string AInputString match regular expression ARegExpr
   // ! will raise exeption if syntax errors in ARegExpr
@@ -784,7 +771,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 994;
+  REVersionMinor = 995;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -959,6 +946,13 @@ begin
   {$ENDIF}
 end;
 {$ENDIF}
+
+function InvertCase(const Ch: REChar): REChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  Result := _UpperCase(Ch);
+  if Result = Ch then
+    Result := _LowerCase(Ch);
+end;
 
 { ============================================================= }
 { ===================== Global functions ====================== }
@@ -1552,7 +1546,6 @@ begin
   {$IFDEF UseWordChars}
   WordChars := RegExprWordChars; // ###0.929
   {$ENDIF}
-  fInvertCase := RegExprInvertCaseFunction; // ###0.927
 
   fLineSeparators := RegExprLineSeparators; // ###0.941
   LinePairedSeparator := RegExprLinePairedSeparator; // ###0.941
@@ -1588,59 +1581,6 @@ begin
   end;
 end; { of destructor TRegExpr.Destroy
   -------------------------------------------------------------- }
-
-{$IFDEF FastUnicodeData}
-class function TRegExpr.InvertCaseFunction(const Ch: REChar): REChar;
-begin
-  Result := _UpperCase(Ch);
-  if Result = Ch then
-    Result := _LowerCase(Ch);
-end;
-{$ELSE}
-class function TRegExpr.InvertCaseFunction(const Ch: REChar): REChar;
-begin
-  Result := Ch;
-  if (Ch >= 'a') and (Ch <= 'z') then
-  begin
-    Dec(Result, 32);
-    Exit;
-  end;
-  if (Ch >= 'A') and (Ch <= 'Z') then
-  begin
-    Inc(Result, 32);
-    Exit;
-  end;
-  if Ord(Ch) < 128 then
-    Exit;
-
-  {$IFDEF FPC}
-  Result := _UpperCase(Ch);
-  if Result = Ch then
-    Result := _LowerCase(Ch);
-  {$ELSE}
-  {$IFDEF UniCode}
-    {$IFDEF D_XE4}
-  if Ch.IsUpper then
-    Result := Ch.ToLower
-  else
-    Result := Ch.ToUpper;
-    {$ELSE}
-    {$IFDEF D2009}
-  if TCharacter.IsUpper(Ch) then
-    Result := TCharacter.ToLower(Ch)
-  else
-    Result := TCharacter.ToUpper(Ch);
-    {$ENDIF}
-  {$ENDIF}
-  {$ELSE}
-  Result := _UpperCase(Ch);
-  if Result = Ch then
-    Result := _LowerCase(Ch);
-  {$ENDIF}
-  {$ENDIF}
-end; { of function TRegExpr.InvertCaseFunction
-  -------------------------------------------------------------- }
-{$ENDIF}
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
@@ -5480,9 +5420,5 @@ end; { of procedure TRegExpr.Error
 
 // be carefull - placed here code will be always compiled with
 // compiler optimization flag
-
-initialization
-
-  RegExprInvertCaseFunction := TRegExpr.InvertCaseFunction;
 
 end.
