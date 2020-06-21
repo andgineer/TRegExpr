@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.995 2020.06.21
+ -=- (^) Deleted prop InvertCase and global variable for this purpose,
+ seems no one needs it anymore. By Alexey Torgashin.
+
  v. 0.994 2020.06.11
  -=- (+) Added define FastUnicodeData, which uses additional arrays
   (size=320K) to speedup unicode functions in Unicode mode.
