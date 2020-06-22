@@ -7,7 +7,7 @@ program test;
 uses
   SysUtils,
   Classes,
-  RegExpr in '../src/RegExpr.pas';
+  RegExpr in '../src/regexpr.pas';
 
 // benchmark from http://lh3lh3.users.sourceforge.net/reb.shtml
 {

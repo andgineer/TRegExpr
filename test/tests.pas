@@ -26,7 +26,7 @@ uses
   TestFramework,
   {$ENDIF}
   Classes, SysUtils,
-  RegExpr {$IFDEF FPC}in '../src/RegExpr.pas'{$ENDIF};
+  RegExpr {$IFDEF FPC}in '../src/regexpr.pas'{$ENDIF};
 
 type
 
