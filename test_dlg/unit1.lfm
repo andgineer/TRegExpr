@@ -12,8 +12,8 @@ object Form1: TForm1
   LCLVersion = '2.1.0.0'
   object ListDump: TListBox
     Left = 6
-    Height = 349
-    Top = 226
+    Height = 340
+    Top = 235
     Width = 792
     Align = alClient
     BorderSpacing.Around = 6
@@ -25,7 +25,7 @@ object Form1: TForm1
   object ListRes: TListBox
     Left = 6
     Height = 120
-    Top = 100
+    Top = 109
     Width = 792
     Align = alTop
     BorderSpacing.Around = 6
@@ -36,12 +36,12 @@ object Form1: TForm1
   end
   object Panel1: TPanel
     Left = 0
-    Height = 55
+    Height = 64
     Top = 0
     Width = 804
     Align = alTop
     BevelOuter = bvNone
-    ClientHeight = 55
+    ClientHeight = 64
     ClientWidth = 804
     TabOrder = 0
     object Label1: TLabel
@@ -50,7 +50,7 @@ object Form1: TForm1
       AnchorSideTop.Side = asrCenter
       Left = 6
       Height = 17
-      Top = 11
+      Top = 14
       Width = 78
       BorderSpacing.Left = 6
       Caption = 'Expression:'
@@ -63,7 +63,7 @@ object Form1: TForm1
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
       Left = 90
-      Height = 27
+      Height = 33
       Top = 6
       Width = 708
       Anchors = [akTop, akLeft, akRight]
@@ -78,8 +78,8 @@ object Form1: TForm1
       AnchorSideTop.Control = EditRegex
       AnchorSideTop.Side = asrBottom
       Left = 90
-      Height = 24
-      Top = 33
+      Height = 23
+      Top = 39
       Width = 119
       Caption = 'i (case-insens)'
       OnChange = chk_iChange
@@ -90,9 +90,9 @@ object Form1: TForm1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chk_i
       Left = 215
-      Height = 24
-      Top = 33
-      Width = 118
+      Height = 23
+      Top = 39
+      Width = 117
       BorderSpacing.Left = 6
       Caption = 'x (comments)'
       OnChange = chk_iChange
@@ -102,9 +102,9 @@ object Form1: TForm1
       AnchorSideLeft.Control = chk_x
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chk_i
-      Left = 339
-      Height = 24
-      Top = 33
+      Left = 338
+      Height = 23
+      Top = 39
       Width = 66
       BorderSpacing.Left = 6
       Caption = 'r (rus)'
@@ -115,9 +115,9 @@ object Form1: TForm1
       AnchorSideLeft.Control = chk_r
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chk_i
-      Left = 411
-      Height = 24
-      Top = 33
+      Left = 410
+      Height = 23
+      Top = 39
       Width = 113
       BorderSpacing.Left = 6
       Caption = 's (dot for all)'
@@ -128,9 +128,9 @@ object Form1: TForm1
       AnchorSideLeft.Control = chk_s
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chk_i
-      Left = 530
-      Height = 24
-      Top = 33
+      Left = 529
+      Height = 23
+      Top = 39
       Width = 72
       BorderSpacing.Left = 6
       Caption = 'greedy'
@@ -141,7 +141,7 @@ object Form1: TForm1
   object Panel2: TPanel
     Left = 0
     Height = 39
-    Top = 55
+    Top = 64
     Width = 804
     Align = alTop
     BevelOuter = bvNone
@@ -168,8 +168,8 @@ object Form1: TForm1
       AnchorSideRight.Control = Panel2
       AnchorSideRight.Side = asrBottom
       Left = 108
-      Height = 27
-      Top = 6
+      Height = 33
+      Top = 3
       Width = 690
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 6

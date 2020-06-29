@@ -47,7 +47,7 @@ var
 
 implementation
 
-uses RegExpr;
+uses regexpr;
 {$R *.dfm}
 
 // This simple function extracts all emails from input string

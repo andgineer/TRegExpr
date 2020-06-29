@@ -4,8 +4,8 @@
 {                              XML Data Binding                               }
 {                                                                             }
 {         Generated on: 25.02.2006 11:51:20                                   }
-{       Generated from: Q:\RegExpr\Test\Tests\RegularExpressionsXMLBind.xml   }
-{   Settings stored in: Q:\RegExpr\Test\Tests\RegularExpressionsXMLBind.xdb   }
+{       Generated from: Q:\regexpr\Test\Tests\RegularExpressionsXMLBind.xml   }
+{   Settings stored in: Q:\regexpr\Test\Tests\RegularExpressionsXMLBind.xdb   }
 {                                                                             }
 {*****************************************************************************}
 

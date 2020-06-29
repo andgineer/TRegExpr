@@ -12,7 +12,7 @@ uses
   Forms,
   Text2HTMLMain in 'Text2HTMLMain.pas' {fmText2HTMLMain},
   HyperLinksDecorator in '..\..\Src\HyperLinksDecorator.pas',
-  RegExpr in '..\..\src\RegExpr.pas';
+  regexpr in '..\..\src\regexpr.pas';
 
 {.$R *.RES}
 

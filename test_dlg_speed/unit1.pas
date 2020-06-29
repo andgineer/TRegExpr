@@ -37,7 +37,7 @@ var
 implementation
 
 uses
-  RegExpr in '../src/RegExpr.pas';
+  regexpr in '../src/regexpr.pas';
 
 {$R *.lfm}
 
@@ -160,7 +160,7 @@ var
   fn: string;
 begin
   fn:= ExtractFileDir(ExtractFileDir(Application.ExeName))+
-    DirectorySeparator+'src'+DirectorySeparator+'RegExpr.pas';
+    DirectorySeparator+'src'+DirectorySeparator+'regexpr.pas';
 
   if not FileExists(fn) then
   begin
