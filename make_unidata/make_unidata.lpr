@@ -28,7 +28,7 @@ var
 begin
   sl:= tstringlist.create;
 
-  sl.add('unit RegExpr_UnicodeData;');
+  sl.add('unit regexpr_unicodedata;');
   sl.add('interface');
   sl.add('');
   sl.add('const');
