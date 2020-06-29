@@ -11,7 +11,7 @@ uses
 {$ENDIF}
   Forms,
   TRegExprRoutinesMain in 'TRegExprRoutinesMain.pas' {fmTRegExprRoutines},
-  RegExpr in '..\..\Src\RegExpr.pas';
+  regexpr in '..\..\Src\regexpr.pas';
 
 {.$R *.RES}
 

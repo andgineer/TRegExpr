@@ -7,7 +7,7 @@ program test;
 uses
   SysUtils,
   Classes,
-  RegExpr in '../src/regexpr.pas';
+  regexpr in '../src/regexpr.pas';
 
 // benchmark from http://lh3lh3.users.sourceforge.net/reb.shtml
 {
@@ -64,7 +64,7 @@ begin
 
   writeln(' ':50,'      Time     | Match count');
   writeln('==============================================================================');
-  writeln('RegExpr.pas:');
+  writeln('regexpr.pas:');
 
   for i:=low(BenchmarkPatterns) to high(BenchmarkPatterns) do begin
    try

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  RegExpr in '../src/regexpr.pas';
+  regexpr in '../src/regexpr.pas';
 
 type
   { TForm1 }
