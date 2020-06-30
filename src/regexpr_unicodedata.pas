@@ -1,4 +1,4 @@
-unit RegExpr_UnicodeData;
+unit regexpr_unicodedata;
 interface
 
 const

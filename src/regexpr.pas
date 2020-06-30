@@ -754,7 +754,7 @@ uses
 {$ENDIF}
 {$IFDEF FastUnicodeData}
 uses
-  RegExpr_UnicodeData;
+  regexpr_unicodedata;
 {$ENDIF}
 {$ELSE}
 {$IFDEF D2009}
