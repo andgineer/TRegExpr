@@ -160,7 +160,7 @@ RegEx      Matches
 ``\V``     not a vertical whitespace
 ======     ==============================================
 
-You may use ``\w``, ``\d`` and ``\s`` within
+You may use ``\w``, ```\W``, ``\d``, ``\D``, ``\h``, ``\H``, ``\v``, ``\V``, ``\s``, ``\S`` within
 `user character classes <User Character Classes_>`_.
 
 =============== =====================================================================================
