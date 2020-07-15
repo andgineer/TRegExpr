@@ -25,7 +25,7 @@ uses
 {$ENDIF}
   Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ComCtrls, ExtCtrls,
-  RegExpr, FileViewer, RETestCases
+  regexpr, FileViewer, RETestCases
   {$IFDEF UseProfiler}, StopWatch {$ENDIF};
 
 type

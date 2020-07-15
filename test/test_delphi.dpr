@@ -12,7 +12,7 @@ uses
   DUnitX.Loggers.Xml.NUnit,
   DUnitX.TestFramework,
   tests,
-  RegExpr in '..\src\RegExpr.pas';
+  regexpr in '..\src\regexpr.pas';
 
 var
   runner : ITestRunner;

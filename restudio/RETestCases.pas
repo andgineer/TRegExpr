@@ -26,7 +26,7 @@ interface
 
 uses
  Classes,
- RegExpr,
+ regexpr,
  tynList;
 
 type

@@ -13,7 +13,9 @@ urls.txt
 bin/
 lib/
 build/
+test
 test_fpc
 test_delphi
 test_speed
+make_unidata
 project1

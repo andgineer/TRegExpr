@@ -8,11 +8,11 @@ unit TRegExprRoutinesMain;
   TRegExpr Demo-project
 
   Using TRegExpr unit global routins:
-  -=- Add RegExpr.pas into Your project files list (or just
+  -=- Add regexpr.pas into Your project files list (or just
   place this file in the same directory as other files
   of Your project):
   Delphi Main Menu -> Project -> Add to project..
-  -=- Add 'RegExpr' into 'uses' of the unit where You want
+  -=- Add 'regexpr' into 'uses' of the unit where You want
   to use the functions:
   Delphi Main Menu -> File -> Use Unit..
   -=- Just use the functions, ExecRegExpr for example (see
@@ -73,7 +73,7 @@ var
 
 implementation
 
-uses RegExpr;
+uses regexpr;
 
 {$R *.dfm}
 

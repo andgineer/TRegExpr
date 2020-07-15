@@ -26,7 +26,7 @@ uses
   TestFramework,
   {$ENDIF}
   Classes, SysUtils,
-  RegExpr {$IFDEF FPC}in '../src/RegExpr.pas'{$ENDIF};
+  regexpr {$IFDEF FPC}in '../src/regexpr.pas'{$ENDIF};
 
 type
 
@@ -477,10 +477,10 @@ const
     ),
     // 44
     ( // valid regex set
-    expression: '([.-]Test[.-])';
-    inputText: 'This.Is.A.Test.1234_Test_abc';
+    expression: '.*?([.-]Test[.-])';
+    inputText: 'This.Is.A_Test_1234.Test.abc';
     substitutionText: '$1';
-    expectedResult: '.Test.';
+    expectedResult: '.Test.abc';
     matchStart: 0
     )
   );

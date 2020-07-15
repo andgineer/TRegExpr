@@ -37,7 +37,7 @@ var
 implementation
 
 uses
-  RegExpr in '../src/RegExpr.pas';
+  regexpr in '../src/regexpr.pas';
 
 {$R *.lfm}
 
@@ -98,7 +98,7 @@ begin
     if not _IsSpace(ch) then
       for IndexRule:= 0 to Length(Rules)-1 do
       begin
-        if Obj[IndexRule].ExecPos(NPos, true) then
+        if Obj[IndexRule].ExecPos(NPos, true, false) then
         begin
           NLen:= Obj[IndexRule].MatchLen[0];
 
@@ -160,7 +160,7 @@ var
   fn: string;
 begin
   fn:= ExtractFileDir(ExtractFileDir(Application.ExeName))+
-    DirectorySeparator+'src'+DirectorySeparator+'RegExpr.pas';
+    DirectorySeparator+'src'+DirectorySeparator+'regexpr.pas';
 
   if not FileExists(fn) then
   begin

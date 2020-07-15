@@ -1,4 +1,4 @@
-﻿unit RegExpr;
+﻿unit regexpr;
 
 {
   TRegExpr class library
@@ -71,6 +71,7 @@ interface
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
+{$DEFINE FastUnicodeData} // Use arrays for UpperCase/LowerCase/IsWordChar, they take 320K more memory
 {$DEFINE UseFirstCharSet} // Enable optimization, which finds possible first chars of input string
 {$DEFINE RegExpPCodeDump} // Enable method Dump() to show opcode as string
 {$IFNDEF FPC} // Not supported in FreePascal
@@ -78,6 +79,10 @@ interface
 {$ENDIF}
 {$DEFINE ComplexBraces} // Support braces in complex cases
 {$IFNDEF UniCode}
+  {$UNDEF UnicodeWordDetection}
+  {$UNDEF FastUnicodeData}
+{$ENDIF}
+{$IFDEF FastUnicodeData}
   {$UNDEF UnicodeWordDetection}
 {$ENDIF}
 // ======== Define Pascal-language options
@@ -128,7 +133,6 @@ type
   PREOp = ^TREOp;
 
 type
-  TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
   TRegExprCharset = set of byte;
 
 const
@@ -310,7 +314,6 @@ type
     {$IFDEF UseWordChars}
     fWordChars: RegExprString;
     {$ENDIF}
-    fInvertCase: TRegExprInvertCaseFunction;
 
     fLineSeparators: RegExprString;
     fLinePairedSeparatorAssigned: boolean;
@@ -460,7 +463,7 @@ type
     function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
+    function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean): boolean;
 
     {$IFDEF RegExpPCodeDump}
     function DumpOp(op: TREOp): RegExprString;
@@ -504,13 +507,13 @@ type
     // Raises exception if used without preceeding SUCCESSFUL call to
     // Exec* (Exec, ExecPos, ExecNext). So You always must use something like
     // if Exec (InputString) then repeat { proceed results} until not ExecNext;
-    function ExecNext: boolean;
+    function ExecNext(ABackward: boolean {$IFDEF DefParam} = False{$ENDIF}): boolean;
 
     // find match for InputString starting from AOffset position
     // (AOffset=1 - first char of InputString)
     function ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
     {$IFDEF OverMeth} overload;
-    function ExecPos(AOffset: integer; ATryOnce: boolean): boolean; overload;
+    function ExecPos(AOffset: integer; ATryOnce, ABackward: boolean): boolean; overload;
     {$ENDIF}
 
     // Returns ATemplate with '$&' or '$0' replaced by whole r.e.
@@ -558,10 +561,6 @@ type
 
     // Returns Error message for error with ID = AErrorID.
     function ErrorMsg(AErrorID: integer): RegExprString; virtual;
-
-    // Converts Ch into upper case if it in lower case or in lower
-    // if it in upper (uses current system local setings)
-    class function InvertCaseFunction(const Ch: REChar): REChar;
 
     // [Re]compile r.e. Useful for example for GUI r.e. editors (to check
     // all properties validity).
@@ -664,10 +663,6 @@ type
     // must contain exactly two chars or no chars at all
     property LinePairedSeparator: RegExprString read GetLinePairedSeparator write SetLinePairedSeparator; // ###0.941
 
-    // Set this property if you want to override case-insensitive functionality.
-    // Create set it to RegExprInvertCaseFunction (InvertCaseFunction by default)
-    property InvertCase: TRegExprInvertCaseFunction read fInvertCase write fInvertCase; // ##0.935
-
     // Use OS line end on replace or not. Default is True for backwards compatibility.
     // Set to false to use #10.
     property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
@@ -681,9 +676,6 @@ type
     ErrorCode: integer;
     CompilerErrorPos: PtrInt;
   end;
-
-const
-  RegExprInvertCaseFunction: TRegExprInvertCaseFunction = nil;
 
   // true if string AInputString match regular expression ARegExpr
   // ! will raise exeption if syntax errors in ARegExpr
@@ -760,6 +752,10 @@ implementation
 uses
   UnicodeData;
 {$ENDIF}
+{$IFDEF FastUnicodeData}
+uses
+  regexpr_unicodedata;
+{$ENDIF}
 {$ELSE}
 {$IFDEF D2009}
 uses
@@ -775,7 +771,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 0;
-  REVersionMinor = 991;
+  REVersionMinor = 995;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -875,6 +871,17 @@ begin
   {$ENDIF}
 end;
 
+{$IFDEF FastUnicodeData}
+function _UpperCase(Ch: REChar): REChar; inline;
+begin
+  Result := CharUpperArray[Ord(Ch)];
+end;
+
+function _LowerCase(Ch: REChar): REChar; inline;
+begin
+  Result := CharLowerArray[Ord(Ch)];
+end;
+{$ELSE}
 function _UpperCase(Ch: REChar): REChar;
 begin
   Result := Ch;
@@ -937,6 +944,14 @@ begin
     Result := AnsiLowerCase(Ch)[1];
     {$ENDIF}
   {$ENDIF}
+end;
+{$ENDIF}
+
+function InvertCase(const Ch: REChar): REChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  Result := _UpperCase(Ch);
+  if Result = Ch then
+    Result := _LowerCase(Ch);
 end;
 
 { ============================================================= }
@@ -1531,7 +1546,6 @@ begin
   {$IFDEF UseWordChars}
   WordChars := RegExprWordChars; // ###0.929
   {$ENDIF}
-  fInvertCase := RegExprInvertCaseFunction; // ###0.927
 
   fLineSeparators := RegExprLineSeparators; // ###0.941
   LinePairedSeparator := RegExprLinePairedSeparator; // ###0.941
@@ -1566,50 +1580,6 @@ begin
     programm := nil;
   end;
 end; { of destructor TRegExpr.Destroy
-  -------------------------------------------------------------- }
-
-class function TRegExpr.InvertCaseFunction(const Ch: REChar): REChar;
-begin
-  Result := Ch;
-  if (Ch >= 'a') and (Ch <= 'z') then
-  begin
-    Dec(Result, 32);
-    Exit;
-  end;
-  if (Ch >= 'A') and (Ch <= 'Z') then
-  begin
-    Inc(Result, 32);
-    Exit;
-  end;
-  if Ord(Ch) < 128 then
-    Exit;
-
-  {$IFDEF FPC}
-  Result := _UpperCase(Ch);
-  if Result = Ch then
-    Result := _LowerCase(Ch);
-  {$ELSE}
-  {$IFDEF UniCode}
-    {$IFDEF D_XE4}
-  if Ch.IsUpper then
-    Result := Ch.ToLower
-  else
-    Result := Ch.ToUpper;
-    {$ELSE}
-    {$IFDEF D2009}
-  if TCharacter.IsUpper(Ch) then
-    Result := TCharacter.ToLower(Ch)
-  else
-    Result := TCharacter.ToUpper(Ch);
-    {$ENDIF}
-  {$ENDIF}
-  {$ELSE}
-  Result := _UpperCase(Ch);
-  if Result = Ch then
-    Result := _LowerCase(Ch);
-  {$ENDIF}
-  {$ENDIF}
-end; { of function TRegExpr.InvertCaseFunction
   -------------------------------------------------------------- }
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
@@ -1767,6 +1737,12 @@ end; { of procedure TRegExpr.SetModifierStr
   {$ENDIF}
 {$ENDIF}
 
+{$IFDEF FastUnicodeData}
+function TRegExpr.IsWordChar(AChar: REChar): boolean;
+begin
+  Result := WordDetectArray[Ord(AChar)];
+end;
+{$ELSE}
 function TRegExpr.IsWordChar(AChar: REChar): boolean;
 begin
   {$IFDEF UseWordChars}
@@ -1786,6 +1762,7 @@ begin
     Result := IsUnicodeWordChar(AChar);
   {$ENDIF}
 end;
+{$ENDIF}
 
 function TRegExpr.IsSpaceChar(AChar: REChar): boolean;
 begin
@@ -4248,7 +4225,7 @@ end; { of function TRegExpr.MatchPrim
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
   InputString := AInputString;
-  Result := ExecPrim(1, False, False);
+  Result := ExecPrim(1, False, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
@@ -4258,27 +4235,27 @@ var
   SlowChecks: boolean;
 begin
   SlowChecks := Length(fInputString) < fSlowChecksSizeMax;
-  Result := ExecPrim(1, False, SlowChecks);
+  Result := ExecPrim(1, False, SlowChecks, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 function TRegExpr.Exec(AOffset: integer): boolean;
 begin
-  Result := ExecPrim(AOffset, False, False);
+  Result := ExecPrim(AOffset, False, False, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 {$ENDIF}
 
 function TRegExpr.ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 begin
-  Result := ExecPrim(AOffset, False, False);
+  Result := ExecPrim(AOffset, False, False, False);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
-function TRegExpr.ExecPos(AOffset: integer; ATryOnce: boolean): boolean;
+function TRegExpr.ExecPos(AOffset: integer; ATryOnce, ABackward: boolean): boolean;
 begin
-  Result := ExecPrim(AOffset, ATryOnce, False);
+  Result := ExecPrim(AOffset, ATryOnce, False, ABackward);
 end;
 {$ENDIF}
 
@@ -4311,7 +4288,8 @@ begin
   GrpCount := 0;
 end;
 
-function TRegExpr.ExecPrim(AOffset: integer; ATryOnce, ASlowChecks: boolean): boolean;
+function TRegExpr.ExecPrim(AOffset: integer;
+  ATryOnce, ASlowChecks, ABackward: boolean): boolean;
 var
   Ptr: PRegExprChar;
 begin
@@ -4378,11 +4356,23 @@ begin
   end;
 
   // Messy cases: unanchored match.
-  Dec(Ptr);
+  if ABackward then
+    Inc(Ptr, 2)
+  else
+    Dec(Ptr);
   repeat
-    Inc(Ptr);
-    if Ptr > fInputEnd then
-      Exit;
+    if ABackward then
+    begin
+      Dec(Ptr);
+      if Ptr < fInputStart then
+        Exit;
+    end
+    else
+    begin
+      Inc(Ptr);
+      if Ptr > fInputEnd then
+        Exit;
+    end;
 
     {$IFDEF UseFirstCharSet}
     {$IFDEF UniCode}
@@ -4400,7 +4390,7 @@ begin
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
-function TRegExpr.ExecNext: boolean;
+function TRegExpr.ExecNext(ABackward: boolean {$IFDEF DefParam} = False{$ENDIF}): boolean;
 var
   PtrBegin, PtrEnd: PRegExprChar;
   Offset: PtrInt;
@@ -4419,7 +4409,7 @@ begin
   if PtrBegin = PtrEnd then
     Inc(Offset);
 
-  Result := ExecPrim(Offset, False, False);
+  Result := ExecPrim(Offset, False, False, ABackward);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
@@ -4567,10 +4557,13 @@ begin
   begin
     Ch := p^;
     Inc(p);
+    n := -1;
     if Ch = '$' then
-      n := GrpIndexes[ParseVarName(p)]
-    else
-      n := -1;
+    begin
+      n := ParseVarName(p);
+      if (n >= 0) and (n <= High(GrpIndexes)) then
+        n := GrpIndexes[n];
+    end;
     if n >= 0 then
     begin
       Inc(ResultLen, endp[n] - startp[n]);
@@ -4623,10 +4616,13 @@ begin
     p0 := p;
     Inc(p);
     p1 := p;
+    n := -1;
     if Ch = '$' then
-      n := GrpIndexes[ParseVarName(p)]
-    else
-      n := -1;
+    begin
+      n := ParseVarName(p);
+      if (n >= 0) and (n <= High(GrpIndexes)) then
+        n := GrpIndexes[n];
+    end;
     if (n >= 0) then
     begin
       p0 := startp[n];
@@ -5424,9 +5420,5 @@ end; { of procedure TRegExpr.Error
 
 // be carefull - placed here code will be always compiled with
 // compiler optimization flag
-
-initialization
-
-  RegExprInvertCaseFunction := TRegExpr.InvertCaseFunction;
 
 end.

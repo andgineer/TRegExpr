@@ -19,7 +19,7 @@ uses
   REStudioMain in 'REStudioMain.pas' {fmREStudioMain},
   PCode in 'PCode.pas' {fmPseudoCodeViewer},
   FileViewer in 'FileViewer.pas' {fmFileViewer},
-  RegExpr in '..\RegExpr.pas',
+  regexpr in '..\regexpr.pas',
   StopWatch in 'StopWatch\StopWatch.pas',
   tynList in 'Persistence\tynList.pas',
   ansoRTTIHook in 'Persistence\ansoRTTIHook.pas',
