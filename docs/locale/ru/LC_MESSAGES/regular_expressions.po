@@ -10,16 +10,17 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-15 13:01+0300\n"
-"PO-Revision-Date: 2019-12-18 14:15+0000\n"
+"PO-Revision-Date: 2020-07-15 10:08+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
+"regular_expressions/ru/>\n"
 "Language: ru\n"
-"Language-Team: Russian "
-"<https://hosted.weblate.org/projects/tregexpr/regular_expressions/ru/>\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.2-dev\n"
 "Generated-By: Babel 2.8.0\n"
 
 # c78ea9c703114f288d7bf3e609787c2a
@@ -610,14 +611,14 @@ msgstr "не вертикальный разделитель"
 
 # 98164c126ddb4e54811015b329028c46
 #: ../../regular_expressions.rst:163 e5d3669b88174ef58e5f13f280dba121
-#, fuzzy
 msgid ""
 "You may use ``\\w``, ```\\W``, ``\\d``, ``\\D``, ``\\h``, ``\\H``, "
 "``\\v``, ``\\V``, ``\\s``, ``\\S`` within `user character classes <User "
 "Character Classes_>`_."
 msgstr ""
-"Вы можете использовать ``\\w``, ``\\d`` и ``\\s`` `в классах "
-"пользовательских символов <User Character Classes_>`_."
+"Вы можете использовать ``\\w``, ```\\W``, ``\\d``, ``\\D``, ``\\h``, ``\\H``"
+", ``\\v``, ``\\V``, ``\\s``, ``\\S`` в `классах пользовательских символов "
+"<User Character Classes_>`_."
 
 # 8357b34a63b04041ad90eb3d67bced28
 #: ../../regular_expressions.rst:169 4aa16289a71c416faeffe2452dc0cae5
@@ -1108,8 +1109,8 @@ msgid ""
 "`Quantifiers <#iterator>`_ in ``greedy`` mode takes as many as possible, "
 "in ``non-greedy`` mode - as few as possible."
 msgstr ""
-"`Повторы <#iterator>`_ в ``жадном`` режиме захватывают как можно больше "
-"из входного текста, в ``не жадном`` режиме  - как можно меньше."
+"`Повторы <#iterator>`_ в ``жадном`` режиме захватывают как можно больше из "
+"входного текста, в ``не жадном`` режиме - как можно меньше."
 
 # 1b50b9189f034c4980a400e2f3a013e3
 #: ../../regular_expressions.rst:317 55246ce2ed7c441485db4e9c1ad408f2
@@ -1925,4 +1926,3 @@ msgstr ""
 # 2e843a74c12b4db5815c32b90e8b2216
 #~ msgid "line breaks in the Unicode standard."
 #~ msgstr ""
-
