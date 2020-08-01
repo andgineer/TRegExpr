@@ -798,6 +798,8 @@ type
   TREBracesArg = integer; // type of {m,n} arguments
   PREBracesArg = ^TREBracesArg;
 
+  TREGroupKind = (gkNormalGroup, gkNonCapturingGroup, gkComment, gkModifierString);
+
 const
   REOpSz = SizeOf(TREOp) div SizeOf(REChar);
   // size of OP_ command in REChars
@@ -3057,6 +3059,7 @@ var
   SavedPtr: PRegExprChar;
   EnderChar, TempChar: REChar;
   DashForRange: Boolean;
+  GrpKind: TREGroupKind;
 begin
   Result := nil;
   flags := 0;
@@ -3234,38 +3237,63 @@ begin
       end;
     '(':
       begin
+        GrpKind := gkNormalGroup;
         if regparse^ = '?' then
         begin
-          // check for non-capturing group: (?:text)
           if (regparse + 1)^ = ':' then
           begin
+            // non-capturing group (?:regex)
+            GrpKind := gkNonCapturingGroup;
             Inc(regparse, 2);
-            ret := ParseReg(1, flags);
-            if ret = nil then
-            begin
-              Result := nil;
-              Exit;
-            end;
-            flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
           end
           else
-            // check for extended Perl syntax : (?..)
-            if (regparse + 1)^ = '#' then
-            begin // (?#comment)
-              Inc(regparse, 2); // find closing ')'
-              while (regparse < fRegexEnd) and (regparse^ <> ')') do
-                Inc(regparse);
-              if regparse^ <> ')' then
+          if (regparse + 1)^ = '#' then
+          begin
+            // (?#comment)
+            GrpKind := gkComment;
+            Inc(regparse, 2);
+          end
+          else
+          begin
+            // modifiers string like (?mxr)
+            GrpKind := gkModifierString;
+            Inc(regparse);
+          end;
+        end;
+
+        case GrpKind of
+          gkNormalGroup:
+            begin
+              // normal (capturing) group
+              if fSecondPass then
+              // must skip this block for one of passes, to not double groups count
+                if GrpCount < NSUBEXP - 1 then
+                begin
+                  Inc(GrpCount);
+                  GrpIndexes[GrpCount] := regnpar;
+                end;
+              ret := ParseReg(1, flags);
+              if ret = nil then
               begin
-                Error(reeUnclosedComment);
+                Result := nil;
                 Exit;
               end;
-              Inc(regparse); // skip ')'
-              ret := EmitNode(OP_COMMENT); // comment
-            end
-            else
-            begin // modifiers ?
-              Inc(regparse); // skip '?'
+              flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
+            end;
+
+          gkNonCapturingGroup:
+            begin
+              ret := ParseReg(1, flags);
+              if ret = nil then
+              begin
+                Result := nil;
+                Exit;
+              end;
+              flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
+            end;
+
+          gkModifierString:
+            begin
               SavedPtr := regparse;
               while (regparse < fRegexEnd) and (regparse^ <> ')') do
                 Inc(regparse);
@@ -3280,25 +3308,20 @@ begin
               // Error (reeQPSBFollowsNothing);
               // Exit;
             end;
-        end
-        else
-        begin
-          // normal (capturing) group
-          if fSecondPass then
-          // must skip this block for one of passes, to not double groups count
-            if GrpCount < NSUBEXP - 1 then
+
+          gkComment:
             begin
-              Inc(GrpCount);
-              GrpIndexes[GrpCount] := regnpar;
+              while (regparse < fRegexEnd) and (regparse^ <> ')') do
+                Inc(regparse);
+              if regparse^ <> ')' then
+              begin
+                Error(reeUnclosedComment);
+                Exit;
+              end;
+              Inc(regparse); // skip ')'
+              ret := EmitNode(OP_COMMENT); // comment
             end;
-          ret := ParseReg(1, flags);
-          if ret = nil then
-          begin
-            Result := nil;
-            Exit;
-          end;
-          flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
-        end;
+        end; // case GrpKind of
       end;
     '|', ')':
       begin // Supposed to be caught earlier.
