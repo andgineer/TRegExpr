@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 0.996 2020.08.01
+ -=- (^) Refactor code which handles different kinds of () blocks.
+  By Alexey Torgashin.
+
  v. 0.995 2020.06.21
  -=- (^) Deleted prop InvertCase and global variable for this purpose,
  seems no one needs it anymore. By Alexey Torgashin.
