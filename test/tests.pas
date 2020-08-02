@@ -95,6 +95,7 @@ type
     Procedure RunTest42;
     Procedure RunTest43;
     Procedure RunTest44;
+    Procedure RunTest45;
     Procedure TestGroups;
     {$IFDEF Unicode}
     procedure TestUnicode1;
@@ -130,7 +131,7 @@ end;
 
 
 const
-  testCases: array [1..44] of TRegExTest = (
+  testCases: array [1..45] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -482,6 +483,14 @@ const
     substitutionText: '$1';
     expectedResult: '.Test.abc';
     matchStart: 0
+    ),
+    // 45
+    ( // comments and modifier-strings
+    expression: '(?#zzz)(?i)aA(?#zz).*(?-i)aA(?#zzz)';
+    inputText: '_a_aaaAAAaaaAAAaaa__';
+    substitutionText: '';
+    expectedResult: 'aaaAAAaaaA';
+    matchStart: 4
     )
   );
 
@@ -792,6 +801,11 @@ end;
 procedure TTestRegexpr.RunTest44;
 begin
   RunRETest(44);
+end;
+
+procedure TTestRegexpr.RunTest45;
+begin
+  RunRETest(45);
 end;
 
 procedure TTestRegexpr.TestGroups;
