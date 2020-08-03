@@ -1487,7 +1487,7 @@ begin
     reeBadLinePairedSeparator:
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
     reeNamedGroupBad:
-      Result := 'TRegExpr compile: bad named group, must be (?P<name>regex)';
+      Result := 'TRegExpr compile: bad named group';
     reeNamedGroupBadName:
       Result := 'TRegExpr compile: bad identifier in named group';
     reeNamedGroupBadRef:
