@@ -253,6 +253,7 @@ type
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
     regmustString: RegExprString;
+    regLookbehind: boolean;
     // reganchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
@@ -813,7 +814,8 @@ type
     gkNonCapturingGroup,
     gkNamedGroupReference,
     gkComment,
-    gkModifierString
+    gkModifierString,
+    gkLookbehind
     );
 
 const
@@ -1418,6 +1420,7 @@ const
   reeNamedGroupBadName = 130;
   reeNamedGroupBadRef = 131;
   reeNamedGroupDupName = 132;
+  reeLookbehindBad = 133;
   // Runtime errors must be >= 1000
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
@@ -1500,6 +1503,8 @@ begin
       Result := 'TRegExpr compile: bad back-reference to named group';
     reeNamedGroupDupName:
       Result := 'TRegExpr compile: named group defined more than once';
+    reeLookbehindBad:
+      Result := 'TRegExpr compile: bad lookbehind';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -2437,6 +2442,8 @@ begin
     regnpar := 1;
     regsize := 0;
     regcode := @regdummy;
+    regLookbehind := False;
+
     EmitC(OP_MAGIC);
     if ParseReg(0, flags) = nil then
       Exit;
@@ -3333,6 +3340,24 @@ begin
                     Error(reeNamedGroupBad);
                 end;
               end;
+            '<':
+              begin
+                // lookbehind: (?<=foo)bar
+                if (regparse + 4 >= fRegexEnd) then
+                  Error(reeLookbehindBad);
+                case (regparse + 2)^ of
+                  '=':
+                    begin
+                      GrpKind := gkLookbehind;
+                      regLookbehind := True;
+                      if regnpar > 1 then
+                        Error(reeLookbehindBad);
+                      Inc(regparse, 3);
+                    end;
+                  else
+                    Error(reeLookbehindBad);
+                end;
+              end;
             '#':
               begin
                 // (?#comment)
@@ -3350,7 +3375,8 @@ begin
         // B: process found kind of brackets
         case GrpKind of
           gkNormalGroup,
-          gkNonCapturingGroup:
+          gkNonCapturingGroup,
+          gkLookbehind:
             begin
               // skip this block for one of passes, to not double groups count;
               // must take first pass (we need GrpNames filled)
@@ -4411,6 +4437,10 @@ begin
   begin
     startp[0] := APos;
     endp[0] := reginput;
+
+    // with lookbehind, increase found position by the len of group=1
+    if regLookbehind then
+      Inc(startp[0], endp[1] - startp[1]);
   end;
 end;
 
