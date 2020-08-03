@@ -808,7 +808,13 @@ type
   TREBracesArg = integer; // type of {m,n} arguments
   PREBracesArg = ^TREBracesArg;
 
-  TREGroupKind = (gkNormalGroup, gkNonCapturingGroup, gkComment, gkModifierString, gkNamedGroupReference);
+  TREGroupKind = (
+    gkNormalGroup,
+    gkNonCapturingGroup,
+    gkNamedGroupReference,
+    gkComment,
+    gkModifierString
+    );
 
 const
   REOpSz = SizeOf(TREOp) div SizeOf(REChar);
