@@ -424,6 +424,10 @@ type
     // emit LongInt value
     procedure EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
 
+    // emit back-reference to group
+    function EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
+      {$IFDEF InlineFuncs}inline;{$ENDIF}
+
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
     procedure InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
@@ -2019,6 +2023,15 @@ begin
     Inc(regsize, RENumberSz);
 end;
 
+function TRegExpr.EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
+begin
+  if AIgnoreCase then
+    Result := EmitNode(OP_BSUBEXPCI)
+  else
+    Result := EmitNode(OP_BSUBEXP);
+  EmitC(REChar(AIndex));
+end;
+
 procedure TRegExpr.InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
 // insert an operator in front of already-emitted operand
 // Means relocating the operand.
@@ -3361,11 +3374,7 @@ begin
               Len := MatchIndexFromName(GrpName);
               if Len < 0 then
                 Error(reeNamedGroupBadRef);
-              if fCompModifiers.I then
-                ret := EmitNode(OP_BSUBEXPCI)
-              else
-                ret := EmitNode(OP_BSUBEXP);
-              EmitC(REChar(Len));
+              ret := EmitGroupRef(Len, fCompModifiers.I);
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
 
@@ -3480,12 +3489,8 @@ begin
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           '1' .. '9':
-            begin // ###0.936
-              if fCompModifiers.I then
-                ret := EmitNode(OP_BSUBEXPCI)
-              else
-                ret := EmitNode(OP_BSUBEXP);
-              EmitC(REChar(Ord(regparse^) - Ord('0')));
+            begin
+              ret := EmitGroupRef(Ord(regparse^) - Ord('0'), fCompModifiers.I);
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
         else
