@@ -238,6 +238,7 @@ type
     endp: array [0 .. NSUBEXP - 1] of PRegExprChar; // found expr end points
 
     GrpIndexes: array [0 .. NSUBEXP - 1] of integer;
+    GrpNames: array [0 .. NSUBEXP - 1] of RegExprString;
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -372,6 +373,7 @@ type
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsCustomLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure InitLineSepArray;
+    procedure FindGroupName(APtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
 
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
@@ -472,6 +474,7 @@ type
     function GetMatchPos(Idx: integer): PtrInt;
     function GetMatchLen(Idx: integer): PtrInt;
     function GetMatch(Idx: integer): RegExprString;
+    function GetGroupIndexFromName(const AName: RegExprString): integer;
 
     procedure SetInputString(const AInputString: RegExprString);
     procedure SetLineSeparators(const AStr: RegExprString);
@@ -798,7 +801,7 @@ type
   TREBracesArg = integer; // type of {m,n} arguments
   PREBracesArg = ^TREBracesArg;
 
-  TREGroupKind = (gkNormalGroup, gkNonCapturingGroup, gkComment, gkModifierString);
+  TREGroupKind = (gkNormalGroup, gkNonCapturingGroup, gkComment, gkModifierString, gkNamedGroupReference);
 
 const
   REOpSz = SizeOf(TREOp) div SizeOf(REChar);
@@ -1398,6 +1401,9 @@ const
   reeComplexBracesNotImplemented = 126;
   reeUnrecognizedModifier = 127;
   reeBadLinePairedSeparator = 128;
+  reeBadNamedGroup = 129;
+  reeBadNamedGroupId = 130;
+  reeBadNamedGroupRef = 131;
   // Runtime errors must be >= 1000
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
@@ -1472,6 +1478,12 @@ begin
       Result := 'TRegExpr compile: unrecognized modifier';
     reeBadLinePairedSeparator:
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
+    reeBadNamedGroup:
+      Result := 'TRegExpr compile: bad named group, must be (?P<name>regex)';
+    reeBadNamedGroupId:
+      Result := 'TRegExpr compile: bad identifier in named group';
+    reeBadNamedGroupRef:
+      Result := 'TRegExpr compile: bad back-reference to named group';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -1643,6 +1655,19 @@ begin
   }
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
+
+function TRegExpr.GetGroupIndexFromName(const AName: RegExprString): integer;
+var
+  i: integer;
+begin
+  for i := 1 {not 0} to GrpCount do
+    if GrpNames[i] = AName then
+    begin
+      Result := i;
+      Exit;
+    end;
+  Result := -1;
+end;
 
 function TRegExpr.GetModifierStr: RegExprString;
 begin
@@ -2140,7 +2165,7 @@ begin
 end;
 
 
-procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharset);
+procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharSet);
 {$IFDEF UseWordChars}
 var
   i: integer;
@@ -3060,6 +3085,7 @@ var
   EnderChar, TempChar: REChar;
   DashForRange: Boolean;
   GrpKind: TREGroupKind;
+  GrpName: RegExprString;
 begin
   Result := nil;
   flags := 0;
@@ -3248,39 +3274,67 @@ begin
     '(':
       begin
         GrpKind := gkNormalGroup;
+        GrpName := '';
+
+        // A: detect kind of expression in brackets
         if regparse^ = '?' then
-        begin
-          if (regparse + 1)^ = ':' then
-          begin
-            // non-capturing group (?:regex)
-            GrpKind := gkNonCapturingGroup;
-            Inc(regparse, 2);
-          end
-          else
-          if (regparse + 1)^ = '#' then
-          begin
-            // (?#comment)
-            GrpKind := gkComment;
-            Inc(regparse, 2);
-          end
-          else
-          begin
-            // modifiers string like (?mxr)
-            GrpKind := gkModifierString;
-            Inc(regparse);
-          end;
+          case (regparse + 1)^ of
+            ':':
+              begin
+                // non-capturing group: (?:regex)
+                GrpKind := gkNonCapturingGroup;
+                Inc(regparse, 2);
+              end;
+            'P':
+              begin
+                if (regparse + 4 >= fRegexEnd) then
+                  Error(reeBadNamedGroup);
+                case (regparse + 2)^ of
+                  '<':
+                    begin
+                      // named group: (?P<name>regex)
+                      GrpKind := gkNormalGroup;
+                      FindGroupName(regparse + 3, '>', GrpName);
+                      Inc(regparse, Length(GrpName) + 4);
+                    end;
+                  '=':
+                    begin
+                      // back-reference to named group: (?P=name)
+                      GrpKind := gkNamedGroupReference;
+                      FindGroupName(regparse + 3, ')', GrpName);
+                      Inc(regparse, Length(GrpName) + 4);
+                    end;
+                  else
+                    Error(reeBadNamedGroup);
+                end;
+              end;
+            '#':
+              begin
+                // (?#comment)
+                GrpKind := gkComment;
+                Inc(regparse, 2);
+              end
+            else
+              begin
+                // modifiers string like (?mxr)
+                GrpKind := gkModifierString;
+                Inc(regparse);
+              end;
         end;
 
+        // B: process found kind of brackets
         case GrpKind of
           gkNormalGroup,
           gkNonCapturingGroup:
             begin
-              if (GrpKind = gkNormalGroup) and fSecondPass then
-                // must skip this block for one of passes, to not double groups count
+              // skip this block for one of passes, to not double groups count;
+              // must take first pass (we need GrpNames filled)
+              if (GrpKind = gkNormalGroup) and not fSecondPass then
                 if GrpCount < NSUBEXP - 1 then
                 begin
                   Inc(GrpCount);
                   GrpIndexes[GrpCount] := regnpar;
+                  GrpNames[GrpCount] := GrpName;
                 end;
               ret := ParseReg(1, flags);
               if ret = nil then
@@ -3289,6 +3343,19 @@ begin
                 Exit;
               end;
               flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
+            end;
+
+          gkNamedGroupReference:
+            begin
+              Len := GetGroupIndexFromName(GrpName);
+              if Len < 0 then
+                Error(reeBadNamedGroupRef);
+              if fCompModifiers.I then
+                ret := EmitNode(OP_BSUBEXPCI)
+              else
+                ret := EmitNode(OP_BSUBEXP);
+              EmitC(REChar(Len));
+              flagp := flagp or flag_HasWidth or flag_Simple;
             end;
 
           gkModifierString:
@@ -3495,6 +3562,35 @@ end; { of function TRegExpr.GetCompilerErrorPos
 { ============================================================= }
 { ===================== Matching section ====================== }
 { ============================================================= }
+
+procedure TRegExpr.FindGroupName(APtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
+// check that group name is valid identifier, started from non-digit
+// this is to be like in Python regex
+var
+  P: PRegExprChar;
+  i: integer;
+begin
+  P := APtr;
+  if IsDigitChar(P^) or not IsWordChar(P^) then
+    Error(reeBadNamedGroupId);
+
+  repeat
+    if P >= fRegexEnd then
+      Error(reeBadNamedGroup);
+    if P^ = AEndChar then
+      Break;
+    if not IsWordChar(P^) then
+      Error(reeBadNamedGroupId);
+    Inc(P);
+  until False;
+
+  SetLength(AName, P-APtr);
+  for i := 1 to Length(AName) do
+  begin
+    AName[i] := APtr^;
+    Inc(APtr);
+  end;
+end;
 
 function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
 // repeatedly match something simple, report how many
@@ -4309,7 +4405,10 @@ begin
   FillChar(startp, SizeOf(startp), 0);
   FillChar(endp, SizeOf(endp), 0);
   for i := 0 to NSUBEXP - 1 do
+  begin
     GrpIndexes[i] := -1;
+    GrpNames[i] := '';
+  end;
   GrpIndexes[0] := 0;
   GrpCount := 0;
 end;
