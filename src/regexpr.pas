@@ -1404,9 +1404,10 @@ const
   reeComplexBracesNotImplemented = 126;
   reeUnrecognizedModifier = 127;
   reeBadLinePairedSeparator = 128;
-  reeBadNamedGroup = 129;
-  reeBadNamedGroupId = 130;
-  reeBadNamedGroupRef = 131;
+  reeNamedGroupBad = 129;
+  reeNamedGroupBadName = 130;
+  reeNamedGroupBadRef = 131;
+  reeNamedGroupDupName = 132;
   // Runtime errors must be >= 1000
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
@@ -1481,12 +1482,14 @@ begin
       Result := 'TRegExpr compile: unrecognized modifier';
     reeBadLinePairedSeparator:
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
-    reeBadNamedGroup:
+    reeNamedGroupBad:
       Result := 'TRegExpr compile: bad named group, must be (?P<name>regex)';
-    reeBadNamedGroupId:
+    reeNamedGroupBadName:
       Result := 'TRegExpr compile: bad identifier in named group';
-    reeBadNamedGroupRef:
+    reeNamedGroupBadRef:
       Result := 'TRegExpr compile: bad back-reference to named group';
+    reeNamedGroupDupName:
+      Result := 'TRegExpr compile: named group defined more than once';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -3291,7 +3294,7 @@ begin
             'P':
               begin
                 if (regparse + 4 >= fRegexEnd) then
-                  Error(reeBadNamedGroup);
+                  Error(reeNamedGroupBad);
                 case (regparse + 2)^ of
                   '<':
                     begin
@@ -3308,7 +3311,7 @@ begin
                       Inc(regparse, Length(GrpName) + 4);
                     end;
                   else
-                    Error(reeBadNamedGroup);
+                    Error(reeNamedGroupBad);
                 end;
               end;
             '#':
@@ -3337,7 +3340,12 @@ begin
                 begin
                   Inc(GrpCount);
                   GrpIndexes[GrpCount] := regnpar;
-                  GrpNames[GrpCount] := GrpName;
+                  if GrpName <> '' then
+                  begin
+                    if MatchIndexFromName(GrpName) >= 0 then
+                      Error(reeNamedGroupDupName);
+                    GrpNames[GrpCount] := GrpName;
+                  end;
                 end;
               ret := ParseReg(1, flags);
               if ret = nil then
@@ -3352,7 +3360,7 @@ begin
             begin
               Len := MatchIndexFromName(GrpName);
               if Len < 0 then
-                Error(reeBadNamedGroupRef);
+                Error(reeNamedGroupBadRef);
               if fCompModifiers.I then
                 ret := EmitNode(OP_BSUBEXPCI)
               else
@@ -3575,15 +3583,15 @@ var
 begin
   P := APtr;
   if IsDigitChar(P^) or not IsWordChar(P^) then
-    Error(reeBadNamedGroupId);
+    Error(reeNamedGroupBadName);
 
   repeat
     if P >= fRegexEnd then
-      Error(reeBadNamedGroup);
+      Error(reeNamedGroupBad);
     if P^ = AEndChar then
       Break;
     if not IsWordChar(P^) then
-      Error(reeBadNamedGroupId);
+      Error(reeNamedGroupBadName);
     Inc(P);
   until False;
 
