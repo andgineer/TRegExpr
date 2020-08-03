@@ -3262,27 +3262,16 @@ begin
         end;
 
         case GrpKind of
-          gkNormalGroup:
+          gkNormalGroup,
+          gkNonCapturingGroup:
             begin
-              // normal (capturing) group
-              if fSecondPass then
-              // must skip this block for one of passes, to not double groups count
+              if (GrpKind = gkNormalGroup) and fSecondPass then
+                // must skip this block for one of passes, to not double groups count
                 if GrpCount < NSUBEXP - 1 then
                 begin
                   Inc(GrpCount);
                   GrpIndexes[GrpCount] := regnpar;
                 end;
-              ret := ParseReg(1, flags);
-              if ret = nil then
-              begin
-                Result := nil;
-                Exit;
-              end;
-              flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
-            end;
-
-          gkNonCapturingGroup:
-            begin
               ret := ParseReg(1, flags);
               if ret = nil then
               begin
