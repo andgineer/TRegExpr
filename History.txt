@@ -9,8 +9,8 @@
  v. 0.997 2020.08.03
  -=- (+) Added named groups like in Python: (?P<name>regex), and back-refs
   to named groups: (?P=name).
-  Added public method MatchIndexByName to find match by group name.
-  Added tests. 
+  Added public method MatchIndexFromName to find match by group name.
+  Added tests.
   By Alexey Torgashin.
 
  v. 0.995 2020.06.21

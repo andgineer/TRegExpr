@@ -638,7 +638,7 @@ type
 
     // get index of group (subexpression) by name, to support named groups
     // like in Python: (?P<name>regex)
-    function MatchIndexByName(const AName: RegExprString): integer;
+    function MatchIndexFromName(const AName: RegExprString): integer;
 
     // Returns position in r.e. where compiler stopped.
     // Useful for error diagnostics
@@ -1659,7 +1659,7 @@ begin
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
 
-function TRegExpr.MatchIndexByName(const AName: RegExprString): integer;
+function TRegExpr.MatchIndexFromName(const AName: RegExprString): integer;
 var
   i: integer;
 begin
@@ -3350,7 +3350,7 @@ begin
 
           gkNamedGroupReference:
             begin
-              Len := MatchIndexByName(GrpName);
+              Len := MatchIndexFromName(GrpName);
               if Len < 0 then
                 Error(reeBadNamedGroupRef);
               if fCompModifiers.I then
