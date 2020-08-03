@@ -253,6 +253,8 @@ type
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
     regmustString: RegExprString;
+    regLookahead: boolean;
+    regLookaheadGroup: integer;
     regLookbehind: boolean;
     // reganchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
@@ -815,6 +817,7 @@ type
     gkNamedGroupReference,
     gkComment,
     gkModifierString,
+    gkLookahead,
     gkLookbehind
     );
 
@@ -1421,6 +1424,7 @@ const
   reeNamedGroupBadRef = 131;
   reeNamedGroupDupName = 132;
   reeLookbehindBad = 133;
+  reeLookaheadBad = 134;
   // Runtime errors must be >= 1000
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
@@ -1505,6 +1509,8 @@ begin
       Result := 'TRegExpr compile: named group defined more than once';
     reeLookbehindBad:
       Result := 'TRegExpr compile: bad lookbehind';
+    reeLookaheadBad:
+      Result := 'TRegExpr compile: bad lookahead';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -2442,6 +2448,8 @@ begin
     regnpar := 1;
     regsize := 0;
     regcode := @regdummy;
+    regLookahead := False;
+    regLookaheadGroup := 0;
     regLookbehind := False;
 
     EmitC(OP_MAGIC);
@@ -3358,6 +3366,17 @@ begin
                     Error(reeLookbehindBad);
                 end;
               end;
+            '=':
+              begin
+                // lookahead: foo(?=bar)
+                if (regparse + 3 >= fRegexEnd) then
+                  Error(reeLookaheadBad);
+                GrpKind := gkLookahead;
+                regLookahead := True;
+                regLookaheadGroup := regnpar;
+                // TODO: check that this () is last in regexp!!
+                Inc(regparse, 2);
+              end;
             '#':
               begin
                 // (?#comment)
@@ -3376,6 +3395,7 @@ begin
         case GrpKind of
           gkNormalGroup,
           gkNonCapturingGroup,
+          gkLookahead,
           gkLookbehind:
             begin
               // skip this block for one of passes, to not double groups count;
@@ -4435,6 +4455,10 @@ begin
     // with lookbehind, increase found position by the len of group=1
     if regLookbehind then
       Inc(startp[0], endp[1] - startp[1]);
+
+    // with lookahead, decrease ending by the len of group=regLookaheadGroup
+    if regLookahead and (regLookaheadGroup > 0) then
+      Dec(endp[0], endp[regLookaheadGroup] - startp[regLookaheadGroup]);
   end;
 end;
 
