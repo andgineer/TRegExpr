@@ -977,6 +977,35 @@ begin
     Result := _LowerCase(Ch);
 end;
 
+function _FindClosingBracket(P, PEnd: PRegExprChar): PRegExprChar;
+var
+  Len, Level: integer;
+begin
+  Result := nil;
+  Level := 1;
+  repeat
+    if P >= PEnd then Exit;
+    case P^ of
+      EscChar:
+        Inc(P);
+      '(':
+        begin
+          Inc(Level);
+        end;
+      ')':
+        begin
+          Dec(Level);
+          if Level = 0 then
+          begin
+            Result := P;
+            Exit;
+          end;
+        end;
+    end;
+    Inc(P);
+  until False;
+end;
+
 { ============================================================= }
 { ===================== Global functions ====================== }
 { ============================================================= }
@@ -3374,7 +3403,12 @@ begin
                 GrpKind := gkLookahead;
                 regLookahead := True;
                 regLookaheadGroup := regnpar;
-                // TODO: check that this () is last in regexp!!
+
+                // check that these brackets are last in regex
+                SavedPtr := _FindClosingBracket(regparse + 1, fRegexEnd);
+                if (SavedPtr = nil) or (SavedPtr <> fRegexEnd - 1) then
+                  Error(reeLookaheadBad);
+
                 Inc(regparse, 2);
               end;
             '#':
