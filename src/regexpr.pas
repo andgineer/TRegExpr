@@ -474,7 +474,6 @@ type
     function GetMatchPos(Idx: integer): PtrInt;
     function GetMatchLen(Idx: integer): PtrInt;
     function GetMatch(Idx: integer): RegExprString;
-    function GetGroupIndexFromName(const AName: RegExprString): integer;
 
     procedure SetInputString(const AInputString: RegExprString);
     procedure SetLineSeparators(const AStr: RegExprString);
@@ -636,6 +635,10 @@ type
     // Returns '' if in r.e. no such subexpr. or this subexpr.
     // not found in input string.
     property Match[Idx: integer]: RegExprString read GetMatch;
+
+    // get index of group (subexpression) by name, to support named groups
+    // like in Python: (?P<name>regex)
+    function MatchIndexByName(const AName: RegExprString): integer;
 
     // Returns position in r.e. where compiler stopped.
     // Useful for error diagnostics
@@ -1656,7 +1659,7 @@ begin
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
 
-function TRegExpr.GetGroupIndexFromName(const AName: RegExprString): integer;
+function TRegExpr.MatchIndexByName(const AName: RegExprString): integer;
 var
   i: integer;
 begin
@@ -3347,7 +3350,7 @@ begin
 
           gkNamedGroupReference:
             begin
-              Len := GetGroupIndexFromName(GrpName);
+              Len := MatchIndexByName(GrpName);
               if Len < 0 then
                 Error(reeBadNamedGroupRef);
               if fCompModifiers.I then
