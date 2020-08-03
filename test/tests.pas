@@ -495,11 +495,11 @@ const
     ),
     // 46
     ( // named groups
-    expression: '(?P<quote>[''"])\w+(?P=quote)';
-    inputText: 'aa "bad? "good" eee ''fff'' "ggg"';
+    expression: '(?P<quote>[''"])\w+(?P=quote).*(?:\w+).*(?P<q>")\w+(?P=q)';
+    inputText: 'aa "bb? "ok" a ''b "ok" eeee';
     substitutionText: '';
-    expectedResult: '"good"';
-    matchStart: 10
+    expectedResult: '"ok" a ''b "ok"';
+    matchStart: 9
     )
   );
 
