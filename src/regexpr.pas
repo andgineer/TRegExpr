@@ -3069,18 +3069,25 @@ begin
   Inc(regparse);
   case (regparse - 1)^ of
     '^':
+     begin
       if not fCompModifiers.M or
         ((fLineSeparators = '') and not fLinePairedSeparatorAssigned) then
         ret := EmitNode(OP_BOL)
       else
         ret := EmitNode(OP_BOLML);
+     end;
+
     '$':
+     begin
       if not fCompModifiers.M or
         ((fLineSeparators = '') and not fLinePairedSeparatorAssigned) then
         ret := EmitNode(OP_EOL)
       else
         ret := EmitNode(OP_EOLML);
+     end;
+
     '.':
+     begin
       if fCompModifiers.S then
       begin
         ret := EmitNode(OP_ANY);
@@ -3091,6 +3098,8 @@ begin
         ret := EmitNode(OP_ANYML);
         flagp := flagp or flag_HasWidth; // not so simple ;)
       end;
+     end;
+
     '[':
       begin
         if regparse^ = '^' then
@@ -3235,6 +3244,7 @@ begin
         Inc(regparse);
         flagp := flagp or flag_HasWidth or flag_Simple;
       end;
+
     '(':
       begin
         GrpKind := gkNormalGroup;
@@ -3312,16 +3322,19 @@ begin
             end;
         end; // case GrpKind of
       end;
+
     '|', ')':
       begin // Supposed to be caught earlier.
         Error(reeInternalUrp);
         Exit;
       end;
+
     '?', '+', '*':
       begin
         Error(reeQPSBFollowsNothing);
         Exit;
       end;
+
     EscChar:
       begin
         if regparse >= fRegexEnd then
@@ -3402,6 +3415,7 @@ begin
         end; { of case }
         Inc(regparse);
       end;
+
   else
     begin
       Dec(regparse);
