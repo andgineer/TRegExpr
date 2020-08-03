@@ -6,8 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 0.996 2020.08.01
- -=- (^) Refactor code which handles different kinds of () blocks.
+ v. 0.997 2020.08.03
+ -=- (+) Added named groups like in Python: (?P<name>regex), and back-refs
+  to named groups: (?P=name). Added tests. 
   By Alexey Torgashin.
 
  v. 0.995 2020.06.21
