@@ -3616,7 +3616,6 @@ procedure TRegExpr.FindGroupName(APtr: PRegExprChar; AEndChar: REChar; var AName
 // this is to be like in Python regex
 var
   P: PRegExprChar;
-  i: integer;
 begin
   P := APtr;
   if IsDigitChar(P^) or not IsWordChar(P^) then
@@ -3632,12 +3631,7 @@ begin
     Inc(P);
   until False;
 
-  SetLength(AName, P-APtr);
-  for i := 1 to Length(AName) do
-  begin
-    AName[i] := APtr^;
-    Inc(APtr);
-  end;
+  SetString(AName, APtr, P-APtr);
 end;
 
 function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
