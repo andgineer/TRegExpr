@@ -1454,6 +1454,7 @@ const
   reeNamedGroupDupName = 132;
   reeLookbehindBad = 133;
   reeLookaheadBad = 134;
+  reeLookaheadNotAtEnd = 135;
   // Runtime errors must be >= 1000
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
@@ -1540,6 +1541,8 @@ begin
       Result := 'TRegExpr compile: bad lookbehind';
     reeLookaheadBad:
       Result := 'TRegExpr compile: bad lookahead';
+    reeLookaheadNotAtEnd:
+      Result := 'TRegExpr compile: bad lookahead, not at end of expression';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -3407,7 +3410,7 @@ begin
                 // check that these brackets are last in regex
                 SavedPtr := _FindClosingBracket(regparse + 1, fRegexEnd);
                 if (SavedPtr = nil) or (SavedPtr <> fRegexEnd - 1) then
-                  Error(reeLookaheadBad);
+                  Error(reeLookaheadNotAtEnd);
 
                 Inc(regparse, 2);
               end;
