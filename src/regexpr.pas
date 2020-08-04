@@ -4755,6 +4755,29 @@ var
     APtr := p;
   end;
 
+  procedure FindSubstGroupIndex(var p: PRegExprChar; var n: integer);
+  var
+    GrpName: RegExprString;
+  begin
+    if IsDigitChar(p^) then
+    begin
+      // usual group
+      n := ParseVarName(p);
+      if (n >= 0) and (n <= High(GrpIndexes)) then
+        n := GrpIndexes[n];
+    end
+    else
+    if p^ = '<' then
+    begin
+      // named group $<name>
+      FindGroupName(p + 1, '>', GrpName);
+      if GrpName = '' then
+        Error(reeNamedGroupBadRef);
+      n := MatchIndexFromName(GrpName);
+      Inc(p, Length(GrpName) + 2);
+    end;
+  end;
+
 type
   TSubstMode = (smodeNormal, smodeOneUpper, smodeOneLower, smodeAllUpper, smodeAllLower);
 var
@@ -4791,11 +4814,7 @@ begin
     Inc(p);
     n := -1;
     if Ch = '$' then
-    begin
-      n := ParseVarName(p);
-      if (n >= 0) and (n <= High(GrpIndexes)) then
-        n := GrpIndexes[n];
-    end;
+      FindSubstGroupIndex(p, n);
     if n >= 0 then
     begin
       Inc(ResultLen, endp[n] - startp[n]);
@@ -4850,11 +4869,7 @@ begin
     p1 := p;
     n := -1;
     if Ch = '$' then
-    begin
-      n := ParseVarName(p);
-      if (n >= 0) and (n <= High(GrpIndexes)) then
-        n := GrpIndexes[n];
-    end;
+      FindSubstGroupIndex(p, n);
     if (n >= 0) then
     begin
       p0 := startp[n];
