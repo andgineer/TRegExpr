@@ -139,6 +139,9 @@ const
   // Escape char ('\' in common r.e.) used for escaping metachars (\w, \d etc)
   EscChar = '\';
 
+  // Substitute method: prefix of group reference: $1 .. $9 and $<name>
+  SubstituteGroupChar = '$';
+
   RegExprModifierI: boolean = False; // default value for ModifierI
   RegExprModifierR: boolean = True; // default value for ModifierR
   RegExprModifierS: boolean = True; // default value for ModifierS
@@ -4813,7 +4816,7 @@ begin
     Ch := p^;
     Inc(p);
     n := -1;
-    if Ch = '$' then
+    if Ch = SubstituteGroupChar then
       FindSubstGroupIndex(p, n);
     if n >= 0 then
     begin
@@ -4868,7 +4871,7 @@ begin
     Inc(p);
     p1 := p;
     n := -1;
-    if Ch = '$' then
+    if Ch = SubstituteGroupChar then
       FindSubstGroupIndex(p, n);
     if (n >= 0) then
     begin
