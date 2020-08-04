@@ -522,7 +522,7 @@ const
     ),
     // 49
     ( // lookahead+lookbehind
-    expression: '(?<=[a-z]{3})(\d+)[a-z]+\1(?=[a-z]{3})';
+    expression: '(?<=[a-z]+)(\d+)[a-z]+\1(?=[a-z]+)';
     inputText: '..2tt2..foo23test23bar..';
     substitutionText: '';
     expectedResult: '23test23';

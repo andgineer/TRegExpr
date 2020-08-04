@@ -5624,14 +5624,14 @@ procedure TRegExpr.Error(AErrorID: integer);
   {$ENDIF}
 var
   e: ERegExpr;
+  Msg: string;
 begin
   fLastError := AErrorID; // dummy stub - useless because will raise exception
-  if AErrorID < 1000 // compilation error ?
-  then
-    e := ERegExpr.Create(ErrorMsg(AErrorID) // yes - show error pos
-      + ' (pos ' + IntToStr(CompilerErrorPos) + ')')
-  else
-    e := ERegExpr.Create(ErrorMsg(AErrorID));
+  Msg := ErrorMsg(AErrorID);
+  // compilation error ?
+  if AErrorID < 1000 then
+    Msg := Msg + ' (pos ' + IntToStr(CompilerErrorPos) + ')';
+  e := ERegExpr.Create(Msg);
   e.ErrorCode := AErrorID;
   e.CompilerErrorPos := CompilerErrorPos;
   raise e
