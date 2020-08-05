@@ -533,7 +533,7 @@ const
     ( // replace with named groups
     expression: '\s+(?P<aa>[f-h]+)\s+(?P<bb>[o-r]+)\s+';
     inputText: '<  fg   oppo  >';
-    substitutionText: '{$<bb>,$<aa>}';
+    substitutionText: '{${bb},${aa}}';
     expectedResult: '<{oppo,fg}>';
     matchStart: 1
     )

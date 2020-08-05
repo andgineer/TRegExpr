@@ -789,7 +789,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 100;
+  REVersionMinor = 101;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4734,11 +4734,12 @@ var
   TemplateBeg, TemplateEnd: PRegExprChar;
 
   function ParseVarName(var APtr: PRegExprChar): integer;
-  // extract name of variable (digits, may be enclosed with
-  // curly braces) from APtr^, uses TemplateEnd !!!
+  // extract name of variable: $1 or ${1} or ${name}
+  // from APtr^, uses TemplateEnd
   var
     p: PRegExprChar;
     Delimited: boolean;
+    GrpName: RegExprString;
   begin
     Result := 0;
     p := APtr;
@@ -4748,11 +4749,23 @@ var
     if (p < TemplateEnd) and (p^ = '&') then
       Inc(p) // this is '$&' or '${&}'
     else
-      while (p < TemplateEnd) and IsDigitChar(p^) do
+    begin
+      if IsDigitChar(p^) then
       begin
-        Result := Result * 10 + (Ord(p^) - Ord('0')); // ###0.939
-        Inc(p);
+        while (p < TemplateEnd) and IsDigitChar(p^) do
+        begin
+          Result := Result * 10 + (Ord(p^) - Ord('0'));
+          Inc(p);
+        end
+      end
+      else
+      if Delimited then
+      begin
+        FindGroupName(p, '}', GrpName);
+        Result := MatchIndexFromName(GrpName);
+        Inc(p, Length(GrpName));
       end;
+    end;
     if Delimited then
       if (p < TemplateEnd) and (p^ = '}') then
         Inc(p) // skip right curly brace
@@ -4764,25 +4777,13 @@ var
   end;
 
   procedure FindSubstGroupIndex(var p: PRegExprChar; var n: integer);
-  var
-    GrpName: RegExprString;
   begin
     if IsDigitChar(p^) or (p^ = '{') then
     begin
-      // usual group: $1 or ${1}
+      // usual group $1 or ${1} or named group ${name}
       n := ParseVarName(p);
       if (n >= 0) and (n <= High(GrpIndexes)) then
         n := GrpIndexes[n];
-    end
-    else
-    if p^ = '<' then
-    begin
-      // named group: $<name>
-      FindGroupName(p + 1, '>', GrpName);
-      if GrpName = '' then
-        Error(reeNamedGroupBadRef);
-      n := MatchIndexFromName(GrpName);
-      Inc(p, Length(GrpName) + 2);
     end;
   end;
 

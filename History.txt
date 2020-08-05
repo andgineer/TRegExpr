@@ -6,13 +6,14 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.100 2020.08.04
+ v. 1.101 2020.08.05
  -=- (+) Support named groups like in Python: (?P<name>regex), and back-refs
   to named groups: (?P=name).
- -=- (+) Public method MatchIndexFromName to find match by group name.
+ -=- (+) Public method MatchIndexFromName
+ -=- (+) Public method MatchFromName
  -=- (+) Support positive lookahead: foo(?=bar)
  -=- (+) Support positive lookbehind: (?<=foo)bar
- -=- (+) Support Substitute with named groups: $<name>
+ -=- (+) Support Substitute with named groups: ${name}
   Added tests.
   By Alexey Torgashin.
 
