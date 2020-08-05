@@ -650,6 +650,8 @@ type
     // like in Python: (?P<name>regex)
     function MatchIndexFromName(const AName: RegExprString): integer;
 
+    function MatchFromName(const AName: RegExprString): RegExprString;
+
     // Returns position in r.e. where compiler stopped.
     // Useful for error diagnostics
     property CompilerErrorPos: PtrInt read GetCompilerErrorPos;
@@ -1729,6 +1731,17 @@ begin
       Exit;
     end;
   Result := -1;
+end;
+
+function TRegExpr.MatchFromName(const AName: RegExprString): RegExprString;
+var
+  Idx: integer;
+begin
+  Idx := MatchIndexFromName(AName);
+  if Idx >= 0 then
+    Result := GetMatch(Idx)
+  else
+    Result := '';
 end;
 
 function TRegExpr.GetModifierStr: RegExprString;
