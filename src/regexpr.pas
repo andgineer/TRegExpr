@@ -3393,10 +3393,12 @@ begin
                 case (regparse + 2)^ of
                   '=':
                     begin
+                      // allow lookbehind only at the beginning
+                      if regparse <> fRegexStart + 1 then
+                        Error(reeLookbehindBad);
+
                       GrpKind := gkLookbehind;
                       regLookbehind := True;
-                      if regnpar > 1 then
-                        Error(reeLookbehindBad);
                       Inc(regparse, 3);
                     end;
                   else
