@@ -4776,15 +4776,11 @@ var
     APtr := p;
   end;
 
-  procedure FindSubstGroupIndex(var p: PRegExprChar; var n: integer);
+  procedure FindSubstGroupIndex(var p: PRegExprChar; var Idx: integer); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
-    if IsDigitChar(p^) or (p^ = '{') then
-    begin
-      // usual group $1 or ${1} or named group ${name}
-      n := ParseVarName(p);
-      if (n >= 0) and (n <= High(GrpIndexes)) then
-        n := GrpIndexes[n];
-    end;
+    Idx := ParseVarName(p);
+    if (Idx >= 0) and (Idx <= High(GrpIndexes)) then
+      Idx := GrpIndexes[Idx];
   end;
 
 type
