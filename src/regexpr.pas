@@ -1709,14 +1709,6 @@ begin
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (endp[Idx] > startp[Idx]) then
     SetString(Result, startp[Idx], endp[Idx] - startp[Idx]);
-  {
-  // then Result := copy (fInputString, MatchPos [Idx], MatchLen [Idx]) //###0.929
-  then
-  begin
-    SetLength(Result, endp[Idx] - startp[Idx]);
-    System.Move(startp[Idx]^, Result[1], Length(Result) * SizeOf(REChar));
-  end;
-  }
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
 
