@@ -157,7 +157,7 @@ const
     (
     expression: #$d'('#$a')';
     inputText: 'word'#$d#$a;
-    substitutionText: '$1';
+    substitutionText: '${1}';
     expectedResult: 'word'#$a;
     MatchStart: 0
     ),

@@ -4767,9 +4767,9 @@ var
   var
     GrpName: RegExprString;
   begin
-    if IsDigitChar(p^) then
+    if IsDigitChar(p^) or (p^ = '{') then
     begin
-      // usual group
+      // usual group: $1 or ${1}
       n := ParseVarName(p);
       if (n >= 0) and (n <= High(GrpIndexes)) then
         n := GrpIndexes[n];
@@ -4777,7 +4777,7 @@ var
     else
     if p^ = '<' then
     begin
-      // named group $<name>
+      // named group: $<name>
       FindGroupName(p + 1, '>', GrpName);
       if GrpName = '' then
         Error(reeNamedGroupBadRef);
