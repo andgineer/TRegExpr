@@ -95,6 +95,12 @@ type
     Procedure RunTest42;
     Procedure RunTest43;
     Procedure RunTest44;
+    Procedure RunTest45;
+    Procedure RunTest46;
+    Procedure RunTest47;
+    Procedure RunTest48;
+    Procedure RunTest49;
+    Procedure RunTest50;
     Procedure TestGroups;
     {$IFDEF Unicode}
     procedure TestUnicode1;
@@ -130,7 +136,7 @@ end;
 
 
 const
-  testCases: array [1..44] of TRegExTest = (
+  testCases: array [1..50] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -151,7 +157,7 @@ const
     (
     expression: #$d'('#$a')';
     inputText: 'word'#$d#$a;
-    substitutionText: '$1';
+    substitutionText: '${1}';
     expectedResult: 'word'#$a;
     MatchStart: 0
     ),
@@ -482,6 +488,54 @@ const
     substitutionText: '$1';
     expectedResult: '.Test.abc';
     matchStart: 0
+    ),
+    // 45
+    ( // comments and modifier-strings
+    expression: '(?#zzz)(?i)aA(?#zz).*(?-i)aA(?#zzz)';
+    inputText: '_a_aaaAAAaaaAAAaaa__';
+    substitutionText: '';
+    expectedResult: 'aaaAAAaaaA';
+    matchStart: 4
+    ),
+    // 46
+    ( // named groups
+    expression: '(?P<quote>[''"])\w+(?P=quote).*(?:\w+).*(?P<q>")\w+(?P=q)';
+    inputText: 'aa "bb? "ok" a ''b "ok" eeee';
+    substitutionText: '';
+    expectedResult: '"ok" a ''b "ok"';
+    matchStart: 9
+    ),
+    // 47
+    ( // lookbehind. it also has group refs \1 \2.
+    expression: '(?<=foo)(=)(\w)\w+\2\1';
+    inputText: '..=tat=..=tat=..foo=tabt=..';
+    substitutionText: '';
+    expectedResult: '=tabt=';
+    matchStart: 20
+    ),
+    // 48
+    ( // lookahead
+    expression: '(=)\w+\1(?=bar)';
+    inputText: '..=taat=..=tddt=bar..';
+    substitutionText: '';
+    expectedResult: '=tddt=';
+    matchStart: 11
+    ),
+    // 49
+    ( // lookahead+lookbehind
+    expression: '(?<=[a-z]+)(\d+)[a-z]+\1(?=[a-z]+)';
+    inputText: '..2tt2..foo23test23bar..';
+    substitutionText: '';
+    expectedResult: '23test23';
+    matchStart: 12
+    ),
+    // 50
+    ( // replace with named groups
+    expression: '\s+(?P<aa>[f-h]+)\s+(?P<bb>[o-r]+)\s+';
+    inputText: '<  fg   oppo  >';
+    substitutionText: '{${bb},${aa}}';
+    expectedResult: '<{oppo,fg}>';
+    matchStart: 1
     )
   );
 
@@ -792,6 +846,36 @@ end;
 procedure TTestRegexpr.RunTest44;
 begin
   RunRETest(44);
+end;
+
+procedure TTestRegexpr.RunTest45;
+begin
+  RunRETest(45);
+end;
+
+procedure TTestRegexpr.RunTest46;
+begin
+  RunRETest(46);
+end;
+
+procedure TTestRegexpr.RunTest47;
+begin
+  RunRETest(47);
+end;
+
+procedure TTestRegexpr.RunTest48;
+begin
+  RunRETest(48);
+end;
+
+procedure TTestRegexpr.RunTest49;
+begin
+  RunRETest(49);
+end;
+
+procedure TTestRegexpr.RunTest50;
+begin
+  RunRETest(50);
 end;
 
 procedure TTestRegexpr.TestGroups;

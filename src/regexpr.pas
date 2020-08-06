@@ -139,6 +139,9 @@ const
   // Escape char ('\' in common r.e.) used for escaping metachars (\w, \d etc)
   EscChar = '\';
 
+  // Substitute method: prefix of group reference: $1 .. $9 and $<name>
+  SubstituteGroupChar = '$';
+
   RegExprModifierI: boolean = False; // default value for ModifierI
   RegExprModifierR: boolean = True; // default value for ModifierR
   RegExprModifierS: boolean = True; // default value for ModifierS
@@ -238,6 +241,7 @@ type
     endp: array [0 .. NSUBEXP - 1] of PRegExprChar; // found expr end points
 
     GrpIndexes: array [0 .. NSUBEXP - 1] of integer;
+    GrpNames: array [0 .. NSUBEXP - 1] of RegExprString;
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -252,6 +256,9 @@ type
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
     regmustString: RegExprString;
+    regLookahead: boolean;
+    regLookaheadGroup: integer;
+    regLookbehind: boolean;
     // reganchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
@@ -372,6 +379,7 @@ type
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsCustomLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure InitLineSepArray;
+    procedure FindGroupName(APtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
 
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
@@ -421,6 +429,10 @@ type
 
     // emit LongInt value
     procedure EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
+
+    // emit back-reference to group
+    function EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
+      {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
@@ -634,6 +646,12 @@ type
     // not found in input string.
     property Match[Idx: integer]: RegExprString read GetMatch;
 
+    // get index of group (subexpression) by name, to support named groups
+    // like in Python: (?P<name>regex)
+    function MatchIndexFromName(const AName: RegExprString): integer;
+
+    function MatchFromName(const AName: RegExprString): RegExprString;
+
     // Returns position in r.e. where compiler stopped.
     // Useful for error diagnostics
     property CompilerErrorPos: PtrInt read GetCompilerErrorPos;
@@ -770,8 +788,8 @@ uses
 
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
-  REVersionMajor = 0;
-  REVersionMinor = 995;
+  REVersionMajor = 1;
+  REVersionMinor = 101;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -797,6 +815,16 @@ type
   // used for extracting Next "pointers" from compiled r.e. //###0.933
   TREBracesArg = integer; // type of {m,n} arguments
   PREBracesArg = ^TREBracesArg;
+
+  TREGroupKind = (
+    gkNormalGroup,
+    gkNonCapturingGroup,
+    gkNamedGroupReference,
+    gkComment,
+    gkModifierString,
+    gkLookahead,
+    gkLookbehind
+    );
 
 const
   REOpSz = SizeOf(TREOp) div SizeOf(REChar);
@@ -952,6 +980,35 @@ begin
   Result := _UpperCase(Ch);
   if Result = Ch then
     Result := _LowerCase(Ch);
+end;
+
+function _FindClosingBracket(P, PEnd: PRegExprChar): PRegExprChar;
+var
+  Len, Level: integer;
+begin
+  Result := nil;
+  Level := 1;
+  repeat
+    if P >= PEnd then Exit;
+    case P^ of
+      EscChar:
+        Inc(P);
+      '(':
+        begin
+          Inc(Level);
+        end;
+      ')':
+        begin
+          Dec(Level);
+          if Level = 0 then
+          begin
+            Result := P;
+            Exit;
+          end;
+        end;
+    end;
+    Inc(P);
+  until False;
 end;
 
 { ============================================================= }
@@ -1396,6 +1453,12 @@ const
   reeComplexBracesNotImplemented = 126;
   reeUnrecognizedModifier = 127;
   reeBadLinePairedSeparator = 128;
+  reeNamedGroupBad = 140;
+  reeNamedGroupBadName = 141;
+  reeNamedGroupBadRef = 142;
+  reeNamedGroupDupName = 143;
+  reeLookaheadBad = 150;
+  reeLookbehindBad = 152;
   // Runtime errors must be >= 1000
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
@@ -1470,6 +1533,18 @@ begin
       Result := 'TRegExpr compile: unrecognized modifier';
     reeBadLinePairedSeparator:
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
+    reeNamedGroupBad:
+      Result := 'TRegExpr compile: bad named group';
+    reeNamedGroupBadName:
+      Result := 'TRegExpr compile: bad identifier in named group';
+    reeNamedGroupBadRef:
+      Result := 'TRegExpr compile: bad back-reference to named group';
+    reeNamedGroupDupName:
+      Result := 'TRegExpr compile: named group defined more than once';
+    reeLookbehindBad:
+      Result := 'TRegExpr compile: bad lookbehind';
+    reeLookaheadBad:
+      Result := 'TRegExpr compile: bad lookahead';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -1631,16 +1706,32 @@ begin
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (endp[Idx] > startp[Idx]) then
     SetString(Result, startp[Idx], endp[Idx] - startp[Idx]);
-  {
-  // then Result := copy (fInputString, MatchPos [Idx], MatchLen [Idx]) //###0.929
-  then
-  begin
-    SetLength(Result, endp[Idx] - startp[Idx]);
-    System.Move(startp[Idx]^, Result[1], Length(Result) * SizeOf(REChar));
-  end;
-  }
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
+
+function TRegExpr.MatchIndexFromName(const AName: RegExprString): integer;
+var
+  i: integer;
+begin
+  for i := 1 {not 0} to GrpCount do
+    if GrpNames[i] = AName then
+    begin
+      Result := i;
+      Exit;
+    end;
+  Result := -1;
+end;
+
+function TRegExpr.MatchFromName(const AName: RegExprString): RegExprString;
+var
+  Idx: integer;
+begin
+  Idx := MatchIndexFromName(AName);
+  if Idx >= 0 then
+    Result := GetMatch(Idx)
+  else
+    Result := '';
+end;
 
 function TRegExpr.GetModifierStr: RegExprString;
 begin
@@ -1986,6 +2077,15 @@ begin
     Inc(regsize, RENumberSz);
 end;
 
+function TRegExpr.EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
+begin
+  if AIgnoreCase then
+    Result := EmitNode(OP_BSUBEXPCI)
+  else
+    Result := EmitNode(OP_BSUBEXP);
+  EmitC(REChar(AIndex));
+end;
+
 procedure TRegExpr.InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
 // insert an operator in front of already-emitted operand
 // Means relocating the operand.
@@ -2138,7 +2238,7 @@ begin
 end;
 
 
-procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharset);
+procedure TRegExpr.GetCharSetFromWordChars(var ARes: TRegExprCharSet);
 {$IFDEF UseWordChars}
 var
   i: integer;
@@ -2385,6 +2485,10 @@ begin
     regnpar := 1;
     regsize := 0;
     regcode := @regdummy;
+    regLookahead := False;
+    regLookaheadGroup := 0;
+    regLookbehind := False;
+
     EmitC(OP_MAGIC);
     if ParseReg(0, flags) = nil then
       Exit;
@@ -3057,6 +3161,8 @@ var
   SavedPtr: PRegExprChar;
   EnderChar, TempChar: REChar;
   DashForRange: Boolean;
+  GrpKind: TREGroupKind;
+  GrpName: RegExprString;
 begin
   Result := nil;
   flags := 0;
@@ -3066,18 +3172,25 @@ begin
   Inc(regparse);
   case (regparse - 1)^ of
     '^':
+     begin
       if not fCompModifiers.M or
         ((fLineSeparators = '') and not fLinePairedSeparatorAssigned) then
         ret := EmitNode(OP_BOL)
       else
         ret := EmitNode(OP_BOLML);
+     end;
+
     '$':
+     begin
       if not fCompModifiers.M or
         ((fLineSeparators = '') and not fLinePairedSeparatorAssigned) then
         ret := EmitNode(OP_EOL)
       else
         ret := EmitNode(OP_EOLML);
+     end;
+
     '.':
+     begin
       if fCompModifiers.S then
       begin
         ret := EmitNode(OP_ANY);
@@ -3088,6 +3201,8 @@ begin
         ret := EmitNode(OP_ANYML);
         flagp := flagp or flag_HasWidth; // not so simple ;)
       end;
+     end;
+
     '[':
       begin
         if regparse^ = '^' then
@@ -3232,40 +3347,135 @@ begin
         Inc(regparse);
         flagp := flagp or flag_HasWidth or flag_Simple;
       end;
+
     '(':
       begin
+        GrpKind := gkNormalGroup;
+        GrpName := '';
+
+        // A: detect kind of expression in brackets
         if regparse^ = '?' then
-        begin
-          // check for non-capturing group: (?:text)
-          if (regparse + 1)^ = ':' then
-          begin
-            Inc(regparse, 2);
-            ret := ParseReg(1, flags);
-            if ret = nil then
-            begin
-              Result := nil;
-              Exit;
-            end;
-            flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
-          end
-          else
-            // check for extended Perl syntax : (?..)
-            if (regparse + 1)^ = '#' then
-            begin // (?#comment)
-              Inc(regparse, 2); // find closing ')'
-              while (regparse < fRegexEnd) and (regparse^ <> ')') do
-                Inc(regparse);
-              if regparse^ <> ')' then
+          case (regparse + 1)^ of
+            ':':
               begin
-                Error(reeUnclosedComment);
+                // non-capturing group: (?:regex)
+                GrpKind := gkNonCapturingGroup;
+                Inc(regparse, 2);
+              end;
+            'P':
+              begin
+                if (regparse + 4 >= fRegexEnd) then
+                  Error(reeNamedGroupBad);
+                case (regparse + 2)^ of
+                  '<':
+                    begin
+                      // named group: (?P<name>regex)
+                      GrpKind := gkNormalGroup;
+                      FindGroupName(regparse + 3, '>', GrpName);
+                      Inc(regparse, Length(GrpName) + 4);
+                    end;
+                  '=':
+                    begin
+                      // back-reference to named group: (?P=name)
+                      GrpKind := gkNamedGroupReference;
+                      FindGroupName(regparse + 3, ')', GrpName);
+                      Inc(regparse, Length(GrpName) + 4);
+                    end;
+                  else
+                    Error(reeNamedGroupBad);
+                end;
+              end;
+            '<':
+              begin
+                // lookbehind: (?<=foo)bar
+                if (regparse + 4 >= fRegexEnd) then
+                  Error(reeLookbehindBad);
+                case (regparse + 2)^ of
+                  '=':
+                    begin
+                      // allow lookbehind only at the beginning
+                      if regparse <> fRegexStart + 1 then
+                        Error(reeLookbehindBad);
+
+                      GrpKind := gkLookbehind;
+                      regLookbehind := True;
+                      Inc(regparse, 3);
+                    end;
+                  else
+                    Error(reeLookbehindBad);
+                end;
+              end;
+            '=':
+              begin
+                // lookahead: foo(?=bar)
+                if (regparse + 3 >= fRegexEnd) then
+                  Error(reeLookaheadBad);
+                GrpKind := gkLookahead;
+                regLookahead := True;
+                regLookaheadGroup := regnpar;
+
+                // check that these brackets are last in regex
+                SavedPtr := _FindClosingBracket(regparse + 1, fRegexEnd);
+                if (SavedPtr <> fRegexEnd - 1) then
+                  Error(reeLookaheadBad);
+
+                Inc(regparse, 2);
+              end;
+            '#':
+              begin
+                // (?#comment)
+                GrpKind := gkComment;
+                Inc(regparse, 2);
+              end
+            else
+              begin
+                // modifiers string like (?mxr)
+                GrpKind := gkModifierString;
+                Inc(regparse);
+              end;
+        end;
+
+        // B: process found kind of brackets
+        case GrpKind of
+          gkNormalGroup,
+          gkNonCapturingGroup,
+          gkLookahead,
+          gkLookbehind:
+            begin
+              // skip this block for one of passes, to not double groups count;
+              // must take first pass (we need GrpNames filled)
+              if (GrpKind = gkNormalGroup) and not fSecondPass then
+                if GrpCount < NSUBEXP - 1 then
+                begin
+                  Inc(GrpCount);
+                  GrpIndexes[GrpCount] := regnpar;
+                  if GrpName <> '' then
+                  begin
+                    if MatchIndexFromName(GrpName) >= 0 then
+                      Error(reeNamedGroupDupName);
+                    GrpNames[GrpCount] := GrpName;
+                  end;
+                end;
+              ret := ParseReg(1, flags);
+              if ret = nil then
+              begin
+                Result := nil;
                 Exit;
               end;
-              Inc(regparse); // skip ')'
-              ret := EmitNode(OP_COMMENT); // comment
-            end
-            else
-            begin // modifiers ?
-              Inc(regparse); // skip '?'
+              flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
+            end;
+
+          gkNamedGroupReference:
+            begin
+              Len := MatchIndexFromName(GrpName);
+              if Len < 0 then
+                Error(reeNamedGroupBadRef);
+              ret := EmitGroupRef(Len, fCompModifiers.I);
+              flagp := flagp or flag_HasWidth or flag_Simple;
+            end;
+
+          gkModifierString:
+            begin
               SavedPtr := regparse;
               while (regparse < fRegexEnd) and (regparse^ <> ')') do
                 Inc(regparse);
@@ -3280,36 +3490,34 @@ begin
               // Error (reeQPSBFollowsNothing);
               // Exit;
             end;
-        end
-        else
-        begin
-          // normal (capturing) group
-          if fSecondPass then
-          // must skip this block for one of passes, to not double groups count
-            if GrpCount < NSUBEXP - 1 then
+
+          gkComment:
             begin
-              Inc(GrpCount);
-              GrpIndexes[GrpCount] := regnpar;
+              while (regparse < fRegexEnd) and (regparse^ <> ')') do
+                Inc(regparse);
+              if regparse^ <> ')' then
+              begin
+                Error(reeUnclosedComment);
+                Exit;
+              end;
+              Inc(regparse); // skip ')'
+              ret := EmitNode(OP_COMMENT); // comment
             end;
-          ret := ParseReg(1, flags);
-          if ret = nil then
-          begin
-            Result := nil;
-            Exit;
-          end;
-          flagp := flagp or flags and (flag_HasWidth or flag_SpecStart);
-        end;
+        end; // case GrpKind of
       end;
+
     '|', ')':
       begin // Supposed to be caught earlier.
         Error(reeInternalUrp);
         Exit;
       end;
+
     '?', '+', '*':
       begin
         Error(reeQPSBFollowsNothing);
         Exit;
       end;
+
     EscChar:
       begin
         if regparse >= fRegexEnd then
@@ -3377,12 +3585,8 @@ begin
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
           '1' .. '9':
-            begin // ###0.936
-              if fCompModifiers.I then
-                ret := EmitNode(OP_BSUBEXPCI)
-              else
-                ret := EmitNode(OP_BSUBEXP);
-              EmitC(REChar(Ord(regparse^) - Ord('0')));
+            begin
+              ret := EmitGroupRef(Ord(regparse^) - Ord('0'), fCompModifiers.I);
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
         else
@@ -3390,6 +3594,7 @@ begin
         end; { of case }
         Inc(regparse);
       end;
+
   else
     begin
       Dec(regparse);
@@ -3469,6 +3674,29 @@ end; { of function TRegExpr.GetCompilerErrorPos
 { ============================================================= }
 { ===================== Matching section ====================== }
 { ============================================================= }
+
+procedure TRegExpr.FindGroupName(APtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
+// check that group name is valid identifier, started from non-digit
+// this is to be like in Python regex
+var
+  P: PRegExprChar;
+begin
+  P := APtr;
+  if IsDigitChar(P^) or not IsWordChar(P^) then
+    Error(reeNamedGroupBadName);
+
+  repeat
+    if P >= fRegexEnd then
+      Error(reeNamedGroupBad);
+    if P^ = AEndChar then
+      Break;
+    if not IsWordChar(P^) then
+      Error(reeNamedGroupBadName);
+    Inc(P);
+  until False;
+
+  SetString(AName, APtr, P-APtr);
+end;
 
 function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
 // repeatedly match something simple, report how many
@@ -4267,6 +4495,14 @@ begin
   begin
     startp[0] := APos;
     endp[0] := reginput;
+
+    // with lookbehind, increase found position by the len of group=1
+    if regLookbehind then
+      Inc(startp[0], endp[1] - startp[1]);
+
+    // with lookahead, decrease ending by the len of group=regLookaheadGroup
+    if regLookahead and (regLookaheadGroup > 0) then
+      Dec(endp[0], endp[regLookaheadGroup] - startp[regLookaheadGroup]);
   end;
 end;
 
@@ -4283,7 +4519,10 @@ begin
   FillChar(startp, SizeOf(startp), 0);
   FillChar(endp, SizeOf(endp), 0);
   for i := 0 to NSUBEXP - 1 do
+  begin
     GrpIndexes[i] := -1;
+    GrpNames[i] := '';
+  end;
   GrpIndexes[0] := 0;
   GrpCount := 0;
 end;
@@ -4494,11 +4733,12 @@ var
   TemplateBeg, TemplateEnd: PRegExprChar;
 
   function ParseVarName(var APtr: PRegExprChar): integer;
-  // extract name of variable (digits, may be enclosed with
-  // curly braces) from APtr^, uses TemplateEnd !!!
+  // extract name of variable: $1 or ${1} or ${name}
+  // from APtr^, uses TemplateEnd
   var
     p: PRegExprChar;
     Delimited: boolean;
+    GrpName: RegExprString;
   begin
     Result := 0;
     p := APtr;
@@ -4508,11 +4748,23 @@ var
     if (p < TemplateEnd) and (p^ = '&') then
       Inc(p) // this is '$&' or '${&}'
     else
-      while (p < TemplateEnd) and IsDigitChar(p^) do
+    begin
+      if IsDigitChar(p^) then
       begin
-        Result := Result * 10 + (Ord(p^) - Ord('0')); // ###0.939
-        Inc(p);
+        while (p < TemplateEnd) and IsDigitChar(p^) do
+        begin
+          Result := Result * 10 + (Ord(p^) - Ord('0'));
+          Inc(p);
+        end
+      end
+      else
+      if Delimited then
+      begin
+        FindGroupName(p, '}', GrpName);
+        Result := MatchIndexFromName(GrpName);
+        Inc(p, Length(GrpName));
       end;
+    end;
     if Delimited then
       if (p < TemplateEnd) and (p^ = '}') then
         Inc(p) // skip right curly brace
@@ -4521,6 +4773,13 @@ var
     if p = APtr then
       Result := -1; // no valid digits found or no right curly brace
     APtr := p;
+  end;
+
+  procedure FindSubstGroupIndex(var p: PRegExprChar; var Idx: integer); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  begin
+    Idx := ParseVarName(p);
+    if (Idx >= 0) and (Idx <= High(GrpIndexes)) then
+      Idx := GrpIndexes[Idx];
   end;
 
 type
@@ -4558,12 +4817,8 @@ begin
     Ch := p^;
     Inc(p);
     n := -1;
-    if Ch = '$' then
-    begin
-      n := ParseVarName(p);
-      if (n >= 0) and (n <= High(GrpIndexes)) then
-        n := GrpIndexes[n];
-    end;
+    if Ch = SubstituteGroupChar then
+      FindSubstGroupIndex(p, n);
     if n >= 0 then
     begin
       Inc(ResultLen, endp[n] - startp[n]);
@@ -4617,12 +4872,8 @@ begin
     Inc(p);
     p1 := p;
     n := -1;
-    if Ch = '$' then
-    begin
-      n := ParseVarName(p);
-      if (n >= 0) and (n <= High(GrpIndexes)) then
-        n := GrpIndexes[n];
-    end;
+    if Ch = SubstituteGroupChar then
+      FindSubstGroupIndex(p, n);
     if (n >= 0) then
     begin
       p0 := startp[n];
@@ -5392,14 +5643,14 @@ procedure TRegExpr.Error(AErrorID: integer);
   {$ENDIF}
 var
   e: ERegExpr;
+  Msg: string;
 begin
   fLastError := AErrorID; // dummy stub - useless because will raise exception
-  if AErrorID < 1000 // compilation error ?
-  then
-    e := ERegExpr.Create(ErrorMsg(AErrorID) // yes - show error pos
-      + ' (pos ' + IntToStr(CompilerErrorPos) + ')')
-  else
-    e := ERegExpr.Create(ErrorMsg(AErrorID));
+  Msg := ErrorMsg(AErrorID);
+  // compilation error ?
+  if AErrorID < 1000 then
+    Msg := Msg + ' (pos ' + IntToStr(CompilerErrorPos) + ')';
+  e := ERegExpr.Create(Msg);
   e.ErrorCode := AErrorID;
   e.CompilerErrorPos := CompilerErrorPos;
   raise e
