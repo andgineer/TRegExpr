@@ -13,13 +13,12 @@
 TRegExpr
 ========
 
-Implements `regular expressions <regular_expressions.html>`_ in pure pascal.
-Is compatible with Free Pascal, Delphi 2-7, Borland C++ Builder 3-6.
+Implements `regular expressions <regular_expressions.html>`_ in pure Pascal.
+Compatible with Free Pascal, Delphi 2-7, C++Builder 3-6.
 
-To use it just copy `source code <https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_
-into your project.
+To use it, copy files "regexpr.pas", "regexpr_unicodedata.pas", "regexpr_compilers.inc", to your project folder.
 
-The library had already included into
+The library is already included into
 `Lazarus (Free Pascal) <http://wiki.freepascal.org/Regexpr>`_ project so you
 do not need to copy anything if you use `Lazarus <https://www.lazarus-ide.org/>`_.
 
@@ -29,7 +28,7 @@ TRegExpr class
 VersionMajor, VersionMinor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Return major and minor version, for example, for ``version 0.944``
+Return major and minor version, for example, for ``version 0.944``.
 
 ::
 
@@ -41,11 +40,11 @@ Expression
 
 Regular expression.
 
-For optimization regular expression is automatically compiled into ``P-code``.
-Human-readable form of the ``P-code`` returns by Dump_.
+For optimization, regular expression is automatically compiled into P-code.
+Human-readable form of the P-code is returned by Dump_.
 
 In case of any errors in compilation, ``Error`` method is called (by
-default ``Error`` raises exception ERegExpr_)
+default ``Error`` raises exception ERegExpr_).
 
 ModifierStr
 ~~~~~~~~~~~
@@ -53,9 +52,9 @@ ModifierStr
 Set or get values of
 `regular expression modifiers <regular_expressions.html#modifiers>`__.
 
-Format of the string is similar as in
+Format of the string is similar to
 `(?ismx-ismx) <regular_expressions.html#inlinemodifiers>`__. For example
-``ModifierStr := ‘i-x’`` will switch on modifier `/i <regular_expressions.html#i>`_,
+``ModifierStr := ‘i-x’`` will switch on the modifier `/i <regular_expressions.html#i>`_,
 switch off `/x <regular_expressions.html#x>`_ and leave unchanged others.
 
 If you try to set unsupported modifier, ``Error`` will be called.
@@ -99,7 +98,7 @@ initialized with RegExprModifierX_ value.
 Exec
 ~~~~
 
-Match the regular expression against ``AInputString``.
+Matches the regular expression against ``AInputString``.
 
 Available overloaded ``Exec`` version without ``AInputString`` - it uses ``AInputString``
 from previous call.
@@ -110,9 +109,9 @@ object creation.
 ExecNext
 ~~~~~~~~
 
-Find next match.
+Finds next match.
 
-Without parameter works the same as
+Without parameter it works the same as:
 
 ::
 
@@ -123,7 +122,7 @@ Without parameter works the same as
 Raises exception if used without preceeding successful call to
 Exec_, ExecPos_ or ExecNext_.
 
-So you always must use something like
+So you always must use something like:
 
 ::
 
@@ -136,7 +135,7 @@ So you always must use something like
 ExecPos
 ~~~~~~~
 
-Finds match for ``InputString`` starting from ``AOffset`` position
+Finds match for ``AInputString`` starting from ``AOffset`` position (1-based).
 
 ::
 
@@ -157,13 +156,13 @@ Substitute
 
     function Substitute (const ATemplate : RegExprString) : RegExprString;
 
-Returns ``ATemplate`` with ``$&`` or ``$0`` replaced by whole regular expression
-and ``$n`` replaced by occurence of subexpression number ``n``.
+Returns ``ATemplate``, where ``$&`` or ``$0`` are replaced with the found match,
+and ``$1``...``$9`` are replaced with found groups 1...9.
 
-To place into template characters ``$`` or ``\``, use prefix ``\``, like ``\\`` or ``\$``.
+To use in template characters ``$`` or ``\``, escape them with a backslash ``\``, like ``\\`` or ``\$``.
 
 ====== ===============================
-symbol description
+Symbol Description
 ====== ===============================
 ``$&`` whole regular expression match
 ``$0`` whole regular expression match
@@ -188,10 +187,13 @@ braces ``{}``.
      'a$12bc' -> 'a<Match[12]>bc'
      'a${1}2bc' -> 'a<Match[1]>2bc'.
 
+To use found named groups, use syntax ``${name}``, where "name"
+is valid identifier of previously found named group (starting with non-digit).
+
 Split
 ~~~~~
 
-Split AInputStr into APieces by r.e. occurencies
+Splits ``AInputStr`` into ``APieces`` by regex occurrences.
 
 Internally calls Exec_ / ExecNext_
 
@@ -218,7 +220,7 @@ Replace, ReplaceEx
       AReplaceFunc : TRegExprReplaceFunction):
       RegExprString;
 
-Returns the string with r.e. occurencies replaced by the replace string.
+Returns the string with regex occurencies replaced by the replace string.
 
 If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will
 be used as template for Substitution methods.
@@ -238,7 +240,7 @@ Returns ``def "$1" value "$2"``
 
 Internally calls Exec_ / ExecNext_
 
-Overloaded version and ``ReplaceEx`` operate with call-back function,
+Overloaded version and ``ReplaceEx`` operate with callback function,
 so you can implement really complex functionality.
 
 See also global function ReplaceRegExpr_ that you can use without explicit ``TRegExpr``
@@ -247,13 +249,12 @@ object creation.
 SubExprMatchCount
 ~~~~~~~~~~~~~~~~~
 
-Number of subexpressions has been found in last Exec_ / ExecNext_ call.
+Count of groups (subexpressions) found in last Exec_ / ExecNext_ call.
 
-If there are no subexpr. but whole expr was found (Exec\* returned
-True), then ``SubExprMatchCount=0``, if no subexpressions nor whole r.e.
-found (Exec_ / ExecNext_ returned false) then ``SubExprMatchCount=-1``.
+If there are no groups found, but some string was found (Exec\* returned True), it returns 0.
+If no groups nor some string were found (Exec_ / ExecNext_ returned false), it returns -1.
 
-Note, that some subexpr. may be not found and for such subexpr.
+Note, that some group may be not found, and for such group
 ``MathPos=MatchLen=-1`` and ``Match=’’``.
 
 ::
@@ -273,34 +274,38 @@ Note, that some subexpr. may be not found and for such subexpr.
 MatchPos
 ~~~~~~~~
 
-pos of entrance subexpr. ``#Idx`` into tested in last ``Exec*`` string.
-First subexpr. have ``Idx=1``, last - ``MatchCount``, whole r.e. have
-``Idx=0``.
+Position (1-based) of group with specified index.
+Result is valid only after some match was found.
+First group has index 1, the entire match has index 0.
 
-Returns ``-1`` if in r.e. no such subexpr. or this subexpr. not found in
-input string.
+Returns -1 if no group with specified index was found.
 
 MatchLen
 ~~~~~~~~
 
-len of entrance subexpr. ``#Idx`` r.e. into tested in last ``Exec*``
-string. First subexpr. have ``Idx=1``, last - MatchCount, whole r.e.
-have ``Idx=0``.
+Length of group with specified index. Result is valid only after some match was found.
+First group has index 1, the entire match has index 0.
 
-Returns -1 if in r.e. no such subexpr. or this subexpr. not found in
-input string.
+Returns -1 if no group with specified index was found.
 
 Match
 ~~~~~
 
-Returns ``’’`` if in r.e. no such subexpression or this subexpression
-was not found in the input string.
+String of group with specified index.
+First group has index 1, the entire match has index 0.
+Returns empty string, if no such group was found.
+
+MatchIndexFromName
+~~~~~~~~~~~~~~~~~~
+
+Returns group index (1-based) from group name, which is needed for "named groups".
+Returns empty string if no such named group was found.
 
 LastError
 ~~~~~~~~~
 
-Returns ``ID`` of last error, ``0`` if no errors (unusable if ``Error`` method
-raises exception) and clear internal status into ``0`` (no errors).
+Returns Id of last error, or 0 if no errors occured (unusable if ``Error`` method
+raises exception). It also clears internal status to 0 (no errors).
 
 ErrorMsg
 ~~~~~~~~
@@ -310,40 +315,39 @@ Returns ``Error`` message for error with ``ID = AErrorID``.
 CompilerErrorPos
 ~~~~~~~~~~~~~~~~
 
-Returns pos in r.e. there compiler stopped.
+Returns position in regex, where P-code compilation was stopped.
 
-Useful for error diagnostics
+Useful for error diagnostics.
 
 SpaceChars
 ~~~~~~~~~~
 
 Contains chars, treated as ``\s`` (initially filled with RegExprSpaceChars_
-global constant)
+global constant).
 
 WordChars
 ~~~~~~~~~
 
 Contains chars, treated as ``\w`` (initially filled with RegExprWordChars_
-global constant)
-
+global constant).
 
 LineSeparators
 ~~~~~~~~~~~~~~
 
-line separators (like ``\n`` in Unix), initially filled with
-RegExprLineSeparators_ global constant)
+Line separators (like ``\n`` in Unix), initially filled with
+RegExprLineSeparators_ global constant).
 
-see also `Line Boundaries <regular_expressions.html#lineseparators>`__
+See also `Line Boundaries <regular_expressions.html#lineseparators>`__
 
 LinePairedSeparator
 ~~~~~~~~~~~~~~~~~~~
 
-paired line separator (like ``\r\n`` in DOS and Windows).
+Paired line separator (like ``\r\n`` in DOS and Windows).
 
-must contain exactly two chars or no chars at all, initially filled with
-RegExprLinePairedSeparator global constant)
+Must contain exactly 2 chars or no chars at all. Initially filled with
+RegExprLinePairedSeparator global constant).
 
-see also `Line Boundaries <regular_expressions.html#lineseparators>`__
+See also `Line Boundaries <regular_expressions.html#lineseparators>`__
 
 For example, if you need Unix-style behaviour, assign
 ``LineSeparators := #$a`` and ``LinePairedSeparator := ''`` (empty string).
@@ -352,7 +356,7 @@ If you want to accept as line separators only ``\x0D\x0A`` but not ``\x0D``
 or ``\x0A`` alone, then assign ``LineSeparators := ''`` (empty string) and
 ``LinePairedSeparator := #$d#$a``.
 
-By default ‘mixed’ mode is used (defined in
+By default, "mixed" mode is used (defined in
 RegExprLine[Paired]Separator[s] global constants):
 
 ::
@@ -360,19 +364,13 @@ RegExprLine[Paired]Separator[s] global constants):
     LineSeparators := #$d#$a; 
     LinePairedSeparator := #$d#$a
 
-Behaviour of this mode is detailed described in the
+Behaviour of this mode is described in the
 `Line Boundaries <regular_expressions.html#lineseparators>`__.
-
-InvertCase
-~~~~~~~~~~
-
-Invertion of character case. Redefine it if you want different
-behaviour.
 
 Compile
 ~~~~~~~
 
-Compiles regular expression.
+Compiles regular expression to internal P-code.
 
 Useful for example for GUI regular expressions editors - to check
 regular expression without using it.
@@ -380,7 +378,7 @@ regular expression without using it.
 Dump
 ~~~~
 
-Show ``P-code`` (compiled regular expression) as human-readable string.
+Shows P-code (compiled regular expression) as human-readable string.
 
 Global constants
 ----------------
@@ -388,65 +386,57 @@ Global constants
 EscChar
 ~~~~~~~
 
-Escape-char, by default ``\``.
+Escape character, by default backslash ``\``.
 
 RegExprModifierI
 ~~~~~~~~~~~~~~~~
 
-`Modifier i <regular_expressions.html#i>`_ default value
+`Modifier i <regular_expressions.html#i>`_ default value.
 
 RegExprModifierR
 ~~~~~~~~~~~~~~~~
 
-`Modifier r <regular_expressions.html#r>`_ default value
+`Modifier r <regular_expressions.html#r>`_ default value.
 
 RegExprModifierS
 ~~~~~~~~~~~~~~~~
 
-`Modifier s <regular_expressions.html#s>`_ default value
+`Modifier s <regular_expressions.html#s>`_ default value.
 
 RegExprModifierG
 ~~~~~~~~~~~~~~~~
 
-`Modifier g <regular_expressions.html#g>`_ default value
+`Modifier g <regular_expressions.html#g>`_ default value.
 
 RegExprModifierM
 ~~~~~~~~~~~~~~~~
 
-`Modifier m <regular_expressions.html#m>`_ default value
+`Modifier m <regular_expressions.html#m>`_ default value.
 
 RegExprModifierX
 ~~~~~~~~~~~~~~~~
 
-`Modifier x <regular_expressions.html#x>`_ default value
+`Modifier x <regular_expressions.html#x>`_ default value.
 
 RegExprSpaceChars
 ~~~~~~~~~~~~~~~~~
 
-Default for SpaceChars_ property
- 
+Default for SpaceChars_ property.
 
 RegExprWordChars
 ~~~~~~~~~~~~~~~~
 
-Default value for WordChars_ property
-
+Default value for WordChars_ property.
  
 RegExprLineSeparators
 ~~~~~~~~~~~~~~~~~~~~~
 
-Default value for LineSeparators_ property
+Default value for LineSeparators_ property.
 
 RegExprLinePairedSeparator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Default value for LinePairedSeparator_ property
-
-
-RegExprInvertCaseFunction
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Default for InvertCase_ property
+Default value for LinePairedSeparator_ property.
 
 Global functions
 ----------------
@@ -458,13 +448,13 @@ you just need one function.
 ExecRegExpr
 ~~~~~~~~~~~
 
-true if the string matches the regular expression.
-Just as Exec_ in ``TRegExpr``.
+Returns True if the string matches the regular expression.
+Just like Exec_ in ``TRegExpr``.
 
 SplitRegExpr
 ~~~~~~~~~~~~
 
-Splits the string by regular expressions.
+Splits the string by regular expression occurences.
 See also Split_ if you prefer to create ``TRegExpr`` instance explicitly.
 
 ReplaceRegExpr
@@ -496,7 +486,7 @@ ReplaceRegExpr
 Returns the string with regular expressions replaced by the ``AReplaceStr``.
 See also Replace_ if you prefer to create TRegExpr instance explicitly.
 
-If last argument (``AUseSubstitution``) is true, then ``AReplaceStr`` will
+If last argument (``AUseSubstitution``) is True, then ``AReplaceStr`` will
 be used as template for ``Substitution methods``:
 
 ::
@@ -508,7 +498,7 @@ be used as template for ``Substitution methods``:
       True
     )
 
-Returns  ``def 'BLOCK' value 'test1'``
+Returns ``def 'BLOCK' value 'test1'``
 
 But this one (note there is no last argument):
 
@@ -544,42 +534,39 @@ QuoteRegExprMetaChars
 ~~~~~~~~~~~~~~~~~~~~~
 
 Replace all metachars with its safe representation, for example
-``abc'cd.(`` converts into ``abc\'cd\.\(``
+``abc'cd.(`` is converted to ``abc\'cd\.\(``
 
-This function usefull for r.e. autogeneration from user input
+This function is useful for regex auto-generation from user input.
 
 RegExprSubExpressions
 ~~~~~~~~~~~~~~~~~~~~~
 
-Makes list of subexpressions found in ``ARegExpr``
+Makes list of subexpressions found in ``ARegExpr``.
 
-In ``ASubExps`` every item represent subexpression, from first to last, in
+In ``ASubExps`` every item represents subexpression, from first to last, in
 format:
 
  String - subexpression text (without ‘()’)
 
- low word of Object - starting position in ARegExpr, including ‘(’ if
-exists! (first position is 1)
+ Low word of Object - starting position in ARegExpr, including ‘(’ if exists! (first position is 1)
 
- high word of Object - length, including starting ‘(’ and ending ‘)’ if
-exist!
+ High word of Object - length, including starting ‘(’ and ending ‘)’ if exist!
 
-``AExtendedSyntax`` - must be ``True`` if modifier ``/x`` will be ``On`` while
-using the r.e.
+``AExtendedSyntax`` - must be True if modifier ``/x`` os on, while using the regex.
 
-Usefull for GUI editors of r.e. etc (you can find example of using in
+Usefull for GUI editors of regex (you can find example of usage in
 `REStudioMain.pas <https://github.com/andgineer/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMain.pas#L474>`_)
 
 =========== =======
 Result code Meaning
 =========== =======
-0           Success. No unbalanced brackets was found
--1          there are not enough closing brackets ``)``
--(n+1)      at position n was found opening ``[`` without corresponding closing ``]``
-n           at position n was found closing bracket ``)`` without corresponding opening ``(``
+0           Success. No unbalanced brackets were found.
+-1          Not enough closing brackets ``)``.
+-(n+1)      At position n it was found opening ``[`` without corresponding closing ``]``.
+n           At position n it was found closing bracket ``)`` without corresponding opening ``(``.
 =========== ======= 
 
-If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal ones
+If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal ones.
 
 ERegExpr
 --------
@@ -595,14 +582,9 @@ ERegExpr
 Unicode
 -------
 
-UniCode slows down performance so use it only if you really need Unicode
-support.
+In Unicode mode, all strings (InputString, Expression, internal strings) are of type UnicodeString/WideString, instead of simple "string".
+Unicode slows down performance, so use it only if you really need Unicode support.
 
-To use Unicode uncomment ``{$DEFINE UniCode}``
+To use Unicode, uncomment ``{$DEFINE UniCode}``
 in `regexpr.pas <https://github.com/andgineer/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86>`__
 (remove ``off``).
-
-
-After that all strings will be treated as WideString.
-
- 
