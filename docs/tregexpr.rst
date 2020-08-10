@@ -98,9 +98,9 @@ initialized with RegExprModifierX_ value.
 Exec
 ~~~~
 
-Matches the regular expression against ``AInputString``.
+Finds regular expression against ``AInputString``, starting from the beginning.
 
-Available overloaded ``Exec`` version without ``AInputString`` - it uses ``AInputString``
+The overloaded ``Exec`` version without ``AInputString`` exists, it uses ``AInputString``
 from previous call.
 
 See also global function ExecRegExpr_ that you can use without explicit ``TRegExpr``
@@ -109,7 +109,7 @@ object creation.
 ExecNext
 ~~~~~~~~
 
-Finds next match.
+Finds next match. If parameter ``ABackward`` is True, it goes downto position 1, ie runs backward search.
 
 Without parameter it works the same as:
 
@@ -126,7 +126,7 @@ So you always must use something like:
 
 ::
 
-    if Exec (InputString)
+    if Exec(InputString)
       then
         repeat
           { proceed results}
@@ -137,9 +137,9 @@ ExecPos
 
 Finds match for ``AInputString`` starting from ``AOffset`` position (1-based).
 
-::
+Parameter ``ABackward`` means going from ``AOffset`` downto 1, ie backward search.
 
-    AOffset = 1 // first char of InputString
+Parameter ``ATryOnce`` means that testing for regex will be only at the initial position, without going to next/previous positions. 
 
 InputString
 ~~~~~~~~~~~
