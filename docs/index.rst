@@ -97,19 +97,17 @@ I cannot list here all of them, but I do appreciate all bug-reports,
 features suggestions and questions that I am receiving from
 you.
 
+-  Alexey Torgashin - added many features in 2019-2020, e.g. named groups, non-capturing groups, assertions, backward search
 -  Guido Muehlwitz - found and fixed ugly bug in big string processing
--  Stephan Klimek - testing in CPPB and suggesting/implementing many
-   features
+-  Stephan Klimek - testing in C++Builder and suggesting/implementing many features
 -  Steve Mudford - implemented Offset parameter
 -  Martin Baur (`www.mindpower.com <http://www.mindpower.com>`__) -
    German translation, usefull suggestions
--  Yury Finkel - implemented UniCode support, found and fixed some bugs
--  Ralf Junker - Implemented some features, many optimization
-   suggestions
+-  Yury Finkel - implemented Unicode support, found and fixed some bugs
+-  Ralf Junker - implemented some features, many optimization suggestions
 -  Simeon Lilov - Bulgarian translation
--  Filip Jirsбk and Matthew Winter - help in Implementation non-greedy
-   mode
--  Kit Eason many examples for introduction help section
+-  Filip Jirsбk and Matthew Winter - help in implementation non-greedy mode
+-  Kit Eason - many examples for introduction help section
 -  Juergen Schroth - bug hunting and useful suggestions
 -  Martin Ledoux - French translation
 -  Diego Calp, Argentina - Spanish translation
