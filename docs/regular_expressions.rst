@@ -265,8 +265,8 @@ order).
 Quantification
 --------------
 
-Quantifier
-~~~~~~~~~~
+Quantifiers
+~~~~~~~~~~~
 
 Any item of a regular expression may be followed by quantifier.
 Quantifier specifies number of repetition of the item.
@@ -341,7 +341,7 @@ RegEx        Matches
 The choice
 ----------
 
-Expressions in the choice are separated by ``|``.
+Expressions in the choice are separated by vertical bar ``|``.
 
 So ``fee|fie|foe`` will match any of ``fee``, ``fie``,
 or ``foe`` in the target string (as would ``f(e|i|o)e``).
@@ -373,11 +373,10 @@ RegEx            Matches
 
 .. _subexpression:
 
-Subexpressions
---------------
+Groups
+------
 
-The brackets ``( ... )`` may also be used to define regular expression
-subexpressions.
+The brackets ``( ... )`` are used to define regular expression groups (ie subexpressions).
 
 .. note::
     `TRegExpr <tregexpr.html>`__
@@ -410,8 +409,8 @@ Whole regular expression has number ``0``.
 Backreferences
 --------------
 
-Metacharacters ``\1`` through ``\9`` are interpreted as backreferences.
-``\n`` matches previously matched subexpression ``n``.
+Metacharacters ``\1`` through ``\9`` are interpreted as backreferences to groups.
+They match the previously found group with the specified index.
 
 =========== ============================
 RegEx       Matches
@@ -420,15 +419,28 @@ RegEx       Matches
 ``(.+)\1+`` also ``abab`` and ``123123``
 =========== ============================
 
- ``(['"]?)(\d+)\1`` matchs ``"13"`` (in double quotes), or ``'4'`` (in
-single quotes) or ``77`` (without quotes) etc
+RegEx ``(['"]?)(\d+)\1`` matches ``"13"`` (in double quotes), or ``'4'`` (in
+single quotes) or ``77`` (without quotes) etc.
+
+Named Groups and Backreferences
+-------------------------------
+
+To make some group (ie subexpression) named, use this syntax: ``(?P<name>)``. Name of group must be valid identifier: first char is letter or "_", other chars are alphanumeric or "_". All named groups are also usual groups and share the same numbers 1 to 9.
+
+Backreferences to named groups are ``(?P=name)``, the numbers ``\1`` to ``\9`` can also be used.
+
+========================== ============================
+RegEx                      Matches
+========================== ============================
+``(?P<qq>['"])\w+(?P=qq)`` ``"word"`` and ``'word'``
+========================== ============================
 
 Modifiers
 ---------
 
 Modifiers are for changing behaviour of regular expressions.
 
-You can set modifiers globally in your system or change inside the the
+You can set modifiers globally in your system or change inside the
 regular expression using the `(?imsxr-imsxr) <#inlinemodifiers>`_.
 
 .. note::
@@ -547,45 +559,26 @@ RegEx   Matches
 
 The modifier is set `On` by default.
 
-Extensions
+Assertions
 ----------
 
-.. _lookahead:
+.. _assertions:
 
-(?=<lookahead>)
-~~~~~~~~~~~~~~~
+Currently engine supports only these kinds of assertions:
 
-``Look ahead`` assertion. It checks input for the regular expression
-``<look-ahead>``, but do not capture it.
+Positive lookahead assertion: ``foo(?=bar)`` matches "foo" only before "bar", and "bar" is excluded from the match.
 
-.. note::
-    `TRegExpr <tregexpr.html>`__
+Positive lookbehind assertion: ``(?<=foo)bar`` matches "bar" only after "foo", and "foo" is excluded from the match.
 
-    Look-ahead is not implemented in TRegExpr.
+Assertions are allowed only at the very beginning and ending of expression. They can contain subexpressions of any complexity (quantifiers are allowed, even groups are allowed). Lookahead and lookbehind can be present both.
 
-    In many cases you can replace ``look ahead`` with
-    `Sub-expression <#subexpression>`_ and just ignore what will be
-    captured in this subexpression.
+Non-capturing Groups
+--------------------
 
-    For example ``(blah)(?=foobar)(blah)`` is the same as ``(blah)(foobar)(blah)``.
-    But in the latter version you have to exclude the middle sub-expression
-    manually - use ``Match[1] + Match[3]`` and ignore ``Match[2]``.
+Syntax is like this: ``(?:subexpression)``.
 
-    This is just not so convenient as in the former version where you can use
-    whole ``Match[0]`` because captured by ``look ahead`` part would not be
-    included in the regular expression match.
-
-.. _inlinemodifiers:
-
-
-(?:<non-capturing group>)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-``?:`` is used when you want to group an expression, but you do not want to
-save it as a matched/captured portion of the string.
-
-So this is just a way to organize your regex into subexpressions without
-overhead of capturing result:
+Such groups do not have the "index" and are invisible for backreferences.
+Non-capturing groups are used when you want to group a subexpression, but you do not want to save it as a matched/captured portion of the string. So this is just a way to organize your regex into subexpressions without overhead of capturing result:
 
 ================================ =======================================
 RegEx                            Matches
@@ -596,11 +589,14 @@ RegEx                            Matches
                                  only ``sorokin.engineer``
 ================================ =======================================
 
-(?imsgxr-imsgxr)
-~~~~~~~~~~~~~~~~
+Inline Modifiers
+----------------
 
-You may use it inside regular expression for modifying modifiers by the fly.
+.. _inlinemodifiers:
 
+Syntax is like this: ``(?i)``, ``(?-i)``, ``(?msgxr-imsgxr)``.
+
+You may use it inside regular expression for modifying modifiers on-the-fly.
 This can be especially handy because it has local scope in a regular
 expression. It affects only that part of regular expression that follows
 ``(?imsgxr-imsgxr)`` operator.
@@ -620,13 +616,12 @@ RegEx                         Matches
 ``((?i)Saint-)?Petersburg``   ``saint-Petersburg``, but not ``saint-petersburg``
 ============================= ==================================================
 
-(?#text)
-~~~~~~~~
+Comments
+--------
 
-A comment, the text is ignored.
+Syntax is like this: ``(?#text)``. Text inside brackets is ignored.
 
-Note that the comment is closed by
-the nearest ``)``, so there is no way to put a literal ``)`` in
+Note that the comment is closed by the nearest ``)``, so there is no way to put a literal ``)`` in
 the comment.
 
 Afterword
@@ -635,4 +630,3 @@ Afterword
 In this `ancient blog post from previous
 century <https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html>`__
 I illustrate some usages of regular expressions.
-
