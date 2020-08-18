@@ -3991,6 +3991,7 @@ end;
 
 function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
 // repeatedly match something simple, report how many
+// p: points to current opcode
 var
   scan: PRegExprChar;
   opnd: PRegExprChar;
@@ -4001,8 +4002,8 @@ var
   ArrayIndex: integer;
 begin
   Result := 0;
-  scan := reginput;
-  opnd := p + REOpSz + RENextOffSz; // OPERAND
+  scan := reginput; // points inside regex string
+  opnd := p + REOpSz + RENextOffSz; // points to operand of opcode (after OP_nnn code)
   TheMax := fInputEnd - scan;
   if TheMax > AMax then
     TheMax := AMax;
