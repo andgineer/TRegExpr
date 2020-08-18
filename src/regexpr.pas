@@ -1831,7 +1831,8 @@ end; { of procedure TRegExpr.SetModifierStr
 {$IFDEF FastUnicodeData}
 function TRegExpr.IsWordChar(AChar: REChar): boolean;
 begin
-  Result := WordDetectArray[Ord(AChar)];
+  // bit 7 in value: is word char
+  Result := CharCategoryArray[Ord(AChar)] and 128 <> 0;
 end;
 {$ELSE}
 function TRegExpr.IsWordChar(AChar: REChar): boolean;
