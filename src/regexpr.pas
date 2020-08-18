@@ -476,11 +476,6 @@ type
     // match at specific position only, called from ExecPrim
     function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
-    {$IFDEF FastUnicodeData}
-    // matches single char by Unicode category \p \P
-    function MatchOneCharCategory(opnd, scan: PRegExprChar): boolean;
-    {$ENDIF}
-
     // Exec for stored InputString
     function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean): boolean;
 
@@ -1957,22 +1952,30 @@ const
     ('C', 'o')
     );
 
-procedure GetCharCategory(AChar: REChar; var Name0, Name1: REChar);
+function CheckCharCategory(AChar: REChar; Ch0, Ch1: REChar): boolean;
 var
   N: byte;
+  Name0, Name1: REChar;
 begin
+  Result := False;
   // bits 0..6 are category
   N := CharCategoryArray[Ord(AChar)] and 127;
   if N <= High(CategoryNames) then
   begin
     Name0 := CategoryNames[N][0];
     Name1 := CategoryNames[N][1];
-  end
-  else
-  begin
-    Name0 := #0;
-    Name1 := #0;
+    if Ch0 <> Name0 then Exit;
+    if Ch1 <> #0 then
+      if Ch1 <> Name1 then Exit;
+    Result := True;
   end;
+end;
+
+function MatchOneCharCategory(opnd, scan: PRegExprChar): boolean; inline;
+// opnd: points to opcode operands after OP_*CATEGORY
+// scan: points into InputString
+begin
+  Result := CheckCharCategory(scan^, opnd^, (opnd + 1)^);
 end;
 
 {$ELSE}
@@ -2360,9 +2363,6 @@ var
   OpKind: REChar;
   ch, ch2: REChar;
   N, i: integer;
-  {$IFDEF FastUnicodeData}
-  name0, name1: REChar;
-  {$ENDIF}
 begin
   if AIgnoreCase then
     AChar := _UpperCase(AChar);
@@ -2440,8 +2440,7 @@ begin
           Inc(ABuffer);
           ch2 := ABuffer^;
           Inc(ABuffer);
-          GetCharCategory(AChar, name0, name1);
-          Result := (ch = name0) and ((ch2 = #0) or (ch2 = name1));
+          Result := CheckCharCategory(AChar, ch, ch2);
           if OpKind = OpKind_CategoryNo then
             Result := not Result;
           if Result then
@@ -4234,24 +4233,6 @@ begin
     Result := p + offset;
 end; { of function TRegExpr.regnext
   -------------------------------------------------------------- }
-
-{$IFDEF FastUnicodeData}
-function TRegExpr.MatchOneCharCategory(opnd, scan: PRegExprChar): boolean;
-// opnd: points to opcode operands after OP_*CATEGORY
-// scan: points into InputString
-var
-  name0, name1, ch, ch2: REChar;
-begin
-  Result := False;
-  ch := opnd^;
-  ch2 := (opnd + 1)^;
-  GetCharCategory(scan^, name0, name1);
-  if (ch <> name0) then Exit;
-  if (ch2 <> #0) then
-    if (ch2 <> name1) then Exit;
-  Result := True;
-end;
-{$ENDIF}
 
 function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // recursively matching routine
