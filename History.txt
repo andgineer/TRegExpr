@@ -6,6 +6,12 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.105 2020.08.18
+ -=- (+) Support Unicode categories: \pL \p{L} \p{Lu}, and negative
+ variant with \P. Both inside char-classes and outside them.
+ Allowed all categories: https://www.compart.com/en/unicode/category/
+ Requires define FastUnicodeData. By Alexey Torgashin.
+
  v. 1.101 2020.08.05
  -=- (+) Support named groups like in Python: (?P<name>regex), and back-refs
   to named groups: (?P=name).
