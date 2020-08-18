@@ -4002,7 +4002,7 @@ var
   ArrayIndex: integer;
 begin
   Result := 0;
-  scan := reginput; // points inside regex string
+  scan := reginput; // points into InputString
   opnd := p + REOpSz + RENextOffSz; // points to operand of opcode (after OP_nnn code)
   TheMax := fInputEnd - scan;
   if TheMax > AMax then
@@ -4230,8 +4230,8 @@ end; { of function TRegExpr.regnext
   -------------------------------------------------------------- }
 
 function TRegExpr.MatchOneCharCategory(opnd, scan: PRegExprChar): boolean;
-// opnd: points to category operands after OP_*CATEGORY
-// scan: points into regex string
+// opnd: points to opcode operands after OP_*CATEGORY
+// scan: points into InputString
 var
   name0, name1, ch, ch2: REChar;
 begin
