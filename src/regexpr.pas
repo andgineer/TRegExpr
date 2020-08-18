@@ -861,6 +861,7 @@ begin
   Result := nil;
 end;
 
+(*
 function IsLetterUpperChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
@@ -870,11 +871,22 @@ begin
       Result := False;
   end;
 end;
+*)
 
 function IsLetterLowerChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
     'a' .. 'z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
+function IsCategoryFirstChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case AChar of
+    'L', 'M', 'N', 'P', 'S', 'C', 'Z':
       Result := True;
     else
       Result := False;
@@ -3316,7 +3328,7 @@ var
     Inc(regparse);
 
     ch := regparse^;
-    if IsLetterUpperChar(ch) then
+    if IsCategoryFirstChar(ch) then
     begin
       ch2 := #0;
     end
@@ -3325,7 +3337,7 @@ var
     begin
       Inc(regparse);
       ch := regparse^;
-      if not IsLetterUpperChar(ch) then
+      if not IsCategoryFirstChar(ch) then
         Error(reeBadUnicodeCategory);
       Inc(regparse);
       ch2 := regparse^;
