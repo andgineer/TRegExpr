@@ -434,7 +434,9 @@ type
     function EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
       {$IFDEF InlineFuncs}inline;{$ENDIF}
 
+    {$IFDEF FastUnicodeData}
     function EmitCategoryMain(APositive: boolean): PRegExprChar;
+    {$ENDIF}
 
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
@@ -863,38 +865,6 @@ begin
   Result := nil;
 end;
 
-(*
-function IsLetterUpperChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-begin
-  case AChar of
-    'A' .. 'Z':
-      Result := True;
-    else
-      Result := False;
-  end;
-end;
-*)
-
-function IsLetterLowerChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-begin
-  case AChar of
-    'a' .. 'z':
-      Result := True;
-    else
-      Result := False;
-  end;
-end;
-
-function IsCategoryFirstChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-begin
-  case AChar of
-    'L', 'M', 'N', 'P', 'S', 'C', 'Z':
-      Result := True;
-    else
-      Result := False;
-  end;
-end;
-
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
@@ -947,6 +917,7 @@ function _LowerCase(Ch: REChar): REChar; inline;
 begin
   Result := CharLowerArray[Ord(Ch)];
 end;
+
 {$ELSE}
 function _UpperCase(Ch: REChar): REChar;
 begin
@@ -1952,6 +1923,30 @@ const
     ('C', 'o')
     );
 
+function IsCategoryFirstChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case AChar of
+    'L', 'M', 'N', 'P', 'S', 'C', 'Z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
+function IsCategoryChars(AChar, AChar2: REChar): boolean;
+var
+  i: integer;
+begin
+  for i := Low(CategoryNames) to High(CategoryNames) do
+    if (AChar = CategoryNames[i][0]) then
+      if (AChar2 = CategoryNames[i][1]) then
+      begin
+        Result := True;
+        Exit
+      end;
+  Result := False;
+end;
+
 function CheckCharCategory(AChar: REChar; Ch0, Ch1: REChar): boolean;
 // AChar: check this char against opcode
 // Ch0, Ch1: opcode operands after OP_*CATEGORY
@@ -2233,6 +2228,7 @@ begin
   EmitC(REChar(AIndex));
 end;
 
+{$IFDEF FastUnicodeData}
 function TRegExpr.EmitCategoryMain(APositive: boolean): PRegExprChar;
 var
   ch, ch2: REChar;
@@ -2263,7 +2259,7 @@ begin
         ch2 := #0;
       end
       else
-      if IsLetterLowerChar(ch2) then
+      if IsCategoryChars(ch, ch2) then
       begin
         Inc(regparse);
         if regparse >= fRegexEnd then
@@ -2273,7 +2269,9 @@ begin
       end
       else
         Error(reeBadUnicodeCategory);
-    end;
+    end
+    else
+      Error(reeBadUnicodeCategory);
   end
   else
     Error(reeBadUnicodeCategory);
@@ -2285,6 +2283,7 @@ begin
   EmitC(ch);
   EmitC(ch2);
 end;
+{$ENDIF}
 
 procedure TRegExpr.InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
 // insert an operator in front of already-emitted operand
@@ -3407,7 +3406,7 @@ var
         Error(reeBadUnicodeCategory);
       Inc(regparse);
       ch2 := regparse^;
-      if IsLetterLowerChar(ch2) then
+      if IsCategoryChars(ch, ch2) then
       begin
         Inc(regparse);
         if regparse^ <> '}' then
@@ -3875,6 +3874,7 @@ begin
               ret := EmitGroupRef(Ord(regparse^) - Ord('0'), fCompModifiers.I);
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
+          {$IFDEF FastUnicodeData}
           'p':
             begin
               ret := EmitCategoryMain(True);
@@ -3885,6 +3885,7 @@ begin
               ret := EmitCategoryMain(False);
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
+          {$ENDIF}
         else
           EmitExactly(UnQuoteChar(regparse));
         end; { of case }
