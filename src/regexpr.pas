@@ -434,6 +434,8 @@ type
     function EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
       {$IFDEF InlineFuncs}inline;{$ENDIF}
 
+    function EmitCategoryMain(APositive: boolean): PRegExprChar;
+
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
     procedure InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
@@ -1417,9 +1419,12 @@ const
   OP_ANYVERTSEP = TREOp(41); // Any vertical whitespace \v
   OP_NOTVERTSEP = TREOp(42); // Not vertical whitespace \V
 
+  OP_ANYCATEGORY = TREOp(43); // \p{L}
+  OP_NOTCATEGORY = TREOp(44); // \P{L}
+
   // !!! Change OP_OPEN value if you add new opcodes !!!
 
-  OP_OPEN = TREOp(43); // -    Mark this point in input as start of \n
+  OP_OPEN = TREOp(45); // -    Mark this point in input as start of \n
   // OP_OPEN + 1 is \1, etc.
   OP_CLOSE = TREOp(Ord(OP_OPEN) + NSUBEXP);
   // -    Analogous to OP_OPEN.
@@ -2216,6 +2221,59 @@ begin
   else
     Result := EmitNode(OP_BSUBEXP);
   EmitC(REChar(AIndex));
+end;
+
+function TRegExpr.EmitCategoryMain(APositive: boolean): PRegExprChar;
+var
+  ch, ch2: REChar;
+begin
+  Inc(regparse);
+  if regparse >= fRegexEnd then
+    Error(reeBadUnicodeCategory);
+  ch := regparse^;
+  if IsCategoryFirstChar(ch) then
+  begin
+    ch2 := #0;
+  end
+  else
+  if ch = '{' then
+  begin
+    Inc(regparse);
+    if regparse >= fRegexEnd then
+      Error(reeBadUnicodeCategory);
+    ch := regparse^;
+    if IsCategoryFirstChar(ch) then
+    begin
+      Inc(regparse);
+      if regparse >= fRegexEnd then
+        Error(reeBadUnicodeCategory);
+      ch2 := regparse^;
+      if ch2 = '}' then
+      begin
+        ch2 := #0;
+      end
+      else
+      if IsLetterLowerChar(ch2) then
+      begin
+        Inc(regparse);
+        if regparse >= fRegexEnd then
+          Error(reeBadUnicodeCategory);
+        if regparse^ <> '}' then
+          Error(reeBadUnicodeCategory);
+      end
+      else
+        Error(reeBadUnicodeCategory);
+    end;
+  end
+  else
+    Error(reeBadUnicodeCategory);
+
+  if APositive then
+    Result := EmitNode(OP_ANYCATEGORY)
+  else
+    Result := EmitNode(OP_NOTCATEGORY);
+  EmitC(ch);
+  EmitC(ch2);
 end;
 
 procedure TRegExpr.InsertOperator(op: TREOp; opnd: PRegExprChar; sz: integer);
@@ -3809,6 +3867,16 @@ begin
               ret := EmitGroupRef(Ord(regparse^) - Ord('0'), fCompModifiers.I);
               flagp := flagp or flag_HasWidth or flag_Simple;
             end;
+          'p':
+            begin
+              ret := EmitCategoryMain(True);
+              flagp := flagp or flag_HasWidth or flag_Simple;
+            end;
+          'P':
+            begin
+              ret := EmitCategoryMain(False);
+              flagp := flagp or flag_HasWidth or flag_Simple;
+            end;
         else
           EmitExactly(UnQuoteChar(regparse));
         end; { of case }
@@ -4152,6 +4220,23 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // recursion, in particular by going through "ordinary" nodes (that don't
 // need to know whether the rest of the match failed) by a loop instead of
 // by recursion.
+
+  function MatchCharCategory(scan: PRegExprChar): boolean;
+  var
+    tst: REChar;
+    name0, name1, ch, ch2: REChar;
+  begin
+    Result := False;
+    ch := scan^;
+    ch2 := (scan+1)^;
+    tst := reginput^;
+    GetCharCategory(tst, name0, name1);
+    if (ch <> name0) then Exit;
+    if (ch2 <> #0) then
+      if (ch2 <> name1) then Exit;
+    Result := True;
+  end;
+
 var
   scan: PRegExprChar; // Current node.
   next: PRegExprChar; // Next node.
@@ -4655,6 +4740,19 @@ begin
           Result := True; // Success!
           Exit;
         end;
+      OP_ANYCATEGORY:
+        begin
+          if (reginput = fInputEnd) then Exit;
+          if not MatchCharCategory(scan + REOpSz + RENextOffSz) then Exit;
+          Inc(reginput);
+        end;
+      OP_NOTCATEGORY:
+        begin
+          if (reginput = fInputEnd) then Exit;
+          if MatchCharCategory(scan + REOpSz + RENextOffSz) then Exit;
+          Inc(reginput);
+        end;
+
     else
       begin
         Error(reeMatchPrimMemoryCorruption);
@@ -5465,6 +5563,12 @@ begin
           FirstCharSet := RegExprAllSet; //###0.948
           Exit;
         end;
+      OP_ANYCATEGORY,
+      OP_NOTCATEGORY:
+        begin
+          FirstCharSet := RegExprAllSet;
+          Exit;
+        end;
       else
         begin
           fLastErrorOpcode := Oper;
@@ -5693,6 +5797,10 @@ begin
       Result := 'PLUSNG'; // ###0.940
     OP_BRACESNG:
       Result := 'BRACESNG'; // ###0.940
+    OP_ANYCATEGORY:
+      Result := 'ANYCATEG';
+    OP_NOTCATEGORY:
+      Result := 'NOTCATEG';
   else
     Error(reeDumpCorruptedOpcode);
   end; { of case op }
@@ -5848,6 +5956,17 @@ begin
       Inc(s, 2 * REBracesArgSz + RENextOffSz);
     end;
     {$ENDIF}
+    if (op = OP_ANYCATEGORY) or (op = OP_NOTCATEGORY) then
+    begin
+      ch := s^;
+      Inc(s);
+      ch2 := s^;
+      Inc(s);
+      if ch2<>#0 then
+        Result := Result + '{' + ch + ch2 + '}'
+      else
+        Result := Result + '{' + ch + '}';
+    end;
     Result := Result + #$d#$a;
   end; { of while }
 
