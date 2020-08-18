@@ -476,8 +476,8 @@ type
     // match at specific position only, called from ExecPrim
     function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
-    // matches single char in reginput, scan: points to operands of opcode
-    function MatchOneCharCategory(scan: PRegExprChar): boolean;
+    // matches single char by Unicode category \p \P
+    function MatchOneCharCategory(opnd, scan: PRegExprChar): boolean;
 
     // Exec for stored InputString
     function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean): boolean;
@@ -4187,6 +4187,19 @@ begin
         Inc(Result);
         Inc(scan);
       end;
+    OP_ANYCATEGORY:
+      while (Result < TheMax) and MatchOneCharCategory(opnd, scan) do
+      begin
+        Inc(Result);
+        Inc(scan);
+      end;
+    OP_NOTCATEGORY:
+      while (Result < TheMax) and not MatchOneCharCategory(opnd, scan) do
+      begin
+        Inc(Result);
+        Inc(scan);
+      end;
+
   else
     begin // Oh dear. Called inappropriately.
       Result := 0; // Best compromise.
@@ -4216,14 +4229,16 @@ begin
 end; { of function TRegExpr.regnext
   -------------------------------------------------------------- }
 
-function TRegExpr.MatchOneCharCategory(scan: PRegExprChar): boolean;
+function TRegExpr.MatchOneCharCategory(opnd, scan: PRegExprChar): boolean;
+// opnd: points to category operands after OP_*CATEGORY
+// scan: points into regex string
 var
   name0, name1, ch, ch2: REChar;
 begin
   Result := False;
-  ch := scan^;
-  ch2 := (scan + 1)^;
-  GetCharCategory(reginput^, name0, name1);
+  ch := opnd^;
+  ch2 := (opnd + 1)^;
+  GetCharCategory(scan^, name0, name1);
   if (ch <> name0) then Exit;
   if (ch2 <> #0) then
     if (ch2 <> name1) then Exit;
@@ -4746,13 +4761,13 @@ begin
       OP_ANYCATEGORY:
         begin
           if (reginput = fInputEnd) then Exit;
-          if not MatchOneCharCategory(scan + REOpSz + RENextOffSz) then Exit;
+          if not MatchOneCharCategory(scan + REOpSz + RENextOffSz, reginput) then Exit;
           Inc(reginput);
         end;
       OP_NOTCATEGORY:
         begin
           if (reginput = fInputEnd) then Exit;
-          if MatchOneCharCategory(scan + REOpSz + RENextOffSz) then Exit;
+          if MatchOneCharCategory(scan + REOpSz + RENextOffSz, reginput) then Exit;
           Inc(reginput);
         end;
 
