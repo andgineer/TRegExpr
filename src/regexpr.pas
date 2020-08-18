@@ -67,7 +67,7 @@ interface
   {$INLINE ON}
 {$ENDIF}
 // ======== Define options for TRegExpr engine
-{$DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
+{ off $DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
@@ -476,8 +476,10 @@ type
     // match at specific position only, called from ExecPrim
     function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
+    {$IFDEF FastUnicodeData}
     // matches single char by Unicode category \p \P
     function MatchOneCharCategory(opnd, scan: PRegExprChar): boolean;
+    {$ENDIF}
 
     // Exec for stored InputString
     function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean): boolean;
@@ -1025,7 +1027,7 @@ end;
 
 function _FindClosingBracket(P, PEnd: PRegExprChar): PRegExprChar;
 var
-  Len, Level: integer;
+  Level: integer;
 begin
   Result := nil;
   Level := 1;
@@ -2357,8 +2359,10 @@ function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreC
 var
   OpKind: REChar;
   ch, ch2: REChar;
-  name0, name1: REChar;
   N, i: integer;
+  {$IFDEF FastUnicodeData}
+  name0, name1: REChar;
+  {$ENDIF}
 begin
   if AIgnoreCase then
     AChar := _UpperCase(AChar);
@@ -4187,6 +4191,7 @@ begin
         Inc(Result);
         Inc(scan);
       end;
+    {$IFDEF FastUnicodeData}
     OP_ANYCATEGORY:
       while (Result < TheMax) and MatchOneCharCategory(opnd, scan) do
       begin
@@ -4199,6 +4204,7 @@ begin
         Inc(Result);
         Inc(scan);
       end;
+    {$ENDIF}
 
   else
     begin // Oh dear. Called inappropriately.
@@ -4229,6 +4235,7 @@ begin
 end; { of function TRegExpr.regnext
   -------------------------------------------------------------- }
 
+{$IFDEF FastUnicodeData}
 function TRegExpr.MatchOneCharCategory(opnd, scan: PRegExprChar): boolean;
 // opnd: points to opcode operands after OP_*CATEGORY
 // scan: points into InputString
@@ -4244,7 +4251,7 @@ begin
     if (ch2 <> name1) then Exit;
   Result := True;
 end;
-
+{$ENDIF}
 
 function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // recursively matching routine
@@ -4758,6 +4765,7 @@ begin
           Result := True; // Success!
           Exit;
         end;
+      {$IFDEF FastUnicodeData}
       OP_ANYCATEGORY:
         begin
           if (reginput = fInputEnd) then Exit;
@@ -4770,6 +4778,7 @@ begin
           if MatchOneCharCategory(scan + REOpSz + RENextOffSz, reginput) then Exit;
           Inc(reginput);
         end;
+      {$ENDIF}
 
     else
       begin
