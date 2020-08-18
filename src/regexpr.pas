@@ -1834,6 +1834,98 @@ begin
   // bit 7 in value: is word char
   Result := CharCategoryArray[Ord(AChar)] and 128 <> 0;
 end;
+
+(*
+  // Unicode General Category
+  UGC_UppercaseLetter         = 0; Lu
+  UGC_LowercaseLetter         = 1; Ll
+  UGC_TitlecaseLetter         = 2; Lt
+  UGC_ModifierLetter          = 3; Lm
+  UGC_OtherLetter             = 4; Lo
+
+  UGC_NonSpacingMark          = 5; Mn
+  UGC_CombiningMark           = 6; Mc
+  UGC_EnclosingMark           = 7; Me
+
+  UGC_DecimalNumber           = 8; Nd
+  UGC_LetterNumber            = 9; Nl
+  UGC_OtherNumber             = 10; No
+
+  UGC_ConnectPunctuation      = 11; Pc
+  UGC_DashPunctuation         = 12; Pd
+  UGC_OpenPunctuation         = 13; Ps
+  UGC_ClosePunctuation        = 14; Pe
+  UGC_InitialPunctuation      = 15; Pi
+  UGC_FinalPunctuation        = 16; Pf
+  UGC_OtherPunctuation        = 17; Po
+
+  UGC_MathSymbol              = 18; Sm
+  UGC_CurrencySymbol          = 19; Sc
+  UGC_ModifierSymbol          = 20; Sk
+  UGC_OtherSymbol             = 21; So
+
+  UGC_SpaceSeparator          = 22; Zs
+  UGC_LineSeparator           = 23; Zl
+  UGC_ParagraphSeparator      = 24; Zp
+
+  UGC_Control                 = 25; Cc
+  UGC_Format                  = 26; Cf
+  UGC_Surrogate               = 27; Cs
+  UGC_PrivateUse              = 28; Co
+  UGC_Unassigned              = 29; -
+*)
+
+const
+  CategoryNames: array[0..28] of array[0..1] of REChar = (
+    ('L', 'u'),
+    ('L', 'l'),
+    ('L', 't'),
+    ('L', 'm'),
+    ('L', 'o'),
+    ('M', 'n'),
+    ('M', 'c'),
+    ('M', 'e'),
+    ('N', 'd'),
+    ('N', 'l'),
+    ('N', 'o'),
+    ('P', 'c'),
+    ('P', 'd'),
+    ('P', 's'),
+    ('P', 'e'),
+    ('P', 'i'),
+    ('P', 'f'),
+    ('P', 'o'),
+    ('S', 'm'),
+    ('S', 'c'),
+    ('S', 'k'),
+    ('S', 'o'),
+    ('Z', 's'),
+    ('Z', 'l'),
+    ('Z', 'p'),
+    ('C', 'c'),
+    ('C', 'f'),
+    ('C', 's'),
+    ('C', 'o')
+    );
+
+procedure GetCharCategory(AChar: REChar; var Name0, Name1: REChar);
+var
+  N: byte;
+begin
+  // bits 0..6 are category
+  N := CharCategoryArray[Ord(AChar)] and 127;
+  if N <= High(CategoryNames) then
+  begin
+    Name0 := CategoryNames[N][0];
+    Name1 := CategoryNames[N][1];
+  end
+  else
+  begin
+    Name0 := #0;
+    Name1 := #0;
+  end;
+end;
+
 {$ELSE}
 function TRegExpr.IsWordChar(AChar: REChar): boolean;
 begin
