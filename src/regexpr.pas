@@ -67,7 +67,7 @@ interface
   {$INLINE ON}
 {$ENDIF}
 // ======== Define options for TRegExpr engine
-{ off $DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
+{$DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
@@ -795,6 +795,10 @@ const
   OpKind_MetaClass = REChar(2);
   OpKind_Range = REChar(3);
   OpKind_Char = REChar(4);
+  {$IFDEF FastUnicodeData}
+  OpKind_CategoryYes = REChar(5);
+  OpKind_CategoryNo = REChar(6);
+  {$ENDIF}
 
   RegExprAllSet = [0 .. 255];
   RegExprWordSet = [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z'), Ord('0') .. Ord('9'), Ord('_')];
@@ -855,6 +859,26 @@ begin
     Inc(SBegin);
   end;
   Result := nil;
+end;
+
+function IsLetterUpperChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case AChar of
+    'A' .. 'Z':
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
+function IsLetterLowerChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case AChar of
+    'a' .. 'z':
+      Result := True;
+    else
+      Result := False;
+  end;
 end;
 
 function IsIgnoredChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -1453,6 +1477,7 @@ const
   reeComplexBracesNotImplemented = 126;
   reeUnrecognizedModifier = 127;
   reeBadLinePairedSeparator = 128;
+  reeBadUnicodeCategory = 129;
   reeNamedGroupBad = 140;
   reeNamedGroupBadName = 141;
   reeNamedGroupBadRef = 142;
@@ -1533,6 +1558,8 @@ begin
       Result := 'TRegExpr compile: unrecognized modifier';
     reeBadLinePairedSeparator:
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
+    reeBadUnicodeCategory:
+      Result := 'TRegExpr compile: invalid category after \p or \P';
     reeNamedGroupBad:
       Result := 'TRegExpr compile: bad named group';
     reeNamedGroupBadName:
@@ -2255,13 +2282,16 @@ function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreC
 // Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
 // and Data depends on Kind
 var
+  OpKind: REChar;
   ch, ch2: REChar;
+  name0, name1: REChar;
   N, i: integer;
 begin
   if AIgnoreCase then
     AChar := _UpperCase(AChar);
   repeat
-    case ABuffer^ of
+    OpKind := ABuffer^;
+    case OpKind of
       OpKind_End:
         begin
           Result := False;
@@ -2323,6 +2353,24 @@ begin
             end;
           end;
         end;
+
+      {$IFDEF FastUnicodeData}
+      OpKind_CategoryYes,
+      OpKind_CategoryNo:
+        begin
+          Inc(ABuffer);
+          ch := ABuffer^;
+          Inc(ABuffer);
+          ch2 := ABuffer^;
+          Inc(ABuffer);
+          GetCharCategory(AChar, name0, name1);
+          Result := (ch = name0) and ((ch2 = #0) or (ch2 = name1));
+          if OpKind = OpKind_CategoryNo then
+            Result := not Result;
+          if Result then
+            Exit;
+        end;
+      {$ENDIF}
 
       else
         Error(reeBadOpcodeInCharClass);
@@ -2490,6 +2538,16 @@ begin
             end;
           end;
         end;
+
+      {$IFDEF FastUnicodeData}
+      OpKind_CategoryYes,
+      OpKind_CategoryNo:
+        begin
+          // usage of FirstCharSet makes no sense for regex with \p \P
+          ARes := RegExprAllSet;
+          Exit;
+        end;
+      {$ENDIF}
 
       else
         Error(reeBadOpcodeInCharClass);
@@ -3248,6 +3306,55 @@ var
     EmitC(ch2);
   end;
 
+  {$IFDEF FastUnicodeData}
+  procedure FindAndEmitCategory(APositive: boolean);
+  var
+    ch, ch2: REChar;
+  begin
+    AddrOfLen := nil;
+    CanBeRange := False;
+    Inc(regparse);
+
+    ch := regparse^;
+    if IsLetterUpperChar(ch) then
+    begin
+      ch2 := #0;
+    end
+    else
+    if ch = '{' then
+    begin
+      Inc(regparse);
+      ch := regparse^;
+      if not IsLetterUpperChar(ch) then
+        Error(reeBadUnicodeCategory);
+      Inc(regparse);
+      ch2 := regparse^;
+      if IsLetterLowerChar(ch2) then
+      begin
+        Inc(regparse);
+        if regparse^ <> '}' then
+          Error(reeBadUnicodeCategory);
+      end
+      else
+      if ch2 = '}' then
+      begin
+        ch2 := #0;
+      end
+      else
+        Error(reeBadUnicodeCategory);
+    end
+    else
+      Error(reeBadUnicodeCategory);
+
+    if APositive then
+      EmitC(OpKind_CategoryYes)
+    else
+      EmitC(OpKind_CategoryNo);
+    EmitC(ch);
+    EmitC(ch2);
+  end;
+  {$ENDIF}
+
 var
   flags: integer;
   Len: integer;
@@ -3407,6 +3514,14 @@ begin
                 end;
               end
               else
+              {$IFDEF FastUnicodeData}
+              if regparse^ = 'p' then
+                FindAndEmitCategory(True)
+              else
+              if regparse^ = 'P' then
+                FindAndEmitCategory(False)
+              else
+              {$ENDIF}
               begin
                 TempChar := UnQuoteChar(regparse);
                 // False if '-' is last char in []
@@ -5590,6 +5705,7 @@ var
   i, NLen: integer;
   Diff: PtrInt;
   iByte: byte;
+  ch, ch2: REChar;
 begin
   if not IsProgrammOk then
     Exit;
@@ -5655,6 +5771,32 @@ begin
               end;
               Result := Result + ') ';
             end;
+          {$IFDEF FastUnicodeData}
+          OpKind_CategoryYes:
+            begin
+              Inc(s);
+              ch := s^;
+              Inc(s);
+              ch2 := s^;
+              if ch2<>#0 then
+                Result := Result + '\p{' + ch + ch2 + '} '
+              else
+                Result := Result + '\p{' + ch + '} ';
+              Inc(s);
+            end;
+          OpKind_CategoryNo:
+            begin
+              Inc(s);
+              ch := s^;
+              Inc(s);
+              ch2 := s^;
+              if ch2<>#0 then
+                Result := Result + '\P{' + ch + ch2 + '} '
+              else
+                Result := Result + '\P{' + ch + '} ';
+              Inc(s);
+            end;
+          {$ENDIF}
           else
             Error(reeDumpCorruptedOpcode);
         end;
