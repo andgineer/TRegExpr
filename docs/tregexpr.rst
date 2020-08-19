@@ -299,7 +299,7 @@ MatchIndexFromName
 ~~~~~~~~~~~~~~~~~~
 
 Returns group index (1-based) from group name, which is needed for "named groups".
-Returns empty string if no such named group was found.
+Returns -1 if no such named group was found.
 
 LastError
 ~~~~~~~~~
