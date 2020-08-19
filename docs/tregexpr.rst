@@ -157,22 +157,22 @@ Substitute
     function Substitute (const ATemplate : RegExprString) : RegExprString;
 
 Returns ``ATemplate``, where ``$&`` or ``$0`` are replaced with the found match,
-and ``$1``...``$9`` are replaced with found groups 1...9.
+and ``$1`` to ``$9`` are replaced with found groups 1 to 9.
 
-To use in template characters ``$`` or ``\``, escape them with a backslash ``\``, like ``\\`` or ``\$``.
+To use in template the characters ``$`` or ``\``, escape them with a backslash ``\``, like ``\\`` or ``\$``.
 
-====== ===============================
-Symbol Description
-====== ===============================
-``$&`` whole regular expression match
-``$0`` whole regular expression match
-``$n`` regular subexpression ``n`` match
-``\n`` in Windows replaced with ``\r\n``
-``\l`` lowcase one next char
-``\L`` lowercase all chars after that
-``\u`` uppcase one next char
-``\U`` uppercase all chars after that
-====== ===============================
+================ =================================
+Symbol           Description
+================ =================================
+``$&``           whole regular expression match
+``$0``           whole regular expression match
+``$1`` .. ``$9`` contents of numbered group 1 .. 9
+``\n``           in Windows replaced with ``\r\n``
+``\l``           lowercase one next char
+``\L``           lowercase all chars after that
+``\u``           uppercase one next char
+``\U``           uppercase all chars after that
+================ =================================
 
 ::
 
