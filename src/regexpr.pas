@@ -267,6 +267,7 @@ type
     // at the start of the r.e., which can involve a lot of backup). regmustlen is
     // supplied because the test in regexec() needs it and regcomp() is computing
     // it anyway.
+    regNestedCalls: integer;
 
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
@@ -796,9 +797,6 @@ uses
   {$ENDIF}
 {$ENDIF}
 {$ENDIF}
-
-var
-  CountOfCalls: integer = 0;
 
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
@@ -4259,13 +4257,13 @@ var
 begin
   Result := False;
 
-  if CountOfCalls > MaxRegexBackTracking then
+  if regNestedCalls > MaxRegexBackTracking then
     Exit;
-  Inc(CountOfCalls);
+  Inc(regNestedCalls);
   {
   if Application<>nil then
     if Application.MainForm<>nil then
-      Application.MainForm.Caption:= 'n'+IntToStr(CountOfCalls);
+      Application.MainForm.Caption:= 'n'+IntToStr(regNestedCalls);
       }
 
   scan := prog;
@@ -4867,7 +4865,7 @@ var
   Ptr: PRegExprChar;
 begin
   Result := False;
-  CountOfCalls := 0;
+  regNestedCalls := 0;
 
   // Ensure that Match cleared either if optimization tricks or some error
   // will lead to leaving ExecPrim without actual search. That is
