@@ -768,6 +768,12 @@ function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
 function RegExprSubExpressions(const ARegExpr: string; ASubExprs: TStrings;
   AExtendedSyntax: boolean{$IFDEF DefParam} = False{$ENDIF}): integer;
 
+// make safe for "Catastrophic Backtracking"
+// https://www.regular-expressions.info/catastrophic.html
+// value 5K makes bad case working ~1 sec. on CPU Intel i3
+const
+  MaxRegexBackTracking = 5000;
+
 implementation
 
 {$IFDEF FPC}
@@ -790,6 +796,9 @@ uses
   {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+
+var
+  CountOfCalls: integer = 0;
 
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
@@ -4249,6 +4258,16 @@ var
   bound1, bound2: boolean;
 begin
   Result := False;
+
+  if CountOfCalls > MaxRegexBackTracking then
+    Exit;
+  Inc(CountOfCalls);
+  {
+  if Application<>nil then
+    if Application.MainForm<>nil then
+      Application.MainForm.Caption:= 'n'+IntToStr(CountOfCalls);
+      }
+
   scan := prog;
   while scan <> nil do
   begin
@@ -4848,6 +4867,7 @@ var
   Ptr: PRegExprChar;
 begin
   Result := False;
+  CountOfCalls := 0;
 
   // Ensure that Match cleared either if optimization tricks or some error
   // will lead to leaving ExecPrim without actual search. That is
