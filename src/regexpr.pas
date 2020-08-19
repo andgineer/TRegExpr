@@ -1888,11 +1888,11 @@ end;
   UGC_Format                  = 26; Cf
   UGC_Surrogate               = 27; Cs
   UGC_PrivateUse              = 28; Co
-  UGC_Unassigned              = 29; -
+  UGC_Unassigned              = 29; Cn
 *)
 
 const
-  CategoryNames: array[0..28] of array[0..1] of REChar = (
+  CategoryNames: array[0..29] of array[0..1] of REChar = (
     ('L', 'u'),
     ('L', 'l'),
     ('L', 't'),
@@ -1921,7 +1921,8 @@ const
     ('C', 'c'),
     ('C', 'f'),
     ('C', 's'),
-    ('C', 'o')
+    ('C', 'o'),
+    ('C', 'n')
     );
 
 function IsCategoryFirstChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
