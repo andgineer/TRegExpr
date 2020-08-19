@@ -435,6 +435,7 @@ type
       {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     {$IFDEF FastUnicodeData}
+    procedure FindCategoryName(var scan: PRegExprChar; var ch1, ch2: REChar);
     function EmitCategoryMain(APositive: boolean): PRegExprChar;
     {$ENDIF}
 
@@ -2229,6 +2230,63 @@ begin
 end;
 
 {$IFDEF FastUnicodeData}
+procedure TRegExpr.FindCategoryName(var scan: PRegExprChar; var ch1, ch2: REChar);
+// scan: points into regex string after '\p', to find category name
+// ch1, ch2: 2-char name of category; ch2 can be #0
+var
+  ch: REChar;
+  pos1, pos2: PRegExprChar;
+  name: RegExprString;
+  Len: integer;
+begin
+  ch1 := #0;
+  ch2 := #0;
+  ch := scan^;
+  if IsCategoryFirstChar(ch) then
+  begin
+    ch1 := ch;
+    Exit;
+  end;
+  if ch = '{' then
+  begin
+    pos1 := scan;
+    pos2 := pos1;
+    while (pos2 < fRegexEnd) and (pos2^ <> '}') do
+      Inc(pos2);
+    if pos2 >= fRegexEnd then
+      Error(reeIncorrectBraces);
+
+    SetString(name, pos1+1, pos2-pos1-1);
+    Len := Length(name);
+    Inc(scan, Len+1);
+
+    if Len<1 then
+      Error(reeBadUnicodeCategory);
+    if Len>2 then
+      Error(reeBadUnicodeCategory);
+
+    if Len = 1 then
+    begin
+      if not IsCategoryFirstChar(name[1]) then
+        Error(reeBadUnicodeCategory);
+      ch1 := name[1];
+      ch2 := #0;
+      Exit;
+    end;
+
+    if Len = 2 then
+    begin
+      if not IsCategoryChars(name[1], name[2]) then
+        Error(reeBadUnicodeCategory);
+      ch1 := name[1];
+      ch2 := name[2];
+      Exit;
+    end;
+  end
+  else
+    Error(reeBadUnicodeCategory);
+end;
+
 function TRegExpr.EmitCategoryMain(APositive: boolean): PRegExprChar;
 var
   ch, ch2: REChar;
@@ -2236,46 +2294,7 @@ begin
   Inc(regparse);
   if regparse >= fRegexEnd then
     Error(reeBadUnicodeCategory);
-  ch := regparse^;
-  if IsCategoryFirstChar(ch) then
-  begin
-    ch2 := #0;
-  end
-  else
-  if ch = '{' then
-  begin
-    Inc(regparse);
-    if regparse >= fRegexEnd then
-      Error(reeBadUnicodeCategory);
-    ch := regparse^;
-    if IsCategoryFirstChar(ch) then
-    begin
-      Inc(regparse);
-      if regparse >= fRegexEnd then
-        Error(reeBadUnicodeCategory);
-      ch2 := regparse^;
-      if ch2 = '}' then
-      begin
-        ch2 := #0;
-      end
-      else
-      if IsCategoryChars(ch, ch2) then
-      begin
-        Inc(regparse);
-        if regparse >= fRegexEnd then
-          Error(reeBadUnicodeCategory);
-        if regparse^ <> '}' then
-          Error(reeBadUnicodeCategory);
-      end
-      else
-        Error(reeBadUnicodeCategory);
-    end
-    else
-      Error(reeBadUnicodeCategory);
-  end
-  else
-    Error(reeBadUnicodeCategory);
-
+  FindCategoryName(regparse, ch, ch2);
   if APositive then
     Result := EmitNode(OP_ANYCATEGORY)
   else
@@ -3384,45 +3403,14 @@ var
   end;
 
   {$IFDEF FastUnicodeData}
-  procedure FindAndEmitCategory(APositive: boolean);
+  procedure EmitCategoryInCharClass(APositive: boolean);
   var
     ch, ch2: REChar;
   begin
     AddrOfLen := nil;
     CanBeRange := False;
     Inc(regparse);
-
-    ch := regparse^;
-    if IsCategoryFirstChar(ch) then
-    begin
-      ch2 := #0;
-    end
-    else
-    if ch = '{' then
-    begin
-      Inc(regparse);
-      ch := regparse^;
-      if not IsCategoryFirstChar(ch) then
-        Error(reeBadUnicodeCategory);
-      Inc(regparse);
-      ch2 := regparse^;
-      if IsCategoryChars(ch, ch2) then
-      begin
-        Inc(regparse);
-        if regparse^ <> '}' then
-          Error(reeBadUnicodeCategory);
-      end
-      else
-      if ch2 = '}' then
-      begin
-        ch2 := #0;
-      end
-      else
-        Error(reeBadUnicodeCategory);
-    end
-    else
-      Error(reeBadUnicodeCategory);
-
+    FindCategoryName(regparse, ch, ch2);
     if APositive then
       EmitC(OpKind_CategoryYes)
     else
@@ -3593,10 +3581,10 @@ begin
               else
               {$IFDEF FastUnicodeData}
               if regparse^ = 'p' then
-                FindAndEmitCategory(True)
+                EmitCategoryInCharClass(True)
               else
               if regparse^ = 'P' then
-                FindAndEmitCategory(False)
+                EmitCategoryInCharClass(False)
               else
               {$ENDIF}
               begin
