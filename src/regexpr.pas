@@ -2235,9 +2235,8 @@ procedure TRegExpr.FindCategoryName(var scan: PRegExprChar; var ch1, ch2: REChar
 // ch1, ch2: 2-char name of category; ch2 can be #0
 var
   ch: REChar;
-  pos1, pos2: PRegExprChar;
-  name: RegExprString;
-  Len: integer;
+  pos1, pos2, namePtr: PRegExprChar;
+  nameLen: integer;
 begin
   ch1 := #0;
   ch2 := #0;
@@ -2256,30 +2255,30 @@ begin
     if pos2 >= fRegexEnd then
       Error(reeIncorrectBraces);
 
-    SetString(name, pos1+1, pos2-pos1-1);
-    Len := Length(name);
-    Inc(scan, Len+1);
+    namePtr := pos1+1;
+    nameLen := pos2-pos1-1;
+    Inc(scan, nameLen+1);
 
-    if Len<1 then
+    if nameLen<1 then
       Error(reeBadUnicodeCategory);
-    if Len>2 then
+    if nameLen>2 then
       Error(reeBadUnicodeCategory);
 
-    if Len = 1 then
+    if nameLen = 1 then
     begin
-      if not IsCategoryFirstChar(name[1]) then
-        Error(reeBadUnicodeCategory);
-      ch1 := name[1];
+      ch1 := namePtr^;
       ch2 := #0;
+      if not IsCategoryFirstChar(ch1) then
+        Error(reeBadUnicodeCategory);
       Exit;
     end;
 
-    if Len = 2 then
+    if nameLen = 2 then
     begin
-      if not IsCategoryChars(name[1], name[2]) then
+      ch1 := namePtr^;
+      ch2 := (namePtr+1)^;
+      if not IsCategoryChars(ch1, ch2) then
         Error(reeBadUnicodeCategory);
-      ch1 := name[1];
-      ch2 := name[2];
       Exit;
     end;
   end
