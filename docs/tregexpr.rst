@@ -28,12 +28,12 @@ TRegExpr class
 VersionMajor, VersionMinor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Return major and minor version, for example, for ``version 0.944``.
+Return major and minor version of the component.
 
 ::
 
-    VersionMajor = 0
-    VersionMinor = 944
+    VersionMajor = 1
+    VersionMinor = 101
 
 Expression
 ~~~~~~~~~~
@@ -62,7 +62,7 @@ If you try to set unsupported modifier, ``Error`` will be called.
 ModifierI
 ~~~~~~~~~
 
-`Modifier /i, "case-insensitive" <regular_expressions.html#i>`, initialized with
+`Modifier /i, "case-insensitive" <regular_expressions.html#i>`_, initialized with
 RegExprModifierI_ value.
 
 ModifierR
@@ -386,12 +386,12 @@ Global constants
 EscChar
 ~~~~~~~
 
-Escape character, by default backslash "\".
+Escape character, by default backslash ``'\'``.
 
 SubstituteGroupChar
 ~~~~~~~~~~~~~~~~~~~
 
-Char used to prefix numbered groups in Substitute method, by default "$".
+Char used to prefix groups (numbered and named) in Substitute method, by default ``'$'``.
 
 RegExprModifierI
 ~~~~~~~~~~~~~~~~
