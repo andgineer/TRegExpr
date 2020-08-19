@@ -386,7 +386,12 @@ Global constants
 EscChar
 ~~~~~~~
 
-Escape character, by default backslash ``\``.
+Escape character, by default backslash "\".
+
+SubstituteGroupChar
+~~~~~~~~~~~~~~~~~~~
+
+Char used to prefix numbered groups in Substitute method, by default "$".
 
 RegExprModifierI
 ~~~~~~~~~~~~~~~~
