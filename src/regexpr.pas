@@ -800,10 +800,8 @@ const
   OpKind_MetaClass = REChar(2);
   OpKind_Range = REChar(3);
   OpKind_Char = REChar(4);
-  {$IFDEF FastUnicodeData}
   OpKind_CategoryYes = REChar(5);
   OpKind_CategoryNo = REChar(6);
-  {$ENDIF}
 
   RegExprAllSet = [0 .. 255];
   RegExprWordSet = [Ord('a') .. Ord('z'), Ord('A') .. Ord('Z'), Ord('0') .. Ord('9'), Ord('_')];
@@ -5890,7 +5888,6 @@ begin
               end;
               Result := Result + ') ';
             end;
-          {$IFDEF FastUnicodeData}
           OpKind_CategoryYes:
             begin
               Inc(s);
@@ -5915,7 +5912,6 @@ begin
                 Result := Result + '\P{' + ch + '} ';
               Inc(s);
             end;
-          {$ENDIF}
           else
             Error(reeDumpCorruptedOpcode);
         end;
