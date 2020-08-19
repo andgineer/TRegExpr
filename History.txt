@@ -6,11 +6,14 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.105 2020.08.18
+ v. 1.106 2020.08.18
  -=- (+) Support Unicode categories: \pL \p{L} \p{Lu}, and negative
- variant with \P. Both inside char-classes and outside them.
- Allowed all categories: https://www.compart.com/en/unicode/category/
- Requires define FastUnicodeData. By Alexey Torgashin.
+  variant with \P. Both inside char-classes and outside them.
+  Allowed categories: https://www.compart.com/en/unicode/category/
+  Requires define FastUnicodeData.
+ -=- (^) Prevent "Catastrophic Backtracking" by limiting MatchPrim calls.
+  https://www.regular-expressions.info/catastrophic.html
+  By Alexey Torgashin.
 
  v. 1.101 2020.08.05
  -=- (+) Support named groups like in Python: (?P<name>regex), and back-refs
