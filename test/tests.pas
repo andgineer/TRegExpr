@@ -12,7 +12,7 @@ unit tests;
 {$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
 {$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
 
-{off $DEFINE Unicode}
+{$DEFINE Unicode}
 
 interface
 
@@ -36,7 +36,7 @@ type
   private
     RE: TRegExpr;
   protected
-    Procedure RunRETest(aIndex : Integer);
+    Procedure RunRETest(aIndex: Integer);
     procedure CompileRE(AExpression: string);
     procedure IsNotNull(AErrorMessage: string; AObjectToCheck: TObject);
     procedure IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
@@ -103,7 +103,8 @@ type
     Procedure RunTest50;
     Procedure TestGroups;
     {$IFDEF Unicode}
-    procedure TestUnicode1;
+    procedure RunTest51unicode;
+    procedure RunTest52unicode;
     {$ENDIF}
   end;
 
@@ -136,7 +137,7 @@ end;
 
 
 const
-  testCases: array [1..50] of TRegExTest = (
+  testCases: array [1..52] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -536,6 +537,22 @@ const
     substitutionText: '{${bb},${aa}}';
     expectedResult: '<{oppo,fg}>';
     matchStart: 1
+    ),
+    // 51, unicode!
+    (
+    expression: '\pL \p{Lu}{3,} \PL+ \P{Lu}+';
+    inputText: ',,wew ABDEF 345 weUPend';
+    substitutionText: '';
+    expectedResult: 'w ABDEF 345 we';
+    matchStart: 5
+    ),
+    // 52, unicode!
+    (
+    expression: '[\p{Ll}\p{N}%]{5,} [\P{L}]+';
+    inputText: ',,NOPE%400 @_ ok%200 @_end';
+    substitutionText: '';
+    expectedResult: 'ok%200 @_';
+    matchStart: 15
     )
   );
 
@@ -878,6 +895,18 @@ begin
   RunRETest(50);
 end;
 
+{$IFDEF Unicode}
+procedure TTestRegexpr.RunTest51unicode;
+begin
+  RunRETest(51);
+end;
+
+procedure TTestRegexpr.RunTest52unicode;
+begin
+  RunRETest(52);
+end;
+{$ENDIF}
+
 procedure TTestRegexpr.TestGroups;
 var
   R: TRegExpr;
@@ -893,27 +922,6 @@ begin
     FreeAndNil(R);
   end;
 end;
-
-{$IFDEF Unicode}
-procedure TTestRegexpr.TestUnicode1;
-const
-  sTest: string = 'пપ2 ϦϨ3';
-var
-  R: TRegExpr;
-begin
-  R:= TRegExpr.Create;
-  try
-    R.ModifierR:= True;
-    R.Expression:= '\w+ \w+';
-    R.InputString:= UTF8Decode(string(sTest));
-    IsTrue('Unicode find failed', R.ExecPos(1));
-    AreEqual('Unicode pos failed', 1, R.MatchPos[0]);
-    AreEqual('Unicode len failed', 7, R.MatchLen[0]);
-  finally
-    FreeAndNil(R);
-  end;
-end;
-{$ENDIF}
 
 procedure TTestRegexpr.CompileRE(AExpression: string);
 begin
@@ -937,23 +945,23 @@ end;
 procedure TTestRegexpr.RunRETest(aIndex: Integer);
 var
   T: TRegExTest;
-  act : String;
+  S: RegExprString;
 begin
-  T:=testCases[aIndex];
+  T:= testCases[aIndex];
 {$IFDEF DUMPTESTS}
   Writeln('Test: ',TestName);
 {$ENDIF}
   CompileRE(T.Expression);
-  if (T.SubstitutionText <> '') then
+  if T.SubstitutionText<>'' then
   begin
-    act:=RE.Replace(T.InputText,T.SubstitutionText,True);
-    AreEqual('Replace failed', PrintableString(T.ExpectedResult),PrintableString(Act))
+    S:= RE.Replace(T.InputText, T.SubstitutionText, True);
+    AreEqual('Replace failed', PrintableString(T.ExpectedResult), PrintableString(S))
   end
   else
   begin
     RE.Exec(T.inputText);
-    AreEqual('Search position',T.MatchStart,RE.MatchPos[0]);
-    AreEqual('Matched text',PrintableString(T.ExpectedResult),PrintableString(RE.Match[0]));
+    AreEqual('Search position', T.MatchStart, RE.MatchPos[0]);
+    AreEqual('Matched text', PrintableString(T.ExpectedResult), PrintableString(RE.Match[0]));
   end;
 end;
 
