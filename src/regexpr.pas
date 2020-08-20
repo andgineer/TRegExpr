@@ -369,8 +369,8 @@ type
     function CharChecker_NotVertSep(ch: REChar): boolean;
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
-    function DumpCheckerIndexToString(N: byte): string;
-    function DumpCategoryToString(ch, ch2: REChar; Positive: boolean): RegExprString;
+    function DumpCheckerIndex(N: byte): RegExprString;
+    function DumpCategoryChars(ch, ch2: REChar; Positive: boolean): RegExprString;
 
     procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -5833,7 +5833,7 @@ begin
     Result := AChar;
 end;
 
-function TRegExpr.DumpCheckerIndexToString(N: byte): string;
+function TRegExpr.DumpCheckerIndex(N: byte): RegExprString;
 begin
   Result:= '?';
   if N=CheckerIndex_Word then exit('\w');
@@ -5850,7 +5850,7 @@ begin
   if N=CheckerIndex_UpperAZ then exit('AZ');
 end;
 
-function TRegExpr.DumpCategoryToString(ch, ch2: REChar; Positive: boolean): RegExprString;
+function TRegExpr.DumpCategoryChars(ch, ch2: REChar; Positive: boolean): RegExprString;
 const
   S: array[boolean] of REChar = ('P', 'p');
 begin
@@ -5919,7 +5919,7 @@ begin
           OpKind_MetaClass:
             begin
               Inc(s);
-              Result := Result + DumpCheckerIndexToString(byte(s^)) + ' ';
+              Result := Result + DumpCheckerIndex(byte(s^)) + ' ';
               Inc(s);
             end;
           OpKind_Char:
@@ -5941,7 +5941,7 @@ begin
               ch := s^;
               Inc(s);
               ch2 := s^;
-              Result := Result + DumpCategoryToString(ch, ch2, True);
+              Result := Result + DumpCategoryChars(ch, ch2, True);
               Inc(s);
             end;
           OpKind_CategoryNo:
@@ -5950,7 +5950,7 @@ begin
               ch := s^;
               Inc(s);
               ch2 := s^;
-              Result := Result + DumpCategoryToString(ch, ch2, False);
+              Result := Result + DumpCategoryChars(ch, ch2, False);
               Inc(s);
             end;
           else
