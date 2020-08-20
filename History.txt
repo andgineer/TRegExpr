@@ -11,8 +11,6 @@
   variant with \P. Both inside char-classes and outside them.
   Allowed categories: https://www.compart.com/en/unicode/category/
   Requires define FastUnicodeData.
- -=- (^) Prevent "Catastrophic Backtracking" by limiting MatchPrim calls.
-  https://www.regular-expressions.info/catastrophic.html
   By Alexey Torgashin.
 
  v. 1.101 2020.08.05

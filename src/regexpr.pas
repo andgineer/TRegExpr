@@ -4258,15 +4258,12 @@ var
   bound1, bound2: boolean;
 begin
   Result := False;
-
+  {
+  // Alexey: not sure it's ok for long searches in big texts, so disabled
   if regNestedCalls > MaxRegexBackTracking then
     Exit;
   Inc(regNestedCalls);
-  {
-  if Application<>nil then
-    if Application.MainForm<>nil then
-      Application.MainForm.Caption:= 'n'+IntToStr(regNestedCalls);
-      }
+  }
 
   scan := prog;
   while scan <> nil do
