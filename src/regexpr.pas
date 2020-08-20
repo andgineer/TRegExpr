@@ -369,6 +369,7 @@ type
     function CharChecker_NotVertSep(ch: REChar): boolean;
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
+    function DumpCheckerIndexToString(N: byte): string;
 
     procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -5831,6 +5832,23 @@ begin
     Result := AChar;
 end;
 
+function TRegExpr.DumpCheckerIndexToString(N: byte): string;
+begin
+  Result:= '?';
+  if N=CheckerIndex_Word then exit('\w');
+  if N=CheckerIndex_NotWord then exit('\W');
+  if N=CheckerIndex_Digit then exit('\d');
+  if N=CheckerIndex_NotDigit then exit('\D');
+  if N=CheckerIndex_Space then exit('\s');
+  if N=CheckerIndex_NotSpace then exit('\S');
+  if N=CheckerIndex_HorzSep then exit('\h');
+  if N=CheckerIndex_NotHorzSep then exit('\H');
+  if N=CheckerIndex_VertSep then exit('\v');
+  if N=CheckerIndex_NotVertSep then exit('\V');
+  if N=CheckerIndex_LowerAZ then exit('az');
+  if N=CheckerIndex_UpperAZ then exit('AZ');
+end;
+
 function TRegExpr.Dump: RegExprString;
 // dump a regexp in vaguely comprehensible form
 var
@@ -5890,7 +5908,7 @@ begin
           OpKind_MetaClass:
             begin
               Inc(s);
-              Result := Result + '\' + PrintableChar(s^) + ' ';
+              Result := Result + DumpCheckerIndexToString(byte(s^)) + ' ';
               Inc(s);
             end;
           OpKind_Char:
