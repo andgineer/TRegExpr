@@ -775,7 +775,7 @@ function RegExprSubExpressions(const ARegExpr: string; ASubExprs: TStrings;
 // https://www.regular-expressions.info/catastrophic.html
 // value 5K makes bad case working ~1 sec. on CPU Intel i3
 const
-  MaxRegexBackTracking = 5000;
+  MaxRegexBackTracking = 8000;
 
 implementation
 
@@ -4824,6 +4824,7 @@ end;
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean;
 begin
   reginput := APos;
+  regNestedCalls := 0;
   Result := MatchPrim(programm + REOpSz);
   if Result then
   begin
@@ -4867,7 +4868,6 @@ var
   Ptr: PRegExprChar;
 begin
   Result := False;
-  regNestedCalls := 0;
 
   // Ensure that Match cleared either if optimization tricks or some error
   // will lead to leaving ExecPrim without actual search. That is
