@@ -370,6 +370,7 @@ type
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
     function DumpCheckerIndexToString(N: byte): string;
+    function DumpCategoryToString(ch, ch2: REChar; Positive: boolean): RegExprString;
 
     procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -5849,6 +5850,16 @@ begin
   if N=CheckerIndex_UpperAZ then exit('AZ');
 end;
 
+function TRegExpr.DumpCategoryToString(ch, ch2: REChar; Positive: boolean): RegExprString;
+const
+  S: array[boolean] of REChar = ('P', 'p');
+begin
+  Result := '\' + S[Positive] + '{' + ch;
+  if ch2 <> #0 then
+    Result := Result + ch2;
+  Result := Result + '} ';
+end;
+
 function TRegExpr.Dump: RegExprString;
 // dump a regexp in vaguely comprehensible form
 var
@@ -5930,10 +5941,7 @@ begin
               ch := s^;
               Inc(s);
               ch2 := s^;
-              if ch2<>#0 then
-                Result := Result + '\p{' + ch + ch2 + '} '
-              else
-                Result := Result + '\p{' + ch + '} ';
+              Result := Result + DumpCategoryToString(ch, ch2, True);
               Inc(s);
             end;
           OpKind_CategoryNo:
@@ -5942,10 +5950,7 @@ begin
               ch := s^;
               Inc(s);
               ch2 := s^;
-              if ch2<>#0 then
-                Result := Result + '\P{' + ch + ch2 + '} '
-              else
-                Result := Result + '\P{' + ch + '} ';
+              Result := Result + DumpCategoryToString(ch, ch2, False);
               Inc(s);
             end;
           else
