@@ -106,6 +106,8 @@ type
     procedure RunTest51unicode;
     procedure RunTest52unicode;
     {$ENDIF}
+    Procedure RunTest53;
+    Procedure RunTest54;
   end;
 
 implementation
@@ -137,7 +139,7 @@ end;
 
 
 const
-  testCases: array [1..52] of TRegExTest = (
+  testCases: array [1..54] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -553,6 +555,22 @@ const
     substitutionText: '';
     expectedResult: 'ok%200 @_';
     matchStart: 15
+    ),
+    // 53, lookahead aa(?!bb)
+    (
+    expression: 'a+(?!\w)';
+    inputText: 'aabaaddaaazaaa=aau';
+    substitutionText: '';
+    expectedResult: 'aaa';
+    matchStart: 12
+    ),
+    // 54, lookahead aa(?!bb)
+    (
+    expression: '(?:\s+)\w{2,}\.(?!com|org|net)';
+    inputText: '  www.com  www.org  www.ok  www.net';
+    substitutionText: '';
+    expectedResult: '  www.';
+    matchStart: 19
     )
   );
 
@@ -906,6 +924,16 @@ begin
   RunRETest(52);
 end;
 {$ENDIF}
+
+procedure TTestRegexpr.RunTest53;
+begin
+  RunRETest(53);
+end;
+
+procedure TTestRegexpr.RunTest54;
+begin
+  RunRETest(54);
+end;
 
 procedure TTestRegexpr.TestGroups;
 var
