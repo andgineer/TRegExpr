@@ -256,9 +256,10 @@ type
     regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
     regmustlen: integer; // length of regmust string
     regmustString: RegExprString;
-    regLookahead: boolean;
-    regLookaheadGroup: integer;
-    regLookbehind: boolean;
+    regLookahead: boolean; // regex has _some_ lookahead
+    regLookaheadNeg: boolean; // regex has _nagative_ lookahead
+    regLookaheadGroup: integer; // index of group for lookahead
+    regLookbehind: boolean; // regex has positive lookbehind
     // reganchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. Regmust permits fast rejection
     // of lines that cannot possibly match. The regmust tests are costly enough
@@ -839,6 +840,7 @@ type
     gkComment,
     gkModifierString,
     gkLookahead,
+    gkLookaheadNeg,
     gkLookbehind
     );
 
@@ -2740,7 +2742,8 @@ begin
     regsize := 0;
     regcode := @regdummy;
     regLookahead := False;
-    regLookaheadGroup := 0;
+    regLookaheadNeg := False;
+    regLookaheadGroup := -1;
     regLookbehind := False;
 
     EmitC(OP_MAGIC);
@@ -3701,6 +3704,23 @@ begin
 
                 Inc(regparse, 2);
               end;
+            '!':
+              begin
+                // lookahead negative: foo(?!bar)
+                if (regparse + 3 >= fRegexEnd) then
+                  Error(reeLookaheadBad);
+                GrpKind := gkLookaheadNeg;
+                regLookahead := True;
+                regLookaheadNeg := True;
+                regLookaheadGroup := regnpar;
+
+                // check that these brackets are last in regex
+                SavedPtr := _FindClosingBracket(regparse + 1, fRegexEnd);
+                if (SavedPtr <> fRegexEnd - 1) then
+                  Error(reeLookaheadBad);
+
+                Inc(regparse, 2);
+              end;
             '#':
               begin
                 // (?#comment)
@@ -3720,6 +3740,7 @@ begin
           gkNormalGroup,
           gkNonCapturingGroup,
           gkLookahead,
+          gkLookaheadNeg,
           gkLookbehind:
             begin
               // skip this block for one of passes, to not double groups count;
@@ -4533,6 +4554,21 @@ begin
           if not Result // ###0.936
           then
             startp[no] := save;
+          // handle negative lookahead
+          if regLookaheadNeg then
+            if no = regLookaheadGroup then
+            begin
+              Result := not Result;
+              if Result then
+              begin
+                // we need zero length of "lookahead group",
+                // it is later used to adjust the match
+                startp[no] := reginput;
+                endp[no]:= reginput;
+              end
+              else
+                startp[no] := save;
+            end;
           // if Result and (startp [no] = nil)
           // then startp [no] := save;
           // Don't set startp if some later invocation of the same
