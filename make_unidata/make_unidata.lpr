@@ -22,9 +22,16 @@ begin
   Result := (NType <= UGC_OtherNumber);
 end;
 
+function GetCateg(c: word): byte;
+begin
+  Result:= GetProps(c)^.Category;
+end;
+
 var
   i: integer;
   sl: tstringlist;
+  bWord: boolean;
+  byteVal: byte;
 begin
   sl:= tstringlist.create;
 
@@ -32,9 +39,14 @@ begin
   sl.add('interface');
   sl.add('');
   sl.add('const');
-  sl.add('  WordDetectArray: packed array[0..$FFFF] of boolean = (');
+  sl.add('  //bit 7: is word char; bits 0..6: category value from UnicodeData unit');
+  sl.add('  CharCategoryArray: packed array[0..$FFFF] of byte = (');
   for i:= 0 to $FFFF do
-    sl.add('    '+BoolToStr(IsUnicodeWordChar(widechar(i)), true)+IfThen(i<$ffff, ',')+' // $'+IntToHex(i, 4));
+  begin
+    bWord:= IsUnicodeWordChar(widechar(i));
+    byteVal:= (Ord(bWord) shl 7) + GetCateg(i);
+    sl.add('    '+IntToStr(byteVal)+IfThen(i<$ffff, ',')+' // $'+IntToHex(i, 4));
+  end;
   sl.add('  );');
 
   sl.add('');

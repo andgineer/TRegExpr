@@ -28,12 +28,12 @@ TRegExpr class
 VersionMajor, VersionMinor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Return major and minor version, for example, for ``version 0.944``.
+Return major and minor version of the component.
 
 ::
 
-    VersionMajor = 0
-    VersionMinor = 944
+    VersionMajor = 1
+    VersionMinor = 101
 
 Expression
 ~~~~~~~~~~
@@ -62,7 +62,7 @@ If you try to set unsupported modifier, ``Error`` will be called.
 ModifierI
 ~~~~~~~~~
 
-`Modifier /i, "case-insensitive" <regular_expressions.html#i>`, initialized with
+`Modifier /i, "case-insensitive" <regular_expressions.html#i>`_, initialized with
 RegExprModifierI_ value.
 
 ModifierR
@@ -157,22 +157,22 @@ Substitute
     function Substitute (const ATemplate : RegExprString) : RegExprString;
 
 Returns ``ATemplate``, where ``$&`` or ``$0`` are replaced with the found match,
-and ``$1``...``$9`` are replaced with found groups 1...9.
+and ``$1`` to ``$9`` are replaced with found groups 1 to 9.
 
-To use in template characters ``$`` or ``\``, escape them with a backslash ``\``, like ``\\`` or ``\$``.
+To use in template the characters ``$`` or ``\``, escape them with a backslash ``\``, like ``\\`` or ``\$``.
 
-====== ===============================
-Symbol Description
-====== ===============================
-``$&`` whole regular expression match
-``$0`` whole regular expression match
-``$n`` regular subexpression ``n`` match
-``\n`` in Windows replaced with ``\r\n``
-``\l`` lowcase one next char
-``\L`` lowercase all chars after that
-``\u`` uppcase one next char
-``\U`` uppercase all chars after that
-====== ===============================
+================ =================================
+Symbol           Description
+================ =================================
+``$&``           whole regular expression match
+``$0``           whole regular expression match
+``$1`` .. ``$9`` contents of numbered group 1 .. 9
+``\n``           in Windows replaced with ``\r\n``
+``\l``           lowercase one next char
+``\L``           lowercase all chars after that
+``\u``           uppercase one next char
+``\U``           uppercase all chars after that
+================ =================================
 
 ::
 
@@ -299,7 +299,7 @@ MatchIndexFromName
 ~~~~~~~~~~~~~~~~~~
 
 Returns group index (1-based) from group name, which is needed for "named groups".
-Returns empty string if no such named group was found.
+Returns -1 if no such named group was found.
 
 LastError
 ~~~~~~~~~
@@ -386,7 +386,12 @@ Global constants
 EscChar
 ~~~~~~~
 
-Escape character, by default backslash ``\``.
+Escape character, by default backslash ``'\'``.
+
+SubstituteGroupChar
+~~~~~~~~~~~~~~~~~~~
+
+Char used to prefix groups (numbered and named) in Substitute method, by default ``'$'``.
 
 RegExprModifierI
 ~~~~~~~~~~~~~~~~

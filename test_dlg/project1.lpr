@@ -14,8 +14,8 @@ uses
 
 begin
   RequireDerivedFormResource:= True;
-  Application.Title:= 'regex dump';
-  Application.Scaled:= True;
+  Application.Title:='regex dump';
+  Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.Run;
