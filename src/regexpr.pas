@@ -252,23 +252,25 @@ type
     // The "internal use only" fields to pass info from compile
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
-    reganchored: REChar; // is the match anchored (at beginning-of-line only)?
-    regmust: PRegExprChar; // string (pointer into program) that match must include, or nil
-    regmustlen: integer; // length of regmust string
-    regmustString: RegExprString;
+
+    regAnchored: REChar; // is the match anchored (at beginning-of-line only)?
+    // regAnchored permits very fast decisions on suitable starting points
+    // for a match, cutting down the work a lot. regMust permits fast rejection
+    // of lines that cannot possibly match. The regMust tests are costly enough
+    // that regcomp() supplies a regMust only if the r.e. contains something
+    // potentially expensive (at present, the only such thing detected is * or +
+    // at the start of the r.e., which can involve a lot of backup). regMustLen is
+    // supplied because the test in regexec() needs it and regcomp() is computing
+    // it anyway.
+
+    regMust: PRegExprChar; // string (pointer into program) that match must include, or nil
+    regMustLen: integer; // length of regMust string
+    regMustString: RegExprString; // string which must occur in match (got from regMust/regMustLen)
     regLookahead: boolean; // regex has _some_ lookahead
     regLookaheadNeg: boolean; // regex has _nagative_ lookahead
     regLookaheadGroup: integer; // index of group for lookahead
     regLookbehind: boolean; // regex has positive lookbehind
-    // reganchored permits very fast decisions on suitable starting points
-    // for a match, cutting down the work a lot. Regmust permits fast rejection
-    // of lines that cannot possibly match. The regmust tests are costly enough
-    // that regcomp() supplies a regmust only if the r.e. contains something
-    // potentially expensive (at present, the only such thing detected is * or +
-    // at the start of the r.e., which can involve a lot of backup). regmustlen is
-    // supplied because the test in regexec() needs it and regcomp() is computing
-    // it anyway.
-    regNestedCalls: integer;
+    regNestedCalls: integer; // some attempt to prevent 'catastrophic backtracking' but not used
 
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
@@ -276,22 +278,22 @@ type
     {$ENDIF}
 
     // work variables for Exec routines - save stack in recursion
-    reginput: PRegExprChar; // String-input pointer.
-    fInputStart: PRegExprChar; // Pointer to first char of input string.
-    fInputEnd: PRegExprChar; // Pointer to char AFTER last char of input string
-    fRegexStart: PRegExprChar;
-    fRegexEnd: PRegExprChar;
+    reginput: PRegExprChar; // pointer to currently handling char of input string
+    fInputStart: PRegExprChar; // pointer to first char of input string
+    fInputEnd: PRegExprChar; // pointer after last char of input string
+    fRegexStart: PRegExprChar; // pointer to first char of regex
+    fRegexEnd: PRegExprChar; // pointer after last char of regex
 
     // work variables for compiler's routines
-    regparse: PRegExprChar; // Input-scan pointer.
-    regnpar: integer; // Count of () brackets.
-    regdummy: REChar;
-    regcode: PRegExprChar; // Code-emit pointer; @regdummy = don't.
-    regsize: integer; // Total programm size in REChars.
+    regparse: PRegExprChar; // pointer to currently handling char of regex
+    regnpar: integer; // count of () brackets
+    regdummy: REChar; // dummy pointer, used to detect which pass of Compile is going
+    regcode: PRegExprChar; // pointer to emitting opcode; if =@regdummy - opcode is not emitting yet
+    regsize: integer; // total opcode size in REChars
     regExactlyLen: PLongInt;
-    regexpBegin: PRegExprChar; // only for error handling. Contains pointer to beginning of r.e. while compiling
-    regexpIsCompiled: boolean; // true if r.e. successfully compiled
-    fSecondPass: boolean;
+    regexpBegin: PRegExprChar; // only for error handling; pointer to beginning of regex while compiling
+    regexpIsCompiled: boolean; // true if regex was successfully compiled
+    fSecondPass: boolean; // true if the 2nd pass of Compile is going
 
     // programm is essentially a linear encoding
     // of a nondeterministic finite-state machine (aka syntax charts or
@@ -305,15 +307,15 @@ type
     // a literal string; for others, it is a node leading into a sub-FSM. In
     // particular, the operand of a BRANCH node is the first node of the branch.
     // (NB this is *not* a tree structure: the tail of the branch connects
-    // to the thing following the set of BRANCHes.) The opcodes are:
-    programm: PRegExprChar; // Unwarranted chumminess with compiler.
+    // to the thing following the set of BRANCHes.)
+    programm: PRegExprChar; // pointer to opcode
 
-    fExpression: RegExprString; // source of compiled r.e.
+    fExpression: RegExprString; // regex string
     fInputString: RegExprString; // input string
-    fLastError: integer; // see Error, LastError
+    fLastError: integer; // Error call sets code of LastError
     fLastErrorOpcode: TREOp;
 
-    fModifiers: TRegExprModifiers; // modifiers
+    fModifiers: TRegExprModifiers; // regex modifiers
     fCompModifiers: TRegExprModifiers; // compiler's copy of modifiers
     fProgModifiers: TRegExprModifiers; // modifiers values from last programm compilation
 
@@ -333,7 +335,7 @@ type
 
     fSlowChecksSizeMax: integer;
     // use ASlowChecks=True in Exec() only when Length(InputString)<SlowChecksSizeMax
-    // ASlowChecks enables to use regmustString optimization
+    // ASlowChecks enables to use regMustString optimization
 
     {$IFNDEF UniCode}
     fLineSepArray: array[byte] of boolean;
@@ -2771,10 +2773,10 @@ begin
       FirstCharArray[Len] := byte(Len) in FirstCharSet;
     {$ENDIF}
 
-    reganchored := #0;
-    regmust := nil;
-    regmustlen := 0;
-    regmustString := '';
+    regAnchored := #0;
+    regMust := nil;
+    regMustLen := 0;
+    regMustString := '';
 
     scan := programm + REOpSz; // First OP_BRANCH.
     if PREOp(regnext(scan))^ = OP_EEND then
@@ -2783,10 +2785,10 @@ begin
 
       // Starting-point info.
       if PREOp(scan)^ = OP_BOL then
-        Inc(reganchored);
+        Inc(regAnchored);
 
       // If there's something expensive in the r.e., find the longest
-      // literal string that must appear and make it the regmust. Resolve
+      // literal string that must appear and make it the regMust. Resolve
       // ties in favor of later strings, since the regstart check works
       // with the beginning of the r.e. and avoiding duplication
       // strengthens checking. Not a strong reason, but sufficient in the
@@ -2809,10 +2811,10 @@ begin
           end;
           scan := regnext(scan);
         end;
-        regmust := longest;
-        regmustlen := Len;
-        if regmustlen > 1 then // don't use regmust if too short
-          SetString(regmustString, regmust, regmustlen);
+        regMust := longest;
+        regMustLen := Len;
+        if regMustLen > 1 then // don't use regMust if too short
+          SetString(regMustString, regMust, regMustLen);
       end;
     end;
 
@@ -4939,8 +4941,8 @@ begin
 
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
-    if regmustString <> '' then
-      if Pos(regmustString, fInputString) = 0 then Exit;
+    if regMustString <> '' then
+      if Pos(regMustString, fInputString) = 0 then Exit;
 
   {$IFDEF ComplexBraces}
   // no loops started
@@ -4948,7 +4950,7 @@ begin
   {$ENDIF}
 
   // ATryOnce or anchored match (it needs to be tried only once).
-  if ATryOnce or (reganchored <> #0) then
+  if ATryOnce or (regAnchored <> #0) then
   begin
     {$IFDEF UseFirstCharSet}
     {$IFDEF UniCode}
@@ -6040,10 +6042,10 @@ begin
   end; { of while }
 
   // Header fields of interest.
-  if reganchored <> #0 then
+  if regAnchored <> #0 then
     Result := Result + 'Anchored; ';
-  if regmustString <> '' then
-    Result := Result + 'Must have: "' + regmustString + '"; ';
+  if regMustString <> '' then
+    Result := Result + 'Must have: "' + regMustString + '"; ';
 
   {$IFDEF UseFirstCharSet} // ###0.929
   Result := Result + #$d#$a'First charset: ';
@@ -6099,12 +6101,9 @@ end; { of procedure TRegExpr.Error
   PCode persistence:
   FirstCharSet
   programm, regsize
-  reganchored // -> programm
-  regmust, regmustlen // -> programm
+  regAnchored // -> programm
+  regMust, regMustLen // -> programm
   fExprIsCompiled
 *)
-
-// be carefull - placed here code will be always compiled with
-// compiler optimization flag
 
 end.
