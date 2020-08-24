@@ -45,32 +45,29 @@ RegEx      Matches
 Non-Printable Characters (escape-codes)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To represent non-printable character in regular expression you use ``\x..``:
-
-============== ====================================================================================
+============== ==============================================
 RegEx          Matches
-============== ====================================================================================
-``\xnn``       character with hex code ``nn``
-``\x{nnnn}``   character with hex code ``nnnn`` (one byte for plain text and two bytes for Unicode)
+============== ==============================================
+``\xAB``       character with 2-digit hex code ``AB``
+``\x{AB20}``   character with 4-digit hex code ``AB20``
 ``foo\x20bar`` ``foo bar`` (note space in the middle)
-============== ====================================================================================
+============== ==============================================
 
-There are a number of predefined ``escape-codes`` for non-printable characters,
-just like in ``C`` language:
+There are a number of predefined escape-codes for non-printable characters,
+like in C language:
 
-============ ==========================================================================
-RegEx        Matches
-============ ==========================================================================
-``\t``       tab (HT/TAB), same as ``\x09``
-``\n``       newline (NL), same as ``\x0a``
-``\r``       car.return (CR), same as ``\x0d``
-``\f``       form feed (FF), same as ``\x0c``
-``\a``       alarm (BEL), same as ``\x07``
-``\e``       escape (ESC), same as ``\x1b``
-``\cx``      | Control Escape Sequence (``Ctrl-x``)
-             | For example, ``\ci`` matches the target sequence
-             | ``\x09``, because ``ctrl-i`` has the value ``0x09``
-============ ==========================================================================
+=================== ==========================================================================
+RegEx               Matches
+=================== ==========================================================================
+``\t``              tab (HT/TAB), same as ``\x09``
+``\n``              line feed (LF), same as ``\x0a``
+``\r``              carriage return (CR), same as ``\x0d``
+``\f``              form feed (FF), same as ``\x0c``
+``\a``              alarm (BEL), same as ``\x07``
+``\e``              escape (ESC), same as ``\x1b``
+``\cA`` ... ``\cZ`` | chr(0) to chr(25)
+                    | For example, ``\cI`` matches the tab-char
+=================== ==========================================================================
 
 
 .. _escape:
@@ -78,11 +75,8 @@ RegEx        Matches
 Escaping
 ~~~~~~~~
 
-If you want to use character ``\`` by itself, not as part of ``escape-code``, just
-prefix it with ``\``, like that: ``\\``.
-
-In fact you can prefix (or ``escape``) with ``\`` any character that has special meaning
-in regular expressions.
+To represent special regex character (one of ``.+*?|\()[]{}^$``), prefix it with a backslash ``\``.
+The literal backslash must be escaped too: ``\\``. 
 
 =============== ========================================================================
 RegEx           Matches
@@ -99,7 +93,7 @@ Character Classes
 User Character Classes
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Character class is a list of characters inside ``[]``.
+Character class is a list of characters inside square brackets ``[]``.
 The class matches any **one** character listed in this class.
 
 ================= =============================================================
@@ -141,7 +135,7 @@ Predefined Character Classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are a number of predefined character classes that keeps regular expressions
-more compact.
+more compact ("meta-classes"):
 
 ======     ==============================================
 RegEx      Matches
@@ -160,7 +154,7 @@ RegEx      Matches
 ``\V``     not a vertical whitespace
 ======     ==============================================
 
-You may use ``\w``, ``\d`` and ``\s`` within
+You may use all those meta-classes within
 `user character classes <User Character Classes_>`_.
 
 =============== =====================================================================================
