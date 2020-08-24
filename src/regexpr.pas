@@ -4284,7 +4284,7 @@ var
   opnd: PRegExprChar;
   no: integer;
   save: PRegExprChar;
-  save_grp: integer;
+  saveCurrentGrp: integer;
   nextch: REChar;
   BracesMin, Bracesmax: integer;
   // we use integer instead of TREBracesArg for better support */+
@@ -4293,6 +4293,7 @@ var
   SavedLoopStackIdx: integer; // ###0.925
   {$ENDIF}
   bound1, bound2: boolean;
+  checkAtomicGroup: boolean;
 begin
   Result := False;
   {
@@ -4615,6 +4616,8 @@ begin
         end;
       OP_BRANCH:
         begin
+          saveCurrentGrp := regCurrentGrp;
+          checkAtomicGroup := (regCurrentGrp >= 0) and GrpAtomic[regCurrentGrp];
           if (next^ <> OP_BRANCH) // No choice.
           then
             next := scan + REOpSz + RENextOffSz // Avoid recursion
@@ -4622,14 +4625,13 @@ begin
           begin
             repeat
               save := regInput;
-              save_grp := regCurrentGrp;
               Result := MatchPrim(scan + REOpSz + RENextOffSz);
-              regCurrentGrp := save_grp;
+              regCurrentGrp := saveCurrentGrp;
               if Result then
                 Exit;
               // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
-              if regCurrentGrp >= 0 then
-                if GrpAtomic[regCurrentGrp] and GrpAtomicDone[regCurrentGrp] then
+              if checkAtomicGroup then
+                if GrpAtomicDone[regCurrentGrp] then
                   Exit;
               regInput := save;
               scan := regnext(scan);
