@@ -1469,6 +1469,7 @@ const
   reeNoLetterAfterBSlashC = 117;
   reeMetaCharAfterMinusInRange = 118;
   reeRarseAtomInternalDisaster = 119;
+  reeIncorrectSpecialBrackets = 120;
   reeIncorrectBraces = 121;
   reeBRACESArgTooBig = 122;
   reeUnknownOpcodeInFillFirst = 123;
@@ -1543,6 +1544,8 @@ begin
       Result := 'TRegExpr compile: trailing \';
     reeRarseAtomInternalDisaster:
       Result := 'TRegExpr compile: RarseAtom internal disaster';
+    reeIncorrectSpecialBrackets:
+      Result := 'TRegExpr compile: incorrect expression in (?...) brackets';
     reeIncorrectBraces:
       Result := 'TRegExpr compile: incorrect {} braces';
     reeBRACESArgTooBig:
@@ -1556,7 +1559,7 @@ begin
     reeComplexBracesNotImplemented:
       Result := 'TRegExpr compile: if you use braces {} and non-greedy ops *?, +?, ?? for complex cases, enable {$DEFINE ComplexBraces}';
     reeUnrecognizedModifier:
-      Result := 'TRegExpr compile: unrecognized modifier';
+      Result := 'TRegExpr compile: incorrect modifier in (?...)';
     reeBadLinePairedSeparator:
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
     reeBadUnicodeCategory:
@@ -3725,13 +3728,15 @@ begin
                 // (?#comment)
                 GrpKind := gkComment;
                 Inc(regparse, 2);
-              end
-            else
+              end;
+            'a'..'z', '-':
               begin
                 // modifiers string like (?mxr)
                 GrpKind := gkModifierString;
                 Inc(regparse);
-              end;
+              end
+            else
+              Error(reeIncorrectSpecialBrackets);
           end;
         end;
 
