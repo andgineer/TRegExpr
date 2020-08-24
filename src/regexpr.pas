@@ -3443,6 +3443,7 @@ var
   DashForRange: Boolean;
   GrpKind: TREGroupKind;
   GrpName: RegExprString;
+  NextCh: REChar;
 begin
   Result := nil;
   flags := 0;
@@ -3643,7 +3644,9 @@ begin
 
         // A: detect kind of expression in brackets
         if regparse^ = '?' then
-          case (regparse + 1)^ of
+        begin
+          NextCh := (regparse + 1)^;
+          case NextCh of
             ':':
               begin
                 // non-capturing group: (?:regex)
@@ -3693,31 +3696,22 @@ begin
                     Error(reeLookbehindBad);
                 end;
               end;
-            '=':
+            '=', '!':
               begin
-                // lookahead: foo(?=bar)
+                // lookaheads: foo(?=bar) and foo(?!bar)
                 if (regparse + 3 >= fRegexEnd) then
                   Error(reeLookaheadBad);
-                GrpKind := gkLookahead;
                 regLookahead := True;
                 regLookaheadGroup := regnpar;
-
-                // check that these brackets are last in regex
-                SavedPtr := _FindClosingBracket(regparse + 1, fRegexEnd);
-                if (SavedPtr <> fRegexEnd - 1) then
-                  Error(reeLookaheadBad);
-
-                Inc(regparse, 2);
-              end;
-            '!':
-              begin
-                // lookahead negative: foo(?!bar)
-                if (regparse + 3 >= fRegexEnd) then
-                  Error(reeLookaheadBad);
-                GrpKind := gkLookaheadNeg;
-                regLookahead := True;
-                regLookaheadNeg := True;
-                regLookaheadGroup := regnpar;
+                if NextCh = '=' then
+                begin
+                  GrpKind := gkLookahead;
+                end
+                else
+                begin
+                  GrpKind := gkLookaheadNeg;
+                  regLookaheadNeg := True;
+                end;
 
                 // check that these brackets are last in regex
                 SavedPtr := _FindClosingBracket(regparse + 1, fRegexEnd);
@@ -3738,6 +3732,7 @@ begin
                 GrpKind := gkModifierString;
                 Inc(regparse);
               end;
+          end;
         end;
 
         // B: process found kind of brackets
