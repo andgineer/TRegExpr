@@ -285,6 +285,7 @@ type
     fInputEnd: PRegExprChar; // pointer after last char of input string
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
+    regCurrentGrp: integer; // index of group handling by OP_OPEN* opcode
 
     // work variables for compiler's routines
     regparse: PRegExprChar; // pointer to currently handling char of regex
@@ -4283,6 +4284,7 @@ var
   opnd: PRegExprChar;
   no: integer;
   save: PRegExprChar;
+  save_grp: integer;
   nextch: REChar;
   BracesMin, Bracesmax: integer;
   // we use integer instead of TREBracesArg for better support */+
@@ -4561,6 +4563,7 @@ begin
       Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1):
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_OPEN);
+          regCurrentGrp := no;
           // save := regInput;
           save := startp[no]; // ###0.936
           startp[no] := regInput; // ###0.936
@@ -4592,6 +4595,7 @@ begin
       Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_CLOSE);
+          regCurrentGrp := -1;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
           if GrpAtomic[no] then
@@ -4618,11 +4622,14 @@ begin
           begin
             repeat
               save := regInput;
+              save_grp := regCurrentGrp;
               Result := MatchPrim(scan + REOpSz + RENextOffSz);
+              regCurrentGrp := save_grp;
               if Result then
                 Exit;
-              // TODO: if we are inside atomic group, and GrpAtomicDone[index],
-              // then Exit. it's hard to get index of this group.
+              if regCurrentGrp >= 0 then
+                if GrpAtomic[regCurrentGrp] and GrpAtomicDone[regCurrentGrp] then
+                  Exit;
               regInput := save;
               scan := regnext(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
@@ -4877,6 +4884,7 @@ end;
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean;
 begin
   regInput := APos;
+  regCurrentGrp := -1;
   regNestedCalls := 0;
   Result := MatchPrim(programm + REOpSz);
   if Result then
