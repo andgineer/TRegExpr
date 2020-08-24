@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.108 2020.08.23
+ -=- (+) Support negative lookahead: aa(?!bb).
+  By Alexey Torgashin.
+
  v. 1.106 2020.08.18
  -=- (+) Support Unicode categories: \pL \p{L} \p{Lu}, and negative
   variant with \P. Both inside char-classes and outside them.
