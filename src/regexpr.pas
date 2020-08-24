@@ -242,6 +242,8 @@ type
 
     GrpIndexes: array [0 .. NSUBEXP - 1] of integer;
     GrpNames: array [0 .. NSUBEXP - 1] of RegExprString;
+    GrpAtomic: array [0 .. NSUBEXP - 1] of boolean; // filled in Compile
+    GrpAtomicDone: array [0 .. NSUBEXP - 1] of boolean; // used in Exec* only
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -3656,6 +3658,13 @@ begin
                 GrpKind := gkNonCapturingGroup;
                 Inc(regparse, 2);
               end;
+            '>':
+              begin
+                // atomic group: (?>regex)
+                GrpKind := gkNonCapturingGroup;
+                Inc(regparse, 2);
+                GrpAtomic[regnpar] := True;
+              end;
             'P':
               begin
                 if (regparse + 4 >= fRegexEnd) then
@@ -4583,6 +4592,10 @@ begin
       Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_CLOSE);
+          // handle atomic group, mark it as "done"
+          // (we are here because some OP_BRANCH is matched)
+          if GrpAtomic[no] then
+            GrpAtomicDone[no] := True;
           // save := regInput;
           save := endp[no]; // ###0.936
           endp[no] := regInput; // ###0.936
@@ -4608,6 +4621,8 @@ begin
               Result := MatchPrim(scan + REOpSz + RENextOffSz);
               if Result then
                 Exit;
+              // TODO: if we are inside atomic group, and GrpAtomicDone[index],
+              // then Exit. it's hard to get index of this group.
               regInput := save;
               scan := regnext(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
@@ -4880,9 +4895,15 @@ begin
 end;
 
 procedure TRegExpr.ClearMatches;
+var
+  i: integer;
 begin
   FillChar(startp, SizeOf(startp), 0);
   FillChar(endp, SizeOf(endp), 0);
+  for i := 0 to NSUBEXP - 1 do
+  begin
+    GrpAtomicDone[i] := False;
+  end;
 end;
 
 procedure TRegExpr.ClearInternalIndexes;
@@ -4895,6 +4916,8 @@ begin
   begin
     GrpIndexes[i] := -1;
     GrpNames[i] := '';
+    GrpAtomic[i] := False;
+    GrpAtomicDone[i] := False;
   end;
   GrpIndexes[0] := 0;
   GrpCount := 0;
