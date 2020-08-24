@@ -1478,6 +1478,7 @@ const
   reeUnrecognizedModifier = 127;
   reeBadLinePairedSeparator = 128;
   reeBadUnicodeCategory = 129;
+  reeTooSmallCheckersArray = 130;
   reeNamedGroupBad = 140;
   reeNamedGroupBadName = 141;
   reeNamedGroupBadRef = 142;
@@ -1560,6 +1561,8 @@ begin
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
     reeBadUnicodeCategory:
       Result := 'TRegExpr compile: invalid category after \p or \P';
+    reeTooSmallCheckersArray:
+      Result := 'TRegExpr compile: too small CharCheckers array';
     reeNamedGroupBad:
       Result := 'TRegExpr compile: bad named group';
     reeNamedGroupBadName:
@@ -5642,7 +5645,7 @@ var
   begin
     Inc(Cnt);
     if Cnt > High(CharCheckers) then
-      raise Exception.Create('Too small CharCheckers array');
+      Error(reeTooSmallCheckersArray);
     CharCheckers[Cnt - 1] := AChecker;
     Result := Cnt - 1;
   end;
