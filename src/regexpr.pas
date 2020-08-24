@@ -4627,6 +4627,7 @@ begin
               regCurrentGrp := save_grp;
               if Result then
                 Exit;
+              // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
               if regCurrentGrp >= 0 then
                 if GrpAtomic[regCurrentGrp] and GrpAtomicDone[regCurrentGrp] then
                   Exit;
