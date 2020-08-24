@@ -585,6 +585,14 @@ RegEx                            Matches
                                  only ``sorokin.engineer``
 ================================ =======================================
 
+Atomic Groups
+-------------
+
+Syntax is like this: ``(?>expr|expr|...)``.
+
+Atomic groups are special case of non-capturing groups.
+`Description of them. <https://regular-expressions.mobi/atomic.html?wlr=1>`__
+
 Inline Modifiers
 ----------------
 
