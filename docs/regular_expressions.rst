@@ -154,7 +154,7 @@ RegEx      Matches
 ``\V``     not a vertical whitespace
 ======     ==============================================
 
-You may use all those meta-classes within
+You may use all meta-classes, mentioned in the table above, within
 `user character classes <User Character Classes_>`_.
 
 =============== =====================================================================================
