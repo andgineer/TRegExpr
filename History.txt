@@ -6,7 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.114 2020.08.26
+ v. 1.115 2020.08.26
+ -=- (+) Added ifdef UnicodeEx, to support unicode chars >0xFFFF, e.g.
+  emojis. Because ".", "\W", "\S" etc must catch 2 WideChars of 1 emoji.  
  -=- (^) Added ifdef UseLineSep, to enable LineSeparators property.
   When turned off (default) it makes Unicode mode faster matching ".".
   By Alexey Torgashin.
