@@ -54,14 +54,6 @@ interface
 {$EXTENDEDSYNTAX ON}
 {$LONGSTRINGS ON}
 {$OPTIMIZATION ON}
-{$IFDEF D6}
-  {$WARN SYMBOL_PLATFORM OFF} // Suppress .Net warnings
-{$ENDIF}
-{$IFDEF D7}
-  {$WARN UNSAFE_CAST OFF} // Suppress .Net warnings
-  {$WARN UNSAFE_TYPE OFF} // Suppress .Net warnings
-  {$WARN UNSAFE_CODE OFF} // Suppress .Net warnings
-{$ENDIF}
 {$IFDEF FPC}
   {$MODE DELPHI} // Delphi-compatible mode in FreePascal
   {$INLINE ON}

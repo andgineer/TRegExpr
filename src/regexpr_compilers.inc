@@ -352,3 +352,15 @@
   {$DEFINE D3}
   {$DEFINE D2}
 {$ENDIF} // D 10.5
+
+
+{$IFDEF D6}
+  {$WARN SYMBOL_PLATFORM OFF} // Suppress .Net warnings
+{$ENDIF}
+
+{$IFDEF D7}
+  {$WARN UNSAFE_CAST OFF} // Suppress .Net warnings
+  {$WARN UNSAFE_TYPE OFF} // Suppress .Net warnings
+  {$WARN UNSAFE_CODE OFF} // Suppress .Net warnings
+{$ENDIF}
+
