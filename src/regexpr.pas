@@ -67,7 +67,8 @@ interface
   {$INLINE ON}
 {$ENDIF}
 // ======== Define options for TRegExpr engine
-{$DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
+{$DEFINE Unicode} // Use WideChar for characters and UnicodeString/WideString for strings
+{$DEFINE UnicodeEx} // Support Unicode >0xFFFF, e.g. emoji, e.g. "." must find 2 WideChars of 1 emoji
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UseLineSep} // Use LineSeparators property, otherwise fixed line-break chars
@@ -820,7 +821,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 114;
+  REVersionMinor = 115;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1044,6 +1045,32 @@ begin
     end;
     Inc(P);
   until False;
+end;
+
+procedure IncUnicode(var p: PRegExprChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
+// make additional increment if we are on low-surrogate char
+// no need to check p<fInputEnd, at the end of string we have chr(0)
+var
+  ch: REChar;
+begin
+  Inc(p);
+  ch := p^;
+  if (Ord(ch) >= $DC00) and (Ord(ch) <= $DFFF) then
+    Inc(p);
+end;
+
+procedure IncUnicode2(var p: PRegExprChar; var N: integer); {$IFDEF InlineFuncs}inline;{$ENDIF}
+var
+  ch: REChar;
+begin
+  Inc(p);
+  Inc(N);
+  ch := p^;
+  if (Ord(ch) >= $DC00) and (Ord(ch) <= $DFFF) then
+  begin
+    Inc(p);
+    Inc(N);
+  end;
 end;
 
 { ============================================================= }
@@ -4075,8 +4102,14 @@ begin
       begin
         // note - OP_ANYML cannot be proceeded in regrepeat because can skip
         // more than one char at once
+        {$IFDEF UnicodeEx}
+        Result := 0;
+        for ArrayIndex := 1 to TheMax do
+          IncUnicode2(scan, Result);
+        {$ELSE}
         Result := TheMax;
         Inc(scan, Result);
+        {$ENDIF}
       end;
     OP_EXACTLY:
       begin // in opnd can be only ONE char !!!
@@ -4390,7 +4423,11 @@ begin
         begin
           if regInput = fInputEnd then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYML:
         begin // ###0.941
@@ -4400,7 +4437,11 @@ begin
             IsCustomLineSeparator(regInput^)
           then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYDIGIT:
         begin
@@ -4412,7 +4453,11 @@ begin
         begin
           if (regInput = fInputEnd) or IsDigitChar(regInput^) then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYLETTER:
         begin
@@ -4426,7 +4471,11 @@ begin
           if (regInput = fInputEnd) or IsWordChar(regInput^) // ###0.943
           then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYSPACE:
         begin
@@ -4440,7 +4489,11 @@ begin
           if (regInput = fInputEnd) or IsSpaceChar(regInput^) // ###0.943
           then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYVERTSEP:
         begin
@@ -4452,7 +4505,11 @@ begin
         begin
           if (regInput = fInputEnd) or IsVertLineSeparator(regInput^) then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYHORZSEP:
         begin
@@ -4464,7 +4521,11 @@ begin
         begin
           if (regInput = fInputEnd) or IsHorzSeparator(regInput^) then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_EXACTLYCI:
         begin
@@ -4558,28 +4619,44 @@ begin
           if (regInput = fInputEnd) or
             not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYBUT:
         begin
           if (regInput = fInputEnd) or
             FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYOFCI:
         begin
           if (regInput = fInputEnd) or
             not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_ANYBUTCI:
         begin
           if (regInput = fInputEnd) or
             FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
             Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_NOTHING:
         ;
