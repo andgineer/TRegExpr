@@ -2093,7 +2093,7 @@ begin
   end;
 end;
 
-function IsLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function IsVertLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   case AChar of
     #$d, #$a, #$b, #$c:
@@ -4203,13 +4203,13 @@ begin
         Inc(scan);
       end;
     OP_ANYVERTSEP:
-      while (Result < TheMax) and IsLineSeparator(scan^) do
+      while (Result < TheMax) and IsVertLineSeparator(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
     OP_NOTVERTSEP:
-      while (Result < TheMax) and not IsLineSeparator(scan^) do
+      while (Result < TheMax) and not IsVertLineSeparator(scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -4444,13 +4444,13 @@ begin
         end;
       OP_ANYVERTSEP:
         begin
-          if (regInput = fInputEnd) or not IsLineSeparator(regInput^) then
+          if (regInput = fInputEnd) or not IsVertLineSeparator(regInput^) then
             Exit;
           Inc(regInput);
         end;
       OP_NOTVERTSEP:
         begin
-          if (regInput = fInputEnd) or IsLineSeparator(regInput^) then
+          if (regInput = fInputEnd) or IsVertLineSeparator(regInput^) then
             Exit;
           Inc(regInput);
         end;
@@ -5788,12 +5788,12 @@ end;
 
 function TRegExpr.CharChecker_VertSep(ch: REChar): boolean;
 begin
-  Result := IsLineSeparator(ch);
+  Result := IsVertLineSeparator(ch);
 end;
 
 function TRegExpr.CharChecker_NotVertSep(ch: REChar): boolean;
 begin
-  Result := not IsLineSeparator(ch);
+  Result := not IsVertLineSeparator(ch);
 end;
 
 function TRegExpr.CharChecker_HorzSep(ch: REChar): boolean;
