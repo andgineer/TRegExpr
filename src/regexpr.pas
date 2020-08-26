@@ -294,7 +294,6 @@ type
     regCode: PRegExprChar; // pointer to emitting opcode; if =@regdummy - opcode is not emitting yet
     regCodeSize: integer; // total opcode size in REChars
     regExactlyLen: PLongInt; // pointer to length of substring of OP_EXACTLY* inside opcode
-    regStartOnCompile: PRegExprChar; // only for error handling; pointer to beginning of regex while compiling
     regIsCompiled: boolean; // true if regex was successfully compiled
     fSecondPass: boolean; // true if the 2nd pass of Compile is going
 
@@ -1638,7 +1637,6 @@ begin
   fExpression := '';
   fInputString := '';
 
-  regStartOnCompile := nil;
   regIsCompiled := False;
 
   FillChar(fModifiers, SIzeOf(fModifiers), 0);
@@ -2097,7 +2095,7 @@ begin
     Exit;
   end;
 
-  CompileRegExpr(PRegExprChar(fExpression));
+  CompileRegExpr(fRegexStart);
 end; { of procedure TRegExpr.Compile
   -------------------------------------------------------------- }
 
@@ -2720,7 +2718,6 @@ begin
   Result := False; // life too dark
   flags := 0;
   regParse := nil; // for correct error handling
-  regStartOnCompile := ARegExp;
   regExactlyLen := nil;
 
   ClearInternalIndexes;
@@ -2831,8 +2828,7 @@ begin
     begin
       if not Result then
         InvalidateProgramm;
-      regStartOnCompile := nil;
-      regIsCompiled := Result; // ###0.944
+      regIsCompiled := Result;
     end;
   end;
 
@@ -3991,9 +3987,9 @@ end; { of function TRegExpr.ParseAtom
 function TRegExpr.GetCompilerErrorPos: PtrInt;
 begin
   Result := 0;
-  if (regStartOnCompile = nil) or (regParse = nil) then
+  if (fRegexStart = nil) or (regParse = nil) then
     Exit; // not in compiling mode ?
-  Result := regParse - regStartOnCompile;
+  Result := regParse - fRegexStart;
 end; { of function TRegExpr.GetCompilerErrorPos
   -------------------------------------------------------------- }
 
