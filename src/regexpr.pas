@@ -5894,19 +5894,19 @@ end;
 
 function TRegExpr.DumpCheckerIndex(N: byte): RegExprString;
 begin
-  Result:= '?';
-  if N=CheckerIndex_Word then exit('\w');
-  if N=CheckerIndex_NotWord then exit('\W');
-  if N=CheckerIndex_Digit then exit('\d');
-  if N=CheckerIndex_NotDigit then exit('\D');
-  if N=CheckerIndex_Space then exit('\s');
-  if N=CheckerIndex_NotSpace then exit('\S');
-  if N=CheckerIndex_HorzSep then exit('\h');
-  if N=CheckerIndex_NotHorzSep then exit('\H');
-  if N=CheckerIndex_VertSep then exit('\v');
-  if N=CheckerIndex_NotVertSep then exit('\V');
-  if N=CheckerIndex_LowerAZ then exit('az');
-  if N=CheckerIndex_UpperAZ then exit('AZ');
+  Result := '?';
+  if N = CheckerIndex_Word then Exit('\w');
+  if N = CheckerIndex_NotWord then Exit('\W');
+  if N = CheckerIndex_Digit then Exit('\d');
+  if N = CheckerIndex_NotDigit then Exit('\D');
+  if N = CheckerIndex_Space then Exit('\s');
+  if N = CheckerIndex_NotSpace then Exit('\S');
+  if N = CheckerIndex_HorzSep then Exit('\h');
+  if N = CheckerIndex_NotHorzSep then Exit('\H');
+  if N = CheckerIndex_VertSep then Exit('\v');
+  if N = CheckerIndex_NotVertSep then Exit('\V');
+  if N = CheckerIndex_LowerAZ then Exit('az');
+  if N = CheckerIndex_UpperAZ then Exit('AZ');
 end;
 
 function TRegExpr.DumpCategoryChars(ch, ch2: REChar; Positive: boolean): RegExprString;
