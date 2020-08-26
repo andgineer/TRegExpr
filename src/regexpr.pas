@@ -3074,7 +3074,7 @@ var
   op: REChar;
   NonGreedyOp, NonGreedyCh: boolean; // ###0.940
   flags: integer;
-  BracesMin, Bracesmax: TREBracesArg;
+  BracesMin, BracesMax: TREBracesArg;
   p: PRegExprChar;
 begin
   flags := 0;
@@ -3210,29 +3210,29 @@ begin
             Exit;
           end;
           if p = regParse then
-            Bracesmax := MaxBracesArg
+            BracesMax := MaxBracesArg
           else
-            Bracesmax := ParseNumber(p, regParse - 1);
+            BracesMax := ParseNumber(p, regParse - 1);
         end
         else
-          Bracesmax := BracesMin; // {n} == {n,n}
-        if BracesMin > Bracesmax then
+          BracesMax := BracesMin; // {n} == {n,n}
+        if BracesMin > BracesMax then
         begin
           Error(reeBracesMinParamGreaterMax);
           Exit;
         end;
         if BracesMin > 0 then
           flagp := flag_Worst;
-        if Bracesmax > 0 then
+        if BracesMax > 0 then
           flagp := flagp or flag_HasWidth or flag_SpecStart;
 
         NonGreedyCh := (regParse + 1)^ = '?'; // ###0.940
         NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         // ###0.940
         if (flags and flag_Simple) <> 0 then
-          EmitSimpleBraces(BracesMin, Bracesmax, NonGreedyOp)
+          EmitSimpleBraces(BracesMin, BracesMax, NonGreedyOp)
         else
-          EmitComplexBraces(BracesMin, Bracesmax, NonGreedyOp);
+          EmitComplexBraces(BracesMin, BracesMax, NonGreedyOp);
         if NonGreedyCh // ###0.940
         then
           Inc(regParse); // Skip extra char '?'
