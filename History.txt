@@ -7,7 +7,7 @@
                                      (^) - improvement
 
  v. 1.114 2020.08.26
- -=- (^) Added ifdef UseLineSep, which enables LineSeparator property.
+ -=- (^) Added ifdef UseLineSep, to enable LineSeparators property.
   When turned off (default) it makes Unicode mode faster matching ".".
   By Alexey Torgashin.
 
