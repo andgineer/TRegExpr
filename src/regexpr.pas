@@ -54,6 +54,10 @@ interface
 {$EXTENDEDSYNTAX ON}
 {$LONGSTRINGS ON}
 {$OPTIMIZATION ON}
+{$IFDEF FPC}
+  {$MODE DELPHI} // Delphi-compatible mode in FreePascal
+  {$INLINE ON}
+{$ENDIF}
 // ======== Define options for TRegExpr engine
 {$DEFINE Unicode} // Use WideChar for characters and UnicodeString/WideString for strings
 { off $DEFINE UnicodeEx} // Support Unicode >0xFFFF, e.g. emoji, e.g. "." must find 2 WideChars of 1 emoji
