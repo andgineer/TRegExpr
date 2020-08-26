@@ -5121,7 +5121,8 @@ begin
       Error(reeBadLinePairedSeparator);
       Exit;
     end;
-    if not fLinePairedSeparatorAssigned or (AStr[1] <> fLinePairedSeparatorHead)
+    if not fLinePairedSeparatorAssigned
+      or (AStr[1] <> fLinePairedSeparatorHead)
       or (AStr[2] <> fLinePairedSeparatorTail) then
     begin
       fLinePairedSeparatorAssigned := True;
@@ -5130,7 +5131,8 @@ begin
       InvalidateProgramm;
     end;
   end
-  else if Length(AStr) = 0 then
+  else
+  if AStr = '' then
   begin
     if fLinePairedSeparatorAssigned then
     begin
