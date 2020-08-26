@@ -6369,13 +6369,4 @@ begin
 end; { of procedure TRegExpr.Error
   -------------------------------------------------------------- }
 
-(*
-  PCode persistence:
-  FirstCharSet
-  programm, regsize
-  regAnchored // -> programm
-  regMust, regMustLen // -> programm
-  fExprIsCompiled
-*)
-
 end.
