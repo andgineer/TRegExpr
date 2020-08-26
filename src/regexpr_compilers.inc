@@ -364,3 +364,8 @@
   {$WARN UNSAFE_CODE OFF} // Suppress .Net warnings
 {$ENDIF}
 
+{$IFDEF FPC}
+  {$MODE DELPHI} // Delphi-compatible mode in FreePascal
+  {$INLINE ON}
+{$ENDIF}
+
