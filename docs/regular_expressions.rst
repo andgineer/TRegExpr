@@ -49,7 +49,7 @@ Non-Printable Characters (escape-codes)
 RegEx          Matches
 ============== ==============================================
 ``\xAB``       character with 2-digit hex code ``AB``
-``\x{AB20}``   character with 4-digit hex code ``AB20``
+``\x{AB20}``   character with 1..4-digit hex code ``AB20``
 ``foo\x20bar`` ``foo bar`` (note space in the middle)
 ============== ==============================================
 
