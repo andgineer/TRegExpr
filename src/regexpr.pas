@@ -822,7 +822,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 115;
+  REVersionMinor = 116;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1048,6 +1048,7 @@ begin
   until False;
 end;
 
+{$IFDEF UNICODEEX}
 procedure IncUnicode(var p: PRegExprChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
 // make additional increment if we are on low-surrogate char
 // no need to check p<fInputEnd, at the end of string we have chr(0)
@@ -1073,6 +1074,7 @@ begin
     Inc(N);
   end;
 end;
+{$ENDIF}
 
 { ============================================================= }
 { ===================== Global functions ====================== }
@@ -4090,7 +4092,7 @@ var
   //NLen: integer;
   InvChar: REChar; // ###0.931
   GrpStart, GrpEnd: PRegExprChar; // ###0.936
-  ArrayIndex: integer;
+  ArrayIndex, i: integer;
 begin
   Result := 0;
   scan := regInput; // points into InputString
@@ -4104,8 +4106,7 @@ begin
         // note - OP_ANYML cannot be proceeded in regrepeat because can skip
         // more than one char at once
         {$IFDEF UnicodeEx}
-        Result := 0;
-        for ArrayIndex := 1 to TheMax do
+        for i := 1 to TheMax do
           IncUnicode2(scan, Result);
         {$ELSE}
         Result := TheMax;
@@ -4207,11 +4208,22 @@ begin
         Inc(scan);
       end;
     OP_NOTDIGIT:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and not IsDigitChar(scan^) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and not IsDigitChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_ANYLETTER:
       while (Result < TheMax) and IsWordChar(scan^) do // ###0.940
       begin
@@ -4219,11 +4231,22 @@ begin
         Inc(scan);
       end;
     OP_NOTLETTER:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and not IsWordChar(scan^) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and not IsWordChar(scan^) do // ###0.940
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_ANYSPACE:
       while (Result < TheMax) and IsSpaceChar(scan^) do
       begin
@@ -4231,11 +4254,22 @@ begin
         Inc(scan);
       end;
     OP_NOTSPACE:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and not IsSpaceChar(scan^) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and not IsSpaceChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_ANYVERTSEP:
       while (Result < TheMax) and IsVertLineSeparator(scan^) do
       begin
@@ -4243,11 +4277,22 @@ begin
         Inc(scan);
       end;
     OP_NOTVERTSEP:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and not IsVertLineSeparator(scan^) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and not IsVertLineSeparator(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_ANYHORZSEP:
       while (Result < TheMax) and IsHorzSeparator(scan^) do
       begin
@@ -4255,48 +4300,125 @@ begin
         Inc(scan);
       end;
     OP_NOTHORZSEP:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and not IsHorzSeparator(scan^) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and not IsHorzSeparator(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_ANYOF:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and FindInCharClass(opnd, scan^, False) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and FindInCharClass(opnd, scan^, False) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_ANYBUT:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and not FindInCharClass(opnd, scan^, False) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and not FindInCharClass(opnd, scan^, False) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_ANYOFCI:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and FindInCharClass(opnd, scan^, True) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and FindInCharClass(opnd, scan^, True) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_ANYBUTCI:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and not FindInCharClass(opnd, scan^, True) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and not FindInCharClass(opnd, scan^, True) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     {$IFDEF FastUnicodeData}
     OP_ANYCATEGORY:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and MatchOneCharCategory(opnd, scan) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and MatchOneCharCategory(opnd, scan) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     OP_NOTCATEGORY:
+      {$IFDEF UNICODEEX}
+      begin
+        i := 0;
+        while (i < TheMax) and not MatchOneCharCategory(opnd, scan) do
+        begin
+          Inc(i);
+          IncUnicode2(scan, Result);
+        end;
+      end;
+      {$ELSE}
       while (Result < TheMax) and not MatchOneCharCategory(opnd, scan) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+      {$ENDIF}
     {$ENDIF}
 
   else
@@ -4926,13 +5048,21 @@ begin
         begin
           if (regInput = fInputEnd) then Exit;
           if not MatchOneCharCategory(scan + REOpSz + RENextOffSz, regInput) then Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       OP_NOTCATEGORY:
         begin
           if (regInput = fInputEnd) then Exit;
           if MatchOneCharCategory(scan + REOpSz + RENextOffSz, regInput) then Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
           Inc(regInput);
+          {$ENDIF}
         end;
       {$ENDIF}
 
