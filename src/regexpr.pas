@@ -5499,7 +5499,9 @@ begin
             Include(FirstCharSet, $a);
             Include(FirstCharSet, $b);
             Include(FirstCharSet, $c);
+            {$IFDEF Unicode}
             Include(FirstCharSet, $85);
+            {$ENDIF}
             {$ENDIF}
           end;
           Exit;
