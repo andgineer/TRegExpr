@@ -6,6 +6,11 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.114 2020.08.26
+ -=- (^) Added ifdef UseLineSep, which enables LineSeparator property.
+  When turned off (default) it makes Unicode mode faster matching ".".
+  By Alexey Torgashin.
+
  v. 1.111 2020.08.24
  -=- (+) Support atomic groups: (?>...).
  -=- (+) Support negative lookahead: aa(?!bb).
