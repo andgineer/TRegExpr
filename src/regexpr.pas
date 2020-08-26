@@ -70,6 +70,7 @@ interface
 {$DEFINE UniCode} // Use WideChar for characters and UnicodeString/WideString for strings
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
+{ off $DEFINE UseLineSep} // Use LineSeparators property, otherwise fixed line-break chars
 { off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
 {$DEFINE FastUnicodeData} // Use arrays for UpperCase/LowerCase/IsWordChar, they take 320K more memory
 {$DEFINE UseFirstCharSet} // Enable optimization, which finds possible first chars of input string
@@ -161,11 +162,13 @@ const
     + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
   {$ENDIF}
 
+  {$IFDEF UseLineSep}
   // default value for LineSeparators
   RegExprLineSeparators: RegExprString = #$d#$a#$b#$c
     {$IFDEF UniCode}
     + #$2028#$2029#$85
     {$ENDIF};
+  {$ENDIF}
 
   // default value for LinePairedSeparator
   RegExprLinePairedSeparator: RegExprString = #$d#$a;
@@ -328,7 +331,9 @@ type
     fWordChars: RegExprString;
     {$ENDIF}
 
+    {$IFDEF UseLineSep}
     fLineSeparators: RegExprString;
+    {$ENDIF}
     fLinePairedSeparatorAssigned: boolean;
     fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
 
@@ -386,7 +391,9 @@ type
     function IsWordChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsSpaceChar(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function IsCustomLineSeparator(AChar: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    {$IFDEF UseLineSep}
     procedure InitLineSepArray;
+    {$ENDIF}
     procedure FindGroupName(APtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
 
     // Mark programm as having to be [re]compiled
@@ -499,7 +506,9 @@ type
     function GetMatch(Idx: integer): RegExprString;
 
     procedure SetInputString(const AInputString: RegExprString);
+    {$IFDEF UseLineSep}
     procedure SetLineSeparators(const AStr: RegExprString);
+    {$ENDIF}
     procedure SetLinePairedSeparator(const AStr: RegExprString);
     function GetLinePairedSeparator: RegExprString;
 
@@ -687,8 +696,11 @@ type
     // If set to true, in addition to using WordChars, a heuristic to detect unicode word letters is used for \w
     property UseUnicodeWordDetection: boolean read FUseUnicodeWordDetection write FUseUnicodeWordDetection;
     {$ENDIF}
+
+    {$IFDEF UseLineSep}
     // line separators (like \n in Unix)
     property LineSeparators: RegExprString read fLineSeparators write SetLineSeparators; // ###0.941
+    {$ENDIF}
 
     // paired line separator (like \r\n in DOS and Windows).
     // must contain exactly two chars or no chars at all
@@ -808,7 +820,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 112;
+  REVersionMinor = 114;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1654,7 +1666,9 @@ begin
   WordChars := RegExprWordChars; // ###0.929
   {$ENDIF}
 
+  {$IFDEF UseLineSep}
   fLineSeparators := RegExprLineSeparators; // ###0.941
+  {$ENDIF}
   LinePairedSeparator := RegExprLinePairedSeparator; // ###0.941
 
   FUseOsLineEndOnReplace := True;
@@ -1666,7 +1680,10 @@ begin
 
   fSlowChecksSizeMax := 2000;
 
+  {$IFDEF UseLineSep}
   InitLineSepArray;
+  {$ENDIF}
+
   InitCharCheckers;
 end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
@@ -2031,10 +2048,23 @@ end;
 
 function TRegExpr.IsCustomLineSeparator(AChar: REChar): boolean;
 begin
-  {$IFDEF UniCode}
-  Result := Pos(AChar, fLineSeparators) > 0;
+  {$IFDEF UseLineSep}
+    {$IFDEF UniCode}
+    Result := Pos(AChar, fLineSeparators) > 0;
+    {$ELSE}
+    Result := fLineSepArray[byte(AChar)];
+    {$ENDIF}
   {$ELSE}
-  Result := fLineSepArray[byte(AChar)];
+  case AChar of
+    #$d, #$a,
+    {$IFDEF UniCode}
+    #$85, #$2028, #$2029,
+    {$ENDIF}
+    #$b, #$c:
+      Result := True;
+    else
+      Result := False;
+  end;
   {$ENDIF}
 end;
 
@@ -2099,6 +2129,7 @@ begin
 end; { of procedure TRegExpr.Compile
   -------------------------------------------------------------- }
 
+{$IFDEF UseLineSep}
 procedure TRegExpr.InitLineSepArray;
 {$IFNDEF UniCode}
 var
@@ -2111,6 +2142,7 @@ begin
     fLineSepArray[byte(fLineSeparators[i])] := True;
   {$ENDIF}
 end;
+{$ENDIF}
 
 function TRegExpr.IsProgrammOk: boolean;
 begin
@@ -3455,7 +3487,7 @@ begin
     '^':
      begin
       if not fCompModifiers.M or
-        ((fLineSeparators = '') and not fLinePairedSeparatorAssigned) then
+        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fLinePairedSeparatorAssigned) then
         ret := EmitNode(OP_BOL)
       else
         ret := EmitNode(OP_BOLML);
@@ -3464,7 +3496,7 @@ begin
     '$':
      begin
       if not fCompModifiers.M or
-        ((fLineSeparators = '') and not fLinePairedSeparatorAssigned) then
+        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fLinePairedSeparatorAssigned) then
         ret := EmitNode(OP_EOL)
       else
         ret := EmitNode(OP_EOLML);
@@ -5065,6 +5097,7 @@ begin
 end; { of procedure TRegExpr.SetInputString
   -------------------------------------------------------------- }
 
+{$IFDEF UseLineSep}
 procedure TRegExpr.SetLineSeparators(const AStr: RegExprString);
 begin
   if AStr <> fLineSeparators then
@@ -5075,6 +5108,7 @@ begin
   end;
 end; { of procedure TRegExpr.SetLineSeparators
   -------------------------------------------------------------- }
+{$ENDIF}
 
 procedure TRegExpr.SetLinePairedSeparator(const AStr: RegExprString);
 begin
@@ -5456,8 +5490,18 @@ begin
         begin //###0.948 was empty in 0.947, was EXIT in 0.937
           Include(FirstCharSet, 0);
           if ModifierM then
+          begin
+            {$IFDEF UseLineSep}
             for i := 1 to Length(LineSeparators) do
               Include(FirstCharSet, byte(LineSeparators[i]));
+            {$ELSE}
+            Include(FirstCharSet, $d);
+            Include(FirstCharSet, $a);
+            Include(FirstCharSet, $b);
+            Include(FirstCharSet, $c);
+            Include(FirstCharSet, $85);
+            {$ENDIF}
+          end;
           Exit;
         end;
       OP_BOUND,
