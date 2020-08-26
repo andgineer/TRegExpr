@@ -68,7 +68,7 @@ interface
 {$ENDIF}
 // ======== Define options for TRegExpr engine
 {$DEFINE Unicode} // Use WideChar for characters and UnicodeString/WideString for strings
-{$DEFINE UnicodeEx} // Support Unicode >0xFFFF, e.g. emoji, e.g. "." must find 2 WideChars of 1 emoji
+{ off $DEFINE UnicodeEx} // Support Unicode >0xFFFF, e.g. emoji, e.g. "." must find 2 WideChars of 1 emoji
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UseLineSep} // Use LineSeparators property, otherwise fixed line-break chars
@@ -81,6 +81,7 @@ interface
 {$ENDIF}
 {$DEFINE ComplexBraces} // Support braces in complex cases
 {$IFNDEF UniCode}
+  {$UNDEF UnicodeEx}
   {$UNDEF UnicodeWordDetection}
   {$UNDEF FastUnicodeData}
 {$ENDIF}
