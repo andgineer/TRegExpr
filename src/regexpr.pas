@@ -1489,13 +1489,13 @@ const
   reeNamedGroupDupName = 143;
   reeLookaheadBad = 150;
   reeLookbehindBad = 152;
-  // Runtime errors must be >= 1000
+  // Runtime errors must be >= reeFirstRuntimeCode
+  reeFirstRuntimeCode = 1000;
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
   reeMatchPrimCorruptedPointers = 1002;
   reeNoExpression = 1003;
   reeCorruptedProgram = 1004;
-  //reeNoInputStringSpecified = 1005;
   reeOffsetMustBePositive = 1006;
   reeExecNextWithoutExec = 1007;
   reeBadOpcodeInCharClass = 1008;
@@ -1592,8 +1592,6 @@ begin
       Result := 'TRegExpr exec: empty expression';
     reeCorruptedProgram:
       Result := 'TRegExpr exec: corrupted opcode (no magic byte)';
-    //reeNoInputStringSpecified:
-    //  Result := 'TRegExpr exec: empty input string';
     reeOffsetMustBePositive:
       Result := 'TRegExpr exec: offset must be >0';
     reeExecNextWithoutExec:
@@ -5200,17 +5198,10 @@ begin
   // Check programm and input string
   if not IsProgrammOk then
     Exit;
-  {
-  // don't check for empty, user needs to replace regex "\b", zero length
-  if fInputString = '' then
-  begin
-    Error(reeNoInputStringSpecified);
-    Exit;
-  end;
-  }
-  // Prepare for working
+  // Note: don't check for empty fInputString, it's valid case,
+  // e.g. user needs to replace regex "\b" to "_", it's zero match length
   if ATemplate = '' then
-  begin // prevent nil pointers
+  begin
     Result := '';
     Exit;
   end;
@@ -6122,15 +6113,15 @@ begin
   fLastError := AErrorID; // dummy stub - useless because will raise exception
   Msg := ErrorMsg(AErrorID);
   // compilation error ?
-  if AErrorID < 1000 then
+  if AErrorID < reeFirstRuntimeCode then
     Msg := Msg + ' (pos ' + IntToStr(CompilerErrorPos) + ')';
   e := ERegExpr.Create(Msg);
   e.ErrorCode := AErrorID;
   e.CompilerErrorPos := CompilerErrorPos;
   raise e
     {$IFDEF reRealExceptionAddr}
-    at ReturnAddr; // ###0.938
-    {$ENDIF}
+    at ReturnAddr
+    {$ENDIF};
 end; { of procedure TRegExpr.Error
   -------------------------------------------------------------- }
 
