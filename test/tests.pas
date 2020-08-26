@@ -108,6 +108,7 @@ type
     {$ENDIF}
     Procedure RunTest53;
     Procedure RunTest54;
+    Procedure RunTest55;
   end;
 
 implementation
@@ -139,7 +140,7 @@ end;
 
 
 const
-  testCases: array [1..54] of TRegExTest = (
+  testCases: array [1..55] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -571,6 +572,14 @@ const
     substitutionText: '';
     expectedResult: '  www.';
     matchStart: 19
+    ),
+    // 55, atomic groups
+    (
+    expression: 'a(?>bc|b)c';
+    inputText: ' abc abcc abc abcc ';
+    substitutionText: '_';
+    expectedResult: ' abc _ abc _ ';
+    matchStart: 1
     )
   );
 
@@ -933,6 +942,11 @@ end;
 procedure TTestRegexpr.RunTest54;
 begin
   RunRETest(54);
+end;
+
+procedure TTestRegexpr.RunTest55;
+begin
+  RunRETest(55);
 end;
 
 procedure TTestRegexpr.TestGroups;

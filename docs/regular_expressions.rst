@@ -45,32 +45,29 @@ RegEx      Matches
 Non-Printable Characters (escape-codes)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To represent non-printable character in regular expression you use ``\x..``:
-
-============== ====================================================================================
+============== ==============================================
 RegEx          Matches
-============== ====================================================================================
-``\xnn``       character with hex code ``nn``
-``\x{nnnn}``   character with hex code ``nnnn`` (one byte for plain text and two bytes for Unicode)
+============== ==============================================
+``\xAB``       character with 2-digit hex code ``AB``
+``\x{AB20}``   character with 4-digit hex code ``AB20``
 ``foo\x20bar`` ``foo bar`` (note space in the middle)
-============== ====================================================================================
+============== ==============================================
 
-There are a number of predefined ``escape-codes`` for non-printable characters,
-just like in ``C`` language:
+There are a number of predefined escape-codes for non-printable characters,
+like in C language:
 
-============ ==========================================================================
-RegEx        Matches
-============ ==========================================================================
-``\t``       tab (HT/TAB), same as ``\x09``
-``\n``       newline (NL), same as ``\x0a``
-``\r``       car.return (CR), same as ``\x0d``
-``\f``       form feed (FF), same as ``\x0c``
-``\a``       alarm (BEL), same as ``\x07``
-``\e``       escape (ESC), same as ``\x1b``
-``\cx``      | Control Escape Sequence (``Ctrl-x``)
-             | For example, ``\ci`` matches the target sequence
-             | ``\x09``, because ``ctrl-i`` has the value ``0x09``
-============ ==========================================================================
+=================== ==========================================================================
+RegEx               Matches
+=================== ==========================================================================
+``\t``              tab (HT/TAB), same as ``\x09``
+``\n``              line feed (LF), same as ``\x0a``
+``\r``              carriage return (CR), same as ``\x0d``
+``\f``              form feed (FF), same as ``\x0c``
+``\a``              alarm (BEL), same as ``\x07``
+``\e``              escape (ESC), same as ``\x1b``
+``\cA`` ... ``\cZ`` | chr(0) to chr(25)
+                    | For example, ``\cI`` matches the tab-char
+=================== ==========================================================================
 
 
 .. _escape:
@@ -78,11 +75,8 @@ RegEx        Matches
 Escaping
 ~~~~~~~~
 
-If you want to use character ``\`` by itself, not as part of ``escape-code``, just
-prefix it with ``\``, like that: ``\\``.
-
-In fact you can prefix (or ``escape``) with ``\`` any character that has special meaning
-in regular expressions.
+To represent special regex character (one of ``.+*?|\()[]{}^$``), prefix it with a backslash ``\``.
+The literal backslash must be escaped too: ``\\``. 
 
 =============== ========================================================================
 RegEx           Matches
@@ -99,7 +93,7 @@ Character Classes
 User Character Classes
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Character class is a list of characters inside ``[]``.
+Character class is a list of characters inside square brackets ``[]``.
 The class matches any **one** character listed in this class.
 
 ================= =============================================================
@@ -141,7 +135,7 @@ Predefined Character Classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are a number of predefined character classes that keeps regular expressions
-more compact.
+more compact ("meta-classes"):
 
 ======     ==============================================
 RegEx      Matches
@@ -160,7 +154,7 @@ RegEx      Matches
 ``\V``     not a vertical whitespace
 ======     ==============================================
 
-You may use ``\w``, ```\W``, ``\d``, ``\D``, ``\h``, ``\H``, ``\v``, ``\V``, ``\s``, ``\S`` within
+You may use all meta-classes, mentioned in the table above, within
 `user character classes <User Character Classes_>`_.
 
 =============== =====================================================================================
@@ -568,6 +562,8 @@ Currently engine supports only these kinds of assertions:
 
 Positive lookahead assertion: ``foo(?=bar)`` matches "foo" only before "bar", and "bar" is excluded from the match.
 
+Negative lookahead assertion: ``foo(?!bar)`` matches "foo" only if it's not followed by "bar".
+
 Positive lookbehind assertion: ``(?<=foo)bar`` matches "bar" only after "foo", and "foo" is excluded from the match.
 
 Assertions are allowed only at the very beginning and ending of expression. They can contain subexpressions of any complexity (quantifiers are allowed, even groups are allowed). Lookahead and lookbehind can be present both.
@@ -588,6 +584,14 @@ RegEx                            Matches
 ``(?:https?|ftp)://([^/\r\n]+)`` in ``https://sorokin.engineer`` matches
                                  only ``sorokin.engineer``
 ================================ =======================================
+
+Atomic Groups
+-------------
+
+Syntax is like this: ``(?>expr|expr|...)``.
+
+Atomic groups are special case of non-capturing groups.
+`Description of them. <https://regular-expressions.mobi/atomic.html?wlr=1>`__
 
 Inline Modifiers
 ----------------

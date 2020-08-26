@@ -6,8 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.108 2020.08.23
+ v. 1.111 2020.08.24
+ -=- (+) Support atomic groups: (?>...).
  -=- (+) Support negative lookahead: aa(?!bb).
+ -=- (^) Add compile error code for unsupported char after '?' in (?...)
   By Alexey Torgashin.
 
  v. 1.106 2020.08.18

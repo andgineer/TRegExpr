@@ -242,6 +242,8 @@ type
 
     GrpIndexes: array [0 .. NSUBEXP - 1] of integer;
     GrpNames: array [0 .. NSUBEXP - 1] of RegExprString;
+    GrpAtomic: array [0 .. NSUBEXP - 1] of boolean; // filled in Compile
+    GrpAtomicDone: array [0 .. NSUBEXP - 1] of boolean; // used in Exec* only
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -283,6 +285,7 @@ type
     fInputEnd: PRegExprChar; // pointer after last char of input string
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
+    regCurrentGrp: integer; // index of group handling by OP_OPEN* opcode
 
     // work variables for compiler's routines
     regparse: PRegExprChar; // pointer to currently handling char of regex
@@ -806,7 +809,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 108;
+  REVersionMinor = 111;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1469,6 +1472,7 @@ const
   reeNoLetterAfterBSlashC = 117;
   reeMetaCharAfterMinusInRange = 118;
   reeRarseAtomInternalDisaster = 119;
+  reeIncorrectSpecialBrackets = 120;
   reeIncorrectBraces = 121;
   reeBRACESArgTooBig = 122;
   reeUnknownOpcodeInFillFirst = 123;
@@ -1478,6 +1482,7 @@ const
   reeUnrecognizedModifier = 127;
   reeBadLinePairedSeparator = 128;
   reeBadUnicodeCategory = 129;
+  reeTooSmallCheckersArray = 130;
   reeNamedGroupBad = 140;
   reeNamedGroupBadName = 141;
   reeNamedGroupBadRef = 142;
@@ -1542,6 +1547,8 @@ begin
       Result := 'TRegExpr compile: trailing \';
     reeRarseAtomInternalDisaster:
       Result := 'TRegExpr compile: RarseAtom internal disaster';
+    reeIncorrectSpecialBrackets:
+      Result := 'TRegExpr compile: incorrect expression in (?...) brackets';
     reeIncorrectBraces:
       Result := 'TRegExpr compile: incorrect {} braces';
     reeBRACESArgTooBig:
@@ -1555,11 +1562,13 @@ begin
     reeComplexBracesNotImplemented:
       Result := 'TRegExpr compile: if you use braces {} and non-greedy ops *?, +?, ?? for complex cases, enable {$DEFINE ComplexBraces}';
     reeUnrecognizedModifier:
-      Result := 'TRegExpr compile: unrecognized modifier';
+      Result := 'TRegExpr compile: incorrect modifier in (?...)';
     reeBadLinePairedSeparator:
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
     reeBadUnicodeCategory:
       Result := 'TRegExpr compile: invalid category after \p or \P';
+    reeTooSmallCheckersArray:
+      Result := 'TRegExpr compile: too small CharCheckers array';
     reeNamedGroupBad:
       Result := 'TRegExpr compile: bad named group';
     reeNamedGroupBadName:
@@ -3440,6 +3449,7 @@ var
   DashForRange: Boolean;
   GrpKind: TREGroupKind;
   GrpName: RegExprString;
+  NextCh: REChar;
 begin
   Result := nil;
   flags := 0;
@@ -3640,12 +3650,21 @@ begin
 
         // A: detect kind of expression in brackets
         if regparse^ = '?' then
-          case (regparse + 1)^ of
+        begin
+          NextCh := (regparse + 1)^;
+          case NextCh of
             ':':
               begin
                 // non-capturing group: (?:regex)
                 GrpKind := gkNonCapturingGroup;
                 Inc(regparse, 2);
+              end;
+            '>':
+              begin
+                // atomic group: (?>regex)
+                GrpKind := gkNonCapturingGroup;
+                Inc(regparse, 2);
+                GrpAtomic[regnpar] := True;
               end;
             'P':
               begin
@@ -3690,31 +3709,22 @@ begin
                     Error(reeLookbehindBad);
                 end;
               end;
-            '=':
+            '=', '!':
               begin
-                // lookahead: foo(?=bar)
+                // lookaheads: foo(?=bar) and foo(?!bar)
                 if (regparse + 3 >= fRegexEnd) then
                   Error(reeLookaheadBad);
-                GrpKind := gkLookahead;
                 regLookahead := True;
                 regLookaheadGroup := regnpar;
-
-                // check that these brackets are last in regex
-                SavedPtr := _FindClosingBracket(regparse + 1, fRegexEnd);
-                if (SavedPtr <> fRegexEnd - 1) then
-                  Error(reeLookaheadBad);
-
-                Inc(regparse, 2);
-              end;
-            '!':
-              begin
-                // lookahead negative: foo(?!bar)
-                if (regparse + 3 >= fRegexEnd) then
-                  Error(reeLookaheadBad);
-                GrpKind := gkLookaheadNeg;
-                regLookahead := True;
-                regLookaheadNeg := True;
-                regLookaheadGroup := regnpar;
+                if NextCh = '=' then
+                begin
+                  GrpKind := gkLookahead;
+                end
+                else
+                begin
+                  GrpKind := gkLookaheadNeg;
+                  regLookaheadNeg := True;
+                end;
 
                 // check that these brackets are last in regex
                 SavedPtr := _FindClosingBracket(regparse + 1, fRegexEnd);
@@ -3728,13 +3738,16 @@ begin
                 // (?#comment)
                 GrpKind := gkComment;
                 Inc(regparse, 2);
-              end
-            else
+              end;
+            'a'..'z', '-':
               begin
                 // modifiers string like (?mxr)
                 GrpKind := gkModifierString;
                 Inc(regparse);
-              end;
+              end
+            else
+              Error(reeIncorrectSpecialBrackets);
+          end;
         end;
 
         // B: process found kind of brackets
@@ -4271,6 +4284,7 @@ var
   opnd: PRegExprChar;
   no: integer;
   save: PRegExprChar;
+  saveCurrentGrp: integer;
   nextch: REChar;
   BracesMin, Bracesmax: integer;
   // we use integer instead of TREBracesArg for better support */+
@@ -4279,6 +4293,7 @@ var
   SavedLoopStackIdx: integer; // ###0.925
   {$ENDIF}
   bound1, bound2: boolean;
+  checkAtomicGroup: boolean;
 begin
   Result := False;
   {
@@ -4549,6 +4564,7 @@ begin
       Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1):
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_OPEN);
+          regCurrentGrp := no;
           // save := regInput;
           save := startp[no]; // ###0.936
           startp[no] := regInput; // ###0.936
@@ -4580,6 +4596,11 @@ begin
       Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_CLOSE);
+          regCurrentGrp := -1;
+          // handle atomic group, mark it as "done"
+          // (we are here because some OP_BRANCH is matched)
+          if GrpAtomic[no] then
+            GrpAtomicDone[no] := True;
           // save := regInput;
           save := endp[no]; // ###0.936
           endp[no] := regInput; // ###0.936
@@ -4595,6 +4616,8 @@ begin
         end;
       OP_BRANCH:
         begin
+          saveCurrentGrp := regCurrentGrp;
+          checkAtomicGroup := (regCurrentGrp >= 0) and GrpAtomic[regCurrentGrp];
           if (next^ <> OP_BRANCH) // No choice.
           then
             next := scan + REOpSz + RENextOffSz // Avoid recursion
@@ -4603,8 +4626,13 @@ begin
             repeat
               save := regInput;
               Result := MatchPrim(scan + REOpSz + RENextOffSz);
+              regCurrentGrp := saveCurrentGrp;
               if Result then
                 Exit;
+              // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
+              if checkAtomicGroup then
+                if GrpAtomicDone[regCurrentGrp] then
+                  Exit;
               regInput := save;
               scan := regnext(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
@@ -4859,6 +4887,7 @@ end;
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean;
 begin
   regInput := APos;
+  regCurrentGrp := -1;
   regNestedCalls := 0;
   Result := MatchPrim(programm + REOpSz);
   if Result then
@@ -4877,9 +4906,15 @@ begin
 end;
 
 procedure TRegExpr.ClearMatches;
+var
+  i: integer;
 begin
   FillChar(startp, SizeOf(startp), 0);
   FillChar(endp, SizeOf(endp), 0);
+  for i := 0 to NSUBEXP - 1 do
+  begin
+    GrpAtomicDone[i] := False;
+  end;
 end;
 
 procedure TRegExpr.ClearInternalIndexes;
@@ -4892,6 +4927,8 @@ begin
   begin
     GrpIndexes[i] := -1;
     GrpNames[i] := '';
+    GrpAtomic[i] := False;
+    GrpAtomicDone[i] := False;
   end;
   GrpIndexes[0] := 0;
   GrpCount := 0;
@@ -5642,7 +5679,7 @@ var
   begin
     Inc(Cnt);
     if Cnt > High(CharCheckers) then
-      raise Exception.Create('Too small CharCheckers array');
+      Error(reeTooSmallCheckersArray);
     CharCheckers[Cnt - 1] := AChecker;
     Result := Cnt - 1;
   end;
