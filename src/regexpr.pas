@@ -3163,11 +3163,9 @@ begin
           NonGreedyCh := (regParse + 1)^ = '?';
           NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         end;
-        // ###0.940
         if (flags and flag_Simple) = 0 then
         begin
-          if NonGreedyOp // ###0.940
-          then
+          if NonGreedyOp then
             EmitComplexBraces(0, MaxBracesArg, NonGreedyOp)
           else
           begin // Emit x* as (x&|), where & means "self".
@@ -3183,8 +3181,7 @@ begin
           if PossessiveCh then
             TheOp := OP_STAR_POSS
           else
-          if NonGreedyOp // ###0.940
-          then
+          if NonGreedyOp then
             TheOp := OP_STARNG
           else
             TheOp := OP_STAR;
@@ -3207,11 +3204,9 @@ begin
           NonGreedyCh := (regParse + 1)^ = '?';
           NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         end;
-        // ###0.940
         if (flags and flag_Simple) = 0 then
         begin
-          if NonGreedyOp // ###0.940
-          then
+          if NonGreedyOp then
             EmitComplexBraces(1, MaxBracesArg, NonGreedyOp)
           else
           begin // Emit x+ as x(&|), where & means "self".
@@ -3227,8 +3222,7 @@ begin
           if PossessiveCh then
             TheOp := OP_PLUS_POSS
           else
-          if NonGreedyOp // ###0.940
-          then
+          if NonGreedyOp then
             TheOp := OP_PLUSNG
           else
             TheOp := OP_PLUS;
