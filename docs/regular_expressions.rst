@@ -332,6 +332,14 @@ RegEx        Matches
 ``(?-g)b+``  ``b``
 ============ =======
 
+Possessive quantifier
+~~~~~~~~~~~~~~~~~~~~~
+
+This regex feature is described in details here: `<https://regular-expressions.mobi/possessive.html?wlr=1>`__
+
+The syntax is: ``a++``, ``a*+``, ``a{2,3}+``. Currently it's supported only for simple braces, but 
+not for complex braces like ``(foo|bar){3,5}+``. 
+
 The choice
 ----------
 
