@@ -3109,10 +3109,12 @@ var
     {$ENDIF}
   end;
 
-  procedure EmitSimpleBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp: boolean); // ###0.940
+  procedure EmitSimpleBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp, APossessive: boolean);
   begin
-    if ANonGreedyOp // ###0.940
-    then
+    if APossessive then
+      TheOp := OP_BRACES_POSS
+    else
+    if ANonGreedyOp then
       TheOp := OP_BRACESNG
     else
       TheOp := OP_BRACES;
@@ -3244,7 +3246,7 @@ begin
           if (flags and flag_Simple) = 0 then
             EmitComplexBraces(0, 1, NonGreedyOp)
           else
-            EmitSimpleBraces(0, 1, NonGreedyOp);
+            EmitSimpleBraces(0, 1, NonGreedyOp, False{Possessive not yet supported});
         end
         else
         begin // greedy '?'
@@ -3298,15 +3300,27 @@ begin
         if BracesMax > 0 then
           flagp := flagp or flag_HasWidth or flag_SpecStart;
 
-        NonGreedyCh := (regParse + 1)^ = '?'; // ###0.940
-        NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
-        // ###0.940
-        if (flags and flag_Simple) <> 0 then
-          EmitSimpleBraces(BracesMin, BracesMax, NonGreedyOp)
+        nextch := (regParse + 1)^;
+        PossessiveCh := nextch = '+';
+        if PossessiveCh then
+        begin
+          NonGreedyCh := False;
+          NonGreedyOp := False;
+        end
         else
+        begin
+          NonGreedyCh := nextch = '?';
+          NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
+        end;
+        if (flags and flag_Simple) <> 0 then
+          EmitSimpleBraces(BracesMin, BracesMax, NonGreedyOp, PossessiveCh)
+        else
+        begin
+          if PossessiveCh then // possessive after complex braces not yet supported
+            Error(reeNestedSQP);
           EmitComplexBraces(BracesMin, BracesMax, NonGreedyOp);
-        if NonGreedyCh // ###0.940
-        then
+        end;
+        if NonGreedyCh or PossessiveCh then
           Inc(regParse); // Skip extra char '?'
       end; // of case '{'
     // else // here we can't be
@@ -6344,7 +6358,7 @@ begin
       Result := Result + ' \' + IntToStr(Ord(s^));
       Inc(s);
     end;
-    if (op = OP_BRACES) or (op = OP_BRACESNG) then
+    if (op = OP_BRACES) or (op = OP_BRACESNG) or (op = OP_BRACES_POSS) then
     begin // ###0.941
       // show min/max argument of braces operator
       Result := Result + Format('{%d,%d}', [PREBracesArg(AlignToInt(s))^,
