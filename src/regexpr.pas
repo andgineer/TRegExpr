@@ -1520,6 +1520,7 @@ const
   reeBadLinePairedSeparator = 128;
   reeBadUnicodeCategory = 129;
   reeTooSmallCheckersArray = 130;
+  reePossessiveAfterComplexBraces = 131;
   reeNamedGroupBad = 140;
   reeNamedGroupBadName = 141;
   reeNamedGroupBadRef = 142;
@@ -1559,7 +1560,7 @@ begin
     reePlusStarOperandCouldBeEmpty:
       Result := 'TRegExpr compile: *+ operand could be empty';
     reeNestedSQP:
-      Result := 'TRegExpr compile: nested *?+';
+      Result := 'TRegExpr compile: nested quantifier *?+';
     reeBadHexDigit:
       Result := 'TRegExpr compile: bad hex digit';
     reeInvalidRange:
@@ -1606,6 +1607,8 @@ begin
       Result := 'TRegExpr compile: invalid category after \p or \P';
     reeTooSmallCheckersArray:
       Result := 'TRegExpr compile: too small CharCheckers array';
+    reePossessiveAfterComplexBraces:
+      Result := 'TRegExpr compile: possessive + after complex braces: (foo){n,m}+';
     reeNamedGroupBad:
       Result := 'TRegExpr compile: bad named group';
     reeNamedGroupBadName:
@@ -3254,8 +3257,8 @@ begin
         begin // ###0.940  // We emit x?? as x{0,1}?
           if (flags and flag_Simple) = 0 then
           begin
-            if PossessiveCh then // possessive not supported for complex bracess
-              Error(reeNestedSQP);
+            if PossessiveCh then
+              Error(reePossessiveAfterComplexBraces);
             EmitComplexBraces(0, 1, NonGreedyOp);
           end
           else
@@ -3328,8 +3331,8 @@ begin
           EmitSimpleBraces(BracesMin, BracesMax, NonGreedyOp, PossessiveCh)
         else
         begin
-          if PossessiveCh then // possessive after complex braces not yet supported
-            Error(reeNestedSQP);
+          if PossessiveCh then
+            Error(reePossessiveAfterComplexBraces);
           EmitComplexBraces(BracesMin, BracesMax, NonGreedyOp);
         end;
         if NonGreedyCh or PossessiveCh then
