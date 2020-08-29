@@ -814,7 +814,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 116;
+  REVersionMinor = 117;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1441,9 +1441,13 @@ const
   OP_ANYCATEGORY = TREOp(43); // \p{L}
   OP_NOTCATEGORY = TREOp(44); // \P{L}
 
+  OP_STAR_POSS = TReOp(45);
+  OP_PLUS_POSS = TReOp(46);
+  OP_BRACES_POSS = TReOp(47);
+
   // !!! Change OP_OPEN value if you add new opcodes !!!
 
-  OP_OPEN = TREOp(45); // -    Mark this point in input as start of \n
+  OP_OPEN = TREOp(48); // -    Mark this point in input as start of \n
   // OP_OPEN + 1 is \1, etc.
   OP_CLOSE = TREOp(Ord(OP_OPEN) + NSUBEXP);
   // -    Analogous to OP_OPEN.
@@ -3122,7 +3126,7 @@ var
 
 var
   op: REChar;
-  NonGreedyOp, NonGreedyCh: boolean; // ###0.940
+  NonGreedyOp, NonGreedyCh, PossessiveCh: boolean;
   flags: integer;
   BracesMin, BracesMax: TREBracesArg;
   p: PRegExprChar;
@@ -3148,8 +3152,17 @@ begin
     '*':
       begin
         flagp := flag_Worst or flag_SpecStart;
-        NonGreedyCh := (regParse + 1)^ = '?'; // ###0.940
-        NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
+        PossessiveCh := (regParse + 1)^ = '+';
+        if PossessiveCh then
+        begin
+          NonGreedyCh := False;
+          NonGreedyOp := False;
+        end
+        else
+        begin
+          NonGreedyCh := (regParse + 1)^ = '?';
+          NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
+        end;
         // ###0.940
         if (flags and flag_Simple) = 0 then
         begin
@@ -3167,6 +3180,9 @@ begin
         end
         else
         begin // Simple
+          if PossessiveCh then
+            TheOp := OP_STAR_POSS
+          else
           if NonGreedyOp // ###0.940
           then
             TheOp := OP_STARNG
@@ -3174,15 +3190,23 @@ begin
             TheOp := OP_STAR;
           InsertOperator(TheOp, Result, REOpSz + RENextOffSz);
         end;
-        if NonGreedyCh // ###0.940
-        then
+        if NonGreedyCh or PossessiveCh then
           Inc(regParse); // Skip extra char ('?')
       end; { of case '*' }
     '+':
       begin
         flagp := flag_Worst or flag_SpecStart or flag_HasWidth;
-        NonGreedyCh := (regParse + 1)^ = '?'; // ###0.940
-        NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
+        PossessiveCh := (regParse + 1)^ = '+';
+        if PossessiveCh then
+        begin
+          NonGreedyCh := False;
+          NonGreedyOp := False;
+        end
+        else
+        begin
+          NonGreedyCh := (regParse + 1)^ = '?';
+          NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
+        end;
         // ###0.940
         if (flags and flag_Simple) = 0 then
         begin
@@ -3200,6 +3224,9 @@ begin
         end
         else
         begin // Simple
+          if PossessiveCh then
+            TheOp := OP_PLUS_POSS
+          else
           if NonGreedyOp // ###0.940
           then
             TheOp := OP_PLUSNG
@@ -3207,8 +3234,7 @@ begin
             TheOp := OP_PLUS;
           InsertOperator(TheOp, Result, REOpSz + RENextOffSz);
         end;
-        if NonGreedyCh // ###0.940
-        then
+        if NonGreedyCh or PossessiveCh then
           Inc(regParse); // Skip extra char ('?')
       end; { of case '+' }
     '?':
@@ -5030,6 +5056,38 @@ begin
             Exit;
           end;
         end;
+      OP_STAR_POSS, OP_PLUS_POSS, OP_BRACES_POSS:
+        begin
+          // Lookahead to avoid useless match attempts when we know
+          // what character comes next.
+          nextch := #0;
+          if next^ = OP_EXACTLY then
+            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
+          opnd := scan + REOpSz + RENextOffSz;
+          case scan^ of
+            OP_STAR_POSS:
+              begin
+                BracesMin := 0;
+                Bracesmax := MaxInt;
+              end;
+            OP_PLUS_POSS:
+              begin
+                BracesMin := 1;
+                Bracesmax := MaxInt;
+              end;
+            else
+              begin // braces
+                BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
+                Bracesmax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
+                Inc(opnd, 2 * REBracesArgSz);
+              end;
+          end;
+          no := regrepeat(opnd, Bracesmax);
+          if no >= BracesMin then
+            if (nextch = #0) or (regInput^ = nextch) then
+              Result := MatchPrim(next);
+          Exit;
+        end;
       OP_EEND:
         begin
           Result := True; // Success!
@@ -5865,16 +5923,19 @@ begin
         end;
       {$ENDIF}
       OP_STAR,
-      OP_STARNG: //###0.940
+      OP_STARNG,
+      OP_STAR_POSS: //###0.940
         FillFirstCharSet(scan + REOpSz + RENextOffSz);
       OP_PLUS,
-      OP_PLUSNG:
+      OP_PLUSNG,
+      OP_PLUS_POSS:
         begin //###0.940
           FillFirstCharSet(scan + REOpSz + RENextOffSz);
           Exit;
         end;
       OP_BRACES,
-      OP_BRACESNG:
+      OP_BRACESNG,
+      OP_BRACES_POSS:
         begin //###0.940
           opnd := scan + REOpSz + RENextOffSz + REBracesArgSz * 2;
           min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^; // BRACES
@@ -6121,6 +6182,12 @@ begin
       Result := 'PLUSNG'; // ###0.940
     OP_BRACESNG:
       Result := 'BRACESNG'; // ###0.940
+    OP_STAR_POSS:
+      Result := 'STAR_POSS';
+    OP_PLUS_POSS:
+      Result := 'PLUS_POSS';
+    OP_BRACES_POSS:
+      Result := 'BRACES_POSS';
     OP_ANYCATEGORY:
       Result := 'ANYCATEG';
     OP_NOTCATEGORY:
