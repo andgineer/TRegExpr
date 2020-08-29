@@ -3238,15 +3238,28 @@ begin
     '?':
       begin
         flagp := flag_Worst;
-        NonGreedyCh := (regParse + 1)^ = '?'; // ###0.940
-        NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
-        // ###0.940
-        if NonGreedyOp then
+        nextch := (regParse + 1)^;
+        PossessiveCh := nextch = '+';
+        if PossessiveCh then
+        begin
+          NonGreedyCh := False;
+          NonGreedyOp := False;
+        end
+        else
+        begin
+          NonGreedyCh := nextch = '?';
+          NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
+        end;
+        if NonGreedyOp or PossessiveCh then
         begin // ###0.940  // We emit x?? as x{0,1}?
           if (flags and flag_Simple) = 0 then
-            EmitComplexBraces(0, 1, NonGreedyOp)
+          begin
+            if PossessiveCh then // possessive not supported for complex bracess
+              Error(reeNestedSQP);
+            EmitComplexBraces(0, 1, NonGreedyOp);
+          end
           else
-            EmitSimpleBraces(0, 1, NonGreedyOp, False{Possessive not yet supported});
+            EmitSimpleBraces(0, 1, NonGreedyOp, PossessiveCh);
         end
         else
         begin // greedy '?'
@@ -3256,8 +3269,7 @@ begin
           Tail(Result, NextNode);
           OpTail(Result, NextNode);
         end;
-        if NonGreedyCh // ###0.940
-        then
+        if NonGreedyCh or PossessiveCh then
           Inc(regParse); // Skip extra char ('?')
       end; { of case '?' }
     '{':
