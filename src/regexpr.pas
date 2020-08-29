@@ -3125,7 +3125,7 @@ var
   end;
 
 var
-  op: REChar;
+  op, nextch: REChar;
   NonGreedyOp, NonGreedyCh, PossessiveCh: boolean;
   flags: integer;
   BracesMin, BracesMax: TREBracesArg;
@@ -3152,7 +3152,8 @@ begin
     '*':
       begin
         flagp := flag_Worst or flag_SpecStart;
-        PossessiveCh := (regParse + 1)^ = '+';
+        nextch := (regParse + 1)^;
+        PossessiveCh := nextch = '+';
         if PossessiveCh then
         begin
           NonGreedyCh := False;
@@ -3160,7 +3161,7 @@ begin
         end
         else
         begin
-          NonGreedyCh := (regParse + 1)^ = '?';
+          NonGreedyCh := nextch = '?';
           NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         end;
         if (flags and flag_Simple) = 0 then
@@ -3193,7 +3194,8 @@ begin
     '+':
       begin
         flagp := flag_Worst or flag_SpecStart or flag_HasWidth;
-        PossessiveCh := (regParse + 1)^ = '+';
+        nextch := (regParse + 1)^;
+        PossessiveCh := nextch = '+';
         if PossessiveCh then
         begin
           NonGreedyCh := False;
@@ -3201,7 +3203,7 @@ begin
         end
         else
         begin
-          NonGreedyCh := (regParse + 1)^ = '?';
+          NonGreedyCh := nextch = '?';
           NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         end;
         if (flags and flag_Simple) = 0 then
