@@ -335,8 +335,9 @@ RegEx        Matches
 Possessive quantifier
 ~~~~~~~~~~~~~~~~~~~~~
 
-The syntax is: ``a++``, ``a*+``, ``a{2,3}+``. Currently it's supported only for simple braces, but 
-not for complex braces like ``(foo|bar){3,5}+``. 
+The syntax is: ``a++``, ``a*+``, ``a?+``, ``a{2,4}+``.
+Currently it's supported only for simple braces, but 
+not for braces after group like ``(foo|bar){3,5}+``. 
 
 This regex feature is `described here. <https://regular-expressions.mobi/possessive.html?wlr=1>`__
 In short, possessive quantifier speeds up matching in complex cases.
