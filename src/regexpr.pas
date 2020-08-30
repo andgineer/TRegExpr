@@ -3153,10 +3153,7 @@ begin
     flagp := flags;
     Exit;
   end;
-  if ((flags and flag_HasWidth) = 0) and (op <> '?')
-    and (op <> '*') then
-    // Alexey: (op<>'*') was added to allow compiling of regex with recursion:
-    // b(?:m|(?R))*e
+  if ((flags and flag_HasWidth) = 0) and (op <> '?') then
   begin
     Error(reePlusStarOperandCouldBeEmpty);
     Exit;
@@ -3939,6 +3936,8 @@ begin
 
           gkRecursion:
             begin
+              // set flag_HasWidth to allow compiling of such regex: b(?:m|(?R))*e
+              flagp := flagp or flag_HasWidth;
               ret := EmitNode(OP_RECUR);
             end;
         end; // case GrpKind of
