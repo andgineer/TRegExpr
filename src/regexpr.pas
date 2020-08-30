@@ -5162,7 +5162,8 @@ begin
 
       OP_RECUR:
         begin
-          Exit;
+          // call opcode start
+          if not MatchPrim(programm + REOpSz) then Exit;
         end;
 
     else
