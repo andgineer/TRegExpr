@@ -647,6 +647,8 @@ The regex ``a(?R)?z`` matches one or more letters "a" followed by exactly the sa
 
 The main purpose of recursion is to match balanced constructs or nested constructs. The generic regex is ``b(?:m|(?R))*e`` where "b" is what begins the construct, "m" is what can occur in the middle of the construct, and "e" is what occurs at the end of the construct.
 
+If what may appear in the middle of the balanced construct may also appear on its own without the beginning and ending parts then the generic regex is ``b(?R)*e|m``.
+
 Afterword
 ---------
 
