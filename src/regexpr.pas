@@ -1496,7 +1496,7 @@ const
   reeCompParseRegUnmatchedBrackets2 = 104;
   reeCompParseRegJunkOnEnd = 105;
   reePlusStarOperandCouldBeEmpty = 106;
-  reeNestedSQP = 107;
+  reeNestedQuantif = 107;
   reeBadHexDigit = 108;
   reeInvalidRange = 109;
   reeParseAtomTrailingBackSlash = 110;
@@ -1504,7 +1504,7 @@ const
   reeHexCodeAfterBSlashXTooBig = 112;
   reeUnmatchedSqBrackets = 113;
   reeInternalUrp = 114;
-  reeQPSBFollowsNothing = 115;
+  reeQuantifFollowsNothing = 115;
   reeTrailingBackSlash = 116;
   reeNoLetterAfterBSlashC = 117;
   reeMetaCharAfterMinusInRange = 118;
@@ -1559,7 +1559,7 @@ begin
       Result := 'TRegExpr compile: ParseReg: junk at end';
     reePlusStarOperandCouldBeEmpty:
       Result := 'TRegExpr compile: *+ operand could be empty';
-    reeNestedSQP:
+    reeNestedQuantif:
       Result := 'TRegExpr compile: nested quantifier *?+';
     reeBadHexDigit:
       Result := 'TRegExpr compile: bad hex digit';
@@ -1579,8 +1579,8 @@ begin
       Result := 'TRegExpr compile: unmatched []';
     reeInternalUrp:
       Result := 'TRegExpr compile: internal fail on char "|", ")"';
-    reeQPSBFollowsNothing:
-      Result := 'TRegExpr compile: ?+*{ follows nothing';
+    reeQuantifFollowsNothing:
+      Result := 'TRegExpr compile: quantifier ?+*{ follows nothing';
     reeTrailingBackSlash:
       Result := 'TRegExpr compile: trailing \';
     reeRarseAtomInternalDisaster:
@@ -3344,7 +3344,7 @@ begin
   Inc(regParse);
   op := regParse^;
   if (op = '*') or (op = '+') or (op = '?') or (op = '{') then
-    Error(reeNestedSQP);
+    Error(reeNestedQuantif);
 end; { of function TRegExpr.ParsePiece
   -------------------------------------------------------------- }
 
@@ -3902,7 +3902,7 @@ begin
               end;
               Inc(regParse); // skip ')'
               ret := EmitNode(OP_COMMENT); // comment
-              // Error (reeQPSBFollowsNothing);
+              // Error (reeQuantifFollowsNothing);
               // Exit;
             end;
 
@@ -3929,7 +3929,7 @@ begin
 
     '?', '+', '*':
       begin
-        Error(reeQPSBFollowsNothing);
+        Error(reeQuantifFollowsNothing);
         Exit;
       end;
 
