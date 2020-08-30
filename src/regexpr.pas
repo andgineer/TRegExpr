@@ -3153,7 +3153,10 @@ begin
     flagp := flags;
     Exit;
   end;
-  if ((flags and flag_HasWidth) = 0) and (op <> '?') then
+  if ((flags and flag_HasWidth) = 0) and (op <> '?')
+    and (op <> '*') then
+    // Alexey: (op<>'*') was added to allow compiling of regex with recursion:
+    // b(?:m|(?R))*e
   begin
     Error(reePlusStarOperandCouldBeEmpty);
     Exit;

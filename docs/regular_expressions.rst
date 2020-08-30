@@ -638,6 +638,15 @@ Syntax is like this: ``(?#text)``. Text inside brackets is ignored.
 Note that the comment is closed by the nearest ``)``, so there is no way to put a literal ``)`` in
 the comment.
 
+Recursion
+---------
+
+Syntax is ``(?R)``, the alias is ``(?0)``.
+
+The regex ``a(?R)?z`` matches one or more letters "a" followed by exactly the same number of letters "z".
+
+The main purpose of recursion is to match balanced constructs or nested constructs. The generic regex is ``b(?:m|(?R))*e`` where "b" is what begins the construct, "m" is what can occur in the middle of the construct, and "e" is what occurs at the end of the construct.
+
 Afterword
 ---------
 
