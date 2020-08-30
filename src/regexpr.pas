@@ -477,10 +477,10 @@ type
     {$ENDIF}
     { ===================== Matching section =================== }
     // repeatedly match something simple, report how many
-    function regrepeat(p: PRegExprChar; AMax: integer): integer;
+    function FindRepeated(p: PRegExprChar; AMax: integer): integer;
 
     // dig the "next" pointer out of a node
-    function regnext(p: PRegExprChar): PRegExprChar;
+    function regNext(p: PRegExprChar): PRegExprChar;
 
     // recursively matching routine
     function MatchPrim(prog: PRegExprChar): boolean;
@@ -2210,7 +2210,7 @@ begin
   // Find last node.
   scan := p;
   repeat
-    temp := regnext(scan);
+    temp := regNext(scan);
     if temp = nil then
       Break;
     scan := temp;
@@ -2844,7 +2844,7 @@ begin
     regMustString := '';
 
     scan := programm + REOpSz; // First OP_BRANCH.
-    if PREOp(regnext(scan))^ = OP_EEND then
+    if PREOp(regNext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
       scan := scan + REOpSz + RENextOffSz;
 
@@ -2874,7 +2874,7 @@ begin
               Len := LenTemp;
             end;
           end;
-          scan := regnext(scan);
+          scan := regNext(scan);
         end;
         regMust := longest;
         regMustLen := Len;
@@ -2981,7 +2981,7 @@ begin
   while br <> nil do
   begin
     OpTail(br, ender);
-    br := regnext(br);
+    br := regNext(br);
   end;
 
   // Check for proper termination.
@@ -4125,16 +4125,15 @@ begin
   SetString(AName, APtr, P-APtr);
 end;
 
-function TRegExpr.regrepeat(p: PRegExprChar; AMax: integer): integer;
+function TRegExpr.FindRepeated(p: PRegExprChar; AMax: integer): integer;
 // repeatedly match something simple, report how many
 // p: points to current opcode
 var
   scan: PRegExprChar;
   opnd: PRegExprChar;
   TheMax: PtrInt; // PtrInt, gets diff of 2 pointers
-  //NLen: integer;
-  InvChar: REChar; // ###0.931
-  GrpStart, GrpEnd: PRegExprChar; // ###0.936
+  InvChar: REChar;
+  GrpStart, GrpEnd: PRegExprChar;
   ArrayIndex, i: integer;
 begin
   Result := 0;
@@ -4146,7 +4145,7 @@ begin
   case PREOp(p)^ of
     OP_ANY:
       begin
-        // note - OP_ANYML cannot be proceeded in regrepeat because can skip
+        // note - OP_ANYML cannot be proceeded in FindRepeated because can skip
         // more than one char at once
         {$IFDEF UnicodeEx}
         for i := 1 to TheMax do
@@ -4472,10 +4471,10 @@ begin
     end;
   end; { of case }
   regInput := scan;
-end; { of function TRegExpr.regrepeat
+end; { of function TRegExpr.FindRepeated
   -------------------------------------------------------------- }
 
-function TRegExpr.regnext(p: PRegExprChar): PRegExprChar;
+function TRegExpr.regNext(p: PRegExprChar): PRegExprChar;
 // dig the "next" pointer out of a node
 var
   offset: TRENextOff;
@@ -4490,7 +4489,7 @@ begin
     Result := nil
   else
     Result := p + offset;
-end; { of function TRegExpr.regnext
+end; { of function TRegExpr.regNext
   -------------------------------------------------------------- }
 
 function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
@@ -4511,7 +4510,7 @@ var
   save: PRegExprChar;
   saveCurrentGrp: integer;
   nextch: REChar;
-  BracesMin, Bracesmax: integer;
+  BracesMin, BracesMax: integer;
   // we use integer instead of TREBracesArg for better support */+
   {$IFDEF ComplexBraces}
   SavedLoopStack: TRegExprLoopStack; // :(( very bad for recursion
@@ -4531,7 +4530,7 @@ begin
   scan := prog;
   while scan <> nil do
   begin
-    Len := PRENextOff(AlignToPtr(scan + 1))^; // ###0.932 inlined regnext
+    Len := PRENextOff(AlignToPtr(scan + 1))^; // ###0.932 inlined regNext
     if Len = 0 then
       next := nil
     else
@@ -4903,7 +4902,7 @@ begin
                 if GrpAtomicDone[regCurrentGrp] then
                   Exit;
               regInput := save;
-              scan := regnext(scan);
+              scan := regNext(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
             Exit;
           end;
@@ -4936,14 +4935,14 @@ begin
           end;
           opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + 2 * REBracesArgSz))^;
           BracesMin := PREBracesArg(AlignToInt(scan + REOpSz + RENextOffSz))^;
-          Bracesmax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
+          BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
           save := regInput;
           if LoopStack[LoopStackIdx] >= BracesMin then
           begin // Min alredy matched - we can work
             if scan^ = OP_LOOP then
             begin
               // greedy way - first try to max deep of greed ;)
-              if LoopStack[LoopStackIdx] < Bracesmax then
+              if LoopStack[LoopStackIdx] < BracesMax then
               begin
                 Inc(LoopStack[LoopStackIdx]);
                 no := LoopStackIdx;
@@ -4967,7 +4966,7 @@ begin
                 Exit
               else
                 regInput := save; // failed - move next and try again
-              if LoopStack[LoopStackIdx] < Bracesmax then
+              if LoopStack[LoopStackIdx] < BracesMax then
               begin
                 Inc(LoopStack[LoopStackIdx]);
                 no := LoopStackIdx;
@@ -5002,7 +5001,7 @@ begin
           nextch := #0;
           if next^ = OP_EXACTLY then
             nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
-          Bracesmax := MaxInt; // infinite loop for * and + //###0.92
+          BracesMax := MaxInt; // infinite loop for * and + //###0.92
           if (scan^ = OP_STAR) or (scan^ = OP_STARNG) then
             BracesMin := 0 // star
           else if (scan^ = OP_PLUS) or (scan^ = OP_PLUSNG) then
@@ -5010,7 +5009,7 @@ begin
           else
           begin // braces
             BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-            Bracesmax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
+            BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
           end;
           save := regInput;
           opnd := scan + REOpSz + RENextOffSz;
@@ -5020,14 +5019,14 @@ begin
           if (scan^ = OP_PLUSNG) or (scan^ = OP_STARNG) or (scan^ = OP_BRACESNG) then
           begin
             // non-greedy mode
-            Bracesmax := regrepeat(opnd, Bracesmax);
+            BracesMax := FindRepeated(opnd, BracesMax);
             // don't repeat more than BracesMax
             // Now we know real Max limit to move forward (for recursion 'back up')
             // In some cases it can be faster to check only Min positions first,
             // but after that we have to check every position separtely instead
             // of fast scannig in loop.
             no := BracesMin;
-            while no <= Bracesmax do
+            while no <= BracesMax do
             begin
               regInput := save + no;
               // If it could work, try it.
@@ -5054,7 +5053,7 @@ begin
           end
           else
           begin // greedy mode
-            no := regrepeat(opnd, Bracesmax); // don't repeat more than max_cnt
+            no := FindRepeated(opnd, BracesMax); // don't repeat more than max_cnt
             while no >= BracesMin do
             begin
               // If it could work, try it.
@@ -5093,21 +5092,21 @@ begin
             OP_STAR_POSS:
               begin
                 BracesMin := 0;
-                Bracesmax := MaxInt;
+                BracesMax := MaxInt;
               end;
             OP_PLUS_POSS:
               begin
                 BracesMin := 1;
-                Bracesmax := MaxInt;
+                BracesMax := MaxInt;
               end;
             else
               begin // braces
                 BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-                Bracesmax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
+                BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
                 Inc(opnd, 2 * REBracesArgSz);
               end;
           end;
-          no := regrepeat(opnd, Bracesmax);
+          no := FindRepeated(opnd, BracesMax);
           if no >= BracesMin then
             if (nextch = #0) or (regInput^ = nextch) then
               Result := MatchPrim(next);
@@ -5757,7 +5756,7 @@ begin
   scan := prog;
   while scan <> nil do
   begin
-    Next := regnext(scan);
+    Next := regNext(scan);
     Oper := PREOp(scan)^;
     case Oper of
       OP_BSUBEXP,
@@ -5924,7 +5923,7 @@ begin
           begin
             repeat
               FillFirstCharSet(scan + REOpSz + RENextOffSz);
-              scan := regnext(scan);
+              scan := regNext(scan);
             until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
             Exit;
           end;
@@ -6281,7 +6280,7 @@ begin
     op := s^;
     Result := Result + Format('%2d%s', [s - programm, DumpOp(s^)]);
     // Where, what.
-    next := regnext(s);
+    next := regNext(s);
     if next = nil // Next ptr.
     then
       Result := Result + ' (0)'
