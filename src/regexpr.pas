@@ -851,7 +851,8 @@ type
     gkModifierString,
     gkLookahead,
     gkLookaheadNeg,
-    gkLookbehind
+    gkLookbehind,
+    gkRecursion
     );
 
 const
@@ -1445,9 +1446,11 @@ const
   OP_PLUS_POSS = TReOp(46);
   OP_BRACES_POSS = TReOp(47);
 
+  OP_RECUR = TReOp(48);
+
   // !!! Change OP_OPEN value if you add new opcodes !!!
 
-  OP_OPEN = TREOp(48); // -    Mark this point in input as start of \n
+  OP_OPEN = TREOp(49); // -    Mark this point in input as start of \n
   // OP_OPEN + 1 is \1, etc.
   OP_CLOSE = TREOp(Ord(OP_OPEN) + NSUBEXP);
   // -    Analogous to OP_OPEN.
@@ -1521,6 +1524,7 @@ const
   reeBadUnicodeCategory = 129;
   reeTooSmallCheckersArray = 130;
   reePossessiveAfterComplexBraces = 131;
+  reeBadRecursion = 132;
   reeNamedGroupBad = 140;
   reeNamedGroupBadName = 141;
   reeNamedGroupBadRef = 142;
@@ -1609,6 +1613,8 @@ begin
       Result := 'TRegExpr compile: too small CharCheckers array';
     reePossessiveAfterComplexBraces:
       Result := 'TRegExpr compile: possessive + after complex braces: (foo){n,m}+';
+    reeBadRecursion:
+      Result := 'TRegExpr compile: bad recursion (?R)';
     reeNamedGroupBad:
       Result := 'TRegExpr compile: bad named group';
     reeNamedGroupBadName:
@@ -3843,7 +3849,16 @@ begin
                 // modifiers string like (?mxr)
                 GrpKind := gkModifierString;
                 Inc(regParse);
-              end
+              end;
+            'R', '0':
+              begin
+                // recursion (?R), (?0)
+                GrpKind := gkRecursion;
+                Inc(regParse, 2);
+                if regParse^ <> ')' then
+                  Error(reeBadRecursion);
+                Inc(regParse);
+              end;
             else
               Error(reeIncorrectSpecialBrackets);
           end;
@@ -3917,6 +3932,11 @@ begin
               end;
               Inc(regParse); // skip ')'
               ret := EmitNode(OP_COMMENT); // comment
+            end;
+
+          gkRecursion:
+            begin
+              ret := EmitNode(OP_RECUR);
             end;
         end; // case GrpKind of
       end;
@@ -5140,6 +5160,11 @@ begin
         end;
       {$ENDIF}
 
+      OP_RECUR:
+        begin
+          Exit;
+        end;
+
     else
       begin
         Error(reeMatchPrimMemoryCorruption);
@@ -5978,6 +6003,9 @@ begin
           FirstCharSet := RegExprAllSet;
           Exit;
         end;
+      OP_RECUR:
+        begin
+        end
       else
         begin
           fLastErrorOpcode := Oper;
@@ -6216,6 +6244,8 @@ begin
       Result := 'ANYCATEG';
     OP_NOTCATEGORY:
       Result := 'NOTCATEG';
+    OP_RECUR:
+      Result := 'RECURSION';
   else
     Error(reeDumpCorruptedOpcode);
   end; { of case op }
