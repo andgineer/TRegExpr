@@ -6,7 +6,8 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.119 2020.08.30
+ v. 1.121 2020.08.31
+ -=- (+) Added recursion: (?R) with alias (?0).
  -=- (+) Added possessive quantifier: a++, a*+, a?+, a{n,m}+ for simple braces.
   Not for complex braces yet: (expr){n,m}+.
   By Alexey Torgashin.
