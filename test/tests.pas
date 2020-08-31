@@ -629,8 +629,8 @@ const
     ),
     // 61, recursion, balanced set of parentheses - https://regular-expressions.mobi/recurse.html?wlr=1
     (
-    expression: '\((?>[^()]|(?R))*\)';
-    inputText: '__(((dd)dd))__(d)__(((ef)f)f)__';
+    expression: '\((?>[^()]|(?0))*\)';
+    inputText: '__(((dd)dd))__(dd)__(((dd)f)f)__';
     substitutionText: '@';
     expectedResult: '__@__@__@__';
     matchStart: 1
