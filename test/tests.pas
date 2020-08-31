@@ -36,7 +36,7 @@ type
   private
     RE: TRegExpr;
   protected
-    Procedure RunRETest(aIndex: Integer);
+    procedure RunRETest(aIndex: Integer);
     procedure CompileRE(AExpression: string);
     procedure IsNotNull(AErrorMessage: string; AObjectToCheck: TObject);
     procedure IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
@@ -51,64 +51,66 @@ type
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
-    Procedure RunTest1;
-    Procedure RunTest2;
-    Procedure RunTest3;
-    Procedure RunTest4;
-    Procedure RunTest5;
-    Procedure RunTest6;
-    Procedure RunTest7;
-    Procedure RunTest8;
-    Procedure RunTest9;
-    Procedure RunTest10;
-    Procedure RunTest11;
-    Procedure RunTest12;
-    Procedure RunTest13;
-    Procedure RunTest14;
-    Procedure RunTest15;
-    Procedure RunTest16;
-    Procedure RunTest17;
-    Procedure RunTest18;
-    Procedure RunTest19;
-    Procedure RunTest20;
-    Procedure RunTest21;
-    Procedure RunTest22;
-    Procedure RunTest23;
-    Procedure RunTest24;
-    Procedure RunTest25;
-    Procedure RunTest26;
-    Procedure RunTest27;
-    Procedure RunTest28;
-    Procedure RunTest29;
-    Procedure RunTest30;
-    Procedure RunTest31;
-    Procedure RunTest32;
-    Procedure RunTest33;
-    Procedure RunTest34;
-    Procedure RunTest35;
-    Procedure RunTest36;
-    Procedure RunTest37;
-    Procedure RunTest38;
-    Procedure RunTest39;
-    Procedure RunTest40;
-    Procedure RunTest41;
-    Procedure RunTest42;
-    Procedure RunTest43;
-    Procedure RunTest44;
-    Procedure RunTest45;
-    Procedure RunTest46;
-    Procedure RunTest47;
-    Procedure RunTest48;
-    Procedure RunTest49;
-    Procedure RunTest50;
-    Procedure TestGroups;
+    procedure RunTest1;
+    procedure RunTest2;
+    procedure RunTest3;
+    procedure RunTest4;
+    procedure RunTest5;
+    procedure RunTest6;
+    procedure RunTest7;
+    procedure RunTest8;
+    procedure RunTest9;
+    procedure RunTest10;
+    procedure RunTest11;
+    procedure RunTest12;
+    procedure RunTest13;
+    procedure RunTest14;
+    procedure RunTest15;
+    procedure RunTest16;
+    procedure RunTest17;
+    procedure RunTest18;
+    procedure RunTest19;
+    procedure RunTest20;
+    procedure RunTest21;
+    procedure RunTest22;
+    procedure RunTest23;
+    procedure RunTest24;
+    procedure RunTest25;
+    procedure RunTest26;
+    procedure RunTest27;
+    procedure RunTest28;
+    procedure RunTest29;
+    procedure RunTest30;
+    procedure RunTest31;
+    procedure RunTest32;
+    procedure RunTest33;
+    procedure RunTest34;
+    procedure RunTest35;
+    procedure RunTest36;
+    procedure RunTest37;
+    procedure RunTest38;
+    procedure RunTest39;
+    procedure RunTest40;
+    procedure RunTest41;
+    procedure RunTest42;
+    procedure RunTest43;
+    procedure RunTest44;
+    procedure RunTest45;
+    procedure RunTest46;
+    procedure RunTest47;
+    procedure RunTest48;
+    procedure RunTest49;
+    procedure RunTest50;
+    procedure TestGroups;
     {$IFDEF Unicode}
     procedure RunTest51unicode;
     procedure RunTest52unicode;
     {$ENDIF}
-    Procedure RunTest53;
-    Procedure RunTest54;
-    Procedure RunTest55;
+    procedure RunTest53;
+    procedure RunTest54;
+    procedure RunTest55;
+    procedure RunTest56;
+    procedure RunTest57;
   end;
 
 implementation
@@ -140,7 +142,7 @@ end;
 
 
 const
-  testCases: array [1..55] of TRegExTest = (
+  testCases: array [1..57] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -580,6 +582,22 @@ const
     substitutionText: '_';
     expectedResult: ' abc _ abc _ ';
     matchStart: 1
+    ),
+    // 56, a++
+    (
+    expression: '\d++e\d++';
+    inputText: ' 20ed2 100e20 2e34 ';
+    substitutionText: '_';
+    expectedResult: ' 20ed2 _ _ ';
+    matchStart: 1
+    ),
+    // 57, a*+, must fail
+    (
+    expression: '".*+"';
+    inputText: 'dd "abc" ee';
+    substitutionText: '';
+    expectedResult: '';
+    matchStart: -1
     )
   );
 
@@ -947,6 +965,16 @@ end;
 procedure TTestRegexpr.RunTest55;
 begin
   RunRETest(55);
+end;
+
+procedure TTestRegexpr.RunTest56;
+begin
+  RunRETest(56);
+end;
+
+procedure TTestRegexpr.RunTest57;
+begin
+  RunRETest(57);
 end;
 
 procedure TTestRegexpr.TestGroups;

@@ -7,10 +7,9 @@ Old items:
 
 Alexey's:
 
-- support WideChar surrogate pairs in unicode mode;
-  it must find such pairs (with length=2) by:
-  - dot
-  - negatives \S \D \W \V \H
-  - \p and \P
-
 - maybe support \X, via implemented \p and \P (docs in web)
+
+- negative assertion: (?<!foo)bar
+  This needs 2nd helper object which will have its own regex '(foo)\Z'
+  and it will find it after successful match of main object.
+  Main object will find "bar".

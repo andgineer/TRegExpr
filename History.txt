@@ -6,6 +6,11 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.119 2020.08.30
+ -=- (+) Added possessive quantifier: a++, a*+, a?+, a{n,m}+ for simple braces.
+  Not for complex braces yet: (expr){n,m}+.
+  By Alexey Torgashin.
+
  v. 1.116 2020.08.26
  -=- (+) Added ifdef UnicodeEx, to support unicode chars >0xFFFF, e.g.
   emojis. Because '.', '\W', '\S' etc must catch 2 WideChars of 1 emoji.
