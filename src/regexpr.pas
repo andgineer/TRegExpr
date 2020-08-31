@@ -241,6 +241,7 @@ type
     GrpNames: array [0 .. NSUBEXP - 1] of RegExprString;
     GrpAtomic: array [0 .. NSUBEXP - 1] of boolean; // filled in Compile
     GrpAtomicDone: array [0 .. NSUBEXP - 1] of boolean; // used in Exec* only
+    GrpOpCodes: array [0 .. NSUBEXP - 1] of PRegExprChar;
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -2946,6 +2947,7 @@ begin
     parno := regNumBrackets;
     Inc(regNumBrackets);
     ret := EmitNode(TREOp(Ord(OP_OPEN) + parno));
+    GrpOpCodes[parno] := ret;
   end
   else
     ret := nil;
@@ -5208,7 +5210,11 @@ begin
 
       OP_SUBCALL .. OP_SUBCALL_LAST:
         begin
-          // todo
+          // call subroutine
+          no := Ord(scan^) - Ord(OP_SUBCALL);
+          save := GrpOpCodes[no];
+          if save = nil then Exit;
+          if not MatchPrim(save) then Exit;
         end;
 
     else
@@ -5308,6 +5314,7 @@ begin
     GrpNames[i] := '';
     GrpAtomic[i] := False;
     GrpAtomicDone[i] := False;
+    GrpOpCodes[i] := nil;
   end;
   GrpIndexes[0] := 0;
   GrpCount := 0;
