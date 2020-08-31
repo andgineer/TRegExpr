@@ -812,7 +812,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 128;
+  REVersionMinor = 130;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -3920,6 +3920,27 @@ begin
                   else
                     Error(reeBadRecursion);
                 end;
+              end;
+            '''':
+              begin
+                // named group: (?'name'regex)
+                if (regParse + 4 >= fRegexEnd) then
+                  Error(reeNamedGroupBad);
+                GrpKind := gkNormalGroup;
+                FindGroupName(regParse + 2, '''', GrpName);
+                Inc(regParse, Length(GrpName) + 3);
+              end;
+            '&':
+              begin
+                // subroutine call to named group: (?&name)
+                if (regParse + 2 >= fRegexEnd) then
+                  Error(reeBadSubCall);
+                GrpKind := gkSubCall;
+                FindGroupName(regParse + 2, ')', GrpName);
+                Inc(regParse, Length(GrpName) + 3);
+                GrpIndex := MatchIndexFromName(GrpName);
+                if GrpIndex < 1 then
+                  Error(reeNamedGroupBadRef);
               end;
             else
               Error(reeIncorrectSpecialBrackets);
