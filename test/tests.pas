@@ -638,10 +638,10 @@ const
     ),
     // 62, subroutine call (?3) + non-capturing groups + atomic group
     (
-    expression: '(rr)(qq)(?:t)(?:t)(b(?>m|(?3))*e)';
-    inputText: '__rrqqttbbbmmeeeeeeeeeeeeeeeeee__';
+    expression: '(rr)(qq)(?:t)(?:t)(\[(?>m|(?3))*\])';
+    inputText: '__rrqqtt[[[mmm]mm]m]m]m]m]m]__';
     substitutionText: '';
-    expectedResult: 'rrqqttbbbmmeee';
+    expectedResult: 'rrqqtt[[[mmm]mm]m]';
     matchStart: 3
     )
   );
