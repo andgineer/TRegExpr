@@ -111,6 +111,10 @@ type
     procedure RunTest55;
     procedure RunTest56;
     procedure RunTest57;
+    procedure RunTest58;
+    procedure RunTest59;
+    procedure RunTest60;
+    procedure RunTest61;
   end;
 
 implementation
@@ -142,7 +146,7 @@ end;
 
 
 const
-  testCases: array [1..57] of TRegExTest = (
+  testCases: array [1..61] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -598,6 +602,38 @@ const
     substitutionText: '';
     expectedResult: '';
     matchStart: -1
+    ),
+    // 58, recursion
+    (
+    expression: 'a(?R)?b';
+    inputText: '__aaaabbbbbbbb__';
+    substitutionText: '';
+    expectedResult: 'aaaabbbb';
+    matchStart: 3
+    ),
+    // 59, recursion, generic regex 1 - https://regular-expressions.mobi/recurse.html?wlr=1
+    (
+    expression: 'b(?:m|(?R))*e';
+    inputText: '_bbfee_bbbmeee__';
+    substitutionText: '';
+    expectedResult: 'bbbmeee';
+    matchStart: 8
+    ),
+    // 60, recursion, generic regex 2 - https://regular-expressions.mobi/recurse.html?wlr=1
+    (
+    expression: 'b(?R)*e|m';
+    inputText: '__bbbmeee__bme__m__';
+    substitutionText: '@';
+    expectedResult: '__@__@__@__';
+    matchStart: 1
+    ),
+    // 61, recursion, balanced set of parentheses - https://regular-expressions.mobi/recurse.html?wlr=1
+    (
+    expression: '\((?>[^()]|(?R))*\)';
+    inputText: '__(((dd)dd))__(d)__(((ef)f)f)__';
+    substitutionText: '@';
+    expectedResult: '__@__@__@__';
+    matchStart: 1
     )
   );
 
@@ -976,6 +1012,27 @@ procedure TTestRegexpr.RunTest57;
 begin
   RunRETest(57);
 end;
+
+procedure TTestRegexpr.RunTest58;
+begin
+  RunRETest(58);
+end;
+
+procedure TTestRegexpr.RunTest59;
+begin
+  RunRETest(59);
+end;
+
+procedure TTestRegexpr.RunTest60;
+begin
+  RunRETest(60);
+end;
+
+procedure TTestRegexpr.RunTest61;
+begin
+  RunRETest(61);
+end;
+
 
 procedure TTestRegexpr.TestGroups;
 var
