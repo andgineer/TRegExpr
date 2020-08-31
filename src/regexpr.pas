@@ -179,12 +179,13 @@ const
     {$ENDIF};
 
 const
-  NSUBEXP = 90; // max number of subexpression //###0.929
-  // Cannot be more than NSUBEXPMAX
-  // Be carefull - don't use values which overflow CLOSE opcode
+  RegexMaxGroups = 90;
+  // Max number of groups.
+  // Be carefull - don't use values which overflow OP_CLOSE* opcode
   // (in this case you'll get compiler error).
-  // Big NSUBEXP will cause more slow work and more stack required
-  NSUBEXPMAX = 255; // Max possible value for NSUBEXP. //###0.945
+  // Big value causes slower work and more stack required.
+  RegexMaxMaxGroups = 255;
+  // Max possible value for RegexMaxGroups.
   // Don't change it! It's defined by internal TRegExpr design.
 
 {$IFDEF ComplexBraces}
@@ -234,14 +235,14 @@ type
 
   TRegExpr = class
   private
-    startp: array [0 .. NSUBEXP - 1] of PRegExprChar; // pointer to group start
-    endp: array [0 .. NSUBEXP - 1] of PRegExprChar; // pointer to group end
+    startp: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group start
+    endp: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group end
 
-    GrpIndexes: array [0 .. NSUBEXP - 1] of integer;
-    GrpNames: array [0 .. NSUBEXP - 1] of RegExprString;
-    GrpAtomic: array [0 .. NSUBEXP - 1] of boolean; // filled in Compile
-    GrpAtomicDone: array [0 .. NSUBEXP - 1] of boolean; // used in Exec* only
-    GrpOpCodes: array [0 .. NSUBEXP - 1] of PRegExprChar;
+    GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer;
+    GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString;
+    GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // filled in Compile
+    GrpAtomicDone: array [0 .. RegexMaxGroups - 1] of boolean; // used in Exec* only
+    GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar;
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -1245,7 +1246,7 @@ type
     StartPos: PtrInt;
   end;
 
-  TStackArray = packed array [0 .. NSUBEXPMAX - 1] of TStackItemRec;
+  TStackArray = packed array [0 .. RegexMaxMaxGroups - 1] of TStackItemRec;
 var
   Len, SubExprLen: integer;
   i, i0: integer;
@@ -1454,15 +1455,15 @@ const
 
   OP_OPEN = TREOp(50); // Opening of group; OP_OPEN+i is for group i
   OP_OPEN_FIRST = Succ(OP_OPEN);
-  OP_OPEN_LAST = TREOp(Ord(OP_OPEN) + NSUBEXP - 1);
+  OP_OPEN_LAST = TREOp(Ord(OP_OPEN) + RegexMaxGroups - 1);
 
   OP_CLOSE = Succ(OP_OPEN_LAST); // Closing of group; OP_CLOSE+i is for group i
   OP_CLOSE_FIRST = Succ(OP_CLOSE);
-  OP_CLOSE_LAST = TReOp(Ord(OP_CLOSE) + NSUBEXP - 1);
+  OP_CLOSE_LAST = TReOp(Ord(OP_CLOSE) + RegexMaxGroups - 1);
 
   OP_SUBCALL = Succ(OP_CLOSE_LAST); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_SUBCALL_FIRST = Succ(OP_SUBCALL);
-  OP_SUBCALL_LAST = TReOp(Ord(OP_SUBCALL) + NSUBEXP - 1);
+  OP_SUBCALL_LAST = TReOp(Ord(OP_SUBCALL) + RegexMaxGroups - 1);
 
   // !!! Don't add new OpCodes after CLOSE !!!
 
@@ -2946,7 +2947,7 @@ begin
   // Make an OP_OPEN node, if parenthesized.
   if paren <> 0 then
   begin
-    if regNumBrackets >= NSUBEXP then
+    if regNumBrackets >= RegexMaxGroups then
     begin
       Error(reeCompParseRegTooManyBrackets);
       Exit;
@@ -3888,7 +3889,7 @@ begin
                   '0'..'9':
                     begin
                       GrpIndex := GrpIndex * 10 + Ord(regParse^) - Ord('0');
-                      if GrpIndex >= NSUBEXP then
+                      if GrpIndex >= RegexMaxGroups then
                         Error(reeBadSubCall);
                       Inc(regParse);
                       if regParse^ <> ')' then
@@ -3915,7 +3916,7 @@ begin
               // skip this block for one of passes, to not double groups count;
               // must take first pass (we need GrpNames filled)
               if (GrpKind = gkNormalGroup) and not fSecondPass then
-                if GrpCount < NSUBEXP - 1 then
+                if GrpCount < RegexMaxGroups - 1 then
                 begin
                   Inc(GrpCount);
                   GrpIndexes[GrpCount] := regNumBrackets;
@@ -5304,7 +5305,7 @@ var
 begin
   FillChar(startp, SizeOf(startp), 0);
   FillChar(endp, SizeOf(endp), 0);
-  for i := 0 to NSUBEXP - 1 do
+  for i := 0 to RegexMaxGroups - 1 do
   begin
     GrpAtomicDone[i] := False;
   end;
@@ -5316,7 +5317,7 @@ var
 begin
   FillChar(startp, SizeOf(startp), 0);
   FillChar(endp, SizeOf(endp), 0);
-  for i := 0 to NSUBEXP - 1 do
+  for i := 0 to RegexMaxGroups - 1 do
   begin
     GrpIndexes[i] := -1;
     GrpNames[i] := '';
