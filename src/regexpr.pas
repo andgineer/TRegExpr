@@ -3804,6 +3804,16 @@ begin
                       FindGroupName(regParse + 3, ')', GrpName);
                       Inc(regParse, Length(GrpName) + 4);
                     end;
+                  '>':
+                    begin
+                      // subroutine call to named group: (?P>name)
+                      GrpKind := gkSubCall;
+                      FindGroupName(regParse + 3, ')', GrpName);
+                      Inc(regParse, Length(GrpName) + 4);
+                      GrpIndex := MatchIndexFromName(GrpName);
+                      if GrpIndex < 1 then
+                        Error(reeNamedGroupBadRef);
+                    end;
                   else
                     Error(reeNamedGroupBad);
                 end;

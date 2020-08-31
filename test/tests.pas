@@ -116,6 +116,7 @@ type
     procedure RunTest60;
     procedure RunTest61;
     procedure RunTest62;
+    procedure RunTest63;
   end;
 
 implementation
@@ -147,7 +148,7 @@ end;
 
 
 const
-  testCases: array [1 .. 62] of TRegExTest = (
+  testCases: array [1 .. 63] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -643,6 +644,14 @@ const
     substitutionText: '';
     expectedResult: 'rrqqtt[[[mmm]mm]m]';
     matchStart: 3
+    ),
+    // 63, subroutine call (?P>name)
+    (
+    expression: '(?P<name>[abc])(?1)(?P>name)';
+    inputText: '__bcabcadef__';
+    substitutionText: '';
+    expectedResult: '?';
+    matchStart: 3
     )
   );
 
@@ -1045,6 +1054,11 @@ end;
 procedure TTestRegexpr.RunTest62;
 begin
   RunRETest(62);
+end;
+
+procedure TTestRegexpr.RunTest63;
+begin
+  RunRETest(63);
 end;
 
 
