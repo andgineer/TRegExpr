@@ -5211,7 +5211,8 @@ begin
       OP_SUBCALL .. OP_SUBCALL_LAST:
         begin
           // call subroutine
-          no := Ord(scan^) - Ord(OP_SUBCALL);
+          no := GrpIndexes[Ord(scan^) - Ord(OP_SUBCALL)];
+          if no < 0 then Exit;
           save := GrpOpCodes[no];
           if save = nil then Exit;
           if not MatchPrim(save) then Exit;
