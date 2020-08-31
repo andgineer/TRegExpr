@@ -241,6 +241,7 @@ type
     GrpNames: array [0 .. NSUBEXP - 1] of RegExprString;
     GrpAtomic: array [0 .. NSUBEXP - 1] of boolean; // filled in Compile
     GrpAtomicDone: array [0 .. NSUBEXP - 1] of boolean; // used in Exec* only
+    GrpOpCodes: array [0 .. NSUBEXP - 1] of PRegExprChar;
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -814,7 +815,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 119;
+  REVersionMinor = 124;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -851,7 +852,9 @@ type
     gkModifierString,
     gkLookahead,
     gkLookaheadNeg,
-    gkLookbehind
+    gkLookbehind,
+    gkRecursion,
+    gkSubCall
     );
 
 const
@@ -1445,12 +1448,21 @@ const
   OP_PLUS_POSS = TReOp(46);
   OP_BRACES_POSS = TReOp(47);
 
+  OP_RECUR = TReOp(48);
+
   // !!! Change OP_OPEN value if you add new opcodes !!!
 
-  OP_OPEN = TREOp(48); // -    Mark this point in input as start of \n
-  // OP_OPEN + 1 is \1, etc.
-  OP_CLOSE = TREOp(Ord(OP_OPEN) + NSUBEXP);
-  // -    Analogous to OP_OPEN.
+  OP_OPEN = TREOp(50); // Opening of group; OP_OPEN+i is for group i
+  OP_OPEN_FIRST = Succ(OP_OPEN);
+  OP_OPEN_LAST = TREOp(Ord(OP_OPEN) + NSUBEXP - 1);
+
+  OP_CLOSE = Succ(OP_OPEN_LAST); // Closing of group; OP_CLOSE+i is for group i
+  OP_CLOSE_FIRST = Succ(OP_CLOSE);
+  OP_CLOSE_LAST = TReOp(Ord(OP_CLOSE) + NSUBEXP - 1);
+
+  OP_SUBCALL = Succ(OP_CLOSE_LAST); // Call of subroutine; OP_SUBCALL+i is for group i
+  OP_SUBCALL_FIRST = Succ(OP_SUBCALL);
+  OP_SUBCALL_LAST = TReOp(Ord(OP_SUBCALL) + NSUBEXP - 1);
 
   // !!! Don't add new OpCodes after CLOSE !!!
 
@@ -1521,6 +1533,8 @@ const
   reeBadUnicodeCategory = 129;
   reeTooSmallCheckersArray = 130;
   reePossessiveAfterComplexBraces = 131;
+  reeBadRecursion = 132;
+  reeBadSubCall = 133;
   reeNamedGroupBad = 140;
   reeNamedGroupBadName = 141;
   reeNamedGroupBadRef = 142;
@@ -1609,6 +1623,10 @@ begin
       Result := 'TRegExpr compile: too small CharCheckers array';
     reePossessiveAfterComplexBraces:
       Result := 'TRegExpr compile: possessive + after complex braces: (foo){n,m}+';
+    reeBadRecursion:
+      Result := 'TRegExpr compile: bad recursion (?R)';
+    reeBadSubCall:
+      Result := 'TRegExpr compile: bad subroutine call';
     reeNamedGroupBad:
       Result := 'TRegExpr compile: bad named group';
     reeNamedGroupBadName:
@@ -2936,6 +2954,7 @@ begin
     parno := regNumBrackets;
     Inc(regNumBrackets);
     ret := EmitNode(TREOp(Ord(OP_OPEN) + parno));
+    GrpOpCodes[parno] := ret;
   end
   else
     ret := nil;
@@ -3548,6 +3567,7 @@ var
   DashForRange: Boolean;
   GrpKind: TREGroupKind;
   GrpName: RegExprString;
+  GrpIndex: integer;
   NextCh: REChar;
 begin
   Result := nil;
@@ -3843,7 +3863,42 @@ begin
                 // modifiers string like (?mxr)
                 GrpKind := gkModifierString;
                 Inc(regParse);
-              end
+              end;
+            'R', '0':
+              begin
+                // recursion (?R), (?0)
+                GrpKind := gkRecursion;
+                Inc(regParse, 2);
+                if regParse^ <> ')' then
+                  Error(reeBadRecursion);
+                Inc(regParse);
+              end;
+            '1'..'9':
+              begin
+                // subroutine call (?1)..(?99)
+                GrpKind := gkSubCall;
+                GrpIndex := Ord(NextCh) - Ord('0');
+                Inc(regParse, 2);
+                // support 2-digit group numbers
+                case regParse^ of
+                  ')':
+                    begin
+                      Inc(regParse);
+                    end;
+                  '0'..'9':
+                    begin
+                      GrpIndex := GrpIndex * 10 + Ord(regParse^) - Ord('0');
+                      if GrpIndex >= NSUBEXP then
+                        Error(reeBadSubCall);
+                      Inc(regParse);
+                      if regParse^ <> ')' then
+                        Error(reeBadSubCall);
+                      Inc(regParse);
+                    end
+                  else
+                    Error(reeBadRecursion);
+                end;
+              end;
             else
               Error(reeIncorrectSpecialBrackets);
           end;
@@ -3917,6 +3972,20 @@ begin
               end;
               Inc(regParse); // skip ')'
               ret := EmitNode(OP_COMMENT); // comment
+            end;
+
+          gkRecursion:
+            begin
+              // set flag_HasWidth to allow compiling of such regex: b(?:m|(?R))*e
+              flagp := flagp or flag_HasWidth;
+              ret := EmitNode(OP_RECUR);
+            end;
+
+          gkSubCall:
+            begin
+              // set flag_HasWidth like for (?R)
+              flagp := flagp or flag_HasWidth;
+              ret := EmitNode(TReOp(Ord(OP_SUBCALL) + GrpIndex));
             end;
         end; // case GrpKind of
       end;
@@ -4829,7 +4898,7 @@ begin
         ;
       OP_BACK:
         ;
-      Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1):
+      OP_OPEN_FIRST .. OP_OPEN_LAST:
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
@@ -4861,7 +4930,7 @@ begin
           // parentheses already has.
           Exit;
         end;
-      Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
+      OP_CLOSE_FIRST .. OP_CLOSE_LAST:
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_CLOSE);
           regCurrentGrp := -1;
@@ -5140,6 +5209,22 @@ begin
         end;
       {$ENDIF}
 
+      OP_RECUR:
+        begin
+          // call opcode start
+          if not MatchPrim(programm + REOpSz) then Exit;
+        end;
+
+      OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
+        begin
+          // call subroutine
+          no := GrpIndexes[Ord(scan^) - Ord(OP_SUBCALL)];
+          if no < 0 then Exit;
+          save := GrpOpCodes[no];
+          if save = nil then Exit;
+          if not MatchPrim(save) then Exit;
+        end;
+
     else
       begin
         Error(reeMatchPrimMemoryCorruption);
@@ -5237,6 +5322,7 @@ begin
     GrpNames[i] := '';
     GrpAtomic[i] := False;
     GrpAtomicDone[i] := False;
+    GrpOpCodes[i] := nil;
   end;
   GrpIndexes[0] := 0;
   GrpCount := 0;
@@ -5904,13 +5990,13 @@ begin
         ;
       OP_BACK:
         ;
-      Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1):
-        begin //###0.929
+      OP_OPEN_FIRST .. OP_OPEN_LAST:
+        begin
           FillFirstCharSet(Next);
           Exit;
         end;
-      Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
-        begin //###0.929
+      OP_CLOSE_FIRST .. OP_CLOSE_LAST:
+        begin
           FillFirstCharSet(Next);
           Exit;
         end;
@@ -5978,6 +6064,10 @@ begin
           FirstCharSet := RegExprAllSet;
           Exit;
         end;
+      OP_RECUR,
+      OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
+        begin
+        end
       else
         begin
           fLastErrorOpcode := Oper;
@@ -6182,9 +6272,9 @@ begin
       Result := 'BSUBEXP';
     OP_BSUBEXPCI:
       Result := 'BSUBEXP/CI';
-    Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1): // ###0.929
+    OP_OPEN_FIRST .. OP_OPEN_LAST:
       Result := Format('OPEN[%d]', [Ord(op) - Ord(OP_OPEN)]);
-    Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1): // ###0.929
+    OP_CLOSE_FIRST .. OP_CLOSE_LAST:
       Result := Format('CLOSE[%d]', [Ord(op) - Ord(OP_CLOSE)]);
     OP_STAR:
       Result := 'STAR';
@@ -6216,6 +6306,10 @@ begin
       Result := 'ANYCATEG';
     OP_NOTCATEGORY:
       Result := 'NOTCATEG';
+    OP_RECUR:
+      Result := 'RECURSION';
+    OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
+      Result := Format('SUBCALL[%d]', [Ord(op) - Ord(OP_SUBCALL)]);
   else
     Error(reeDumpCorruptedOpcode);
   end; { of case op }
