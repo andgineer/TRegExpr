@@ -649,6 +649,13 @@ The main purpose of recursion is to match balanced constructs or nested construc
 
 If what may appear in the middle of the balanced construct may also appear on its own without the beginning and ending parts then the generic regex is ``b(?R)*e|m``.
 
+Subroutine calls
+----------------
+
+Syntax is ``(?1)`` ... ``(?90)`` (limited by internal constant).
+
+This is like recursion but calls only code of capturing group with specified index.
+
 Afterword
 ---------
 
