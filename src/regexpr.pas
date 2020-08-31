@@ -5980,13 +5980,7 @@ begin
             for i := 1 to Length(LineSeparators) do
               Include(FirstCharSet, byte(LineSeparators[i]));
             {$ELSE}
-            Include(FirstCharSet, $d);
-            Include(FirstCharSet, $a);
-            Include(FirstCharSet, $b);
-            Include(FirstCharSet, $c);
-            {$IFDEF Unicode}
-            Include(FirstCharSet, $85);
-            {$ENDIF}
+            FirstCharSet := FirstCharSet + RegExprLineSeparatorsSet;
             {$ENDIF}
           end;
           Exit;
