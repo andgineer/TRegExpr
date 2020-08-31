@@ -1452,9 +1452,13 @@ const
 
   // !!! Change OP_OPEN value if you add new opcodes !!!
 
-  OP_OPEN = TREOp(49); // Opening of group; OP_OPEN+i is for group i
-  OP_CLOSE = TREOp(Ord(OP_OPEN) + NSUBEXP); // Closing of group; OP_CLOSE+i is for group i
-  OP_SUBCALL = TReOp(Ord(OP_CLOSE) + NSUBEXP); // Call of subroutine; OP_SUBCALL+i is for group i
+  OP_OPEN = TREOp(50); // Opening of group; OP_OPEN+i is for group i
+  OP_OPEN_LAST = TREOp(Ord(OP_OPEN) + NSUBEXP - 1);
+
+  OP_CLOSE = Succ(OP_OPEN_LAST); // Closing of group; OP_CLOSE+i is for group i
+  OP_CLOSE_LAST = TReOp(Ord(OP_CLOSE) + NSUBEXP - 1);
+
+  OP_SUBCALL = Succ(OP_CLOSE_LAST); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_SUBCALL_LAST = TReOp(Ord(OP_SUBCALL) + NSUBEXP - 1);
 
   // !!! Don't add new OpCodes after CLOSE !!!
@@ -4891,7 +4895,7 @@ begin
         ;
       OP_BACK:
         ;
-      Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1):
+      Succ(OP_OPEN) .. OP_OPEN_LAST:
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
@@ -4923,7 +4927,7 @@ begin
           // parentheses already has.
           Exit;
         end;
-      Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
+      Succ(OP_CLOSE) .. OP_CLOSE_LAST:
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_CLOSE);
           regCurrentGrp := -1;
@@ -5983,13 +5987,13 @@ begin
         ;
       OP_BACK:
         ;
-      Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1):
-        begin //###0.929
+      Succ(OP_OPEN) .. OP_OPEN_LAST:
+        begin
           FillFirstCharSet(Next);
           Exit;
         end;
-      Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1):
-        begin //###0.929
+      Succ(OP_CLOSE) .. OP_CLOSE_LAST:
+        begin
           FillFirstCharSet(Next);
           Exit;
         end;
@@ -6265,9 +6269,9 @@ begin
       Result := 'BSUBEXP';
     OP_BSUBEXPCI:
       Result := 'BSUBEXP/CI';
-    Succ(OP_OPEN) .. TREOp(Ord(OP_OPEN) + NSUBEXP - 1): // ###0.929
+    Succ(OP_OPEN) .. OP_OPEN_LAST:
       Result := Format('OPEN[%d]', [Ord(op) - Ord(OP_OPEN)]);
-    Succ(OP_CLOSE) .. TREOp(Ord(OP_CLOSE) + NSUBEXP - 1): // ###0.929
+    Succ(OP_CLOSE) .. OP_CLOSE_LAST:
       Result := Format('CLOSE[%d]', [Ord(op) - Ord(OP_CLOSE)]);
     OP_STAR:
       Result := 'STAR';
