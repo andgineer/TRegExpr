@@ -1466,8 +1466,6 @@ const
     High(REChar); // must fit to 0..255 range
     {$ENDIF}
 
-  // !!! Don't add new OpCodes after CLOSE !!!
-
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
   // must have lengths that can be divided by SizeOf (REChar) !
