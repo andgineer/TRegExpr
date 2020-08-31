@@ -652,7 +652,9 @@ If what may appear in the middle of the balanced construct may also appear on it
 Subroutine calls
 ----------------
 
-Syntax is ``(?1)`` ... ``(?90)`` (limited by internal constant).
+Syntax for call to numbered groups is ``(?1)`` ... ``(?90)`` (maximal index is limited by code).
+
+Syntax for call to named groups is ``(?P>name)``.
 
 This is like recursion but calls only code of capturing group with specified index.
 
