@@ -316,6 +316,7 @@ type
     fInputString: RegExprString; // input string
     fLastError: integer; // Error call sets code of LastError
     fLastErrorOpcode: TREOp;
+    fLastErrorSymbol: REChar;
 
     fModifiers: TRegExprModifiers; // regex modifiers
     fCompModifiers: TRegExprModifiers; // compiler's copy of modifiers
@@ -811,7 +812,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 127;
+  REVersionMinor = 128;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1504,6 +1505,7 @@ const
 const
   reeOk = 0;
   reeCompNullArgument = 100;
+  reeUnknownMetaSymbol = 101;
   reeCompParseRegTooManyBrackets = 102;
   reeCompParseRegUnmatchedBrackets = 103;
   reeCompParseRegUnmatchedBrackets2 = 104;
@@ -1564,6 +1566,8 @@ begin
       Result := 'No errors';
     reeCompNullArgument:
       Result := 'TRegExpr compile: null argument';
+    reeUnknownMetaSymbol:
+      Result := 'TRegExpr compile: unknown meta-character: \' + fLastErrorSymbol;
     reeCompParseRegTooManyBrackets:
       Result := 'TRegExpr compile: ParseReg: too many ()';
     reeCompParseRegUnmatchedBrackets:
@@ -3465,7 +3469,14 @@ begin
         end;
       end;
   else
-    Result := APtr^;
+    begin
+      Result := APtr^;
+      if IsWordChar(Result) then
+      begin
+        fLastErrorSymbol := Result;
+        Error(reeUnknownMetaSymbol);
+      end;
+    end;
   end;
 end;
 
