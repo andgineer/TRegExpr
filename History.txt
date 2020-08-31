@@ -6,7 +6,8 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.127 2020.08.31
+ v. 1.128 2020.08.31
+ -=- (^) Added compile error code for unknown meta-chars (like \X \E \z).
  -=- (+) Added recursion: (?R) with alias (?0).
  -=- (+) Added subroutine calls: (?1) ... (?80), and for named groups: (?P>name).
  -=- (+) Added possessive quantifier: a++, a*+, a?+, a{n,m}+ for simple braces.
