@@ -240,9 +240,10 @@ type
 
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
-    GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // groups are atomic, filled in Compile
-    GrpAtomicDone: array [0 .. RegexMaxGroups - 1] of boolean; // atomic group is "done", used in Exec* only
-    GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to opcode of groups, used by OP_SUBCALL*
+    GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
+    GrpAtomicDone: array [0 .. RegexMaxGroups - 1] of boolean; // atomic group[i] is "done" (used in Exec* only)
+    GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
+    GrpSubCalled: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is called by OP_SUBCALL*
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -810,7 +811,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 125;
+  REVersionMinor = 127;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4951,6 +4952,15 @@ begin
           // save := regInput;
           save := GrpEnd[no]; // ###0.936
           GrpEnd[no] := regInput; // ###0.936
+
+          // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
+          // in OP_CLOSE, without going to next opcode
+          if GrpSubCalled[no] then
+          begin
+            Result := True;
+            Exit;
+          end;
+
           Result := MatchPrim(next);
           if not Result // ###0.936
           then
@@ -5232,7 +5242,15 @@ begin
           if no < 0 then Exit;
           save := GrpOpCodes[no];
           if save = nil then Exit;
-          if not MatchPrim(save) then Exit;
+          checkAtomicGroup := GrpSubCalled[no];
+          // mark group in GrpSubCalled array so opcode can detect subcall
+          GrpSubCalled[no] := True;
+          if not MatchPrim(save) then
+          begin
+            GrpSubCalled[no] := checkAtomicGroup;
+            Exit;
+          end;
+          GrpSubCalled[no] := checkAtomicGroup;
         end;
 
     else
@@ -5309,15 +5327,12 @@ begin
 end;
 
 procedure TRegExpr.ClearMatches;
-var
-  i: integer;
 begin
   FillChar(GrpStart, SizeOf(GrpStart), 0);
   FillChar(GrpEnd, SizeOf(GrpEnd), 0);
-  for i := 0 to RegexMaxGroups - 1 do
-  begin
-    GrpAtomicDone[i] := False;
-  end;
+
+  FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
+  FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
 end;
 
 procedure TRegExpr.ClearInternalIndexes;
@@ -5326,13 +5341,16 @@ var
 begin
   FillChar(GrpStart, SizeOf(GrpStart), 0);
   FillChar(GrpEnd, SizeOf(GrpEnd), 0);
+
+  FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
+  FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
+  FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
+  FillChar(GrpOpCodes, SizeOf(GrpOpCodes), 0);
+
   for i := 0 to RegexMaxGroups - 1 do
   begin
     GrpIndexes[i] := -1;
     GrpNames[i] := '';
-    GrpAtomic[i] := False;
-    GrpAtomicDone[i] := False;
-    GrpOpCodes[i] := nil;
   end;
   GrpIndexes[0] := 0;
   GrpCount := 0;

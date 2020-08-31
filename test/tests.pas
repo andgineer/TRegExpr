@@ -650,7 +650,7 @@ const
     expression: '(?P<name>[abc])(?1)(?P>name)';
     inputText: '__bcabcadef__';
     substitutionText: '';
-    expectedResult: '?';
+    expectedResult: 'bca';
     matchStart: 3
     )
   );
