@@ -1457,7 +1457,12 @@ const
 
   OP_SUBCALL = Succ(OP_CLOSE_LAST); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_SUBCALL_FIRST = Succ(OP_SUBCALL);
-  OP_SUBCALL_LAST = TReOp(Ord(OP_SUBCALL) + RegexMaxGroups - 1);
+  OP_SUBCALL_LAST =
+    {$IFDEF Unicode}
+    TReOp(Ord(OP_SUBCALL) + RegexMaxGroups - 1);
+    {$ELSE}
+    High(REChar); // must fit to 0..255 range
+    {$ENDIF}
 
   // !!! Don't add new OpCodes after CLOSE !!!
 
