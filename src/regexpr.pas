@@ -302,14 +302,14 @@ type
     regParse: PRegExprChar; // pointer to currently handling char of regex
     regNumBrackets: integer; // count of () brackets
     regDummy: REChar; // dummy pointer, used to detect 1st/2nd pass of Compile
-                      // if p=@regDummy, it is 1st pass: opcode memory is not yet allocated
-    programm: PRegExprChar; // pointer to opcode, =nil in the 1st pass
-    regCode: PRegExprChar; // pointer to opcode, but =@regDummy in the 1st pass
+                      // if p=@regDummy, it is pass-1: opcode memory is not yet allocated
+    programm: PRegExprChar; // pointer to opcode, =nil in pass-1
+    regCode: PRegExprChar; // pointer to last emitted opcode; changing in pass-2, but =@regDummy in pass-1
     regCodeSize: integer; // total opcode size in REChars
     regCodeWork: PRegExprChar; // pointer to opcode, to first code after MAGIC
     regExactlyLen: PLongInt; // pointer to length of substring of OP_EXACTLY* inside opcode
     regIsCompiled: boolean; // true if regex was successfully compiled
-    fSecondPass: boolean; // true if the 2nd pass of Compile is going
+    fSecondPass: boolean; // true inside pass-2 of Compile
 
     fExpression: RegExprString; // regex string
     fInputString: RegExprString; // input string
@@ -2769,9 +2769,9 @@ begin
     end;
 
     fProgModifiers := fModifiers;
-    // well, may it's paranoia. I'll check it later... !!!!!!!!
+    // well, may it's paranoia. I'll check it later.
 
-    // First pass: determine size, legality.
+    // First pass: calculate opcode size, validate regex
     fSecondPass := False;
     fCompModifiers := fModifiers;
     regParse := ARegExp;
@@ -2788,10 +2788,10 @@ begin
     if ParseReg(False, FlagTemp) = nil then
       Exit;
 
-    // Allocate space.
+    // Allocate memory
     GetMem(programm, regCodeSize * SizeOf(REChar));
 
-    // Second pass: emit code.
+    // Second pass: emit opcode
     fSecondPass := True;
     fCompModifiers := fModifiers;
     regParse := ARegExp;
