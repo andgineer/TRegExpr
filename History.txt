@@ -6,6 +6,11 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.141 2020.91.02
+ -=- (^) Rework handling of paired CR LF: simplified code, removed
+  prop LinePairedSeparator (str), added prop UseLinePairedBreak (bool),
+  it works faster. By Alexey Torgashin.
+
  v. 1.138 2020.91.01
  -=- (+) Added \z which matches at the very ending. \Z is changed: it matches
   _also_ before the final line-break. Like in major engines.
