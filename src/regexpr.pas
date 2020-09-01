@@ -783,7 +783,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 135;
+  REVersionMinor = 138;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1385,6 +1385,7 @@ const
   // Min and Max are TREBracesArg
   // Node - next node in sequence,
   // LoopEntryJmp - associated LOOPENTRY node addr
+  OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
   OP_BSUBEXP = TREOp(28);
   // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
   OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
@@ -3993,15 +3994,17 @@ begin
           Error(reeTrailingBackSlash);
           Exit;
         end;
-        case regParse^ of // r.e.extensions
+        case regParse^ of
           'b':
-            ret := EmitNode(OP_BOUND); // ###0.943
+            ret := EmitNode(OP_BOUND);
           'B':
-            ret := EmitNode(OP_NOTBOUND); // ###0.943
+            ret := EmitNode(OP_NOTBOUND);
           'A':
-            ret := EmitNode(OP_BOL); // ###0.941
+            ret := EmitNode(OP_BOL);
+          'z':
+            ret := EmitNode(OP_EOL);
           'Z':
-            ret := EmitNode(OP_EOL); // ###0.941
+            ret := EmitNode(OP_EOL2);
           'd':
             begin // r.e.extension - any digit ('0' .. '9')
               ret := EmitNode(OP_ANYDIGIT);
@@ -4634,8 +4637,24 @@ begin
 
       OP_EOL:
         begin
+          // \z matches at the very end
           if regInput < fInputEnd then
             Exit;
+        end;
+
+      OP_EOL2:
+        begin
+          // \Z matches at the very and + before the final line-break (LF and CR LF)
+          if regInput < fInputEnd then
+          begin
+            if (regInput = fInputEnd - 1) and (regInput^ = #10) then
+              begin end
+            else
+            if (regInput = fInputEnd - 2) and (regInput^ = #13) and ((regInput + 1) ^ = #10) then
+              begin end
+            else
+              Exit;
+          end;
         end;
 
       OP_BOLML:
@@ -5918,6 +5937,7 @@ begin
         ; // Exit; //###0.937
 
       OP_EOL,
+      OP_EOL2,
       OP_EOLML:
         begin //###0.948 was empty in 0.947, was EXIT in 0.937
           Include(FirstCharSet, 0);
@@ -6301,6 +6321,8 @@ begin
       Result := 'BOL';
     OP_EOL:
       Result := 'EOL';
+    OP_EOL2:
+      Result := 'EOL2';
     OP_BOLML:
       Result := 'BOLML';
     OP_EOLML:

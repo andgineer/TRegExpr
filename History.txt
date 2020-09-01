@@ -6,10 +6,13 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.133 2020.91.01
+ v. 1.138 2020.91.01
+ -=- (+) Added \z which matches at the very ending. \Z is changed: it matches
+  _also_ before the final line-break. Like in major engines.
  -=- (^) Remove ifdef UnicodeWordDetection, because it needs code which
   is compiler specific (FPC/Delphi) and hard to support. Unicode is supported
-  better with existing ifdef FastUnicodeData. By Alexey Torgashin.
+  better with existing ifdef FastUnicodeData.
+  By Alexey Torgashin.
 
  v. 1.130 2020.08.31
  -=- (+) Support Perl syntax for named groups: (?'name'expr) and
