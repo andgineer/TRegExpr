@@ -812,7 +812,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 130;
+  REVersionMinor = 131;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4733,9 +4733,10 @@ begin
       OP_ANYML:
         begin // ###0.941
           if (regInput = fInputEnd) or
-            ((regInput^ = fLinePairedSeparatorHead) and
-            ((regInput + 1)^ = fLinePairedSeparatorTail)) or
-            IsCustomLineSeparator(regInput^)
+            IsCustomLineSeparator(regInput^) or
+            (fLinePairedSeparatorAssigned and
+             (regInput^ = fLinePairedSeparatorHead) and
+             ((regInput + 1)^ = fLinePairedSeparatorTail))
           then
             Exit;
           {$IFDEF UNICODEEX}
@@ -4765,16 +4766,14 @@ begin
 
       OP_ANYLETTER:
         begin
-          if (regInput = fInputEnd) or not IsWordChar(regInput^) // ###0.943
-          then
+          if (regInput = fInputEnd) or not IsWordChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTLETTER:
         begin
-          if (regInput = fInputEnd) or IsWordChar(regInput^) // ###0.943
-          then
+          if (regInput = fInputEnd) or IsWordChar(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -4785,16 +4784,14 @@ begin
 
       OP_ANYSPACE:
         begin
-          if (regInput = fInputEnd) or not IsSpaceChar(regInput^) // ###0.943
-          then
+          if (regInput = fInputEnd) or not IsSpaceChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTSPACE:
         begin
-          if (regInput = fInputEnd) or IsSpaceChar(regInput^) // ###0.943
-          then
+          if (regInput = fInputEnd) or IsSpaceChar(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
