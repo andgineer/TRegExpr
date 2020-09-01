@@ -454,7 +454,7 @@ type
     // ###0.90
 
     // regular expression, i.e. main body or parenthesized thing
-    function ParseReg(paren: integer; var FlagParse: integer): PRegExprChar;
+    function ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
 
     // one alternative of an | operator
     function ParseBranch(var FlagParse: integer): PRegExprChar;
@@ -2785,7 +2785,7 @@ begin
     regLookbehind := False;
 
     EmitC(OP_MAGIC);
-    if ParseReg(0, FlagTemp) = nil then
+    if ParseReg(False, FlagTemp) = nil then
       Exit;
 
     // Allocate space.
@@ -2800,7 +2800,7 @@ begin
     regCodeWork := programm + REOpSz;
 
     EmitC(OP_MAGIC);
-    if ParseReg(0, FlagTemp) = nil then
+    if ParseReg(False, FlagTemp) = nil then
       Exit;
 
     // Dig out information for optimizations.
@@ -2880,7 +2880,7 @@ begin
     fReplaceLineEnd := #10;
 end;
 
-function TRegExpr.ParseReg(paren: integer; var FlagParse: integer): PRegExprChar;
+function TRegExpr.ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
 // regular expression, i.e. main body or parenthesized thing
 // Caller must absorb opening parenthesis.
 // Combining parenthesis handling with the base level of regular expression
@@ -2899,7 +2899,7 @@ begin
   SavedModifiers := fCompModifiers;
 
   // Make an OP_OPEN node, if parenthesized.
-  if paren <> 0 then
+  if InBrackets then
   begin
     if regNumBrackets >= RegexMaxGroups then
     begin
@@ -2944,7 +2944,7 @@ begin
   end;
 
   // Make a closing node, and hook it on the end.
-  if paren <> 0 then
+  if InBrackets then
     ender := EmitNode(TREOp(Ord(OP_CLOSE) + parno))
   else
     ender := EmitNode(OP_EEND);
@@ -2959,7 +2959,7 @@ begin
   end;
 
   // Check for proper termination.
-  if paren <> 0 then
+  if InBrackets then
     if regParse^ <> ')' then
     begin
       Error(reeCompParseRegUnmatchedBrackets);
@@ -2967,7 +2967,7 @@ begin
     end
     else
       Inc(regParse); // skip trailing ')'
-  if (paren = 0) and (regParse < fRegexEnd) then
+  if (not InBrackets) and (regParse < fRegexEnd) then
   begin
     if regParse^ = ')' then
       Error(reeCompParseRegUnmatchedBrackets2)
@@ -3921,7 +3921,7 @@ begin
                     GrpNames[GrpCount] := GrpName;
                   end;
                 end;
-              ret := ParseReg(1, FlagTemp);
+              ret := ParseReg(True, FlagTemp);
               if ret = nil then
               begin
                 Result := nil;
