@@ -130,12 +130,14 @@ type
     {$ENDIF}
   {$ENDIF}
   REChar = WideChar;
+  PRegex2Chars = ^LongInt;
   {$ELSE}
   PRegExprChar = PChar;
-  RegExprString = AnsiString; // ###0.952 was string
+  RegExprString = AnsiString;
   REChar = Char;
+  PRegex2Chars = ^Word;
   {$ENDIF}
-  TREOp = REChar; // internal p-code type //###0.933
+  TREOp = REChar; // internal opcode type
   PREOp = ^TREOp;
 
 type
@@ -174,13 +176,6 @@ const
     + #$2028#$2029#$85
     {$ENDIF};
   {$ENDIF}
-
-  // default value for LinePairedSeparator
-  RegExprLinePairedSeparator: RegExprString = #$d#$a;
-  { if You need Unix-styled line separators (only \n), then use:
-    RegExprLineSeparators = #$a;
-    RegExprLinePairedSeparator = '';
-  }
 
   // Tab and Unicode category "Space Separator":
   // https://www.compart.com/en/unicode/category/Zs
@@ -331,9 +326,8 @@ type
     {$IFDEF UseLineSep}
     fLineSeparators: RegExprString;
     {$ENDIF}
-    fLinePairedSeparatorAssigned: boolean;
-    fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
 
+    fUsePairedBreak: boolean;
     fReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
     fReplaceLineEndFromOS: boolean; // use OS LineBreak chars (LF or CR LF) for fReplaceLineEnd
 
@@ -503,8 +497,7 @@ type
     {$IFDEF UseLineSep}
     procedure SetLineSeparators(const AStr: RegExprString);
     {$ENDIF}
-    procedure SetLinePairedSeparator(const AStr: RegExprString);
-    function GetLinePairedSeparator: RegExprString;
+    procedure SetUsePairedBreak(AValue: boolean);
 
   public
     constructor Create; {$IFDEF OverMeth} overload;
@@ -691,9 +684,8 @@ type
     property LineSeparators: RegExprString read fLineSeparators write SetLineSeparators; // ###0.941
     {$ENDIF}
 
-    // paired line separator (like \r\n in DOS and Windows).
-    // must contain exactly two chars or no chars at all
-    property LinePairedSeparator: RegExprString read GetLinePairedSeparator write SetLinePairedSeparator; // ###0.941
+    // support paired line-break CR LF
+    property UseLinePairedBreak: boolean read fUsePairedBreak write SetUsePairedBreak;
 
     // Use OS-dependant LineBreak on replaces.
     // Default is True for backwards compatibility.
@@ -788,7 +780,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 140;
+  REVersionMinor = 141;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -846,6 +838,13 @@ const
   // size of BRACES arguments in REChars
   {$ENDIF}
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
+
+function IsPairedBreak(p: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+const
+  cBreak = 13 shl (SizeOf(REChar) * 8) + 10;
+begin
+  Result := PRegex2Chars(p)^ = cBreak;
+end;
 
 function _FindCharInBuffer(SBegin, SEnd: PRegExprChar; Ch: REChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1695,7 +1694,8 @@ begin
   {$IFDEF UseLineSep}
   fLineSeparators := RegExprLineSeparators;
   {$ENDIF}
-  LinePairedSeparator := RegExprLinePairedSeparator;
+
+  UseLinePairedBreak := True;
 
   fReplaceLineEndFromOS := True;
   fReplaceLineEnd := sLineBreak;
@@ -3542,7 +3542,7 @@ begin
     '^':
      begin
       if not fCompModifiers.M or
-        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fLinePairedSeparatorAssigned) then
+        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fUsePairedBreak) then
         ret := EmitNode(OP_BOL)
       else
         ret := EmitNode(OP_BOLML);
@@ -3551,7 +3551,7 @@ begin
     '$':
      begin
       if not fCompModifiers.M or
-        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fLinePairedSeparatorAssigned) then
+        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fUsePairedBreak) then
         ret := EmitNode(OP_EOL)
       else
         ret := EmitNode(OP_EOLML);
@@ -4670,15 +4670,13 @@ begin
       OP_BOLML:
         if regInput > fInputStart then
         begin
-          nextch := (regInput - 1)^;
-          if (nextch <> fLinePairedSeparatorTail) or
-            ((regInput - 1) <= fInputStart) or
-            ((regInput - 2)^ <> fLinePairedSeparatorHead) then
+          if ((regInput - 1) <= fInputStart) or
+            not IsPairedBreak(regInput - 2) then
           begin
-            if (nextch = fLinePairedSeparatorHead) and
-              (regInput^ = fLinePairedSeparatorTail) then
-              Exit; // don't stop between paired separator
-            if not IsCustomLineSeparator(nextch) then
+            // don't stop between paired separator
+            if IsPairedBreak(regInput - 1) then
+              Exit;
+            if not IsCustomLineSeparator((regInput - 1)^) then
               Exit;
           end;
         end;
@@ -4686,14 +4684,12 @@ begin
       OP_EOLML:
         if regInput < fInputEnd then
         begin
-          nextch := regInput^;
-          if (nextch <> fLinePairedSeparatorHead) or
-            ((regInput + 1)^ <> fLinePairedSeparatorTail) then
+          if not IsPairedBreak(regInput) then
           begin
-            if (nextch = fLinePairedSeparatorTail) and (regInput > fInputStart)
-              and ((regInput - 1)^ = fLinePairedSeparatorHead) then
-              Exit; // don't stop between paired separator
-            if not IsCustomLineSeparator(nextch) then
+            // don't stop between paired separator
+            if (regInput > fInputStart) and IsPairedBreak(regInput - 1) then
+              Exit;
+            if not IsCustomLineSeparator(regInput^) then
               Exit;
           end;
         end;
@@ -4710,10 +4706,9 @@ begin
         end;
 
       OP_ANYML:
-        begin // ###0.941
+        begin
           if (regInput >= fInputEnd) or
-            ((regInput^ = fLinePairedSeparatorHead) and
-            ((regInput + 1)^ = fLinePairedSeparatorTail)) or
+            IsPairedBreak(regInput) or
             IsCustomLineSeparator(regInput^)
           then
             Exit;
@@ -5566,59 +5561,14 @@ end; { of procedure TRegExpr.SetLineSeparators
   -------------------------------------------------------------- }
 {$ENDIF}
 
-procedure TRegExpr.SetLinePairedSeparator(const AStr: RegExprString);
+procedure TRegExpr.SetUsePairedBreak(AValue: boolean);
 begin
-  if Length(AStr) = 2 then
+  if AValue <> fUsePairedBreak then
   begin
-    if AStr[1] = AStr[2] then
-    begin
-      // it's impossible for our 'one-point' checking to support
-      // two chars separator for identical chars
-      Error(reeBadLinePairedSeparator);
-      Exit;
-    end;
-    if not fLinePairedSeparatorAssigned
-      or (AStr[1] <> fLinePairedSeparatorHead)
-      or (AStr[2] <> fLinePairedSeparatorTail) then
-    begin
-      fLinePairedSeparatorAssigned := True;
-      fLinePairedSeparatorHead := AStr[1];
-      fLinePairedSeparatorTail := AStr[2];
-      InvalidateProgramm;
-    end;
-  end
-  else
-  if AStr = '' then
-  begin
-    if fLinePairedSeparatorAssigned then
-    begin
-      fLinePairedSeparatorAssigned := False;
-      InvalidateProgramm;
-    end;
-  end
-  else
-    Error(reeBadLinePairedSeparator);
-end; { of procedure TRegExpr.SetLinePairedSeparator
-  -------------------------------------------------------------- }
-
-function TRegExpr.GetLinePairedSeparator: RegExprString;
-begin
-  if fLinePairedSeparatorAssigned then
-  begin
-    {$IFDEF UniCode}
-    // Here is some UniCode 'magic'
-    // If You do know better decision to concatenate
-    // two WideChars, please, let me know!
-    Result := fLinePairedSeparatorHead; // ###0.947
-    Result := Result + fLinePairedSeparatorTail;
-    {$ELSE}
-    Result := fLinePairedSeparatorHead + fLinePairedSeparatorTail;
-    {$ENDIF}
-  end
-  else
-    Result := '';
-end; { of function TRegExpr.GetLinePairedSeparator
-  -------------------------------------------------------------- }
+    fUsePairedBreak := AValue;
+    InvalidateProgramm;
+  end;
+end;
 
 function TRegExpr.Substitute(const ATemplate: RegExprString): RegExprString;
 // perform substitutions after a regexp match
