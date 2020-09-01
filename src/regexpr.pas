@@ -5075,6 +5075,12 @@ begin
         end;
       {$ENDIF}
 
+      OP_EEND:
+        begin
+          Result := True; // Success!
+          Exit;
+        end;
+
       OP_STAR, OP_PLUS, OP_BRACES, OP_STARNG, OP_PLUSNG, OP_BRACESNG:
         begin
           // Lookahead to avoid useless match attempts when we know
@@ -5192,12 +5198,6 @@ begin
           if no >= BracesMin then
             if (nextch = #0) or (regInput^ = nextch) then
               Result := MatchPrim(next);
-          Exit;
-        end;
-
-      OP_EEND:
-        begin
-          Result := True; // Success!
           Exit;
         end;
 
