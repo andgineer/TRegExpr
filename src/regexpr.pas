@@ -286,8 +286,9 @@ type
     regParse: PRegExprChar; // pointer to currently handling char of regex
     regNumBrackets: integer; // count of () brackets
     regDummy: REChar; // dummy pointer, used to detect which pass of Compile is going
-    regCode: PRegExprChar; // pointer to emitting opcode; if =@regdummy - opcode is not emitting yet
+    regCode: PRegExprChar; // pointer to opcode, like "programm", but if =@regdummy - opcode is not emitting yet
     regCodeSize: integer; // total opcode size in REChars
+    regCodeWork: PRegExprChar; // pointer to opcode, to first code after MAGIC
     regExactlyLen: PLongInt; // pointer to length of substring of OP_EXACTLY* inside opcode
     regIsCompiled: boolean; // true if regex was successfully compiled
     fSecondPass: boolean; // true if the 2nd pass of Compile is going
@@ -783,7 +784,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 139;
+  REVersionMinor = 140;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -2773,6 +2774,7 @@ begin
     regNumBrackets := 1;
     regCodeSize := 0;
     regCode := @regDummy;
+    regCodeWork := nil;
     regLookahead := False;
     regLookaheadNeg := False;
     regLookaheadGroup := -1;
@@ -2791,6 +2793,8 @@ begin
     regParse := ARegExp;
     regNumBrackets := 1;
     regCode := programm;
+    regCodeWork := programm + REOpSz;
+
     EmitC(OP_MAGIC);
     if ParseReg(0, FlagTemp) = nil then
       Exit;
@@ -2798,7 +2802,7 @@ begin
     // Dig out information for optimizations.
     {$IFDEF UseFirstCharSet} // ###0.929
     FirstCharSet := [];
-    FillFirstCharSet(programm + REOpSz);
+    FillFirstCharSet(regCodeWork);
     for Len := 0 to 255 do
       FirstCharArray[Len] := byte(Len) in FirstCharSet;
     {$ENDIF}
@@ -2808,7 +2812,7 @@ begin
     regMustLen := 0;
     regMustString := '';
 
-    scan := programm + REOpSz; // First OP_BRANCH.
+    scan := regCodeWork; // First OP_BRANCH.
     if PREOp(regNext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
       scan := scan + REOpSz + RENextOffSz;
@@ -3785,7 +3789,7 @@ begin
                         Error(reeLookbehindBad);
 
                       GrpKind := gkLookbehind;
-                      GrpAtomic[regNumBrackets] := True; // lookaround must be atomic
+                      GrpAtomic[regNumBrackets] := True; // lookbehind must be atomic
                       regLookbehind := True;
                       Inc(regParse, 3);
                     end;
@@ -3803,12 +3807,12 @@ begin
                 if NextCh = '=' then
                 begin
                   GrpKind := gkLookahead;
-                  GrpAtomic[regNumBrackets] := True; // lookaround must be atomic
+                  //GrpAtomic[regNumBrackets] := True; // lookahead must be atomic - but it breaks Test54
                 end
                 else
                 begin
                   GrpKind := gkLookaheadNeg;
-                  GrpAtomic[regNumBrackets] := True; // lookaround must be atomic
+                  //GrpAtomic[regNumBrackets] := True; // lookahead must be atomic - but it breaks Test54
                   regLookaheadNeg := True;
                 end;
 
@@ -5286,7 +5290,7 @@ begin
       OP_RECUR:
         begin
           // call opcode start
-          if not MatchPrim(programm + REOpSz) then Exit;
+          if not MatchPrim(regCodeWork) then Exit;
         end;
 
       OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
@@ -5364,7 +5368,7 @@ begin
   regInput := APos;
   regCurrentGrp := -1;
   regNestedCalls := 0;
-  Result := MatchPrim(programm + REOpSz);
+  Result := MatchPrim(regCodeWork);
   if Result then
   begin
     GrpStart[0] := APos;
@@ -6480,7 +6484,7 @@ begin
 
   op := OP_EXACTLY;
   Result := '';
-  s := programm + REOpSz;
+  s := regCodeWork;
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
