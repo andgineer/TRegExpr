@@ -339,30 +339,27 @@ RegExprLineSeparators_ global constant).
 
 See also `Line Boundaries <regular_expressions.html#lineseparators>`__
 
-LinePairedSeparator
-~~~~~~~~~~~~~~~~~~~
+UseLinePairedBreak
+~~~~~~~~~~~~~~~~~~
 
-Paired line separator (like ``\r\n`` in DOS and Windows).
-
-Must contain exactly 2 chars or no chars at all. Initially filled with
-RegExprLinePairedSeparator global constant).
+Boolean property, enables to detect paired line separator CR LF.
 
 See also `Line Boundaries <regular_expressions.html#lineseparators>`__
 
-For example, if you need Unix-style behaviour, assign
-``LineSeparators := #$a`` and ``LinePairedSeparator := ''`` (empty string).
+For example, if you need only Unix-style separator LF, assign
+``LineSeparators := #$a`` and ``UseLinePairedBreak := False``.
 
-If you want to accept as line separators only ``\x0D\x0A`` but not ``\x0D``
-or ``\x0A`` alone, then assign ``LineSeparators := ''`` (empty string) and
-``LinePairedSeparator := #$d#$a``.
+If you want to accept as line separators only CR LF but not CR or LF alone,
+then assign ``LineSeparators := ''`` (empty string) and
+``UseLinePairedBreak := True``.
 
 By default, "mixed" mode is used (defined in
-RegExprLine[Paired]Separator[s] global constants):
+RegExprLineSeparators global constant):
 
 ::
 
     LineSeparators := #$d#$a; 
-    LinePairedSeparator := #$d#$a
+    UseLinePairedBreak := True;
 
 Behaviour of this mode is described in the
 `Line Boundaries <regular_expressions.html#lineseparators>`__.
@@ -437,11 +434,6 @@ RegExprLineSeparators
 ~~~~~~~~~~~~~~~~~~~~~
 
 Default value for LineSeparators_ property.
-
-RegExprLinePairedSeparator
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Default value for LinePairedSeparator_ property.
 
 Global functions
 ----------------

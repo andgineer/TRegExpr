@@ -237,7 +237,7 @@ this is 2 line-breaks in the wrong order.
 
     Multi-line processing can be tuned by properties
     `LineSeparators <tregexpr.html#lineseparators>`__ and
-    `LinePairedSeparator <tregexpr.html#linepairedseparator>`_.
+    `UseLinePairedBreak <tregexpr.html#linepairedseparator>`_.
 
     So you can use Unix style separators ``\n`` or DOS/Windows style
     ``\r\n`` or mix them together (as in described above default behaviour).
