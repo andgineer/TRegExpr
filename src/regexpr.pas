@@ -783,7 +783,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 136;
+  REVersionMinor = 135;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4750,6 +4750,42 @@ begin
           {$ENDIF}
         end;
 
+      OP_ANYVERTSEP:
+        begin
+          if (regInput >= fInputEnd) or not IsVertLineSeparator(regInput^) then
+            Exit;
+          Inc(regInput);
+        end;
+
+      OP_NOTVERTSEP:
+        begin
+          if (regInput >= fInputEnd) or IsVertLineSeparator(regInput^) then
+            Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
+          Inc(regInput);
+          {$ENDIF}
+        end;
+
+      OP_ANYHORZSEP:
+        begin
+          if (regInput >= fInputEnd) or not IsHorzSeparator(regInput^) then
+            Exit;
+          Inc(regInput);
+        end;
+
+      OP_NOTHORZSEP:
+        begin
+          if (regInput >= fInputEnd) or IsHorzSeparator(regInput^) then
+            Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
+          Inc(regInput);
+          {$ENDIF}
+        end;
+
       OP_EXACTLYCI:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
@@ -5075,12 +5111,6 @@ begin
         end;
       {$ENDIF}
 
-      OP_EEND:
-        begin
-          Result := True; // Success!
-          Exit;
-        end;
-
       OP_STAR, OP_PLUS, OP_BRACES, OP_STARNG, OP_PLUSNG, OP_BRACESNG:
         begin
           // Lookahead to avoid useless match attempts when we know
@@ -5201,40 +5231,10 @@ begin
           Exit;
         end;
 
-      OP_ANYVERTSEP:
+      OP_EEND:
         begin
-          if (regInput >= fInputEnd) or not IsVertLineSeparator(regInput^) then
-            Exit;
-          Inc(regInput);
-        end;
-
-      OP_NOTVERTSEP:
-        begin
-          if (regInput >= fInputEnd) or IsVertLineSeparator(regInput^) then
-            Exit;
-          {$IFDEF UNICODEEX}
-          IncUnicode(regInput);
-          {$ELSE}
-          Inc(regInput);
-          {$ENDIF}
-        end;
-
-      OP_ANYHORZSEP:
-        begin
-          if (regInput >= fInputEnd) or not IsHorzSeparator(regInput^) then
-            Exit;
-          Inc(regInput);
-        end;
-
-      OP_NOTHORZSEP:
-        begin
-          if (regInput >= fInputEnd) or IsHorzSeparator(regInput^) then
-            Exit;
-          {$IFDEF UNICODEEX}
-          IncUnicode(regInput);
-          {$ELSE}
-          Inc(regInput);
-          {$ENDIF}
+          Result := True; // Success!
+          Exit;
         end;
 
       {$IFDEF FastUnicodeData}
