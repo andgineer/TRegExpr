@@ -130,12 +130,10 @@ type
     {$ENDIF}
   {$ENDIF}
   REChar = WideChar;
-  PRegex2Chars = ^LongInt;
   {$ELSE}
   PRegExprChar = PChar;
   RegExprString = AnsiString;
   REChar = Char;
-  PRegex2Chars = ^Word;
   {$ENDIF}
   TREOp = REChar; // internal opcode type
   PREOp = ^TREOp;
@@ -840,10 +838,16 @@ const
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
 
 function IsPairedBreak(p: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+type
+  {$IFDEF Unicode}
+  PtrPair = ^LongInt;
+  {$ELSE}
+  PtrPair = ^Word;
+  {$ENDIF}
 const
   cBreak = 13 shl (SizeOf(REChar) * 8) + 10;
 begin
-  Result := PRegex2Chars(p)^ = cBreak;
+  Result := PtrPair(p)^ = cBreak;
 end;
 
 function _FindCharInBuffer(SBegin, SEnd: PRegExprChar; Ch: REChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
