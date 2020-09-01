@@ -6,6 +6,11 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.133 2020.91.01
+ -=- (^) Remove ifdef UnicodeWordDetection, because it needs code which
+  is compiler specific (FPC/Delphi) and hard to support. Unicode is supported
+  better with existing ifdef FastUnicodeData. By Alexey Torgashin.
+
  v. 1.130 2020.08.31
  -=- (+) Support Perl syntax for named groups: (?'name'expr) and
   subroutine calls via (?&name).
