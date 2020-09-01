@@ -2367,9 +2367,9 @@ begin
   src := regCode;
   Inc(regCode, sz);
   {$IFDEF DebugSynRegExpr}
-  if regcode - programm > regsize then
+  if regCode - programm > regCodeSize then
     raise Exception.Create('TRegExpr.InsertOperator buffer overrun');
-  // if (opnd<regcode) or (opnd-regcode>regsize) then
+  // if (opnd<regCode) or (opnd-regCode>regCodeSize) then
   // raise Exception.Create('TRegExpr.InsertOperator invalid opnd');
   {$ENDIF}
   dst := regCode;
