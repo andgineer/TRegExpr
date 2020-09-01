@@ -4711,11 +4711,10 @@ begin
 
       OP_ANYML:
         begin // ###0.941
-          if (regInput >= fInputEnd) or
-            IsCustomLineSeparator(regInput^) or
-            (fLinePairedSeparatorAssigned and
-             (regInput^ = fLinePairedSeparatorHead) and
-             ((regInput + 1)^ = fLinePairedSeparatorTail))
+          if (regInput = fInputEnd) or
+            ((regInput^ = fLinePairedSeparatorHead) and
+            ((regInput + 1)^ = fLinePairedSeparatorTail)) or
+            IsCustomLineSeparator(regInput^)
           then
             Exit;
           {$IFDEF UNICODEEX}
