@@ -285,8 +285,10 @@ type
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
     regNumBrackets: integer; // count of () brackets
-    regDummy: REChar; // dummy pointer, used to detect which pass of Compile is going
-    regCode: PRegExprChar; // pointer to opcode, like "programm", but if =@regdummy - opcode is not emitting yet
+    regDummy: REChar; // dummy pointer, used to detect 1st/2nd pass of Compile
+                      // if p=@regDummy, it is 1st pass: opcode memory is not yet allocated
+    programm: PRegExprChar; // pointer to opcode, =nil in the 1st pass
+    regCode: PRegExprChar; // pointer to opcode, but =@regDummy in the 1st pass
     regCodeSize: integer; // total opcode size in REChars
     regCodeWork: PRegExprChar; // pointer to opcode, to first code after MAGIC
     regExactlyLen: PLongInt; // pointer to length of substring of OP_EXACTLY* inside opcode
@@ -306,7 +308,6 @@ type
     // particular, the operand of a BRANCH node is the first node of the branch.
     // (NB this is *not* a tree structure: the tail of the branch connects
     // to the thing following the set of BRANCHes.)
-    programm: PRegExprChar; // pointer to opcode
 
     fExpression: RegExprString; // regex string
     fInputString: RegExprString; // input string
