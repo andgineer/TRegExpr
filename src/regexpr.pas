@@ -64,7 +64,6 @@ interface
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_'
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
 { off $DEFINE UseLineSep} // Use LineSeparators property, otherwise fixed line-break chars
-{ off $DEFINE UnicodeWordDetection} // Additionally to ASCII word chars, detect word chars >=128 by Unicode table
 {$DEFINE FastUnicodeData} // Use arrays for UpperCase/LowerCase/IsWordChar, they take 320K more memory
 {$DEFINE UseFirstCharSet} // Enable optimization, which finds possible first chars of input string
 {$DEFINE RegExpPCodeDump} // Enable method Dump() to show opcode as string
@@ -72,13 +71,9 @@ interface
   {$DEFINE reRealExceptionAddr} // Exceptions will point to appropriate source line, not to Error procedure
 {$ENDIF}
 {$DEFINE ComplexBraces} // Support braces in complex cases
-{$IFNDEF UniCode}
+{$IFNDEF Unicode}
   {$UNDEF UnicodeEx}
-  {$UNDEF UnicodeWordDetection}
   {$UNDEF FastUnicodeData}
-{$ENDIF}
-{$IFDEF FastUnicodeData}
-  {$UNDEF UnicodeWordDetection}
 {$ENDIF}
 // ======== Define Pascal-language options
 // Define 'UseAsserts' option (do not edit this definitions).
@@ -344,9 +339,6 @@ type
 
     {$IFNDEF UniCode}
     fLineSepArray: array[byte] of boolean;
-    {$ENDIF}
-    {$IFDEF UnicodeWordDetection}
-    FUseUnicodeWordDetection: boolean;
     {$ENDIF}
 
     CharCheckers: TRegExprCharCheckerArray;
@@ -690,11 +682,6 @@ type
     // ###0.929
     {$ENDIF}
 
-    {$IFDEF UnicodeWordDetection}
-    // If set to true, in addition to using WordChars, a heuristic to detect unicode word letters is used for \w
-    property UseUnicodeWordDetection: boolean read FUseUnicodeWordDetection write FUseUnicodeWordDetection;
-    {$ENDIF}
-
     {$IFDEF UseLineSep}
     // line separators (like \n in Unix)
     property LineSeparators: RegExprString read fLineSeparators write SetLineSeparators; // ###0.941
@@ -788,25 +775,9 @@ function RegExprSubExpressions(const ARegExpr: string; ASubExprs: TStrings;
 
 implementation
 
-{$IFDEF FPC}
-{$IFDEF UnicodeWordDetection}
-uses
-  UnicodeData;
-{$ENDIF}
 {$IFDEF FastUnicodeData}
 uses
   regexpr_unicodedata;
-{$ENDIF}
-{$ELSE}
-{$IFDEF D2009}
-uses
-  // unit exists since Delphi 2009
-  {$IFDEF D_XE2}
-  System.Character;
-  {$ELSE}
-  Character;
-  {$ENDIF}
-{$ENDIF}
 {$ENDIF}
 
 const
@@ -1723,10 +1694,6 @@ begin
   FUseOsLineEndOnReplace := True;
   FReplaceLineEnd := sLineBreak;
 
-  {$IFDEF UnicodeWordDetection}
-  FUseUnicodeWordDetection := True;
-  {$ENDIF}
-
   fSlowChecksSizeMax := 2000;
 
   {$IFDEF UseLineSep}
@@ -1907,25 +1874,6 @@ end; { of procedure TRegExpr.SetModifierStr
 { ==================== Compiler section ======================= }
 { ============================================================= }
 
-{$IFDEF UnicodeWordDetection}
-  {$IFDEF FPC}
-  function IsUnicodeWordChar(AChar: WideChar): boolean; inline;
-  var
-    NType: byte;
-  begin
-    if Ord(AChar) >= LOW_SURROGATE_BEGIN then
-      Exit(False);
-    NType := GetProps(Ord(AChar))^.Category;
-    Result := (NType <= UGC_OtherNumber);
-  end;
-  {$ELSE}
-  function IsUnicodeWordChar(AChar: WideChar): boolean; inline;
-  begin
-    Result := System.Character.IsLetterOrDigit(AChar);
-  end;
-  {$ENDIF}
-{$ENDIF}
-
 {$IFDEF FastUnicodeData}
 function TRegExpr.IsWordChar(AChar: REChar): boolean;
 begin
@@ -2073,10 +2021,6 @@ begin
     else
       Result := False;
   end;
-  {$ENDIF}
-  {$IFDEF UnicodeWordDetection}
-  if not Result and (Ord(AChar) >= 128) and UseUnicodeWordDetection then
-    Result := IsUnicodeWordChar(AChar);
   {$ENDIF}
 end;
 {$ENDIF}
