@@ -23,7 +23,7 @@ With regular expressions you can validate user input, search for some
 patterns like emails of phone numbers on web pages or in some documents
 and so on.
 
-Below is complete regular expressions cheat sheet just on one page.
+Below is the complete regular expressions cheat sheet.
 
 Characters
 ----------
@@ -31,9 +31,8 @@ Characters
 Simple matches
 ~~~~~~~~~~~~~~
 
-Any single character matches itself.
-
-A series of characters matches that series of characters in the input
+Any single character (except special regex characters) matches itself.
+A series of (not special) characters matches that series of characters in the input
 string.
 
 ========== ==========
@@ -44,6 +43,9 @@ RegEx      Matches
 
 Non-Printable Characters (escape-codes)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To specify character by its Unicode code, use the prefix ``\x`` followed by the hex code.
+For 3-4 digits code (after U+00FF), enclose the code into braces. 
 
 ============== ==============================================
 RegEx          Matches
@@ -65,10 +67,10 @@ RegEx               Matches
 ``\f``              form feed (FF), same as ``\x0c``
 ``\a``              alarm (BEL), same as ``\x07``
 ``\e``              escape (ESC), same as ``\x1b``
-``\cA`` ... ``\cZ`` | chr(0) to chr(25)
-                    | For example, ``\cI`` matches the tab-char
+``\cA`` ... ``\cZ`` | chr(0) to chr(25).
+                    | For example, ``\cI`` matches the tab-char. 
+                    | Lower-case letters "a"..."z" are also supported.
 =================== ==========================================================================
-
 
 .. _escape:
 
@@ -76,13 +78,13 @@ Escaping
 ~~~~~~~~
 
 To represent special regex character (one of ``.+*?|\()[]{}^$``), prefix it with a backslash ``\``.
-The literal backslash must be escaped too: ``\\``. 
+The literal backslash must be escaped too. 
 
 =============== ========================================================================
 RegEx           Matches
 =============== ========================================================================
-``\^FooBarPtr`` ``^FooBarPtr`` this is ``^`` and not `start of line <#lineseparators>`__
-``\[a\]``       ``[a]`` this is not `character class <#userclass>`__
+``\^FooBarPtr`` ``^FooBarPtr``, this is ``^`` and not `start of line <#lineseparators>`__
+``\[a\]``       ``[a]``, this is not `character class <#userclass>`__
 =============== ========================================================================
 
 Character Classes
@@ -94,7 +96,7 @@ User Character Classes
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Character class is a list of characters inside square brackets ``[]``.
-The class matches any **one** character listed in this class.
+The class matches any **single** character listed in this class.
 
 ================= =============================================================
 RegEx             Matches
@@ -102,8 +104,8 @@ RegEx             Matches
 ``foob[aeiou]r``  ``foobar``, ``foober`` etc but not ``foobbr``, ``foobcr`` etc
 ================= =============================================================
 
-You can ``invert`` the class - if the first character after the ``[`` is
-``^``, then the class matches any character **but** characters listed
+You can "invert" the class - if the first character after the ``[`` is
+``^``, then the class matches any character **except** the characters listed
 in the class.
 
 ================= =============================================================
@@ -112,10 +114,10 @@ RegEx             Matches
 ``foob[^aeiou]r`` ``foobbr``, ``foobcr`` etc but not ``foobar``, ``foober`` etc
 ================= =============================================================
 
-Within a list, the ``-`` character is used to specify a range, so that
+Within a list, the dash ``-`` character is used to specify a range, so that
 ``a-z`` represents all characters between ``a`` and ``z``, inclusive.
 
-If you want ``-`` itself to be a member of a class, put it at the start
+If you want the dash ``-`` itself to be a member of a class, put it at the start
 or end of the list, or `escape <#escape>`__ it with a backslash.
 
 If you want ``]`` as part of the class you may place it at the start of list or
@@ -128,29 +130,29 @@ RegEx         Matches
 ``[az-]``     ``a``, ``z`` and ``-``
 ``[a\-z]``    ``a``, ``z`` and ``-``
 ``[a-z]``     characters from ``a`` to ``z``
-``[\n-\x0D]`` characters from ``#10`` to ``#13``
+``[\n-\x0D]`` characters from chr(10) to chr(13)
 ============= ==================================
 
-Predefined Character Classes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Meta-Classes
+~~~~~~~~~~~~
 
 There are a number of predefined character classes that keeps regular expressions
-more compact ("meta-classes"):
+more compact, "meta-classes":
 
 ======     ==============================================
 RegEx      Matches
 ======     ==============================================
-``\w``     an alphanumeric character (including ``_``)
-``\W``     a nonalphanumeric
-``\d``     a numeric character (same as ``[0123456789]``)
+``\w``     an alphanumeric character, including ``_``
+``\W``     a non-alphanumeric
+``\d``     a numeric character (same as ``[0-9]``)
 ``\D``     a non-numeric
 ``\s``     any space (same as ``[ \t\n\r\f]``)
-``\S``     a non space
-``\h``     | horizontal whitespace. the tab and all characters
-           | in the "space separator" Unicode category.
+``\S``     a non-space
+``\h``     | horizontal whitespace: the tab and all characters
+           | in the "space separator" Unicode category
 ``\H``     not a horizontal whitespace
-``\v``     | vertical whitespace. all characters treated as
-           | line breaks in the Unicode standard.
+``\v``     | vertical whitespace: all characters treated as
+           | line-breaks in the Unicode standard
 ``\V``     not a vertical whitespace
 ======     ==============================================
 
@@ -160,8 +162,8 @@ You may use all meta-classes, mentioned in the table above, within
 =============== =====================================================================================
 RegEx           Matches
 =============== =====================================================================================
-``foob\dr``     ``foob1r``, ``foob6r`` and so on but not ``foobar``, ``foobbr`` and so on
-``foob[\w\s]r`` ``foobar``, ``foob r``, ``foobbr`` and so on but not ``foob1r``, ``foob=r`` and so on
+``foob\dr``     ``foob1r``, ``foob6r`` and so on, but not ``foobar``, ``foobbr`` and so on
+``foob[\w\s]r`` ``foobar``, ``foob r``, ``foobbr`` and so on, but not ``foob1r``, ``foob=r`` and so on
 =============== =====================================================================================
 
 .. note::
@@ -172,7 +174,7 @@ RegEx           Matches
     `WordChars <tregexpr.html#wordchars>`_ define
     character classes ``\w``, ``\W``, ``\s``, ``\S``.
 
-    So you can redefine this classes.
+    So you can redefine these classes.
 
 Boundaries
 ----------
@@ -185,23 +187,23 @@ Line Boundaries
 ============= ================================================
 RegEx         Matches
 ============= ================================================
-``^``         start of line
-``$``         end of line
-``\A``        start of text
-``\Z``        end of text
-``.``         any character in line
+``^``         zero-length match at start of line
+``$``         zero-length match at end of line
+``\A``        zero-length match at start of entire text
+``\Z``        zero-length match at end of entire text
+``.``         any character, can include line-breaks
 ``^foobar``   ``foobar`` only if it's at the beginning of line
 ``foobar$``   ``foobar`` only if it's at the end of line
 ``^foobar$``  ``foobar`` only if it's the only string in line
 ``foob.r``    ``foobar``, ``foobbr``, ``foob1r`` and so on
 ============= ================================================
 
-``^`` metacharacter by default match the
-beginning of the input string. ``$`` - the end.
+``^`` metacharacter matches zero-length position at the beginning of the input string.
+``$`` - at the end.
 
 You may, however, wish to treat a string as a multi-line text,
-so ``^`` will match after any line separator within the string,
-and ``$`` will match before any line separator. You can do this by
+so ``^`` will match after any line-break within the string,
+and ``$`` will match before any line-break. You can do this by
 switching `modifier /m <#m>`_.
 
 Note that there is no empty line within the sequence ``\x0D\x0A``.
@@ -213,23 +215,22 @@ Note that there is no empty line within the sequence ``\x0D\x0A``.
     `Unicode version <tregexpr.html#unicode>`__, then ``^``/``$``
     also matches ``\x2028``, ``\x2029``, ``\x0B``, ``\x0C`` or ``\x85``.
 
-The ``\A`` and ``\Z`` are just like ``^`` and ``$``, except that they
-won’t match multiple times when the `modifier
-/m <#m>`_ is used.
+The ``\A`` and ``\Z`` are like ``^`` and ``$``, but they match only at the
+very beginning/ending of the input string,
+ignoring the `modifier /m <#m>`_.
 
 The ``.`` metacharacter by default matches any character, but if you
-switch ``Off`` the `modifier /s <#s>`_, then
-``.`` won’t match line separators inside the string.
+turn **off** the `modifier /s <#s>`_, then it won't match line-breaks inside the string.
 
 Note that ``^.*$`` does not match a string between ``\x0D\x0A``,
 because this is unbreakable line separator.
 But it matches the empty string within the sequence ``\x0A\x0D`` because
-this is just wrong order to be treated as line separator.
+this is 2 line-breaks in the wrong order.
 
 .. note::
     `TRegExpr <tregexpr.html>`__
 
-    Multiline processing can be tuned with of properties
+    Multi-line processing can be tuned by properties
     `LineSeparators <tregexpr.html#lineseparators>`__ and
     `LinePairedSeparator <tregexpr.html#linepairedseparator>`_.
 
@@ -280,13 +281,9 @@ So, digits in curly brackets ``{n,m}``, specify the minimum
 number of times to match ``n`` and the maximum ``m``.
 
 The ``{n}`` is equivalent to ``{n,n}`` and matches exactly ``n`` times.
-
 The ``{n,}`` matches ``n`` or more times.
 
-There is no limit to the size of ``n`` or ``m``.
-
-If a curly bracket occurs in any other context, it is treated as a
-regular character.
+There is no practical limit to the values n and m (limit is maximal signed 32-bit value).
 
 ================== ========================================================================
 RegEx              Matches
@@ -305,11 +302,11 @@ RegEx              Matches
 Greediness
 ~~~~~~~~~~
 
-`Quantifiers <#iterator>`_ in ``greedy`` mode takes as many as possible,
-in ``non-greedy`` mode - as few as possible.
+`Quantifiers <#iterator>`_ in "greedy" mode takes as many as possible,
+in "lazy" mode - as few as possible.
 
-By default all quantifiers are ``greedy``.
-Use ``?`` to make any quantifier ``non-greedy``.
+By default all quantifiers are "greedy".
+Append the character ``?`` to make any quantifier "lazy".
 
 For string ``abbbbc``:
 
@@ -323,7 +320,7 @@ RegEx       Matches
 ``b{2,3}``  ``bbb``
 =========== ============
 
-You can switch all quantifiers into ``non-greedy`` mode (`modifier /g <#g>`_,
+You can switch all quantifiers into "lazy" mode (`modifier /g <#g>`_,
 below we use `in-line modifier change <#inlinemodifiers>`_).
 
 ============ =======
@@ -332,7 +329,7 @@ RegEx        Matches
 ``(?-g)b+``  ``b``
 ============ =======
 
-Possessive quantifier
+Possessive Quantifier
 ~~~~~~~~~~~~~~~~~~~~~
 
 The syntax is: ``a++``, ``a*+``, ``a?+``, ``a{2,4}+``.
@@ -342,8 +339,8 @@ not for braces after group like ``(foo|bar){3,5}+``.
 This regex feature is `described here. <https://regular-expressions.mobi/possessive.html?wlr=1>`__
 In short, possessive quantifier speeds up matching in complex cases.
 
-The choice
-----------
+Choice
+------
 
 Expressions in the choice are separated by vertical bar ``|``.
 
