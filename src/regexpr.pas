@@ -783,7 +783,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 138;
+  REVersionMinor = 139;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -3785,6 +3785,7 @@ begin
                         Error(reeLookbehindBad);
 
                       GrpKind := gkLookbehind;
+                      GrpAtomic[regNumBrackets] := True; // lookaround must be atomic
                       regLookbehind := True;
                       Inc(regParse, 3);
                     end;
@@ -3802,10 +3803,12 @@ begin
                 if NextCh = '=' then
                 begin
                   GrpKind := gkLookahead;
+                  GrpAtomic[regNumBrackets] := True; // lookaround must be atomic
                 end
                 else
                 begin
                   GrpKind := gkLookaheadNeg;
+                  GrpAtomic[regNumBrackets] := True; // lookaround must be atomic
                   regLookaheadNeg := True;
                 end;
 
