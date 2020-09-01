@@ -338,8 +338,8 @@ type
     fReplaceLineEndFromOS: boolean; // use OS LineBreak chars (LF or CR LF) for fReplaceLineEnd
 
     fSlowChecksSizeMax: integer;
-    // use ASlowChecks=True in Exec() only when Length(InputString)<SlowChecksSizeMax
-    // ASlowChecks enables to use regMustString optimization
+    // Exec() param ASlowChecks is set to True, when Length(InputString)<SlowChecksSizeMax
+    // This ASlowChecks enables to use regMustString optimization
 
     {$IFNDEF UniCode}
     fLineSepArray: array[byte] of boolean;
