@@ -1698,10 +1698,9 @@ begin
   programm := nil;
   fExpression := '';
   fInputString := '';
-
   regIsCompiled := False;
 
-  FillChar(fModifiers, SIzeOf(fModifiers), 0);
+  FillChar(fModifiers, SizeOf(fModifiers), 0);
   ModifierI := RegExprModifierI;
   ModifierR := RegExprModifierR;
   ModifierS := RegExprModifierS;
@@ -1710,16 +1709,16 @@ begin
   ModifierX := RegExprModifierX;
 
   {$IFDEF UseSpaceChars}
-  SpaceChars := RegExprSpaceChars; // ###0.927
+  SpaceChars := RegExprSpaceChars;
   {$ENDIF}
   {$IFDEF UseWordChars}
-  WordChars := RegExprWordChars; // ###0.929
+  WordChars := RegExprWordChars;
   {$ENDIF}
 
   {$IFDEF UseLineSep}
-  fLineSeparators := RegExprLineSeparators; // ###0.941
+  fLineSeparators := RegExprLineSeparators;
   {$ENDIF}
-  LinePairedSeparator := RegExprLinePairedSeparator; // ###0.941
+  LinePairedSeparator := RegExprLinePairedSeparator;
 
   FUseOsLineEndOnReplace := True;
   FReplaceLineEnd := sLineBreak;
