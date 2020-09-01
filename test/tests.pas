@@ -376,7 +376,7 @@ const
     ),
     // 29
     (
-    expression: '.*?\b(https?|ftp)://(?:\w+)\.(?:\w+)\.(\w+)';
+    expression: '.*?\b(https?|ftp)\b://(?:\w+)\.(?:\w+)\.(\w\B\w\B\w)';
     inputText: '>>ftp://www.name.com';
     substitutionText: '$1 $2';
     expectedResult: 'ftp com';

@@ -783,7 +783,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 133;
+  REVersionMinor = 136;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4610,12 +4610,19 @@ begin
       next := scan + Len;
 
     case scan^ of
-      OP_NOTBOUND,
       OP_BOUND:
         begin
           bound1 := (regInput = fInputStart) or not IsWordChar((regInput - 1)^);
-          bound2 := (regInput = fInputEnd) or not IsWordChar(regInput^);
-          if (scan^ = OP_BOUND) xor (bound1 <> bound2) then
+          bound2 := (regInput >= fInputEnd) or not IsWordChar(regInput^);
+          if bound1 = bound2 then
+            Exit;
+        end;
+
+      OP_NOTBOUND:
+        begin
+          bound1 := (regInput = fInputStart) or not IsWordChar((regInput - 1)^);
+          bound2 := (regInput >= fInputEnd) or not IsWordChar(regInput^);
+          if bound1 <> bound2 then
             Exit;
         end;
 
@@ -4664,7 +4671,7 @@ begin
 
       OP_ANY:
         begin
-          if regInput = fInputEnd then
+          if regInput >= fInputEnd then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -4675,7 +4682,7 @@ begin
 
       OP_ANYML:
         begin // ###0.941
-          if (regInput = fInputEnd) or
+          if (regInput >= fInputEnd) or
             IsCustomLineSeparator(regInput^) or
             (fLinePairedSeparatorAssigned and
              (regInput^ = fLinePairedSeparatorHead) and
@@ -4691,14 +4698,14 @@ begin
 
       OP_ANYDIGIT:
         begin
-          if (regInput = fInputEnd) or not IsDigitChar(regInput^) then
+          if (regInput >= fInputEnd) or not IsDigitChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTDIGIT:
         begin
-          if (regInput = fInputEnd) or IsDigitChar(regInput^) then
+          if (regInput >= fInputEnd) or IsDigitChar(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -4709,14 +4716,14 @@ begin
 
       OP_ANYLETTER:
         begin
-          if (regInput = fInputEnd) or not IsWordChar(regInput^) then
+          if (regInput >= fInputEnd) or not IsWordChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTLETTER:
         begin
-          if (regInput = fInputEnd) or IsWordChar(regInput^) then
+          if (regInput >= fInputEnd) or IsWordChar(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -4727,50 +4734,14 @@ begin
 
       OP_ANYSPACE:
         begin
-          if (regInput = fInputEnd) or not IsSpaceChar(regInput^) then
+          if (regInput >= fInputEnd) or not IsSpaceChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTSPACE:
         begin
-          if (regInput = fInputEnd) or IsSpaceChar(regInput^) then
-            Exit;
-          {$IFDEF UNICODEEX}
-          IncUnicode(regInput);
-          {$ELSE}
-          Inc(regInput);
-          {$ENDIF}
-        end;
-
-      OP_ANYVERTSEP:
-        begin
-          if (regInput = fInputEnd) or not IsVertLineSeparator(regInput^) then
-            Exit;
-          Inc(regInput);
-        end;
-
-      OP_NOTVERTSEP:
-        begin
-          if (regInput = fInputEnd) or IsVertLineSeparator(regInput^) then
-            Exit;
-          {$IFDEF UNICODEEX}
-          IncUnicode(regInput);
-          {$ELSE}
-          Inc(regInput);
-          {$ENDIF}
-        end;
-
-      OP_ANYHORZSEP:
-        begin
-          if (regInput = fInputEnd) or not IsHorzSeparator(regInput^) then
-            Exit;
-          Inc(regInput);
-        end;
-
-      OP_NOTHORZSEP:
-        begin
-          if (regInput = fInputEnd) or IsHorzSeparator(regInput^) then
+          if (regInput >= fInputEnd) or IsSpaceChar(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -4872,7 +4843,7 @@ begin
 
       OP_ANYOF:
         begin
-          if (regInput = fInputEnd) or
+          if (regInput >= fInputEnd) or
             not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
             Exit;
           {$IFDEF UNICODEEX}
@@ -4884,7 +4855,7 @@ begin
 
       OP_ANYBUT:
         begin
-          if (regInput = fInputEnd) or
+          if (regInput >= fInputEnd) or
             FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
             Exit;
           {$IFDEF UNICODEEX}
@@ -4896,7 +4867,7 @@ begin
 
       OP_ANYOFCI:
         begin
-          if (regInput = fInputEnd) or
+          if (regInput >= fInputEnd) or
             not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
             Exit;
           {$IFDEF UNICODEEX}
@@ -4908,7 +4879,7 @@ begin
 
       OP_ANYBUTCI:
         begin
-          if (regInput = fInputEnd) or
+          if (regInput >= fInputEnd) or
             FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
             Exit;
           {$IFDEF UNICODEEX}
@@ -5230,10 +5201,46 @@ begin
           Exit;
         end;
 
+      OP_ANYVERTSEP:
+        begin
+          if (regInput >= fInputEnd) or not IsVertLineSeparator(regInput^) then
+            Exit;
+          Inc(regInput);
+        end;
+
+      OP_NOTVERTSEP:
+        begin
+          if (regInput >= fInputEnd) or IsVertLineSeparator(regInput^) then
+            Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
+          Inc(regInput);
+          {$ENDIF}
+        end;
+
+      OP_ANYHORZSEP:
+        begin
+          if (regInput >= fInputEnd) or not IsHorzSeparator(regInput^) then
+            Exit;
+          Inc(regInput);
+        end;
+
+      OP_NOTHORZSEP:
+        begin
+          if (regInput >= fInputEnd) or IsHorzSeparator(regInput^) then
+            Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
+          Inc(regInput);
+          {$ENDIF}
+        end;
+
       {$IFDEF FastUnicodeData}
       OP_ANYCATEGORY:
         begin
-          if (regInput = fInputEnd) then Exit;
+          if (regInput >= fInputEnd) then Exit;
           if not MatchOneCharCategory(scan + REOpSz + RENextOffSz, regInput) then Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5244,7 +5251,7 @@ begin
 
       OP_NOTCATEGORY:
         begin
-          if (regInput = fInputEnd) then Exit;
+          if (regInput >= fInputEnd) then Exit;
           if MatchOneCharCategory(scan + REOpSz + RENextOffSz, regInput) then Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
