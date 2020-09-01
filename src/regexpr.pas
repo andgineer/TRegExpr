@@ -182,6 +182,9 @@ const
     + #$1680#$2000#$2001#$2002#$2003#$2004#$2005#$2006#$2007#$2008#$2009#$200A#$202F#$205F#$3000
     {$ENDIF};
 
+  RegExprUsePairedBreak: boolean = True;
+  RegExprReplaceLineBreakFromOS: boolean = True;
+
 const
   RegexMaxGroups = 90;
   // Max number of groups.
@@ -778,7 +781,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 141;
+  REVersionMinor = 142;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1699,9 +1702,9 @@ begin
   fLineSeparators := RegExprLineSeparators;
   {$ENDIF}
 
-  UseLinePairedBreak := True;
+  fUsePairedBreak := RegExprUsePairedBreak;
 
-  fReplaceLineEndFromOS := True;
+  fReplaceLineEndFromOS := RegExprReplaceLineBreakFromOS;
   fReplaceLineEnd := sLineBreak;
 
   fSlowChecksSizeMax := 2000;
