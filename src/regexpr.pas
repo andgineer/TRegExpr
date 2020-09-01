@@ -4711,7 +4711,7 @@ begin
 
       OP_ANYML:
         begin // ###0.941
-          if (regInput = fInputEnd) or
+          if (regInput >= fInputEnd) or
             ((regInput^ = fLinePairedSeparatorHead) and
             ((regInput + 1)^ = fLinePairedSeparatorTail)) or
             IsCustomLineSeparator(regInput^)
