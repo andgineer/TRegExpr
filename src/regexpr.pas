@@ -183,6 +183,7 @@ const
     {$ENDIF};
 
   RegExprUsePairedBreak: boolean = True;
+  RegExprReplaceLineBreak: RegExprString = sLineBreak;
   RegExprReplaceLineBreakFromOS: boolean = True;
 
 const
@@ -1703,9 +1704,8 @@ begin
   {$ENDIF}
 
   fUsePairedBreak := RegExprUsePairedBreak;
-
+  fReplaceLineEnd := RegExprReplaceLineBreak;
   fReplaceLineEndFromOS := RegExprReplaceLineBreakFromOS;
-  fReplaceLineEnd := sLineBreak;
 
   fSlowChecksSizeMax := 2000;
 
