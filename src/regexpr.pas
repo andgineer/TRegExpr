@@ -783,7 +783,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 133;
+  REVersionMinor = 134;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4610,12 +4610,19 @@ begin
       next := scan + Len;
 
     case scan^ of
-      OP_NOTBOUND,
       OP_BOUND:
         begin
           bound1 := (regInput = fInputStart) or not IsWordChar((regInput - 1)^);
           bound2 := (regInput = fInputEnd) or not IsWordChar(regInput^);
-          if (scan^ = OP_BOUND) xor (bound1 <> bound2) then
+          if bound1 = bound2 then
+            Exit;
+        end;
+
+      OP_NOTBOUND:
+        begin
+          bound1 := (regInput = fInputStart) or not IsWordChar((regInput - 1)^);
+          bound2 := (regInput = fInputEnd) or not IsWordChar(regInput^);
+          if bound1 <> bound2 then
             Exit;
         end;
 
