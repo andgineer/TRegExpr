@@ -44,6 +44,22 @@
   The same modified LGPL with static linking exception as the Free Pascal RTL
 }
 
+{
+program is essentially a linear encoding
+of a nondeterministic finite-state machine (aka syntax charts or
+"railroad normal form" in parsing technology). Each node is an opcode
+plus a "next" pointer, possibly plus an operand. "Next" pointers of
+all nodes except BRANCH implement concatenation; a "next" pointer with
+a BRANCH on both ends of it connects two alternatives. (Here we
+have one of the subtle syntax dependencies: an individual BRANCH (as
+opposed to a collection of them) is never concatenated with anything
+because of operator precedence.) The operand of some types of node is
+a literal string; for others, it is a node leading into a sub-FSM. In
+particular, the operand of a BRANCH node is the first node of the branch.
+(NB this is *not* a tree structure: the tail of the branch connects
+to the thing following the set of BRANCHes.)
+}
+
 interface
 
 { off $DEFINE DebugSynRegExpr }
@@ -294,20 +310,6 @@ type
     regExactlyLen: PLongInt; // pointer to length of substring of OP_EXACTLY* inside opcode
     regIsCompiled: boolean; // true if regex was successfully compiled
     fSecondPass: boolean; // true if the 2nd pass of Compile is going
-
-    // programm is essentially a linear encoding
-    // of a nondeterministic finite-state machine (aka syntax charts or
-    // "railroad normal form" in parsing technology). Each node is an opcode
-    // plus a "next" pointer, possibly plus an operand. "Next" pointers of
-    // all nodes except BRANCH implement concatenation; a "next" pointer with
-    // a BRANCH on both ends of it connects two alternatives. (Here we
-    // have one of the subtle syntax dependencies: an individual BRANCH (as
-    // opposed to a collection of them) is never concatenated with anything
-    // because of operator precedence.) The operand of some types of node is
-    // a literal string; for others, it is a node leading into a sub-FSM. In
-    // particular, the operand of a BRANCH node is the first node of the branch.
-    // (NB this is *not* a tree structure: the tail of the branch connects
-    // to the thing following the set of BRANCHes.)
 
     fExpression: RegExprString; // regex string
     fInputString: RegExprString; // input string
