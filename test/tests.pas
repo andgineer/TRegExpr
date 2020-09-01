@@ -4,7 +4,7 @@ unit tests;
 {$mode objfpc}{$H+}
 {$ENDIF}
 
-{ $DEFINE DUMPTESTS} //define this to dump a
+{ $DEFINE DUMPTESTS} //define this to dump results to console
 
 {$IFDEF VER130} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D5
 {$IFDEF VER140} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D6
@@ -740,7 +740,6 @@ end;
 procedure TTestRegexpr.TestEmpty;
 begin
   CompileRE('1'); // just to create RE object
-  IsFalse('UseOsLineEndOnReplace correctly set', RE.UseOsLineEndOnReplace);
 end;
 
 procedure TTestRegexpr.TestNotFound;
@@ -1122,11 +1121,12 @@ end;
 
 procedure TTestRegexpr.CompileRE(AExpression: string);
 begin
-  if (RE = Nil) then begin
+  if (RE = Nil) then
+  begin
     RE := TRegExpr.Create;
-    RE.UseOsLineEndOnReplace:=False;
+    RE.ReplaceLineEnd := #10;
   end;
-  RE.Expression:=AExpression;
+  RE.Expression := AExpression;
   RE.Compile;
 {$IFDEF DUMPTESTS}
   writeln('  Modifiers "', RE.ModifierStr, '"');

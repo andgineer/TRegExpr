@@ -184,7 +184,6 @@ const
 
   RegExprUsePairedBreak: boolean = True;
   RegExprReplaceLineBreak: RegExprString = sLineBreak;
-  RegExprReplaceLineBreakFromOS: boolean = True;
 
 const
   RegexMaxGroups = 90;
@@ -331,7 +330,6 @@ type
 
     fUsePairedBreak: boolean;
     fReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
-    fReplaceLineEndFromOS: boolean; // use OS LineBreak chars (LF or CR LF) for fReplaceLineEnd
 
     fSlowChecksSizeMax: integer;
     // Exec() param ASlowChecks is set to True, when Length(InputString)<SlowChecksSizeMax
@@ -418,7 +416,6 @@ type
     { ==================== Compiler section =================== }
     // compile a regular expression into internal code
     function CompileRegExpr(ARegExp: PRegExprChar): boolean;
-    procedure SetUseOsLineEndOnReplace(AValue: boolean);
 
     // set the next-pointer at the end of a node chain
     procedure Tail(p: PRegExprChar; val: PRegExprChar);
@@ -689,10 +686,7 @@ type
     // support paired line-break CR LF
     property UseLinePairedBreak: boolean read fUsePairedBreak write SetUsePairedBreak;
 
-    // Use OS-dependant LineBreak on replaces.
-    // Default is True for backwards compatibility.
-    // Set to False to always use LF.
-    property UseOsLineEndOnReplace: boolean read fReplaceLineEndFromOS write SetUseOsLineEndOnReplace;
+    property ReplaceLineEnd: RegExprString read fReplaceLineEnd write fReplaceLineEnd;
 
     property SlowChecksSizeMax: integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
   end;
@@ -782,7 +776,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 142;
+  REVersionMinor = 143;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1158,7 +1152,10 @@ begin
       ModifierX := (rroModifierX in Options);
       // Set this after the above, if the regex contains modifiers, they will be applied.
       Expression := ARegExpr;
-      UseOsLineEndOnReplace := (rroUseOsLineEnd in Options);
+      if rroUseOsLineEnd in Options then
+        ReplaceLineEnd := sLineBreak
+      else
+        ReplaceLineEnd := #10;
       Result := Replace(AInputStr, AReplaceStr, rroUseSubstitution in Options);
     finally
       Free;
@@ -1705,7 +1702,6 @@ begin
 
   fUsePairedBreak := RegExprUsePairedBreak;
   fReplaceLineEnd := RegExprReplaceLineBreak;
-  fReplaceLineEndFromOS := RegExprReplaceLineBreakFromOS;
 
   fSlowChecksSizeMax := 2000;
 
@@ -2875,17 +2871,6 @@ begin
 
 end; { of function TRegExpr.CompileRegExpr
   -------------------------------------------------------------- }
-
-procedure TRegExpr.SetUseOsLineEndOnReplace(AValue: boolean);
-begin
-  if fReplaceLineEndFromOS = AValue then
-    Exit;
-  fReplaceLineEndFromOS := AValue;
-  if fReplaceLineEndFromOS then
-    fReplaceLineEnd := sLineBreak
-  else
-    fReplaceLineEnd := #10;
-end;
 
 function TRegExpr.ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
 // regular expression, i.e. main body or parenthesized thing
