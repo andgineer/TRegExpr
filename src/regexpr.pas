@@ -240,9 +240,10 @@ type
 
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
-    GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // groups are atomic, filled in Compile
-    GrpAtomicDone: array [0 .. RegexMaxGroups - 1] of boolean; // atomic group is "done", used in Exec* only
-    GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to opcode of groups, used by OP_SUBCALL*
+    GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
+    GrpAtomicDone: array [0 .. RegexMaxGroups - 1] of boolean; // atomic group[i] is "done" (used in Exec* only)
+    GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
+    GrpSubCalled: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is called by OP_SUBCALL*
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -315,6 +316,7 @@ type
     fInputString: RegExprString; // input string
     fLastError: integer; // Error call sets code of LastError
     fLastErrorOpcode: TREOp;
+    fLastErrorSymbol: REChar;
 
     fModifiers: TRegExprModifiers; // regex modifiers
     fCompModifiers: TRegExprModifiers; // compiler's copy of modifiers
@@ -810,7 +812,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 125;
+  REVersionMinor = 130;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1464,8 +1466,6 @@ const
     High(REChar); // must fit to 0..255 range
     {$ENDIF}
 
-  // !!! Don't add new OpCodes after CLOSE !!!
-
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
   // must have lengths that can be divided by SizeOf (REChar) !
@@ -1503,6 +1503,7 @@ const
 const
   reeOk = 0;
   reeCompNullArgument = 100;
+  reeUnknownMetaSymbol = 101;
   reeCompParseRegTooManyBrackets = 102;
   reeCompParseRegUnmatchedBrackets = 103;
   reeCompParseRegUnmatchedBrackets2 = 104;
@@ -1563,6 +1564,8 @@ begin
       Result := 'No errors';
     reeCompNullArgument:
       Result := 'TRegExpr compile: null argument';
+    reeUnknownMetaSymbol:
+      Result := 'TRegExpr compile: unknown meta-character: \' + fLastErrorSymbol;
     reeCompParseRegTooManyBrackets:
       Result := 'TRegExpr compile: ParseReg: too many ()';
     reeCompParseRegUnmatchedBrackets:
@@ -3464,7 +3467,14 @@ begin
         end;
       end;
   else
-    Result := APtr^;
+    begin
+      Result := APtr^;
+      if IsWordChar(Result) then
+      begin
+        fLastErrorSymbol := Result;
+        Error(reeUnknownMetaSymbol);
+      end;
+    end;
   end;
 end;
 
@@ -3804,6 +3814,16 @@ begin
                       FindGroupName(regParse + 3, ')', GrpName);
                       Inc(regParse, Length(GrpName) + 4);
                     end;
+                  '>':
+                    begin
+                      // subroutine call to named group: (?P>name)
+                      GrpKind := gkSubCall;
+                      FindGroupName(regParse + 3, ')', GrpName);
+                      Inc(regParse, Length(GrpName) + 4);
+                      GrpIndex := MatchIndexFromName(GrpName);
+                      if GrpIndex < 1 then
+                        Error(reeNamedGroupBadRef);
+                    end;
                   else
                     Error(reeNamedGroupBad);
                 end;
@@ -3898,6 +3918,27 @@ begin
                   else
                     Error(reeBadRecursion);
                 end;
+              end;
+            '''':
+              begin
+                // named group: (?'name'regex)
+                if (regParse + 4 >= fRegexEnd) then
+                  Error(reeNamedGroupBad);
+                GrpKind := gkNormalGroup;
+                FindGroupName(regParse + 2, '''', GrpName);
+                Inc(regParse, Length(GrpName) + 3);
+              end;
+            '&':
+              begin
+                // subroutine call to named group: (?&name)
+                if (regParse + 2 >= fRegexEnd) then
+                  Error(reeBadSubCall);
+                GrpKind := gkSubCall;
+                FindGroupName(regParse + 2, ')', GrpName);
+                Inc(regParse, Length(GrpName) + 3);
+                GrpIndex := MatchIndexFromName(GrpName);
+                if GrpIndex < 1 then
+                  Error(reeNamedGroupBadRef);
               end;
             else
               Error(reeIncorrectSpecialBrackets);
@@ -4224,6 +4265,7 @@ begin
         Inc(scan, Result);
         {$ENDIF}
       end;
+
     OP_EXACTLY:
       begin // in opnd can be only ONE char !!!
         {
@@ -4239,6 +4281,7 @@ begin
           Inc(scan);
         end;
       end;
+
     OP_EXACTLYCI:
       begin // in opnd can be only ONE char !!!
         {
@@ -4263,6 +4306,7 @@ begin
           end;
         end;
       end;
+
     OP_BSUBEXP:
       begin // ###0.936
         ArrayIndex := GrpIndexes[Ord(opnd^)];
@@ -4287,6 +4331,7 @@ begin
           regInput := scan;
         until Result >= AMax;
       end;
+
     OP_BSUBEXPCI:
       begin // ###0.936
         ArrayIndex := GrpIndexes[Ord(opnd^)];
@@ -4312,12 +4357,14 @@ begin
           regInput := scan;
         until Result >= AMax;
       end;
+
     OP_ANYDIGIT:
       while (Result < TheMax) and IsDigitChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+
     OP_NOTDIGIT:
       {$IFDEF UNICODEEX}
       begin
@@ -4335,12 +4382,14 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_ANYLETTER:
       while (Result < TheMax) and IsWordChar(scan^) do // ###0.940
       begin
         Inc(Result);
         Inc(scan);
       end;
+
     OP_NOTLETTER:
       {$IFDEF UNICODEEX}
       begin
@@ -4358,12 +4407,14 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_ANYSPACE:
       while (Result < TheMax) and IsSpaceChar(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+
     OP_NOTSPACE:
       {$IFDEF UNICODEEX}
       begin
@@ -4381,12 +4432,14 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_ANYVERTSEP:
       while (Result < TheMax) and IsVertLineSeparator(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+
     OP_NOTVERTSEP:
       {$IFDEF UNICODEEX}
       begin
@@ -4404,12 +4457,14 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_ANYHORZSEP:
       while (Result < TheMax) and IsHorzSeparator(scan^) do
       begin
         Inc(Result);
         Inc(scan);
       end;
+
     OP_NOTHORZSEP:
       {$IFDEF UNICODEEX}
       begin
@@ -4427,6 +4482,7 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_ANYOF:
       {$IFDEF UNICODEEX}
       begin
@@ -4444,6 +4500,7 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_ANYBUT:
       {$IFDEF UNICODEEX}
       begin
@@ -4461,6 +4518,7 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_ANYOFCI:
       {$IFDEF UNICODEEX}
       begin
@@ -4478,6 +4536,7 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_ANYBUTCI:
       {$IFDEF UNICODEEX}
       begin
@@ -4495,6 +4554,7 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     {$IFDEF FastUnicodeData}
     OP_ANYCATEGORY:
       {$IFDEF UNICODEEX}
@@ -4513,6 +4573,7 @@ begin
         Inc(scan);
       end;
       {$ENDIF}
+
     OP_NOTCATEGORY:
       {$IFDEF UNICODEEX}
       begin
@@ -4534,7 +4595,7 @@ begin
 
   else
     begin // Oh dear. Called inappropriately.
-      Result := 0; // Best compromise.
+      Result := 0;
       Error(reeRegRepeatCalledInappropriately);
       Exit;
     end;
@@ -4614,16 +4675,19 @@ begin
           if (scan^ = OP_BOUND) xor (bound1 <> bound2) then
             Exit;
         end;
+
       OP_BOL:
         begin
           if regInput <> fInputStart then
             Exit;
         end;
+
       OP_EOL:
         begin
           if regInput < fInputEnd then
             Exit;
         end;
+
       OP_BOLML:
         if regInput > fInputStart then
         begin
@@ -4639,6 +4703,7 @@ begin
               Exit;
           end;
         end;
+
       OP_EOLML:
         if regInput < fInputEnd then
         begin
@@ -4653,6 +4718,7 @@ begin
               Exit;
           end;
         end;
+
       OP_ANY:
         begin
           if regInput = fInputEnd then
@@ -4663,6 +4729,7 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYML:
         begin // ###0.941
           if (regInput = fInputEnd) or
@@ -4677,12 +4744,14 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYDIGIT:
         begin
           if (regInput = fInputEnd) or not IsDigitChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
+
       OP_NOTDIGIT:
         begin
           if (regInput = fInputEnd) or IsDigitChar(regInput^) then
@@ -4693,6 +4762,7 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYLETTER:
         begin
           if (regInput = fInputEnd) or not IsWordChar(regInput^) // ###0.943
@@ -4700,6 +4770,7 @@ begin
             Exit;
           Inc(regInput);
         end;
+
       OP_NOTLETTER:
         begin
           if (regInput = fInputEnd) or IsWordChar(regInput^) // ###0.943
@@ -4711,6 +4782,7 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYSPACE:
         begin
           if (regInput = fInputEnd) or not IsSpaceChar(regInput^) // ###0.943
@@ -4718,6 +4790,7 @@ begin
             Exit;
           Inc(regInput);
         end;
+
       OP_NOTSPACE:
         begin
           if (regInput = fInputEnd) or IsSpaceChar(regInput^) // ###0.943
@@ -4729,12 +4802,14 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYVERTSEP:
         begin
           if (regInput = fInputEnd) or not IsVertLineSeparator(regInput^) then
             Exit;
           Inc(regInput);
         end;
+
       OP_NOTVERTSEP:
         begin
           if (regInput = fInputEnd) or IsVertLineSeparator(regInput^) then
@@ -4745,12 +4820,14 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYHORZSEP:
         begin
           if (regInput = fInputEnd) or not IsHorzSeparator(regInput^) then
             Exit;
           Inc(regInput);
         end;
+
       OP_NOTHORZSEP:
         begin
           if (regInput = fInputEnd) or IsHorzSeparator(regInput^) then
@@ -4761,6 +4838,7 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_EXACTLYCI:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
@@ -4783,6 +4861,7 @@ begin
           // ###0.929 end
           Inc(regInput, Len);
         end;
+
       OP_EXACTLY:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
@@ -4805,6 +4884,7 @@ begin
           // ###0.929 end
           Inc(regInput, Len);
         end;
+
       OP_BSUBEXP:
         begin // ###0.936
           no := Ord((scan + REOpSz + RENextOffSz)^);
@@ -4826,6 +4906,7 @@ begin
           end;
           regInput := save;
         end;
+
       OP_BSUBEXPCI:
         begin // ###0.936
           no := Ord((scan + REOpSz + RENextOffSz)^);
@@ -4848,6 +4929,7 @@ begin
           end;
           regInput := save;
         end;
+
       OP_ANYOF:
         begin
           if (regInput = fInputEnd) or
@@ -4859,6 +4941,7 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYBUT:
         begin
           if (regInput = fInputEnd) or
@@ -4870,6 +4953,7 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYOFCI:
         begin
           if (regInput = fInputEnd) or
@@ -4881,6 +4965,7 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_ANYBUTCI:
         begin
           if (regInput = fInputEnd) or
@@ -4892,12 +4977,14 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_NOTHING:
         ;
       OP_COMMENT:
         ;
       OP_BACK:
         ;
+
       OP_OPEN_FIRST .. OP_OPEN_LAST:
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_OPEN);
@@ -4930,6 +5017,7 @@ begin
           // parentheses already has.
           Exit;
         end;
+
       OP_CLOSE_FIRST .. OP_CLOSE_LAST:
         begin // ###0.929
           no := Ord(scan^) - Ord(OP_CLOSE);
@@ -4941,6 +5029,15 @@ begin
           // save := regInput;
           save := GrpEnd[no]; // ###0.936
           GrpEnd[no] := regInput; // ###0.936
+
+          // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
+          // in OP_CLOSE, without going to next opcode
+          if GrpSubCalled[no] then
+          begin
+            Result := True;
+            Exit;
+          end;
+
           Result := MatchPrim(next);
           if not Result // ###0.936
           then
@@ -4951,6 +5048,7 @@ begin
           // parentheses already has.
           Exit;
         end;
+
       OP_BRANCH:
         begin
           saveCurrentGrp := regCurrentGrp;
@@ -4976,6 +5074,7 @@ begin
             Exit;
           end;
         end;
+
       {$IFDEF ComplexBraces}
       OP_LOOPENTRY:
         begin // ###0.925
@@ -4995,6 +5094,7 @@ begin
           regInput := save;
           Exit;
         end;
+
       OP_LOOP, OP_LOOPNG:
         begin // ###0.940
           if LoopStackIdx <= 0 then
@@ -5063,6 +5163,7 @@ begin
           end;
         end;
       {$ENDIF}
+
       OP_STAR, OP_PLUS, OP_BRACES, OP_STARNG, OP_PLUSNG, OP_BRACESNG:
         begin
           // Lookahead to avoid useless match attempts when we know
@@ -5149,6 +5250,7 @@ begin
             Exit;
           end;
         end;
+
       OP_STAR_POSS, OP_PLUS_POSS, OP_BRACES_POSS:
         begin
           // Lookahead to avoid useless match attempts when we know
@@ -5181,11 +5283,13 @@ begin
               Result := MatchPrim(next);
           Exit;
         end;
+
       OP_EEND:
         begin
           Result := True; // Success!
           Exit;
         end;
+
       {$IFDEF FastUnicodeData}
       OP_ANYCATEGORY:
         begin
@@ -5197,6 +5301,7 @@ begin
           Inc(regInput);
           {$ENDIF}
         end;
+
       OP_NOTCATEGORY:
         begin
           if (regInput = fInputEnd) then Exit;
@@ -5222,7 +5327,15 @@ begin
           if no < 0 then Exit;
           save := GrpOpCodes[no];
           if save = nil then Exit;
-          if not MatchPrim(save) then Exit;
+          checkAtomicGroup := GrpSubCalled[no];
+          // mark group in GrpSubCalled array so opcode can detect subcall
+          GrpSubCalled[no] := True;
+          if not MatchPrim(save) then
+          begin
+            GrpSubCalled[no] := checkAtomicGroup;
+            Exit;
+          end;
+          GrpSubCalled[no] := checkAtomicGroup;
         end;
 
     else
@@ -5299,15 +5412,12 @@ begin
 end;
 
 procedure TRegExpr.ClearMatches;
-var
-  i: integer;
 begin
   FillChar(GrpStart, SizeOf(GrpStart), 0);
   FillChar(GrpEnd, SizeOf(GrpEnd), 0);
-  for i := 0 to RegexMaxGroups - 1 do
-  begin
-    GrpAtomicDone[i] := False;
-  end;
+
+  FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
+  FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
 end;
 
 procedure TRegExpr.ClearInternalIndexes;
@@ -5316,13 +5426,16 @@ var
 begin
   FillChar(GrpStart, SizeOf(GrpStart), 0);
   FillChar(GrpEnd, SizeOf(GrpEnd), 0);
+
+  FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
+  FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
+  FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
+  FillChar(GrpOpCodes, SizeOf(GrpOpCodes), 0);
+
   for i := 0 to RegexMaxGroups - 1 do
   begin
     GrpIndexes[i] := -1;
     GrpNames[i] := '';
-    GrpAtomic[i] := False;
-    GrpAtomicDone[i] := False;
-    GrpOpCodes[i] := nil;
   end;
   GrpIndexes[0] := 0;
   GrpCount := 0;
@@ -5852,9 +5965,11 @@ begin
           FirstCharSet := RegExprAllSet; //###0.930
           Exit;
         end;
+
       OP_BOL,
       OP_BOLML:
         ; // Exit; //###0.937
+
       OP_EOL,
       OP_EOLML:
         begin //###0.948 was empty in 0.947, was EXIT in 0.937
@@ -5865,80 +5980,87 @@ begin
             for i := 1 to Length(LineSeparators) do
               Include(FirstCharSet, byte(LineSeparators[i]));
             {$ELSE}
-            Include(FirstCharSet, $d);
-            Include(FirstCharSet, $a);
-            Include(FirstCharSet, $b);
-            Include(FirstCharSet, $c);
-            {$IFDEF Unicode}
-            Include(FirstCharSet, $85);
-            {$ENDIF}
+            FirstCharSet := FirstCharSet + RegExprLineSeparatorsSet;
             {$ENDIF}
           end;
           Exit;
         end;
+
       OP_BOUND,
       OP_NOTBOUND:
         ; //###0.943 ?!!
+
       OP_ANY,
       OP_ANYML:
         begin // we can better define ANYML !!!
           FirstCharSet := RegExprAllSet; //###0.930
           Exit;
         end;
+
       OP_ANYDIGIT:
         begin
           FirstCharSet := FirstCharSet + RegExprDigitSet;
           Exit;
         end;
+
       OP_NOTDIGIT:
         begin
           FirstCharSet := FirstCharSet + (RegExprAllSet - RegExprDigitSet);
           Exit;
         end;
+
       OP_ANYLETTER:
         begin
           GetCharSetFromWordChars(TempSet);
           FirstCharSet := FirstCharSet + TempSet;
           Exit;
         end;
+
       OP_NOTLETTER:
         begin
           GetCharSetFromWordChars(TempSet);
           FirstCharSet := FirstCharSet + (RegExprAllSet - TempSet);
           Exit;
         end;
+
       OP_ANYSPACE:
         begin
           GetCharSetFromSpaceChars(TempSet);
           FirstCharSet := FirstCharSet + TempSet;
           Exit;
         end;
+
       OP_NOTSPACE:
         begin
           GetCharSetFromSpaceChars(TempSet);
           FirstCharSet := FirstCharSet + (RegExprAllSet - TempSet);
           Exit;
         end;
+
       OP_ANYVERTSEP:
         begin
           FirstCharSet := FirstCharSet + RegExprLineSeparatorsSet;
           Exit;
         end;
+
       OP_NOTVERTSEP:
         begin
           FirstCharSet := FirstCharSet + (RegExprAllSet - RegExprLineSeparatorsSet);
           Exit;
         end;
+
       OP_ANYHORZSEP:
         begin
           FirstCharSet := FirstCharSet + RegExprHorzSeparatorsSet;
           Exit;
         end;
+
       OP_NOTHORZSEP:
         begin
           FirstCharSet := FirstCharSet + (RegExprAllSet - RegExprHorzSeparatorsSet);
           Exit;
         end;
+
       OP_EXACTLYCI:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
@@ -5951,6 +6073,7 @@ begin
           end;
           Exit;
         end;
+
       OP_EXACTLY:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
@@ -5960,46 +6083,54 @@ begin
             Include(FirstCharSet, byte(ch));
           Exit;
         end;
+
       OP_ANYOF:
         begin
           GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, False, TempSet);
           FirstCharSet := FirstCharSet + TempSet;
           Exit;
         end;
+
       OP_ANYBUT:
         begin
           GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, False, TempSet);
           FirstCharSet := FirstCharSet + (RegExprAllSet - TempSet);
           Exit;
         end;
+
       OP_ANYOFCI:
         begin
           GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, True, TempSet);
           FirstCharSet := FirstCharSet + TempSet;
           Exit;
         end;
+
       OP_ANYBUTCI:
         begin
           GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, True, TempSet);
           FirstCharSet := FirstCharSet + (RegExprAllSet - TempSet);
           Exit;
         end;
+
       OP_NOTHING:
         ;
       OP_COMMENT:
         ;
       OP_BACK:
         ;
+
       OP_OPEN_FIRST .. OP_OPEN_LAST:
         begin
           FillFirstCharSet(Next);
           Exit;
         end;
+
       OP_CLOSE_FIRST .. OP_CLOSE_LAST:
         begin
           FillFirstCharSet(Next);
           Exit;
         end;
+
       OP_BRANCH:
         begin
           if (PREOp(Next)^ <> OP_BRANCH) // No choice.
@@ -6014,6 +6145,7 @@ begin
             Exit;
           end;
         end;
+
       {$IFDEF ComplexBraces}
       OP_LOOPENTRY:
         begin //###0.925
@@ -6021,6 +6153,7 @@ begin
           FillFirstCharSet(Next); // execute LOOP
           Exit;
         end;
+
       OP_LOOP,
       OP_LOOPNG:
         begin //###0.940
@@ -6032,10 +6165,12 @@ begin
           Exit;
         end;
       {$ENDIF}
+
       OP_STAR,
       OP_STARNG,
       OP_STAR_POSS: //###0.940
         FillFirstCharSet(scan + REOpSz + RENextOffSz);
+
       OP_PLUS,
       OP_PLUSNG,
       OP_PLUS_POSS:
@@ -6043,6 +6178,7 @@ begin
           FillFirstCharSet(scan + REOpSz + RENextOffSz);
           Exit;
         end;
+
       OP_BRACES,
       OP_BRACESNG,
       OP_BRACES_POSS:
@@ -6053,21 +6189,25 @@ begin
           if min_cnt > 0 then
             Exit;
         end;
+
       OP_EEND:
         begin
           FirstCharSet := RegExprAllSet; //###0.948
           Exit;
         end;
+
       OP_ANYCATEGORY,
       OP_NOTCATEGORY:
         begin
           FirstCharSet := RegExprAllSet;
           Exit;
         end;
+
       OP_RECUR,
       OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
         begin
         end
+
       else
         begin
           fLastErrorOpcode := Oper;
@@ -6219,13 +6359,13 @@ begin
     OP_EOLML:
       Result := 'EOLML';
     OP_BOUND:
-      Result := 'BOUND'; // ###0.943
+      Result := 'BOUND';
     OP_NOTBOUND:
-      Result := 'NOTBOUND'; // ###0.943
+      Result := 'NOTBOUND';
     OP_ANY:
       Result := 'ANY';
     OP_ANYML:
-      Result := 'ANYML'; // ###0.941
+      Result := 'ANYML';
     OP_ANYLETTER:
       Result := 'ANYLETTER';
     OP_NOTLETTER:
@@ -6284,18 +6424,18 @@ begin
       Result := 'BRACES';
     {$IFDEF ComplexBraces}
     OP_LOOPENTRY:
-      Result := 'LOOPENTRY'; // ###0.925
+      Result := 'LOOPENTRY';
     OP_LOOP:
-      Result := 'LOOP'; // ###0.925
+      Result := 'LOOP';
     OP_LOOPNG:
-      Result := 'LOOPNG'; // ###0.940
+      Result := 'LOOPNG';
     {$ENDIF}
     OP_STARNG:
-      Result := 'STARNG'; // ###0.940
+      Result := 'STARNG';
     OP_PLUSNG:
-      Result := 'PLUSNG'; // ###0.940
+      Result := 'PLUSNG';
     OP_BRACESNG:
-      Result := 'BRACESNG'; // ###0.940
+      Result := 'BRACESNG';
     OP_STAR_POSS:
       Result := 'STAR_POSS';
     OP_PLUS_POSS:

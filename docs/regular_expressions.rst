@@ -429,7 +429,9 @@ single quotes) or ``77`` (without quotes) etc.
 Named Groups and Backreferences
 -------------------------------
 
-To make some group (ie subexpression) named, use this syntax: ``(?P<name>)``. Name of group must be valid identifier: first char is letter or "_", other chars are alphanumeric or "_". All named groups are also usual groups and share the same numbers 1 to 9.
+To make some group (ie subexpression) named, use this syntax: ``(?P<name>expr)``. Also Perl syntax is supported: ``(?'name'expr)``.
+
+Name of group must be valid identifier: first char is letter or "_", other chars are alphanumeric or "_". All named groups are also usual groups and share the same numbers 1 to 9.
 
 Backreferences to named groups are ``(?P=name)``, the numbers ``\1`` to ``\9`` can also be used.
 
@@ -652,7 +654,9 @@ If what may appear in the middle of the balanced construct may also appear on it
 Subroutine calls
 ----------------
 
-Syntax is ``(?1)`` ... ``(?90)`` (limited by internal constant).
+Syntax for call to numbered groups: ``(?1)`` ... ``(?90)`` (maximal index is limited by code).
+
+Syntax for call to named groups: ``(?P>name)``. Also Perl syntax is supported: ``(?&name)``.
 
 This is like recursion but calls only code of capturing group with specified index.
 

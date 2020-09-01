@@ -50,10 +50,11 @@ object Form1: TForm1
       AnchorSideTop.Side = asrCenter
       Left = 6
       Height = 17
-      Top = 14
-      Width = 78
+      Top = 11
+      Width = 45
       BorderSpacing.Left = 6
-      Caption = 'Expression:'
+      Caption = '&RegEx:'
+      FocusControl = EditRegex
       ParentColor = False
     end
     object EditRegex: TEdit
@@ -62,10 +63,10 @@ object Form1: TForm1
       AnchorSideTop.Control = Panel1
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
-      Left = 90
-      Height = 33
+      Left = 57
+      Height = 26
       Top = 6
-      Width = 708
+      Width = 741
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 6
       BorderSpacing.Top = 6
@@ -77,11 +78,11 @@ object Form1: TForm1
       AnchorSideLeft.Control = EditRegex
       AnchorSideTop.Control = EditRegex
       AnchorSideTop.Side = asrBottom
-      Left = 90
-      Height = 23
-      Top = 39
+      Left = 57
+      Height = 24
+      Top = 32
       Width = 119
-      Caption = 'i (case-insens)'
+      Caption = '&i (case-insens)'
       OnChange = chk_iChange
       TabOrder = 1
     end
@@ -89,12 +90,12 @@ object Form1: TForm1
       AnchorSideLeft.Control = chk_i
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chk_i
-      Left = 215
-      Height = 23
-      Top = 39
+      Left = 182
+      Height = 24
+      Top = 32
       Width = 117
       BorderSpacing.Left = 6
-      Caption = 'x (comments)'
+      Caption = '&x (comments)'
       OnChange = chk_iChange
       TabOrder = 2
     end
@@ -102,9 +103,9 @@ object Form1: TForm1
       AnchorSideLeft.Control = chk_x
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chk_i
-      Left = 338
-      Height = 23
-      Top = 39
+      Left = 305
+      Height = 24
+      Top = 32
       Width = 66
       BorderSpacing.Left = 6
       Caption = 'r (rus)'
@@ -115,12 +116,12 @@ object Form1: TForm1
       AnchorSideLeft.Control = chk_r
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chk_i
-      Left = 410
-      Height = 23
-      Top = 39
+      Left = 377
+      Height = 24
+      Top = 32
       Width = 113
       BorderSpacing.Left = 6
-      Caption = 's (dot for all)'
+      Caption = '&s (dot for all)'
       OnChange = chk_iChange
       TabOrder = 4
     end
@@ -128,12 +129,12 @@ object Form1: TForm1
       AnchorSideLeft.Control = chk_s
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chk_i
-      Left = 529
-      Height = 23
-      Top = 39
+      Left = 496
+      Height = 24
+      Top = 32
       Width = 72
       BorderSpacing.Left = 6
-      Caption = 'greedy'
+      Caption = '&greedy'
       OnChange = chk_iChange
       TabOrder = 5
     end
@@ -155,9 +156,10 @@ object Form1: TForm1
       Left = 6
       Height = 17
       Top = 11
-      Width = 96
+      Width = 32
       BorderSpacing.Left = 6
-      Caption = 'Subject string:'
+      Caption = '&Text:'
+      FocusControl = EditText
       ParentColor = False
     end
     object EditText: TEdit
@@ -167,10 +169,10 @@ object Form1: TForm1
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Panel2
       AnchorSideRight.Side = asrBottom
-      Left = 108
-      Height = 33
-      Top = 3
-      Width = 690
+      Left = 44
+      Height = 26
+      Top = 6
+      Width = 754
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 6
       BorderSpacing.Right = 6
