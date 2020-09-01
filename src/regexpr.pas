@@ -2888,14 +2888,14 @@ function TRegExpr.ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExp
 // follows makes it hard to avoid.
 var
   ret, br, ender: PRegExprChar;
-  parno: integer;
+  NBrackets: integer;
   FlagTemp: integer;
   SavedModifiers: TRegExprModifiers;
 begin
   Result := nil;
   FlagTemp := 0;
   FlagParse := FLAG_HASWIDTH; // Tentatively.
-  parno := 0; // eliminate compiler stupid warning
+  NBrackets := 0;
   SavedModifiers := fCompModifiers;
 
   // Make an OP_OPEN node, if parenthesized.
@@ -2906,10 +2906,10 @@ begin
       Error(reeCompParseRegTooManyBrackets);
       Exit;
     end;
-    parno := regNumBrackets;
+    NBrackets := regNumBrackets;
     Inc(regNumBrackets);
-    ret := EmitNode(TREOp(Ord(OP_OPEN) + parno));
-    GrpOpCodes[parno] := ret;
+    ret := EmitNode(TREOp(Ord(OP_OPEN) + NBrackets));
+    GrpOpCodes[NBrackets] := ret;
   end
   else
     ret := nil;
@@ -2945,7 +2945,7 @@ begin
 
   // Make a closing node, and hook it on the end.
   if InBrackets then
-    ender := EmitNode(TREOp(Ord(OP_CLOSE) + parno))
+    ender := EmitNode(TREOp(Ord(OP_CLOSE) + NBrackets))
   else
     ender := EmitNode(OP_EEND);
   Tail(ret, ender);
