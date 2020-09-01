@@ -185,26 +185,31 @@ Line Boundaries
 ~~~~~~~~~~~~~~~
 
 ============= ================================================
-RegEx         Matches
+Metachar      Matches
 ============= ================================================
+``.``         any character, can include line-breaks
 ``^``         zero-length match at start of line
 ``$``         zero-length match at end of line
-``\A``        zero-length match at start of entire text
-``\Z``        zero-length match at end of entire text
-``.``         any character, can include line-breaks
+``\A``        zero-length match at the very beginning
+``\z``        zero-length match at the very end
+``\Z``        like ``\z`` but also matches before the final line-break
+============= ================================================
+
+Examples:
+
+============= ================================================
+RegEx         Matches
+============= ================================================
 ``^foobar``   ``foobar`` only if it's at the beginning of line
 ``foobar$``   ``foobar`` only if it's at the end of line
 ``^foobar$``  ``foobar`` only if it's the only string in line
 ``foob.r``    ``foobar``, ``foobbr``, ``foob1r`` and so on
 ============= ================================================
 
-``^`` metacharacter matches zero-length position at the beginning of the input string.
-``$`` - at the end.
-
-You may, however, wish to treat a string as a multi-line text,
-so ``^`` will match after any line-break within the string,
-and ``$`` will match before any line-break. You can do this by
-switching `modifier /m <#m>`_.
+Metachar ``^`` matches zero-length position at the beginning of the input string.
+``$`` - at the ending.
+If `modifier /m <#m>`_ is **on**, they also match at the beginning/ending
+of individual lines in the multi-line text.
 
 Note that there is no empty line within the sequence ``\x0D\x0A``.
 
@@ -215,9 +220,9 @@ Note that there is no empty line within the sequence ``\x0D\x0A``.
     `Unicode version <tregexpr.html#unicode>`__, then ``^``/``$``
     also matches ``\x2028``, ``\x2029``, ``\x0B``, ``\x0C`` or ``\x85``.
 
-The ``\A`` and ``\Z`` are like ``^`` and ``$``, but they match only at the
-very beginning/ending of the input string,
-ignoring the `modifier /m <#m>`_.
+Metachars ``\A`` matches zero-length position at the very beginning of the input string,
+``\z`` - at the very ending. They ignore `modifier /m <#m>`_.
+``\Z`` is like ``\z`` but also matches before the final line-break (LF and CR LF).
 
 The ``.`` metacharacter by default matches any character, but if you
 turn **off** the `modifier /s <#s>`_, then it won't match line-breaks inside the string.
