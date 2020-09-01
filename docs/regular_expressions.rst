@@ -657,6 +657,47 @@ Syntax for call to named groups: ``(?P>name)``. Also Perl syntax is supported: `
 
 This is like recursion but calls only code of capturing group with specified index.
 
+Unicode Categories
+------------------
+
+Unicode standard has names for character categories. These are 2-letter strings. For example "Lu" is uppercase letters, "Ll" is lowercase letters. And 1-letter bigger category "L" is all letters.
+
+* Cc - Control
+* Cf - Format
+* Co - Private Use
+* Cs - Surrrogate
+* Ll - Lowercase Letter
+* Lm - Modifier Letter
+* Lo - Other Letter
+* Lt - Titlecase Letter
+* Lu - Uppercase Letter
+* Mc - Spacing Mark
+* Me - Enclosing Mark
+* Mn - Nonspacing Mark
+* Nd - Decimal Number
+* Nl - Letter Number
+* No - Other Number
+* Pc - Connector Punctuation
+* Pd - Dash Punctuation
+* Pe - Close Punctuation
+* Pf - Final Punctuation
+* Pi - Initial Punctuation
+* Po - Other Punctuation
+* Ps - Open Punctuation
+* Sc - Currency Symbol
+* Sk - Modifier Symbol
+* Sm - Math Symbol
+* So - Other Symbol
+* Zl - Line Separator
+* Zp - Paragraph Separator
+* Zs - Space Separator
+
+Meta-character ``\p`` denotes one Unicode char of specified category. Syntaxes: ``\pL`` and ``\p{L}`` for 1-letter name, ``\p{Lu}`` for 2-letter names.
+
+Meta-character ``\P`` is inverted, it denotes one Unicode char **not** in the specified category.
+
+These meta-characters are supported withing character classes too.
+
 Afterword
 ---------
 
