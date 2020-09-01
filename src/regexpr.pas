@@ -3810,14 +3810,13 @@ begin
                 if NextCh = '=' then
                 begin
                   GrpKind := gkLookahead;
-                  //GrpAtomic[regNumBrackets] := True; // lookahead must be atomic - but it breaks Test54
                 end
                 else
                 begin
                   GrpKind := gkLookaheadNeg;
-                  //GrpAtomic[regNumBrackets] := True; // lookahead must be atomic - but it breaks Test54
                   regLookaheadNeg := True;
                 end;
+                //GrpAtomic[regNumBrackets] := True; // lookahead must be atomic? but it breaks Test54
 
                 // check that these brackets are last in regex
                 SavedPtr := _FindClosingBracket(regParse + 1, fRegexEnd);
