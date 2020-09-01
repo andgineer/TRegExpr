@@ -334,8 +334,8 @@ type
     fLinePairedSeparatorAssigned: boolean;
     fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
 
-    FReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
-    FUseOsLineEndOnReplace: boolean; // use OS LineBreak chars (LF or CRLF) for FReplaceLineEnd
+    fReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
+    fReplaceLineEndFromOS: boolean; // use OS LineBreak chars (LF or CR LF) for fReplaceLineEnd
 
     fSlowChecksSizeMax: integer;
     // use ASlowChecks=True in Exec() only when Length(InputString)<SlowChecksSizeMax
@@ -695,9 +695,10 @@ type
     // must contain exactly two chars or no chars at all
     property LinePairedSeparator: RegExprString read GetLinePairedSeparator write SetLinePairedSeparator; // ###0.941
 
-    // Use OS line end on replace or not. Default is True for backwards compatibility.
-    // Set to false to use #10.
-    property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
+    // Use OS-dependant LineBreak on replaces.
+    // Default is True for backwards compatibility.
+    // Set to False to always use LF.
+    property UseOsLineEndOnReplace: boolean read fReplaceLineEndFromOS write SetUseOsLineEndOnReplace;
 
     property SlowChecksSizeMax: integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
   end;
@@ -1696,8 +1697,8 @@ begin
   {$ENDIF}
   LinePairedSeparator := RegExprLinePairedSeparator;
 
-  FUseOsLineEndOnReplace := True;
-  FReplaceLineEnd := sLineBreak;
+  fReplaceLineEndFromOS := True;
+  fReplaceLineEnd := sLineBreak;
 
   fSlowChecksSizeMax := 2000;
 
@@ -2870,13 +2871,13 @@ end; { of function TRegExpr.CompileRegExpr
 
 procedure TRegExpr.SetUseOsLineEndOnReplace(AValue: boolean);
 begin
-  if FUseOsLineEndOnReplace = AValue then
+  if fReplaceLineEndFromOS = AValue then
     Exit;
-  FUseOsLineEndOnReplace := AValue;
-  if FUseOsLineEndOnReplace then
-    FReplaceLineEnd := sLineBreak
+  fReplaceLineEndFromOS := AValue;
+  if fReplaceLineEndFromOS then
+    fReplaceLineEnd := sLineBreak
   else
-    FReplaceLineEnd := #10;
+    fReplaceLineEnd := #10;
 end;
 
 function TRegExpr.ParseReg(paren: integer; var FlagParse: integer): PRegExprChar;
@@ -5717,7 +5718,7 @@ begin
         Inc(p);
         case Ch of
           'n':
-            Inc(ResultLen, Length(FReplaceLineEnd));
+            Inc(ResultLen, Length(fReplaceLineEnd));
           'u', 'l', 'U', 'L': { nothing }
             ;
           'x':
@@ -5774,8 +5775,8 @@ begin
         case Ch of
           'n':
             begin
-              p0 := PRegExprChar(FReplaceLineEnd);
-              p1 := p0 + Length(FReplaceLineEnd);
+              p0 := PRegExprChar(fReplaceLineEnd);
+              p1 := p0 + Length(fReplaceLineEnd);
             end;
           'x', 't', 'r', 'f', 'a', 'e':
             begin
