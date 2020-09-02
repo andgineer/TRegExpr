@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 14:15+0300\n"
+"POT-Creation-Date: 2020-09-02 14:51+0300\n"
 "PO-Revision-Date: 2020-04-03 18:34+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language: de\n"
@@ -887,49 +887,38 @@ msgstr ""
 "RegExprLineSeparators_ (globale Konstante)"
 
 # 9a2790f4b35b46dd8d067f2601a11d2e
-#: ../../tregexpr.rst:340 ../../tregexpr.rst:350
+#: ../../tregexpr.rst:340 ../../tregexpr.rst:347
 #: 5c90b1a119bc47d89c06cd8b1089ce16 dcd89b6346914ee4a5eab6d12cca0d02
 #, fuzzy
 msgid "See also `Line Boundaries <regular_expressions.html#lineseparators>`__"
 msgstr "Siehe auch `Zeilengrenzen <regular_expressions.html#lineseparators> __"
 
-# 365d71bfb73645d8ac1dc3bc69bebba2
-#: ../../tregexpr.rst:343 24d71faf35f44a56b55711a3d4d8675e
-msgid "LinePairedSeparator"
-msgstr "LinePairedSeparator"
-
-# 0858c0e771ff4062a02f4f60e60b319c
-#: ../../tregexpr.rst:345 34dfb9100e9c45fbb471ebae4eafe3c4
-#, fuzzy
-msgid "Paired line separator (like ``\\r\\n`` in DOS and Windows)."
-msgstr "gepaartes Trennzeichen (wie ``\\r\\n`` in DOS und Windows)."
-
-# 908fba08a9e14d618d0639c8a52414ec
-#: ../../tregexpr.rst:347 61e866497875409aa5d5103df44a3eaa
-#, fuzzy
-msgid ""
-"Must contain exactly 2 chars or no chars at all. Initially filled with "
-"RegExprLinePairedSeparator global constant)."
+#: ../../tregexpr.rst:343 e6dbf49d405b48e9a51df08b6b6ce6e9
+msgid "UseLinePairedBreak"
 msgstr ""
-"muss genau zwei oder gar keine Zeichen enthalten und ist anfangs mit dem "
-"Inhalt der globalen Konstante RegExprLinePairedSeparator vorbefüllt"
+
+#: ../../tregexpr.rst:345 51367a8331ed4e1886d00854b8ed1721
+msgid "Boolean property, enables to detect paired line separator CR LF."
+msgstr ""
 
 # d5fcd4a7ae984f41954575a890a13689
-#: ../../tregexpr.rst:352 e67c5988996c4e90830a14110807befb
+#: ../../tregexpr.rst:349 e67c5988996c4e90830a14110807befb
+#, fuzzy
 msgid ""
-"For example, if you need Unix-style behaviour, assign ``LineSeparators :="
-" #$a`` and ``LinePairedSeparator := ''`` (empty string)."
+"For example, if you need only Unix-style separator LF, assign "
+"``LineSeparators := #$a`` and ``UseLinePairedBreak := False``."
 msgstr ""
 "Wenn Sie beispielsweise ein Verhalten im Unix-Stil benötigen, weisen Sie "
 "`` LineSeparators: = # $ a`` und `` LinePairedSeparator: = &#39;&#39; `` "
 "(leere Zeichenfolge) zu."
 
 # c3211083e90a4a39a944ec1bc4b36deb
-#: ../../tregexpr.rst:355 6af0d7d62f67426bae981d2dc4a57eb8
+#: ../../tregexpr.rst:352 6af0d7d62f67426bae981d2dc4a57eb8
+#, fuzzy
 msgid ""
-"If you want to accept as line separators only ``\\x0D\\x0A`` but not "
-"``\\x0D`` or ``\\x0A`` alone, then assign ``LineSeparators := ''`` (empty"
-" string) and ``LinePairedSeparator := #$d#$a``."
+"If you want to accept as line separators only CR LF but not CR or LF "
+"alone, then assign ``LineSeparators := ''`` (empty string) and "
+"``UseLinePairedBreak := True``."
 msgstr ""
 "Wenn Sie als Linientrennzeichen nur `\\ x0D \\ x0A`` aber nicht` `x0D`` "
 "oder` `\\ x0A`` allein akzeptieren möchten, weisen Sie` `LineSeparators: "
@@ -937,24 +926,25 @@ msgstr ""
 " $ a``."
 
 # e9b5de25fffd431483ee4bf0e87e2c9e
-#: ../../tregexpr.rst:359 b32b7d1df60247a0ae37050df9923615
+#: ../../tregexpr.rst:356 b32b7d1df60247a0ae37050df9923615
 #, fuzzy
 msgid ""
-"By default, \"mixed\" mode is used (defined in "
-"RegExprLine[Paired]Separator[s] global constants):"
+"By default, \"mixed\" mode is used (defined in RegExprLineSeparators "
+"global constant):"
 msgstr ""
 "Standardmäßig wird der gemischte Modus verwendet (definiert in "
 "RegExprLine [Paired] Separator [s] globale Konstanten):"
 
 # 7e4dfafc0da343818e7c236d3a8a61a2
-#: ../../tregexpr.rst:364 46fde5664384401b9e2bf967f4a5637a
+#: ../../tregexpr.rst:361 46fde5664384401b9e2bf967f4a5637a
+#, fuzzy
 msgid ""
 "LineSeparators := #$d#$a;\n"
-"LinePairedSeparator := #$d#$a"
+"UseLinePairedBreak := True;"
 msgstr "LineSeparators: = # $ d # $ a; LinePairedSeparator: = # $ d # $ a"
 
 # d8be7f9e6d1d4bb482ae504c9a589919
-#: ../../tregexpr.rst:367 f8e63fc2dd12454d85e93755bcee1555
+#: ../../tregexpr.rst:364 f8e63fc2dd12454d85e93755bcee1555
 #, fuzzy
 msgid ""
 "Behaviour of this mode is described in the `Line Boundaries "
@@ -964,18 +954,18 @@ msgstr ""
 "beschrieben <regular_expressions.html#lineseparators> __."
 
 # e3afaecd54dd4fb3b652545a4477e036
-#: ../../tregexpr.rst:371 988f0f8ce39b4562a94c972187a8d8ee
+#: ../../tregexpr.rst:368 988f0f8ce39b4562a94c972187a8d8ee
 msgid "Compile"
 msgstr "Kompilieren"
 
 # d44c9ef8b2a74f4c855c33ee7671d119
-#: ../../tregexpr.rst:373 bafb07b1d5314e1ca942390010bd6e25
+#: ../../tregexpr.rst:370 bafb07b1d5314e1ca942390010bd6e25
 #, fuzzy
 msgid "Compiles regular expression to internal P-code."
 msgstr "Kompiliert regulären Ausdruck."
 
 # 9772176176724152abcfa01ce5275d48
-#: ../../tregexpr.rst:375 2fd9314f23c440e388ca8f11888a84c2
+#: ../../tregexpr.rst:372 2fd9314f23c440e388ca8f11888a84c2
 msgid ""
 "Useful for example for GUI regular expressions editors - to check regular"
 " expression without using it."
@@ -984,12 +974,12 @@ msgstr ""
 "reguläre Ausdrücke zu überprüfen, ohne ihn zu verwenden."
 
 # a3e43476373a48978533b7dd6819d647
-#: ../../tregexpr.rst:379 943b13bf1a854ab2b8f25b527c17904f
+#: ../../tregexpr.rst:376 943b13bf1a854ab2b8f25b527c17904f
 msgid "Dump"
 msgstr "Dump"
 
 # a80b2e57d8cb464d8ea2e4a12fa4fbe7
-#: ../../tregexpr.rst:381 bafb07b1d5314e1ca942390010bd6e25
+#: ../../tregexpr.rst:378 bafb07b1d5314e1ca942390010bd6e25
 #, fuzzy
 msgid "Shows P-code (compiled regular expression) as human-readable string."
 msgstr ""
@@ -997,150 +987,139 @@ msgstr ""
 "lesbare Zeichenfolge."
 
 # 9f264ffc0a2b4738b7670ee5ad10a703
-#: ../../tregexpr.rst:384 8ebfef9bf88f4273a340a4bd1e958b4a
+#: ../../tregexpr.rst:381 8ebfef9bf88f4273a340a4bd1e958b4a
 msgid "Global constants"
 msgstr "Globale Konstanten"
 
 # 27406b79d7294fc281b4b1e526b94aa5
-#: ../../tregexpr.rst:387 9df8502927474373b77ce2b65cdc585d
+#: ../../tregexpr.rst:384 9df8502927474373b77ce2b65cdc585d
 msgid "EscChar"
 msgstr "EscChar"
 
 # 125f2a4e7a824ac8bc65b2b761482b42
-#: ../../tregexpr.rst:389 f932d622a6b84491be8916b664dd7d10
+#: ../../tregexpr.rst:386 f932d622a6b84491be8916b664dd7d10
 #, fuzzy
 msgid "Escape character, by default backslash ``'\\'``."
 msgstr "Escape-char, standardmäßig ``\\``."
 
 # 4c92cf154cce41c1bc65dae09f0f4bb1
-#: ../../tregexpr.rst:392 23982aff08b7414ead7a9863df6881df
+#: ../../tregexpr.rst:389 23982aff08b7414ead7a9863df6881df
 #, fuzzy
 msgid "SubstituteGroupChar"
 msgstr "Substitute"
 
-#: ../../tregexpr.rst:394 a33d43fabf3b40448205b8abee771edd
+#: ../../tregexpr.rst:391 a33d43fabf3b40448205b8abee771edd
 msgid ""
 "Char used to prefix groups (numbered and named) in Substitute method, by "
 "default ``'$'``."
 msgstr ""
 
 # b694219c815443b39f3e092d12171dba
-#: ../../tregexpr.rst:397 0a60769cf5c04054b39e98c66fe73812
+#: ../../tregexpr.rst:394 0a60769cf5c04054b39e98c66fe73812
 msgid "RegExprModifierI"
 msgstr "RegExprModifierI"
 
 # 088ef484a7bd4a65a20b1d88022ce0d0
-#: ../../tregexpr.rst:399 ea851f2dd3fe4f2b98a5cf8f2f536326
+#: ../../tregexpr.rst:396 ea851f2dd3fe4f2b98a5cf8f2f536326
 #, fuzzy
 msgid "`Modifier i <regular_expressions.html#i>`_ default value."
 msgstr "Modifier i <regular_expressions.html#i> _ Standardwert"
 
 # aa9c039a53d74df59987ae3abed1ce18
-#: ../../tregexpr.rst:402 e2c67beac54c4ba993c43d7e0825c016
+#: ../../tregexpr.rst:399 e2c67beac54c4ba993c43d7e0825c016
 msgid "RegExprModifierR"
 msgstr "RegExprModifierR"
 
 # 217317d65eee4edd9e01483cd49a0d83
-#: ../../tregexpr.rst:404 49fdfafa618a485f945e9ca380e2b2b1
+#: ../../tregexpr.rst:401 49fdfafa618a485f945e9ca380e2b2b1
 #, fuzzy
 msgid "`Modifier r <regular_expressions.html#r>`_ default value."
 msgstr "Modifier r <regular_expressions.html#r> _ Standardwert"
 
 # 45cda2c7f6ca40c0ab899663a0f65f05
-#: ../../tregexpr.rst:407 ea13ccab96bd4d68b797d871d185e2b0
+#: ../../tregexpr.rst:404 ea13ccab96bd4d68b797d871d185e2b0
 msgid "RegExprModifierS"
 msgstr "RegExprModifierS"
 
 # 59b7ae2c56fa49f5801c1d3af277f8e8
-#: ../../tregexpr.rst:409 732dd280c1f2497394ac8144ff88e7a1
+#: ../../tregexpr.rst:406 732dd280c1f2497394ac8144ff88e7a1
 #, fuzzy
 msgid "`Modifier s <regular_expressions.html#s>`_ default value."
 msgstr "`Modifier s <regular_expressions.html#s> _ Standardwert"
 
 # 58bc3091060d4399a02951ec97630f33
-#: ../../tregexpr.rst:412 af18e52e715e4418b03a3e028398c0f1
+#: ../../tregexpr.rst:409 af18e52e715e4418b03a3e028398c0f1
 msgid "RegExprModifierG"
 msgstr "RegExprModifierG"
 
 # da0b49d2a3d74b32988134b30e573819
-#: ../../tregexpr.rst:414 a9acdafe21494eb2bf90443d4ea004a3
+#: ../../tregexpr.rst:411 a9acdafe21494eb2bf90443d4ea004a3
 #, fuzzy
 msgid "`Modifier g <regular_expressions.html#g>`_ default value."
 msgstr "`Modifikator g <regular_expressions.html#g> _ Standardwert"
 
 # 0d2a949eb6a340399449ebacb03097ac
-#: ../../tregexpr.rst:417 6cb80e81178f4760ba285e0924a0ee48
+#: ../../tregexpr.rst:414 6cb80e81178f4760ba285e0924a0ee48
 msgid "RegExprModifierM"
 msgstr "RegExprModifierM"
 
 # 60489a8dd5f24d2ba28233c0a1458f2d
-#: ../../tregexpr.rst:419 d7d13a21298c4d72867b9e0aa8c004b9
+#: ../../tregexpr.rst:416 d7d13a21298c4d72867b9e0aa8c004b9
 #, fuzzy
 msgid "`Modifier m <regular_expressions.html#m>`_ default value."
 msgstr "Modifier m <regular_expressions.html#m> _ Standardwert"
 
 # aeb6c43c45a84a549d44b4de741fe653
-#: ../../tregexpr.rst:422 9cce79ee0b8046b689bfb1e8ddd4a30d
+#: ../../tregexpr.rst:419 9cce79ee0b8046b689bfb1e8ddd4a30d
 msgid "RegExprModifierX"
 msgstr "RegExprModifierX"
 
 # b491af4c78b94bc18fc874d59524b7a1
-#: ../../tregexpr.rst:424 47ccbb869ce74b29879eb5480edefa21
+#: ../../tregexpr.rst:421 47ccbb869ce74b29879eb5480edefa21
 #, fuzzy
 msgid "`Modifier x <regular_expressions.html#x>`_ default value."
 msgstr "`Modifikator x <regular_expressions.html#x> _ Standardwert"
 
 # ad707065285c43e18a9477e6ede04d9b
-#: ../../tregexpr.rst:427 82c6c2c5bed344249cab0f515f8e3e0a
+#: ../../tregexpr.rst:424 82c6c2c5bed344249cab0f515f8e3e0a
 msgid "RegExprSpaceChars"
 msgstr "RegExprSpaceChars"
 
 # d97ac5ca4291439d9990079ff07d9b1b
-#: ../../tregexpr.rst:429 5634305f5ee347159cc27472a0918915
+#: ../../tregexpr.rst:426 5634305f5ee347159cc27472a0918915
 #, fuzzy
 msgid "Default for SpaceChars_ property."
 msgstr "Standardwert für die SpaceChars_-Eigenschaft"
 
 # 4aa0deda29784187946dd010c02c5aec
-#: ../../tregexpr.rst:432 d5d17e812aa3489c963377c14fe05c67
+#: ../../tregexpr.rst:429 d5d17e812aa3489c963377c14fe05c67
 msgid "RegExprWordChars"
 msgstr "RegExprWordChars"
 
 # e31a20227b1f463f8eb30a51a63d9b12
-#: ../../tregexpr.rst:434 bbd2f9940c7a4281b7a23fbb58bb5e2d
+#: ../../tregexpr.rst:431 bbd2f9940c7a4281b7a23fbb58bb5e2d
 #, fuzzy
 msgid "Default value for WordChars_ property."
 msgstr "Standardwert für die Eigenschaft WordChars_"
 
 # 587f145f49a743a7ac74d65b58a7d6d4
-#: ../../tregexpr.rst:437 7e07bd81b9774b9e9ae324dc9a301311
+#: ../../tregexpr.rst:434 7e07bd81b9774b9e9ae324dc9a301311
 msgid "RegExprLineSeparators"
 msgstr "RegExprLineSeparators"
 
 # 02f6f3bc3f3240999252663ffb1946ba
-#: ../../tregexpr.rst:439 5c0b25ddbe5c496882e483bd8a2a7868
+#: ../../tregexpr.rst:436 5c0b25ddbe5c496882e483bd8a2a7868
 #, fuzzy
 msgid "Default value for LineSeparators_ property."
 msgstr "Standardwert für die LineSeparators_-Eigenschaft"
 
-# f11ef3231f4a4f7c976633edcbf6cdde
-#: ../../tregexpr.rst:442 e6dbf49d405b48e9a51df08b6b6ce6e9
-msgid "RegExprLinePairedSeparator"
-msgstr "RegExprLinePairedSeparator"
-
-# 845c9e7f55954551b55b737424a5aa70
-#: ../../tregexpr.rst:444 3c84d9767ffa42dfbb72293cbfed457c
-#, fuzzy
-msgid "Default value for LinePairedSeparator_ property."
-msgstr "Standardwert für die LinePairedSeparator_-Eigenschaft"
-
 # 0539fbf94edd40388db5e2100343c4c5
-#: ../../tregexpr.rst:447 9ea54a9c2c7e4251bfdb77a9d52d7624
+#: ../../tregexpr.rst:439 9ea54a9c2c7e4251bfdb77a9d52d7624
 msgid "Global functions"
 msgstr "Globale Funktionen"
 
 # ff352fde8a094be0b82e9b5e15427f0c
-#: ../../tregexpr.rst:449 56263902a6fa4d66bae4965a411e20a7
+#: ../../tregexpr.rst:441 56263902a6fa4d66bae4965a411e20a7
 msgid ""
 "All this functionality is available as methods of ``TRegExpr``, but with "
 "global functions you do not need to create ``TReExpr`` instance so your "
@@ -1152,12 +1131,12 @@ msgstr ""
 "benötigen."
 
 # 976f67edefab42f3ac9f276d20a8a6bf
-#: ../../tregexpr.rst:454 75d48b7754aa4fec8e5293fab9f9ffad
+#: ../../tregexpr.rst:446 75d48b7754aa4fec8e5293fab9f9ffad
 msgid "ExecRegExpr"
 msgstr "ExecRegExpr"
 
 # 379c9c62941e4aaba9f5033fbe5164ec
-#: ../../tregexpr.rst:456 3808290d63854174b4f584b768da5e3e
+#: ../../tregexpr.rst:448 3808290d63854174b4f584b768da5e3e
 #, fuzzy
 msgid ""
 "Returns True if the string matches the regular expression. Just like "
@@ -1167,12 +1146,12 @@ msgstr ""
 "wie Exec_ in ``TRegExpr``."
 
 # 8ebb3f82d0ed4174b953a0d49c6e3225
-#: ../../tregexpr.rst:460 a7d1b19d09c5453cb0250f8a188acb82
+#: ../../tregexpr.rst:452 a7d1b19d09c5453cb0250f8a188acb82
 msgid "SplitRegExpr"
 msgstr "SplitRegExpr"
 
 # 50b241d388564b3897942fe14045c6a4
-#: ../../tregexpr.rst:462 d210e8c5255943afbc539dfca3ee0b31
+#: ../../tregexpr.rst:454 d210e8c5255943afbc539dfca3ee0b31
 #, fuzzy
 msgid ""
 "Splits the string by regular expression occurences. See also Split_ if "
@@ -1182,12 +1161,12 @@ msgstr ""
 "die ``TRegExpr``-Instanz explizit erstellen möchten."
 
 # 848d75458db94f55aa25dc110c38dab1
-#: ../../tregexpr.rst:466 1eef82397a5a4003b93cb47b058c76f9
+#: ../../tregexpr.rst:458 1eef82397a5a4003b93cb47b058c76f9
 msgid "ReplaceRegExpr"
 msgstr "ReplaceRegExpr"
 
 # f60ed1bd5af143e5b62df6d78641f72c
-#: ../../tregexpr.rst:470 8579d73a1eb94776bb5b3c760cc936e6
+#: ../../tregexpr.rst:462 8579d73a1eb94776bb5b3c760cc936e6
 msgid ""
 "function ReplaceRegExpr (\n"
 "    const ARegExpr, AInputStr, AReplaceStr : RegExprString;\n"
@@ -1220,7 +1199,7 @@ msgstr ""
 "RegExprString; Überlast;"
 
 # 3446fdd5d12849ca9d526b4ac3599206
-#: ../../tregexpr.rst:491 6161e924e20b42ca8d9cd9b02cbb43b3
+#: ../../tregexpr.rst:483 6161e924e20b42ca8d9cd9b02cbb43b3
 msgid ""
 "Returns the string with regular expressions replaced by the "
 "``AReplaceStr``. See also Replace_ if you prefer to create TRegExpr "
@@ -1231,7 +1210,7 @@ msgstr ""
 "vorziehen, die TRegExpr-Instanz explizit zu erstellen."
 
 # 1b6dc7fa59294b0ba3653468f5cee2d4
-#: ../../tregexpr.rst:494 fc4028025ef042a89623860b5b8b6e49
+#: ../../tregexpr.rst:486 fc4028025ef042a89623860b5b8b6e49
 #, fuzzy
 msgid ""
 "If last argument (``AUseSubstitution``) is True, then ``AReplaceStr`` "
@@ -1241,7 +1220,7 @@ msgstr ""
 "AReplaceStr`` als Vorlage für `` Substitutionsmethoden`` verwendet:"
 
 # 2bf6d65a1443409384b682e259c5be76
-#: ../../tregexpr.rst:499 b7e2680af48143648b6ec2964175bff7
+#: ../../tregexpr.rst:491 b7e2680af48143648b6ec2964175bff7
 msgid ""
 "ReplaceRegExpr (\n"
 "  '((?i)block|var)\\s*(\\s*\\([^ ]*\\)\\s*)\\s*',\n"
@@ -1255,18 +1234,18 @@ msgstr ""
 "&quot; $ 2 &quot;, wahr)"
 
 # 19c18b1de0f140e6b54eb9b509ffb64b
-#: ../../tregexpr.rst:506 841112696ce547e084554171e929437c
+#: ../../tregexpr.rst:498 841112696ce547e084554171e929437c
 #, fuzzy
 msgid "Returns ``def 'BLOCK' value 'test1'``"
 msgstr "Gibt den `` def &#39;BLOCK&#39;-Wert&#39; test1 &#39;`zurück"
 
 # ab2ee91a93a44e7ea26959497f57dd99
-#: ../../tregexpr.rst:508 bae77ff26b014f5db429f5f50d786084
+#: ../../tregexpr.rst:500 bae77ff26b014f5db429f5f50d786084
 msgid "But this one (note there is no last argument):"
 msgstr "Aber dieses hier (Anmerkung: Es gibt kein letztes Argument):"
 
 # 2bf6d65a1443409384b682e259c5be76
-#: ../../tregexpr.rst:512 5668d2d0b1c14d56b4e6d868c31b457a
+#: ../../tregexpr.rst:504 5668d2d0b1c14d56b4e6d868c31b457a
 msgid ""
 "ReplaceRegExpr (\n"
 "  '((?i)block|var)\\s*(\\s*\\([^ ]*\\)\\s*)\\s*',\n"
@@ -1279,17 +1258,17 @@ msgstr ""
 "&quot; $ 2 &quot;&#39;)"
 
 # 468582f17cf44aa99caf539ca7906a57
-#: ../../tregexpr.rst:518 e59ac41fc809464f95fc2f190eafe5bc
+#: ../../tregexpr.rst:510 e59ac41fc809464f95fc2f190eafe5bc
 msgid "Returns ``def \"$1\" value \"$2\"``"
 msgstr "Liefert `` def &quot;$ 1&quot; Wert &quot;$ 2&quot; ``"
 
 # 154956e5a5684cfe8fe738b50f2e623e
-#: ../../tregexpr.rst:521 3ffeb65944bd4cc58e6cc07b9e3aa852
+#: ../../tregexpr.rst:513 3ffeb65944bd4cc58e6cc07b9e3aa852
 msgid "Version with options"
 msgstr "Version mit Optionen"
 
 # cfbcd8a386864fed94530caa92931339
-#: ../../tregexpr.rst:523 6e8eed6282554fa19b9ff8b6938b15ae
+#: ../../tregexpr.rst:515 6e8eed6282554fa19b9ff8b6938b15ae
 msgid ""
 "With ``Options`` you control ``\\n`` behaviour (if ``rroUseOsLineEnd`` "
 "then ``\\n`` is replaced with ``\\n\\r`` in Windows and ``\\n`` in "
@@ -1300,7 +1279,7 @@ msgstr ""
 "ersetzt, unter Linux bleibt es ein ``\\n``). Und so weiter."
 
 # 260c91d9e4944a759e3bd73168ebc836
-#: ../../tregexpr.rst:526 6d281d53e2ae4abc8729cb7a3b8893bc
+#: ../../tregexpr.rst:518 6d281d53e2ae4abc8729cb7a3b8893bc
 msgid ""
 "Type\n"
 "  TRegexReplaceOption = (rroModifierI,\n"
@@ -1317,12 +1296,12 @@ msgstr ""
 "rroUseOsLineEnd);"
 
 # 1ed790106086420dbcb76422bd55ca5d
-#: ../../tregexpr.rst:539 5eb8311b3b8b498899476649b914fd90
+#: ../../tregexpr.rst:531 5eb8311b3b8b498899476649b914fd90
 msgid "QuoteRegExprMetaChars"
 msgstr "QuoteRegExprMetaChars"
 
 # a32c441895684121977d60f0fbd6db0c
-#: ../../tregexpr.rst:541 78489ea1e1da416ba6213b500ab020c2
+#: ../../tregexpr.rst:533 78489ea1e1da416ba6213b500ab020c2
 #, fuzzy
 msgid ""
 "Replace all metachars with its safe representation, for example "
@@ -1332,7 +1311,7 @@ msgstr ""
 "`` abc&#39;cd. (`` Konvertiert in ``abc\\'cd\\.\\(``.)"
 
 # 77d383900a7c4f6588708ac87a1d30f8
-#: ../../tregexpr.rst:544 0ed92a9e90a84304bfe9dfa42fbc99fd
+#: ../../tregexpr.rst:536 0ed92a9e90a84304bfe9dfa42fbc99fd
 #, fuzzy
 msgid "This function is useful for regex auto-generation from user input."
 msgstr ""
@@ -1340,12 +1319,12 @@ msgstr ""
 "Benutzereingaben"
 
 # a5c9b2e21be44d4783cc11c309b5113c
-#: ../../tregexpr.rst:547 c69e31a4a8c9458496b5fc02c7614324
+#: ../../tregexpr.rst:539 c69e31a4a8c9458496b5fc02c7614324
 msgid "RegExprSubExpressions"
 msgstr "RegExprSubExpressions"
 
 # bb18fa14624b49f89e7e635017d65415
-#: ../../tregexpr.rst:549 3fa3e9df323445cea54a6866189185fc
+#: ../../tregexpr.rst:541 3fa3e9df323445cea54a6866189185fc
 #, fuzzy
 msgid "Makes list of subexpressions found in ``ARegExpr``."
 msgstr ""
@@ -1353,7 +1332,7 @@ msgstr ""
 "werden"
 
 # f5fe823d6b9d44c19a4656fccfb94ec7
-#: ../../tregexpr.rst:551 9c2a5d5b370045af8185d23fd4e86d92
+#: ../../tregexpr.rst:543 9c2a5d5b370045af8185d23fd4e86d92
 #, fuzzy
 msgid ""
 "In ``ASubExps`` every item represents subexpression, from first to last, "
@@ -1363,12 +1342,12 @@ msgstr ""
 "ersten bis zum letzten Format im Format:"
 
 # 691fb061827f4c34a92dacde681dc4d5
-#: ../../tregexpr.rst:554 7d2ae7593ecc41c0ace1305b219532ba
+#: ../../tregexpr.rst:546 7d2ae7593ecc41c0ace1305b219532ba
 msgid "String - subexpression text (without ‘()’)"
 msgstr "String - Unterausdruck (ohne &#39;()&#39;)"
 
 # fd9c0421e94f42a2b7c1a24d60b09c3d
-#: ../../tregexpr.rst:556 4df17fdd7f2749118a5864f61231cf3d
+#: ../../tregexpr.rst:548 4df17fdd7f2749118a5864f61231cf3d
 #, fuzzy
 msgid ""
 "Low word of Object - starting position in ARegExpr, including ‘(’ if "
@@ -1378,7 +1357,7 @@ msgstr ""
 "&#39;(&#39; falls vorhanden! (erste Position ist 1)"
 
 # 36c9774b5f4543b2a3f11b8d3ebed089
-#: ../../tregexpr.rst:558 22f9d588379c468988b5e429d77d6643
+#: ../../tregexpr.rst:550 22f9d588379c468988b5e429d77d6643
 #, fuzzy
 msgid ""
 "High word of Object - length, including starting ‘(’ and ending ‘)’ if "
@@ -1388,7 +1367,7 @@ msgstr ""
 "&quot;Endung&quot;) &quot;falls vorhanden!"
 
 # 2e1c0fd57150421c9f7fb6dfadd66141
-#: ../../tregexpr.rst:560 221f189ef958450f950387fd6bd8e4b3
+#: ../../tregexpr.rst:552 221f189ef958450f950387fd6bd8e4b3
 #, fuzzy
 msgid ""
 "``AExtendedSyntax`` - must be True if modifier ``/x`` os on, while using "
@@ -1398,7 +1377,7 @@ msgstr ""
 "dem regulären Ausdruck verwendet werden soll."
 
 # e124e12c0b9748088e423f0cb5c53c37
-#: ../../tregexpr.rst:562 68db39052a4744a8984a531132115c0a
+#: ../../tregexpr.rst:554 68db39052a4744a8984a531132115c0a
 #, fuzzy
 msgid ""
 "Usefull for GUI editors of regex (you can find example of usage in "
@@ -1411,44 +1390,44 @@ msgstr ""
 " _)"
 
 # 3f20b5860f984ad8b65858dad109f7b3
-#: ../../tregexpr.rst:566 db5ba35e74db498d859ef08a7e346064
+#: ../../tregexpr.rst:558 db5ba35e74db498d859ef08a7e346064
 msgid "Result code"
 msgstr "Ergebniscode"
 
 # d1575d03df594bb5a1f5259d9bde1f96
-#: ../../tregexpr.rst:566 bfa67272fbef4b6f90e5b486c5661a33
+#: ../../tregexpr.rst:558 bfa67272fbef4b6f90e5b486c5661a33
 msgid "Meaning"
 msgstr "Bedeutung"
 
 # 4f0a93de521a470f8ccd3bc06efde5d9
-#: ../../tregexpr.rst:568 a7695a33f0dc4276900f787521bf2a24
+#: ../../tregexpr.rst:560 a7695a33f0dc4276900f787521bf2a24
 msgid "0"
 msgstr "0"
 
 # e31c68543c174722ab7814aa70c21d42
-#: ../../tregexpr.rst:568 d819dc8ff815436494bdaf6338274186
+#: ../../tregexpr.rst:560 d819dc8ff815436494bdaf6338274186
 #, fuzzy
 msgid "Success. No unbalanced brackets were found."
 msgstr "Erfolg. Es wurden keine unausgeglichenen Klammern gefunden"
 
 # d5330ee8b4de4800b73f912aee5f0687
-#: ../../tregexpr.rst:569 05d594dd4b7a4faf97fd1fed31a07072
+#: ../../tregexpr.rst:561 05d594dd4b7a4faf97fd1fed31a07072
 msgid "-1"
 msgstr "-1"
 
 # 61091b3b25774e2cbebe3ab73c70c459
-#: ../../tregexpr.rst:569 0dbf4705b6bc4e73a2d70064911254fc
+#: ../../tregexpr.rst:561 0dbf4705b6bc4e73a2d70064911254fc
 #, fuzzy
 msgid "Not enough closing brackets ``)``."
 msgstr "Es gibt nicht genug schließende Klammern ``)``"
 
 # 27190c0c3dfd4d35b17fe9b37fc76a4c
-#: ../../tregexpr.rst:570 e7053bc1242749bd9dd7221216101ec6
+#: ../../tregexpr.rst:562 e7053bc1242749bd9dd7221216101ec6
 msgid "-(n+1)"
 msgstr "- (n + 1)"
 
 # 1a26203a8657400c9d453af26cd933de
-#: ../../tregexpr.rst:570 bf87ccc8eeba4c29b987c9c8a3a97fd8
+#: ../../tregexpr.rst:562 bf87ccc8eeba4c29b987c9c8a3a97fd8
 #, fuzzy
 msgid ""
 "At position n it was found opening ``[`` without corresponding closing "
@@ -1458,12 +1437,12 @@ msgstr ""
 "``] `` gefunden"
 
 # 6c205095ee8d4373983f802772b82aca
-#: ../../tregexpr.rst:571 2cdf1070cd2c42eabd68b2b253c2cddf
+#: ../../tregexpr.rst:563 2cdf1070cd2c42eabd68b2b253c2cddf
 msgid "n"
 msgstr "n"
 
 # 7b8a44df14a44204b77878f26f7f7f79
-#: ../../tregexpr.rst:571 b16419a8fc5f40e592a56bb22de8e942
+#: ../../tregexpr.rst:563 b16419a8fc5f40e592a56bb22de8e942
 #, fuzzy
 msgid ""
 "At position n it was found closing bracket ``)`` without corresponding "
@@ -1473,7 +1452,7 @@ msgstr ""
 "Öffnung ``(``) gefunden"
 
 # 5ccc5e356eda4954a316c17918906fa4
-#: ../../tregexpr.rst:574 2cf07b2ada5c4e47be85b6e057d6eb7d
+#: ../../tregexpr.rst:566 2cf07b2ada5c4e47be85b6e057d6eb7d
 #, fuzzy
 msgid ""
 "If ``Result <> 0``, then ``ASubExprs`` can contain empty items or illegal"
@@ -1483,12 +1462,12 @@ msgstr ""
 "enthalten"
 
 # aed94ac85d94421eaa743168b7ac3892
-#: ../../tregexpr.rst:577 091b9d6669cc43b7bf05965a08df9028
+#: ../../tregexpr.rst:569 091b9d6669cc43b7bf05965a08df9028
 msgid "ERegExpr"
 msgstr "ERegExpr"
 
 # a7223b94cacf4357adc94ff03ab8e197
-#: ../../tregexpr.rst:581 1d77fb414a574ed6ae7b3bb39b24415d
+#: ../../tregexpr.rst:573 1d77fb414a574ed6ae7b3bb39b24415d
 msgid ""
 "ERegExpr = class (Exception)\n"
 "  public\n"
@@ -1503,11 +1482,11 @@ msgstr ""
 "Position in re, an der der Kompilierungsfehler aufgetreten ist end;"
 
 # 5acc362ed76e4abebb386b53cb17ec25
-#: ../../tregexpr.rst:588 f98f76a7500b4f45b0894ba55769b50c
+#: ../../tregexpr.rst:580 f98f76a7500b4f45b0894ba55769b50c
 msgid "Unicode"
 msgstr "Unicode"
 
-#: ../../tregexpr.rst:590 c32f39ad2e614595b53648b42aaa83f5
+#: ../../tregexpr.rst:582 c32f39ad2e614595b53648b42aaa83f5
 msgid ""
 "In Unicode mode, all strings (InputString, Expression, internal strings) "
 "are of type UnicodeString/WideString, instead of simple \"string\". "
@@ -1516,7 +1495,7 @@ msgid ""
 msgstr ""
 
 # ef19321b7ec943d8932d7819c196e5a6
-#: ../../tregexpr.rst:593 35b88bd7c7f1403987d6c3054607bc77
+#: ../../tregexpr.rst:585 35b88bd7c7f1403987d6c3054607bc77
 #, fuzzy
 msgid ""
 "To use Unicode, uncomment ``{$DEFINE UniCode}`` in `regexpr.pas "
@@ -1665,4 +1644,31 @@ msgstr ""
 # c44517be82fc44adbe4f598a2e67cff1
 #~ msgid "After that all strings will be treated as WideString."
 #~ msgstr "Danach werden alle Zeichenfolgen als WideString behandelt."
+
+# 365d71bfb73645d8ac1dc3bc69bebba2
+#~ msgid "LinePairedSeparator"
+#~ msgstr "LinePairedSeparator"
+
+# 0858c0e771ff4062a02f4f60e60b319c
+#~ msgid "Paired line separator (like ``\\r\\n`` in DOS and Windows)."
+#~ msgstr "gepaartes Trennzeichen (wie ``\\r\\n`` in DOS und Windows)."
+
+# 908fba08a9e14d618d0639c8a52414ec
+#~ msgid ""
+#~ "Must contain exactly 2 chars or no"
+#~ " chars at all. Initially filled with"
+#~ " RegExprLinePairedSeparator global constant)."
+#~ msgstr ""
+#~ "muss genau zwei oder gar keine "
+#~ "Zeichen enthalten und ist anfangs mit"
+#~ " dem Inhalt der globalen Konstante "
+#~ "RegExprLinePairedSeparator vorbefüllt"
+
+# f11ef3231f4a4f7c976633edcbf6cdde
+#~ msgid "RegExprLinePairedSeparator"
+#~ msgstr "RegExprLinePairedSeparator"
+
+# 845c9e7f55954551b55b737424a5aa70
+#~ msgid "Default value for LinePairedSeparator_ property."
+#~ msgstr "Standardwert für die LinePairedSeparator_-Eigenschaft"
 
