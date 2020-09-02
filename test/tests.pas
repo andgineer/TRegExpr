@@ -4,7 +4,7 @@ unit tests;
 {$mode objfpc}{$H+}
 {$ENDIF}
 
-{ $DEFINE DUMPTESTS} //define this to dump a
+{ $DEFINE DUMPTESTS} //define this to dump results to console
 
 {$IFDEF VER130} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D5
 {$IFDEF VER140} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D6
@@ -118,6 +118,8 @@ type
     procedure RunTest62;
     procedure RunTest63;
     procedure RunTest64;
+    procedure RunTest65;
+    procedure RunTest66;
   end;
 
 implementation
@@ -149,7 +151,7 @@ end;
 
 
 const
-  testCases: array [1 .. 64] of TRegExTest = (
+  testCases: array [1 .. 66] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -661,6 +663,22 @@ const
     substitutionText: '';
     expectedResult: '"ok" a ''b "ok"';
     matchStart: 9
+    ),
+    // 65
+    ( // \A and \z
+    expression: '(?s)\A.+\z';
+    inputText: 'some'#10'text'#10;
+    substitutionText: '-';
+    expectedResult: '-';
+    matchStart: 1
+    ),
+    // 66
+    ( // \A and \Z
+    expression: '(?s)\A.+\w\Z';
+    inputText: 'some'#13#10'text'#13#10;
+    substitutionText: '-';
+    expectedResult: '-'#13#10;
+    matchStart: 1
     )
   );
 
@@ -722,7 +740,6 @@ end;
 procedure TTestRegexpr.TestEmpty;
 begin
   CompileRE('1'); // just to create RE object
-  IsFalse('UseOsLineEndOnReplace correctly set', RE.UseOsLineEndOnReplace);
 end;
 
 procedure TTestRegexpr.TestNotFound;
@@ -1075,6 +1092,16 @@ begin
   RunRETest(64);
 end;
 
+procedure TTestRegexpr.RunTest65;
+begin
+  RunRETest(65);
+end;
+
+procedure TTestRegexpr.RunTest66;
+begin
+  RunRETest(66);
+end;
+
 
 procedure TTestRegexpr.TestGroups;
 var
@@ -1094,11 +1121,12 @@ end;
 
 procedure TTestRegexpr.CompileRE(AExpression: string);
 begin
-  if (RE = Nil) then begin
+  if (RE = Nil) then
+  begin
     RE := TRegExpr.Create;
-    RE.UseOsLineEndOnReplace:=False;
+    RE.ReplaceLineEnd := #10;
   end;
-  RE.Expression:=AExpression;
+  RE.Expression := AExpression;
   RE.Compile;
 {$IFDEF DUMPTESTS}
   writeln('  Modifiers "', RE.ModifierStr, '"');

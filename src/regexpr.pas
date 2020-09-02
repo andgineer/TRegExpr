@@ -44,6 +44,22 @@
   The same modified LGPL with static linking exception as the Free Pascal RTL
 }
 
+{
+program is essentially a linear encoding
+of a nondeterministic finite-state machine (aka syntax charts or
+"railroad normal form" in parsing technology). Each node is an opcode
+plus a "next" pointer, possibly plus an operand. "Next" pointers of
+all nodes except BRANCH implement concatenation; a "next" pointer with
+a BRANCH on both ends of it connects two alternatives. (Here we
+have one of the subtle syntax dependencies: an individual BRANCH (as
+opposed to a collection of them) is never concatenated with anything
+because of operator precedence.) The operand of some types of node is
+a literal string; for others, it is a node leading into a sub-FSM. In
+particular, the operand of a BRANCH node is the first node of the branch.
+(NB this is *not* a tree structure: the tail of the branch connects
+to the thing following the set of BRANCHes.)
+}
+
 interface
 
 { off $DEFINE DebugSynRegExpr }
@@ -116,10 +132,10 @@ type
   REChar = WideChar;
   {$ELSE}
   PRegExprChar = PChar;
-  RegExprString = AnsiString; // ###0.952 was string
+  RegExprString = AnsiString;
   REChar = Char;
   {$ENDIF}
-  TREOp = REChar; // internal p-code type //###0.933
+  TREOp = REChar; // internal opcode type
   PREOp = ^TREOp;
 
 type
@@ -159,19 +175,18 @@ const
     {$ENDIF};
   {$ENDIF}
 
-  // default value for LinePairedSeparator
-  RegExprLinePairedSeparator: RegExprString = #$d#$a;
-  { if You need Unix-styled line separators (only \n), then use:
-    RegExprLineSeparators = #$a;
-    RegExprLinePairedSeparator = '';
-  }
-
   // Tab and Unicode category "Space Separator":
   // https://www.compart.com/en/unicode/category/Zs
   RegExprHorzSeparators: RegExprString = #9#$20#$A0
     {$IFDEF UniCode}
     + #$1680#$2000#$2001#$2002#$2003#$2004#$2005#$2006#$2007#$2008#$2009#$200A#$202F#$205F#$3000
     {$ENDIF};
+
+  RegExprUsePairedBreak: boolean = True;
+  RegExprReplaceLineBreak: RegExprString = sLineBreak;
+
+  RegExprLookaheadIsAtomic: boolean = False;
+  RegExprLookbehindIsAtomic: boolean = True;
 
 const
   RegexMaxGroups = 90;
@@ -285,27 +300,15 @@ type
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
     regNumBrackets: integer; // count of () brackets
-    regDummy: REChar; // dummy pointer, used to detect which pass of Compile is going
-    regCode: PRegExprChar; // pointer to emitting opcode; if =@regdummy - opcode is not emitting yet
+    regDummy: REChar; // dummy pointer, used to detect 1st/2nd pass of Compile
+                      // if p=@regDummy, it is pass-1: opcode memory is not yet allocated
+    programm: PRegExprChar; // pointer to opcode, =nil in pass-1
+    regCode: PRegExprChar; // pointer to last emitted opcode; changing in pass-2, but =@regDummy in pass-1
     regCodeSize: integer; // total opcode size in REChars
+    regCodeWork: PRegExprChar; // pointer to opcode, to first code after MAGIC
     regExactlyLen: PLongInt; // pointer to length of substring of OP_EXACTLY* inside opcode
     regIsCompiled: boolean; // true if regex was successfully compiled
-    fSecondPass: boolean; // true if the 2nd pass of Compile is going
-
-    // programm is essentially a linear encoding
-    // of a nondeterministic finite-state machine (aka syntax charts or
-    // "railroad normal form" in parsing technology). Each node is an opcode
-    // plus a "next" pointer, possibly plus an operand. "Next" pointers of
-    // all nodes except BRANCH implement concatenation; a "next" pointer with
-    // a BRANCH on both ends of it connects two alternatives. (Here we
-    // have one of the subtle syntax dependencies: an individual BRANCH (as
-    // opposed to a collection of them) is never concatenated with anything
-    // because of operator precedence.) The operand of some types of node is
-    // a literal string; for others, it is a node leading into a sub-FSM. In
-    // particular, the operand of a BRANCH node is the first node of the branch.
-    // (NB this is *not* a tree structure: the tail of the branch connects
-    // to the thing following the set of BRANCHes.)
-    programm: PRegExprChar; // pointer to opcode
+    fSecondPass: boolean; // true inside pass-2 of Compile
 
     fExpression: RegExprString; // regex string
     fInputString: RegExprString; // input string
@@ -327,15 +330,13 @@ type
     {$IFDEF UseLineSep}
     fLineSeparators: RegExprString;
     {$ENDIF}
-    fLinePairedSeparatorAssigned: boolean;
-    fLinePairedSeparatorHead, fLinePairedSeparatorTail: REChar;
 
-    FReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
-    FUseOsLineEndOnReplace: boolean; // use OS LineBreak chars (LF or CRLF) for FReplaceLineEnd
+    fUsePairedBreak: boolean;
+    fReplaceLineEnd: RegExprString; // string to use for "\n" in Substitute method
 
     fSlowChecksSizeMax: integer;
-    // use ASlowChecks=True in Exec() only when Length(InputString)<SlowChecksSizeMax
-    // ASlowChecks enables to use regMustString optimization
+    // Exec() param ASlowChecks is set to True, when Length(InputString)<SlowChecksSizeMax
+    // This ASlowChecks enables to use regMustString optimization
 
     {$IFNDEF UniCode}
     fLineSepArray: array[byte] of boolean;
@@ -418,7 +419,6 @@ type
     { ==================== Compiler section =================== }
     // compile a regular expression into internal code
     function CompileRegExpr(ARegExp: PRegExprChar): boolean;
-    procedure SetUseOsLineEndOnReplace(AValue: boolean);
 
     // set the next-pointer at the end of a node chain
     procedure Tail(p: PRegExprChar; val: PRegExprChar);
@@ -450,7 +450,7 @@ type
     // ###0.90
 
     // regular expression, i.e. main body or parenthesized thing
-    function ParseReg(paren: integer; var FlagParse: integer): PRegExprChar;
+    function ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
 
     // one alternative of an | operator
     function ParseBranch(var FlagParse: integer): PRegExprChar;
@@ -499,8 +499,7 @@ type
     {$IFDEF UseLineSep}
     procedure SetLineSeparators(const AStr: RegExprString);
     {$ENDIF}
-    procedure SetLinePairedSeparator(const AStr: RegExprString);
-    function GetLinePairedSeparator: RegExprString;
+    procedure SetUsePairedBreak(AValue: boolean);
 
   public
     constructor Create; {$IFDEF OverMeth} overload;
@@ -687,13 +686,10 @@ type
     property LineSeparators: RegExprString read fLineSeparators write SetLineSeparators; // ###0.941
     {$ENDIF}
 
-    // paired line separator (like \r\n in DOS and Windows).
-    // must contain exactly two chars or no chars at all
-    property LinePairedSeparator: RegExprString read GetLinePairedSeparator write SetLinePairedSeparator; // ###0.941
+    // support paired line-break CR LF
+    property UseLinePairedBreak: boolean read fUsePairedBreak write SetUsePairedBreak;
 
-    // Use OS line end on replace or not. Default is True for backwards compatibility.
-    // Set to false to use #10.
-    property UseOsLineEndOnReplace: boolean read FUseOsLineEndOnReplace write SetUseOsLineEndOnReplace;
+    property ReplaceLineEnd: RegExprString read fReplaceLineEnd write fReplaceLineEnd;
 
     property SlowChecksSizeMax: integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
   end;
@@ -783,7 +779,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 136;
+  REVersionMinor = 144;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -841,6 +837,15 @@ const
   // size of BRACES arguments in REChars
   {$ENDIF}
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
+
+function IsPairedBreak(p: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+const
+  cBreak = {$IFDEF Unicode} $000D000A; {$ELSE} $0D0A; {$ENDIF}
+type
+  PtrPair = {$IFDEF Unicode} ^LongInt; {$ELSE} ^Word; {$ENDIF}
+begin
+  Result := PtrPair(p)^ = cBreak;
+end;
 
 function _FindCharInBuffer(SBegin, SEnd: PRegExprChar; Ch: REChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -1146,7 +1151,10 @@ begin
       ModifierX := (rroModifierX in Options);
       // Set this after the above, if the regex contains modifiers, they will be applied.
       Expression := ARegExpr;
-      UseOsLineEndOnReplace := (rroUseOsLineEnd in Options);
+      if rroUseOsLineEnd in Options then
+        ReplaceLineEnd := sLineBreak
+      else
+        ReplaceLineEnd := #10;
       Result := Replace(AInputStr, AReplaceStr, rroUseSubstitution in Options);
     finally
       Free;
@@ -1385,6 +1393,7 @@ const
   // Min and Max are TREBracesArg
   // Node - next node in sequence,
   // LoopEntryJmp - associated LOOPENTRY node addr
+  OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
   OP_BSUBEXP = TREOp(28);
   // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
   OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
@@ -1689,10 +1698,9 @@ begin
   {$IFDEF UseLineSep}
   fLineSeparators := RegExprLineSeparators;
   {$ENDIF}
-  LinePairedSeparator := RegExprLinePairedSeparator;
 
-  FUseOsLineEndOnReplace := True;
-  FReplaceLineEnd := sLineBreak;
+  fUsePairedBreak := RegExprUsePairedBreak;
+  fReplaceLineEnd := RegExprReplaceLineBreak;
 
   fSlowChecksSizeMax := 2000;
 
@@ -2361,9 +2369,9 @@ begin
   src := regCode;
   Inc(regCode, sz);
   {$IFDEF DebugSynRegExpr}
-  if regcode - programm > regsize then
+  if regCode - programm > regCodeSize then
     raise Exception.Create('TRegExpr.InsertOperator buffer overrun');
-  // if (opnd<regcode) or (opnd-regcode>regsize) then
+  // if (opnd<regCode) or (opnd-regCode>regCodeSize) then
   // raise Exception.Create('TRegExpr.InsertOperator invalid opnd');
   {$ENDIF}
   dst := regCode;
@@ -2763,41 +2771,44 @@ begin
     end;
 
     fProgModifiers := fModifiers;
-    // well, may it's paranoia. I'll check it later... !!!!!!!!
+    // well, may it's paranoia. I'll check it later.
 
-    // First pass: determine size, legality.
+    // First pass: calculate opcode size, validate regex
     fSecondPass := False;
     fCompModifiers := fModifiers;
     regParse := ARegExp;
     regNumBrackets := 1;
     regCodeSize := 0;
     regCode := @regDummy;
+    regCodeWork := nil;
     regLookahead := False;
     regLookaheadNeg := False;
     regLookaheadGroup := -1;
     regLookbehind := False;
 
     EmitC(OP_MAGIC);
-    if ParseReg(0, FlagTemp) = nil then
+    if ParseReg(False, FlagTemp) = nil then
       Exit;
 
-    // Allocate space.
+    // Allocate memory
     GetMem(programm, regCodeSize * SizeOf(REChar));
 
-    // Second pass: emit code.
+    // Second pass: emit opcode
     fSecondPass := True;
     fCompModifiers := fModifiers;
     regParse := ARegExp;
     regNumBrackets := 1;
     regCode := programm;
+    regCodeWork := programm + REOpSz;
+
     EmitC(OP_MAGIC);
-    if ParseReg(0, FlagTemp) = nil then
+    if ParseReg(False, FlagTemp) = nil then
       Exit;
 
     // Dig out information for optimizations.
     {$IFDEF UseFirstCharSet} // ###0.929
     FirstCharSet := [];
-    FillFirstCharSet(programm + REOpSz);
+    FillFirstCharSet(regCodeWork);
     for Len := 0 to 255 do
       FirstCharArray[Len] := byte(Len) in FirstCharSet;
     {$ENDIF}
@@ -2807,7 +2818,7 @@ begin
     regMustLen := 0;
     regMustString := '';
 
-    scan := programm + REOpSz; // First OP_BRANCH.
+    scan := regCodeWork; // First OP_BRANCH.
     if PREOp(regNext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
       scan := scan + REOpSz + RENextOffSz;
@@ -2860,18 +2871,7 @@ begin
 end; { of function TRegExpr.CompileRegExpr
   -------------------------------------------------------------- }
 
-procedure TRegExpr.SetUseOsLineEndOnReplace(AValue: boolean);
-begin
-  if FUseOsLineEndOnReplace = AValue then
-    Exit;
-  FUseOsLineEndOnReplace := AValue;
-  if FUseOsLineEndOnReplace then
-    FReplaceLineEnd := sLineBreak
-  else
-    FReplaceLineEnd := #10;
-end;
-
-function TRegExpr.ParseReg(paren: integer; var FlagParse: integer): PRegExprChar;
+function TRegExpr.ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
 // regular expression, i.e. main body or parenthesized thing
 // Caller must absorb opening parenthesis.
 // Combining parenthesis handling with the base level of regular expression
@@ -2879,28 +2879,28 @@ function TRegExpr.ParseReg(paren: integer; var FlagParse: integer): PRegExprChar
 // follows makes it hard to avoid.
 var
   ret, br, ender: PRegExprChar;
-  parno: integer;
+  NBrackets: integer;
   FlagTemp: integer;
   SavedModifiers: TRegExprModifiers;
 begin
   Result := nil;
   FlagTemp := 0;
   FlagParse := FLAG_HASWIDTH; // Tentatively.
-  parno := 0; // eliminate compiler stupid warning
+  NBrackets := 0;
   SavedModifiers := fCompModifiers;
 
   // Make an OP_OPEN node, if parenthesized.
-  if paren <> 0 then
+  if InBrackets then
   begin
     if regNumBrackets >= RegexMaxGroups then
     begin
       Error(reeCompParseRegTooManyBrackets);
       Exit;
     end;
-    parno := regNumBrackets;
+    NBrackets := regNumBrackets;
     Inc(regNumBrackets);
-    ret := EmitNode(TREOp(Ord(OP_OPEN) + parno));
-    GrpOpCodes[parno] := ret;
+    ret := EmitNode(TREOp(Ord(OP_OPEN) + NBrackets));
+    GrpOpCodes[NBrackets] := ret;
   end
   else
     ret := nil;
@@ -2935,8 +2935,8 @@ begin
   end;
 
   // Make a closing node, and hook it on the end.
-  if paren <> 0 then
-    ender := EmitNode(TREOp(Ord(OP_CLOSE) + parno))
+  if InBrackets then
+    ender := EmitNode(TREOp(Ord(OP_CLOSE) + NBrackets))
   else
     ender := EmitNode(OP_EEND);
   Tail(ret, ender);
@@ -2950,7 +2950,7 @@ begin
   end;
 
   // Check for proper termination.
-  if paren <> 0 then
+  if InBrackets then
     if regParse^ <> ')' then
     begin
       Error(reeCompParseRegUnmatchedBrackets);
@@ -2958,7 +2958,7 @@ begin
     end
     else
       Inc(regParse); // skip trailing ')'
-  if (paren = 0) and (regParse < fRegexEnd) then
+  if (not InBrackets) and (regParse < fRegexEnd) then
   begin
     if regParse^ = ')' then
       Error(reeCompParseRegUnmatchedBrackets2)
@@ -3533,7 +3533,7 @@ begin
     '^':
      begin
       if not fCompModifiers.M or
-        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fLinePairedSeparatorAssigned) then
+        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fUsePairedBreak) then
         ret := EmitNode(OP_BOL)
       else
         ret := EmitNode(OP_BOLML);
@@ -3542,7 +3542,7 @@ begin
     '$':
      begin
       if not fCompModifiers.M or
-        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fLinePairedSeparatorAssigned) then
+        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fUsePairedBreak) then
         ret := EmitNode(OP_EOL)
       else
         ret := EmitNode(OP_EOLML);
@@ -3784,6 +3784,7 @@ begin
                         Error(reeLookbehindBad);
 
                       GrpKind := gkLookbehind;
+                      GrpAtomic[regNumBrackets] := RegExprLookbehindIsAtomic;
                       regLookbehind := True;
                       Inc(regParse, 3);
                     end;
@@ -3807,6 +3808,7 @@ begin
                   GrpKind := gkLookaheadNeg;
                   regLookaheadNeg := True;
                 end;
+                GrpAtomic[regNumBrackets] := RegExprLookaheadIsAtomic;
 
                 // check that these brackets are last in regex
                 SavedPtr := _FindClosingBracket(regParse + 1, fRegexEnd);
@@ -3910,7 +3912,7 @@ begin
                     GrpNames[GrpCount] := GrpName;
                   end;
                 end;
-              ret := ParseReg(1, FlagTemp);
+              ret := ParseReg(True, FlagTemp);
               if ret = nil then
               begin
                 Result := nil;
@@ -3993,15 +3995,17 @@ begin
           Error(reeTrailingBackSlash);
           Exit;
         end;
-        case regParse^ of // r.e.extensions
+        case regParse^ of
           'b':
-            ret := EmitNode(OP_BOUND); // ###0.943
+            ret := EmitNode(OP_BOUND);
           'B':
-            ret := EmitNode(OP_NOTBOUND); // ###0.943
+            ret := EmitNode(OP_NOTBOUND);
           'A':
-            ret := EmitNode(OP_BOL); // ###0.941
+            ret := EmitNode(OP_BOL);
+          'z':
+            ret := EmitNode(OP_EOL);
           'Z':
-            ret := EmitNode(OP_EOL); // ###0.941
+            ret := EmitNode(OP_EOL2);
           'd':
             begin // r.e.extension - any digit ('0' .. '9')
               ret := EmitNode(OP_ANYDIGIT);
@@ -4634,22 +4638,36 @@ begin
 
       OP_EOL:
         begin
+          // \z matches at the very end
           if regInput < fInputEnd then
             Exit;
+        end;
+
+      OP_EOL2:
+        begin
+          // \Z matches at the very and + before the final line-break (LF and CR LF)
+          if regInput < fInputEnd then
+          begin
+            if (regInput = fInputEnd - 1) and (regInput^ = #10) then
+              begin end
+            else
+            if (regInput = fInputEnd - 2) and (regInput^ = #13) and ((regInput + 1) ^ = #10) then
+              begin end
+            else
+              Exit;
+          end;
         end;
 
       OP_BOLML:
         if regInput > fInputStart then
         begin
-          nextch := (regInput - 1)^;
-          if (nextch <> fLinePairedSeparatorTail) or
-            ((regInput - 1) <= fInputStart) or
-            ((regInput - 2)^ <> fLinePairedSeparatorHead) then
+          if ((regInput - 1) <= fInputStart) or
+            not IsPairedBreak(regInput - 2) then
           begin
-            if (nextch = fLinePairedSeparatorHead) and
-              (regInput^ = fLinePairedSeparatorTail) then
-              Exit; // don't stop between paired separator
-            if not IsCustomLineSeparator(nextch) then
+            // don't stop between paired separator
+            if IsPairedBreak(regInput - 1) then
+              Exit;
+            if not IsCustomLineSeparator((regInput - 1)^) then
               Exit;
           end;
         end;
@@ -4657,14 +4675,12 @@ begin
       OP_EOLML:
         if regInput < fInputEnd then
         begin
-          nextch := regInput^;
-          if (nextch <> fLinePairedSeparatorHead) or
-            ((regInput + 1)^ <> fLinePairedSeparatorTail) then
+          if not IsPairedBreak(regInput) then
           begin
-            if (nextch = fLinePairedSeparatorTail) and (regInput > fInputStart)
-              and ((regInput - 1)^ = fLinePairedSeparatorHead) then
-              Exit; // don't stop between paired separator
-            if not IsCustomLineSeparator(nextch) then
+            // don't stop between paired separator
+            if (regInput > fInputStart) and IsPairedBreak(regInput - 1) then
+              Exit;
+            if not IsCustomLineSeparator(regInput^) then
               Exit;
           end;
         end;
@@ -4681,12 +4697,10 @@ begin
         end;
 
       OP_ANYML:
-        begin // ###0.941
+        begin
           if (regInput >= fInputEnd) or
-            IsCustomLineSeparator(regInput^) or
-            (fLinePairedSeparatorAssigned and
-             (regInput^ = fLinePairedSeparatorHead) and
-             ((regInput + 1)^ = fLinePairedSeparatorTail))
+            IsPairedBreak(regInput) or
+            IsCustomLineSeparator(regInput^)
           then
             Exit;
           {$IFDEF UNICODEEX}
@@ -4742,6 +4756,42 @@ begin
       OP_NOTSPACE:
         begin
           if (regInput >= fInputEnd) or IsSpaceChar(regInput^) then
+            Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
+          Inc(regInput);
+          {$ENDIF}
+        end;
+
+      OP_ANYVERTSEP:
+        begin
+          if (regInput >= fInputEnd) or not IsVertLineSeparator(regInput^) then
+            Exit;
+          Inc(regInput);
+        end;
+
+      OP_NOTVERTSEP:
+        begin
+          if (regInput >= fInputEnd) or IsVertLineSeparator(regInput^) then
+            Exit;
+          {$IFDEF UNICODEEX}
+          IncUnicode(regInput);
+          {$ELSE}
+          Inc(regInput);
+          {$ENDIF}
+        end;
+
+      OP_ANYHORZSEP:
+        begin
+          if (regInput >= fInputEnd) or not IsHorzSeparator(regInput^) then
+            Exit;
+          Inc(regInput);
+        end;
+
+      OP_NOTHORZSEP:
+        begin
+          if (regInput >= fInputEnd) or IsHorzSeparator(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5201,42 +5251,6 @@ begin
           Exit;
         end;
 
-      OP_ANYVERTSEP:
-        begin
-          if (regInput >= fInputEnd) or not IsVertLineSeparator(regInput^) then
-            Exit;
-          Inc(regInput);
-        end;
-
-      OP_NOTVERTSEP:
-        begin
-          if (regInput >= fInputEnd) or IsVertLineSeparator(regInput^) then
-            Exit;
-          {$IFDEF UNICODEEX}
-          IncUnicode(regInput);
-          {$ELSE}
-          Inc(regInput);
-          {$ENDIF}
-        end;
-
-      OP_ANYHORZSEP:
-        begin
-          if (regInput >= fInputEnd) or not IsHorzSeparator(regInput^) then
-            Exit;
-          Inc(regInput);
-        end;
-
-      OP_NOTHORZSEP:
-        begin
-          if (regInput >= fInputEnd) or IsHorzSeparator(regInput^) then
-            Exit;
-          {$IFDEF UNICODEEX}
-          IncUnicode(regInput);
-          {$ELSE}
-          Inc(regInput);
-          {$ENDIF}
-        end;
-
       {$IFDEF FastUnicodeData}
       OP_ANYCATEGORY:
         begin
@@ -5264,7 +5278,7 @@ begin
       OP_RECUR:
         begin
           // call opcode start
-          if not MatchPrim(programm + REOpSz) then Exit;
+          if not MatchPrim(regCodeWork) then Exit;
         end;
 
       OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
@@ -5342,7 +5356,7 @@ begin
   regInput := APos;
   regCurrentGrp := -1;
   regNestedCalls := 0;
-  Result := MatchPrim(programm + REOpSz);
+  Result := MatchPrim(regCodeWork);
   if Result then
   begin
     GrpStart[0] := APos;
@@ -5538,59 +5552,14 @@ end; { of procedure TRegExpr.SetLineSeparators
   -------------------------------------------------------------- }
 {$ENDIF}
 
-procedure TRegExpr.SetLinePairedSeparator(const AStr: RegExprString);
+procedure TRegExpr.SetUsePairedBreak(AValue: boolean);
 begin
-  if Length(AStr) = 2 then
+  if AValue <> fUsePairedBreak then
   begin
-    if AStr[1] = AStr[2] then
-    begin
-      // it's impossible for our 'one-point' checking to support
-      // two chars separator for identical chars
-      Error(reeBadLinePairedSeparator);
-      Exit;
-    end;
-    if not fLinePairedSeparatorAssigned
-      or (AStr[1] <> fLinePairedSeparatorHead)
-      or (AStr[2] <> fLinePairedSeparatorTail) then
-    begin
-      fLinePairedSeparatorAssigned := True;
-      fLinePairedSeparatorHead := AStr[1];
-      fLinePairedSeparatorTail := AStr[2];
-      InvalidateProgramm;
-    end;
-  end
-  else
-  if AStr = '' then
-  begin
-    if fLinePairedSeparatorAssigned then
-    begin
-      fLinePairedSeparatorAssigned := False;
-      InvalidateProgramm;
-    end;
-  end
-  else
-    Error(reeBadLinePairedSeparator);
-end; { of procedure TRegExpr.SetLinePairedSeparator
-  -------------------------------------------------------------- }
-
-function TRegExpr.GetLinePairedSeparator: RegExprString;
-begin
-  if fLinePairedSeparatorAssigned then
-  begin
-    {$IFDEF UniCode}
-    // Here is some UniCode 'magic'
-    // If You do know better decision to concatenate
-    // two WideChars, please, let me know!
-    Result := fLinePairedSeparatorHead; // ###0.947
-    Result := Result + fLinePairedSeparatorTail;
-    {$ELSE}
-    Result := fLinePairedSeparatorHead + fLinePairedSeparatorTail;
-    {$ENDIF}
-  end
-  else
-    Result := '';
-end; { of function TRegExpr.GetLinePairedSeparator
-  -------------------------------------------------------------- }
+    fUsePairedBreak := AValue;
+    InvalidateProgramm;
+  end;
+end;
 
 function TRegExpr.Substitute(const ATemplate: RegExprString): RegExprString;
 // perform substitutions after a regexp match
@@ -5689,7 +5658,7 @@ begin
         Inc(p);
         case Ch of
           'n':
-            Inc(ResultLen, Length(FReplaceLineEnd));
+            Inc(ResultLen, Length(fReplaceLineEnd));
           'u', 'l', 'U', 'L': { nothing }
             ;
           'x':
@@ -5746,8 +5715,8 @@ begin
         case Ch of
           'n':
             begin
-              p0 := PRegExprChar(FReplaceLineEnd);
-              p1 := p0 + Length(FReplaceLineEnd);
+              p0 := PRegExprChar(fReplaceLineEnd);
+              p1 := p0 + Length(fReplaceLineEnd);
             end;
           'x', 't', 'r', 'f', 'a', 'e':
             begin
@@ -5918,6 +5887,7 @@ begin
         ; // Exit; //###0.937
 
       OP_EOL,
+      OP_EOL2,
       OP_EOLML:
         begin //###0.948 was empty in 0.947, was EXIT in 0.937
           Include(FirstCharSet, 0);
@@ -6301,6 +6271,8 @@ begin
       Result := 'BOL';
     OP_EOL:
       Result := 'EOL';
+    OP_EOL2:
+      Result := 'EOL2';
     OP_BOLML:
       Result := 'BOLML';
     OP_EOLML:
@@ -6455,7 +6427,7 @@ begin
 
   op := OP_EXACTLY;
   Result := '';
-  s := programm + REOpSz;
+  s := regCodeWork;
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
