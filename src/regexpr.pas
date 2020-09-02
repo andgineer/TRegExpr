@@ -185,6 +185,9 @@ const
   RegExprUsePairedBreak: boolean = True;
   RegExprReplaceLineBreak: RegExprString = sLineBreak;
 
+  RegExprLookaheadIsAtomic: boolean = False;
+  RegExprLookbehindIsAtomic: boolean = True;
+
 const
   RegexMaxGroups = 90;
   // Max number of groups.
@@ -776,7 +779,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 143;
+  REVersionMinor = 144;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -3781,7 +3784,7 @@ begin
                         Error(reeLookbehindBad);
 
                       GrpKind := gkLookbehind;
-                      GrpAtomic[regNumBrackets] := True; // lookbehind must be atomic
+                      GrpAtomic[regNumBrackets] := RegExprLookbehindIsAtomic;
                       regLookbehind := True;
                       Inc(regParse, 3);
                     end;
@@ -3805,7 +3808,7 @@ begin
                   GrpKind := gkLookaheadNeg;
                   regLookaheadNeg := True;
                 end;
-                //GrpAtomic[regNumBrackets] := True; // lookahead must be atomic? but it breaks Test54
+                GrpAtomic[regNumBrackets] := RegExprLookaheadIsAtomic;
 
                 // check that these brackets are last in regex
                 SavedPtr := _FindClosingBracket(regParse + 1, fRegexEnd);
