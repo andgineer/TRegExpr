@@ -10,16 +10,17 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 14:15+0300\n"
-"PO-Revision-Date: 2020-07-15 10:08+0000\n"
+"PO-Revision-Date: 2020-09-02 11:49+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
+"regular_expressions/ru/>\n"
 "Language: ru\n"
-"Language-Team: Russian "
-"<https://hosted.weblate.org/projects/tregexpr/regular_expressions/ru/>\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 "Generated-By: Babel 2.8.0\n"
 
 # c78ea9c703114f288d7bf3e609787c2a
@@ -174,6 +175,9 @@ msgid ""
 " by the hex code. For 3-4 digits code (after U+00FF), enclose the code "
 "into braces."
 msgstr ""
+"Для представления непечатаемого символа в регулярном выражении используется "
+"``\\x`` с шестнадцатеричным кодом. Если код длиннее 2 цифр  (более U+00FF), "
+"то он обрамляется в фигурные скобки."
 
 # dcbf88787fa14cf584b81ec83ac7a779
 #: ../../regular_expressions.rst:53 fdd62fb3fbda445e93e913e2efd39cab
@@ -289,7 +293,7 @@ msgstr "``aaaa`` и ``cc``"
 
 #: ../../regular_expressions.rst 62e97daef50f4218b11d7e2cf5e8b029
 msgid "chr(0) to chr(25)."
-msgstr ""
+msgstr "chr(0) по chr(25)."
 
 # cbf6cd7c10f046e79e03f0d3e2396c78
 #: ../../regular_expressions.rst f409dcbffbab47519714904a6e6b1455
@@ -299,7 +303,7 @@ msgstr "Например ``\\ci`` соответствует"
 
 #: ../../regular_expressions.rst cf40f41bc8a24950bcf33474d8c3fcca
 msgid "Lower-case letters \"a\"...\"z\" are also supported."
-msgstr ""
+msgstr "Также поддерживаются буквы в нижнем регистре \"a\"...\"z\"."
 
 # bff99611ece44f6096d3d93bc422213b
 #: ../../regular_expressions.rst:78 8e40247cc1b14244a38440d43f651f4c
@@ -311,6 +315,8 @@ msgid ""
 "To represent special regex character (one of ``.+*?|\\()[]{}^$``), prefix"
 " it with a backslash ``\\``. The literal backslash must be escaped too."
 msgstr ""
+"Для представления спецсимволов (``.+*?|\\()[]{}^$``), перед ними надо "
+"поставить ``\\``. Чтобы вставить сам обратный слэш его надо удвоить."
 
 # 8cded9271ee144b3bfef52eabd5ff4f9
 #: ../../regular_expressions.rst:86 03147fa5c5be40be86a6aea73561bf33
@@ -462,7 +468,7 @@ msgstr "символы от ``#10`` до ``#13``"
 
 #: ../../regular_expressions.rst:137 2d9af4a82976480493227b3fe7f0edc6
 msgid "Meta-Classes"
-msgstr ""
+msgstr "Метаклассы"
 
 # c7765b08c9264ce9877e3a5d242c7948
 #: ../../regular_expressions.rst:139 703aac0962e14ea99ba51b1345ef9a64
@@ -597,6 +603,8 @@ msgid ""
 "You may use all meta-classes, mentioned in the table above, within `user "
 "character classes <User Character Classes_>`_."
 msgstr ""
+"Все указанные в таблице метаклассы можно использовать внутри `"
+"пользовательских классов <User Character Classes_>`_."
 
 # 8357b34a63b04041ad90eb3d67bced28
 #: ../../regular_expressions.rst:165 4aa16289a71c416faeffe2452dc0cae5
@@ -665,7 +673,7 @@ msgstr "``^``"
 
 #: ../../regular_expressions.rst:190 1a128183593b4af98383eab9b2f9d709
 msgid "zero-length match at start of line"
-msgstr ""
+msgstr "совпадение нулевой длины в начале строки"
 
 # 966026b627b346ff9e70e025893c3ea5
 #: ../../regular_expressions.rst:191 316298b436e647798955eb88e75aa2fe
@@ -674,7 +682,7 @@ msgstr "``$``"
 
 #: ../../regular_expressions.rst:191 1a128183593b4af98383eab9b2f9d709
 msgid "zero-length match at end of line"
-msgstr ""
+msgstr "совпадение нулевой длины в конце строки"
 
 # f81a0c2b6e474711bc20298c774e4a14
 #: ../../regular_expressions.rst:192 19ed35116a57472ea484b7f4931e8ff6
@@ -683,7 +691,7 @@ msgstr "``\\A``"
 
 #: ../../regular_expressions.rst:192 ad7bd556df1e461a9dd8e7181859e76a
 msgid "zero-length match at start of entire text"
-msgstr ""
+msgstr "совпадение нулевой длины в начале всего текста"
 
 # 8b5574757786481ea6883fd0f2288458
 #: ../../regular_expressions.rst:193 79f68f3f66ff42be8848a90b8bcf13d9
@@ -692,7 +700,7 @@ msgstr "``\\Z``"
 
 #: ../../regular_expressions.rst:193 238c2181b05a43999553022e2da5cbdc
 msgid "zero-length match at end of entire text"
-msgstr ""
+msgstr "совпадение нулевой длины в конце всего текста"
 
 # 9e2d0d5f65e94ec18fe5a956acc26eb8
 #: ../../regular_expressions.rst:194 54a035ab3ee04392b88f6a693a590dfc
@@ -995,6 +1003,8 @@ msgid ""
 "There is no practical limit to the values n and m (limit is maximal "
 "signed 32-bit value)."
 msgstr ""
+"Теоретически значение n и m не ограничены (можно использовать максимальное "
+"значение для 32-х битного числа)."
 
 # 3cb39219c7174004a7a31aede6a18e90
 #: ../../regular_expressions.rst:291 53d6ece1a4d34576b559a75090a6039e
@@ -1169,7 +1179,7 @@ msgstr "``(?-g)Ь+``"
 
 #: ../../regular_expressions.rst:333 14ec238a099c4ab182de3df773d823dd
 msgid "Possessive Quantifier"
-msgstr ""
+msgstr "Possessive Quantifier"
 
 #: ../../regular_expressions.rst:335 df91c1be4d9a44f495f78b6cde4f00fe
 msgid ""
@@ -1177,6 +1187,9 @@ msgid ""
 "supported only for simple braces, but not for braces after group like "
 "``(foo|bar){3,5}+``."
 msgstr ""
+"Синтаксис: ``a++``, ``a*+``, ``a?+``, ``a{2,4}+``. В настоящее время "
+"реализован только для простых групп и не будет работать для сложны, как "
+"например ``(foo|bar){3,5}+``."
 
 #: ../../regular_expressions.rst:339 708b758776a241cb80dd299975a63a58
 msgid ""
@@ -1184,6 +1197,9 @@ msgid ""
 "expressions.mobi/possessive.html?wlr=1>`__ In short, possessive "
 "quantifier speeds up matching in complex cases."
 msgstr ""
+"`Полное описание (на английском) <https://regular-expressions.mobi/possessive"
+".html?wlr=1>`__ В кратце, possessive quantifier ускоряет работу в сложных "
+"случаях."
 
 # 4900787c3f5e4230a8ad260b39e990b3
 #: ../../regular_expressions.rst:343 5ad24eba0d7e408ca787d22446085787
@@ -1270,7 +1286,7 @@ msgstr "``foobar`` или ``foofoo``"
 
 #: ../../regular_expressions.rst:378 839bef0bb04345b194e2d960a9217c86
 msgid "Groups"
-msgstr ""
+msgstr "Группы"
 
 # 2ca409f0fc1a4dc6b8e2bc46a07ffe7a
 #: ../../regular_expressions.rst:380 b44c5de4ec23406c909ed6c27c302094
@@ -1403,13 +1419,13 @@ msgstr ""
 
 #: ../../regular_expressions.rst:427 1295797156194c0fbbdb06aa2aa9d056
 msgid "Named Groups and Backreferences"
-msgstr ""
+msgstr "Именованные группы и обратные ссылки"
 
 #: ../../regular_expressions.rst:429 df401a4db1c24489ad730b8c6a9cb928
 msgid ""
 "To make some group (ie subexpression) named, use this syntax: "
 "``(?P<name>expr)``. Also Perl syntax is supported: ``(?'name'expr)``."
-msgstr ""
+msgstr "Чтобы присвоить имя группе ``(?P<name>expr)`` или``(?'name'expr)``."
 
 #: ../../regular_expressions.rst:431 30d243b94a094e1fa9707e7432a6fa9d
 msgid ""
@@ -1417,20 +1433,25 @@ msgid ""
 "other chars are alphanumeric or \"_\". All named groups are also usual "
 "groups and share the same numbers 1 to 9."
 msgstr ""
+"Имя группы должно начинаться с буквы или \"_\", далее следуют буквы, цифры "
+"или \"_\". Именованные и не именованные группы имеют общую нумерацию от 1 до "
+"9."
 
 #: ../../regular_expressions.rst:433 b08b18697b6544fc96188385caa592e7
 msgid ""
 "Backreferences to named groups are ``(?P=name)``, the numbers ``\\1`` to "
 "``\\9`` can also be used."
 msgstr ""
+"Чтобы сослаться на именованную группу используйте ``(?P=name)``. Или, как и "
+"для не именованных, цифры от ``\\1``до ``\\9``."
 
 #: ../../regular_expressions.rst:438 6b4e646ad1d54d718733bb9667af5fb7
 msgid "``(?P<qq>['\"])\\w+(?P=qq)``"
-msgstr ""
+msgstr "``(?P<qq>['\"])\\w+(?P=qq)``"
 
 #: ../../regular_expressions.rst:438 f6a69d8928194959be2fb2776a8d995a
 msgid "``\"word\"`` and ``'word'``"
-msgstr ""
+msgstr "``\"word\"`` и ``'word'``"
 
 # 5c5af9913f9a478cb64afa2960e299dd
 #: ../../regular_expressions.rst:442 24ea8acf9fc3498f98d57c146e500fdd
@@ -1706,7 +1727,7 @@ msgstr "Модификатор по умолчанию установлен на
 
 #: ../../regular_expressions.rst:566 74e1bb9dd6c34816ba693a38134021c6
 msgid "Assertions"
-msgstr ""
+msgstr "Assertions"
 
 #: ../../regular_expressions.rst:570 573de704d0e846a3b6beecb8aac430b6
 msgid "Currently engine supports only these kinds of assertions:"
@@ -2354,4 +2375,3 @@ msgstr ""
 # 266330cfc29d47f88dd036955f0830f3
 #~ msgid "A comment, the text is ignored."
 #~ msgstr "Комментарий, текст игнорируется."
-
