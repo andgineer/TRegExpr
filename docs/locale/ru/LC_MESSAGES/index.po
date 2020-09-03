@@ -10,16 +10,17 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 14:15+0300\n"
-"PO-Revision-Date: 2019-11-29 05:25+0000\n"
+"PO-Revision-Date: 2020-09-03 08:30+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/index/"
+"ru/>\n"
 "Language: ru\n"
-"Language-Team: Russian "
-"<https://hosted.weblate.org/projects/tregexpr/index/ru/>\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.3-dev\n"
 "Generated-By: Babel 2.8.0\n"
 
 # bcceb9ddb03f415580d4b5e55290527d
@@ -271,6 +272,8 @@ msgid ""
 "Alexey Torgashin - added many features in 2019-2020, e.g. named groups, "
 "non-capturing groups, assertions, backward search"
 msgstr ""
+"Alexey Torgashin - основной контрибутор 2019-2020. реализовал именованные "
+"группы, не захватывающие группы, заглядывания вперед и назад, обратный поиск"
 
 # 160e6d10af5b45678086bcecaf2f8ccc
 #: ../../index.rst:101 3e690a49f3be4eb2915d93e03f81861d
@@ -279,7 +282,6 @@ msgstr "Guido Muehlwitz - обнаружена и исправлена ошиб�
 
 # 7f5bfc14b9ac4064b3ae3a150933960f
 #: ../../index.rst:102 8276a72848664812bc0f8d004dded843
-#, fuzzy
 msgid ""
 "Stephan Klimek - testing in C++Builder and suggesting/implementing many "
 "features"
@@ -303,19 +305,15 @@ msgstr ""
 
 # 587479db44134d4bad81d5f1294044ee
 #: ../../index.rst:106 054be448fb8248678dcf02d932341259
-#, fuzzy
 msgid "Yury Finkel - implemented Unicode support, found and fixed some bugs"
 msgstr ""
-"Yury Finkel - реализовал поддержку UniCode, нашел и исправил некоторые "
-"ошибки"
+"Yury Finkel - реализовал поддержку UniCode, нашел и исправил некоторые ошибки"
 
 # 0e7d798dcfb841cb9721dfb54acae872
 #: ../../index.rst:107 e6c1d6c20a1149c3ab815a9bf8bf7927
-#, fuzzy
 msgid "Ralf Junker - implemented some features, many optimization suggestions"
 msgstr ""
-"Ralf Junker - Реализованы некоторые функции, много предложений по "
-"оптимизации"
+"Ralf Junker - Реализованы некоторые функции, много предложений по оптимизации"
 
 # 4073ffb53aef4064880a1fe785bc14bd
 #: ../../index.rst:108 2146052c075f4175a5032e60b9bf1c62
@@ -324,13 +322,11 @@ msgstr "Симеон Лилов - болгарский перевод"
 
 # f798907889f648d38a794a0d213bc63f
 #: ../../index.rst:109 b5593284a11f4687b8355b53c52ab794
-#, fuzzy
 msgid "Filip Jirsбk and Matthew Winter - help in implementation non-greedy mode"
 msgstr "Филип Джирсбк и Мэтью Винтер - помогли в реализации не жадного режима"
 
 # b9d9d2e44c0e4025857043de25eda658
 #: ../../index.rst:110 cb3f81f7126b444899326cf5d0022bed
-#, fuzzy
 msgid "Kit Eason - many examples for introduction help section"
 msgstr "Kit Eason много примеров для документации"
 
@@ -348,4 +344,3 @@ msgstr "Martin Ledoux - французский перевод"
 #: ../../index.rst:113 5cb21afbab24459db9baaa6bf440aa61
 msgid "Diego Calp, Argentina - Spanish translation"
 msgstr "Diego Calp, Аргентина - испанский перевод"
-
