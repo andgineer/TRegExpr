@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-02 14:51+0300\n"
-"PO-Revision-Date: 2020-09-03 08:30+0000\n"
+"PO-Revision-Date: 2020-09-03 09:49+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
 "tregexpr/ru/>\n"
@@ -541,6 +541,8 @@ msgid ""
 "valid identifier of previously found named group (starting with non-"
 "digit)."
 msgstr ""
+"Чтобы использовать найденные группы используется синтаксис ``${name}``, "
+"where ``name`` это номер найденной группы."
 
 # 9285f4f0589c4df88ed9a1b9d25cc774
 #: ../../tregexpr.rst:194 c926d3bf9a9a43968081020cc55100c8
@@ -549,9 +551,9 @@ msgstr "Split"
 
 # 471e9a74ee6f4427adfbcb9831c7ad5b
 #: ../../tregexpr.rst:196 d62218f6cee6415d9a294a30904d68bf
-#, fuzzy
 msgid "Splits ``AInputStr`` into ``APieces`` by regex occurrences."
-msgstr "Разделяет AInputStr на APieces по найденным регулярным выражениям"
+msgstr ""
+"Разделяет ``AInputStr`` на ``APieces`` по найденным регулярным выражениям"
 
 # b322778a78174b19a1ec867d734b92fe
 #: ../../tregexpr.rst:198 ../../tregexpr.rst:241
@@ -604,7 +606,6 @@ msgstr ""
 
 # 09523f19b3134cd0a900969dbc980445
 #: ../../tregexpr.rst:223 79e13564e15041a38af5c3067a5d7c99
-#, fuzzy
 msgid "Returns the string with regex occurencies replaced by the replace string."
 msgstr "Возвращает строку с повторениями, замененными строкой замены."
 
@@ -644,14 +645,12 @@ msgstr "Возвращает ``def \"$1\" value \"$2\"``"
 
 # 217cf585377e4a5a87cd0d665e3ef7e9
 #: ../../tregexpr.rst:243 307fa93749144477a810139232cf56d0
-#, fuzzy
 msgid ""
 "Overloaded version and ``ReplaceEx`` operate with callback function, so "
 "you can implement really complex functionality."
 msgstr ""
-"Перегруженная версия и ``ReplaceEx`` работают с функцией обратного "
-"вызова, поэтому вы можете реализовать действительно сложную "
-"функциональность."
+"Перегруженная версия ``ReplaceEx`` работающая с функцией обратного вызова, "
+"чтобы реализовать сложную функциональность."
 
 # 3e40efdfe68a447a865227806a4c7649
 #: ../../tregexpr.rst:246 69d198c37d65494fa9e51ca479f30430
@@ -669,31 +668,30 @@ msgstr "SubExprMatchCount"
 
 # d5ba0e249bdd4d8da0cfa8cfdeabbe6f
 #: ../../tregexpr.rst:252 e9822c31a7e342359cafa6d4eb38aade
-#, fuzzy
 msgid "Count of groups (subexpressions) found in last Exec_ / ExecNext_ call."
-msgstr "Количество подвыражений было найдено в последнем вызове Exec_ / ExecNext_."
+msgstr ""
+"Количество подвыражений, которое было найдено в последнем вызове Exec_ / "
+"ExecNext_."
 
 # d72f338a23914f4da1e709843b857975
 #: ../../tregexpr.rst:254 c8f93506f0fa4864a41a04d62466a927
-#, fuzzy
 msgid ""
 "If there are no groups found, but some string was found (Exec\\* returned"
 " True), it returns 0. If no groups nor some string were found (Exec_ / "
 "ExecNext_ returned false), it returns -1."
 msgstr ""
-"Если нет подвыражений но был найдено все выражение (Exec\\* вернул True),"
-" то ``SubExprMatchCount=0``, если ни подвыражений, ни всего выражения не "
+"Если нет подвыражений но было найдено все выражение (Exec\\* вернул True), "
+"то ``SubExprMatchCount=0``, если ни подвыражений, ни всего выражения не "
 "найдено (Exec_ / ExecNext_ вернул false), тогда ``SubExprMatchCount=-1``."
 
 # 2767db19f2ce40f78b7da4cb1b8153c2
 #: ../../tregexpr.rst:257 ee0b679ae6ce42d7a83b7dcabdf4d1fa
-#, fuzzy
 msgid ""
 "Note, that some group may be not found, and for such group "
 "``MathPos=MatchLen=-1`` and ``Match=’’``."
 msgstr ""
-"Обратите внимание, что некоторые субэкспр. может быть не найден и для "
-"такого подэкспр. ``MathPos = MatchLen = -1`` и ``Match = &#39;&#39;``."
+"Обратите внимание, что некоторые группы (подвыражения) могут быть не найдены "
+"и для таких групп ``MathPos=MatchLen=-1`` и ``Match=’’``."
 
 # d3f54fd075074e0481f0beeed23208ea
 #: ../../tregexpr.rst:262 46b00a92f30e44ddb8cad93118ce1a6d
@@ -731,11 +729,14 @@ msgid ""
 "after some match was found. First group has index 1, the entire match has"
 " index 0."
 msgstr ""
+"Позиция группы (начиная с 1). Результат имеет смысл только после того как "
+"выражение было найдено. Первая группа имеет номер 1. Совпадение регулярного "
+"выражения в целом имеет номер 0."
 
 #: ../../tregexpr.rst:281 ../../tregexpr.rst:289
 #: 0423f8c862f34164b09e2098d9ac5f4d
 msgid "Returns -1 if no group with specified index was found."
-msgstr ""
+msgstr "Возвращает ``-1``, если группа с указанным номером не была найдена."
 
 # 04f50017d5d444659d11747e8362b1df
 #: ../../tregexpr.rst:284 5a5c06deb34c4ce99358e9502ff1d3c9
@@ -747,6 +748,9 @@ msgid ""
 "Length of group with specified index. Result is valid only after some "
 "match was found. First group has index 1, the entire match has index 0."
 msgstr ""
+"Длина группы с указанным номером. Результат имеет смысл только после того, "
+"как выражение было найдено. У первой группы номер 1, у выражения в целом "
+"номер 0."
 
 # da753df4c443438b8abe57a911637416
 #: ../../tregexpr.rst:292 cc184c6ae37a431f92ab003c84d14aa7
@@ -758,6 +762,9 @@ msgid ""
 "String of group with specified index. First group has index 1, the entire"
 " match has index 0. Returns empty string, if no such group was found."
 msgstr ""
+"Строка совпавшая с группой с указанным номером. Первая группа имеет номер 1, "
+"все выражение имеет номер 0. Возвращает пустую строку, если указанная группа "
+"не была найдена."
 
 #: ../../tregexpr.rst:299 d86b1c0b5f3c438e8aa7f026aaffe417
 msgid "MatchIndexFromName"
