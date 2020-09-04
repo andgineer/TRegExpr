@@ -34,12 +34,30 @@ opcode after group, and if all next opcode works ok, that old MatchPrim call get
 When repeat-until gets True for any branch, it found the ok choice.
 
 How atomic groups are handled?
+------------------------------
 
 We handle OP_CLOSE+i, we are there when some branch matched. For atomic group,
 we mark our group as "done". GrpAtomicDone[i]:=True.
 Then opcode after group is run. If it gets False, code backtracks to that repeat-until.
 For normal group, code goes to next choice.
 For atomic group, code does NOT go to next choice, because it checks GrpAtomicDone[i].
+
+How negative lookaround works?
+-------------------------------
+TODO: this is not fully implemented! (?<!foo)bar don't work.
+
+Lookaround is also a group. Which is marked as "negative".
+
+a) lookaround matched
+We are in OP_CLOSE+i, we have some choice matched.
+For negative group, we must discard the entire result.
+So we return to OP_OPEN+i handler.
+We make the total result False.
+
+b) lookaround is not matched
+That old repeat-until ended, no choice was ok.
+This means that we must jump to opcode after lookaround.
+We jump from OP_OPEN+i to OP_CLOSE+i, and jump to opcode after group.
 
 
 Alexey Torgashin, 2020
