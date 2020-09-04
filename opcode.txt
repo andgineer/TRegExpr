@@ -1,0 +1,45 @@
+Some hints about opcode
+-----------------------
+
+How opcode handles groups in brackets?
+Group can contain choices (vertical bars).
+(expr1|expr2|expr3)expr
+For each choice, opcode has OP_BRANCH node.
+Entire group in inside OP_OPEN+i ... OP_CLOSE+i pair (i = absolute index of group).
+
+  OP_OPEN+i
+  OP_BRANCH (begin of branch 1) -> links to branch 2
+  code (contents of branch 1)
+  code
+  code
+  code                          -> last code links to OP_CLOSE+i
+  OP_BRANCH (begin of branch 2) -> links to branch 3
+  code
+  code
+  code
+  code                          -> last code links to OP_CLOSE+i
+  OP_BRANCH (last branch)       -> links to nothing
+  code
+  code
+  code
+  code                          -> last code links to OP_CLOSE+i
+  OP_CLOSE+i                    -> links to opcode after group
+  code
+  code
+  code
+
+So how the code handles group? It calls MatchPrim for beginning of all branches.
+In repeat-until. When any branch gives OK result, it goes to OP_CLOSE+i, then to next
+opcode after group, and if all next opcode works ok, that old MatchPrim call gets True.
+When repeat-until gets True for any branch, it found the ok choice.
+
+How atomic groups are handled?
+
+We handle OP_CLOSE+i, we are there when some branch matched. For atomic group,
+we mark our group as "done". GrpAtomicDone[i]:=True.
+Then opcode after group is run. If it gets False, code backtracks to that repeat-until.
+For normal group, code goes to next choice.
+For atomic group, code does NOT go to next choice, because it checks GrpAtomicDone[i].
+
+
+Alexey Torgashin, 2020
