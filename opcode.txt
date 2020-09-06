@@ -80,9 +80,10 @@ How subroutine calls work
 
 It's more complex than recursion because we need to quit handling of 
 calling group when opcode goes to its end. So handler of OP_SUBCALL+i
-goes to opcode of i-th group (pointer in GrpOpCodes[] array).
-To quit handling of group at its end, we handle also OP_CLOSE+i, and
-there we check that we are inside sub-call, "if GrpSubCalled[no]".
+- sets flag "we are inside sub-call" GrpSubCalled[]
+- goes to opcode of i-th group (pointer in GrpOpCodes[] array).
+To quit handling of group at its end, we handle OP_CLOSE+i, and
+there we check flag in GrpSubCalled[].
 
 
 Alexey Torgashin, 2020
