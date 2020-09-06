@@ -35,6 +35,7 @@ When any branch gives ok, it goes to OP_CLOSE+i, then to next opcode after group
 and if all next opcode gives ok, that old MatchPrim call gets True.
 When repeat-until gets True on some loop, it found the ok choice.
 
+
 How atomic groups are handled
 -----------------------------
 
@@ -50,14 +51,14 @@ For atomic group, code does NOT go to next choice, because it checks GrpAtomicDo
 How positive lookaround is handled
 ----------------------------------
 
-Lookarounds make groups, group index if lookaround at begin - 0; group index of 
-lookaround at end - remembered to variable. Non-capturing groups, so back-refs
-will not be affected.
 Code needs that lookarounds are at the very beginning/ending of the regex.
-When we found ok result, we just correct the pointers 
-- GrpStart[i] for beginning
-- GrpEnd[j] for ending
-We do it in MatchAtOnePos - it's the only function called for entire regex. 
+Lookarounds make groups, group index if lookaround at begin - 1; group index of 
+lookaround at end - saved to variable. Non-capturing groups, so back-refs
+are not affected.
+When we found ok result, we just correct the pointers: 
+- GrpStart[0], by the length of group 1
+- GrpEnd[0], by the length of last group
+We do it in MatchAtOnePos - it's the deepest function called for entire regex. 
 
 
 Proposal: How negative lookaround must work
