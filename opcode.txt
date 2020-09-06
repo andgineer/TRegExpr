@@ -1,63 +1,104 @@
 Some hints about opcode
 -----------------------
 
-How opcode handles groups in brackets?
-Group can contain choices (vertical bars).
-(expr1|expr2|expr3)expr
+Group can contain choices: (expr1|expr2|expr3)expr.
 For each choice, opcode has OP_BRANCH node.
-Entire group in inside OP_OPEN+i ... OP_CLOSE+i pair (i = absolute index of group).
+Even if no choices, opcode has single OP_BRANCH.
+Entire group in inside OP_OPEN+i ... OP_CLOSE+i pair (i = index of group).
 
-  OP_OPEN+i
+  OP_OPEN+i                     -> links to branch 1
   OP_BRANCH (begin of branch 1) -> links to branch 2
   code (contents of branch 1)
   code
   code
-  code                          -> last code links to OP_CLOSE+i
+  code (last)                   -> links to OP_CLOSE+i
   OP_BRANCH (begin of branch 2) -> links to branch 3
   code
   code
   code
-  code                          -> last code links to OP_CLOSE+i
+  code (last)                   -> links to OP_CLOSE+i
   OP_BRANCH (last branch)       -> links to nothing
   code
   code
   code
-  code                          -> last code links to OP_CLOSE+i
+  code (last)                   -> links to OP_CLOSE+i
   OP_CLOSE+i                    -> links to opcode after group
   code
   code
   code
 
-So how the code handles group? It calls MatchPrim for beginning of all branches.
-In repeat-until. When any branch gives OK result, it goes to OP_CLOSE+i, then to next
-opcode after group, and if all next opcode works ok, that old MatchPrim call gets True.
-When repeat-until gets True for any branch, it found the ok choice.
+"Code goes to" means handler of one opcode calls MatchPrim for another opcode.
+So how the code handles group? 
+Code goes from OP_OPEN+i to first OP_BRANCH.
+Handler of OP_BRANCH has repeat-until, it loops all next branches.
+When any branch gives ok, it goes to OP_CLOSE+i, then to next opcode after group,
+and if all next opcode gives ok, that old MatchPrim call gets True.
+When repeat-until gets True on some loop, it found the ok choice.
 
-How atomic groups are handled?
-------------------------------
 
-We handle OP_CLOSE+i, we are there when some branch matched. For atomic group,
+How atomic groups are handled
+-----------------------------
+
+We handle OP_CLOSE+i, we are there when some choice matched. For atomic group,
 we mark our group as "done". GrpAtomicDone[i]:=True.
-Then opcode after group is run. If it gets False, code backtracks to that repeat-until.
+Then code goes to opcode after the group.
+If it gets False (regex after the group didn't match), code backtracks 
+to that mentioned repeat-until.
 For normal group, code goes to next choice.
 For atomic group, code does NOT go to next choice, because it checks GrpAtomicDone[i].
 
-How negative lookaround works?
--------------------------------
-TODO: this is not fully implemented! (?<!foo)bar don't work.
 
-Lookaround is also a group. Which is marked as "negative".
+How positive lookaround is handled
+----------------------------------
 
-a) lookaround matched
-We are in OP_CLOSE+i, we have some choice matched.
+Code needs that lookarounds are at the very beginning/ending of the regex.
+Lookarounds make groups, group index if lookaround at begin - 1; group index of 
+lookaround at end - saved to variable. Non-capturing groups, so back-refs
+are not affected.
+When we found ok result, we just correct the pointers: 
+- GrpStart[0], by the length of group 1
+- GrpEnd[0], by the length of last group
+We do it in MatchAtOnePos - it's the deepest function called for entire regex. 
+
+
+Proposal: How negative lookaround must work
+-------------------------------------------
+This is not fully implemented! (?<!foo)bar don't work.
+
+Negative lookaround is also a group. Which is marked as "negative".
+
+a) Lookaround matched
+We are in OP_CLOSE+i, so we have some choice matched.
 For negative group, we must discard the entire result.
 So we return to OP_OPEN+i handler.
 We make the total result False.
 
-b) lookaround is not matched
+b) Lookaround is not matched
 That old repeat-until ended, no choice was ok.
 This means that we must jump to opcode after lookaround.
-We jump from OP_OPEN+i to OP_CLOSE+i, and jump to opcode after group.
+- For (?<!foo)bar at regex start - jump to the actual regex.
+- For foo(?!bar) at regex end - jump to OP_END and get True. 
+
+We jump from OP_OPEN+i to OP_CLOSE+i (using links between branches),
+and jump to opcode after group.
+
+
+Recursion
+---------
+
+Handler of OP_RECUR just goes to (calls MatchPrim) beginning of opcode
+(after MAGIC byte).
+
+
+Subroutine calls
+----------------
+
+It's more complex than recursion because we need to quit handling of 
+calling group when opcode goes to its end. So handler of OP_SUBCALL+i
+- sets flag "we are inside sub-call" GrpSubCalled[]
+- goes to opcode of i-th group (pointer in GrpOpCodes[] array).
+To quit handling of group at its end, we handle OP_CLOSE+i, and
+there we check flag GrpSubCalled[].
 
 
 Alexey Torgashin, 2020
