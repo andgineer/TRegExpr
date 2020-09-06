@@ -4947,15 +4947,13 @@ begin
         ;
 
       OP_OPEN_FIRST .. OP_OPEN_LAST:
-        begin // ###0.929
+        begin
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
-          // save := regInput;
           save := GrpStart[no]; // ###0.936
           GrpStart[no] := regInput; // ###0.936
           Result := MatchPrim(next);
-          if not Result // ###0.936
-          then
+          if not Result then // ###0.936
             GrpStart[no] := save;
           // handle negative lookahead
           if regLookaheadNeg then
@@ -4972,22 +4970,17 @@ begin
               else
                 GrpStart[no] := save;
             end;
-          // if Result and (GrpStart [no] = nil)
-          // then GrpStart [no] := save;
-          // Don't set startp if some later invocation of the same
-          // parentheses already has.
           Exit;
         end;
 
       OP_CLOSE_FIRST .. OP_CLOSE_LAST:
-        begin // ###0.929
+        begin
           no := Ord(scan^) - Ord(OP_CLOSE);
           regCurrentGrp := -1;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
           if GrpAtomic[no] then
             GrpAtomicDone[no] := True;
-          // save := regInput;
           save := GrpEnd[no]; // ###0.936
           GrpEnd[no] := regInput; // ###0.936
 
@@ -5000,13 +4993,8 @@ begin
           end;
 
           Result := MatchPrim(next);
-          if not Result // ###0.936
-          then
+          if not Result then // ###0.936
             GrpEnd[no] := save;
-          // if Result and (GrpEnd [no] = nil)
-          // then GrpEnd [no] := save;
-          // Don't set endp if some later invocation of the same
-          // parentheses already has.
           Exit;
         end;
 
@@ -5014,7 +5002,7 @@ begin
         begin
           saveCurrentGrp := regCurrentGrp;
           checkAtomicGroup := (regCurrentGrp >= 0) and GrpAtomic[regCurrentGrp];
-          if (next^ <> OP_BRANCH) // No choice.
+          if (next^ <> OP_BRANCH) // No next choice in group
           then
             next := scan + REOpSz + RENextOffSz // Avoid recursion
           else
