@@ -51,7 +51,8 @@ How positive lookaround is handled
 ----------------------------------
 
 Lookarounds make groups, group index if lookaround at begin - 0; group index of 
-lookaround at end - remembered to variable.
+lookaround at end - remembered to variable. Non-capturing groups, so back-refs
+will not be affected.
 Code needs that lookarounds are at the very beginning/ending of the regex.
 When we found ok result, we just correct the pointers 
 - GrpStart[i] for beginning
