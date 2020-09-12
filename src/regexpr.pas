@@ -6577,7 +6577,6 @@ begin
   Result := False;
   ALen := 0;
   if not regIsCompiled then Exit;
-  op := OP_EXACTLY;
   s := regCodeWork;
 
   repeat
@@ -6674,14 +6673,17 @@ begin
           Continue;
         end;
 
-      OP_ANYCATEGORY, OP_NOTCATEGORY:
+      OP_ANYCATEGORY,
+      OP_NOTCATEGORY:
         begin
           Inc(ALen);
           Inc(s, 2);
           Continue;
         end;
 
-      OP_BRACES, OP_BRACESNG, OP_BRACES_POSS:
+      OP_BRACES,
+      OP_BRACESNG,
+      OP_BRACES_POSS:
         begin
           // allow only d{n,n}
           N := PREBracesArg(AlignToInt(s))^;
