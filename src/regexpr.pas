@@ -487,9 +487,6 @@ type
     // Exec for stored InputString
     function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean): boolean;
 
-    {$IFDEF RegExpPCodeDump}
-    function DumpOp(op: TREOp): RegExprString;
-    {$ENDIF}
     function GetSubExprCount: integer;
     function GetMatchPos(Idx: integer): PtrInt;
     function GetMatchLen(Idx: integer): PtrInt;
@@ -592,7 +589,11 @@ type
     {$IFDEF RegExpPCodeDump}
     // dump a compiled regexp in vaguely comprehensible form
     function Dump: RegExprString;
+    function DumpOp(op: TREOp): RegExprString;
     {$ENDIF}
+
+    // opcode contains only operations for fixed match length: EXACTLY*, ANY*, etc
+    function FixedLength(var op: TREOp; var ALen: integer): boolean;
 
     // Regular expression.
     // For optimization, TRegExpr will automatically compiles it into 'P-code'
@@ -779,7 +780,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 144;
+  REVersionMinor = 145;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -6567,6 +6568,95 @@ begin
 end; { of function TRegExpr.Dump
   -------------------------------------------------------------- }
 {$ENDIF}
+
+
+function TRegExpr.FixedLength(var op: TREOp; var ALen: integer): boolean;
+var
+  s, next: PRegExprChar;
+  N, N2: integer;
+begin
+  Result := False;
+  ALen := 0;
+  if not regIsCompiled then Exit;
+  op := OP_EXACTLY;
+  s := regCodeWork;
+
+  repeat
+    next := regNext(s);
+    op := s^;
+    Inc(s, REOpSz + RENextOffSz);
+
+    case op of
+      OP_EEND:
+        begin
+          Result := True;
+          Exit;
+        end;
+
+      OP_BRANCH:
+        begin
+          op := next^;
+          if op <> OP_EEND then Exit;
+        end;
+
+      OP_COMMENT,
+      OP_BOUND,
+      OP_NOTBOUND:
+        Continue;
+
+      OP_ANY,
+      OP_ANYOF,
+      OP_ANYOFCI,
+      OP_ANYBUT,
+      OP_ANYBUTCI,
+      OP_ANYML,
+      OP_ANYDIGIT,
+      OP_NOTDIGIT,
+      OP_ANYLETTER,
+      OP_NOTLETTER,
+      OP_ANYSPACE,
+      OP_NOTSPACE,
+      OP_ANYHORZSEP,
+      OP_NOTHORZSEP,
+      OP_ANYVERTSEP,
+      OP_NOTVERTSEP:
+        begin
+          Inc(ALen);
+          Continue;
+        end;
+
+      OP_EXACTLY,
+      OP_EXACTLYCI:
+        begin
+          N := PLongInt(s)^;
+          Inc(ALen, N);
+          Inc(s, RENumberSz + N);
+          Continue;
+        end;
+
+      OP_ANYCATEGORY, OP_NOTCATEGORY:
+        begin
+          Inc(ALen);
+          Inc(s, 2);
+          Continue;
+        end;
+
+      OP_BRACES, OP_BRACESNG, OP_BRACES_POSS:
+        begin
+          // allow only d{n,n}
+          N := PREBracesArg(AlignToInt(s))^;
+          N2 := PREBracesArg(AlignToInt(s + REBracesArgSz))^;
+          if N <> N2 then
+            Exit;
+          Inc(ALen, N-1);
+          Inc(s, REBracesArgSz * 2);
+        end;
+
+      else
+        Exit;
+    end;
+  until False;
+end;
 
 {$IFDEF reRealExceptionAddr}
 {$OPTIMIZATION ON}
