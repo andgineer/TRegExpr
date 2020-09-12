@@ -307,7 +307,6 @@ type
     regCodeSize: integer; // total opcode size in REChars
     regCodeWork: PRegExprChar; // pointer to opcode, to first code after MAGIC
     regExactlyLen: PLongInt; // pointer to length of substring of OP_EXACTLY* inside opcode
-    regIsCompiled: boolean; // true if regex was successfully compiled
     fSecondPass: boolean; // true inside pass-2 of Compile
 
     fExpression: RegExprString; // regex string
@@ -582,17 +581,19 @@ type
     // Returns Error message for error with ID = AErrorID.
     function ErrorMsg(AErrorID: integer): RegExprString; virtual;
 
-    // [Re]compile r.e. Useful for example for GUI r.e. editors (to check
-    // all properties validity).
-    procedure Compile; // ###0.941
+    // Re-compile regex
+    procedure Compile;
 
     {$IFDEF RegExpPCodeDump}
-    // dump a compiled regexp in vaguely comprehensible form
+    // Show compiled regex in textual form
     function Dump: RegExprString;
+    // Show single opcode in textual form
     function DumpOp(op: TREOp): RegExprString;
     {$ENDIF}
 
-    // opcode contains only operations for fixed match length: EXACTLY*, ANY*, etc
+    function IsCompiled: boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+
+    // Opcode contains only operations for fixed match length: EXACTLY*, ANY*, etc
     function IsFixedLength(var op: TREOp; var ALen: integer): boolean;
 
     // Regular expression.
@@ -1679,7 +1680,6 @@ begin
   programm := nil;
   fExpression := '';
   fInputString := '';
-  regIsCompiled := False;
 
   FillChar(fModifiers, SizeOf(fModifiers), 0);
   ModifierI := RegExprModifierI;
@@ -1733,14 +1733,13 @@ end; { of destructor TRegExpr.Destroy
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
-  if (AStr <> fExpression) or not regIsCompiled then
+  if (AStr <> fExpression) or not IsCompiled then
   begin
-    regIsCompiled := False;
     fExpression := AStr;
     UniqueString(fExpression);
     fRegexStart := PRegExprChar(fExpression);
     fRegexEnd := fRegexStart + Length(fExpression);
-    InvalidateProgramm; // ###0.941
+    InvalidateProgramm;
   end;
 end; { of procedure TRegExpr.SetExpression
   -------------------------------------------------------------- }
@@ -2158,7 +2157,7 @@ begin
   // [Re]compile if needed
   if programm = nil then
   begin
-    Compile; // ###0.941
+    Compile;
     // Check [re]compiled programm
     if programm = nil then
       Exit; // error was set/raised by Compile (was reeExecAfterCompErr)
@@ -2865,7 +2864,6 @@ begin
     begin
       if not Result then
         InvalidateProgramm;
-      regIsCompiled := Result;
     end;
   end;
 
@@ -6364,6 +6362,11 @@ begin
 end; { of function TRegExpr.DumpOp
   -------------------------------------------------------------- }
 
+function TRegExpr.IsCompiled: boolean;
+begin
+  Result := programm <> nil;
+end;
+
 function PrintableChar(AChar: REChar): RegExprString; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   if AChar < ' ' then
@@ -6576,7 +6579,7 @@ var
 begin
   Result := False;
   ALen := 0;
-  if not regIsCompiled then Exit;
+  if not IsCompiled then Exit;
   s := regCodeWork;
 
   repeat
