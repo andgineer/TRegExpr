@@ -73,7 +73,7 @@ begin
     reg.ModifierG:= chk_g.Checked;
 
     reg.Compile;
-    if reg.FixedLength(op, i) then
+    if reg.IsFixedLength(op, i) then
       ListDump.Items.Add('Fixed length: '+IntToStr(i))
     else
       ListDump.Items.Add('Not fixed op: '+reg.DumpOp(op));

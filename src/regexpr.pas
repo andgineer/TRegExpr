@@ -593,7 +593,7 @@ type
     {$ENDIF}
 
     // opcode contains only operations for fixed match length: EXACTLY*, ANY*, etc
-    function FixedLength(var op: TREOp; var ALen: integer): boolean;
+    function IsFixedLength(var op: TREOp; var ALen: integer): boolean;
 
     // Regular expression.
     // For optimization, TRegExpr will automatically compiles it into 'P-code'
@@ -6569,7 +6569,7 @@ end; { of function TRegExpr.Dump
 {$ENDIF}
 
 
-function TRegExpr.FixedLength(var op: TREOp; var ALen: integer): boolean;
+function TRegExpr.IsFixedLength(var op: TREOp; var ALen: integer): boolean;
 var
   s, next: PRegExprChar;
   N, N2, i: integer;
