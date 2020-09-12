@@ -6575,7 +6575,7 @@ end; { of function TRegExpr.Dump
 function TRegExpr.IsFixedLength(var op: TREOp; var ALen: integer): boolean;
 var
   s, next: PRegExprChar;
-  N, N2, i: integer;
+  N, N2: integer;
 begin
   Result := False;
   ALen := 0;
