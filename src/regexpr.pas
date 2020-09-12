@@ -6649,12 +6649,7 @@ begin
               OpKind_Char:
                 begin
                   Inc(s);
-                  N := PLongInt(s)^;
-                  Inc(s, RENumberSz);
-                  for i := 1 to N do
-                  begin
-                    Inc(s);
-                  end;
+                  Inc(s, RENumberSz + PLongInt(s)^);
                 end;
               OpKind_CategoryYes,
               OpKind_CategoryNo:
