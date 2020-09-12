@@ -57,6 +57,7 @@ end;
 
 procedure TForm1.EditRegexChange(Sender: TObject);
 var
+  op: TREOp;
   i: integer;
 begin
   ListRes.Items.Clear;
@@ -70,6 +71,13 @@ begin
     reg.ModifierR:= chk_r.Checked;
     reg.ModifierS:= chk_s.Checked;
     reg.ModifierG:= chk_g.Checked;
+
+    reg.Compile;
+    if reg.IsFixedLength(op, i) then
+      ListDump.Items.Add('Fixed length: '+IntToStr(i))
+    else
+      ListDump.Items.Add('Not fixed op: '+reg.DumpOp(op));
+
     ListDump.Items.AddText(reg.Dump);
   except
     on e: Exception do

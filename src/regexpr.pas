@@ -307,7 +307,6 @@ type
     regCodeSize: integer; // total opcode size in REChars
     regCodeWork: PRegExprChar; // pointer to opcode, to first code after MAGIC
     regExactlyLen: PLongInt; // pointer to length of substring of OP_EXACTLY* inside opcode
-    regIsCompiled: boolean; // true if regex was successfully compiled
     fSecondPass: boolean; // true inside pass-2 of Compile
 
     fExpression: RegExprString; // regex string
@@ -487,9 +486,6 @@ type
     // Exec for stored InputString
     function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean): boolean;
 
-    {$IFDEF RegExpPCodeDump}
-    function DumpOp(op: TREOp): RegExprString;
-    {$ENDIF}
     function GetSubExprCount: integer;
     function GetMatchPos(Idx: integer): PtrInt;
     function GetMatchLen(Idx: integer): PtrInt;
@@ -585,14 +581,20 @@ type
     // Returns Error message for error with ID = AErrorID.
     function ErrorMsg(AErrorID: integer): RegExprString; virtual;
 
-    // [Re]compile r.e. Useful for example for GUI r.e. editors (to check
-    // all properties validity).
-    procedure Compile; // ###0.941
+    // Re-compile regex
+    procedure Compile;
 
     {$IFDEF RegExpPCodeDump}
-    // dump a compiled regexp in vaguely comprehensible form
+    // Show compiled regex in textual form
     function Dump: RegExprString;
+    // Show single opcode in textual form
+    function DumpOp(op: TREOp): RegExprString;
     {$ENDIF}
+
+    function IsCompiled: boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+
+    // Opcode contains only operations for fixed match length: EXACTLY*, ANY*, etc
+    function IsFixedLength(var op: TREOp; var ALen: integer): boolean;
 
     // Regular expression.
     // For optimization, TRegExpr will automatically compiles it into 'P-code'
@@ -779,7 +781,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 144;
+  REVersionMinor = 145;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1678,7 +1680,6 @@ begin
   programm := nil;
   fExpression := '';
   fInputString := '';
-  regIsCompiled := False;
 
   FillChar(fModifiers, SizeOf(fModifiers), 0);
   ModifierI := RegExprModifierI;
@@ -1732,14 +1733,13 @@ end; { of destructor TRegExpr.Destroy
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
-  if (AStr <> fExpression) or not regIsCompiled then
+  if (AStr <> fExpression) or not IsCompiled then
   begin
-    regIsCompiled := False;
     fExpression := AStr;
     UniqueString(fExpression);
     fRegexStart := PRegExprChar(fExpression);
     fRegexEnd := fRegexStart + Length(fExpression);
-    InvalidateProgramm; // ###0.941
+    InvalidateProgramm;
   end;
 end; { of procedure TRegExpr.SetExpression
   -------------------------------------------------------------- }
@@ -2157,7 +2157,7 @@ begin
   // [Re]compile if needed
   if programm = nil then
   begin
-    Compile; // ###0.941
+    Compile;
     // Check [re]compiled programm
     if programm = nil then
       Exit; // error was set/raised by Compile (was reeExecAfterCompErr)
@@ -2864,7 +2864,6 @@ begin
     begin
       if not Result then
         InvalidateProgramm;
-      regIsCompiled := Result;
     end;
   end;
 
@@ -6359,10 +6358,14 @@ begin
       Result := Format('SUBCALL[%d]', [Ord(op) - Ord(OP_SUBCALL)]);
   else
     Error(reeDumpCorruptedOpcode);
-  end; { of case op }
-  Result := ':' + Result;
+  end;
 end; { of function TRegExpr.DumpOp
   -------------------------------------------------------------- }
+
+function TRegExpr.IsCompiled: boolean;
+begin
+  Result := programm <> nil;
+end;
 
 function PrintableChar(AChar: REChar): RegExprString; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
@@ -6419,7 +6422,7 @@ begin
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    Result := Result + Format('%2d%s', [s - programm, DumpOp(s^)]);
+    Result := Result + Format('%2d: %s', [s - programm, DumpOp(s^)]);
     // Where, what.
     next := regNext(s);
     if next = nil // Next ptr.
@@ -6567,6 +6570,133 @@ begin
 end; { of function TRegExpr.Dump
   -------------------------------------------------------------- }
 {$ENDIF}
+
+
+function TRegExpr.IsFixedLength(var op: TREOp; var ALen: integer): boolean;
+var
+  s, next: PRegExprChar;
+  N, N2: integer;
+begin
+  Result := False;
+  ALen := 0;
+  if not IsCompiled then Exit;
+  s := regCodeWork;
+
+  repeat
+    next := regNext(s);
+    op := s^;
+    Inc(s, REOpSz + RENextOffSz);
+
+    case op of
+      OP_EEND:
+        begin
+          Result := True;
+          Exit;
+        end;
+
+      OP_BRANCH:
+        begin
+          op := next^;
+          if op <> OP_EEND then Exit;
+        end;
+
+      OP_COMMENT,
+      OP_BOUND,
+      OP_NOTBOUND:
+        Continue;
+
+      OP_ANY,
+      OP_ANYML,
+      OP_ANYDIGIT,
+      OP_NOTDIGIT,
+      OP_ANYLETTER,
+      OP_NOTLETTER,
+      OP_ANYSPACE,
+      OP_NOTSPACE,
+      OP_ANYHORZSEP,
+      OP_NOTHORZSEP,
+      OP_ANYVERTSEP,
+      OP_NOTVERTSEP:
+        begin
+          Inc(ALen);
+          Continue;
+        end;
+
+      OP_ANYOF,
+      OP_ANYOFCI,
+      OP_ANYBUT,
+      OP_ANYBUTCI:
+        begin
+          Inc(ALen);
+          repeat
+            case s^ of
+              OpKind_End:
+                begin
+                  Inc(s);
+                  Break;
+                end;
+              OpKind_Range:
+                begin
+                  Inc(s);
+                  Inc(s);
+                  Inc(s);
+                end;
+              OpKind_MetaClass:
+                begin
+                  Inc(s);
+                  Inc(s);
+                end;
+              OpKind_Char:
+                begin
+                  Inc(s);
+                  Inc(s, RENumberSz + PLongInt(s)^);
+                end;
+              OpKind_CategoryYes,
+              OpKind_CategoryNo:
+                begin
+                  Inc(s);
+                  Inc(s);
+                  Inc(s);
+                end;
+            end;
+          until False;
+        end;
+
+      OP_EXACTLY,
+      OP_EXACTLYCI:
+        begin
+          N := PLongInt(s)^;
+          Inc(ALen, N);
+          Inc(s, RENumberSz + N);
+          Continue;
+        end;
+
+      OP_ANYCATEGORY,
+      OP_NOTCATEGORY:
+        begin
+          Inc(ALen);
+          Inc(s, 2);
+          Continue;
+        end;
+
+      OP_BRACES,
+      OP_BRACESNG,
+      OP_BRACES_POSS:
+        begin
+          // allow only d{n,n}
+          N := PREBracesArg(AlignToInt(s))^;
+          N2 := PREBracesArg(AlignToInt(s + REBracesArgSz))^;
+          if N <> N2 then
+            Exit;
+          Inc(ALen, N-1);
+          Inc(s, REBracesArgSz * 2);
+        end;
+
+      else
+        Exit;
+    end;
+  until False;
+end;
 
 {$IFDEF reRealExceptionAddr}
 {$OPTIMIZATION ON}
