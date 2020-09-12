@@ -6572,7 +6572,7 @@ end; { of function TRegExpr.Dump
 function TRegExpr.FixedLength(var op: TREOp; var ALen: integer): boolean;
 var
   s, next: PRegExprChar;
-  N, N2: integer;
+  N, N2, i: integer;
 begin
   Result := False;
   ALen := 0;
@@ -6604,10 +6604,6 @@ begin
         Continue;
 
       OP_ANY,
-      OP_ANYOF,
-      OP_ANYOFCI,
-      OP_ANYBUT,
-      OP_ANYBUTCI,
       OP_ANYML,
       OP_ANYDIGIT,
       OP_NOTDIGIT,
@@ -6622,6 +6618,51 @@ begin
         begin
           Inc(ALen);
           Continue;
+        end;
+
+      OP_ANYOF,
+      OP_ANYOFCI,
+      OP_ANYBUT,
+      OP_ANYBUTCI:
+        begin
+          Inc(ALen);
+          repeat
+            case s^ of
+              OpKind_End:
+                begin
+                  Inc(s);
+                  Break;
+                end;
+              OpKind_Range:
+                begin
+                  Inc(s);
+                  Inc(s);
+                  Inc(s);
+                end;
+              OpKind_MetaClass:
+                begin
+                  Inc(s);
+                  Inc(s);
+                end;
+              OpKind_Char:
+                begin
+                  Inc(s);
+                  N := PLongInt(s)^;
+                  Inc(s, RENumberSz);
+                  for i := 1 to N do
+                  begin
+                    Inc(s);
+                  end;
+                end;
+              OpKind_CategoryYes,
+              OpKind_CategoryNo:
+                begin
+                  Inc(s);
+                  Inc(s);
+                  Inc(s);
+                end;
+            end;
+          until False;
         end;
 
       OP_EXACTLY,
