@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.145 2020.09.12
+ -=- (^) Added FixedLength() to detect regex with fixed length match.
+  By Alexey Torgashin.
+
  v. 1.144 2020.09.02
  -=- (^) Rework handling of paired CR LF: simplified code, removed
   prop LinePairedSeparator (str), added prop UseLinePairedBreak (bool),
