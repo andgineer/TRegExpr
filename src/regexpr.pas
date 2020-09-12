@@ -6360,8 +6360,7 @@ begin
       Result := Format('SUBCALL[%d]', [Ord(op) - Ord(OP_SUBCALL)]);
   else
     Error(reeDumpCorruptedOpcode);
-  end; { of case op }
-  Result := ':' + Result;
+  end;
 end; { of function TRegExpr.DumpOp
   -------------------------------------------------------------- }
 
@@ -6420,7 +6419,7 @@ begin
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    Result := Result + Format('%2d%s', [s - programm, DumpOp(s^)]);
+    Result := Result + Format('%2d: %s', [s - programm, DumpOp(s^)]);
     // Where, what.
     next := regNext(s);
     if next = nil // Next ptr.
