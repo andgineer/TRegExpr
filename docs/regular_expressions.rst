@@ -572,17 +572,18 @@ Assertions
 
 .. _assertions:
 
-Currently engine supports only these kinds of assertions:
-
 Positive lookahead assertion: ``foo(?=bar)`` matches "foo" only before "bar", and "bar" is excluded from the match.
 
 Negative lookahead assertion: ``foo(?!bar)`` matches "foo" only if it's not followed by "bar".
 
 Positive lookbehind assertion: ``(?<=foo)bar`` matches "bar" only after "foo", and "foo" is excluded from the match.
 
-Negative lookbehind assertion: ``(?<!foo)bar`` matches "bar" only if it's not prefixed with "foo". Limitation: the regex "foo" must be of fixed length, ie contains only operations for fixed length matches. So quantifiers are not allowed, except braces with the repeated numbers ``{n,n}``. Char-classes are allowed here, dot is allowed, ``\b`` and ``\B`` are allowed.
+Negative lookbehind assertion: ``(?<!foo)bar`` matches "bar" only if it's not prefixed with "foo". 
 
-Limitation: brackets for lookahead must be at the very ending of expression, and brackets for lookbehind must be at the very beginning. So assertions between choices ``|``, or inside groups, are not supported.
+Limitations:
+
+* Brackets for lookahead must be at the very ending of expression, and brackets for lookbehind must be at the very beginning. So assertions between choices ``|``, or inside groups, are not supported.
+* For ``(?<!foo)bar``, regex "foo" must be of fixed length, ie contains only operations for fixed length matches. So quantifiers are not allowed, except braces with the repeated numbers ``{n,n}``. Char-classes are allowed here, dot is allowed, ``\b`` and ``\B`` are allowed.
 
 Non-capturing Groups
 --------------------
