@@ -121,6 +121,7 @@ type
     procedure RunTest65;
     procedure RunTest66;
     procedure RunTest67;
+    procedure RunTest68;
   end;
 
 implementation
@@ -152,7 +153,7 @@ end;
 
 
 const
-  testCases: array [1 .. 67] of TRegExTest = (
+  testCases: array [1 .. 68] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -688,6 +689,14 @@ const
     substitutionText: '';
     expectedResult: 'bar';
     matchStart: 17
+    ),
+    // 68
+    ( // (?<!foo)bar
+    expression: '(?<![a-o]\d)bar';
+    inputText: 'a2bar o3bar __bar';
+    substitutionText: '';
+    expectedResult: 'bar';
+    matchStart: 15
     )
   );
 
@@ -1114,6 +1123,11 @@ end;
 procedure TTestRegexpr.RunTest67;
 begin
   RunRETest(67);
+end;
+
+procedure TTestRegexpr.RunTest68;
+begin
+  RunRETest(68);
 end;
 
 

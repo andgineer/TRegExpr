@@ -495,6 +495,8 @@ type
     function GetMatch(Idx: integer): RegExprString;
 
     procedure SetInputString(const AInputString: RegExprString);
+    procedure SetInputRange(AStart, AEnd: PRegExprChar);
+
     {$IFDEF UseLineSep}
     procedure SetLineSeparators(const AStr: RegExprString);
     {$ENDIF}
@@ -5396,14 +5398,17 @@ end;
 
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean;
 begin
-  // test for lookbehind '(?<!foo)bar' before running MatchPrim for the actual regex
+  // test for lookbehind '(?<!foo)bar' before running actual MatchPrim
   if Assigned(fHelper) then
-    if (APos - fHelperLen) >= fInputStart  then
+    if (APos - fHelperLen) >= fInputStart then
+    begin
+      fHelper.SetInputRange(APos - fHelperLen, APos);
       if fHelper.MatchAtOnePos(APos - fHelperLen) then
       begin
         Result := False;
         Exit;
       end;
+    end;
 
   regInput := APos;
   regCurrentGrp := -1;
@@ -5588,8 +5593,14 @@ begin
 
   fInputStart := PRegExprChar(fInputString);
   fInputEnd := fInputStart + Length(fInputString);
-end; { of procedure TRegExpr.SetInputString
-  -------------------------------------------------------------- }
+end;
+
+procedure TRegExpr.SetInputRange(AStart, AEnd: PRegExprChar);
+begin
+  fInputString := '';
+  fInputStart := AStart;
+  fInputEnd := AEnd;
+end;
 
 {$IFDEF UseLineSep}
 procedure TRegExpr.SetLineSeparators(const AStr: RegExprString);
