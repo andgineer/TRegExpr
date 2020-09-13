@@ -784,7 +784,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 145;
+  REVersionMinor = 147;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -3817,7 +3817,9 @@ begin
                       if not fSecondPass then
                       begin
                         if fHelper = nil then
+                        begin
                           fHelper := TRegExpr.Create;
+                        end;
                         fHelper.Expression := Copy(fExpression, 5, SavedPtr - fRegexStart - 4);
 
                         try
@@ -5394,6 +5396,15 @@ end;
 
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean;
 begin
+  // test for lookbehind '(?<!foo)bar' before running MatchPrim for the actual regex
+  if Assigned(fHelper) then
+    if (APos - fHelperLen) >= fInputStart  then
+      if fHelper.MatchAtOnePos(APos - fHelperLen) then
+      begin
+        Result := False;
+        Exit;
+      end;
+
   regInput := APos;
   regCurrentGrp := -1;
   regNestedCalls := 0;
