@@ -1530,6 +1530,7 @@ const
   reeLookaheadBad = 150;
   reeLookbehindBad = 152;
   reeLookbehindTooComplex = 153;
+  reeLookaroundNotAtEdge = 154;
   // Runtime errors must be >= reeFirstRuntimeCode
   reeFirstRuntimeCode = 1000;
   reeRegRepeatCalledInappropriately = 1000;
@@ -1626,12 +1627,14 @@ begin
       Result := 'TRegExpr compile: bad back-reference to named group';
     reeNamedGroupDupName:
       Result := 'TRegExpr compile: named group defined more than once';
+    reeLookaheadBad:
+      Result := 'TRegExpr compile: bad lookahead';
     reeLookbehindBad:
       Result := 'TRegExpr compile: bad lookbehind';
     reeLookbehindTooComplex:
-      Result := 'TRegExpr compile: negative lookbehind  (?<!foo) must have fixed length';
-    reeLookaheadBad:
-      Result := 'TRegExpr compile: bad lookahead';
+      Result := 'TRegExpr compile: lookbehind (?<!foo) must have fixed length';
+    reeLookaroundNotAtEdge:
+      Result := 'TRegExpr compile: lookaround brackets must be at the very beginning/ending';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -3792,7 +3795,7 @@ begin
                     begin
                       // allow lookbehind only at the beginning
                       if regParse <> fRegexStart + 1 then
-                        Error(reeLookbehindBad);
+                        Error(reeLookaroundNotAtEdge);
 
                       GrpKind := gkLookbehind;
                       GrpAtomic[regNumBrackets] := RegExprLookbehindIsAtomic;
@@ -3804,7 +3807,7 @@ begin
                     begin
                       // allow lookbehind only at the beginning
                       if regParse <> fRegexStart + 1 then
-                        Error(reeLookbehindBad);
+                        Error(reeLookaroundNotAtEdge);
 
                       GrpKind := gkLookbehindNeg;
                       Inc(regParse, 3);
@@ -3868,7 +3871,7 @@ begin
                 // check that these brackets are last in regex
                 SavedPtr := _FindClosingBracket(regParse + 1, fRegexEnd);
                 if (SavedPtr <> fRegexEnd - 1) then
-                  Error(reeLookaheadBad);
+                  Error(reeLookaroundNotAtEdge);
 
                 Inc(regParse, 2);
               end;
