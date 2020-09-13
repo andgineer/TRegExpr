@@ -1735,8 +1735,10 @@ begin
     FreeMem(programm);
     programm := nil;
   end;
-end; { of destructor TRegExpr.Destroy
-  -------------------------------------------------------------- }
+
+  if Assigned(fHelper) then
+    FreeAndNil(fHelper);
+end;
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
@@ -2755,7 +2757,7 @@ var
   Len, LenTemp: integer;
   FlagTemp: integer;
 begin
-  Result := False; // life too dark
+  Result := False;
   FlagTemp := 0;
   regParse := nil; // for correct error handling
   regExactlyLen := nil;
@@ -2763,6 +2765,10 @@ begin
   ClearInternalIndexes;
   fLastError := reeOk;
   fLastErrorOpcode := TREOp(0);
+
+  if Assigned(fHelper) then
+    FreeAndNil(fHelper);
+  fHelperLen := 0;
 
   try
     if programm <> nil then
@@ -3528,7 +3534,6 @@ var
   GrpName: RegExprString;
   GrpIndex: integer;
   NextCh: REChar;
-  TempOp: TREOp;
 begin
   Result := nil;
   FlagTemp := 0;
@@ -3795,6 +3800,7 @@ begin
                       regLookbehind := True;
                       Inc(regParse, 3);
                     end;
+
                   '!':
                     begin
                       // allow lookbehind only at the beginning
@@ -3802,23 +3808,33 @@ begin
                         Error(reeLookbehindBad);
 
                       GrpKind := gkLookbehindNeg;
-                      GrpAtomic[regNumBrackets] := RegExprLookbehindIsAtomic;
                       Inc(regParse, 3);
                       SavedPtr := _FindClosingBracket(regParse, fRegexEnd);
                       if SavedPtr = nil then
-                        Error(reeLookbehindBad);
+                        Error(reeCompParseRegUnmatchedBrackets);
 
-                      if fHelper = nil then
-                        fHelper := TRegExpr.Create;
-                      fHelper.Expression := Copy(fExpression, 5, SavedPtr - fRegexStart - 4);
-                      fHelperLen := 0;
+                      // for '(?<!foo)bar', we make our regex 'bar' and make Helper object with 'foo'
+                      if not fSecondPass then
+                      begin
+                        if fHelper = nil then
+                          fHelper := TRegExpr.Create;
+                        fHelper.Expression := Copy(fExpression, 5, SavedPtr - fRegexStart - 4);
 
-                      try
-                        fHelper.Compile;
-                        if not fHelper.IsFixedLength(TempOp, fHelperLen) then
+                        try
+                          fHelper.Compile;
+                        except
+                          Len := fHelper.LastError;
+                          FreeAndNil(fHelper);
+                          Error(Len);
+                        end;
+
+                        if fHelper.IsFixedLength(TempChar, Len) then
+                          fHelperLen := Len
+                        else
+                        begin
+                          FreeAndNil(fHelper);
                           Error(reeLookbehindTooComplex);
-                      except
-                        Error(fHelper.LastError);
+                        end;
                       end;
 
                       // jump to closing bracket, don't make opcode for (?<!foo)
