@@ -392,9 +392,8 @@ type
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
 
-    // Check if we can use precompiled r.e. or
-    // [re]compile it if something changed
-    function IsProgrammOk: boolean; // ###0.941
+    // Check if we can use compiled regex, compile it if something changed
+    function IsProgrammOk: boolean;
 
     procedure SetExpression(const AStr: RegExprString);
 
@@ -2161,21 +2160,19 @@ begin
   Result := False;
 
   // check modifiers
-  if not IsModifiersEqual(fModifiers, fProgModifiers) // ###0.941
-  then
+  if not IsModifiersEqual(fModifiers, fProgModifiers) then
     InvalidateProgramm;
 
-  // [Re]compile if needed
+  // compile if needed
   if programm = nil then
   begin
     Compile;
-    // Check [re]compiled programm
+    // Check compiled programm
     if programm = nil then
-      Exit; // error was set/raised by Compile (was reeExecAfterCompErr)
+      Exit;
   end;
 
-  if programm[0] <> OP_MAGIC // Program corrupted.
-  then
+  if programm[0] <> OP_MAGIC then
     Error(reeCorruptedProgram)
   else
     Result := True;
