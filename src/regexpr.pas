@@ -356,6 +356,9 @@ type
     CheckerIndex_LowerAZ: byte;
     CheckerIndex_UpperAZ: byte;
 
+    fHelper: TRegExpr;
+    fHelperLen: integer;
+
     procedure InitCharCheckers;
     function CharChecker_Word(ch: REChar): boolean;
     function CharChecker_NotWord(ch: REChar): boolean;
@@ -819,6 +822,7 @@ type
     gkLookahead,
     gkLookaheadNeg,
     gkLookbehind,
+    gkLookbehindNeg,
     gkRecursion,
     gkSubCall
     );
@@ -1524,6 +1528,7 @@ const
   reeNamedGroupDupName = 143;
   reeLookaheadBad = 150;
   reeLookbehindBad = 152;
+  reeLookbehindTooComplex = 153;
   // Runtime errors must be >= reeFirstRuntimeCode
   reeFirstRuntimeCode = 1000;
   reeRegRepeatCalledInappropriately = 1000;
@@ -1622,6 +1627,8 @@ begin
       Result := 'TRegExpr compile: named group defined more than once';
     reeLookbehindBad:
       Result := 'TRegExpr compile: bad lookbehind';
+    reeLookbehindTooComplex:
+      Result := 'TRegExpr compile: negative lookbehind  (?<!foo) must have fixed length';
     reeLookaheadBad:
       Result := 'TRegExpr compile: bad lookahead';
 
@@ -3521,6 +3528,7 @@ var
   GrpName: RegExprString;
   GrpIndex: integer;
   NextCh: REChar;
+  TempOp: TREOp;
 begin
   Result := nil;
   FlagTemp := 0;
@@ -3787,6 +3795,35 @@ begin
                       regLookbehind := True;
                       Inc(regParse, 3);
                     end;
+                  '!':
+                    begin
+                      // allow lookbehind only at the beginning
+                      if regParse <> fRegexStart + 1 then
+                        Error(reeLookbehindBad);
+
+                      GrpKind := gkLookbehindNeg;
+                      GrpAtomic[regNumBrackets] := RegExprLookbehindIsAtomic;
+                      Inc(regParse, 3);
+                      SavedPtr := _FindClosingBracket(regParse, fRegexEnd);
+                      if SavedPtr = nil then
+                        Error(reeLookbehindBad);
+
+                      if fHelper = nil then
+                        fHelper := TRegExpr.Create;
+                      fHelper.Expression := Copy(fExpression, 5, SavedPtr - fRegexStart - 4);
+                      fHelperLen := 0;
+
+                      try
+                        fHelper.Compile;
+                        if not fHelper.IsFixedLength(TempOp, fHelperLen) then
+                          Error(reeLookbehindTooComplex);
+                      except
+                        Error(fHelper.LastError);
+                      end;
+
+                      // jump to closing bracket, don't make opcode for (?<!foo)
+                      regParse := SavedPtr;
+                    end;
                   else
                     Error(reeLookbehindBad);
                 end;
@@ -3895,7 +3932,8 @@ begin
           gkNonCapturingGroup,
           gkLookahead,
           gkLookaheadNeg,
-          gkLookbehind:
+          gkLookbehind,
+          gkLookbehindNeg:
             begin
               // skip this block for one of passes, to not double groups count;
               // must take first pass (we need GrpNames filled)
