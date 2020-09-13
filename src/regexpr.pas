@@ -5479,7 +5479,6 @@ begin
       Exit;
   end;
 
-  // Check InputString presence
   if fInputString = '' then
   begin
     //Error(reeNoInputStringSpecified); // better don't raise error, breaks some apps
@@ -5494,9 +5493,7 @@ begin
   end;
 
   // Check that the start position is not longer than the line
-  // If so then exit with nothing found
-  if AOffset > (Length(fInputString) + 1) // for matching empty string after last char.
-  then
+  if AOffset > (Length(fInputString) + 1) then
     Exit;
 
   Ptr := fInputStart + AOffset - 1;
