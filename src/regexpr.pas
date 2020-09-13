@@ -3815,11 +3815,13 @@ begin
                       // for '(?<!foo)bar', we make our regex 'bar' and make Helper object with 'foo'
                       if not fSecondPass then
                       begin
+                        Len := SavedPtr - fRegexStart - 4;
+                        if Len = 0 then
+                          Error(reeLookbehindBad);
+
                         if fHelper = nil then
-                        begin
                           fHelper := TRegExpr.Create;
-                        end;
-                        fHelper.Expression := Copy(fExpression, 5, SavedPtr - fRegexStart - 4);
+                        fHelper.Expression := Copy(fExpression, 5, Len);
 
                         try
                           fHelper.Compile;
