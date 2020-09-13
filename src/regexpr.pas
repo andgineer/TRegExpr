@@ -3841,7 +3841,7 @@ begin
                       end;
 
                       // jump to closing bracket, don't make opcode for (?<!foo)
-                      regParse := SavedPtr;
+                      regParse := SavedPtr + 1;
                     end;
                   else
                     Error(reeLookbehindBad);
@@ -3951,8 +3951,7 @@ begin
           gkNonCapturingGroup,
           gkLookahead,
           gkLookaheadNeg,
-          gkLookbehind,
-          gkLookbehindNeg:
+          gkLookbehind:
             begin
               // skip this block for one of passes, to not double groups count;
               // must take first pass (we need GrpNames filled)
@@ -3975,6 +3974,13 @@ begin
                 Exit;
               end;
               FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_SPECSTART);
+            end;
+
+          gkLookbehindNeg:
+            begin
+              // don't make opcode
+              ret := EmitNode(OP_COMMENT);
+              FlagParse := FLAG_WORST;
             end;
 
           gkNamedGroupReference:
