@@ -580,6 +580,8 @@ Negative lookahead assertion: ``foo(?!bar)`` matches "foo" only if it's not foll
 
 Positive lookbehind assertion: ``(?<=foo)bar`` matches "bar" only after "foo", and "foo" is excluded from the match.
 
+Negative lookbehind assertion: ``(?<!foo)bar`` matches "bar" only if it's not prefixed with "foo". Limitation: the regex "foo" must be of fixed length, ie contains only operations for fixed length matches. So quantifiers are not allowed, except braces with the repeated numbers ``{n,n}``. Char-classes are allowed here, dot is allowed, ``\b`` and ``\B`` are allowed.
+
 Assertions are allowed only at the very beginning and ending of expression. They can contain subexpressions of any complexity (quantifiers are allowed, even groups are allowed). Lookahead and lookbehind can be present both.
 
 Non-capturing Groups
