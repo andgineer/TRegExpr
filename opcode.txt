@@ -36,8 +36,8 @@ and if all next opcode gives ok, that old MatchPrim call gets True.
 When repeat-until gets True on some loop, it found the ok choice.
 
 
-How atomic groups are handled
------------------------------
+Atomic groups
+-------------
 
 We handle OP_CLOSE+i, we are there when some choice matched. For atomic group,
 we mark our group as "done". GrpAtomicDone[i]:=True.
@@ -48,8 +48,8 @@ For normal group, code goes to next choice.
 For atomic group, code does NOT go to next choice, because it checks GrpAtomicDone[i].
 
 
-How positive lookaround is handled
-----------------------------------
+Positive lookaround
+-------------------
 
 Code needs that lookarounds are at the very beginning/ending of the regex.
 Lookarounds make groups, group index if lookaround at begin - 1; group index of 
@@ -57,30 +57,31 @@ lookaround at end - saved to variable. Non-capturing groups, so back-refs
 are not affected.
 When we found ok result, we just correct the pointers: 
 - GrpStart[0], by the length of group 1
-- GrpEnd[0], by the length of last group
+- GrpEnd[0], by the length of "remembered" group
 We do it in MatchAtOnePos - it's the deepest function called for entire regex. 
 
 
-Proposal: How negative lookaround must work
--------------------------------------------
-This is not fully implemented! (?<!foo)bar don't work.
+Negative lookahead 'foo(?!bar)'
+-------------------------------
 
-Negative lookaround is also a group. Which is marked as "negative".
+We parse final brackets as a group, and mark this group (remember its index).
+When MatchPrim works on this "group", we invert its result.
+ 
+a) Group matched
+In handler of OP_CLOSE+i, we have some choice matched.
+It's negative lookaround, we must discard the entire result.
+b) Group is not matched
+We invert result and make it True.
 
-a) Lookaround matched
-We are in OP_CLOSE+i, so we have some choice matched.
-For negative group, we must discard the entire result.
-So we return to OP_OPEN+i handler.
-We make the total result False.
 
-b) Lookaround is not matched
-That old repeat-until ended, no choice was ok.
-This means that we must jump to opcode after lookaround.
-- For (?<!foo)bar at regex start - jump to the actual regex.
-- For foo(?!bar) at regex end - jump to OP_END and get True. 
+Negative lookbehind '(?<!foo)bar'
+---------------------------------
 
-We jump from OP_OPEN+i to OP_CLOSE+i (using links between branches),
-and jump to opcode after group.
+For regex '(?<!foo)bar' we make actual working regex as 'bar' and set 'foo' as regex
+for Helper object.
+Code checks (IsFixedLength) that Helper object expression has fixed length HelperLen.
+We handle MatchAtOnePos(APos), and run Helper - test HelperLen chars before APos.
+It Helper has a match, it's bad pos.
 
 
 Recursion

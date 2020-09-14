@@ -572,15 +572,19 @@ Assertions
 
 .. _assertions:
 
-Currently engine supports only these kinds of assertions:
-
 Positive lookahead assertion: ``foo(?=bar)`` matches "foo" only before "bar", and "bar" is excluded from the match.
 
 Negative lookahead assertion: ``foo(?!bar)`` matches "foo" only if it's not followed by "bar".
 
 Positive lookbehind assertion: ``(?<=foo)bar`` matches "bar" only after "foo", and "foo" is excluded from the match.
 
-Assertions are allowed only at the very beginning and ending of expression. They can contain subexpressions of any complexity (quantifiers are allowed, even groups are allowed). Lookahead and lookbehind can be present both.
+Negative lookbehind assertion: ``(?<!foo)bar`` matches "bar" only if it's not prefixed with "foo". 
+
+Limitations:
+
+* Brackets for lookahead must be at the very ending of expression, and brackets for lookbehind must be at the very beginning. So assertions between choices ``|``, or inside groups, are not supported.
+* For lookbehind ``(?<!foo)bar``, regex "foo" must be of fixed length, ie contains only operations of fixed length matches. Quantifiers are not allowed, except braces with the repeated numbers ``{n}`` or ``{n,n}``. Char-classes are allowed here, dot is allowed, ``\b`` and ``\B`` are allowed. Groups and choices are not allowed.
+* For other 3 assertion kinds, expression in brackets can be of any complexity.
 
 Non-capturing Groups
 --------------------

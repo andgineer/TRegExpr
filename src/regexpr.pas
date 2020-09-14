@@ -356,6 +356,9 @@ type
     CheckerIndex_LowerAZ: byte;
     CheckerIndex_UpperAZ: byte;
 
+    fHelper: TRegExpr;
+    fHelperLen: integer;
+
     procedure InitCharCheckers;
     function CharChecker_Word(ch: REChar): boolean;
     function CharChecker_NotWord(ch: REChar): boolean;
@@ -389,9 +392,8 @@ type
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
 
-    // Check if we can use precompiled r.e. or
-    // [re]compile it if something changed
-    function IsProgrammOk: boolean; // ###0.941
+    // Check if we can use compiled regex, compile it if something changed
+    function IsProgrammOk: boolean;
 
     procedure SetExpression(const AStr: RegExprString);
 
@@ -492,6 +494,8 @@ type
     function GetMatch(Idx: integer): RegExprString;
 
     procedure SetInputString(const AInputString: RegExprString);
+    procedure SetInputRange(AStart, AEnd: PRegExprChar);
+
     {$IFDEF UseLineSep}
     procedure SetLineSeparators(const AStr: RegExprString);
     {$ENDIF}
@@ -781,7 +785,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 145;
+  REVersionMinor = 147;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -819,6 +823,7 @@ type
     gkLookahead,
     gkLookaheadNeg,
     gkLookbehind,
+    gkLookbehindNeg,
     gkRecursion,
     gkSubCall
     );
@@ -1524,6 +1529,8 @@ const
   reeNamedGroupDupName = 143;
   reeLookaheadBad = 150;
   reeLookbehindBad = 152;
+  reeLookbehindTooComplex = 153;
+  reeLookaroundNotAtEdge = 154;
   // Runtime errors must be >= reeFirstRuntimeCode
   reeFirstRuntimeCode = 1000;
   reeRegRepeatCalledInappropriately = 1000;
@@ -1620,10 +1627,14 @@ begin
       Result := 'TRegExpr compile: bad back-reference to named group';
     reeNamedGroupDupName:
       Result := 'TRegExpr compile: named group defined more than once';
-    reeLookbehindBad:
-      Result := 'TRegExpr compile: bad lookbehind';
     reeLookaheadBad:
       Result := 'TRegExpr compile: bad lookahead';
+    reeLookbehindBad:
+      Result := 'TRegExpr compile: bad lookbehind';
+    reeLookbehindTooComplex:
+      Result := 'TRegExpr compile: lookbehind (?<!foo) must have fixed length';
+    reeLookaroundNotAtEdge:
+      Result := 'TRegExpr compile: lookaround brackets must be at the very beginning/ending';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -1728,8 +1739,10 @@ begin
     FreeMem(programm);
     programm := nil;
   end;
-end; { of destructor TRegExpr.Destroy
-  -------------------------------------------------------------- }
+
+  if Assigned(fHelper) then
+    FreeAndNil(fHelper);
+end;
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
 begin
@@ -2150,21 +2163,19 @@ begin
   Result := False;
 
   // check modifiers
-  if not IsModifiersEqual(fModifiers, fProgModifiers) // ###0.941
-  then
+  if not IsModifiersEqual(fModifiers, fProgModifiers) then
     InvalidateProgramm;
 
-  // [Re]compile if needed
+  // compile if needed
   if programm = nil then
   begin
     Compile;
-    // Check [re]compiled programm
+    // Check compiled programm
     if programm = nil then
-      Exit; // error was set/raised by Compile (was reeExecAfterCompErr)
+      Exit;
   end;
 
-  if programm[0] <> OP_MAGIC // Program corrupted.
-  then
+  if programm[0] <> OP_MAGIC then
     Error(reeCorruptedProgram)
   else
     Result := True;
@@ -2748,7 +2759,7 @@ var
   Len, LenTemp: integer;
   FlagTemp: integer;
 begin
-  Result := False; // life too dark
+  Result := False;
   FlagTemp := 0;
   regParse := nil; // for correct error handling
   regExactlyLen := nil;
@@ -2756,6 +2767,10 @@ begin
   ClearInternalIndexes;
   fLastError := reeOk;
   fLastErrorOpcode := TREOp(0);
+
+  if Assigned(fHelper) then
+    FreeAndNil(fHelper);
+  fHelperLen := 0;
 
   try
     if programm <> nil then
@@ -3780,12 +3795,56 @@ begin
                     begin
                       // allow lookbehind only at the beginning
                       if regParse <> fRegexStart + 1 then
-                        Error(reeLookbehindBad);
+                        Error(reeLookaroundNotAtEdge);
 
                       GrpKind := gkLookbehind;
                       GrpAtomic[regNumBrackets] := RegExprLookbehindIsAtomic;
                       regLookbehind := True;
                       Inc(regParse, 3);
+                    end;
+
+                  '!':
+                    begin
+                      // allow lookbehind only at the beginning
+                      if regParse <> fRegexStart + 1 then
+                        Error(reeLookaroundNotAtEdge);
+
+                      GrpKind := gkLookbehindNeg;
+                      Inc(regParse, 3);
+                      SavedPtr := _FindClosingBracket(regParse, fRegexEnd);
+                      if SavedPtr = nil then
+                        Error(reeCompParseRegUnmatchedBrackets);
+
+                      // for '(?<!foo)bar', we make our regex 'bar' and make Helper object with 'foo'
+                      if not fSecondPass then
+                      begin
+                        Len := SavedPtr - fRegexStart - 4;
+                        if Len = 0 then
+                          Error(reeLookbehindBad);
+
+                        if fHelper = nil then
+                          fHelper := TRegExpr.Create;
+                        fHelper.Expression := Copy(fExpression, 5, Len);
+
+                        try
+                          fHelper.Compile;
+                        except
+                          Len := fHelper.LastError;
+                          FreeAndNil(fHelper);
+                          Error(Len);
+                        end;
+
+                        if fHelper.IsFixedLength(TempChar, Len) then
+                          fHelperLen := Len
+                        else
+                        begin
+                          FreeAndNil(fHelper);
+                          Error(reeLookbehindTooComplex);
+                        end;
+                      end;
+
+                      // jump to closing bracket, don't make opcode for (?<!foo)
+                      regParse := SavedPtr + 1;
                     end;
                   else
                     Error(reeLookbehindBad);
@@ -3812,7 +3871,7 @@ begin
                 // check that these brackets are last in regex
                 SavedPtr := _FindClosingBracket(regParse + 1, fRegexEnd);
                 if (SavedPtr <> fRegexEnd - 1) then
-                  Error(reeLookaheadBad);
+                  Error(reeLookaroundNotAtEdge);
 
                 Inc(regParse, 2);
               end;
@@ -3918,6 +3977,13 @@ begin
                 Exit;
               end;
               FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_SPECSTART);
+            end;
+
+          gkLookbehindNeg:
+            begin
+              // don't make opcode
+              ret := EmitNode(OP_COMMENT);
+              FlagParse := FLAG_WORST;
             end;
 
           gkNamedGroupReference:
@@ -5340,6 +5406,18 @@ end;
 
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): boolean;
 begin
+  // test for lookbehind '(?<!foo)bar' before running actual MatchPrim
+  if Assigned(fHelper) then
+    if (APos - fHelperLen) >= fInputStart then
+    begin
+      fHelper.SetInputRange(APos - fHelperLen, APos);
+      if fHelper.MatchAtOnePos(APos - fHelperLen) then
+      begin
+        Result := False;
+        Exit;
+      end;
+    end;
+
   regInput := APos;
   regCurrentGrp := -1;
   regNestedCalls := 0;
@@ -5409,7 +5487,6 @@ begin
       Exit;
   end;
 
-  // Check InputString presence
   if fInputString = '' then
   begin
     //Error(reeNoInputStringSpecified); // better don't raise error, breaks some apps
@@ -5424,9 +5501,7 @@ begin
   end;
 
   // Check that the start position is not longer than the line
-  // If so then exit with nothing found
-  if AOffset > (Length(fInputString) + 1) // for matching empty string after last char.
-  then
+  if AOffset > (Length(fInputString) + 1) then
     Exit;
 
   Ptr := fInputStart + AOffset - 1;
@@ -5523,8 +5598,14 @@ begin
 
   fInputStart := PRegExprChar(fInputString);
   fInputEnd := fInputStart + Length(fInputString);
-end; { of procedure TRegExpr.SetInputString
-  -------------------------------------------------------------- }
+end;
+
+procedure TRegExpr.SetInputRange(AStart, AEnd: PRegExprChar);
+begin
+  fInputString := '';
+  fInputStart := AStart;
+  fInputEnd := AEnd;
+end;
 
 {$IFDEF UseLineSep}
 procedure TRegExpr.SetLineSeparators(const AStr: RegExprString);
