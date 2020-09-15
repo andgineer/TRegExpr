@@ -3,8 +3,9 @@ Some hints about opcode
 
 Group can contain choices: (expr1|expr2|expr3)expr.
 For each choice, opcode has OP_BRANCH node.
-Even if no choices, opcode has single OP_BRANCH.
-Entire group in inside OP_OPEN+i ... OP_CLOSE+i pair (i = index of group).
+Even without choices, group opcode has single OP_BRANCH.
+Group is enclosed in OP_OPEN+i ... OP_CLOSE+i pair (i = index of group).
+Even the whole regex is enclosed in such pair.
 
   OP_OPEN+i                     -> links to branch 1
   OP_BRANCH (begin of branch 1) -> links to branch 2

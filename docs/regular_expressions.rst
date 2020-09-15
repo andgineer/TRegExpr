@@ -299,7 +299,7 @@ RegEx              Matches
 ``fooba{2}r``      ``foobaar``
 ``fooba{2,}r``     ``foobaar'``, ``foobaaar``, ``foobaaaar`` etc.
 ``fooba{2,3}r``    ``foobaar``, or ``foobaaar``  but not ``foobaaaar``
-``(foobar){8,10}`` ``8``, ``9`` or ``10`` instances of the ``foobar`` (``()`` is `Subexpression <#subexpression>`__)
+``(foobar){8,10}`` 8...10 instances of ``foobar`` (``()`` is `group <#subexpression>`__)
 ================== ========================================================================
 
 .. _greedy:
@@ -382,12 +382,12 @@ RegEx            Matches
 Groups
 ------
 
-The brackets ``( ... )`` are used to define regular expression groups (ie subexpressions).
+The brackets ``()`` are used to define groups (ie subexpressions).
 
 .. note::
     `TRegExpr <tregexpr.html>`__
 
-    Subexpression positions, lengths and actual values will be in
+    Group positions, lengths and actual values will be in
     `MatchPos <tregexpr.html#matchpos>`_,
     `MatchLen <tregexpr.html#matchlen>`_ and
     `Match <tregexpr.html#match>`_.
@@ -395,22 +395,20 @@ The brackets ``( ... )`` are used to define regular expression groups (ie subexp
     You can substitute them with
     `Substitute <tregexpr.html#substitute>`_.
 
-Subexpressions are numbered from left to right by their
-opening parenthesis (including nested subexpressions).
+Groups are numbered from left to right by their
+opening parenthesis (including nested groups).
+First group has index 1.
+The entire regex has index 0.
 
-First subexpression has number ``1``.
-Whole regular expression has number ``0``.
+.. highlights:: For string ``foobar``, the regex ``(foo(bar))`` will find:
 
-.. highlights:: For example for input string ``foobar``
-    regular expression ``(foo(bar))`` will find:
-
-    ============= ==========
-    subexpression value
-    ============= ==========
-    ``0``         ``foobar``
-    ``1``         ``foobar``
-    ``2``         ``bar``
-    ============= ==========
+    ====== ==========
+    Group  Value
+    ====== ==========
+    0      ``foobar``
+    1      ``foobar``
+    2      ``bar``
+    ====== ==========
 
 Backreferences
 --------------
@@ -431,7 +429,7 @@ single quotes) or ``77`` (without quotes) etc.
 Named Groups and Backreferences
 -------------------------------
 
-To make some group (ie subexpression) named, use this syntax: ``(?P<name>expr)``. Also Perl syntax is supported: ``(?'name'expr)``.
+To make some group named, use this syntax: ``(?P<name>expr)``. Also Perl syntax is supported: ``(?'name'expr)``.
 
 Name of group must be valid identifier: first char is letter or "_", other chars are alphanumeric or "_". All named groups are also usual groups and share the same numbers 1 to 9.
 
@@ -589,7 +587,7 @@ Limitations:
 Non-capturing Groups
 --------------------
 
-Syntax is like this: ``(?:subexpression)``.
+Syntax is like this: ``(?:expr)``.
 
 Such groups do not have the "index" and are invisible for backreferences.
 Non-capturing groups are used when you want to group a subexpression, but you do not want to save it as a matched/captured portion of the string. So this is just a way to organize your regex into subexpressions without overhead of capturing result:
@@ -616,17 +614,16 @@ Inline Modifiers
 
 .. _inlinemodifiers:
 
-Syntax is like this: ``(?i)``, ``(?-i)``, ``(?msgxr-imsgxr)``.
+Syntax for one modifier: ``(?i)`` to turn on, and ``(?-i)`` to turn off. Many modifiers are allowed like this: ``(?msgxr-imsgxr)``.
 
 You may use it inside regular expression for modifying modifiers on-the-fly.
 This can be especially handy because it has local scope in a regular
 expression. It affects only that part of regular expression that follows
 ``(?imsgxr-imsgxr)`` operator.
 
-And if it's inside subexpression it will
-affect only this subexpression - specifically the part of the subexpression
-that follows after the operator. So in ``((?i)Saint)-Petersburg`` it affects
-only subexpression ``((?i)Saint)`` so it will match ``saint-Petersburg``
+And if it's inside group, it will affect only this group - specifically the part of the group
+that follows the modifiers. So in ``((?i)Saint)-Petersburg`` it affects
+only group ``((?i)Saint)`` so it will match ``saint-Petersburg``
 but not ``saint-petersburg``.
 
 ============================= ==================================================
