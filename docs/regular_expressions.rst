@@ -185,7 +185,7 @@ Line Boundaries
 ~~~~~~~~~~~~~~~
 
 ============= ================================================
-Metachar      Matches
+Meta-char     Matches
 ============= ================================================
 ``.``         any character, can include line-breaks
 ``^``         zero-length match at start of line
@@ -206,7 +206,7 @@ RegEx         Matches
 ``foob.r``    ``foobar``, ``foobbr``, ``foob1r`` and so on
 ============= ================================================
 
-Metachar ``^`` matches zero-length position at the beginning of the input string.
+Meta-char ``^`` matches zero-length position at the beginning of the input string.
 ``$`` - at the ending.
 If `modifier /m <#m>`_ is **on**, they also match at the beginning/ending
 of individual lines in the multi-line text.
@@ -220,11 +220,12 @@ Note that there is no empty line within the sequence ``\x0D\x0A``.
     `Unicode version <tregexpr.html#unicode>`__, then ``^``/``$``
     also matches ``\x2028``, ``\x2029``, ``\x0B``, ``\x0C`` or ``\x85``.
 
-Metachars ``\A`` matches zero-length position at the very beginning of the input string,
+Meta-char ``\A`` matches zero-length position at the very beginning of the input string,
 ``\z`` - at the very ending. They ignore `modifier /m <#m>`_.
 ``\Z`` is like ``\z`` but also matches before the final line-break (LF and CR LF).
+Behaviour of ``\A``, ``\z``, ``\Z`` is made like in most of major regex engines (Perl, PCRE, etc).
 
-The ``.`` metacharacter by default matches any character, but if you
+Meta-char ``.`` (dot) by default matches any character, but if you
 turn **off** the `modifier /s <#s>`_, then it won't match line-breaks inside the string.
 
 Note that ``^.*$`` does not match a string between ``\x0D\x0A``,
@@ -413,7 +414,7 @@ The entire regex has index 0.
 Backreferences
 --------------
 
-Metacharacters ``\1`` through ``\9`` are interpreted as backreferences to groups.
+Meta-chars ``\1`` through ``\9`` are interpreted as backreferences to groups.
 They match the previously found group with the specified index.
 
 =========== ============================
