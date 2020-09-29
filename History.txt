@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.148 2020.09.29
+ -=- (-) Fixed broken ^ and $ if UseLinePairedBreak=False.
+  By Alexey Torgashin.
+
  v. 1.147 2020.09.13
  -=- (+) Added support for negative lookbehind: (?<!foo)bar.
  -=- (^) Added IsFixedLength() to detect regex with fixed length match.
