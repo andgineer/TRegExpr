@@ -785,7 +785,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 147;
+  REVersionMinor = 148;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -3546,8 +3546,8 @@ begin
   case (regParse - 1)^ of
     '^':
      begin
-      if not fCompModifiers.M or
-        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fUsePairedBreak) then
+      if not fCompModifiers.M
+        {$IFDEF UseLineSep} or (fLineSeparators = '') {$ENDIF} then
         ret := EmitNode(OP_BOL)
       else
         ret := EmitNode(OP_BOLML);
@@ -3555,8 +3555,8 @@ begin
 
     '$':
      begin
-      if not fCompModifiers.M or
-        ({$IFDEF UseLineSep} (fLineSeparators = '') and {$ENDIF} not fUsePairedBreak) then
+      if not fCompModifiers.M
+        {$IFDEF UseLineSep} or (fLineSeparators = '') {$ENDIF} then
         ret := EmitNode(OP_EOL)
       else
         ret := EmitNode(OP_EOLML);
