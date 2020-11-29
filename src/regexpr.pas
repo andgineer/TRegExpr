@@ -241,19 +241,24 @@ type
   end;
   TRegExprCharCheckerInfos = array of TRegExprCharCheckerInfo;
 
+  TRegExprGrpFlags = array [0 .. RegexMaxGroups - 1] of boolean;
+  TRegExprGrpPointers = array [0 .. RegexMaxGroups - 1] of PRegExprChar;
+  TRegExprGrpNames = array [0 .. RegexMaxGroups - 1] of RegExprString;
+  TRegExprGrpIndexes = array [0 .. RegexMaxGroups - 1] of Integer;
+
   { TRegExpr }
 
   TRegExpr = class
   private
-    GrpStart: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group start in InputString
-    GrpEnd: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group end in InputString
+    GrpStart: TRegExprGrpPointers; // pointer to group start in InputString
+    GrpEnd: TRegExprGrpPointers; // pointer to group end in InputString
 
-    GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
-    GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
-    GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
-    GrpAtomicDone: array [0 .. RegexMaxGroups - 1] of boolean; // atomic group[i] is "done" (used in Exec* only)
-    GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
-    GrpSubCalled: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is called by OP_SUBCALL*
+    GrpIndexes: TRegExprGrpIndexes; // map global group index to _capturing_ group index
+    GrpNames: TRegExprGrpNames; // names of groups, if non-empty
+    GrpAtomic: TRegExprGrpFlags; // group[i] is atomic (filled in Compile)
+    GrpAtomicDone: TRegExprGrpFlags; // atomic group[i] is "done" (used in Exec* only)
+    GrpOpCodes: TRegExprGrpPointers; // pointer to opcode of group[i] (used by OP_SUBCALL*)
+    GrpSubCalled: TRegExprGrpFlags; // group[i] is called by OP_SUBCALL*
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -774,6 +779,125 @@ function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
 // If Result <> 0, then ASubExpr can contain empty items or illegal ones
 function RegExprSubExpressions(const ARegExpr: string; ASubExprs: TStrings;
   AExtendedSyntax: boolean{$IFDEF DefParam} = False{$ENDIF}): integer;
+
+const
+  OP_MAGIC = TREOp(216); // programm signature
+
+  // name            opcode    opnd? meaning
+  OP_EEND = TREOp(0); // -    End of program
+  OP_BOL = TREOp(1); // -    Match "" at beginning of line
+  OP_EOL = TREOp(2); // -    Match "" at end of line
+  OP_ANY = TREOp(3); // -    Match any one character
+  OP_ANYOF = TREOp(4); // Str  Match any character in string Str
+  OP_ANYBUT = TREOp(5); // Str  Match any char. not in string Str
+  OP_BRANCH = TREOp(6); // Node Match this alternative, or the next
+  OP_BACK = TREOp(7); // -    Jump backward (Next < 0)
+  OP_EXACTLY = TREOp(8); // Str  Match string Str
+  OP_NOTHING = TREOp(9); // -    Match empty string
+  OP_STAR = TREOp(10); // Node Match this (simple) thing 0 or more times
+  OP_PLUS = TREOp(11); // Node Match this (simple) thing 1 or more times
+  OP_ANYDIGIT = TREOp(12); // -    Match any digit (equiv [0-9])
+  OP_NOTDIGIT = TREOp(13); // -    Match not digit (equiv [0-9])
+  OP_ANYLETTER = TREOp(14); // -    Match any letter from property WordChars
+  OP_NOTLETTER = TREOp(15); // -    Match not letter from property WordChars
+  OP_ANYSPACE = TREOp(16); // -    Match any space char (see property SpaceChars)
+  OP_NOTSPACE = TREOp(17); // -    Match not space char (see property SpaceChars)
+  OP_BRACES = TREOp(18);
+  // Node,Min,Max Match this (simple) thing from Min to Max times.
+  // Min and Max are TREBracesArg
+  OP_COMMENT = TREOp(19); // -    Comment ;)
+  OP_EXACTLYCI = TREOp(20); // Str  Match string Str case insensitive
+  OP_ANYOFCI = TREOp(21);
+  // Str  Match any character in string Str, case insensitive
+  OP_ANYBUTCI = TREOp(22);
+  // Str  Match any char. not in string Str, case insensitive
+  OP_LOOPENTRY = TREOp(23); // Node Start of loop (Node - LOOP for this loop)
+  OP_LOOP = TREOp(24); // Node,Min,Max,LoopEntryJmp - back jump for LOOPENTRY.
+  // Min and Max are TREBracesArg
+  // Node - next node in sequence,
+  // LoopEntryJmp - associated LOOPENTRY node addr
+  OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
+  OP_BSUBEXP = TREOp(28);
+  // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
+  OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
+
+  // Non-Greedy Style Ops //###0.940
+  OP_STARNG = TREOp(30); // Same as OP_START but in non-greedy mode
+  OP_PLUSNG = TREOp(31); // Same as OP_PLUS but in non-greedy mode
+  OP_BRACESNG = TREOp(32); // Same as OP_BRACES but in non-greedy mode
+  OP_LOOPNG = TREOp(33); // Same as OP_LOOP but in non-greedy mode
+
+  // Multiline mode \m
+  OP_BOLML = TREOp(34); // -    Match "" at beginning of line
+  OP_EOLML = TREOp(35); // -    Match "" at end of line
+  OP_ANYML = TREOp(36); // -    Match any one character
+
+  // Word boundary
+  OP_BOUND = TREOp(37); // Match "" between words //###0.943
+  OP_NOTBOUND = TREOp(38); // Match "" not between words //###0.943
+
+  OP_ANYHORZSEP = TREOp(39); // Any horizontal whitespace \h
+  OP_NOTHORZSEP = TREOp(40); // Not horizontal whitespace \H
+  OP_ANYVERTSEP = TREOp(41); // Any vertical whitespace \v
+  OP_NOTVERTSEP = TREOp(42); // Not vertical whitespace \V
+
+  OP_ANYCATEGORY = TREOp(43); // \p{L}
+  OP_NOTCATEGORY = TREOp(44); // \P{L}
+
+  OP_STAR_POSS = TReOp(45);
+  OP_PLUS_POSS = TReOp(46);
+  OP_BRACES_POSS = TReOp(47);
+
+  OP_RECUR = TReOp(48);
+
+  // !!! Change OP_OPEN value if you add new opcodes !!!
+
+  OP_OPEN = TREOp(50); // Opening of group; OP_OPEN+i is for group i
+  OP_OPEN_FIRST = Succ(OP_OPEN);
+  OP_OPEN_LAST = TREOp(Ord(OP_OPEN) + RegexMaxGroups - 1);
+
+  OP_CLOSE = Succ(OP_OPEN_LAST); // Closing of group; OP_CLOSE+i is for group i
+  OP_CLOSE_FIRST = Succ(OP_CLOSE);
+  OP_CLOSE_LAST = TReOp(Ord(OP_CLOSE) + RegexMaxGroups - 1);
+
+  OP_SUBCALL = Succ(OP_CLOSE_LAST); // Call of subroutine; OP_SUBCALL+i is for group i
+  OP_SUBCALL_FIRST = Succ(OP_SUBCALL);
+  OP_SUBCALL_LAST =
+    {$IFDEF Unicode}
+    TReOp(Ord(OP_SUBCALL) + RegexMaxGroups - 1);
+    {$ELSE}
+    High(REChar); // must fit to 0..255 range
+    {$ENDIF}
+
+  // We work with p-code through pointers, compatible with PRegExprChar.
+  // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
+  // must have lengths that can be divided by SizeOf (REChar) !
+  // A node is TREOp of opcode followed Next "pointer" of TRENextOff type.
+  // The Next is a offset from the opcode of the node containing it.
+  // An operand, if any, simply follows the node. (Note that much of
+  // the code generation knows about this implicit relationship!)
+  // Using TRENextOff=PtrInt speed up p-code processing.
+
+  // Opcodes description:
+  //
+  // BRANCH The set of branches constituting a single choice are hooked
+  // together with their "next" pointers, since precedence prevents
+  // anything being concatenated to any individual branch. The
+  // "next" pointer of the last BRANCH in a choice points to the
+  // thing following the whole choice. This is also where the
+  // final "next" pointer of each individual branch points; each
+  // branch starts with the operand node of a BRANCH node.
+  // BACK Normal "next" pointers all implicitly point forward; BACK
+  // exists to make loop structures possible.
+  // STAR,PLUS,BRACES '?', and complex '*' and '+', are implemented as
+  // circular BRANCH structures using BACK. Complex '{min,max}'
+  // - as pair LOOPENTRY-LOOP (see below). Simple cases (one
+  // character per match) are implemented with STAR, PLUS and
+  // BRACES for speed and to minimize recursive plunges.
+  // LOOPENTRY,LOOP {min,max} are implemented as special pair
+  // LOOPENTRY-LOOP. Each LOOPENTRY initialize loopstack for
+  // current level.
+  // OPEN,CLOSE are numbered at compile time.
 
 implementation
 
@@ -1363,125 +1487,6 @@ begin
   end;
 end; { of function RegExprSubExpressions
   -------------------------------------------------------------- }
-
-const
-  OP_MAGIC = TREOp(216); // programm signature
-
-  // name            opcode    opnd? meaning
-  OP_EEND = TREOp(0); // -    End of program
-  OP_BOL = TREOp(1); // -    Match "" at beginning of line
-  OP_EOL = TREOp(2); // -    Match "" at end of line
-  OP_ANY = TREOp(3); // -    Match any one character
-  OP_ANYOF = TREOp(4); // Str  Match any character in string Str
-  OP_ANYBUT = TREOp(5); // Str  Match any char. not in string Str
-  OP_BRANCH = TREOp(6); // Node Match this alternative, or the next
-  OP_BACK = TREOp(7); // -    Jump backward (Next < 0)
-  OP_EXACTLY = TREOp(8); // Str  Match string Str
-  OP_NOTHING = TREOp(9); // -    Match empty string
-  OP_STAR = TREOp(10); // Node Match this (simple) thing 0 or more times
-  OP_PLUS = TREOp(11); // Node Match this (simple) thing 1 or more times
-  OP_ANYDIGIT = TREOp(12); // -    Match any digit (equiv [0-9])
-  OP_NOTDIGIT = TREOp(13); // -    Match not digit (equiv [0-9])
-  OP_ANYLETTER = TREOp(14); // -    Match any letter from property WordChars
-  OP_NOTLETTER = TREOp(15); // -    Match not letter from property WordChars
-  OP_ANYSPACE = TREOp(16); // -    Match any space char (see property SpaceChars)
-  OP_NOTSPACE = TREOp(17); // -    Match not space char (see property SpaceChars)
-  OP_BRACES = TREOp(18);
-  // Node,Min,Max Match this (simple) thing from Min to Max times.
-  // Min and Max are TREBracesArg
-  OP_COMMENT = TREOp(19); // -    Comment ;)
-  OP_EXACTLYCI = TREOp(20); // Str  Match string Str case insensitive
-  OP_ANYOFCI = TREOp(21);
-  // Str  Match any character in string Str, case insensitive
-  OP_ANYBUTCI = TREOp(22);
-  // Str  Match any char. not in string Str, case insensitive
-  OP_LOOPENTRY = TREOp(23); // Node Start of loop (Node - LOOP for this loop)
-  OP_LOOP = TREOp(24); // Node,Min,Max,LoopEntryJmp - back jump for LOOPENTRY.
-  // Min and Max are TREBracesArg
-  // Node - next node in sequence,
-  // LoopEntryJmp - associated LOOPENTRY node addr
-  OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
-  OP_BSUBEXP = TREOp(28);
-  // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
-  OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
-
-  // Non-Greedy Style Ops //###0.940
-  OP_STARNG = TREOp(30); // Same as OP_START but in non-greedy mode
-  OP_PLUSNG = TREOp(31); // Same as OP_PLUS but in non-greedy mode
-  OP_BRACESNG = TREOp(32); // Same as OP_BRACES but in non-greedy mode
-  OP_LOOPNG = TREOp(33); // Same as OP_LOOP but in non-greedy mode
-
-  // Multiline mode \m
-  OP_BOLML = TREOp(34); // -    Match "" at beginning of line
-  OP_EOLML = TREOp(35); // -    Match "" at end of line
-  OP_ANYML = TREOp(36); // -    Match any one character
-
-  // Word boundary
-  OP_BOUND = TREOp(37); // Match "" between words //###0.943
-  OP_NOTBOUND = TREOp(38); // Match "" not between words //###0.943
-
-  OP_ANYHORZSEP = TREOp(39); // Any horizontal whitespace \h
-  OP_NOTHORZSEP = TREOp(40); // Not horizontal whitespace \H
-  OP_ANYVERTSEP = TREOp(41); // Any vertical whitespace \v
-  OP_NOTVERTSEP = TREOp(42); // Not vertical whitespace \V
-
-  OP_ANYCATEGORY = TREOp(43); // \p{L}
-  OP_NOTCATEGORY = TREOp(44); // \P{L}
-
-  OP_STAR_POSS = TReOp(45);
-  OP_PLUS_POSS = TReOp(46);
-  OP_BRACES_POSS = TReOp(47);
-
-  OP_RECUR = TReOp(48);
-
-  // !!! Change OP_OPEN value if you add new opcodes !!!
-
-  OP_OPEN = TREOp(50); // Opening of group; OP_OPEN+i is for group i
-  OP_OPEN_FIRST = Succ(OP_OPEN);
-  OP_OPEN_LAST = TREOp(Ord(OP_OPEN) + RegexMaxGroups - 1);
-
-  OP_CLOSE = Succ(OP_OPEN_LAST); // Closing of group; OP_CLOSE+i is for group i
-  OP_CLOSE_FIRST = Succ(OP_CLOSE);
-  OP_CLOSE_LAST = TReOp(Ord(OP_CLOSE) + RegexMaxGroups - 1);
-
-  OP_SUBCALL = Succ(OP_CLOSE_LAST); // Call of subroutine; OP_SUBCALL+i is for group i
-  OP_SUBCALL_FIRST = Succ(OP_SUBCALL);
-  OP_SUBCALL_LAST =
-    {$IFDEF Unicode}
-    TReOp(Ord(OP_SUBCALL) + RegexMaxGroups - 1);
-    {$ELSE}
-    High(REChar); // must fit to 0..255 range
-    {$ENDIF}
-
-  // We work with p-code through pointers, compatible with PRegExprChar.
-  // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
-  // must have lengths that can be divided by SizeOf (REChar) !
-  // A node is TREOp of opcode followed Next "pointer" of TRENextOff type.
-  // The Next is a offset from the opcode of the node containing it.
-  // An operand, if any, simply follows the node. (Note that much of
-  // the code generation knows about this implicit relationship!)
-  // Using TRENextOff=PtrInt speed up p-code processing.
-
-  // Opcodes description:
-  //
-  // BRANCH The set of branches constituting a single choice are hooked
-  // together with their "next" pointers, since precedence prevents
-  // anything being concatenated to any individual branch. The
-  // "next" pointer of the last BRANCH in a choice points to the
-  // thing following the whole choice. This is also where the
-  // final "next" pointer of each individual branch points; each
-  // branch starts with the operand node of a BRANCH node.
-  // BACK Normal "next" pointers all implicitly point forward; BACK
-  // exists to make loop structures possible.
-  // STAR,PLUS,BRACES '?', and complex '*' and '+', are implemented as
-  // circular BRANCH structures using BACK. Complex '{min,max}'
-  // - as pair LOOPENTRY-LOOP (see below). Simple cases (one
-  // character per match) are implemented with STAR, PLUS and
-  // BRACES for speed and to minimize recursive plunges.
-  // LOOPENTRY,LOOP {min,max} are implemented as special pair
-  // LOOPENTRY-LOOP. Each LOOPENTRY initialize loopstack for
-  // current level.
-  // OPEN,CLOSE are numbered at compile time.
 
   { ============================================================= }
   { ================== Error handling section =================== }
@@ -5677,11 +5682,11 @@ var
     APtr := p;
   end;
 
-  procedure FindSubstGroupIndex(var p: PRegExprChar; var Idx: integer); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure FindSubstGroupIndex(GrpIdx: TRegExprGrpIndexes; var p: PRegExprChar; var Idx: integer); {$IFDEF InlineFuncs}inline;{$ENDIF}
   begin
     Idx := ParseVarName(p);
-    if (Idx >= 0) and (Idx <= High(GrpIndexes)) then
-      Idx := GrpIndexes[Idx];
+    if (Idx >= 0) and (Idx <= High(GrpIdx)) then
+      Idx := GrpIdx[Idx];
   end;
 
 type
@@ -5713,7 +5718,7 @@ begin
     Inc(p);
     n := -1;
     if Ch = SubstituteGroupChar then
-      FindSubstGroupIndex(p, n);
+      FindSubstGroupIndex(GrpIndexes, p, n);
     if n >= 0 then
     begin
       Inc(ResultLen, GrpEnd[n] - GrpStart[n]);
@@ -5768,7 +5773,7 @@ begin
     p1 := p;
     n := -1;
     if Ch = SubstituteGroupChar then
-      FindSubstGroupIndex(p, n);
+      FindSubstGroupIndex(GrpIndexes, p, n);
     if (n >= 0) then
     begin
       p0 := GrpStart[n];
@@ -5932,7 +5937,7 @@ var
   opnd: PRegExprChar;
   Oper: TREOp;
   ch: REChar;
-  min_cnt, i: integer;
+  min_cnt{$IFDEF UseLineSep}, i{$ENDIF}: integer;
   TempSet: TRegExprCharset;
 begin
   TempSet := [];
