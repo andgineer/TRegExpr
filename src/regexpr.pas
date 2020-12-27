@@ -438,7 +438,6 @@ type
 
     // emit back-reference to group
     function EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
-      {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     {$IFDEF FastUnicodeData}
     procedure FindCategoryName(var scan: PRegExprChar; var ch1, ch2: REChar);
@@ -5677,7 +5676,7 @@ var
     APtr := p;
   end;
 
-  procedure FindSubstGroupIndex(var p: PRegExprChar; var Idx: integer); {$IFDEF InlineFuncs}inline;{$ENDIF}
+  procedure FindSubstGroupIndex(var p: PRegExprChar; var Idx: integer);
   begin
     Idx := ParseVarName(p);
     if (Idx >= 0) and (Idx <= High(GrpIndexes)) then
