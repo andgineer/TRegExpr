@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.149 2021.01.08
+ -=- (-) Allow underscore char to be escaped '\_'. Other word-chars are
+ not allowed. By Alexey Torgashin.
+
  v. 1.148 2020.09.29
  -=- (-) Fixed broken ^ and $ if UseLinePairedBreak=False.
   By Alexey Torgashin.
