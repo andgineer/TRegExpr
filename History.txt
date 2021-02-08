@@ -6,6 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.150 2021.02.08
+ -=- (-) Setters of Modifier* properties now invalidate the opcode.
+
  v. 1.149 2021.01.08
  -=- (-) Allow underscore char to be escaped '\_'. Other word-chars are
  not allowed. By Alexey Torgashin.
