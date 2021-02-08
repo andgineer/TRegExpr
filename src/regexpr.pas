@@ -784,7 +784,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 149;
+  REVersionMinor = 150;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1692,12 +1692,12 @@ begin
   fInputString := '';
 
   FillChar(fModifiers, SizeOf(fModifiers), 0);
-  ModifierI := RegExprModifierI;
-  ModifierR := RegExprModifierR;
-  ModifierS := RegExprModifierS;
-  ModifierG := RegExprModifierG;
-  ModifierM := RegExprModifierM;
-  ModifierX := RegExprModifierX;
+  fModifiers.I := RegExprModifierI;
+  fModifiers.R := RegExprModifierR;
+  fModifiers.S := RegExprModifierS;
+  fModifiers.G := RegExprModifierG;
+  fModifiers.M := RegExprModifierM;
+  fModifiers.X := RegExprModifierX;
 
   {$IFDEF UseSpaceChars}
   SpaceChars := RegExprSpaceChars;
@@ -1855,40 +1855,65 @@ end; { of function TRegExpr.GetModifierStr
 
 procedure TRegExpr.SetModifierG(AValue: boolean);
 begin
-  fModifiers.G := AValue;
+  if fModifiers.G <> AValue then
+  begin
+    fModifiers.G := AValue;
+    InvalidateProgramm;
+  end;
 end;
 
 procedure TRegExpr.SetModifierI(AValue: boolean);
 begin
-  fModifiers.I := AValue;
+  if fModifiers.I <> AValue then
+  begin
+    fModifiers.I := AValue;
+    InvalidateProgramm;
+  end;
 end;
 
 procedure TRegExpr.SetModifierM(AValue: boolean);
 begin
-  fModifiers.M := AValue;
+  if fModifiers.M <> AValue then
+  begin
+    fModifiers.M := AValue;
+    InvalidateProgramm;
+  end;
 end;
 
 procedure TRegExpr.SetModifierR(AValue: boolean);
 begin
-  fModifiers.R := AValue;
+  if fModifiers.R <> AValue then
+  begin
+    fModifiers.R := AValue;
+    InvalidateProgramm;
+  end;
 end;
 
 procedure TRegExpr.SetModifierS(AValue: boolean);
 begin
-  fModifiers.S := AValue;
+  if fModifiers.S <> AValue then
+  begin
+    fModifiers.S := AValue;
+    InvalidateProgramm;
+  end;
 end;
 
 procedure TRegExpr.SetModifierX(AValue: boolean);
 begin
-  fModifiers.X := AValue;
+  if fModifiers.X <> AValue then
+  begin
+    fModifiers.X := AValue;
+    InvalidateProgramm;
+  end;
 end;
 
 procedure TRegExpr.SetModifierStr(const AStr: RegExprString);
 begin
-  if not ParseModifiers(PRegExprChar(AStr), Length(AStr), fModifiers) then
+  if ParseModifiers(PRegExprChar(AStr), Length(AStr), fModifiers) then
+    InvalidateProgramm
+  else
     Error(reeModifierUnsupported);
-end; { of procedure TRegExpr.SetModifierStr
-  -------------------------------------------------------------- }
+end;
 
 { ============================================================= }
 { ==================== Compiler section ======================= }
