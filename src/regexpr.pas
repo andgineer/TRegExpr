@@ -1692,12 +1692,12 @@ begin
   fInputString := '';
 
   FillChar(fModifiers, SizeOf(fModifiers), 0);
-  ModifierI := RegExprModifierI;
-  ModifierR := RegExprModifierR;
-  ModifierS := RegExprModifierS;
-  ModifierG := RegExprModifierG;
-  ModifierM := RegExprModifierM;
-  ModifierX := RegExprModifierX;
+  fModifiers.I := RegExprModifierI;
+  fModifiers.R := RegExprModifierR;
+  fModifiers.S := RegExprModifierS;
+  fModifiers.G := RegExprModifierG;
+  fModifiers.M := RegExprModifierM;
+  fModifiers.X := RegExprModifierX;
 
   {$IFDEF UseSpaceChars}
   SpaceChars := RegExprSpaceChars;
