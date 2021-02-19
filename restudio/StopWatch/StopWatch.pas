@@ -129,7 +129,6 @@ function SystemClockStep : DWORD;
 implementation
 
 uses
- windows,
  SysUtils,
  {$IFDEF FPC} DateUtils, {$ENDIF}
  MMSystem;

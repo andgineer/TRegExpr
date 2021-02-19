@@ -1,8 +1,6 @@
 object fmREDebuggerMain: TfmREDebuggerMain
   Left = 207
-  Height = 474
   Top = 33
-  Width = 531
   BorderIcons = [biSystemMenu]
   Caption = 'fmREDebuggerMain'
   ClientHeight = 474
@@ -10,38 +8,46 @@ object fmREDebuggerMain: TfmREDebuggerMain
   Color = clBtnFace
   Constraints.MinHeight = 400
   Constraints.MinWidth = 350
-  DesignTimePPI = 144
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -10
   Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = True
+  Position = poScreenCenter
+  Scaled = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  Position = poScreenCenter
-  LCLVersion = '1.8.4.0'
-  Scaled = False
+  DesignSize = (
+    531
+    474)
+  PixelsPerInch = 96
+  TextHeight = 13
   object Bevel1: TBevel
     Left = 0
-    Height = 2
     Top = 464
     Width = 124
+    Height = 2
     Anchors = [akLeft, akBottom]
     Shape = bsTopLine
     Style = bsRaised
   end
   object lblWWW: TLabel
-    Cursor = crHandPoint
     Left = 8
-    Height = 13
-    Hint = 'Go to TRegExpr web-page in Internet'
     Top = 448
     Width = 83
+    Height = 13
+    Cursor = crHandPoint
+    Hint = 'Go to TRegExpr web-page in Internet'
     Anchors = [akLeft, akBottom]
     Caption = ' TRegExpr home '
     Color = clBtnFace
+    Font.Charset = DEFAULT_CHARSET
     Font.Color = clGray
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
+    Font.Style = []
     ParentColor = False
     ParentFont = False
     ParentShowHint = False
@@ -51,15 +57,17 @@ object fmREDebuggerMain: TfmREDebuggerMain
   end
   object btnClose: TBitBtn
     Left = 414
-    Height = 25
     Top = 441
     Width = 107
+    Height = 25
     Anchors = [akRight, akBottom]
     Cancel = True
     Caption = '&Exit'
+    Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
+    Font.Style = []
     Glyph.Data = {
       76020000424D7602000000000000760000002800000040000000100000000100
       0400000000000002000000000000000000001000000000000000000000000000
@@ -80,98 +88,108 @@ object fmREDebuggerMain: TfmREDebuggerMain
       03337F377777337F33333301110BBBBB03333011EEEEE11033333301E10BBBBB
       03337F333333337F33333301E10BBBBB033330111111111033333301EE0BBBBB
       03337FFFFFFFFF7F33333301EE0BBBBB03333011111111103333330000000000
-      0333777777777773333333000000000003333000000000003333
-    }
+      0333777777777773333333000000000003333000000000003333}
     NumGlyphs = 4
-    OnClick = btnCloseClick
     ParentFont = False
     Spacing = -1
     TabOrder = 1
+    OnClick = btnCloseClick
   end
   object grpRegExpr: TGroupBox
     Left = 2
-    Height = 433
     Top = 0
     Width = 519
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 415
-    ClientWidth = 515
+    Height = 433
+    Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
+    DesignSize = (
+      519
+      433)
     object PageControl1: TPageControl
-      Left = 0
-      Height = 383
-      Top = 32
+      Left = 2
+      Top = 47
       Width = 515
+      Height = 384
       ActivePage = tabExpression
       Align = alClient
-      TabIndex = 0
       TabOrder = 0
+      ExplicitLeft = 0
+      ExplicitTop = 32
+      ExplicitHeight = 383
       object tabExpression: TTabSheet
         Caption = ' &Expression '
-        ClientHeight = 357
-        ClientWidth = 507
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Splitter3: TSplitter
-          Cursor = crVSplit
           Left = 0
-          Height = 5
           Top = 171
           Width = 507
+          Height = 5
+          Cursor = crVSplit
           Align = alTop
           AutoSnap = False
           Beveled = True
           MinSize = 120
-          ResizeAnchor = akTop
         end
         object pnlRegExpr: TPanel
           Left = 0
-          Height = 171
           Top = 0
           Width = 507
+          Height = 171
           Align = alTop
           BevelOuter = bvNone
-          ClientHeight = 171
-          ClientWidth = 507
           TabOrder = 0
+          DesignSize = (
+            507
+            171)
           object lblRegExpr: TLabel
             Left = 4
-            Height = 13
             Top = 48
             Width = 90
+            Height = 13
             Caption = 'Regular expression'
+            Color = clBtnFace
             FocusControl = edRegExpr
             ParentColor = False
           end
           object lblRegExprUnbalancedBrackets: TLabel
             Left = 136
-            Height = 13
             Top = 48
             Width = 180
+            Height = 13
             Caption = 'lblRegExprUnbalancedBrackets'
+            Color = clBtnFace
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clPurple
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
-            Layout = tlCenter
             ParentColor = False
             ParentFont = False
+            Layout = tlCenter
             OnDblClick = lblRegExprUnbalancedBracketsDblClick
           end
           object edSubExprs: TLabel
             Left = 4
-            Height = 13
             Top = 150
             Width = 77
+            Height = 13
             Anchors = [akLeft, akBottom]
             Caption = 'Subexpressions:'
+            Color = clBtnFace
             FocusControl = cbSubExprs
             ParentColor = False
           end
           object btnViewPCode: TSpeedButton
             Left = 424
-            Height = 26
-            Hint = 'View compiled r.e. as "P-code"'#13#10'for TRegExpr debugging and'#13#10'internal engine undestanding'
             Top = 144
             Width = 82
+            Height = 26
+            Hint = 
+              'View compiled r.e. as "P-code"'#13#10'for TRegExpr debugging and'#13#10'inte' +
+              'rnal engine undestanding'
             Anchors = [akRight, akBottom]
             Caption = 'P-code'
             Flat = True
@@ -187,177 +205,186 @@ object fmREDebuggerMain: TfmREDebuggerMain
               078073F7F7FF73F37FF7700070007037007837773777F73377FF007777700730
               70007733FFF77F37377707700077033707307F37773F7FFF7337080777070003
               3330737F3F7F777F333778080707770333333F7F737F3F7F3333080787070003
-              33337F73FF737773333307800077033333337337773373333333
-            }
+              33337F73FF737773333307800077033333337337773373333333}
             NumGlyphs = 2
+            ParentShowHint = False
+            ShowHint = True
             Spacing = -1
             OnClick = btnViewPCodeClick
-            ShowHint = True
-            ParentShowHint = False
           end
           object gbModifiers: TGroupBox
             Left = 0
-            Height = 44
             Top = 0
             Width = 504
-            Anchors = [akTop, akLeft, akRight]
+            Height = 44
+            Anchors = [akLeft, akTop, akRight]
             Caption = ' Global modifiers '
-            ClientHeight = 26
-            ClientWidth = 500
             TabOrder = 0
             object chkModifierI: TCheckBox
               Left = 8
-              Height = 29
-              Hint = 'Case insensitive'
               Top = 0
-              Width = 37
+              Width = 27
+              Height = 19
+              Hint = 'Case insensitive'
+              TabStop = False
               Caption = '/i'
-              OnClick = chkModifierIClick
               ParentShowHint = False
               ShowHint = True
               TabOrder = 0
-              TabStop = False
+              OnClick = chkModifierIClick
             end
             object chkModifierR: TCheckBox
               Left = 256
-              Height = 29
               Top = 0
-              Width = 103
-              Caption = 'Russian ranges'
-              OnClick = chkModifierRClick
-              TabOrder = 5
+              Width = 93
+              Height = 19
               TabStop = False
+              Caption = 'Russian ranges'
+              TabOrder = 5
+              OnClick = chkModifierRClick
             end
             object chkModifierS: TCheckBox
               Left = 88
-              Height = 29
-              Hint = 'If on then . means any char'#13#10'If off then . doesnt include line separators'
               Top = 0
-              Width = 40
+              Width = 30
+              Height = 19
+              Hint = 
+                'If on then . means any char'#13#10'If off then . doesnt include line s' +
+                'eparators'
+              TabStop = False
               Caption = '/s'
-              OnClick = chkModifierSClick
               ParentShowHint = False
               ShowHint = True
               TabOrder = 2
-              TabStop = False
+              OnClick = chkModifierSClick
             end
             object chkModifierG: TCheckBox
               Left = 184
-              Height = 29
-              Hint = 'If Off then all operators '#13#10'work as non-greedy '#13#10'(* as *?, + as +? '#13#10'and so on)'
               Top = 0
-              Width = 64
+              Width = 54
+              Height = 19
+              Hint = 
+                'If Off then all operators '#13#10'work as non-greedy '#13#10'(* as *?, + as ' +
+                '+? '#13#10'and so on)'
+              TabStop = False
               Caption = 'Greedy'
-              OnClick = chkModifierGClick
               ParentShowHint = False
               ShowHint = True
               TabOrder = 4
-              TabStop = False
+              OnClick = chkModifierGClick
             end
             object chkModifierM: TCheckBox
               Left = 48
-              Height = 29
-              Hint = 'If ON then ^ / $ match'#13#10'every embedded line start / end,'#13#10'if OFF, then only beginning / end'#13#10'of whole text'
               Top = 0
-              Width = 43
+              Width = 33
+              Height = 19
+              Hint = 
+                'If ON then ^ / $ match'#13#10'every embedded line start / end,'#13#10'if OFF' +
+                ', then only beginning / end'#13#10'of whole text'
+              TabStop = False
               Caption = '/m'
-              OnClick = chkModifierMClick
               ParentShowHint = False
               ShowHint = True
               TabOrder = 1
-              TabStop = False
+              OnClick = chkModifierMClick
             end
             object chkModifierX: TCheckBox
               Left = 128
-              Height = 29
-              Hint = 'If ON then eXtended comment syntax available'
               Top = 0
-              Width = 40
+              Width = 30
+              Height = 19
+              Hint = 'If ON then eXtended comment syntax available'
+              TabStop = False
               Caption = '/x'
-              OnClick = chkModifierXClick
               ParentShowHint = False
               ShowHint = True
               TabOrder = 3
-              TabStop = False
+              OnClick = chkModifierXClick
             end
           end
           object edRegExpr: TMemo
             Left = 0
-            Height = 79
             Top = 64
             Width = 507
-            Anchors = [akTop, akLeft, akRight, akBottom]
-            Font.CharSet = RUSSIAN_CHARSET
+            Height = 79
+            Anchors = [akLeft, akTop, akRight, akBottom]
+            Font.Charset = RUSSIAN_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Courier New'
+            Font.Style = []
             Lines.Strings = (
-              'edRegExpr'
-            )
-            OnChange = edRegExprChange
-            OnClick = edRegExprClick
-            OnKeyDown = edRegExprKeyDown
-            OnKeyUp = edRegExprKeyDown
+              'edRegExpr')
             ParentFont = False
             ScrollBars = ssBoth
             TabOrder = 1
             WordWrap = False
+            OnChange = edRegExprChange
+            OnClick = edRegExprClick
+            OnKeyDown = edRegExprKeyDown
+            OnKeyUp = edRegExprKeyDown
           end
           object cbSubExprs: TComboBox
             Left = 106
-            Height = 21
-            Hint = 'Subexpressions'
             Top = 146
             Width = 315
+            Height = 21
+            Hint = 'Subexpressions'
+            Style = csDropDownList
             Anchors = [akLeft, akRight, akBottom]
             Color = clBtnFace
-            ItemHeight = 13
-            OnClick = cbSubExprsClick
             ParentShowHint = False
             ShowHint = True
-            Style = csDropDownList
             TabOrder = 2
             TabStop = False
+            OnClick = cbSubExprsClick
           end
         end
         object pnlInputStrings: TPanel
           Left = 0
-          Height = 181
           Top = 176
           Width = 507
+          Height = 180
           Align = alClient
           BevelOuter = bvNone
-          ClientHeight = 181
-          ClientWidth = 507
           TabOrder = 1
+          ExplicitHeight = 181
+          DesignSize = (
+            507
+            180)
           object lblInputString: TLabel
             Left = 4
-            Height = 13
             Top = 4
             Width = 55
+            Height = 13
             Caption = 'Input string:'
+            Color = clBtnFace
             FocusControl = edInputString
             ParentColor = False
           end
           object lblInputStringPos: TLabel
             Left = 88
-            Height = 13
             Top = 4
             Width = 82
+            Height = 13
             Caption = 'Current selection:'
+            Color = clBtnFace
             FocusControl = edInputStringPos
             ParentColor = False
           end
           object lblTestResult: TLabel
             Left = 256
-            Height = 40
-            Hint = 'Last Exec* result and'#13#10'positions of r.e. and'#13#10'subexpressions'#13#10'in input string'
             Top = 141
             Width = 252
+            Height = 40
+            Hint = 
+              'Last Exec* result and'#13#10'positions of r.e. and'#13#10'subexpressions'#13#10'in' +
+              ' input string'
             Anchors = [akLeft, akRight, akBottom]
             AutoSize = False
             Caption = 'String is not tested'
             Color = clBtnFace
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
@@ -371,13 +398,15 @@ object fmREDebuggerMain: TfmREDebuggerMain
           end
           object lblStopWatch: TLabel
             Left = 248
-            Height = 17
             Top = 4
             Width = 249
+            Height = 17
             Alignment = taRightJustify
-            Anchors = [akTop, akLeft, akRight]
+            Anchors = [akLeft, akTop, akRight]
             AutoSize = False
             Caption = 'lblStopWatch'
+            Color = clBtnFace
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clPurple
             Font.Height = -10
             Font.Name = 'MS Sans Serif'
@@ -388,13 +417,15 @@ object fmREDebuggerMain: TfmREDebuggerMain
           end
           object edInputString: TMemo
             Left = 0
-            Height = 115
             Top = 24
             Width = 507
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Height = 115
+            Anchors = [akLeft, akTop, akRight, akBottom]
             Lines.Strings = (
-              'edInputString'
-            )
+              'edInputString')
+            ScrollBars = ssBoth
+            TabOrder = 0
+            WordWrap = False
             OnChange = edInputStringClick
             OnClick = edInputStringClick
             OnKeyDown = edInputStringKeyDown
@@ -402,27 +433,24 @@ object fmREDebuggerMain: TfmREDebuggerMain
             OnMouseDown = edInputStringMouseDown
             OnMouseMove = edInputStringMouseMove
             OnMouseUp = edInputStringMouseDown
-            ScrollBars = ssBoth
-            TabOrder = 0
-            WordWrap = False
           end
           object edInputStringPos: TEdit
             Left = 192
-            Height = 21
             Top = 0
             Width = 49
+            Height = 21
+            TabStop = False
             Color = clBtnFace
             ReadOnly = True
-            TabStop = False
             TabOrder = 1
             Text = 'edInputStringPos'
           end
           object btnTestString: TBitBtn
             Left = 0
-            Height = 33
-            Hint = 'Exec r.e. for input string'
             Top = 145
             Width = 73
+            Height = 33
+            Hint = 'Exec r.e. for input string'
             Anchors = [akLeft, akBottom]
             Caption = 'E&xec'
             Glyph.Data = {
@@ -437,20 +465,19 @@ object fmREDebuggerMain: TfmREDebuggerMain
               0788888F877333330000333308888888F80333330000333307888888F8033333
               00003333078FF8888803333300003333777FF888877333330000333330778888
               7033333300003333330777770333333300003333333700073333333300003333
-              33333333333333330000
-            }
-            OnClick = btnTestStringClick
+              33333333333333330000}
             ParentShowHint = False
             ShowHint = True
             Spacing = -1
             TabOrder = 2
+            OnClick = btnTestStringClick
           end
           object btnExecNext: TBitBtn
             Left = 73
-            Height = 33
-            Hint = 'Exec from last match'
             Top = 145
             Width = 98
+            Height = 33
+            Hint = 'Exec from last match'
             Anchors = [akLeft, akBottom]
             Caption = 'Exec&Next'
             Glyph.Data = {
@@ -465,19 +492,18 @@ object fmREDebuggerMain: TfmREDebuggerMain
               30788888F877333300003333308888888F80333300003333307888888F803333
               000033333078FF8888803333000033333777FF88887733330000333333077888
               8703333300003333333077777033333300003333333370007333333300003333
-              33333333333333330000
-            }
-            OnClick = btnExecNextClick
+              33333333333333330000}
             ParentShowHint = False
             ShowHint = True
             Spacing = -1
             TabOrder = 3
+            OnClick = btnExecNextClick
           end
           object btnFindRegExprInFile: TBitBtn
             Left = 176
-            Height = 33
             Top = 145
             Width = 75
+            Height = 33
             Anchors = [akLeft, akBottom]
             Caption = '&File'
             Glyph.Data = {
@@ -491,66 +517,70 @@ object fmREDebuggerMain: TfmREDebuggerMain
               08777000000070F0EFEFEF0770777000000070F0F0000F077077700000007000
               EFEFFF0770777000000077780000000708777000000077770077777807777000
               0000777770077700777770000000777777800087777770000000777777777777
-              777770000000
-            }
+              777770000000}
             Spacing = -1
             TabOrder = 4
           end
           object cbSubStrs: TComboBox
             Left = 256
-            Height = 21
             Top = 157
             Width = 251
+            Height = 21
+            Style = csDropDownList
             Anchors = [akLeft, akRight, akBottom]
             Color = clBtnFace
-            ItemHeight = 13
-            OnClick = cbSubStrsClick
-            Style = csDropDownList
             TabOrder = 5
             Visible = False
+            OnClick = cbSubStrsClick
           end
         end
       end
       object tabSubstitute: TTabSheet
         Caption = ' &Substitute '
-        ClientHeight = 357
-        ClientWidth = 507
         ImageIndex = 1
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Splitter2: TSplitter
-          Cursor = crVSplit
           Left = 0
-          Height = 5
           Top = 129
           Width = 507
+          Height = 5
+          Cursor = crVSplit
           Align = alTop
           AutoSnap = False
           Beveled = True
           MinSize = 50
-          ResizeAnchor = akTop
         end
         object pnlSubstitutionComment: TPanel
           Left = 0
-          Height = 39
           Top = 0
           Width = 507
+          Height = 39
           Align = alTop
           BevelOuter = bvNone
-          ClientHeight = 39
-          ClientWidth = 507
           Color = clBtnShadow
-          ParentColor = False
           TabOrder = 0
+          DesignSize = (
+            507
+            39)
           object lblSubstitutionComment: TLabel
             Left = 8
-            Height = 30
             Top = 6
             Width = 402
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Height = 30
+            Anchors = [akLeft, akTop, akRight, akBottom]
             AutoSize = False
-            Caption = 'Use $&& in template for whole r.e. substitution and $n or ${n} for substitute subexpression of r.e. number n.'
+            Caption = 
+              'Use $&& in template for whole r.e. substitution and $n or ${n} f' +
+              'or substitute subexpression of r.e. number n.'
+            Color = clBtnShadow
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clWhite
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
+            Font.Style = []
             ParentColor = False
             ParentFont = False
             WordWrap = True
@@ -558,106 +588,119 @@ object fmREDebuggerMain: TfmREDebuggerMain
         end
         object pnlSubstitutionTemplate: TPanel
           Left = 0
-          Height = 90
           Top = 39
           Width = 507
+          Height = 90
           Align = alTop
           BevelOuter = bvNone
-          ClientHeight = 90
-          ClientWidth = 507
           TabOrder = 1
+          DesignSize = (
+            507
+            90)
           object lblSubstitutionTemplate: TLabel
             Left = 4
-            Height = 13
             Top = 2
             Width = 72
+            Height = 13
             Caption = 'Template string'
+            Color = clBtnFace
             FocusControl = memSubstitutionTemplate
             ParentColor = False
           end
           object memSubstitutionTemplate: TMemo
             Left = 1
-            Height = 71
             Top = 18
             Width = 505
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Height = 71
+            Anchors = [akLeft, akTop, akRight, akBottom]
             ScrollBars = ssVertical
             TabOrder = 0
           end
         end
         object pnlSubstitutionResult: TPanel
           Left = 0
-          Height = 223
           Top = 134
           Width = 507
+          Height = 222
           Align = alClient
           BevelOuter = bvNone
-          ClientHeight = 223
-          ClientWidth = 507
           TabOrder = 2
+          ExplicitHeight = 223
+          DesignSize = (
+            507
+            222)
           object lblSubstitutionResult: TLabel
             Left = 4
-            Height = 13
             Top = 2
             Width = 83
+            Height = 13
             Caption = 'Substitution result'
+            Color = clBtnFace
             FocusControl = memSubstitutionResult
             ParentColor = False
           end
           object memSubstitutionResult: TMemo
             Left = 0
-            Height = 189
             Top = 19
             Width = 507
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Height = 188
+            TabStop = False
+            Anchors = [akLeft, akTop, akRight, akBottom]
             Color = clBtnFace
             ReadOnly = True
             ScrollBars = ssVertical
             TabOrder = 0
-            TabStop = False
+            ExplicitHeight = 189
           end
         end
       end
       object tabReplace: TTabSheet
         Caption = ' &Replace '
-        ClientHeight = 357
-        ClientWidth = 507
         ImageIndex = 2
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Splitter1: TSplitter
-          Cursor = crVSplit
           Left = 0
-          Height = 5
           Top = 137
           Width = 507
+          Height = 5
+          Cursor = crVSplit
           Align = alTop
           AutoSnap = False
           Beveled = True
           MinSize = 50
-          ResizeAnchor = akTop
         end
         object pnlReplaceComment: TPanel
           Left = 0
-          Height = 39
           Top = 0
           Width = 507
+          Height = 39
           Align = alTop
           BevelOuter = bvNone
-          ClientHeight = 39
-          ClientWidth = 507
           Color = clBtnShadow
-          ParentColor = False
           TabOrder = 0
+          DesignSize = (
+            507
+            39)
           object lblReplaceComment: TLabel
             Left = 8
-            Height = 30
             Top = 6
             Width = 497
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Height = 30
+            Anchors = [akLeft, akTop, akRight, akBottom]
             AutoSize = False
-            Caption = 'Replace all entrances of r.e. in input string with another string (it may be template for substitution).'#13#10'Note: Replace uses Exec* calls, so Match* properties will be undefined after it.'
+            Caption = 
+              'Replace all entrances of r.e. in input string with another strin' +
+              'g (it may be template for substitution).'#13#10'Note: Replace uses Exe' +
+              'c* calls, so Match* properties will be undefined after it.'
+            Color = clBtnShadow
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clWhite
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
+            Font.Style = []
             ParentColor = False
             ParentFont = False
             WordWrap = True
@@ -665,37 +708,39 @@ object fmREDebuggerMain: TfmREDebuggerMain
         end
         object pnlReplaceTemplate: TPanel
           Left = 0
-          Height = 98
           Top = 39
           Width = 507
+          Height = 98
           Align = alTop
           BevelOuter = bvNone
-          ClientHeight = 98
-          ClientWidth = 507
           TabOrder = 1
+          DesignSize = (
+            507
+            98)
           object lblReplaceString: TLabel
             Left = 4
-            Height = 13
             Top = 2
             Width = 80
+            Height = 13
             Caption = 'String for replace'
+            Color = clBtnFace
             FocusControl = edReplaceString
             ParentColor = False
           end
           object edReplaceString: TMemo
             Left = 0
-            Height = 80
             Top = 18
             Width = 507
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Height = 80
+            Anchors = [akLeft, akTop, akRight, akBottom]
             ScrollBars = ssVertical
             TabOrder = 0
           end
           object chkUseSubstitution: TCheckBox
             Left = 144
-            Height = 29
             Top = 0
             Width = 162
+            Height = 29
             Caption = 'Use as substitution template'
             Checked = True
             State = cbChecked
@@ -704,41 +749,45 @@ object fmREDebuggerMain: TfmREDebuggerMain
         end
         object pnlReplaceResult: TPanel
           Left = 0
-          Height = 215
           Top = 142
           Width = 507
+          Height = 214
           Align = alClient
           BevelOuter = bvNone
-          ClientHeight = 215
-          ClientWidth = 507
           TabOrder = 2
+          ExplicitHeight = 215
+          DesignSize = (
+            507
+            214)
           object lblReplaceResult: TLabel
             Left = 4
-            Height = 13
             Top = 0
             Width = 68
+            Height = 13
             Caption = 'Replace result'
+            Color = clBtnFace
             FocusControl = memReplaceResult
             ParentColor = False
           end
           object memReplaceResult: TMemo
             Left = 0
-            Height = 159
             Top = 16
             Width = 507
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Height = 158
+            TabStop = False
+            Anchors = [akLeft, akTop, akRight, akBottom]
             Color = clBtnFace
             ReadOnly = True
             ScrollBars = ssVertical
             TabOrder = 0
-            TabStop = False
+            ExplicitHeight = 159
           end
           object btnReplace: TBitBtn
             Left = 408
+            Top = 178
+            Width = 97
             Height = 33
             Hint = 'Exec r.e. for input string'
-            Top = 179
-            Width = 97
             Anchors = [akRight, akBottom]
             Caption = '&Replace'
             Glyph.Data = {
@@ -758,36 +807,42 @@ object fmREDebuggerMain: TfmREDebuggerMain
               88833388F333333333333333330083333333333333333388FF33333333333333
               3330033333333333333333388F33333333333333333303333333333333333333
               8333333333333333333333333333333333333333333333333333333333333333
-              33333333333333333333
-            }
+              33333333333333333333}
             NumGlyphs = 2
-            OnClick = btnReplaceClick
             ParentShowHint = False
             ShowHint = True
             Spacing = -1
             TabOrder = 1
+            OnClick = btnReplaceClick
+            ExplicitTop = 179
           end
         end
       end
       object tabSplit: TTabSheet
         Caption = ' &Split '
-        ClientHeight = 357
-        ClientWidth = 507
         ImageIndex = 3
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
+        DesignSize = (
+          507
+          356)
         object lblSplitResult: TLabel
           Left = 4
-          Height = 13
           Top = 40
           Width = 48
+          Height = 13
           Caption = 'Split result'
+          Color = clBtnFace
           ParentColor = False
         end
         object btnSplit: TBitBtn
           Left = 407
-          Height = 33
-          Hint = 'Exec r.e. for input string'
           Top = 320
           Width = 97
+          Height = 33
+          Hint = 'Exec r.e. for input string'
           Anchors = [akRight, akBottom]
           Caption = '&Split'
           Default = True
@@ -808,50 +863,54 @@ object fmREDebuggerMain: TfmREDebuggerMain
             88833388F333333333333333330083333333333333333388FF33333333333333
             3330033333333333333333388F33333333333333333303333333333333333333
             8333333333333333333333333333333333333333333333333333333333333333
-            33333333333333333333
-          }
+            33333333333333333333}
           NumGlyphs = 2
-          OnClick = btnSplitClick
           ParentShowHint = False
           ShowHint = True
           Spacing = -1
           TabOrder = 0
+          OnClick = btnSplitClick
         end
         object memSplitResult: TMemo
           Left = 0
-          Height = 263
           Top = 56
           Width = 504
-          Anchors = [akTop, akLeft, akRight, akBottom]
+          Height = 263
+          TabStop = False
+          Anchors = [akLeft, akTop, akRight, akBottom]
           Color = clBtnFace
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
-          TabStop = False
         end
         object pnlSplitComment: TPanel
           Left = 0
-          Height = 39
           Top = 0
           Width = 507
+          Height = 39
           Align = alTop
           BevelOuter = bvNone
-          ClientHeight = 39
-          ClientWidth = 507
           Color = clBtnShadow
-          ParentColor = False
           TabOrder = 2
+          DesignSize = (
+            507
+            39)
           object lblSplitComment: TLabel
             Left = 8
-            Height = 30
             Top = 6
             Width = 402
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Height = 30
+            Anchors = [akLeft, akTop, akRight, akBottom]
             AutoSize = False
-            Caption = 'Split input string by r.e. entrances.'#13#10'Note: Split uses Exec* calls, so Match* properties will be undefined after it.'
+            Caption = 
+              'Split input string by r.e. entrances.'#13#10'Note: Split uses Exec* ca' +
+              'lls, so Match* properties will be undefined after it.'
+            Color = clBtnShadow
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clWhite
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
+            Font.Style = []
             ParentColor = False
             ParentFont = False
             WordWrap = True
@@ -860,21 +919,21 @@ object fmREDebuggerMain: TfmREDebuggerMain
       end
     end
     object pnlTopExamples: TPanel
-      Left = 0
-      Height = 32
-      Top = 0
+      Left = 2
+      Top = 15
       Width = 515
+      Height = 32
       Align = alTop
       BevelOuter = bvNone
-      ClientHeight = 32
-      ClientWidth = 515
       TabOrder = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
       object btnGetRE: TSpeedButton
         Left = 8
-        Height = 28
-        Hint = 'Load example from "r.e. repository"'
         Top = 0
         Width = 121
+        Height = 28
+        Hint = 'Load example from "r.e. repository"'
         Caption = 'r.e. repository >>'
         Glyph.Data = {
           76010000424D7601000000000000760000002800000020000000100000000100
@@ -888,47 +947,51 @@ object fmREDebuggerMain: TfmREDebuggerMain
           8F0055575FF7777555775555000888888F005555777FFFFFFF77555550000000
           0F055555577777777F7F555550FFFFFF0F05555557F5FFF57F7F555550F000FF
           0005555557F777557775555550FFFFFF0555555557F555FF7F55555550FF7000
-          05555555575FF777755555555500055555555555557775555555
-        }
+          05555555575FF777755555555500055555555555557775555555}
         NumGlyphs = 2
+        ParentShowHint = False
+        ShowHint = True
         Spacing = -1
         OnClick = btnGetREClick
-        ShowHint = True
-        ParentShowHint = False
       end
     end
     object pnlRepositoryHint: TPanel
       Left = 140
-      Height = 32
       Top = 0
       Width = 369
-      Anchors = [akTop, akLeft, akRight]
+      Height = 32
+      Anchors = [akLeft, akTop, akRight]
       BevelOuter = bvNone
-      ClientHeight = 32
-      ClientWidth = 369
       Color = clBtnShadow
+      Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -10
       Font.Name = 'MS Sans Serif'
-      ParentColor = False
+      Font.Style = []
       ParentFont = False
       TabOrder = 2
+      DesignSize = (
+        369
+        32)
       object Label1: TLabel
         Left = 32
-        Height = 28
         Top = 0
         Width = 338
-        Anchors = [akTop, akLeft, akRight, akBottom]
+        Height = 28
+        Anchors = [akLeft, akTop, akRight, akBottom]
         AutoSize = False
-        Caption = 'You can select one of ready-to-use regular expressions from the repository'
+        Caption = 
+          'You can select one of ready-to-use regular expressions from the ' +
+          'repository'
+        Color = clBtnShadow
         ParentColor = False
         WordWrap = True
       end
       object Image1: TImage
         Left = 8
-        Height = 16
         Top = 8
         Width = 16
+        Height = 16
         AutoSize = True
         Picture.Data = {
           055449636F6E3E01000000000100010010101000000000002801000016000000
@@ -941,8 +1004,7 @@ object fmREDebuggerMain: TfmREDebuggerMain
           000BBB000BBB0000000BBBBBBBBB000000B00BBBBB00B0000000000B00000000
           0000000B00000000FEFF0000FC7F0000FC7F0000D8370000E00F0000E00F0000
           C0070000C007000000010000C0070000C0070000E00F0000E00F0000D8370000
-          FEFF0000FEFF0000
-        }
+          FEFF0000FEFF0000}
       end
     end
   end

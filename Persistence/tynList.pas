@@ -95,7 +95,7 @@ type
     ItemClassID : string;
   end;
 
-const
+var
  tynItemClasses : TObjectList = nil;
 
 function GettynListItemClassID (AClass : CtynListItem) : string;
