@@ -8,5 +8,6 @@
   {$WARN UNSAFE_CODE OFF} // Suppress .Net warnings
 {$ENDIF}
 
+{$IFDEF FPC}
 {$DEFINE UseProfiler} // use StopWatch unit to profile operations
-
+{$ENDIF}

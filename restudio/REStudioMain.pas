@@ -25,7 +25,7 @@ uses
 {$ENDIF}
   Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ComCtrls, ExtCtrls,
-  regexpr, FileViewer, RETestCases
+  regexpr, RETestCases
   {$IFDEF UseProfiler}, StopWatch {$ENDIF};
 
 type
@@ -147,7 +147,9 @@ type
     fShowOnce : boolean;
     //procedure AssignTestCase (ARegularExpression : string);
    public
+{$IFDEF FILEVIEWER}
     procedure HighlightREInFileViewer (AFileViewer : TfmFileViewer);
+{$ENDIF}
     property HelpFolder : string read fHelpFolder;
   end;
 
@@ -162,7 +164,6 @@ uses
   ShellAPI,
 {$ELSE}
 {$ENDIF}
-  windows,
   PCode;
 
 const
@@ -261,6 +262,8 @@ procedure TfmREDebuggerMain.ExecIt (AFindNext : boolean);
   s : string;
  begin
   try
+  if Not aFindNext then
+    begin
     r.Expression := edRegExpr.Text;
     {$IFDEF UseProfiler}
     sw.Start;
@@ -270,7 +273,7 @@ procedure TfmREDebuggerMain.ExecIt (AFindNext : boolean);
     sw.Stop;
     lblStopWatch.Caption := 'Compile: ' + sw.TimeStr;
     {$ENDIF}
-
+    end;
     {$IFDEF UseProfiler}
     sw.Start;
     {$ENDIF}
@@ -333,6 +336,7 @@ procedure TfmREDebuggerMain.btnExecNextClick(Sender: TObject);
   ExecIt (true);
  end;
 
+{$IFDEF FILEVIEWER}
 procedure TfmREDebuggerMain.HighlightREInFileViewer (AFileViewer : TfmFileViewer);
  var
   ExecRes : boolean;
@@ -406,7 +410,7 @@ procedure TfmREDebuggerMain.HighlightREInFileViewer (AFileViewer : TfmFileViewer
    end;
   end;
  end;
-
+{$ENDIF}
 
 procedure TfmREDebuggerMain.btnReplaceClick(Sender: TObject);
  begin
@@ -606,8 +610,17 @@ procedure TfmREDebuggerMain.cbSubStrsClick(Sender: TObject);
 procedure TfmREDebuggerMain.GoToRegExprHomePage;
  var
   zFileName, zParams, zDir: array [0 .. MAX_PATH] of Char;
+{$IFNDEF FPC}
+  URL : String;
+{$ENDIF}
+
  begin
+{$IFDEF FPC}
   OpenURL(StrPCopy (zFileName, 'http://' + ProductHomePage)); { *Converted from ShellExecute* }
+{$ELSE}
+  URL:='http://' + ProductHomePage;
+  ShellExecute(0,'OPEN',PChar(URL),Nil,Nil,0); { *Converted from ShellExecute* }
+{$ENDIF}
  end;
 
 procedure TfmREDebuggerMain.btnHelpClick(Sender: TObject);

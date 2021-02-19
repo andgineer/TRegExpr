@@ -2,17 +2,17 @@
 <CONFIG>
   <ProjectSession>
     <PathDelim Value="\"/>
-    <Version Value="10"/>
+    <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="14">
+    <Units Count="19">
       <Unit0>
         <Filename Value="REStudio.dpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <TopLine Value="11"/>
-        <CursorPos X="28" Y="34"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="2"/>
+        <CursorPos X="17" Y="20"/>
         <UsageCount Value="20"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit0>
       <Unit1>
@@ -22,8 +22,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="124"/>
-        <CursorPos X="48" Y="127"/>
+        <TopLine Value="73"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
@@ -41,11 +40,8 @@
       </Unit2>
       <Unit3>
         <Filename Value="FileViewer.pas"/>
-        <IsPartOfProject Value="True"/>
         <HasResources Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="4"/>
-        <CursorPos X="17" Y="21"/>
         <UsageCount Value="20"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit3>
@@ -60,7 +56,6 @@
       </Unit4>
       <Unit5>
         <Filename Value="Persistence\tynList.pas"/>
-        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
@@ -70,7 +65,6 @@
       </Unit5>
       <Unit6>
         <Filename Value="Persistence\ansoRTTIHook.pas"/>
-        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="337"/>
         <CursorPos X="50" Y="344"/>
@@ -79,7 +73,6 @@
       </Unit6>
       <Unit7>
         <Filename Value="Persistence\ansoStrings.pas"/>
-        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
@@ -89,11 +82,11 @@
       </Unit7>
       <Unit8>
         <Filename Value="RETestCases.pas"/>
-        <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <TopLine Value="-1"/>
-        <CursorPos X="-1" Y="-1"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="93"/>
+        <CursorPos X="22" Y="102"/>
         <UsageCount Value="20"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit8>
       <Unit9>
@@ -135,7 +128,145 @@
         <CursorPos X="29" Y="263"/>
         <UsageCount Value="10"/>
       </Unit13>
+      <Unit14>
+        <Filename Value="..\Persistence\ansoRTTI.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="73"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="251"/>
+        <CursorPos X="42" Y="276"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="..\Persistence\ansoStrings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="..\Persistence\tynList.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="79"/>
+        <UsageCount Value="20"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="REStudio_inc.pas"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="31" Y="13"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit18>
     </Units>
-    <JumpHistory HistoryIndex="-1"/>
+    <JumpHistory Count="23" HistoryIndex="22">
+      <Position1>
+        <Filename Value="REStudioMain.pas"/>
+        <Caret Line="137" Column="51" TopLine="124"/>
+      </Position1>
+      <Position2>
+        <Filename Value="RETestCases.pas"/>
+        <Caret Line="30" Column="2" TopLine="15"/>
+      </Position2>
+      <Position3>
+        <Filename Value="REStudioMain.pas"/>
+        <Caret Line="129" Column="11" TopLine="124"/>
+      </Position3>
+      <Position4>
+        <Filename Value="REStudioMain.pas"/>
+        <Caret Line="157" Column="64" TopLine="7"/>
+      </Position4>
+      <Position5>
+        <Filename Value="REStudioMain.pas"/>
+        <Caret Line="16" Column="37" TopLine="7"/>
+      </Position5>
+      <Position6>
+        <Filename Value="REStudio.dpr"/>
+        <Caret Line="20" Column="17" TopLine="2"/>
+      </Position6>
+      <Position7>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="273" Column="34" TopLine="258"/>
+      </Position7>
+      <Position8>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="301" Column="35" TopLine="286"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+      </Position9>
+      <Position10>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="301" Column="43" TopLine="286"/>
+      </Position10>
+      <Position11>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="12" Column="10"/>
+      </Position11>
+      <Position12>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="286" Column="47" TopLine="286"/>
+      </Position12>
+      <Position13>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="11" Column="16"/>
+      </Position13>
+      <Position14>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="306" Column="43" TopLine="291"/>
+      </Position14>
+      <Position15>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="11"/>
+      </Position15>
+      <Position16>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="341" TopLine="326"/>
+      </Position16>
+      <Position17>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="342" Column="60" TopLine="326"/>
+      </Position17>
+      <Position18>
+        <Filename Value="REStudioMain.pas"/>
+        <Caret Line="415" Column="29" TopLine="397"/>
+      </Position18>
+      <Position19>
+        <Filename Value="REStudioMain.pas"/>
+        <Caret Line="132" Column="13" TopLine="123"/>
+      </Position19>
+      <Position20>
+        <Filename Value="REStudioMain.pas"/>
+        <Caret Line="137" Column="27" TopLine="128"/>
+      </Position20>
+      <Position21>
+        <Filename Value="REStudioMain.pas"/>
+        <Caret Line="286" Column="16" TopLine="268"/>
+      </Position21>
+      <Position22>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+        <Caret Line="332" Column="42" TopLine="327"/>
+      </Position22>
+      <Position23>
+        <Filename Value="..\Persistence\ansoRTTIHook.pas"/>
+      </Position23>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
   </ProjectSession>
 </CONFIG>
