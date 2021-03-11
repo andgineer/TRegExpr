@@ -113,7 +113,11 @@ uses
   Classes, // TStrings in Split method
   SysUtils, // Exception
     {$IFDEF D2009}
-    System.Character,
+        {$IFDEF D_XE}
+        System.Character,
+        {$ELSE}
+        Character,
+        {$ENDIF}
     {$ENDIF}
   Math;
 
@@ -850,13 +854,17 @@ const
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
 
 function IsPairedBreak(p: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-const
-  cBreak = {$IFDEF Unicode} $000D000A; {$ELSE} $0D0A; {$ENDIF}
-type
-  PtrPair = {$IFDEF Unicode} ^LongInt; {$ELSE} ^Word; {$ENDIF}
+{$IFDEF Unicode}
+  const cBreak = $000D000A;
 begin
-  Result := PtrPair(p)^ = cBreak;
+  Result := PLongInt(p)^ = cBreak;
 end;
+{$ELSE}
+  const cBreak = $0D0A;
+begin
+  Result := PWord(p)^ = cBreak;
+end;
+{$ENDIF}
 
 function _FindCharInBuffer(SBegin, SEnd: PRegExprChar; Ch: REChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
