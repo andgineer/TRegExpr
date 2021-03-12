@@ -112,9 +112,9 @@ interface
 uses
   Classes, // TStrings in Split method
   SysUtils, // Exception
-    {$IFDEF D2009}
-    System.Character,
-    {$ENDIF}
+  {$IFDEF D2009}
+    {$IFDEF D_XE}System.{$ENDIF}Character,
+  {$ENDIF}
   Math;
 
 type
