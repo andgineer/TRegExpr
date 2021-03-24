@@ -6,6 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.151 2021.03.24
+ -=- (-) Fix for Substitute method and named groups. By @chrisgch.
+
  v. 1.150 2021.02.08
  -=- (-) Setters of Modifier* properties now invalidate the opcode.
 
