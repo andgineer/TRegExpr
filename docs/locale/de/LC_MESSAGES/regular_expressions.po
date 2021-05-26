@@ -10,15 +10,16 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-18 09:57+0300\n"
-"PO-Revision-Date: 2019-12-18 13:46+0000\n"
-"Last-Translator: Elmar Dolgener <elmar.dolgener@fau.de>\n"
+"PO-Revision-Date: 2021-05-20 09:33+0000\n"
+"Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/tregexpr/"
+"regular_expressions/de/>\n"
 "Language: de\n"
-"Language-Team: German "
-"<https://hosted.weblate.org/projects/tregexpr/regular_expressions/de/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.7-dev\n"
 "Generated-By: Babel 2.8.0\n"
 
 # c78ea9c703114f288d7bf3e609787c2a
@@ -1348,15 +1349,15 @@ msgstr "Wert"
 
 #: ../../regular_expressions.rst:409 7bf8a9b5a4c94763ae69e2f46ebd9199
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: ../../regular_expressions.rst:410 d32330aca09a416c8c201a7bb5e4b92f
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: ../../regular_expressions.rst:411 e0fbca20722443458f799ecc64a08a8d
 msgid "2"
-msgstr ""
+msgstr "2"
 
 # da9a71bc872d41e09e88ae85efbc48ad
 #: ../../regular_expressions.rst:411 10e723a301e844a790686c8831461b52
@@ -2525,4 +2526,3 @@ msgstr ""
 #~ "but also matches before the final "
 #~ "line-break (LF and CR LF)."
 #~ msgstr ""
-
