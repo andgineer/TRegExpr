@@ -789,7 +789,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 151;
+  REVersionMinor = 152;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -5518,8 +5518,9 @@ begin
 
   if fInputString = '' then
   begin
-    //Error(reeNoInputStringSpecified); // better don't raise error, breaks some apps
-    Exit;
+    // Empty string can match e.g. '^$'
+    if regMustLen > 0 then
+      Exit;
   end;
 
   // Check that the start position is not negative
