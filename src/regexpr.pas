@@ -112,9 +112,9 @@ interface
 uses
   Classes, // TStrings in Split method
   SysUtils, // Exception
-    {$IFDEF D2009}
-    System.Character,
-    {$ENDIF}
+  {$IFDEF D2009}
+    {$IFDEF D_XE}System.{$ENDIF}Character,
+  {$ENDIF}
   Math;
 
 type
@@ -392,7 +392,7 @@ type
     {$IFDEF UseLineSep}
     procedure InitLineSepArray;
     {$ENDIF}
-    procedure FindGroupName(APtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
+    procedure FindGroupName(APtr, AEndPtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
 
     // Mark programm as having to be [re]compiled
     procedure InvalidateProgramm;
@@ -789,7 +789,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 150;
+  REVersionMinor = 152;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -3790,21 +3790,21 @@ begin
                     begin
                       // named group: (?P<name>regex)
                       GrpKind := gkNormalGroup;
-                      FindGroupName(regParse + 3, '>', GrpName);
+                      FindGroupName(regParse + 3, fRegexEnd, '>', GrpName);
                       Inc(regParse, Length(GrpName) + 4);
                     end;
                   '=':
                     begin
                       // back-reference to named group: (?P=name)
                       GrpKind := gkNamedGroupReference;
-                      FindGroupName(regParse + 3, ')', GrpName);
+                      FindGroupName(regParse + 3, fRegexEnd, ')', GrpName);
                       Inc(regParse, Length(GrpName) + 4);
                     end;
                   '>':
                     begin
                       // subroutine call to named group: (?P>name)
                       GrpKind := gkSubCall;
-                      FindGroupName(regParse + 3, ')', GrpName);
+                      FindGroupName(regParse + 3, fRegexEnd, ')', GrpName);
                       Inc(regParse, Length(GrpName) + 4);
                       GrpIndex := MatchIndexFromName(GrpName);
                       if GrpIndex < 1 then
@@ -3957,7 +3957,7 @@ begin
                 if (regParse + 4 >= fRegexEnd) then
                   Error(reeNamedGroupBad);
                 GrpKind := gkNormalGroup;
-                FindGroupName(regParse + 2, '''', GrpName);
+                FindGroupName(regParse + 2, fRegexEnd, '''', GrpName);
                 Inc(regParse, Length(GrpName) + 3);
               end;
             '&':
@@ -3966,7 +3966,7 @@ begin
                 if (regParse + 2 >= fRegexEnd) then
                   Error(reeBadSubCall);
                 GrpKind := gkSubCall;
-                FindGroupName(regParse + 2, ')', GrpName);
+                FindGroupName(regParse + 2, fRegexEnd, ')', GrpName);
                 Inc(regParse, Length(GrpName) + 3);
                 GrpIndex := MatchIndexFromName(GrpName);
                 if GrpIndex < 1 then
@@ -4253,7 +4253,7 @@ end; { of function TRegExpr.GetCompilerErrorPos
 { ===================== Matching section ====================== }
 { ============================================================= }
 
-procedure TRegExpr.FindGroupName(APtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
+procedure TRegExpr.FindGroupName(APtr, AEndPtr: PRegExprChar; AEndChar: REChar; var AName: RegExprString);
 // check that group name is valid identifier, started from non-digit
 // this is to be like in Python regex
 var
@@ -4264,7 +4264,7 @@ begin
     Error(reeNamedGroupBadName);
 
   repeat
-    if P >= fRegexEnd then
+    if P >= AEndPtr then
       Error(reeNamedGroupBad);
     if P^ = AEndChar then
       Break;
@@ -5518,8 +5518,9 @@ begin
 
   if fInputString = '' then
   begin
-    //Error(reeNoInputStringSpecified); // better don't raise error, breaks some apps
-    Exit;
+    // Empty string can match e.g. '^$'
+    if regMustLen > 0 then
+      Exit;
   end;
 
   // Check that the start position is not negative
@@ -5691,7 +5692,7 @@ var
       else
       if Delimited then
       begin
-        FindGroupName(p, '}', GrpName);
+        FindGroupName(p, TemplateEnd, '}', GrpName);
         Result := MatchIndexFromName(GrpName);
         Inc(p, Length(GrpName));
       end;
