@@ -6489,18 +6489,18 @@ end;
 function TRegExpr.DumpCheckerIndex(N: byte): RegExprString;
 begin
   Result := '?';
-  if N = CheckerIndex_Word then Result := '\w' else
-  if N = CheckerIndex_NotWord then Result := '\W' else
-  if N = CheckerIndex_Digit then Result := ('\d') else
-  if N = CheckerIndex_NotDigit then Result := ('\D') else
-  if N = CheckerIndex_Space then Result := ('\s') else
-  if N = CheckerIndex_NotSpace then Result := ('\S') else
-  if N = CheckerIndex_HorzSep then Result := ('\h') else
-  if N = CheckerIndex_NotHorzSep then Result := ('\H') else
-  if N = CheckerIndex_VertSep then Result := ('\v') else
-  if N = CheckerIndex_NotVertSep then Result := ('\V') else
-  if N = CheckerIndex_LowerAZ then Result := ('az') else
-  if N = CheckerIndex_UpperAZ then Result := ('AZ') else
+  if N = CheckerIndex_Word       then Result := '\w' else
+  if N = CheckerIndex_NotWord    then Result := '\W' else
+  if N = CheckerIndex_Digit      then Result := '\d' else
+  if N = CheckerIndex_NotDigit   then Result := '\D' else
+  if N = CheckerIndex_Space      then Result := '\s' else
+  if N = CheckerIndex_NotSpace   then Result := '\S' else
+  if N = CheckerIndex_HorzSep    then Result := '\h' else
+  if N = CheckerIndex_NotHorzSep then Result := '\H' else
+  if N = CheckerIndex_VertSep    then Result := '\v' else
+  if N = CheckerIndex_NotVertSep then Result := '\V' else
+  if N = CheckerIndex_LowerAZ    then Result := 'az' else
+  if N = CheckerIndex_UpperAZ    then Result := 'AZ' else
   ;
 end;
 
