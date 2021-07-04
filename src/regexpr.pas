@@ -1,4 +1,4 @@
-﻿unit regexpr;
+unit regexpr;
 
 {
   TRegExpr class library
@@ -789,7 +789,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 152;
+  REVersionMinor = 153;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -6489,23 +6489,24 @@ end;
 function TRegExpr.DumpCheckerIndex(N: byte): RegExprString;
 begin
   Result := '?';
-  if N = CheckerIndex_Word then Exit('\w');
-  if N = CheckerIndex_NotWord then Exit('\W');
-  if N = CheckerIndex_Digit then Exit('\d');
-  if N = CheckerIndex_NotDigit then Exit('\D');
-  if N = CheckerIndex_Space then Exit('\s');
-  if N = CheckerIndex_NotSpace then Exit('\S');
-  if N = CheckerIndex_HorzSep then Exit('\h');
-  if N = CheckerIndex_NotHorzSep then Exit('\H');
-  if N = CheckerIndex_VertSep then Exit('\v');
-  if N = CheckerIndex_NotVertSep then Exit('\V');
-  if N = CheckerIndex_LowerAZ then Exit('az');
-  if N = CheckerIndex_UpperAZ then Exit('AZ');
+  if N = CheckerIndex_Word       then Result := '\w' else
+  if N = CheckerIndex_NotWord    then Result := '\W' else
+  if N = CheckerIndex_Digit      then Result := '\d' else
+  if N = CheckerIndex_NotDigit   then Result := '\D' else
+  if N = CheckerIndex_Space      then Result := '\s' else
+  if N = CheckerIndex_NotSpace   then Result := '\S' else
+  if N = CheckerIndex_HorzSep    then Result := '\h' else
+  if N = CheckerIndex_NotHorzSep then Result := '\H' else
+  if N = CheckerIndex_VertSep    then Result := '\v' else
+  if N = CheckerIndex_NotVertSep then Result := '\V' else
+  if N = CheckerIndex_LowerAZ    then Result := 'az' else
+  if N = CheckerIndex_UpperAZ    then Result := 'AZ' else
+  ;
 end;
 
 function TRegExpr.DumpCategoryChars(ch, ch2: REChar; Positive: boolean): RegExprString;
 const
-  S: array[boolean] of REChar = ('P', 'p');
+  S: array[boolean] of RegExprString = ('P', 'p');
 begin
   Result := '\' + S[Positive] + '{' + ch;
   if ch2 <> #0 then
