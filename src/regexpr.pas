@@ -832,6 +832,8 @@ type
     gkSubCall
     );
 
+{$undef FPC_REQUIRES_PROPER_ALIGNMENT}
+
 const
   REOpSz = SizeOf(TREOp) div SizeOf(REChar);
   // size of OP_ command in REChars
