@@ -832,6 +832,9 @@ type
     gkSubCall
     );
 
+// Alexey T.: handling of that define FPC_REQUIRES_PROPER_ALIGNMENT was present even 15 years ago,
+// but with it, we have failing of some RegEx tests, on ARM64 CPU.
+// If I undefine FPC_REQUIRES_PROPER_ALIGNMENT, all tests run OK on ARM64 again.
 {$undef FPC_REQUIRES_PROPER_ALIGNMENT}
 
 const
