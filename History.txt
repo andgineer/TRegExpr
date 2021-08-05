@@ -6,6 +6,15 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.153 2021.07.04
+ -=- (^) Compatability with Delphi 7. By Alexey Torgashin.
+
+ v. 1.152 2021.05.26
+ -=- (-) Fix match empty strings (e.g. by '^$'). By Alexey Torgashin.
+
+ v. 1.151 2021.03.24
+ -=- (-) Fix for Substitute method and named groups. By @chrisgch.
+
  v. 1.150 2021.02.08
  -=- (-) Setters of Modifier* properties now invalidate the opcode.
 
