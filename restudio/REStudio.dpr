@@ -15,22 +15,25 @@ program REStudio;
 }
 
 uses
-  Forms, Interfaces,
+  Forms,
+  {$IFDEF FPC}
+  Interfaces,
+  {$ENDIF }
   REStudioMain in 'REStudioMain.pas' {fmREStudioMain},
   PCode in 'PCode.pas' {fmPseudoCodeViewer},
-  FileViewer in 'FileViewer.pas' {fmFileViewer},
-  regexpr in '..\regexpr.pas',
   StopWatch in 'StopWatch\StopWatch.pas',
-  tynList in 'Persistence\tynList.pas',
-  ansoRTTIHook in 'Persistence\ansoRTTIHook.pas',
-  ansoStrings in 'Persistence\ansoStrings.pas';
+  regexpr in '..\src\regexpr.pas',
+  ansoRTTI in '..\Persistence\ansoRTTI.pas',
+  ansoRTTIHook in '..\Persistence\ansoRTTIHook.pas',
+  ansoStrings in '..\Persistence\ansoStrings.pas',
+  tynList in '..\Persistence\tynList.pas';
 
 {.$R *.RES}
 
 begin
   Application.Initialize;
   Application.CreateForm(TfmREDebuggerMain, fmREDebuggerMain);
-  //Application.CreateForm(TfmTestCases, fmTestCases);
+  // Application.CreateForm(TfmTestCases, fmTestCases);
   Application.Run;
 end.
 

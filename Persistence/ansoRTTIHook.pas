@@ -7,6 +7,9 @@
   {$WARN UNSAFE_TYPE OFF} // Suppress .Net warnings
   {$WARN UNSAFE_CODE OFF} // Suppress .Net warnings
 {$ENDIF}
+{$IFDEF FPC}
+{$DEFINE NODEREF}
+{$ENDIF}
 unit ansoRTTIHook;
 
 {
@@ -270,7 +273,7 @@ function TansoRTTIHook.GetAsStrings (const AIdx : integer) : string;
   ObjProp : TObject;
  begin
   PropInfo := fPropList [AIdx];
-  PropKind := PropInfo^.PropType^^.Kind;
+  PropKind := PropInfo^.PropType^{$IFNDEF NODEREF}^{$ENDIF}.Kind;
   case PropKind of
     tkInteger : Result := IntToStr ((GetOrdProp (fHookedObject, PropInfo)));
     tkChar :    Result := Char ((GetOrdProp (fHookedObject, PropInfo)));
@@ -298,7 +301,7 @@ procedure TansoRTTIHook.SetAsStrings (const AIdx : integer; AValue : string);
   ObjProp : TObject;
  begin
   PropInfo := fPropList [AIdx];
-  PropKind := PropInfo^.PropType^^.Kind;
+  PropKind := PropInfo^.PropType^{$IFNDEF NODEREF}^{$ENDIF}.Kind;
   try
     case PropKind of
       tkInteger : SetOrdProp (fHookedObject, PropInfo, StrToInt (AValue));
@@ -335,7 +338,7 @@ procedure TansoRTTIHook.Clear (const AIdx : integer);
   ObjProp : TObject;
  begin
   PropInfo := fPropList [AIdx];
-  PropKind := PropInfo^.PropType^^.Kind;
+  PropKind := PropInfo^.PropType^{$IFNDEF NODEREF}^{$ENDIF}.Kind;
   case PropKind of
       tkInteger : SetOrdProp (fHookedObject, PropInfo, 0);
       tkChar    : SetOrdProp (fHookedObject, PropInfo, 0);
