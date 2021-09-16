@@ -1,4 +1,4 @@
-unit regexpr;
+﻿unit regexpr;
 
 {
   TRegExpr class library
@@ -113,7 +113,11 @@ uses
   Classes, // TStrings in Split method
   SysUtils, // Exception
   {$IFDEF D2009}
-    {$IFDEF D_XE}System.{$ENDIF}Character,
+    {$IFDEF D_XE}
+    System.Character,
+    {$ELSE}
+    Character,
+    {$ENDIF}
   {$ENDIF}
   Math;
 
@@ -6823,11 +6827,13 @@ end;
 {$ENDIF}
 
 procedure TRegExpr.Error(AErrorID: integer);
+  {$IFNDEF LINUX}
   {$IFDEF reRealExceptionAddr}
   function ReturnAddr: Pointer; // ###0.938
   asm
     mov  eax,[ebp+4]
   end;
+  {$ENDIF}
   {$ENDIF}
 var
   e: ERegExpr;
@@ -6842,8 +6848,10 @@ begin
   e.ErrorCode := AErrorID;
   e.CompilerErrorPos := CompilerErrorPos;
   raise e
+    {$IFNDEF LINUX}
     {$IFDEF reRealExceptionAddr}
     at ReturnAddr
+    {$ENDIF}
     {$ENDIF};
 end; { of procedure TRegExpr.Error
   -------------------------------------------------------------- }
