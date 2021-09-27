@@ -37,13 +37,13 @@ type
     RE: TRegExpr;
   protected
     procedure RunRETest(aIndex: Integer);
-    procedure CompileRE(AExpression: RegExprString);
+    procedure CompileRE(const AExpression: RegExprString);
     procedure IsNotNull(AErrorMessage: string; AObjectToCheck: TObject);
     procedure IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
     procedure IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
-    procedure AreEqual(AErrorMessage: string; s1,s2: string); overload;
-    procedure AreEqual(AErrorMessage: string; i1,i2: integer); overload;
-    procedure TestBadRegex(const AErrorMessage, AExpression: string);
+    procedure AreEqual(AErrorMessage: string; s1, s2: string); overload;
+    procedure AreEqual(AErrorMessage: string; i1, i2: integer); overload;
+    procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString);
   published
     procedure TestEmpty;
     procedure TestNotFound;
@@ -137,15 +137,17 @@ Type
     MatchStart: integer;
   end;
 
-function PrintableString(const S: string): string;
+function PrintableString(const S: RegExprString): string;
 var
+  buf: string;
   ch: char;
   i: integer;
 begin
   Result := '';
-  for i := 1 to Length(S) do
+  buf := UTF8Encode(S);
+  for i := 1 to Length(buf) do
   begin
-    ch := S[i];
+    ch := buf[i];
     if Ord(ch) < 31 then
       Result := Result + '#' + IntToStr(Ord(ch))
     else
@@ -752,7 +754,8 @@ begin
   {$ENDIF}
 end;
 
-procedure TTestRegexpr.TestBadRegex(const AErrorMessage, AExpression: string);
+procedure TTestRegexpr.TestBadRegex(const AErrorMessage: string;
+  const AExpression: RegExprString);
 var
   ok: boolean;
 begin
@@ -1179,7 +1182,7 @@ begin
   end;
 end;
 
-procedure TTestRegexpr.CompileRE(AExpression: RegExprString);
+procedure TTestRegexpr.CompileRE(const AExpression: RegExprString);
 begin
   if (RE = Nil) then
   begin
