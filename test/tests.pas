@@ -37,7 +37,7 @@ type
     RE: TRegExpr;
   protected
     procedure RunRETest(aIndex: Integer);
-    procedure CompileRE(AExpression: string);
+    procedure CompileRE(AExpression: RegExprString);
     procedure IsNotNull(AErrorMessage: string; AObjectToCheck: TObject);
     procedure IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
     procedure IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
@@ -105,6 +105,7 @@ type
     {$IFDEF Unicode}
     procedure RunTest51unicode;
     procedure RunTest52unicode;
+    procedure RunTest70russian;
     {$ENDIF}
     procedure RunTest53;
     procedure RunTest54;
@@ -1057,6 +1058,23 @@ procedure TTestRegexpr.RunTest52unicode;
 begin
   RunRETest(52);
 end;
+
+procedure TTestRegexpr.RunTest70russian;
+//Alexey: if I add Russian test directly to array of tests,
+//I have problems with UTF8 coding then, which I cannot solve in this test
+var
+  T: TRegExTest;
+begin
+  T.Expression:= UTF8Decode('[а-я]+');
+  T.InputText:= UTF8Decode('12морошка');
+  T.ExpectedResult:= UTF8Decode('морошка');
+  T.MatchStart:= 3;
+  T.SubstitutionText:= '';
+  CompileRE(T.Expression);
+  RE.Exec(T.inputText);
+  AreEqual('Search position', T.MatchStart, RE.MatchPos[0]);
+  AreEqual('Matched text', PrintableString(T.ExpectedResult), PrintableString(RE.Match[0]));
+end;
 {$ENDIF}
 
 procedure TTestRegexpr.RunTest53;
@@ -1161,7 +1179,7 @@ begin
   end;
 end;
 
-procedure TTestRegexpr.CompileRE(AExpression: string);
+procedure TTestRegexpr.CompileRE(AExpression: RegExprString);
 begin
   if (RE = Nil) then
   begin
