@@ -37,13 +37,13 @@ type
     RE: TRegExpr;
   protected
     procedure RunRETest(aIndex: Integer);
-    procedure CompileRE(AExpression: string);
+    procedure CompileRE(const AExpression: RegExprString);
     procedure IsNotNull(AErrorMessage: string; AObjectToCheck: TObject);
     procedure IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
     procedure IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
-    procedure AreEqual(AErrorMessage: string; s1,s2: string); overload;
-    procedure AreEqual(AErrorMessage: string; i1,i2: integer); overload;
-    procedure TestBadRegex(const AErrorMessage, AExpression: string);
+    procedure AreEqual(AErrorMessage: string; s1, s2: string); overload;
+    procedure AreEqual(AErrorMessage: string; i1, i2: integer); overload;
+    procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString);
   published
     procedure TestEmpty;
     procedure TestNotFound;
@@ -105,6 +105,7 @@ type
     {$IFDEF Unicode}
     procedure RunTest51unicode;
     procedure RunTest52unicode;
+    procedure RunTest70russian;
     {$ENDIF}
     procedure RunTest53;
     procedure RunTest54;
@@ -136,15 +137,17 @@ Type
     MatchStart: integer;
   end;
 
-function PrintableString(const S: string): string;
+function PrintableString(const S: RegExprString): string;
 var
+  buf: string;
   ch: char;
   i: integer;
 begin
   Result := '';
-  for i := 1 to Length(S) do
+  buf := UTF8Encode(S);
+  for i := 1 to Length(buf) do
   begin
-    ch := S[i];
+    ch := buf[i];
     if Ord(ch) < 31 then
       Result := Result + '#' + IntToStr(Ord(ch))
     else
@@ -751,7 +754,8 @@ begin
   {$ENDIF}
 end;
 
-procedure TTestRegexpr.TestBadRegex(const AErrorMessage, AExpression: string);
+procedure TTestRegexpr.TestBadRegex(const AErrorMessage: string;
+  const AExpression: RegExprString);
 var
   ok: boolean;
 begin
@@ -1057,6 +1061,23 @@ procedure TTestRegexpr.RunTest52unicode;
 begin
   RunRETest(52);
 end;
+
+procedure TTestRegexpr.RunTest70russian;
+//Alexey: if I add Russian test directly to array of tests,
+//I have problems with UTF8 coding then, which I cannot solve in this test
+var
+  T: TRegExTest;
+begin
+  T.Expression:= UTF8Decode('[а-я]+');
+  T.InputText:= UTF8Decode('12морошка');
+  T.ExpectedResult:= UTF8Decode('морошка');
+  T.MatchStart:= 3;
+  T.SubstitutionText:= '';
+  CompileRE(T.Expression);
+  RE.Exec(T.inputText);
+  AreEqual('Search position', T.MatchStart, RE.MatchPos[0]);
+  AreEqual('Matched text', PrintableString(T.ExpectedResult), PrintableString(RE.Match[0]));
+end;
 {$ENDIF}
 
 procedure TTestRegexpr.RunTest53;
@@ -1161,7 +1182,7 @@ begin
   end;
 end;
 
-procedure TTestRegexpr.CompileRE(AExpression: string);
+procedure TTestRegexpr.CompileRE(const AExpression: RegExprString);
 begin
   if (RE = Nil) then
   begin
