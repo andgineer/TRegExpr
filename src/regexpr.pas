@@ -93,6 +93,7 @@ interface
   {$UNDEF UnicodeEx}
   {$UNDEF FastUnicodeData}
 {$ENDIF}
+{.$DEFINE Compat} // Enable compatability methods/properties for forked version in Free Pascal 3.0
 // ======== Define Pascal-language options
 // Define 'UseAsserts' option (do not edit this definitions).
 // Asserts used to catch 'strange bugs' in TRegExpr implementation (when something goes
@@ -250,6 +251,10 @@ type
   end;
   TRegExprCharCheckerInfos = array of TRegExprCharCheckerInfo;
 
+  {$IFDEF Compat}
+  TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
+  {$ENDIF}
+
   { TRegExpr }
 
   TRegExpr = class
@@ -367,6 +372,17 @@ type
 
     fHelper: TRegExpr;
     fHelperLen: integer;
+
+    {$IFDEF Compat}
+    fUseUnicodeWordDetection: boolean;
+    fInvertCase: TRegExprInvertCaseFunction;
+    fEmptyInputRaisesError: boolean;
+    fUseOsLineEndOnReplace: boolean;
+    function OldInvertCase(const Ch: REChar): REChar;
+    function GetLinePairedSeparator: RegExprString;
+    procedure SetLinePairedSeparator(const AValue: RegExprString);
+    procedure SetUseOsLineEndOnReplace(AValue: boolean);
+    {$ENDIF}
 
     procedure InitCharCheckers;
     function CharChecker_Word(ch: REChar): boolean;
@@ -584,6 +600,16 @@ type
     // so you can implement really complex functionality.
     function ReplaceEx(const AInputStr: RegExprString;
       AReplaceFunc: TRegExprReplaceFunction): RegExprString;
+
+    {$IFDEF Compat}
+    function ExecPos(AOffset: integer; ATryOnce: boolean): boolean; overload; deprecated 'Use modern form of ExecPos()';
+    class function InvertCaseFunction(const Ch: REChar): REChar; deprecated 'This has no effect now';
+    property InvertCase: TRegExprInvertCaseFunction read fInvertCase write fInvertCase; deprecated 'This has no effect now';
+    property UseUnicodeWordDetection: boolean read fUseUnicodeWordDetection write fUseUnicodeWordDetection; deprecated 'This has no effect, use {$DEFINE Unicode} instead';
+    property LinePairedSeparator: RegExprString read GetLinePairedSeparator write SetLinePairedSeparator; deprecated 'This has no effect now';
+    property EmptyInputRaisesError: boolean read fEmptyInputRaisesError write fEmptyInputRaisesError; deprecated 'This has no effect now';
+    property UseOsLineEndOnReplace: boolean read fUseOsLineEndOnReplace write SetUseOsLineEndOnReplace; deprecated 'Use property ReplaceLineEnd instead';
+    {$ENDIF}
 
     // Returns ID of last error, 0 if no errors (unusable if
     // Error method raises exception) and clear internal status
@@ -1734,6 +1760,10 @@ begin
   {$ENDIF}
 
   InitCharCheckers;
+
+  {$IFDEF Compat}
+  fInvertCase := OldInvertCase;
+  {$ENDIF}
 end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
 
@@ -6855,5 +6885,48 @@ begin
     {$ENDIF};
 end; { of procedure TRegExpr.Error
   -------------------------------------------------------------- }
+
+{$IFDEF Compat} // APIs needed only for users of old FPC 3.0
+function TRegExpr.ExecPos(AOffset: integer; ATryOnce: boolean): boolean; overload;
+begin
+  Result := ExecPrim(AOffset, ATryOnce, False, False);
+end;
+
+function TRegExpr.OldInvertCase(const Ch: REChar): REChar;
+begin
+  Result := _UpperCase(Ch);
+  if Result = Ch then
+    Result := _LowerCase(Ch);
+end;
+
+class function TRegExpr.InvertCaseFunction(const Ch: REChar): REChar;
+begin
+  Result := _UpperCase(Ch);
+  if Result = Ch then
+    Result := _LowerCase(Ch);
+end;
+
+function TRegExpr.GetLinePairedSeparator: RegExprString;
+begin
+  // not supported anymore
+  Result := '';
+end;
+
+procedure TRegExpr.SetLinePairedSeparator(const AValue: RegExprString);
+begin
+  // not supported anymore
+end;
+
+procedure TRegExpr.SetUseOsLineEndOnReplace(AValue: boolean);
+begin
+  if fUseOsLineEndOnReplace = AValue then
+    Exit;
+  fUseOsLineEndOnReplace := AValue;
+  if fUseOsLineEndOnReplace then
+    fReplaceLineEnd := sLineBreak
+  else
+    fReplaceLineEnd := #10;
+end;
+{$ENDIF}
 
 end.
