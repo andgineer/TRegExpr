@@ -135,11 +135,11 @@ msgstr "Schnellstart"
 #: ../../index.rst:42 acf06e278c684351af8d67b7007653e6
 msgid ""
 "To use the library just add `the sources "
-"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_ to "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas>`_ to "
 "you project and use the class `TRegExpr <tregexpr.html>`_."
 msgstr ""
 "Um die Bibliothek zu verwenden, fügen Sie einfach `den Quelltext "
-"<https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`__ "
+"<https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas>`__ "
 "Ihrem Projekt hinzu und nutzen Sie die Klasse `TRegExpr "
 "<tregexpr.html>`__."
 

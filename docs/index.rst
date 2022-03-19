@@ -39,7 +39,7 @@ Reviews
 Quick start
 ~~~~~~~~~~~
 
-To use the library just add `the sources <https://github.com/andgineer/TRegExpr/blob/master/src/RegExpr.pas>`_
+To use the library just add `the sources <https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas>`_
 to you project and use the class `TRegExpr <tregexpr.html>`_.
 
 In the `FAQ <faq.html>`_ you can learn from others users problems.
