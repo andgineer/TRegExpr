@@ -819,7 +819,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 154;
+  REVersionMinor = 155;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -5746,10 +5746,11 @@ var
     APtr := p;
   end;
 
-  procedure FindSubstGroupIndex(var p: PRegExprChar; var Idx: integer);
+  procedure FindSubstGroupIndex(var p: PRegExprChar; var Idx: integer; var NumberFound: boolean);
   begin
     Idx := ParseVarName(p);
-    if (Idx >= 0) and (Idx <= High(GrpIndexes)) then
+    NumberFound := (Idx >= 0) and (Idx <= High(GrpIndexes));
+    if NumberFound then
       Idx := GrpIndexes[Idx];
   end;
 
@@ -5760,6 +5761,7 @@ var
   p, p0, p1, ResultPtr: PRegExprChar;
   ResultLen, n: integer;
   Ch, QuotedChar: REChar;
+  GroupFound: boolean;
 begin
   // Check programm and input string
   if not IsProgrammOk then
@@ -5781,11 +5783,13 @@ begin
     Ch := p^;
     Inc(p);
     n := -1;
+    GroupFound := False;
     if Ch = SubstituteGroupChar then
-      FindSubstGroupIndex(p, n);
-    if n >= 0 then
+      FindSubstGroupIndex(p, n, GroupFound);
+    if GroupFound then
     begin
-      Inc(ResultLen, GrpEnd[n] - GrpStart[n]);
+      if n >= 0 then
+        Inc(ResultLen, GrpEnd[n] - GrpStart[n]);
     end
     else
     begin
@@ -5836,12 +5840,18 @@ begin
     Inc(p);
     p1 := p;
     n := -1;
+    GroupFound := False;
     if Ch = SubstituteGroupChar then
-      FindSubstGroupIndex(p, n);
-    if (n >= 0) then
+      FindSubstGroupIndex(p, n, GroupFound);
+    if GroupFound then
     begin
-      p0 := GrpStart[n];
-      p1 := GrpEnd[n];
+      if n >= 0 then
+      begin
+        p0 := GrpStart[n];
+        p1 := GrpEnd[n];
+      end
+      else
+        p1 := p0;
     end
     else
     begin
