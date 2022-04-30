@@ -6,6 +6,12 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.155 2022.04.28
+ -=- (-) Fix Substitute() result for not-real group index like '$9' in regex '(b)'.
+  By Alexey Torgashin.
+ -=- (-) Fix UnQuoteChar() range check for Substitute() call.
+  By @delphicz and Alexey T.
+
  v. 1.153 2021.07.04
  -=- (^) Compatability with Delphi 7. By Alexey Torgashin.
 
