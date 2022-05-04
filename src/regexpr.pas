@@ -884,13 +884,12 @@ const
   {$ENDIF}
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
 
-function IsPairedBreak(p: PRegExprChar): boolean;
-          {$IFDEF 2009}{$IFDEF InlineFuncs}inline;{$ENDIF}{$ENDIF}
-          {$IFDEF FPC}inline;{$ENDIF}
-const
-  cBreak = {$IFDEF Unicode} $000D000A; {$ELSE} $0D0A; {$ENDIF}
 type
   PtrPair = {$IFDEF Unicode} ^LongInt; {$ELSE} ^Word; {$ENDIF}
+
+function IsPairedBreak(p: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+const
+  cBreak = {$IFDEF Unicode} $000D000A; {$ELSE} $0D0A; {$ENDIF}
 begin
   Result := PtrPair(p)^ = cBreak;
 end;
