@@ -111,7 +111,6 @@ interface
 {$IFDEF FPC} {$DEFINE InlineFuncs} {$ENDIF}
 
 uses
-  Classes, // TStrings in Split method
   SysUtils, // Exception
   {$IFDEF D2009}
     {$IFDEF D_XE}
@@ -120,7 +119,7 @@ uses
     Character,
     {$ENDIF}
   {$ENDIF}
-  Math;
+  Classes; // TStrings in Split method
 
 type
   {$IFNDEF FPC}
@@ -351,8 +350,10 @@ type
     // Exec() param ASlowChecks is set to True, when Length(InputString)<SlowChecksSizeMax
     // This ASlowChecks enables to use regMustString optimization
 
-    {$IFNDEF UniCode}
-    fLineSepArray: array[byte] of boolean;
+    {$IFDEF UseLineSep}
+      {$IFNDEF UniCode}
+      fLineSepArray: array[byte] of boolean;
+      {$ENDIF}
     {$ENDIF}
 
     CharCheckers: TRegExprCharCheckerArray;
@@ -819,7 +820,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 155;
+  REVersionMinor = 156;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -2667,9 +2668,12 @@ begin
           ch := ABuffer^;
           Inc(ABuffer);
           ch2 := ABuffer^;
+          {$IFDEF UniCode}
+          if Ord(ch2) > $FF then
+            ch2 := REChar($FF);
+          {$ENDIF}
           Inc(ABuffer);
-          for i := Ord(ch) to
-            {$IFDEF UniCode} Min(Ord(ch2), $FF) {$ELSE} Ord(ch2) {$ENDIF} do
+          for i := Ord(ch) to Ord(ch2) do
           begin
             Include(ARes, byte(i));
             if AIgnoreCase then
@@ -4325,7 +4329,10 @@ var
   TheMax: PtrInt; // PtrInt, gets diff of 2 pointers
   InvChar: REChar;
   CurStart, CurEnd: PRegExprChar;
-  ArrayIndex, i: integer;
+  ArrayIndex: integer;
+  {$IFDEF UnicodeEx}
+  i: integer;
+  {$ENDIF}
 begin
   Result := 0;
   scan := regInput; // points into InputString
@@ -5713,6 +5720,7 @@ var
     GrpName: RegExprString;
   begin
     Result := 0;
+    GrpName := '';
     p := APtr;
     Delimited := (p < TemplateEnd) and (p^ = '{');
     if Delimited then
@@ -6012,7 +6020,10 @@ var
   opnd: PRegExprChar;
   Oper: TREOp;
   ch: REChar;
-  min_cnt, i: integer;
+  min_cnt: integer;
+  {$IFDEF UseLineSep}
+  i: integer;
+  {$ENDIF}
   TempSet: TRegExprCharset;
 begin
   TempSet := [];
