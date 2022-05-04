@@ -409,7 +409,7 @@
 {$ENDIF} // D 10.4
 
 {$IFDEF VER350}
-  {$DEFINE D_105}
+  {$DEFINE D_110}
   {$DEFINE D_104}
   {$DEFINE D_103}
   {$DEFINE D_102}
@@ -435,7 +435,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 10.5
+{$ENDIF} // D 11.0
 
 
 {$IFDEF D6}
