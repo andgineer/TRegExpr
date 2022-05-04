@@ -124,9 +124,16 @@ uses
 type
   {$IFNDEF FPC}
   // Delphi doesn't have PtrInt but has NativeInt
-  PtrInt = NativeInt;
-  PtrUInt = NativeInt;
+  // but unfortunately NativeInt is declared wrongly in several versions
+    {$IF SizeOf(Pointer)=4}
+    PtrInt = Integer;
+    PtrUInt = Cardinal;
+    {$ELSE}
+    PtrInt = Int64;
+    PtrUInt = UInt64;
+    {$IFEND}
   {$ENDIF}
+
   {$IFDEF UnicodeRE}
   PRegExprChar = PWideChar;
   {$IFDEF FPC}
