@@ -75,7 +75,7 @@ interface
   {$INLINE ON}
 {$ENDIF}
 // ======== Define options for TRegExpr engine
-{$DEFINE Unicode} // Use WideChar for characters and UnicodeString/WideString for strings
+{$DEFINE UnicodeRE} // Use WideChar for characters and UnicodeString/WideString for strings
 { off $DEFINE UnicodeEx} // Support Unicode >0xFFFF, e.g. emoji, e.g. "." must find 2 WideChars of 1 emoji
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_' 
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
@@ -89,7 +89,7 @@ interface
   {$DEFINE reRealExceptionAddr} // Exceptions will point to appropriate source line, not to Error procedure
 {$ENDIF}
 {$DEFINE ComplexBraces} // Support braces in complex cases
-{$IFNDEF Unicode}
+{$IFNDEF UnicodeRE}
   {$UNDEF UnicodeEx}
   {$UNDEF FastUnicodeData}
 {$ENDIF}
@@ -127,7 +127,7 @@ type
   PtrInt = NativeInt;
   PtrUInt = NativeInt;
   {$ENDIF}
-  {$IFDEF UniCode}
+  {$IFDEF UnicodeRE}
   PRegExprChar = PWideChar;
   {$IFDEF FPC}
   RegExprString = UnicodeString;
@@ -179,7 +179,7 @@ const
   {$IFDEF UseLineSep}
   // default value for LineSeparators
   RegExprLineSeparators: RegExprString = #$d#$a#$b#$c
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     + #$2028#$2029#$85
     {$ENDIF};
   {$ENDIF}
@@ -187,7 +187,7 @@ const
   // Tab and Unicode category "Space Separator":
   // https://www.compart.com/en/unicode/category/Zs
   RegExprHorzSeparators: RegExprString = #9#$20#$A0
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     + #$1680#$2000#$2001#$2002#$2003#$2004#$2005#$2006#$2007#$2008#$2009#$200A#$202F#$205F#$3000
     {$ENDIF};
 
@@ -351,7 +351,7 @@ type
     // This ASlowChecks enables to use regMustString optimization
 
     {$IFDEF UseLineSep}
-      {$IFNDEF UniCode}
+      {$IFNDEF UnicodeRE}
       fLineSepArray: array[byte] of boolean;
       {$ENDIF}
     {$ENDIF}
@@ -606,7 +606,7 @@ type
     function ExecPos(AOffset: integer; ATryOnce: boolean): boolean; overload; deprecated 'Use modern form of ExecPos()';
     class function InvertCaseFunction(const Ch: REChar): REChar; deprecated 'This has no effect now';
     property InvertCase: TRegExprInvertCaseFunction read fInvertCase write fInvertCase; deprecated 'This has no effect now';
-    property UseUnicodeWordDetection: boolean read fUseUnicodeWordDetection write fUseUnicodeWordDetection; deprecated 'This has no effect, use {$DEFINE Unicode} instead';
+    property UseUnicodeWordDetection: boolean read fUseUnicodeWordDetection write fUseUnicodeWordDetection; deprecated 'This has no effect, use {$DEFINE UnicodeRE} instead';
     property LinePairedSeparator: RegExprString read GetLinePairedSeparator write SetLinePairedSeparator; deprecated 'This has no effect now';
     property EmptyInputRaisesError: boolean read fEmptyInputRaisesError write fEmptyInputRaisesError; deprecated 'This has no effect now';
     property UseOsLineEndOnReplace: boolean read fUseOsLineEndOnReplace write SetUseOsLineEndOnReplace; deprecated 'Use property ReplaceLineEnd instead';
@@ -836,7 +836,7 @@ const
   RegExprUpperAzSet = [Ord('A') .. Ord('Z')];
   RegExprAllAzSet = RegExprLowerAzSet + RegExprUpperAzSet;
   RegExprSpaceSet = [Ord(' '), $9, $A, $D, $C];
-  RegExprLineSeparatorsSet = [$d, $a, $b, $c] {$IFDEF UniCode} + [$85] {$ENDIF};
+  RegExprLineSeparatorsSet = [$d, $a, $b, $c] {$IFDEF UnicodeRE} + [$85] {$ENDIF};
   RegExprHorzSeparatorsSet = [9, $20, $A0];
 
   MaxBracesArg = $7FFFFFFF - 1; // max value for {n,m} arguments //###0.933
@@ -886,11 +886,11 @@ const
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
 
 type
-  PtrPair = {$IFDEF Unicode} ^LongInt; {$ELSE} ^Word; {$ENDIF}
+  PtrPair = {$IFDEF UnicodeRE} ^LongInt; {$ELSE} ^Word; {$ENDIF}
 
 function IsPairedBreak(p: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 const
-  cBreak = {$IFDEF Unicode} $000D000A; {$ELSE} $0D0A; {$ENDIF}
+  cBreak = {$IFDEF UnicodeRE} $000D000A; {$ELSE} $0D0A; {$ENDIF}
 begin
   Result := PtrPair(p)^ = cBreak;
 end;
@@ -975,13 +975,13 @@ begin
     Exit;
 
   {$IFDEF FPC}
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     Result := UnicodeUpperCase(Ch)[1];
     {$ELSE}
     Result := AnsiUpperCase(Ch)[1];
     {$ENDIF}
   {$ELSE}
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
       {$IFDEF D_XE4}
     Result := Ch.ToUpper;
       {$ELSE}
@@ -1007,13 +1007,13 @@ begin
     Exit;
 
   {$IFDEF FPC}
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     Result := UnicodeLowerCase(Ch)[1];
     {$ELSE}
     Result := AnsiLowerCase(Ch)[1];
     {$ENDIF}
   {$ELSE}
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
       {$IFDEF D_XE4}
     Result := Ch.ToLower;
       {$ELSE}
@@ -1373,7 +1373,7 @@ begin
           begin
             // skip eXtended comments
             while (i <= Len) and (ARegExpr[i] <> #$d) and (ARegExpr[i] <> #$a)
-            // do not use [#$d, #$a] due to UniCode compatibility
+            // do not use [#$d, #$a] due to Unicode compatibility
               do
               Inc(i);
             while (i + 1 <= Len) and
@@ -1488,7 +1488,7 @@ const
   OP_SUBCALL = Succ(OP_CLOSE_LAST); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_SUBCALL_FIRST = Succ(OP_SUBCALL);
   OP_SUBCALL_LAST =
-    {$IFDEF Unicode}
+    {$IFDEF UnicodeRE}
     TReOp(Ord(OP_SUBCALL) + RegexMaxGroups - 1);
     {$ELSE}
     High(REChar); // must fit to 0..255 range
@@ -2133,7 +2133,7 @@ end;
 function TRegExpr.IsCustomLineSeparator(AChar: REChar): boolean;
 begin
   {$IFDEF UseLineSep}
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     Result := Pos(AChar, fLineSeparators) > 0;
     {$ELSE}
     Result := fLineSepArray[byte(AChar)];
@@ -2141,7 +2141,7 @@ begin
   {$ELSE}
   case AChar of
     #$d, #$a,
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     #$85, #$2028, #$2029,
     {$ENDIF}
     #$b, #$c:
@@ -2168,7 +2168,7 @@ begin
   case AChar of
     #9, #$20, #$A0:
       Result := True;
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     #$1680, #$2000 .. #$200A, #$202F, #$205F, #$3000:
       Result := True;
     {$ENDIF}
@@ -2182,7 +2182,7 @@ begin
   case AChar of
     #$d, #$a, #$b, #$c:
       Result := True;
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     #$2028, #$2029, #$85:
       Result := True;
     {$ENDIF}
@@ -2215,12 +2215,12 @@ end; { of procedure TRegExpr.Compile
 
 {$IFDEF UseLineSep}
 procedure TRegExpr.InitLineSepArray;
-{$IFNDEF UniCode}
+{$IFNDEF UnicodeRE}
 var
   i: integer;
 {$ENDIF}
 begin
-  {$IFNDEF UniCode}
+  {$IFNDEF UnicodeRE}
   FillChar(fLineSepArray, SizeOf(fLineSepArray), 0);
   for i := 1 to Length(fLineSeparators) do
     fLineSepArray[byte(fLineSeparators[i])] := True;
@@ -2274,7 +2274,7 @@ begin
     // work around PWideChar subtraction bug (Delphi uses
     // shr after subtraction to calculate widechar distance %-( )
     // so, if difference is negative we have .. the "feature" :(
-    // I could wrap it in $IFDEF UniCode, but I didn't because
+    // I could wrap it in $IFDEF UnicodeRE, but I didn't because
     // "P – Q computes the difference between the address given
     // by P (the higher address) and the address given by Q (the
     // lower address)" - Delphi help quotation.
@@ -2494,7 +2494,7 @@ const
   FLAG_SIMPLE = 2; // Simple enough to be OP_STAR/OP_PLUS/OP_BRACES operand
   FLAG_SPECSTART = 4; // Starts with * or +
 
-  {$IFDEF UniCode}
+  {$IFDEF UnicodeRE}
   RusRangeLoLow = #$430; // 'а'
   RusRangeLoHigh = #$44F; // 'я'
   RusRangeHiLow = #$410; // 'А'
@@ -2617,7 +2617,7 @@ begin
   for i := 1 to Length(fWordChars) do
   begin
     ch := fWordChars[i];
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     if Ord(ch) <= $FF then
     {$ENDIF}
       Include(ARes, byte(ch));
@@ -2639,7 +2639,7 @@ begin
   for i := 1 to Length(fSpaceChars) do
   begin
     ch := fSpaceChars[i];
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     if Ord(ch) <= $FF then
     {$ENDIF}
       Include(ARes, byte(ch));
@@ -2668,7 +2668,7 @@ begin
           ch := ABuffer^;
           Inc(ABuffer);
           ch2 := ABuffer^;
-          {$IFDEF UniCode}
+          {$IFDEF UnicodeRE}
           if Ord(ch2) > $FF then
             ch2 := REChar($FF);
           {$ENDIF}
@@ -2757,7 +2757,7 @@ begin
           begin
             ch := ABuffer^;
             Inc(ABuffer);
-            {$IFDEF UniCode}
+            {$IFDEF UnicodeRE}
             if Ord(ch) <= $FF then
             {$ENDIF}
             begin
@@ -5597,7 +5597,7 @@ begin
   if ATryOnce or (regAnchored <> #0) then
   begin
     {$IFDEF UseFirstCharSet}
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     if Ord(Ptr^) <= $FF then
     {$ENDIF}
       if not FirstCharArray[byte(Ptr^)] then
@@ -5628,7 +5628,7 @@ begin
     end;
 
     {$IFDEF UseFirstCharSet}
-    {$IFDEF UniCode}
+    {$IFDEF UnicodeRE}
     if Ord(Ptr^) <= $FF then
     {$ENDIF}
       if not FirstCharArray[byte(Ptr^)] then
@@ -6140,7 +6140,7 @@ begin
       OP_EXACTLYCI:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
-          {$IFDEF UniCode}
+          {$IFDEF UnicodeRE}
           if Ord(ch) <= $FF then
           {$ENDIF}
           begin
@@ -6153,7 +6153,7 @@ begin
       OP_EXACTLY:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
-          {$IFDEF UniCode}
+          {$IFDEF UnicodeRE}
           if Ord(ch) <= $FF then
           {$ENDIF}
             Include(FirstCharSet, byte(ch));
