@@ -814,7 +814,7 @@ function QuoteRegExprMetaChars(const AStr: RegExprString): RegExprString;
 // n      At position n was found closing bracket ')' without
 // corresponding opening '('.
 // If Result <> 0, then ASubExpr can contain empty items or illegal ones
-function RegExprSubExpressions(const ARegExpr: string; ASubExprs: TStrings;
+function RegExprSubExpressions(const ARegExpr: RegExprString; ASubExprs: TStrings;
   AExtendedSyntax: boolean{$IFDEF DefParam} = False{$ENDIF}): integer;
 
 implementation
@@ -1268,7 +1268,7 @@ begin
 end; { of function QuoteRegExprMetaChars
   -------------------------------------------------------------- }
 
-function RegExprSubExpressions(const ARegExpr: string; ASubExprs: TStrings;
+function RegExprSubExpressions(const ARegExpr: RegExprString; ASubExprs: TStrings;
   AExtendedSyntax: boolean{$IFDEF DefParam} = False{$ENDIF}): integer;
 type
   TStackItemRec = record // ###0.945
