@@ -3621,6 +3621,7 @@ begin
   FlagTemp := 0;
   FlagParse := FLAG_WORST;
   AddrOfLen := nil;
+  GrpIndex := -1;
 
   Inc(regParse);
   case (regParse - 1)^ of
