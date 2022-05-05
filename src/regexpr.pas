@@ -147,9 +147,9 @@ type
   {$ENDIF}
   REChar = WideChar;
   {$ELSE}
-  PRegExprChar = PChar;
+  PRegExprChar = PAnsiChar;
   RegExprString = AnsiString;
-  REChar = Char;
+  REChar = AnsiChar;
   {$ENDIF}
   TREOp = REChar; // internal opcode type
   PREOp = ^TREOp;
