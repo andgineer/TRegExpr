@@ -76,6 +76,12 @@ interface
 {$ENDIF}
 // ======== Define options for TRegExpr engine
 {$DEFINE UnicodeRE} // Use WideChar for characters and UnicodeString/WideString for strings
+{$IFDEF UNICODE}
+  {$IFNDEF UnicodeRE}
+  {$MESSAGE ERROR 'You cannot undefine UnicodeRE for Unicode Delphi versions'}
+  {$ENDIF}
+{$ENDIF}
+
 { off $DEFINE UnicodeEx} // Support Unicode >0xFFFF, e.g. emoji, e.g. "." must find 2 WideChars of 1 emoji
 { off $DEFINE UseWordChars} // Use WordChars property, otherwise fixed list 'a'..'z','A'..'Z','0'..'9','_' 
 { off $DEFINE UseSpaceChars} // Use SpaceChars property, otherwise fixed list
