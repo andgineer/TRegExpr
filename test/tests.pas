@@ -102,7 +102,7 @@ type
     procedure RunTest49;
     procedure RunTest50;
     procedure TestGroups;
-    {$IFDEF Unicode}
+    {$IFDEF UnicodeRE}
     procedure RunTest51unicode;
     procedure RunTest52unicode;
     procedure RunTest70russian;
@@ -1060,7 +1060,7 @@ begin
   RunRETest(50);
 end;
 
-{$IFDEF Unicode}
+{$IFDEF UnicodeRE}
 procedure TTestRegexpr.RunTest51unicode;
 begin
   RunRETest(51);
