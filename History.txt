@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.157 2022.05.30
+ -=- (-) Fix Substitute() result when 'regex subroutine' (?1) is used.
+  Reported by Konstantin Vlasov, fixed by Alexey Torgashin.
+
  v. 1.156 2022.05.04
  -=- (^) Compatability with Delphi 2007 (maybe D2005 too); fixed compiler warnings.
  -=- (^) Renamed compiler define 'Unicode' to 'UnicodeRE' since 'Unicode'
