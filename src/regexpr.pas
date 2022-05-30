@@ -321,6 +321,7 @@ type
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
     regCurrentGrp: integer; // index of group handling by OP_OPEN* opcode
+    regRecursionLevel: integer;
 
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
@@ -5104,10 +5105,11 @@ begin
         begin
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
-          save := GrpStart[no]; // ###0.936
-          GrpStart[no] := regInput; // ###0.936
+          save := GrpStart[no];
+          if regRecursionLevel = 0 then
+            GrpStart[no] := regInput;
           Result := MatchPrim(next);
-          if not Result then // ###0.936
+          if not Result then
             GrpStart[no] := save;
           // handle negative lookahead
           if regLookaheadNeg then
@@ -5135,8 +5137,9 @@ begin
           // (we are here because some OP_BRANCH is matched)
           if GrpAtomic[no] then
             GrpAtomicDone[no] := True;
-          save := GrpEnd[no]; // ###0.936
-          GrpEnd[no] := regInput; // ###0.936
+          save := GrpEnd[no];
+          if regRecursionLevel = 0 then
+            GrpEnd[no] := regInput;
 
           // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
           // in OP_CLOSE, without going to next opcode
@@ -5420,7 +5423,10 @@ begin
       OP_RECUR:
         begin
           // call opcode start
-          if not MatchPrim(regCodeWork) then Exit;
+          Inc(regRecursionLevel);
+          bound1 := MatchPrim(regCodeWork);
+          Dec(regRecursionLevel);
+          if not bound1 then Exit;
         end;
 
       OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
@@ -5433,12 +5439,11 @@ begin
           checkAtomicGroup := GrpSubCalled[no];
           // mark group in GrpSubCalled array so opcode can detect subcall
           GrpSubCalled[no] := True;
-          if not MatchPrim(save) then
-          begin
-            GrpSubCalled[no] := checkAtomicGroup;
-            Exit;
-          end;
+          Inc(regRecursionLevel);
+          bound1 := MatchPrim(save);
+          Dec(regRecursionLevel);
           GrpSubCalled[no] := checkAtomicGroup;
+          if not bound1 then Exit;
         end;
 
     else
@@ -5510,6 +5515,7 @@ begin
   regInput := APos;
   regCurrentGrp := -1;
   regNestedCalls := 0;
+  regRecursionLevel := 0;
   Result := MatchPrim(regCodeWork);
   if Result then
   begin
