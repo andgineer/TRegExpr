@@ -75,11 +75,6 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <OtherDefines Count="1">
-        <Define0 Value="UNICODE"/>
-      </OtherDefines>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions>

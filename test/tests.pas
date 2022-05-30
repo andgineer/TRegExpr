@@ -126,6 +126,7 @@ type
     procedure RunTest69;
     procedure RunTest70;
     procedure RunTest71;
+    procedure RunTest72;
   end;
 
 implementation
@@ -159,7 +160,7 @@ end;
 
 
 const
-  testCases: array [1 .. 71] of TRegExTest = (
+  testCases: array [1 .. 72] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -721,12 +722,20 @@ const
     matchStart: 1
     ),
     // 71
-    (
+    ( // sub-routine
     expression: '(\w+)_(?1)';
     inputText: '==abc_de==';
     substitutionText: '$1';
     expectedResult: '==abc==';
     matchStart: 3
+    ),
+    // 72
+    ( // recursion with back-reference
+    expression: '(\w+)(?R)?\1';
+    inputText: '=abcba=12344321=';
+    substitutionText: '';
+    expectedResult: '12344321';
+    matchStart: 8
     )
   );
 
@@ -1191,6 +1200,11 @@ end;
 procedure TTestRegexpr.RunTest71;
 begin
   RunRETest(71);
+end;
+
+procedure TTestRegexpr.RunTest72;
+begin
+  RunRETest(72);
 end;
 
 
