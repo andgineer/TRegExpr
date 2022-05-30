@@ -4742,10 +4742,10 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // by recursion.
 
 var
-  scan: PRegExprChar; // Current node.
-  next: PRegExprChar; // Next node.
+  scan: PRegExprChar; // current node
+  next: PRegExprChar; // next node
   Len: PtrInt;
-  opnd: PRegExprChar;
+  opnd, opGrpEnd: PRegExprChar;
   no: integer;
   save: PRegExprChar;
   saveCurrentGrp: integer;
@@ -5015,13 +5015,14 @@ begin
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
-          if GrpBounds[regRecursion].GrpStart[no] = nil then
+          opnd := GrpBounds[regRecursion].GrpStart[no];
+          if opnd = nil then
             Exit;
-          if GrpBounds[regRecursion].GrpEnd[no] = nil then
+          opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
+          if opGrpEnd = nil then
             Exit;
           save := regInput;
-          opnd := GrpBounds[regRecursion].GrpStart[no];
-          while opnd < GrpBounds[regRecursion].GrpEnd[no] do
+          while opnd < opGrpEnd do
           begin
             if (save >= fInputEnd) or (save^ <> opnd^) then
               Exit;
@@ -5037,13 +5038,14 @@ begin
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
-          if GrpBounds[regRecursion].GrpStart[no] = nil then
+          opnd := GrpBounds[regRecursion].GrpStart[no];
+          if opnd = nil then
             Exit;
-          if GrpBounds[regRecursion].GrpEnd[no] = nil then
+          opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
+          if opGrpEnd = nil then
             Exit;
           save := regInput;
-          opnd := GrpBounds[regRecursion].GrpStart[no];
-          while opnd < GrpBounds[regRecursion].GrpEnd[no] do
+          while opnd < opGrpEnd do
           begin
             if (save >= fInputEnd) or
               ((save^ <> opnd^) and (save^ <> InvertCase(opnd^))) then
