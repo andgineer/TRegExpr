@@ -210,14 +210,18 @@ const
   RegExprLookbehindIsAtomic: boolean = True;
 
 const
-  RegexMaxGroups = 90;
   // Max number of groups.
   // Be carefull - don't use values which overflow OP_CLOSE* opcode
   // (in this case you'll get compiler error).
   // Big value causes slower work and more stack required.
-  RegexMaxMaxGroups = 255;
+  RegexMaxGroups = 90;
+
   // Max possible value for RegexMaxGroups.
   // Don't change it! It's defined by internal TRegExpr design.
+  RegexMaxMaxGroups = 255;
+
+  // Max depth of recursion for (?R) and (?1)..(?9)
+  RegexMaxRecursion = 20;
 
 {$IFDEF ComplexBraces}
 const
@@ -266,13 +270,17 @@ type
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
   {$ENDIF}
 
+  TRegExprBounds = record
+    GrpStart: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group start in InputString
+    GrpEnd: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group end in InputString
+  end;
+  TRegExprBoundsArray = array[0 .. RegexMaxRecursion] of TRegExprBounds;
+
   { TRegExpr }
 
   TRegExpr = class
   private
-    GrpStart: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group start in InputString
-    GrpEnd: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group end in InputString
-
+    GrpBounds: TRegExprBoundsArray;
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
     GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
@@ -321,6 +329,7 @@ type
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
     regCurrentGrp: integer; // index of group handling by OP_OPEN* opcode
+    regRecursion: integer; // current level of recursion (?R) (?1); always 0 if no recursion is used
 
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
@@ -832,7 +841,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 156;
+  REVersionMinor = 158;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1817,7 +1826,7 @@ end; { of procedure TRegExpr.SetExpression
 function TRegExpr.GetSubExprCount: integer;
 begin
   // if nothing found, we must return -1 per TRegExpr docs
-  if GrpStart[0] = nil then
+  if GrpBounds[0].GrpStart[0] = nil then
     Result := -1
   else
     Result := GrpCount;
@@ -1826,8 +1835,8 @@ end;
 function TRegExpr.GetMatchPos(Idx: integer): PtrInt;
 begin
   Idx := GrpIndexes[Idx];
-  if (Idx >= 0) and (GrpStart[Idx] <> nil) then
-    Result := GrpStart[Idx] - fInputStart + 1
+  if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
+    Result := GrpBounds[0].GrpStart[Idx] - fInputStart + 1
   else
     Result := -1;
 end; { of function TRegExpr.GetMatchPos
@@ -1836,8 +1845,8 @@ end; { of function TRegExpr.GetMatchPos
 function TRegExpr.GetMatchLen(Idx: integer): PtrInt;
 begin
   Idx := GrpIndexes[Idx];
-  if (Idx >= 0) and (GrpStart[Idx] <> nil) then
-    Result := GrpEnd[Idx] - GrpStart[Idx]
+  if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
+    Result := GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx]
   else
     Result := -1;
 end; { of function TRegExpr.GetMatchLen
@@ -1847,8 +1856,8 @@ function TRegExpr.GetMatch(Idx: integer): RegExprString;
 begin
   Result := '';
   Idx := GrpIndexes[Idx];
-  if (Idx >= 0) and (GrpEnd[Idx] > GrpStart[Idx]) then
-    SetString(Result, GrpStart[Idx], GrpEnd[Idx] - GrpStart[Idx]);
+  if (Idx >= 0) and (GrpBounds[0].GrpEnd[Idx] > GrpBounds[0].GrpStart[Idx]) then
+    SetString(Result, GrpBounds[0].GrpStart[Idx], GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx]);
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
 
@@ -4413,10 +4422,10 @@ begin
         ArrayIndex := GrpIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
           Exit;
-        CurStart := GrpStart[ArrayIndex];
+        CurStart := GrpBounds[regRecursion].GrpStart[ArrayIndex];
         if CurStart = nil then
           Exit;
-        CurEnd := GrpEnd[ArrayIndex];
+        CurEnd := GrpBounds[regRecursion].GrpEnd[ArrayIndex];
         if CurEnd = nil then
           Exit;
         repeat
@@ -4438,10 +4447,10 @@ begin
         ArrayIndex := GrpIndexes[Ord(opnd^)];
         if ArrayIndex < 0 then
           Exit;
-        CurStart := GrpStart[ArrayIndex];
+        CurStart := GrpBounds[regRecursion].GrpStart[ArrayIndex];
         if CurStart = nil then
           Exit;
-        CurEnd := GrpEnd[ArrayIndex];
+        CurEnd := GrpBounds[regRecursion].GrpEnd[ArrayIndex];
         if CurEnd = nil then
           Exit;
         repeat
@@ -4733,19 +4742,19 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
 // by recursion.
 
 var
-  scan: PRegExprChar; // Current node.
-  next: PRegExprChar; // Next node.
+  scan: PRegExprChar; // current node
+  next: PRegExprChar; // next node
   Len: PtrInt;
-  opnd: PRegExprChar;
+  opnd, opGrpEnd: PRegExprChar;
   no: integer;
   save: PRegExprChar;
   saveCurrentGrp: integer;
   nextch: REChar;
   BracesMin, BracesMax: integer;
-  // we use integer instead of TREBracesArg for better support */+
+  // we use integer instead of TREBracesArg to better support */+
   {$IFDEF ComplexBraces}
-  SavedLoopStack: TRegExprLoopStack; // :(( very bad for recursion
-  SavedLoopStackIdx: integer; // ###0.925
+  SavedLoopStack: TRegExprLoopStack; // very bad for recursion
+  SavedLoopStackIdx: integer;
   {$ENDIF}
   bound1, bound2: boolean;
   checkAtomicGroup: boolean;
@@ -5006,13 +5015,14 @@ begin
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
-          if GrpStart[no] = nil then
+          opnd := GrpBounds[regRecursion].GrpStart[no];
+          if opnd = nil then
             Exit;
-          if GrpEnd[no] = nil then
+          opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
+          if opGrpEnd = nil then
             Exit;
           save := regInput;
-          opnd := GrpStart[no];
-          while opnd < GrpEnd[no] do
+          while opnd < opGrpEnd do
           begin
             if (save >= fInputEnd) or (save^ <> opnd^) then
               Exit;
@@ -5028,13 +5038,14 @@ begin
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
-          if GrpStart[no] = nil then
+          opnd := GrpBounds[regRecursion].GrpStart[no];
+          if opnd = nil then
             Exit;
-          if GrpEnd[no] = nil then
+          opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
+          if opGrpEnd = nil then
             Exit;
           save := regInput;
-          opnd := GrpStart[no];
-          while opnd < GrpEnd[no] do
+          while opnd < opGrpEnd do
           begin
             if (save >= fInputEnd) or
               ((save^ <> opnd^) and (save^ <> InvertCase(opnd^))) then
@@ -5104,11 +5115,11 @@ begin
         begin
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
-          save := GrpStart[no]; // ###0.936
-          GrpStart[no] := regInput; // ###0.936
+          save := GrpBounds[regRecursion].GrpStart[no];
+          GrpBounds[regRecursion].GrpStart[no] := regInput;
           Result := MatchPrim(next);
-          if not Result then // ###0.936
-            GrpStart[no] := save;
+          if not Result then
+            GrpBounds[regRecursion].GrpStart[no] := save;
           // handle negative lookahead
           if regLookaheadNeg then
             if no = regLookaheadGroup then
@@ -5118,11 +5129,11 @@ begin
               begin
                 // we need zero length of "lookahead group",
                 // it is later used to adjust the match
-                GrpStart[no] := regInput;
-                GrpEnd[no]:= regInput;
+                GrpBounds[regRecursion].GrpStart[no] := regInput;
+                GrpBounds[regRecursion].GrpEnd[no]:= regInput;
               end
               else
-                GrpStart[no] := save;
+                GrpBounds[regRecursion].GrpStart[no] := save;
             end;
           Exit;
         end;
@@ -5135,8 +5146,8 @@ begin
           // (we are here because some OP_BRANCH is matched)
           if GrpAtomic[no] then
             GrpAtomicDone[no] := True;
-          save := GrpEnd[no]; // ###0.936
-          GrpEnd[no] := regInput; // ###0.936
+          save := GrpBounds[regRecursion].GrpEnd[no];
+          GrpBounds[regRecursion].GrpEnd[no] := regInput;
 
           // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
           // in OP_CLOSE, without going to next opcode
@@ -5148,7 +5159,7 @@ begin
 
           Result := MatchPrim(next);
           if not Result then // ###0.936
-            GrpEnd[no] := save;
+            GrpBounds[regRecursion].GrpEnd[no] := save;
           Exit;
         end;
 
@@ -5420,7 +5431,15 @@ begin
       OP_RECUR:
         begin
           // call opcode start
-          if not MatchPrim(regCodeWork) then Exit;
+          if regRecursion < RegexMaxRecursion then
+          begin
+            Inc(regRecursion);
+            bound1 := MatchPrim(regCodeWork);
+            Dec(regRecursion);
+          end
+          else
+            bound1 := False;
+          if not bound1 then Exit;
         end;
 
       OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
@@ -5430,15 +5449,19 @@ begin
           if no < 0 then Exit;
           save := GrpOpCodes[no];
           if save = nil then Exit;
-          checkAtomicGroup := GrpSubCalled[no];
-          // mark group in GrpSubCalled array so opcode can detect subcall
-          GrpSubCalled[no] := True;
-          if not MatchPrim(save) then
+          if regRecursion < RegexMaxRecursion then
           begin
+            // mark group in GrpSubCalled array so opcode can detect subcall
+            checkAtomicGroup := GrpSubCalled[no];
+            GrpSubCalled[no] := True;
+            Inc(regRecursion);
+            bound1 := MatchPrim(save);
+            Dec(regRecursion);
             GrpSubCalled[no] := checkAtomicGroup;
-            Exit;
-          end;
-          GrpSubCalled[no] := checkAtomicGroup;
+          end
+          else
+            bound1 := False;
+          if not bound1 then Exit;
         end;
 
     else
@@ -5510,27 +5533,26 @@ begin
   regInput := APos;
   regCurrentGrp := -1;
   regNestedCalls := 0;
+  regRecursion := 0;
   Result := MatchPrim(regCodeWork);
   if Result then
   begin
-    GrpStart[0] := APos;
-    GrpEnd[0] := regInput;
+    GrpBounds[0].GrpStart[0] := APos;
+    GrpBounds[0].GrpEnd[0] := regInput;
 
     // with lookbehind, increase found position by the len of group=1
     if regLookbehind then
-      Inc(GrpStart[0], GrpEnd[1] - GrpStart[1]);
+      Inc(GrpBounds[0].GrpStart[0], GrpBounds[0].GrpEnd[1] - GrpBounds[0].GrpStart[1]);
 
     // with lookahead, decrease ending by the len of group=regLookaheadGroup
     if regLookahead and (regLookaheadGroup > 0) then
-      Dec(GrpEnd[0], GrpEnd[regLookaheadGroup] - GrpStart[regLookaheadGroup]);
+      Dec(GrpBounds[0].GrpEnd[0], GrpBounds[0].GrpEnd[regLookaheadGroup] - GrpBounds[0].GrpStart[regLookaheadGroup]);
   end;
 end;
 
 procedure TRegExpr.ClearMatches;
 begin
-  FillChar(GrpStart, SizeOf(GrpStart), 0);
-  FillChar(GrpEnd, SizeOf(GrpEnd), 0);
-
+  FillChar(GrpBounds, SizeOf(GrpBounds), 0);
   FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
 end;
@@ -5539,9 +5561,7 @@ procedure TRegExpr.ClearInternalIndexes;
 var
   i: integer;
 begin
-  FillChar(GrpStart, SizeOf(GrpStart), 0);
-  FillChar(GrpEnd, SizeOf(GrpEnd), 0);
-
+  FillChar(GrpBounds, SizeOf(GrpBounds), 0);
   FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
   FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
@@ -5661,8 +5681,8 @@ var
   PtrBegin, PtrEnd: PRegExprChar;
   Offset: PtrInt;
 begin
-  PtrBegin := GrpStart[0];
-  PtrEnd := GrpEnd[0];
+  PtrBegin := GrpBounds[0].GrpStart[0];
+  PtrEnd := GrpBounds[0].GrpEnd[0];
   if (PtrBegin = nil) or (PtrEnd = nil) then
   begin
     Error(reeExecNextWithoutExec);
@@ -5811,7 +5831,7 @@ begin
     if GroupFound then
     begin
       if n >= 0 then
-        Inc(ResultLen, GrpEnd[n] - GrpStart[n]);
+        Inc(ResultLen, GrpBounds[0].GrpEnd[n] - GrpBounds[0].GrpStart[n]);
     end
     else
     begin
@@ -5869,8 +5889,8 @@ begin
     begin
       if n >= 0 then
       begin
-        p0 := GrpStart[n];
-        p1 := GrpEnd[n];
+        p0 := GrpBounds[0].GrpStart[n];
+        p1 := GrpBounds[0].GrpEnd[n];
       end
       else
         p1 := p0;
