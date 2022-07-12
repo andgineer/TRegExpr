@@ -69,7 +69,6 @@ interface
 {$BOOLEVAL OFF}
 {$EXTENDEDSYNTAX ON}
 {$LONGSTRINGS ON}
-{$OPTIMIZATION ON}
 {$IFDEF FPC}
   {$MODE DELPHI} // Delphi-compatible mode in FreePascal
   {$INLINE ON}
@@ -1716,6 +1715,8 @@ begin
       Result := 'TRegExpr exec: invalid opcode in char class';
     reeDumpCorruptedOpcode:
       Result := 'TRegExpr dump: corrupted opcode';
+    reeModifierUnsupported:
+      Result := 'TRegExpr compile: incorrect  modifier';
     reeLoopStackExceeded:
       Result := 'TRegExpr exec: loop stack exceeded';
     reeLoopWithoutEntry:
