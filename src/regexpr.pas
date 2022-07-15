@@ -972,12 +972,12 @@ begin
 end;
 
 {$IFDEF FastUnicodeData}
-function _UpperCase(Ch: REChar): REChar; inline;
+function _UpperCase(Ch: REChar): REChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   Result := CharUpperArray[Ord(Ch)];
 end;
 
-function _LowerCase(Ch: REChar): REChar; inline;
+function _LowerCase(Ch: REChar): REChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   Result := CharLowerArray[Ord(Ch)];
 end;
