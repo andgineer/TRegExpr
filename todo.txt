@@ -1,15 +1,10 @@
 Old items:
 
-- "Russian Ranges" --> National ranges (use property WordChars ?
- for ordering letters in ranges by its order in WordChars if modifier /r is On)
+- "Russian ranges" --> national ranges (use property WordChars?
+ for ordering letters in ranges by its order in WordChars if modifier /r is on)
 
 - opcode optimization: remove BRANCH-to-EEND, COMMENT, BACK(?)
 
 Alexey's:
 
 - maybe support \X, via implemented \p and \P (docs in web)
-
-- negative assertion: (?<!foo)bar
-  This needs 2nd helper object which will have its own regex '(foo)\Z'
-  and it will find it after successful match of main object.
-  Main object will find "bar".
