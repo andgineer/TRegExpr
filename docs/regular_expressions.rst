@@ -699,11 +699,11 @@ Unicode standard has names for character categories. These are 2-letter strings.
 * Zp - Paragraph Separator
 * Zs - Space Separator
 
-Meta-character ``\p`` denotes one Unicode char of specified category. Syntaxes: ``\pL`` and ``\p{L}`` for 1-letter name, ``\p{Lu}`` for 2-letter names.
+Meta-character ``\p`` denotes one Unicode char of specified category. Syntax: ``\pL`` and ``\p{L}`` for 1-letter name, ``\p{Lu}`` for 2-letter names.
 
 Meta-character ``\P`` is inverted, it denotes one Unicode char **not** in the specified category.
 
-These meta-characters are supported withing character classes too.
+These meta-characters are supported within character classes too.
 
 Afterword
 ---------
