@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-01 07:42+0300\n"
-"PO-Revision-Date: 2020-02-14 15:50+0000\n"
-"Last-Translator: iLocIT! <matthiasc@ilocit.de>\n"
+"PO-Revision-Date: 2023-04-24 07:17+0000\n"
+"Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/tregexpr/faq/de/>"
 "\n"
 "Language: de\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.11-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 420897fb25af4c7b8320dec8b9bf7c95
@@ -141,8 +141,8 @@ msgid ""
 "For example, r.e. ``<font .\\*>`` returns the first ``<font``, then the "
 "rest of the file including last ``</html>``."
 msgstr ""
-"Zum Beispiel gibt re `` <font .\\*>`` das erste `` zurück</font> <font``,"
-" then the rest of the file including last ``</html> <font .\\*>``.</font>"
+"Zum Beispiel gibt re `` <font .\\*>`` das erste `` zurück</font> <font``, "
+"then the rest of the file including last ``</html> <font .\\*>``.</font>."
 
 # c260c550f14d42e2acc808a1c3188ce0
 #: ../../faq.rst:56
@@ -168,8 +168,8 @@ msgstr ""
 #: ../../faq.rst:62
 msgid "BTW I suggest ``<font ([^\\n>]*)>``, in ``Match[1]`` will be the URL."
 msgstr ""
-"Übrigens empfehle ich `` <font ([^\\n>] *)&gt; ``, in `` Match [1] `` "
-"wird die URL.</font>"
+"Übrigens empfehle ich `` <font ([^\\n"
+">] *)&gt; ``, in `` Match [1] `` wird die URL.</font>."
 
 # 26323d71542949ca9eeeb5a8e2e99f0c
 #: ../../faq.rst:65
@@ -226,9 +226,9 @@ msgid ""
 "have to use real parser, not r.e."
 msgstr ""
 "Natürlich können Sie TRegExpr problemlos zum Extrahieren einiger "
-"Informationen aus HTML verwenden, wie in meinen Beispielen gezeigt. Wenn "
-"Sie jedoch eine genaue Analyse wünschen, müssen Sie einen echten Parser "
-"verwenden, nicht re"
+"Informationen aus HTML verwenden, wie in meinen Beispielen gezeigt. Wenn Sie "
+"jedoch eine genaue Analyse wünschen, müssen Sie einen echten Parser "
+"verwenden, nicht re."
 
 # 9565d64088b445999b49b8f42e7ef392
 #: ../../faq.rst:91
