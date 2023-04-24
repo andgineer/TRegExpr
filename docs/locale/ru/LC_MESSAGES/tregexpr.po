@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-02 14:51+0300\n"
-"PO-Revision-Date: 2020-09-13 15:02+0000\n"
+"PO-Revision-Date: 2023-04-24 07:10+0000\n"
 "Last-Translator: Andrey Sorokin <filbert@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/tregexpr/"
 "tregexpr/ru/>\n"
@@ -18,9 +18,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.18-dev\n"
 "Generated-By: Babel 2.8.0\n"
 
 # 641c63bb9dac43b69cd3528d9789b841
@@ -99,7 +99,7 @@ msgstr "VersionMajor, VersionMinor"
 # c7de356b46a449f9aa6a4e4f8f6ced23
 #: ../../tregexpr.rst:31 fc42b4bd214741dfbffc9bd24a2fd39d
 msgid "Return major and minor version of the component."
-msgstr "Вернуть мажорную и минорную версию, например, ``version 0.944``"
+msgstr "Вернуть мажорную и минорную версию, например, ``version 0.944``."
 
 # d000e079152d4589adc8e55f58fa9835
 #: ../../tregexpr.rst:35 713f4c3e523a48c39dbbe176c5a97db1
@@ -136,7 +136,7 @@ msgid ""
 "default ``Error`` raises exception ERegExpr_)."
 msgstr ""
 "В случае каких-либо ошибок при компиляции вызывается метод ``Error`` (по "
-"умолчанию ``Error`` вызывает исключение ERegExpr_)"
+"умолчанию ``Error`` вызывает исключение ERegExpr_)."
 
 # 215faa741d804fa28e1ab58140732d42
 #: ../../tregexpr.rst:50 3a8ffccb33c64c5d8a121621ca587f0b
@@ -330,7 +330,7 @@ msgstr ""
 # 0e849c7e466844a2b3c5b4b0579748a8
 #: ../../tregexpr.rst:125 40771f9b7a434cf89b77053d3ac49061
 msgid "So you always must use something like:"
-msgstr "Таким образом, вы всегда должны использовать что-то вроде"
+msgstr "Таким образом, вы всегда должны использовать что-то вроде:"
 
 # a5be303551c641f986789278754e8e17
 #: ../../tregexpr.rst:129 68d4a427c6a24d109e7755babd2d6ef7
@@ -359,7 +359,7 @@ msgid ""
 "(1-based)."
 msgstr ""
 "Находит совпадение для ``InputString``, начиная с позиции ``AOffset`` ("
-"нумерация с 1)"
+"нумерация с 1)."
 
 #: ../../tregexpr.rst:140 9ea939422b2f40f7a026fa16d3a72b07
 msgid ""
@@ -553,7 +553,7 @@ msgstr "Split"
 #: ../../tregexpr.rst:196 d62218f6cee6415d9a294a30904d68bf
 msgid "Splits ``AInputStr`` into ``APieces`` by regex occurrences."
 msgstr ""
-"Разделяет ``AInputStr`` на ``APieces`` по найденным регулярным выражениям"
+"Разделяет ``AInputStr`` на ``APieces`` по найденным регулярным выражениям."
 
 # b322778a78174b19a1ec867d734b92fe
 #: ../../tregexpr.rst:198 ../../tregexpr.rst:241
@@ -831,7 +831,7 @@ msgid ""
 "RegExprSpaceChars_ global constant)."
 msgstr ""
 "Содержит символы, которые рассматриваются как ``\\s`` (изначально заполнены "
-"глобальной константой RegExprSpaceChars_)"
+"глобальной константой RegExprSpaceChars_)."
 
 # 8cf870efcd0d4c7a8b0cc93e84516465
 #: ../../tregexpr.rst:329 6e38bc2b42db4c81ba9507d6ee669d38
@@ -845,7 +845,7 @@ msgid ""
 "RegExprWordChars_ global constant)."
 msgstr ""
 "Содержит символы, которые рассматриваются как ``\\w`` (изначально заполнены "
-"глобальной константой RegExprWordChars_)"
+"глобальной константой RegExprWordChars_)."
 
 # 6a97370bdeab422bb5ae0c9b3a036f97
 #: ../../tregexpr.rst:335 5ad2a5d9f0d649a1b2f94a624255793e
@@ -860,7 +860,7 @@ msgid ""
 msgstr ""
 "разделители строк (например, ``\\n"
 "`` в Unix), изначально заполненные глобальной константой "
-"RegExprLineSeparators_)"
+"RegExprLineSeparators_)."
 
 # 9a2790f4b35b46dd8d067f2601a11d2e
 #: ../../tregexpr.rst:340 ../../tregexpr.rst:347
@@ -992,7 +992,7 @@ msgstr "RegExprModifierI"
 # 088ef484a7bd4a65a20b1d88022ce0d0
 #: ../../tregexpr.rst:396 ea851f2dd3fe4f2b98a5cf8f2f536326
 msgid "`Modifier i <regular_expressions.html#i>`_ default value."
-msgstr "`Модификатор i <regular_expressions.html#i>`_ значение по умолчанию"
+msgstr "`Модификатор i <regular_expressions.html#i>`_ значение по умолчанию."
 
 # aa9c039a53d74df59987ae3abed1ce18
 #: ../../tregexpr.rst:399 e2c67beac54c4ba993c43d7e0825c016
@@ -1002,7 +1002,7 @@ msgstr "RegExprModifierR"
 # 217317d65eee4edd9e01483cd49a0d83
 #: ../../tregexpr.rst:401 49fdfafa618a485f945e9ca380e2b2b1
 msgid "`Modifier r <regular_expressions.html#r>`_ default value."
-msgstr "`Модификатор r <regular_expressions.html#r>`_ значение по умолчанию"
+msgstr "`Модификатор r <regular_expressions.html#r>`_ значение по умолчанию."
 
 # 45cda2c7f6ca40c0ab899663a0f65f05
 #: ../../tregexpr.rst:404 ea13ccab96bd4d68b797d871d185e2b0
@@ -1012,7 +1012,7 @@ msgstr "RegExprModifierS"
 # 59b7ae2c56fa49f5801c1d3af277f8e8
 #: ../../tregexpr.rst:406 732dd280c1f2497394ac8144ff88e7a1
 msgid "`Modifier s <regular_expressions.html#s>`_ default value."
-msgstr "`Модификатор s <regular_expressions.html#s>`_ значение по умолчанию"
+msgstr "`Модификатор s <regular_expressions.html#s>`_ значение по умолчанию."
 
 # 58bc3091060d4399a02951ec97630f33
 #: ../../tregexpr.rst:409 af18e52e715e4418b03a3e028398c0f1
@@ -1022,7 +1022,7 @@ msgstr "RegExprModifierG"
 # da0b49d2a3d74b32988134b30e573819
 #: ../../tregexpr.rst:411 a9acdafe21494eb2bf90443d4ea004a3
 msgid "`Modifier g <regular_expressions.html#g>`_ default value."
-msgstr "`Модификатор g <regular_expressions.html#g>`_ значение по умолчанию"
+msgstr "`Модификатор g <regular_expressions.html#g>`_ значение по умолчанию."
 
 # 0d2a949eb6a340399449ebacb03097ac
 #: ../../tregexpr.rst:414 6cb80e81178f4760ba285e0924a0ee48
@@ -1032,7 +1032,7 @@ msgstr "RegExprModifierM"
 # 60489a8dd5f24d2ba28233c0a1458f2d
 #: ../../tregexpr.rst:416 d7d13a21298c4d72867b9e0aa8c004b9
 msgid "`Modifier m <regular_expressions.html#m>`_ default value."
-msgstr "`Модификатор m <regular_expressions.html#m>`_ значение по умолчанию"
+msgstr "`Модификатор m <regular_expressions.html#m>`_ значение по умолчанию."
 
 # aeb6c43c45a84a549d44b4de741fe653
 #: ../../tregexpr.rst:419 9cce79ee0b8046b689bfb1e8ddd4a30d
@@ -1042,7 +1042,7 @@ msgstr "RegExprModifierX"
 # b491af4c78b94bc18fc874d59524b7a1
 #: ../../tregexpr.rst:421 47ccbb869ce74b29879eb5480edefa21
 msgid "`Modifier x <regular_expressions.html#x>`_ default value."
-msgstr "`Модификатор х <regular_expressions.html#x>`_ значение по умолчанию"
+msgstr "`Модификатор х <regular_expressions.html#x>`_ значение по умолчанию."
 
 # ad707065285c43e18a9477e6ede04d9b
 #: ../../tregexpr.rst:424 82c6c2c5bed344249cab0f515f8e3e0a
@@ -1052,7 +1052,7 @@ msgstr "RegExprSpaceChars"
 # d97ac5ca4291439d9990079ff07d9b1b
 #: ../../tregexpr.rst:426 5634305f5ee347159cc27472a0918915
 msgid "Default for SpaceChars_ property."
-msgstr "По умолчанию для свойства SpaceChars_"
+msgstr "По умолчанию для свойства SpaceChars_."
 
 # 4aa0deda29784187946dd010c02c5aec
 #: ../../tregexpr.rst:429 d5d17e812aa3489c963377c14fe05c67
@@ -1062,7 +1062,7 @@ msgstr "RegExprWordChars"
 # e31a20227b1f463f8eb30a51a63d9b12
 #: ../../tregexpr.rst:431 bbd2f9940c7a4281b7a23fbb58bb5e2d
 msgid "Default value for WordChars_ property."
-msgstr "Значение по умолчанию для свойства WordChars_"
+msgstr "Значение по умолчанию для свойства WordChars_."
 
 # 587f145f49a743a7ac74d65b58a7d6d4
 #: ../../tregexpr.rst:434 7e07bd81b9774b9e9ae324dc9a301311
@@ -1072,7 +1072,7 @@ msgstr "RegExprLineSeparators"
 # 02f6f3bc3f3240999252663ffb1946ba
 #: ../../tregexpr.rst:436 5c0b25ddbe5c496882e483bd8a2a7868
 msgid "Default value for LineSeparators_ property."
-msgstr "Значение по умолчанию для свойства LineSeparators_"
+msgstr "Значение по умолчанию для свойства LineSeparators_."
 
 # 0539fbf94edd40388db5e2100343c4c5
 #: ../../tregexpr.rst:439 9ea54a9c2c7e4251bfdb77a9d52d7624
@@ -1293,7 +1293,7 @@ msgstr ""
 #: ../../tregexpr.rst:536 0ed92a9e90a84304bfe9dfa42fbc99fd
 msgid "This function is useful for regex auto-generation from user input."
 msgstr ""
-"Эта функция полезна для повторной автогенерации из пользовательского ввода"
+"Эта функция полезна для повторной автогенерации из пользовательского ввода."
 
 # a5c9b2e21be44d4783cc11c309b5113c
 #: ../../tregexpr.rst:539 c69e31a4a8c9458496b5fc02c7614324
@@ -1303,7 +1303,7 @@ msgstr "RegExprSubExpressions"
 # bb18fa14624b49f89e7e635017d65415
 #: ../../tregexpr.rst:541 3fa3e9df323445cea54a6866189185fc
 msgid "Makes list of subexpressions found in ``ARegExpr``."
-msgstr "Составляет список подвыражений, найденных в ``ARegExpr``"
+msgstr "Составляет список подвыражений, найденных в ``ARegExpr``."
 
 # f5fe823d6b9d44c19a4656fccfb94ec7
 #: ../../tregexpr.rst:543 9c2a5d5b370045af8185d23fd4e86d92
@@ -1375,7 +1375,7 @@ msgstr "0"
 # e31c68543c174722ab7814aa70c21d42
 #: ../../tregexpr.rst:560 d819dc8ff815436494bdaf6338274186
 msgid "Success. No unbalanced brackets were found."
-msgstr "Успех. Не найдено несбалансированных скобок"
+msgstr "Успех. Не найдено несбалансированных скобок."
 
 # d5330ee8b4de4800b73f912aee5f0687
 #: ../../tregexpr.rst:561 05d594dd4b7a4faf97fd1fed31a07072
@@ -1385,7 +1385,7 @@ msgstr "-1"
 # 61091b3b25774e2cbebe3ab73c70c459
 #: ../../tregexpr.rst:561 0dbf4705b6bc4e73a2d70064911254fc
 msgid "Not enough closing brackets ``)``."
-msgstr "Недостаточно закрывающих скобок ``)``"
+msgstr "Недостаточно закрывающих скобок ``)``."
 
 # 27190c0c3dfd4d35b17fe9b37fc76a4c
 #: ../../tregexpr.rst:562 e7053bc1242749bd9dd7221216101ec6
@@ -1398,7 +1398,7 @@ msgid ""
 "At position n it was found opening ``[`` without corresponding closing "
 "``]``."
 msgstr ""
-"В позиции n было найдено открытие ``[`` без соответствующего закрытия ``]``"
+"В позиции n было найдено открытие ``[`` без соответствующего закрытия ``]``."
 
 # 6c205095ee8d4373983f802772b82aca
 #: ../../tregexpr.rst:563 2cdf1070cd2c42eabd68b2b253c2cddf
@@ -1412,7 +1412,7 @@ msgid ""
 "opening ``(``."
 msgstr ""
 "В позиции n была найдена закрывающая скобка ``)`` без соответствующего "
-"открывания ``(``"
+"открывания ``(``."
 
 # 5ccc5e356eda4954a316c17918906fa4
 #: ../../tregexpr.rst:566 2cf07b2ada5c4e47be85b6e057d6eb7d
