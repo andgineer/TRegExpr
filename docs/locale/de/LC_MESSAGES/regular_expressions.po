@@ -924,7 +924,7 @@ msgstr "Quantifizierer"
 #: ../../regular_expressions.rst:272 39d64b7faba34f33abf099ca0c22393e
 msgid ""
 "Any item of a regular expression may be followed by quantifier. "
-"Quantifier specifies number of repetition of the item."
+"Quantifier specifies number of repetitions of the item."
 msgstr ""
 "Auf jedes Element eines regulären Ausdrucks kann ein Quantifizierer "
 "folgen. Dieser gibt die Anzahl der Wiederholungen des Elements an."

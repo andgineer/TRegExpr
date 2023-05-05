@@ -904,7 +904,7 @@ msgstr "Cuantificador"
 #: ../../regular_expressions.rst:272 39d64b7faba34f33abf099ca0c22393e
 msgid ""
 "Any item of a regular expression may be followed by quantifier. "
-"Quantifier specifies number of repetition of the item."
+"Quantifier specifies number of repetitions of the item."
 msgstr ""
 "Cualquier elemento de una expresión regular puede ser seguido por un "
 "cuantificador. El cuantificador especifica el número de repetición del "

@@ -270,7 +270,7 @@ Quantifiers
 ~~~~~~~~~~~
 
 Any item of a regular expression may be followed by quantifier.
-Quantifier specifies number of repetition of the item.
+Quantifier specifies number of repetitions of the item.
 
 ========== ============================================================
 RegEx      Matches
