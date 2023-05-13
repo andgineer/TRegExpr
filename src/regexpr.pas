@@ -6913,7 +6913,7 @@ end;
 {$ENDIF}
 
 procedure TRegExpr.Error(AErrorID: integer);
-  {$IFNDEF LINUX}
+  {$IFDEF windows}
   {$IFDEF reRealExceptionAddr}
   function ReturnAddr: Pointer; // ###0.938
   asm
@@ -6934,7 +6934,7 @@ begin
   e.ErrorCode := AErrorID;
   e.CompilerErrorPos := CompilerErrorPos;
   raise e
-    {$IFNDEF LINUX}
+    {$IFDEF windows}
     {$IFDEF reRealExceptionAddr}
     at ReturnAddr
     {$ENDIF}
