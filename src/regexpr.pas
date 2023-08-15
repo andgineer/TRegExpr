@@ -6975,7 +6975,7 @@ begin
     exit;
 
   fInputString := AInputString;
-  UniqueString(fInputString);
+  //UniqueString(fInputString);
 
   fInputStart := PRegExprChar(fInputString) + AInputStartPos - 1;
   fInputEnd := fInputStart + AInputLen;
