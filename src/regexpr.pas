@@ -6536,6 +6536,8 @@ begin
       Result := 'EOL2';
     OP_BOLML:
       Result := 'BOLML';
+    OP_CONTINUE_POS:
+      Result := 'CONTINUE_POS';
     OP_EOLML:
       Result := 'EOLML';
     OP_BOUND:
