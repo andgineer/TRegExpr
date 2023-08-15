@@ -1515,6 +1515,7 @@ const
   // Node - next node in sequence,
   // LoopEntryJmp - associated LOOPENTRY node addr
   OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
+  OP_CONTINUE_POS = TReOp(26); // \G last match end or "Exec(AOffset)"
   OP_BSUBEXP = TREOp(28);
   // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
   OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
@@ -1566,8 +1567,6 @@ const
     {$ELSE}
     High(REChar); // must fit to 0..255 range
     {$ENDIF}
-
-  OP_CONTINUE_POS = Succ(OP_SUBCALL_LAST); // \G last match end or "Exec(AOffset)"
 
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
