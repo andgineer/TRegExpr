@@ -1248,6 +1248,13 @@ procedure TTestRegexpr.RunRETest(aIndex: Integer);
 var
   T: TRegExTest;
   S: RegExprString;
+
+  procedure DoMatchAssertions;
+  begin
+    AreEqual('Search position', T.MatchStart, RE.MatchPos[0]);
+    AreEqual('Matched text', PrintableString(T.ExpectedResult), PrintableString(RE.Match[0]));
+  end;
+
 begin
   T:= testCases[aIndex];
 {$IFDEF DUMPTESTS}
@@ -1262,8 +1269,17 @@ begin
   else
   begin
     RE.Exec(T.inputText);
-    AreEqual('Search position', T.MatchStart, RE.MatchPos[0]);
-    AreEqual('Matched text', PrintableString(T.ExpectedResult), PrintableString(RE.Match[0]));
+    DoMatchAssertions;
+
+    // Test via InputString
+    RE.InputString := T.InputText;
+    RE.Exec;
+    DoMatchAssertions;
+
+    // Test via SetInputSubString
+    RE.SetInputSubString('abc' + T.InputText + '12345', 4, Length(t.InputText));
+    RE.Exec;
+    DoMatchAssertions;
   end;
 end;
 

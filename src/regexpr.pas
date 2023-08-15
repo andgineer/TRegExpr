@@ -683,6 +683,9 @@ type
     // to this property).
     // Any assignment to this property clear Match* properties !
     property InputString: RegExprString read fInputString write SetInputString;
+    // SetInputSubString
+    // Only looks at copy(AInputString, AInputStartPos, AInputLen)
+    procedure SetInputSubString(const AInputString: RegExprString; AInputStartPos, AInputLen: integer);
 
     // Number of subexpressions has been found in last Exec* call.
     // If there are no subexpr. but whole expr was found (Exec* returned True),
@@ -970,6 +973,32 @@ begin
   Result := p;
   {$ENDIF}
 end;
+
+function strLpos(str1,str2 : PRegExprChar; len1, len2: SizeInt) : PRegExprChar;
+  var
+    p : PRegExprChar;
+  begin
+    strLpos:=nil;
+    if (str1=nil) or (str2=nil) then
+      exit;
+    p:=strscan(str1,str2^);
+    if p=nil then
+       exit;
+    if p > str1 + len1 - len2 then
+      exit;
+    while p<>nil do
+      begin
+        if strlcomp(p,str2,len2)=0 then
+          begin
+             strLpos:=p;
+             exit;
+          end;
+        inc(p);
+        p:=strscan(p,str2^);
+        if p > str1 + len1 - len2 then
+          exit;
+      end;
+  end;
 
 {$IFDEF FastUnicodeData}
 function _UpperCase(Ch: REChar): REChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -5492,7 +5521,7 @@ function TRegExpr.Exec: boolean;
 var
   SlowChecks: boolean;
 begin
-  SlowChecks := Length(fInputString) < fSlowChecksSizeMax;
+  SlowChecks := fInputEnd - fInputStart < fSlowChecksSizeMax;
   Result := ExecPrim(1, False, SlowChecks, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
@@ -5597,7 +5626,7 @@ begin
       Exit;
   end;
 
-  if fInputString = '' then
+  if fInputEnd = fInputStart then
   begin
     // Empty string can match e.g. '^$'
     if regMustLen > 0 then
@@ -5612,15 +5641,17 @@ begin
   end;
 
   // Check that the start position is not longer than the line
-  if AOffset > (Length(fInputString) + 1) then
+  Dec(AOffset);
+  if (AOffset) > (fInputEnd - fInputStart) then
     Exit;
 
-  Ptr := fInputStart + AOffset - 1;
+  Ptr := fInputStart + AOffset;
 
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
     if regMustString <> '' then
-      if Pos(regMustString, fInputString) = 0 then Exit;
+      if strLpos(fInputStart, PRegExprChar(regMustString), fInputEnd - fInputStart, length(regMustString)) <> nil then
+        exit;
 
   {$IFDEF ComplexBraces}
   // no loops started
@@ -6903,6 +6934,29 @@ begin
         Exit;
     end;
   until False;
+end;
+
+procedure TRegExpr.SetInputSubString(const AInputString: RegExprString;
+  AInputStartPos, AInputLen: integer);
+begin
+  ClearMatches;
+
+  if AInputStartPos < 1 then
+    AInputStartPos := 1
+  else
+  if AInputStartPos > Length(AInputString) then
+    AInputStartPos := Length(AInputString);
+  if AInputLen > Length(AInputString) + 1 - AInputStartPos then
+    AInputLen := Length(AInputString) + 1 - AInputStartPos;
+
+  if AInputLen < 1 then
+    exit;
+
+  fInputString := AInputString;
+  UniqueString(fInputString);
+
+  fInputStart := PRegExprChar(fInputString) + AInputStartPos - 1;
+  fInputEnd := fInputStart + AInputLen;
 end;
 
 {$IFDEF reRealExceptionAddr}
