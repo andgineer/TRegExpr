@@ -324,6 +324,7 @@ type
     // work variables for Exec routines - save stack in recursion
     regInput: PRegExprChar; // pointer to currently handling char of input string
     fInputStart: PRegExprChar; // pointer to first char of input string
+    fInputContinue: PRegExprChar; // pointer to first char of input string
     fInputEnd: PRegExprChar; // pointer after last char of input string
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
@@ -539,7 +540,7 @@ type
     function GetMatch(Idx: integer): RegExprString;
 
     procedure SetInputString(const AInputString: RegExprString);
-    procedure SetInputRange(AStart, AEnd: PRegExprChar);
+    procedure SetInputRange(AStart, AEnd, AContinueAnchor: PRegExprChar);
 
     {$IFDEF UseLineSep}
     procedure SetLineSeparators(const AStr: RegExprString);
@@ -1565,6 +1566,8 @@ const
     {$ELSE}
     High(REChar); // must fit to 0..255 range
     {$ENDIF}
+
+  OP_CONTINUE_POS = Succ(OP_SUBCALL_LAST); // \G last match end or "Exec(AOffset)"
 
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
@@ -4219,6 +4222,8 @@ begin
             ret := EmitNode(OP_EOL);
           'Z':
             ret := EmitNode(OP_EOL2);
+          'G':
+            ret := EmitNode(OP_CONTINUE_POS);
           'd':
             begin // r.e.extension - any digit ('0' .. '9')
               ret := EmitNode(OP_ANYDIGIT);
@@ -4849,6 +4854,12 @@ begin
       OP_BOL:
         begin
           if regInput <> fInputStart then
+            Exit;
+        end;
+
+      OP_CONTINUE_POS:
+        begin
+          if regInput <> fInputContinue then
             Exit;
         end;
 
@@ -5575,7 +5586,7 @@ begin
   if Assigned(fHelper) then
     if (APos - fHelperLen) >= fInputStart then
     begin
-      fHelper.SetInputRange(APos - fHelperLen, APos);
+      fHelper.SetInputRange(APos - fHelperLen, APos, fInputContinue);
       if fHelper.MatchAtOnePos(APos - fHelperLen) then
       begin
         Result := False;
@@ -5668,6 +5679,7 @@ begin
     Exit;
 
   Ptr := fInputStart + AOffset - 1;
+  fInputContinue := Ptr;
 
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
@@ -5762,13 +5774,15 @@ begin
 
   fInputStart := PRegExprChar(fInputString);
   fInputEnd := fInputStart + Length(fInputString);
+  fInputContinue := fInputStart;
 end;
 
-procedure TRegExpr.SetInputRange(AStart, AEnd: PRegExprChar);
+procedure TRegExpr.SetInputRange(AStart, AEnd, AContinueAnchor: PRegExprChar);
 begin
   fInputString := '';
   fInputStart := AStart;
   fInputEnd := AEnd;
+  fInputContinue := AContinueAnchor;
 end;
 
 {$IFDEF UseLineSep}
@@ -6129,7 +6143,8 @@ begin
         end;
 
       OP_BOL,
-      OP_BOLML:
+      OP_BOLML,
+      OP_CONTINUE_POS:
         ; // Exit; //###0.937
 
       OP_EOL,
@@ -6979,6 +6994,7 @@ begin
 
   fInputStart := PRegExprChar(fInputString) + AInputStartPos - 1;
   fInputEnd := fInputStart + AInputLen;
+  fInputContinue := fInputStart;
 end;
 
 {$IFDEF reRealExceptionAddr}

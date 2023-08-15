@@ -48,6 +48,7 @@ type
     procedure TestEmpty;
     procedure TestNotFound;
     procedure TestBads;
+    procedure TestContinueAnchor;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -826,6 +827,123 @@ begin
   //TestBadRegex('No Error for bad braces', 'd{');
   //TestBadRegex('No Error for bad braces', 'd{22');
   //TestBadRegex('No Error for bad braces', 'd{}');
+end;
+
+procedure TTestRegexpr.TestContinueAnchor;
+  procedure AssertMatch(AName: String; AStart, ALen: Integer);
+  begin
+    AreEqual(AName + 'MatchCount', 1, RE.SubExprMatchCount);
+    AreEqual(AName + 'MatchPos[1]', AStart, RE.MatchPos[1]);
+    AreEqual(AName + 'MatchLen[1]', ALen, RE.MatchLen[1]);
+  end;
+begin
+  // Without \G MatchNext will skip
+  CompileRE('(A)');
+  RE.InputString:= 'AABA';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('"A" match 1 at 1', 1, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('"A" match 2 at 2', 2, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('"A" match 3 at 4', 4, 1);
+
+
+  // With \G MatchNext will fail instead of skip
+  CompileRE('\G(A)');
+  RE.InputString:= 'AABA';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('"A" match 1 at 1', 1, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('"A" match 2 at 2', 2, 1);
+  IsFalse('Exec must give False "\G(A)"', RE.ExecNext);
+
+
+  // Without \G  chars will be matched before the capture
+  CompileRE('[^A]*([^A]*?A)');
+  RE.InputString:= '123A345A67890A--';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('Zero-len * - match 1 at 4', 4, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('Zero-len * - match 2 at 8', 8, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('Zero-len * - match 3 at 14', 14, 1);
+
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('Zero-len * - Exec(2) at 4', 4, 1);
+
+  // Without \G  chars will be matched in the capture
+  CompileRE('[^A]*(\G[^A]*?A)');
+  RE.InputString:= '123A345A67890A--';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('\G match * - match 1 at 1', 1, 4);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('\G match * - match 2 at 5', 5, 4);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('\G match * - match 3 at 9', 9, 6);
+
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('\C Zero-len * - Exec(2) at 2', 2, 3);
+
+  // Without \G  chars will be matched in the capture
+  CompileRE('[^A]*\G([^A]*?A)');
+  RE.InputString:= '123A345A67890A--';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('\G match * - match 1 at 1', 1, 4);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('\G match * - match 2 at 5', 5, 4);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('\G match * - match 3 at 9', 9, 6);
+
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('\C Zero-len * - Exec(2) at 2', 2, 3);
+
+
+  CompileRE('(A|B)');
+  RE.InputString:= 'xBxA';
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('(A|B)  xBxA', 2, 1);
+
+  CompileRE('(A|\GB)');
+  RE.InputString:= 'xBxA';
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('(A|\GB)  xBxA', 4, 1);
+
+  CompileRE('(A|\GB)');
+  RE.InputString:= 'xBxA';
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('(A|\GB)  xBxA offset 2', 2, 1);
+
+  // in look behind
+  CompileRE('(?<=\GA.*)(X)');
+  RE.InputString:= '123X3';
+  IsFalse('Exec must give True', RE.Exec);
+  // in look behind
+  CompileRE('(?<=\GA.*)(X)');
+  RE.InputString:= 'A123X3';
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('(?<=\GA.*)(X)  A123X3', 5, 1);
+
+  // in look behind
+  CompileRE('(?<=\GA.*)(X)');
+  RE.InputString:= 'A123X3';
+  IsFalse('Exec must give False', RE.Exec(2));
+
+  // in look behind
+  CompileRE('(?<=\GA.*)(X)');
+  RE.InputString:= '_A123X3';
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('(?<=\GA.*)(X)  _A123X3 offset 2 ', 6, 1);
+
+//  CompileRE('(?<=^.\GA...)(X)');
+//  CompileRE('(?<=^.\GA...)(X)');
+//  RE.InputString:= '_A123X3';
+//  IsTrue('Exec must give True', RE.Exec(2));
+//  AssertMatch('(?<=^.\GA...)(X)  _A123X3 offset 2 ', 6, 1);
 end;
 
 procedure TTestRegexpr.RunTest1;
