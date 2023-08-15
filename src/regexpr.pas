@@ -324,7 +324,7 @@ type
     // work variables for Exec routines - save stack in recursion
     regInput: PRegExprChar; // pointer to currently handling char of input string
     fInputStart: PRegExprChar; // pointer to first char of input string
-    fInputContinue: PRegExprChar; // pointer to first char of input string
+    fInputContinue: PRegExprChar; // pointer to char specified with Exec(AOffset), or start pos of ExecNext
     fInputEnd: PRegExprChar; // pointer after last char of input string
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
