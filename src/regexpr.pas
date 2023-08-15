@@ -974,6 +974,32 @@ begin
   {$ENDIF}
 end;
 
+function StrLScan(P: PRegExprChar; C: REChar; len: SizeInt): PRegExprChar;
+Var
+   count: SizeInt;
+Begin
+ count := 0;
+ { As in Borland Pascal, if looking for NULL return null }
+ if C = #0 then
+ begin
+   StrLScan := @(P[StrLen(P)]);
+   exit;
+ end;
+ { Find first matching character of Ch in Str }
+ while (count < len) and (P[count] <> #0) do
+ begin
+   if C = P[count] then
+    begin
+        StrLScan := @(P[count]);
+        exit;
+    end;
+   Inc(count);
+ end;
+ { nothing found. }
+ StrLScan := nil;
+end;
+
+
 function strLpos(str1,str2 : PRegExprChar; len1, len2: SizeInt) : PRegExprChar;
   var
     p : PRegExprChar;
@@ -981,11 +1007,10 @@ function strLpos(str1,str2 : PRegExprChar; len1, len2: SizeInt) : PRegExprChar;
     strLpos:=nil;
     if (str1=nil) or (str2=nil) then
       exit;
-    p:=strscan(str1,str2^);
+    len1 := len1 - len2 + 1;
+    p:=StrLScan(str1,str2^,len1);
     if p=nil then
        exit;
-    if p > str1 + len1 - len2 then
-      exit;
     while p<>nil do
       begin
         if strlcomp(p,str2,len2)=0 then
@@ -994,9 +1019,7 @@ function strLpos(str1,str2 : PRegExprChar; len1, len2: SizeInt) : PRegExprChar;
              exit;
           end;
         inc(p);
-        p:=strscan(p,str2^);
-        if p > str1 + len1 - len2 then
-          exit;
+        p:=StrLScan(p,str2^,len1-(p-str1));
       end;
   end;
 
@@ -5641,11 +5664,10 @@ begin
   end;
 
   // Check that the start position is not longer than the line
-  Dec(AOffset);
-  if (AOffset) > (fInputEnd - fInputStart) then
+  if (AOffset - 1) > (fInputEnd - fInputStart) then
     Exit;
 
-  Ptr := fInputStart + AOffset;
+  Ptr := fInputStart + AOffset - 1;
 
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
