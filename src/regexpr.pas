@@ -980,14 +980,8 @@ Var
    count: SizeInt;
 Begin
   count := 0;
-  { As in Borland Pascal, if looking for NULL return null }
-  if C = #0 then
-  begin
-    StrLScan := @(P[StrLen(P)]);
-    exit;
-  end;
   { Find first matching character of Ch in Str }
-  while (count < len) and (P[count] <> #0) do
+  while (count < len) do
   begin
     if C = P[count] then
      begin
