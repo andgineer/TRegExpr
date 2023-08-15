@@ -996,27 +996,25 @@ end;
 
 
 function StrLPos(str1,str2 : PRegExprChar; len1, len2: SizeInt) : PRegExprChar;
-  var
-    p : PRegExprChar;
-  begin
-    StrLPos := nil;
-    if (str1 = nil) or (str2 = nil) then
-      exit;
-    len1 := len1 - len2 + 1;
-    p := StrLScan(str1,str2^, len1);
-    if p = nil then
-       exit;
-    while p <> nil do
-      begin
-        if strlcomp(p, str2, len2)=0 then
-          begin
-             StrLPos := p;
-             exit;
-          end;
-        inc(p);
-        p := StrLScan(p, str2^, len1 - (p-str1));
-      end;
-  end;
+var
+  p : PRegExprChar;
+begin
+  StrLPos := nil;
+  if (str1 = nil) or (str2 = nil) then
+    exit;
+  len1 := len1 - len2 + 1;
+  p := StrLScan(str1,str2^, len1);
+  while p <> nil do
+    begin
+      if strlcomp(p, str2, len2)=0 then
+        begin
+           StrLPos := p;
+           exit;
+        end;
+      inc(p);
+      p := StrLScan(p, str2^, len1 - (p-str1));
+    end;
+end;
 
 {$IFDEF FastUnicodeData}
 function _UpperCase(Ch: REChar): REChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
