@@ -49,6 +49,7 @@ type
     procedure TestNotFound;
     procedure TestBads;
     procedure TestContinueAnchor;
+    procedure TestRegMustExist;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -944,6 +945,14 @@ begin
 //  RE.InputString:= '_A123X3';
 //  IsTrue('Exec must give True', RE.Exec(2));
 //  AssertMatch('(?<=^.\GA...)(X)  _A123X3 offset 2 ', 6, 1);
+end;
+
+procedure TTestRegexpr.TestRegMustExist;
+begin
+  CompileRE('\w*abcd');
+  RE.InputString:= StringOfChar('.', 3000) + 'abcd';
+  RE.SlowChecksSizeMax := 5000;
+  IsTrue('Exec must give True', RE.Exec);
 end;
 
 procedure TTestRegexpr.RunTest1;
