@@ -6870,7 +6870,13 @@ begin
 
       OP_COMMENT,
       OP_BOUND,
-      OP_NOTBOUND:
+      OP_NOTBOUND,
+      OP_BOL,
+      OP_BOLML,
+      OP_EOL,
+      OP_EOL2,
+      OP_EOLML,
+      OP_CONTINUE_POS:
         Continue;
 
       OP_ANY,
