@@ -4811,7 +4811,6 @@ var
   {$ENDIF}
   bound1, bound2: boolean;
   saveSubCalled: boolean;
-  savedIsBacktrackingGroupAsAtom: boolean;
 begin
   Result := False;
   {
@@ -5175,12 +5174,11 @@ begin
         begin
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
-//          savedIsBacktrackingGroupAsAtom := IsBacktrackingGroupAsAtom;
           save := GrpBounds[regRecursion].GrpStart[no];
           GrpBounds[regRecursion].GrpStart[no] := regInput;
           Result := MatchPrim(next);
           if GrpBacktrackingAsAtom[no] then
-            IsBacktrackingGroupAsAtom := False; // savedIsBacktrackingGroupAsAtom;
+            IsBacktrackingGroupAsAtom := False;
           GrpBacktrackingAsAtom[no] := False;
           if not Result then
             GrpBounds[regRecursion].GrpStart[no] := save;
