@@ -660,7 +660,8 @@ type
     function IsCompiled: boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Opcode contains only operations for fixed match length: EXACTLY*, ANY*, etc
-    function IsFixedLength(var op: TREOp; var ALen: integer): boolean;
+    function IsFixedLength(var op: TREOp; var ALen: integer): boolean; overload;
+    function IsPartFixedLength(var prog: PRegExprChar; var op: TREOp; var ALen: integer; StopAt: TREOp): boolean; overload;
 
     // Regular expression.
     // For optimization, TRegExpr will automatically compiles it into 'P-code'
@@ -6857,17 +6858,31 @@ end; { of function TRegExpr.Dump
 
 function TRegExpr.IsFixedLength(var op: TREOp; var ALen: integer): boolean;
 var
+  s: PRegExprChar;
+begin
+  s := regCodeWork;
+  Result := IsPartFixedLength(s, op, ALen, OP_EEND);
+end;
+
+function TRegExpr.IsPartFixedLength(var prog: PRegExprChar; var op: TREOp;
+  var ALen: integer; StopAt: TREOp): boolean;
+var
   s, next: PRegExprChar;
-  N, N2: integer;
+  N, N2, ASubLen, ABranchLen: integer;
 begin
   Result := False;
   ALen := 0;
   if not IsCompiled then Exit;
-  s := regCodeWork;
+  s := prog;
 
   repeat
     next := regNext(s);
+    prog := s;
     op := s^;
+
+    Result := op = StopAt;
+    if Result then Exit;
+
     Inc(s, REOpSz + RENextOffSz);
 
     case op of
@@ -6879,10 +6894,36 @@ begin
 
       OP_BRANCH:
         begin
-          op := next^;
-          if op <> OP_EEND then Exit;
+          if next^ = OP_BRANCH then begin
+            if not IsPartFixedLength(s, op, ABranchLen, OP_BRANCH) then Exit;
+            repeat
+              next := regNext(s);
+              Inc(s, REOpSz + RENextOffSz);
+              if not IsPartFixedLength(s, op, ASubLen, next^) then Exit;
+              op := OP_BRANCH;
+              if (ASubLen <> ABranchLen) then Exit;
+            until next^ <> OP_BRANCH;
+            ALen := ALen + ABranchLen;
+          end;
         end;
 
+      OP_OPEN_FIRST..OP_OPEN_LAST:
+        begin
+          if regLookbehind and (op = OP_OPEN_FIRST) then
+            exit;
+          if regLookahead and ((ord(op) - ord(OP_OPEN_FIRST)) = regLookaheadGroup - 1) then
+            exit;
+          if not IsPartFixedLength(s, op, ASubLen, TREOp(ord(OP_CLOSE_FIRST) + ord(op) - ord(OP_OPEN_FIRST))) then
+            exit;
+          ALen := ALen + ASubLen;
+          Inc(s, REOpSz + RENextOffSz); // consume the OP_CLOSE
+          continue;
+        end;
+
+      OP_CLOSE_FIRST..OP_CLOSE_LAST:
+        continue;
+
+      OP_NOTHING,
       OP_COMMENT,
       OP_BOUND,
       OP_NOTBOUND,

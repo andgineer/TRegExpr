@@ -71,6 +71,7 @@ type
     procedure TestRegMustExist;
     procedure TestAtomic;
     procedure TestLoop;
+    procedure TestIsFixedLength;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -1161,6 +1162,112 @@ begin
              '(?:(?>Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?)|.*)B',
              'AayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyBB',   [1,44,   -1,-1, -1,-1, -1,-1] ); // 40 y
 
+
+end;
+
+procedure TTestRegexpr.TestIsFixedLength;
+
+  procedure HasLength(AErrorMessage: String; ARegEx: RegExprString; ExpLen: Integer);
+  var
+    r: Boolean;
+    op: TREOp;
+    ALen: integer;
+  begin
+    CompileRE(ARegEx);
+    r := RE.IsFixedLength(op, ALen);
+    if ExpLen < 0 then begin
+      IsFalse(AErrorMessage, r);
+    end
+    else begin
+      IsTrue(AErrorMessage, r);
+      AreEqual(AErrorMessage, ExpLen, ALen);
+    end;
+  end;
+
+begin
+  HasLength('bound', '^',      0);
+  HasLength('bound', '$',      0);
+  HasLength('bound', '\G',     0);
+  HasLength('bound', '\b',     0);
+  HasLength('{0}', 'a{0}',     0);
+  HasLength('{0,0}', 'a{0,0}', 0);
+
+  HasLength('A', 'A', 1);
+  HasLength('branch', 'A|B',     1);
+  HasLength('branch', 'A|B|C',   1);
+  HasLength('branch', 'AA|B',   -1);
+  HasLength('branch', 'A|BB',   -1);
+  HasLength('branch', 'A|^',    -1);
+  HasLength('branch', '$|B',    -1);
+  HasLength('branch', 'AA|B|C', -1);
+  HasLength('branch', 'A|BB|C', -1);
+  HasLength('branch', 'A|B|CC', -1);
+  HasLength('branch', '\b|B|C', -1);
+  HasLength('branch', 'A|\b|C', -1);
+  HasLength('branch', 'A|B|\b', -1);
+
+  HasLength('branch ()', '(A)',       1);
+  HasLength('branch ()', '(A|B)',     1);
+  HasLength('branch ()', '(A|B|C)',   1);
+  HasLength('branch ()', '(A|BB)',   -1);
+  HasLength('branch ()', '(AA|B)',   -1);
+  HasLength('branch ()', 'A|^',      -1);
+  HasLength('branch ()', '$|B',      -1);
+  HasLength('branch ()', '(AA|B|C)', -1);
+  HasLength('branch ()', '(A|BB|C)', -1);
+  HasLength('branch ()', '(A|B|CC)', -1);
+  HasLength('branch ()', '(\b|B|C)', -1);
+  HasLength('branch ()', '(A|\b|C)', -1);
+  HasLength('branch ()', '(A|B|\b)', -1);
+
+  HasLength('branch () mixed', 'x(A|B)',     2);
+  HasLength('branch () mixed', 'x(A|B|C)',   2);
+  HasLength('branch () mixed', 'x(A|BB)',   -1);
+  HasLength('branch () mixed', 'x(AA|B|C)', -1);
+  HasLength('branch () mixed', 'x(A|\b|C)', -1);
+
+  HasLength('branch () mixed', 'xx(A|B)',     3);
+  HasLength('branch () mixed', 'xx(A|B|C)',   3);
+  HasLength('branch () mixed', 'xx(A|BB)',   -1);
+  HasLength('branch () mixed', 'xx(AA|B|C)', -1);
+  HasLength('branch () mixed', 'xx(A|\b|C)', -1);
+
+  HasLength('branch () mixed', '\b(A|B)',     1);
+  HasLength('branch () mixed', '\b(A|B|C)',   1);
+  HasLength('branch () mixed', '\b(A|BB)',   -1);
+  HasLength('branch () mixed', '\b(AA|B|C)', -1);
+  HasLength('branch () mixed', '\b(A|\b|C)', -1);
+
+  HasLength('branch () mixed', '(A|B)xxx',     4);
+  HasLength('branch () mixed', '(A|B|C)xxx',   4);
+  HasLength('branch () mixed', '(A|BB)xxx',   -1);
+  HasLength('branch () mixed', '(AA|B|C)xxx', -1);
+  HasLength('branch () mixed', '(A|\b|C)xxx', -1);
+
+  HasLength('branch () twice', '(A|B)(D|E)',     2);
+  HasLength('branch () twice', '(A|B|C)(D|E)',   2);
+  HasLength('branch () twice', '(A|BB)(D|E)',   -1);
+  HasLength('branch () twice', '(A|B)(DD|E)',   -1);
+  HasLength('branch () twice', '(AA|B|C)(D|E)', -1);
+  HasLength('branch () twice', '(A|B|C)(D|EE)', -1);
+  HasLength('branch () twice', '(A|\b|C)(D|E)', -1);
+  HasLength('branch () twice', '(A|B|C)(D|^)',  -1);
+
+  HasLength('branch () twice |', '(A|B)|(D|E)',     1);
+  HasLength('branch () twice |', '(A|B|C)|(D|E)',   1);
+  HasLength('branch () twice |', '(A|BB)|(D|E)',   -1);
+  HasLength('branch () twice |', '(A|B)|(DD|E)',   -1);
+  HasLength('branch () twice |', '(AA|B|C)|(D|E)', -1);
+  HasLength('branch () twice |', '(A|B|C)|(D|EE)', -1);
+  HasLength('branch () twice |', '(A|\b|C)|(D|E)', -1);
+  HasLength('branch () twice |', '(A|B|C)|(D|^)',  -1);
+
+  HasLength('branch () nested', '(A(x)|B(D|E))',     2);
+  HasLength('branch () nested', '(A(x)|Bx|C(D|E))',   2);
+  HasLength('branch () nested', '(A(x)|BB(D|E))',   -1);
+  HasLength('branch () nested', '(A(x)|B(DD|E))',   -1);
+
+  HasLength('branch () some zero len', 'x(A|B\b|Cx{0})',   2);
 
 end;
 
