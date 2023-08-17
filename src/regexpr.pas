@@ -283,6 +283,7 @@ type
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
     GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
+    GrpBacktrackingAsAtom: array [0 .. RegexMaxGroups - 1] of boolean; // close of group[i] has set IsBacktrackingGroupAsAtom
     IsBacktrackingGroupAsAtom: Boolean;  // Backtracking an entire atomic group that had matched.
     // Once the group matched it should not try any alternative matches within the group
     // If the pattern after the group fails, then the group fails (regardless of any alternative match in the group)
@@ -5174,11 +5175,13 @@ begin
         begin
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
-          savedIsBacktrackingGroupAsAtom := IsBacktrackingGroupAsAtom;
+//          savedIsBacktrackingGroupAsAtom := IsBacktrackingGroupAsAtom;
           save := GrpBounds[regRecursion].GrpStart[no];
           GrpBounds[regRecursion].GrpStart[no] := regInput;
           Result := MatchPrim(next);
-          IsBacktrackingGroupAsAtom := savedIsBacktrackingGroupAsAtom;
+          if GrpBacktrackingAsAtom[no] then
+            IsBacktrackingGroupAsAtom := False; // savedIsBacktrackingGroupAsAtom;
+          GrpBacktrackingAsAtom[no] := False;
           if not Result then
             GrpBounds[regRecursion].GrpStart[no] := save;
           // handle negative lookahead
@@ -5219,8 +5222,10 @@ begin
           Result := MatchPrim(next);
           if not Result then begin// ###0.936
             GrpBounds[regRecursion].GrpEnd[no] := save;
-            if GrpAtomic[no] then
+            if GrpAtomic[no] and not IsBacktrackingGroupAsAtom then begin
+              GrpBacktrackingAsAtom[no] := True;
               IsBacktrackingGroupAsAtom := True;
+            end;
           end;
           Exit;
         end;
@@ -5240,9 +5245,9 @@ begin
               if Result then
                 Exit;
               // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
+              regInput := save;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-              regInput := save;
               scan := regNext(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
             Exit;
@@ -5386,12 +5391,12 @@ begin
                   Result := True;
                   Exit;
                 end;
-                if IsBacktrackingGroupAsAtom then
-                  Exit;
                 {$IFDEF ComplexBraces}
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
                 LoopStackIdx := SavedLoopStackIdx;
                 {$ENDIF}
+                if IsBacktrackingGroupAsAtom then
+                  Exit;
               end;
               Inc(no); // Couldn't or didn't - move forward.
             end; { of while }
@@ -5415,12 +5420,12 @@ begin
                   Result := True;
                   Exit;
                 end;
-                if IsBacktrackingGroupAsAtom then
-                  Exit;
                 {$IFDEF ComplexBraces}
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
                 LoopStackIdx := SavedLoopStackIdx;
                 {$ENDIF}
+                if IsBacktrackingGroupAsAtom then
+                  Exit;
               end;
               Dec(no); // Couldn't or didn't - back up.
               regInput := save + no;

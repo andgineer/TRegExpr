@@ -1017,6 +1017,14 @@ begin
   IsMatching('NESTED: Atomic backtrace until match is found ',
              'a(?>((?>b.*?cx..8))|.)',
              '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
+  // The outer atomic must not backtrace, the inner group must not undo the flag for the outer
+  IsNotMatching('NESTED: Atomic backtrace inner and outer',
+             'a(?>((?>b.*?cx..8))|.)_',
+             '1ab__cx__9cx__8...56Yb');
+  IsMatching('NESTED: Atomic backtrace inner, outer can still try and find ',
+             'a(?>((?>b.*?cx..8|.)_)|.)',
+             '1ab__cx__9cx__8...56Yb',  [2,2,  -1,-1]);
+
   IsNotMatching('NESTED 2: Match is not changed, if pattern fails after atomic',
                 'a(?>(b.*?c)|.)x..8', '1ab__cx__9cx__8...56Yb');
   IsMatching('NESTED 2: Atomic backtrace until match is found ',
