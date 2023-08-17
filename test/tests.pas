@@ -857,6 +857,7 @@ end;
 
 procedure TTestRegexpr.TestBads;
 begin
+  TestBadRegex('Error for matching zero width {}', '(a{0,2})*');
   //TestBadRegex('No Error for bad braces', 'd{');
   //TestBadRegex('No Error for bad braces', 'd{22');
   //TestBadRegex('No Error for bad braces', 'd{}');
@@ -1410,7 +1411,6 @@ procedure TTestRegexpr.RunTest72;
 begin
   RunRETest(72);
 end;
-
 
 procedure TTestRegexpr.TestGroups;
 var

@@ -3435,9 +3435,9 @@ begin
           Exit;
         end;
         if BracesMin > 0 then
-          FlagParse := FLAG_WORST;
+          FlagParse := FLAG_WORST or FLAG_HASWIDTH;
         if BracesMax > 0 then
-          FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SPECSTART;
+          FlagParse := FlagParse or FLAG_SPECSTART;
 
         nextch := (regParse + 1)^;
         PossessiveCh := nextch = '+';
