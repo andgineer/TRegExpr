@@ -205,8 +205,8 @@ const
   RegExprUsePairedBreak: boolean = True;
   RegExprReplaceLineBreak: RegExprString = sLineBreak;
 
-  RegExprLookaheadIsAtomic: boolean = False;
-  RegExprLookbehindIsAtomic: boolean = True;
+  RegExprLookaheadIsAtomic: boolean = True;
+  RegExprLookbehindIsAtomic: boolean = False;
 
 const
   // Max number of groups.
@@ -283,7 +283,10 @@ type
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
     GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
-    GrpAtomicDone: array [0 .. RegexMaxGroups - 1] of boolean; // atomic group[i] is "done" (used in Exec* only)
+    FIsBactracingAtomic: Boolean;  // Backtracing an atomic group that has matched.
+    // Once the group matched it should not try any alternative matches within the group
+    // If the pattern after the group fails, then the group fails (regardless of any alternative match in the group)
+
     GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
     GrpSubCalled: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is called by OP_SUBCALL*
     GrpCount: integer;
@@ -4806,7 +4809,8 @@ var
   SavedLoopStackIdx: integer;
   {$ENDIF}
   bound1, bound2: boolean;
-  checkAtomicGroup: boolean;
+  saveSubCalled: boolean;
+  savedBackracingAtomic: boolean;
 begin
   Result := False;
   {
@@ -5170,9 +5174,11 @@ begin
         begin
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
+          savedBackracingAtomic := FIsBactracingAtomic;
           save := GrpBounds[regRecursion].GrpStart[no];
           GrpBounds[regRecursion].GrpStart[no] := regInput;
           Result := MatchPrim(next);
+          FIsBactracingAtomic := savedBackracingAtomic;
           if not Result then
             GrpBounds[regRecursion].GrpStart[no] := save;
           // handle negative lookahead
@@ -5199,8 +5205,6 @@ begin
           regCurrentGrp := -1;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
-          if GrpAtomic[no] then
-            GrpAtomicDone[no] := True;
           save := GrpBounds[regRecursion].GrpEnd[no];
           GrpBounds[regRecursion].GrpEnd[no] := regInput;
 
@@ -5213,15 +5217,17 @@ begin
           end;
 
           Result := MatchPrim(next);
-          if not Result then // ###0.936
+          if not Result then begin// ###0.936
             GrpBounds[regRecursion].GrpEnd[no] := save;
+            if GrpAtomic[no] then
+              FIsBactracingAtomic := True;
+          end;
           Exit;
         end;
 
       OP_BRANCH:
         begin
           saveCurrentGrp := regCurrentGrp;
-          checkAtomicGroup := (regCurrentGrp >= 0) and GrpAtomic[regCurrentGrp];
           if (next^ <> OP_BRANCH) // No next choice in group
           then
             next := scan + REOpSz + RENextOffSz // Avoid recursion
@@ -5234,9 +5240,8 @@ begin
               if Result then
                 Exit;
               // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
-              if checkAtomicGroup then
-                if GrpAtomicDone[regCurrentGrp] then
-                  Exit;
+              if FIsBactracingAtomic then
+                Exit;
               regInput := save;
               scan := regNext(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
@@ -5381,6 +5386,8 @@ begin
                   Result := True;
                   Exit;
                 end;
+                if FIsBactracingAtomic then
+                  Exit;
                 {$IFDEF ComplexBraces}
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
                 LoopStackIdx := SavedLoopStackIdx;
@@ -5408,6 +5415,8 @@ begin
                   Result := True;
                   Exit;
                 end;
+                if FIsBactracingAtomic then
+                  Exit;
                 {$IFDEF ComplexBraces}
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
                 LoopStackIdx := SavedLoopStackIdx;
@@ -5507,12 +5516,12 @@ begin
           if regRecursion < RegexMaxRecursion then
           begin
             // mark group in GrpSubCalled array so opcode can detect subcall
-            checkAtomicGroup := GrpSubCalled[no];
+            saveSubCalled := GrpSubCalled[no];
             GrpSubCalled[no] := True;
             Inc(regRecursion);
             bound1 := MatchPrim(save);
             Dec(regRecursion);
-            GrpSubCalled[no] := checkAtomicGroup;
+            GrpSubCalled[no] := saveSubCalled;
           end
           else
             bound1 := False;
@@ -5608,7 +5617,6 @@ end;
 procedure TRegExpr.ClearMatches;
 begin
   FillChar(GrpBounds, SizeOf(GrpBounds), 0);
-  FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
 end;
 
@@ -5618,7 +5626,6 @@ var
 begin
   FillChar(GrpBounds, SizeOf(GrpBounds), 0);
   FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
-  FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
   FillChar(GrpOpCodes, SizeOf(GrpOpCodes), 0);
 

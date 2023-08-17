@@ -44,12 +44,16 @@ type
     procedure AreEqual(AErrorMessage: string; s1, s2: string); overload;
     procedure AreEqual(AErrorMessage: string; i1, i2: integer); overload;
     procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString);
+    // CheckMatches: returns error message
+    procedure IsMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AExpectStartLenPairs: array of Integer);
+    procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString);
   published
     procedure TestEmpty;
     procedure TestNotFound;
     procedure TestBads;
     procedure TestContinueAnchor;
     procedure TestRegMustExist;
+    procedure TestAtomic;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -797,6 +801,34 @@ begin
   IsTrue(AErrorMessage, ok);
 end;
 
+procedure TTestRegexpr.IsMatching(AErrorMessage: String; ARegEx,
+  AInput: RegExprString; AExpectStartLenPairs: array of Integer);
+var
+  i: Integer;
+  L: SizeInt;
+begin
+  CompileRE(ARegEx);
+  RE.InputString:= AInput;
+
+  IsTrue(AErrorMessage + ' Exec must give True', RE.Exec);
+
+  L := Length(AExpectStartLenPairs) div 2;
+  AreEqual(AErrorMessage + ': MatchCount', L - 1, RE.SubExprMatchCount);
+  for i := 0 to L - 1 do begin
+    AreEqual(AErrorMessage + ': MatchPos['+inttostr(i)+']', AExpectStartLenPairs[i*2], RE.MatchPos[i]);
+    AreEqual(AErrorMessage + ': MatchLen['+inttostr(i)+']', AExpectStartLenPairs[i*2+1], RE.MatchLen[i]);
+  end;
+end;
+
+procedure TTestRegexpr.IsNotMatching(AErrorMessage: String; ARegEx,
+  AInput: RegExprString);
+begin
+  CompileRE(ARegEx);
+  RE.InputString:= AInput;
+
+  IsFalse(AErrorMessage + ': Exec must give False', RE.Exec);
+end;
+
 procedure TTestRegexpr.TestEmpty;
 begin
   CompileRE('1'); // just to create RE object
@@ -953,6 +985,43 @@ begin
   RE.InputString:= StringOfChar('.', 3000) + 'abcd';
   RE.SlowChecksSizeMax := 5000;
   IsTrue('Exec must give True', RE.Exec);
+end;
+
+procedure TTestRegexpr.TestAtomic;
+begin
+  IsNotMatching('Match is not changed, if pattern fails after atomic',
+                'a(?>b.*?c|.)x..8', '1ab__cx__9cx__8...56Yb');
+  IsMatching('Atomic backtrace until match is found ',
+             'a(?>b.*?cx..8|.)',
+             '1ab__cx__9cx__8_...56Yb', [2,14]);
+
+  IsMatching('Bactrace to before start of atomic',
+             '(.)(?>Y|X)a', '1234Xa...56Yb', [4,3,  4,1]);
+  IsMatching('Bactrace to before start of atomic - atomic on 2nd pos',
+             '(.)(?>X|Y)b',
+             '1234Xa...56Yb', [11,3,  11,1]);
+  IsMatching('Bactrace to before start of atomic - atomic on 2nd pos',
+             '(.)(?>Y|X)b',
+             '1234Xa...56Yb', [11,3,  11,1]);
+
+  IsMatching('Bactrace to before start of atomic - 2nd pos - forget capture in 1st pos',
+             '(.)(?>(X)|Y)b',
+             '1234Xa...56Yb', [11,3,  11,1, -1,-1]);
+  IsMatching('Bactrace to before start of atomic - 2nd pos - forget capture in 1st pos',
+             '(.)(?>Y|(X))b',
+             '1234Xa...56Yb', [11,3,  11,1, -1,-1]);
+
+  // Nested
+  IsNotMatching('NESTED: Match is not changed, if pattern fails after atomic',
+                'a(?>(b.*?c)|.)x..8', '1ab__cx__9cx__8...56Yb');
+  IsMatching('NESTED: Atomic backtrace until match is found ',
+             'a(?>((?>b.*?cx..8))|.)',
+             '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
+  IsNotMatching('NESTED 2: Match is not changed, if pattern fails after atomic',
+                'a(?>(b.*?c)|.)x..8', '1ab__cx__9cx__8...56Yb');
+  IsMatching('NESTED 2: Atomic backtrace until match is found ',
+             'a(?>((?>b.*?cx..8))|.)',
+             '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
 end;
 
 procedure TTestRegexpr.RunTest1;
