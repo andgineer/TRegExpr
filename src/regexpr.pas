@@ -283,7 +283,7 @@ type
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
     GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
-    FIsBactracingAtomic: Boolean;  // Backtracing an atomic group that has matched.
+    IsBacktrackingGroupAsAtom: Boolean;  // Backtracing an atomic group that has matched.
     // Once the group matched it should not try any alternative matches within the group
     // If the pattern after the group fails, then the group fails (regardless of any alternative match in the group)
 
@@ -4810,7 +4810,7 @@ var
   {$ENDIF}
   bound1, bound2: boolean;
   saveSubCalled: boolean;
-  savedBackracingAtomic: boolean;
+  savedIsBacktrackingGroupAsAtom: boolean;
 begin
   Result := False;
   {
@@ -5174,11 +5174,11 @@ begin
         begin
           no := Ord(scan^) - Ord(OP_OPEN);
           regCurrentGrp := no;
-          savedBackracingAtomic := FIsBactracingAtomic;
+          savedIsBacktrackingGroupAsAtom := IsBacktrackingGroupAsAtom;
           save := GrpBounds[regRecursion].GrpStart[no];
           GrpBounds[regRecursion].GrpStart[no] := regInput;
           Result := MatchPrim(next);
-          FIsBactracingAtomic := savedBackracingAtomic;
+          IsBacktrackingGroupAsAtom := savedIsBacktrackingGroupAsAtom;
           if not Result then
             GrpBounds[regRecursion].GrpStart[no] := save;
           // handle negative lookahead
@@ -5220,7 +5220,7 @@ begin
           if not Result then begin// ###0.936
             GrpBounds[regRecursion].GrpEnd[no] := save;
             if GrpAtomic[no] then
-              FIsBactracingAtomic := True;
+              IsBacktrackingGroupAsAtom := True;
           end;
           Exit;
         end;
@@ -5240,7 +5240,7 @@ begin
               if Result then
                 Exit;
               // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
-              if FIsBactracingAtomic then
+              if IsBacktrackingGroupAsAtom then
                 Exit;
               regInput := save;
               scan := regNext(scan);
@@ -5386,7 +5386,7 @@ begin
                   Result := True;
                   Exit;
                 end;
-                if FIsBactracingAtomic then
+                if IsBacktrackingGroupAsAtom then
                   Exit;
                 {$IFDEF ComplexBraces}
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
@@ -5415,7 +5415,7 @@ begin
                   Result := True;
                   Exit;
                 end;
-                if FIsBactracingAtomic then
+                if IsBacktrackingGroupAsAtom then
                   Exit;
                 {$IFDEF ComplexBraces}
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
