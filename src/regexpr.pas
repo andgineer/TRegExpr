@@ -5621,6 +5621,8 @@ procedure TRegExpr.ClearMatches;
 begin
   FillChar(GrpBounds, SizeOf(GrpBounds), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
+  FillChar(GrpSubCalled, SizeOf(GrpBacktrackingAsAtom), 0);
+  IsBacktrackingGroupAsAtom := False;
 end;
 
 procedure TRegExpr.ClearInternalIndexes;
