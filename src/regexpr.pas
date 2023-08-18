@@ -284,6 +284,7 @@ type
   PRegExprLookAroundInfo = ^TRegExprLookAroundInfo;
   TRegExprLookAroundInfo = record
     InputPos: PRegExprChar; // pointer to start of look-around in the input string
+    savedInputCurrentEnd: PRegExprChar; // pointer to start of look-around in the input string
     IsNegative, HasMatchedToEnd: Boolean;
     IsBackTracking: Boolean;
     OuterInfo: PRegExprLookAroundInfo; // for nested lookaround
@@ -340,6 +341,7 @@ type
     fInputStart: PRegExprChar; // pointer to first char of input string
     fInputContinue: PRegExprChar; // pointer to char specified with Exec(AOffset), or start pos of ExecNext
     fInputEnd: PRegExprChar; // pointer after last char of input string
+    fInputCurrentEnd: PRegExprChar; // pointer after last char of the current visible part of input string (can be limited by look-behind)
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
     regCurrentGrp: integer; // index of group handling by OP_OPEN* opcode
@@ -4952,7 +4954,7 @@ begin
 
       OP_ANY:
         begin
-          if regInput >= fInputEnd then
+          if regInput >= fInputCurrentEnd then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -4963,7 +4965,7 @@ begin
 
       OP_ANYML:
         begin
-          if (regInput >= fInputEnd) or
+          if (regInput >= fInputCurrentEnd) or
             IsPairedBreak(regInput) or
             IsCustomLineSeparator(regInput^)
           then
@@ -4977,14 +4979,14 @@ begin
 
       OP_ANYDIGIT:
         begin
-          if (regInput >= fInputEnd) or not IsDigitChar(regInput^) then
+          if (regInput >= fInputCurrentEnd) or not IsDigitChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTDIGIT:
         begin
-          if (regInput >= fInputEnd) or IsDigitChar(regInput^) then
+          if (regInput >= fInputCurrentEnd) or IsDigitChar(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -4995,14 +4997,14 @@ begin
 
       OP_ANYLETTER:
         begin
-          if (regInput >= fInputEnd) or not IsWordChar(regInput^) then
+          if (regInput >= fInputCurrentEnd) or not IsWordChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTLETTER:
         begin
-          if (regInput >= fInputEnd) or IsWordChar(regInput^) then
+          if (regInput >= fInputCurrentEnd) or IsWordChar(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5013,14 +5015,14 @@ begin
 
       OP_ANYSPACE:
         begin
-          if (regInput >= fInputEnd) or not IsSpaceChar(regInput^) then
+          if (regInput >= fInputCurrentEnd) or not IsSpaceChar(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTSPACE:
         begin
-          if (regInput >= fInputEnd) or IsSpaceChar(regInput^) then
+          if (regInput >= fInputCurrentEnd) or IsSpaceChar(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5031,14 +5033,14 @@ begin
 
       OP_ANYVERTSEP:
         begin
-          if (regInput >= fInputEnd) or not IsVertLineSeparator(regInput^) then
+          if (regInput >= fInputCurrentEnd) or not IsVertLineSeparator(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTVERTSEP:
         begin
-          if (regInput >= fInputEnd) or IsVertLineSeparator(regInput^) then
+          if (regInput >= fInputCurrentEnd) or IsVertLineSeparator(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5049,14 +5051,14 @@ begin
 
       OP_ANYHORZSEP:
         begin
-          if (regInput >= fInputEnd) or not IsHorzSeparator(regInput^) then
+          if (regInput >= fInputCurrentEnd) or not IsHorzSeparator(regInput^) then
             Exit;
           Inc(regInput);
         end;
 
       OP_NOTHORZSEP:
         begin
-          if (regInput >= fInputEnd) or IsHorzSeparator(regInput^) then
+          if (regInput >= fInputCurrentEnd) or IsHorzSeparator(regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5069,6 +5071,8 @@ begin
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
           Len := PLongInt(opnd)^;
+          if (regInput + Len > fInputCurrentEnd) then
+            Exit;
           Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
           if (opnd^ <> regInput^) and (InvertCase(opnd^) <> regInput^) then
@@ -5092,6 +5096,8 @@ begin
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
           Len := PLongInt(opnd)^;
+          if (regInput + Len > fInputCurrentEnd) then
+            Exit;
           Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
           if opnd^ <> regInput^ then
@@ -5126,7 +5132,7 @@ begin
           save := regInput;
           while opnd < opGrpEnd do
           begin
-            if (save >= fInputEnd) or (save^ <> opnd^) then
+            if (save >= fInputCurrentEnd) or (save^ <> opnd^) then
               Exit;
             Inc(save);
             Inc(opnd);
@@ -5149,7 +5155,7 @@ begin
           save := regInput;
           while opnd < opGrpEnd do
           begin
-            if (save >= fInputEnd) or
+            if (save >= fInputCurrentEnd) or
               ((save^ <> opnd^) and (save^ <> InvertCase(opnd^))) then
               Exit;
             Inc(save);
@@ -5160,7 +5166,7 @@ begin
 
       OP_ANYOF:
         begin
-          if (regInput >= fInputEnd) or
+          if (regInput >= fInputCurrentEnd) or
             not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
             Exit;
           {$IFDEF UNICODEEX}
@@ -5172,7 +5178,7 @@ begin
 
       OP_ANYBUT:
         begin
-          if (regInput >= fInputEnd) or
+          if (regInput >= fInputCurrentEnd) or
             FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
             Exit;
           {$IFDEF UNICODEEX}
@@ -5184,7 +5190,7 @@ begin
 
       OP_ANYOFCI:
         begin
-          if (regInput >= fInputEnd) or
+          if (regInput >= fInputCurrentEnd) or
             not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
             Exit;
           {$IFDEF UNICODEEX}
@@ -5196,7 +5202,7 @@ begin
 
       OP_ANYBUTCI:
         begin
-          if (regInput >= fInputEnd) or
+          if (regInput >= fInputCurrentEnd) or
             FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
             Exit;
           {$IFDEF UNICODEEX}
@@ -5265,7 +5271,9 @@ begin
           LookAroundInfo.HasMatchedToEnd := False;
           LookAroundInfo.IsBackTracking := False;
           LookAroundInfo.OuterInfo := LookAroundInfoList;
+          LookAroundInfo.savedInputCurrentEnd := fInputCurrentEnd;
           LookAroundInfoList := @LookAroundInfo;
+          fInputCurrentEnd := fInputEnd;
 
           scan := AlignToPtr(scan + 1) + SizeOf(TRENextOff);
           Result := MatchPrim(scan);
@@ -5273,6 +5281,7 @@ begin
           if LookAroundInfo.IsBackTracking then
             IsBacktrackingGroupAsAtom := False;
           LookAroundInfoList := LookAroundInfo.OuterInfo;
+          fInputCurrentEnd := LookAroundInfo.savedInputCurrentEnd;
 
           if IsNegativeLook then begin
             Result := not LookAroundInfo.HasMatchedToEnd;
@@ -5299,7 +5308,9 @@ begin
           LookAroundInfo.HasMatchedToEnd := False;
           LookAroundInfo.IsBackTracking := False;
           LookAroundInfo.OuterInfo := LookAroundInfoList;
+          LookAroundInfo.savedInputCurrentEnd := fInputCurrentEnd;
           LookAroundInfoList := @LookAroundInfo;
+          fInputCurrentEnd := regInput;
 
           scan := AlignToPtr(scan + 1) + SizeOf(TRENextOff);
           InpStart := fInputStart;
@@ -5313,6 +5324,7 @@ begin
           if LookAroundInfo.IsBackTracking then
             IsBacktrackingGroupAsAtom := False;
           LookAroundInfoList := LookAroundInfo.OuterInfo;
+          fInputCurrentEnd := LookAroundInfo.savedInputCurrentEnd;
 
           if IsNegativeLook then begin
             Result := not LookAroundInfo.HasMatchedToEnd;
@@ -5337,6 +5349,7 @@ begin
           LookAroundInfoPtr.HasMatchedToEnd := True;
 
           if not LookAroundInfoPtr^.IsNegative then begin
+            fInputCurrentEnd := LookAroundInfoPtr^.savedInputCurrentEnd;
             regInput := LookAroundInfoPtr^.InputPos;
             LookAroundInfoList := LookAroundInfoPtr^.OuterInfo;
 
@@ -5364,6 +5377,7 @@ begin
 
           if not LookAroundInfoPtr^.IsNegative then begin
             regInput := LookAroundInfoPtr^.InputPos;
+            fInputCurrentEnd := LookAroundInfoPtr^.savedInputCurrentEnd;
             LookAroundInfoList := LookAroundInfoPtr^.OuterInfo;
 
             Result := MatchPrim(next);
@@ -5606,7 +5620,7 @@ begin
       {$IFDEF FastUnicodeData}
       OP_ANYCATEGORY:
         begin
-          if (regInput >= fInputEnd) then Exit;
+          if (regInput >= fInputCurrentEnd) then Exit;
           if not MatchOneCharCategory(scan + REOpSz + RENextOffSz, regInput) then Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5617,7 +5631,7 @@ begin
 
       OP_NOTCATEGORY:
         begin
-          if (regInput >= fInputEnd) then Exit;
+          if (regInput >= fInputCurrentEnd) then Exit;
           if MatchOneCharCategory(scan + REOpSz + RENextOffSz, regInput) then Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5721,6 +5735,7 @@ begin
   regCurrentGrp := -1;
   regNestedCalls := 0;
   regRecursion := 0;
+  fInputCurrentEnd := fInputEnd;
   Result := MatchPrim(regCodeWork);
   if Result then
   begin
