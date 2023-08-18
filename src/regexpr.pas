@@ -5628,7 +5628,7 @@ end;
 
 procedure TRegExpr.ClearInternalExecData;
 begin
-  FillChar(GrpSubCalled, SizeOf(GrpBacktrackingAsAtom), 0);
+  FillChar(GrpBacktrackingAsAtom, SizeOf(GrpBacktrackingAsAtom), 0);
   IsBacktrackingGroupAsAtom := False;
 end;
 
