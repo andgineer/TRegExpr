@@ -427,6 +427,7 @@ type
     function DumpCategoryChars(ch, ch2: REChar; Positive: boolean): RegExprString;
 
     procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure ClearInternalExecData; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: boolean; var ARes: TRegExprCharset);
@@ -5590,6 +5591,7 @@ begin
     if (APos - fHelperLen) >= fInputStart then
     begin
       fHelper.SetInputRange(APos - fHelperLen, APos, fInputContinue);
+      fHelper.ClearInternalExecData;
       if fHelper.MatchAtOnePos(APos - fHelperLen) then
       begin
         Result := False;
@@ -5621,6 +5623,10 @@ procedure TRegExpr.ClearMatches;
 begin
   FillChar(GrpBounds, SizeOf(GrpBounds), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
+end;
+
+procedure TRegExpr.ClearInternalExecData;
+begin
   FillChar(GrpSubCalled, SizeOf(GrpBacktrackingAsAtom), 0);
   IsBacktrackingGroupAsAtom := False;
 end;
@@ -5654,6 +5660,8 @@ begin
   // will lead to leaving ExecPrim without actual search. That is
   // important for ExecNext logic and so on.
   ClearMatches;
+  ClearInternalExecData;
+
 
   // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
   if programm = nil then
@@ -5782,6 +5790,7 @@ end;
 
 procedure TRegExpr.SetInputRange(AStart, AEnd, AContinueAnchor: PRegExprChar);
 begin
+  ClearMatches;
   fInputString := '';
   fInputStart := AStart;
   fInputEnd := AEnd;
