@@ -464,11 +464,6 @@ type
     procedure SetModifierS(AValue: boolean);
     procedure SetModifierX(AValue: boolean);
 
-    // Default handler raises exception ERegExpr with
-    // Message = ErrorMsg (AErrorID), ErrorCode = AErrorID
-    // and CompilerErrorPos = value of property CompilerErrorPos.
-    procedure Error(AErrorID: integer); virtual; // error handler.
-
     { ==================== Compiler section =================== }
     // compile a regular expression into internal code
     function CompileRegExpr(ARegExp: PRegExprChar): boolean;
@@ -551,6 +546,12 @@ type
     procedure SetLineSeparators(const AStr: RegExprString);
     {$ENDIF}
     procedure SetUsePairedBreak(AValue: boolean);
+
+  protected
+    // Default handler raises exception ERegExpr with
+    // Message = ErrorMsg (AErrorID), ErrorCode = AErrorID
+    // and CompilerErrorPos = value of property CompilerErrorPos.
+    procedure Error(AErrorID: integer); virtual; // error handler.
 
   public
     constructor Create; {$IFDEF OverMeth} overload;

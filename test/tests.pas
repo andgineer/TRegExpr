@@ -30,11 +30,25 @@ uses
 
 type
 
+  { TTestableRegExpr }
+
+  TTestableRegExpr = class(TRegExpr)
+  private
+    FTestLastError: integer;
+    FTestErrorCatching: boolean;
+  protected
+    procedure Error(AErrorID: integer); override;
+  public
+    procedure TestStartErrorCatching;
+    procedure TestEndErrorCatching;
+    procedure TestClearError;
+    property TestLastError: integer read FTestLastError;
+  end;
   { TTestRegexpr }
 
   TTestRegexpr= class(TTestCase)
   private
-    RE: TRegExpr;
+    RE: TTestableRegExpr;
   protected
     procedure RunRETest(aIndex: Integer);
     procedure CompileRE(const AExpression: RegExprString);
@@ -43,10 +57,12 @@ type
     procedure IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
     procedure AreEqual(AErrorMessage: string; s1, s2: string); overload;
     procedure AreEqual(AErrorMessage: string; i1, i2: integer); overload;
-    procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString);
+    procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString; ExpErrorId: Integer = 0);
     // CheckMatches: returns error message
     procedure IsMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AExpectStartLenPairs: array of Integer);
     procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString);
+    procedure SetUp; override;
+    procedure TearDown; override;
   published
     procedure TestEmpty;
     procedure TestNotFound;
@@ -788,17 +804,18 @@ begin
 end;
 
 procedure TTestRegexpr.TestBadRegex(const AErrorMessage: string;
-  const AExpression: RegExprString);
-var
-  ok: boolean;
+  const AExpression: RegExprString; ExpErrorId: Integer);
 begin
   try
+    RE.TestStartErrorCatching;
     CompileRE(AExpression);
-    ok := False;
-  except
-    ok := True;
+    if ExpErrorId <> 0 then
+      AreEqual(AErrorMessage, ExpErrorId, RE.TestLastError)
+    else
+      IsTrue(AErrorMessage, RE.TestLastError <> 0);
+  finally
+    RE.TestEndErrorCatching;
   end;
-  IsTrue(AErrorMessage, ok);
 end;
 
 procedure TTestRegexpr.IsMatching(AErrorMessage: String; ARegEx,
@@ -829,6 +846,22 @@ begin
   IsFalse(AErrorMessage + ': Exec must give False', RE.Exec);
 end;
 
+procedure TTestRegexpr.SetUp;
+begin
+  inherited SetUp;
+  if (RE = Nil) then
+  begin
+    RE := TTestableRegExpr.Create;
+    RE.ReplaceLineEnd := #10;
+  end;
+end;
+
+procedure TTestRegexpr.TearDown;
+begin
+  inherited TearDown;
+  FreeAndNil(RE);
+end;
+
 procedure TTestRegexpr.TestEmpty;
 begin
   CompileRE('1'); // just to create RE object
@@ -857,10 +890,10 @@ end;
 
 procedure TTestRegexpr.TestBads;
 begin
-  TestBadRegex('Error for matching zero width {}', '(a{0,2})*');
-  //TestBadRegex('No Error for bad braces', 'd{');
-  //TestBadRegex('No Error for bad braces', 'd{22');
-  //TestBadRegex('No Error for bad braces', 'd{}');
+  TestBadRegex('Error for matching zero width {}', '(a{0,2})*', 115);
+  TestBadRegex('No Error for bad braces', 'd{');
+  TestBadRegex('No Error for bad braces', 'd{22');
+  TestBadRegex('No Error for bad braces', 'd{}');
 end;
 
 procedure TTestRegexpr.TestContinueAnchor;
@@ -1414,9 +1447,9 @@ end;
 
 procedure TTestRegexpr.TestGroups;
 var
-  R: TRegExpr;
+  R: TTestableRegExpr;
 begin
-  R:= TRegExpr.Create;
+  R:= TTestableRegExpr.Create;
   try
     R.Expression:= '(\w+) (?:\w+) (\w+) (?:\w+) (\d+)';
     R.InputString:= 'abc wall dirt wert 234';
@@ -1432,7 +1465,7 @@ procedure TTestRegexpr.CompileRE(const AExpression: RegExprString);
 begin
   if (RE = Nil) then
   begin
-    RE := TRegExpr.Create;
+    RE := TTestableRegExpr.Create;
     RE.ReplaceLineEnd := #10;
   end;
   RE.Expression := AExpression;
@@ -1485,6 +1518,31 @@ begin
     RE.Exec;
     DoMatchAssertions;
   end;
+end;
+
+procedure TTestableRegExpr.Error(AErrorID: integer);
+begin
+  if FTestErrorCatching then
+    FTestLastError := AErrorID
+  else
+    inherited Error(AErrorID);
+end;
+
+procedure TTestableRegExpr.TestStartErrorCatching;
+begin
+  FTestErrorCatching := True;
+  TestClearError;
+end;
+
+procedure TTestableRegExpr.TestEndErrorCatching;
+begin
+  FTestErrorCatching := False;
+  TestClearError;
+end;
+
+procedure TTestableRegExpr.TestClearError;
+begin
+  FTestLastError := 0;
 end;
 
 initialization
