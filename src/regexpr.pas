@@ -5605,6 +5605,7 @@ begin
   // will lead to leaving ExecPrim without actual search. That is
   // important for ExecNext logic and so on.
   ClearMatches;
+  IsMatchingAfterLoop := False;
 
   // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
   if programm = nil then
