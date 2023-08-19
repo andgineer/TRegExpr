@@ -5237,7 +5237,9 @@ begin
                 regInput := save;
               end;
               Dec(LoopStackIdx); // Fail. May be we are too greedy? ;)
+              no := LoopStackIdx;
               Result := MatchPrim(next);
+              LoopStackIdx := no;
               if not Result then
                 regInput := save;
               Exit;
@@ -5245,7 +5247,9 @@ begin
             else
             begin
               // non-greedy - try just now
+              no := LoopStackIdx;
               Result := MatchPrim(next);
+              LoopStackIdx := no;
               if Result then
                 Exit
               else

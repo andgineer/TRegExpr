@@ -127,6 +127,8 @@ type
     procedure RunTest70;
     procedure RunTest71;
     procedure RunTest72;
+    procedure RunTest73;
+    procedure RunTest74;
   end;
 
 implementation
@@ -160,7 +162,7 @@ end;
 
 
 const
-  testCases: array [1 .. 72] of TRegExTest = (
+  testCases: array [1 .. 74] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -736,6 +738,22 @@ const
     substitutionText: '';
     expectedResult: '12344321';
     matchStart: 8
+    ),
+    // 73
+    ( // nested loops / OP_LOOPNG
+    expression: 'A(?>(?:b|c(?:d|e)*?)*?_)a';
+    inputText: 'Acece_x_Acece_a_';
+    substitutionText: '';
+    expectedResult: 'Acece_a';
+    matchStart: 9
+    ),
+    // 74
+    ( // nested loops / OP_LOOPNG
+    expression: 'A(?>(?:b|c(?:d|e(?:f|g)*?)*?)*?_)a';
+    inputText: 'Acece_x_Acecegg_a_';
+    substitutionText: '';
+    expectedResult: 'Acecegg_a';
+    matchStart: 9
     )
   );
 
@@ -1205,6 +1223,16 @@ end;
 procedure TTestRegexpr.RunTest72;
 begin
   RunRETest(72);
+end;
+
+procedure TTestRegexpr.RunTest73;
+begin
+  RunRETest(73);
+end;
+
+procedure TTestRegexpr.RunTest74;
+begin
+  RunRETest(74);
 end;
 
 
