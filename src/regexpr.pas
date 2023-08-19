@@ -645,7 +645,7 @@ type
 
     {$IFDEF RegExpPCodeDump}
     // Show compiled regex in textual form
-    function Dump: RegExprString;
+    function Dump(Indent: Integer = 0): RegExprString;
     // Show single opcode in textual form
     function DumpOp(op: TREOp): RegExprString;
     {$ENDIF}
@@ -6609,13 +6609,13 @@ begin
   Result := Result + '} ';
 end;
 
-function TRegExpr.Dump: RegExprString;
+function TRegExpr.Dump(Indent: Integer): RegExprString;
 // dump a regexp in vaguely comprehensible form
 var
   s: PRegExprChar;
   op: TREOp; // Arbitrary non-END op.
   next: PRegExprChar;
-  i, NLen: integer;
+  i, NLen, CurIndent: integer;
   Diff: PtrInt;
   iByte: byte;
   ch, ch2: REChar;
@@ -6623,13 +6623,18 @@ begin
   if not IsProgrammOk then
     Exit;
 
+  CurIndent := 0;
   op := OP_EXACTLY;
   Result := '';
   s := regCodeWork;
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    Result := Result + Format('%2d: %s', [s - programm, DumpOp(s^)]);
+    if (((op >=OP_CLOSE_FIRST) and (op <= OP_CLOSE_LAST)) or (op = OP_LOOP) or (op = OP_LOOPNG)) and (CurIndent > 0) then
+      dec(CurIndent, Indent);
+    Result := Result + Format('%2d:%s %s', [s - programm, StringOfChar(' ', CurIndent), DumpOp(s^)]);
+    if (((op >=OP_OPEN_FIRST) and (op <= OP_OPEN_LAST)) or (op = OP_LOOPENTRY)) then
+      inc(CurIndent, Indent);
     // Where, what.
     next := regNext(s);
     if next = nil // Next ptr.
