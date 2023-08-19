@@ -329,6 +329,7 @@ type
     fRegexEnd: PRegExprChar; // pointer after last char of regex
     regCurrentGrp: integer; // index of group handling by OP_OPEN* opcode
     regRecursion: integer; // current level of recursion (?R) (?1); always 0 if no recursion is used
+    IsMatchingAfterLoop: boolean; // when a nested loop checks for its current counter, if the remaining pattern matches, the OP_LOOP of outer loops must be passed without executing them
 
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
@@ -4759,6 +4760,7 @@ var
   {$ENDIF}
   bound1, bound2: boolean;
   checkAtomicGroup: boolean;
+  savedIsMatchingAfterLoop: boolean;
 begin
   Result := False;
   {
@@ -5202,7 +5204,10 @@ begin
           end;
           save := regInput;
           LoopStack[LoopStackIdx] := 0; // init loop counter
+          savedIsMatchingAfterLoop := IsMatchingAfterLoop;
+          IsMatchingAfterLoop := False;
           Result := MatchPrim(next); // execute loop
+          IsMatchingAfterLoop := savedIsMatchingAfterLoop;
           LoopStackIdx := no; // cleanup
           if Result then
             Exit;
@@ -5212,6 +5217,8 @@ begin
 
       OP_LOOP, OP_LOOPNG:
         begin // ###0.940
+          if IsMatchingAfterLoop then
+            dec(LoopStackIdx);
           if LoopStackIdx <= 0 then
           begin
             Error(reeLoopWithoutEntry);
@@ -5238,7 +5245,10 @@ begin
               end;
               Dec(LoopStackIdx); // Fail. May be we are too greedy? ;)
               no := LoopStackIdx;
+              savedIsMatchingAfterLoop := IsMatchingAfterLoop;
+              IsMatchingAfterLoop := True;
               Result := MatchPrim(next);
+              IsMatchingAfterLoop := savedIsMatchingAfterLoop;
               LoopStackIdx := no;
               if not Result then
                 regInput := save;
@@ -5248,7 +5258,10 @@ begin
             begin
               // non-greedy - try just now
               no := LoopStackIdx;
+              savedIsMatchingAfterLoop := IsMatchingAfterLoop;
+              IsMatchingAfterLoop := True;
               Result := MatchPrim(next);
+              IsMatchingAfterLoop := savedIsMatchingAfterLoop;
               LoopStackIdx := no;
               if Result then
                 Exit
