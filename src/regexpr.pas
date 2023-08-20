@@ -222,14 +222,6 @@ const
   // Max depth of recursion for (?R) and (?1)..(?9)
   RegexMaxRecursion = 20;
 
-{$IFDEF ComplexBraces}
-const
-  LoopStackMax = 10; // max depth of loops stack //###0.925
-
-type
-  TRegExprLoopStack = array [1 .. LoopStackMax] of integer;
-{$ENDIF}
-
 type
   TRegExprModifiers = record
     I: boolean;
@@ -269,6 +261,15 @@ type
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
   {$ENDIF}
 
+  {$IFDEF ComplexBraces}
+  POpLoopInfo = ^TOpLoopInfo;
+  TOpLoopInfo = record
+    Count: integer;
+    OuterLoop: POpLoopInfo; // for nested loops
+  end;
+  {$ENDIF}
+
+
   TRegExprBounds = record
     GrpStart: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group start in InputString
     GrpEnd: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group end in InputString
@@ -293,8 +294,7 @@ type
     GrpCount: integer;
 
     {$IFDEF ComplexBraces}
-    LoopStack: TRegExprLoopStack; // state before entering loop
-    LoopStackIdx: integer; // 0 - out of all loops
+    CurrentLoopInfoListPtr: POpLoopInfo;
     {$ENDIF}
 
     // The "internal use only" fields to pass info from compile
@@ -4807,12 +4807,19 @@ var
   nextch: REChar;
   BracesMin, BracesMax: integer;
   // we use integer instead of TREBracesArg to better support */+
-  {$IFDEF ComplexBraces}
-  SavedLoopStack: TRegExprLoopStack; // very bad for recursion
-  SavedLoopStackIdx: integer;
-  {$ENDIF}
   bound1, bound2: boolean;
   saveSubCalled: boolean;
+  Local: record
+    case TREOp of
+      {$IFDEF ComplexBraces}
+      OP_LOOPENTRY: (
+        LoopInfo: TOpLoopInfo;
+      );
+      OP_LOOP: ( // and OP_LOOPNG
+        LoopInfoListPtr: POpLoopInfo;
+      );
+      {$ENDIF}
+  end;
 begin
   Result := False;
   {
@@ -5257,27 +5264,20 @@ begin
       {$IFDEF ComplexBraces}
       OP_LOOPENTRY:
         begin // ###0.925
-          no := LoopStackIdx;
-          Inc(LoopStackIdx);
-          if LoopStackIdx > LoopStackMax then
-          begin
-            Error(reeLoopStackExceeded);
-            Exit;
-          end;
+          Local.LoopInfo.Count := 0;
+          Local.LoopInfo.OuterLoop := CurrentLoopInfoListPtr;
+          CurrentLoopInfoListPtr := @Local.LoopInfo;
           save := regInput;
-          LoopStack[LoopStackIdx] := 0; // init loop counter
           Result := MatchPrim(next); // execute loop
-          LoopStackIdx := no; // cleanup
-          if Result then
-            Exit;
-          regInput := save;
+          CurrentLoopInfoListPtr := Local.LoopInfo.OuterLoop;
+          if not Result then
+            regInput := save;
           Exit;
         end;
 
       OP_LOOP, OP_LOOPNG:
         begin // ###0.940
-          if LoopStackIdx <= 0 then
-          begin
+          if CurrentLoopInfoListPtr = nil then begin
             Error(reeLoopWithoutEntry);
             Exit;
           end;
@@ -5285,23 +5285,24 @@ begin
           BracesMin := PREBracesArg(AlignToInt(scan + REOpSz + RENextOffSz))^;
           BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
           save := regInput;
-          if LoopStack[LoopStackIdx] >= BracesMin then
+          Local.LoopInfoListPtr := CurrentLoopInfoListPtr;
+          if Local.LoopInfoListPtr^.Count >= BracesMin then
           begin // Min alredy matched - we can work
             if scan^ = OP_LOOP then
             begin
               // greedy way - first try to max deep of greed ;)
-              if LoopStack[LoopStackIdx] < BracesMax then
+              if Local.LoopInfoListPtr^.Count < BracesMax then
               begin
-                Inc(LoopStack[LoopStackIdx]);
-                no := LoopStackIdx;
+                Inc(Local.LoopInfoListPtr^.Count);
                 Result := MatchPrim(opnd);
-                LoopStackIdx := no;
                 if Result then
                   Exit;
+                Dec(Local.LoopInfoListPtr^.Count);
                 regInput := save;
               end;
-              Dec(LoopStackIdx); // Fail. May be we are too greedy? ;)
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
               if not Result then
                 regInput := save;
               Exit;
@@ -5309,34 +5310,31 @@ begin
             else
             begin
               // non-greedy - try just now
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
               if Result then
-                Exit
-              else
-                regInput := save; // failed - move next and try again
-              if LoopStack[LoopStackIdx] < BracesMax then
+                Exit;
+              regInput := save; // failed - move next and try again
+              if Local.LoopInfoListPtr^.Count < BracesMax then
               begin
-                Inc(LoopStack[LoopStackIdx]);
-                no := LoopStackIdx;
+                Inc(Local.LoopInfoListPtr^.Count);
                 Result := MatchPrim(opnd);
-                LoopStackIdx := no;
                 if Result then
                   Exit;
+                Dec(Local.LoopInfoListPtr^.Count);
                 regInput := save;
               end;
-              Dec(LoopStackIdx); // Failed - back up
               Exit;
             end
           end
           else
           begin // first match a min_cnt times
-            Inc(LoopStack[LoopStackIdx]);
-            no := LoopStackIdx;
+            Inc(Local.LoopInfoListPtr^.Count);
             Result := MatchPrim(opnd);
-            LoopStackIdx := no;
             if Result then
               Exit;
-            Dec(LoopStack[LoopStackIdx]);
+            Dec(Local.LoopInfoListPtr^.Count);
             regInput := save;
             Exit;
           end;
@@ -5381,20 +5379,11 @@ begin
               // If it could work, try it.
               if (nextch = #0) or (regInput^ = nextch) then
               begin
-                {$IFDEF ComplexBraces}
-                System.Move(LoopStack, SavedLoopStack, SizeOf(LoopStack));
-                // ###0.925
-                SavedLoopStackIdx := LoopStackIdx;
-                {$ENDIF}
                 if MatchPrim(next) then
                 begin
                   Result := True;
                   Exit;
                 end;
-                {$IFDEF ComplexBraces}
-                System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
-                LoopStackIdx := SavedLoopStackIdx;
-                {$ENDIF}
                 if IsBacktrackingGroupAsAtom then
                   Exit;
               end;
@@ -5410,20 +5399,11 @@ begin
               // If it could work, try it.
               if (nextch = #0) or (regInput^ = nextch) then
               begin
-                {$IFDEF ComplexBraces}
-                System.Move(LoopStack, SavedLoopStack, SizeOf(LoopStack));
-                // ###0.925
-                SavedLoopStackIdx := LoopStackIdx;
-                {$ENDIF}
                 if MatchPrim(next) then
                 begin
                   Result := True;
                   Exit;
                 end;
-                {$IFDEF ComplexBraces}
-                System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
-                LoopStackIdx := SavedLoopStackIdx;
-                {$ENDIF}
                 if IsBacktrackingGroupAsAtom then
                   Exit;
               end;
@@ -5630,6 +5610,10 @@ procedure TRegExpr.ClearInternalExecData;
 begin
   FillChar(GrpBacktrackingAsAtom, SizeOf(GrpBacktrackingAsAtom), 0);
   IsBacktrackingGroupAsAtom := False;
+  {$IFDEF ComplexBraces}
+  // no loops started
+  CurrentLoopInfoListPtr := nil;
+  {$ENDIF}
 end;
 
 procedure TRegExpr.ClearInternalIndexes;
@@ -5662,7 +5646,6 @@ begin
   // important for ExecNext logic and so on.
   ClearMatches;
   ClearInternalExecData;
-
 
   // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
   if programm = nil then
@@ -5698,11 +5681,6 @@ begin
     if regMustString <> '' then
       if StrLPos(fInputStart, PRegExprChar(regMustString), fInputEnd - fInputStart, length(regMustString)) = nil then
         exit;
-
-  {$IFDEF ComplexBraces}
-  // no loops started
-  LoopStackIdx := 0; // ###0.925
-  {$ENDIF}
 
   // ATryOnce or anchored match (it needs to be tried only once).
   if ATryOnce or (regAnchored <> #0) then

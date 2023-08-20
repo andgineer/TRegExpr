@@ -70,6 +70,7 @@ type
     procedure TestContinueAnchor;
     procedure TestRegMustExist;
     procedure TestAtomic;
+    procedure TestLoop;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -1064,6 +1065,91 @@ begin
   IsMatching('NESTED 2: Atomic backtrace until match is found ',
              'a(?>((?>b.*?cx..8))|.)',
              '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
+end;
+
+procedure TTestRegexpr.TestLoop;
+begin
+  // The patterns below **should** use OP_LOOP[ng]
+
+  (* 'Aa(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+      The most inner () matches minimum  3 y each run
+      The 2nd inner ()  matches minimum  3 times 1 y + 3y   = 12 y
+      The outer ()      matches minimum  3 times 1 y + 12 y = 3*13 = 39 y
+  *)
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y){3,4}){3,4}',
+             'Aayyyyyyyyyyyy',  [1,14,   11,4,  14,1]); // minimum y
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y){3,4}){3,4}',
+             'Aayyyyyyyyyyyyy',  [1,15,   12,4,  15,1]); // one extra y
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y){3,4}){3,4}',
+             'Aayyyyyyyyyyyyyy',  [1,16,   13,4,  16,1]); // two extra y
+
+  IsNotMatching('nested {} greedy ',
+             'Aa(x|y(x|y){3,4}){3,4}',
+             'Aayyyyyyyyyyy'  );
+
+
+
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',  [1,41,   29,13,  38,4,  41,1]); // 39 y
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',  [1,42,   30,13,  39,4,  42,1]); // 40 y
+
+  IsNotMatching('nested {} greedy ',
+             'Aa(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');  // 38 y
+
+
+  IsMatching('nested {} no greedy ',
+             'Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',  [1,41,   29,13,  38,4,  41,1]); // 39 y
+
+  IsMatching('nested {} no greedy ',
+             'Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',  [1,41,   29,13,  38,4,  41,1]); // 40 y
+
+  IsNotMatching('nested {} no greedy ',
+             'Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');  // 38 y
+
+
+
+  IsMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e)*?)*?_)a',
+             'Acece_x_Acece_a_',  [9,7]);
+
+  IsMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e(?:f|g)*?)*?)*?_)a',
+             'Acece_x_Acecegg_a_',  [9,9]);
+
+  IsMatching('nested branch *? ',  // uses OP_BACK
+             'A((ce+?)c?|ce)*a',
+             'Aceecea_',  [1,7,   5,2,  5,2]);
+
+  IsMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e(?:f|g){0,2}?){1,1}?){2,2}?_)a',
+             'Acece_x_Acecegg_a_',  [9,9]);
+
+  IsMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e(?:f|g){0,2}?){1,1}?){2,2}?_)a(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Acece_x_Acecegg_ayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',
+             [9,93,   81,21,  97,5,  101, 1]);
+
+  IsNotMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e(?:f|g){0,2}?){1,1}?){2,2}?_)a(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Acece_x_Acecegg_ayyyyyyyyyyyyyyyyyyyyyyyyy'
+             );
+
+
 end;
 
 procedure TTestRegexpr.RunTest1;
