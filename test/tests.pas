@@ -30,11 +30,25 @@ uses
 
 type
 
+  { TTestableRegExpr }
+
+  TTestableRegExpr = class(TRegExpr)
+  private
+    FTestLastError: integer;
+    FTestErrorCatching: boolean;
+  protected
+    procedure Error(AErrorID: integer); override;
+  public
+    procedure TestStartErrorCatching;
+    procedure TestEndErrorCatching;
+    procedure TestClearError;
+    property TestLastError: integer read FTestLastError;
+  end;
   { TTestRegexpr }
 
   TTestRegexpr= class(TTestCase)
   private
-    RE: TRegExpr;
+    RE: TTestableRegExpr;
   protected
     procedure RunRETest(aIndex: Integer);
     procedure CompileRE(const AExpression: RegExprString);
@@ -43,11 +57,19 @@ type
     procedure IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
     procedure AreEqual(AErrorMessage: string; s1, s2: string); overload;
     procedure AreEqual(AErrorMessage: string; i1, i2: integer); overload;
-    procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString);
+    procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString; ExpErrorId: Integer = 0);
+    // CheckMatches: returns error message
+    procedure IsMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AExpectStartLenPairs: array of Integer);
+    procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString);
+    procedure SetUp; override;
+    procedure TearDown; override;
   published
     procedure TestEmpty;
     procedure TestNotFound;
     procedure TestBads;
+    procedure TestContinueAnchor;
+    procedure TestRegMustExist;
+    procedure TestAtomic;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -782,17 +804,62 @@ begin
 end;
 
 procedure TTestRegexpr.TestBadRegex(const AErrorMessage: string;
-  const AExpression: RegExprString);
-var
-  ok: boolean;
+  const AExpression: RegExprString; ExpErrorId: Integer);
 begin
   try
+    RE.TestStartErrorCatching;
     CompileRE(AExpression);
-    ok := False;
-  except
-    ok := True;
+    if ExpErrorId <> 0 then
+      AreEqual(AErrorMessage, ExpErrorId, RE.TestLastError)
+    else
+      IsTrue(AErrorMessage, RE.TestLastError <> 0);
+  finally
+    RE.TestEndErrorCatching;
   end;
-  IsTrue(AErrorMessage, ok);
+end;
+
+procedure TTestRegexpr.IsMatching(AErrorMessage: String; ARegEx,
+  AInput: RegExprString; AExpectStartLenPairs: array of Integer);
+var
+  i: Integer;
+  L: SizeInt;
+begin
+  CompileRE(ARegEx);
+  RE.InputString:= AInput;
+
+  IsTrue(AErrorMessage + ' Exec must give True', RE.Exec);
+
+  L := Length(AExpectStartLenPairs) div 2;
+  AreEqual(AErrorMessage + ': MatchCount', L - 1, RE.SubExprMatchCount);
+  for i := 0 to L - 1 do begin
+    AreEqual(AErrorMessage + ': MatchPos['+inttostr(i)+']', AExpectStartLenPairs[i*2], RE.MatchPos[i]);
+    AreEqual(AErrorMessage + ': MatchLen['+inttostr(i)+']', AExpectStartLenPairs[i*2+1], RE.MatchLen[i]);
+  end;
+end;
+
+procedure TTestRegexpr.IsNotMatching(AErrorMessage: String; ARegEx,
+  AInput: RegExprString);
+begin
+  CompileRE(ARegEx);
+  RE.InputString:= AInput;
+
+  IsFalse(AErrorMessage + ': Exec must give False', RE.Exec);
+end;
+
+procedure TTestRegexpr.SetUp;
+begin
+  inherited SetUp;
+  if (RE = Nil) then
+  begin
+    RE := TTestableRegExpr.Create;
+    RE.ReplaceLineEnd := #10;
+  end;
+end;
+
+procedure TTestRegexpr.TearDown;
+begin
+  inherited TearDown;
+  FreeAndNil(RE);
 end;
 
 procedure TTestRegexpr.TestEmpty;
@@ -823,9 +890,180 @@ end;
 
 procedure TTestRegexpr.TestBads;
 begin
-  //TestBadRegex('No Error for bad braces', 'd{');
-  //TestBadRegex('No Error for bad braces', 'd{22');
-  //TestBadRegex('No Error for bad braces', 'd{}');
+  TestBadRegex('Error for matching zero width {}', '(a{0,2})*', 115);
+  TestBadRegex('No Error for bad braces', 'd{');
+  TestBadRegex('No Error for bad braces', 'd{22');
+  TestBadRegex('No Error for bad braces', 'd{}');
+end;
+
+procedure TTestRegexpr.TestContinueAnchor;
+  procedure AssertMatch(AName: String; AStart, ALen: Integer);
+  begin
+    AreEqual(AName + 'MatchCount', 1, RE.SubExprMatchCount);
+    AreEqual(AName + 'MatchPos[1]', AStart, RE.MatchPos[1]);
+    AreEqual(AName + 'MatchLen[1]', ALen, RE.MatchLen[1]);
+  end;
+begin
+  // Without \G MatchNext will skip
+  CompileRE('(A)');
+  RE.InputString:= 'AABA';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('"A" match 1 at 1', 1, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('"A" match 2 at 2', 2, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('"A" match 3 at 4', 4, 1);
+
+
+  // With \G MatchNext will fail instead of skip
+  CompileRE('\G(A)');
+  RE.InputString:= 'AABA';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('"A" match 1 at 1', 1, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('"A" match 2 at 2', 2, 1);
+  IsFalse('Exec must give False "\G(A)"', RE.ExecNext);
+
+
+  // Without \G  chars will be matched before the capture
+  CompileRE('[^A]*([^A]*?A)');
+  RE.InputString:= '123A345A67890A--';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('Zero-len * - match 1 at 4', 4, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('Zero-len * - match 2 at 8', 8, 1);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('Zero-len * - match 3 at 14', 14, 1);
+
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('Zero-len * - Exec(2) at 4', 4, 1);
+
+  // Without \G  chars will be matched in the capture
+  CompileRE('[^A]*(\G[^A]*?A)');
+  RE.InputString:= '123A345A67890A--';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('\G match * - match 1 at 1', 1, 4);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('\G match * - match 2 at 5', 5, 4);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('\G match * - match 3 at 9', 9, 6);
+
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('\C Zero-len * - Exec(2) at 2', 2, 3);
+
+  // Without \G  chars will be matched in the capture
+  CompileRE('[^A]*\G([^A]*?A)');
+  RE.InputString:= '123A345A67890A--';
+
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('\G match * - match 1 at 1', 1, 4);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('\G match * - match 2 at 5', 5, 4);
+  IsTrue('Exec must give True', RE.ExecNext);
+  AssertMatch('\G match * - match 3 at 9', 9, 6);
+
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('\C Zero-len * - Exec(2) at 2', 2, 3);
+
+
+  CompileRE('(A|B)');
+  RE.InputString:= 'xBxA';
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('(A|B)  xBxA', 2, 1);
+
+  CompileRE('(A|\GB)');
+  RE.InputString:= 'xBxA';
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('(A|\GB)  xBxA', 4, 1);
+
+  CompileRE('(A|\GB)');
+  RE.InputString:= 'xBxA';
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('(A|\GB)  xBxA offset 2', 2, 1);
+
+  // in look behind
+  CompileRE('(?<=\GA.*)(X)');
+  RE.InputString:= '123X3';
+  IsFalse('Exec must give True', RE.Exec);
+  // in look behind
+  CompileRE('(?<=\GA.*)(X)');
+  RE.InputString:= 'A123X3';
+  IsTrue('Exec must give True', RE.Exec);
+  AssertMatch('(?<=\GA.*)(X)  A123X3', 5, 1);
+
+  // in look behind
+  CompileRE('(?<=\GA.*)(X)');
+  RE.InputString:= 'A123X3';
+  IsFalse('Exec must give False', RE.Exec(2));
+
+  // in look behind
+  CompileRE('(?<=\GA.*)(X)');
+  RE.InputString:= '_A123X3';
+  IsTrue('Exec must give True', RE.Exec(2));
+  AssertMatch('(?<=\GA.*)(X)  _A123X3 offset 2 ', 6, 1);
+
+//  CompileRE('(?<=^.\GA...)(X)');
+//  CompileRE('(?<=^.\GA...)(X)');
+//  RE.InputString:= '_A123X3';
+//  IsTrue('Exec must give True', RE.Exec(2));
+//  AssertMatch('(?<=^.\GA...)(X)  _A123X3 offset 2 ', 6, 1);
+end;
+
+procedure TTestRegexpr.TestRegMustExist;
+begin
+  CompileRE('\w*abcd');
+  RE.InputString:= StringOfChar('.', 3000) + 'abcd';
+  RE.SlowChecksSizeMax := 5000;
+  IsTrue('Exec must give True', RE.Exec);
+end;
+
+procedure TTestRegexpr.TestAtomic;
+begin
+  IsNotMatching('Match is not changed, if pattern fails after atomic',
+                'a(?>b.*?c|.)x..8', '1ab__cx__9cx__8...56Yb');
+  IsMatching('Atomic backtrace until match is found ',
+             'a(?>b.*?cx..8|.)',
+             '1ab__cx__9cx__8_...56Yb', [2,14]);
+
+  IsMatching('Bactrace to before start of atomic',
+             '(.)(?>Y|X)a', '1234Xa...56Yb', [4,3,  4,1]);
+  IsMatching('Bactrace to before start of atomic - atomic on 2nd pos',
+             '(.)(?>X|Y)b',
+             '1234Xa...56Yb', [11,3,  11,1]);
+  IsMatching('Bactrace to before start of atomic - atomic on 2nd pos',
+             '(.)(?>Y|X)b',
+             '1234Xa...56Yb', [11,3,  11,1]);
+
+  IsMatching('Bactrace to before start of atomic - 2nd pos - forget capture in 1st pos',
+             '(.)(?>(X)|Y)b',
+             '1234Xa...56Yb', [11,3,  11,1, -1,-1]);
+  IsMatching('Bactrace to before start of atomic - 2nd pos - forget capture in 1st pos',
+             '(.)(?>Y|(X))b',
+             '1234Xa...56Yb', [11,3,  11,1, -1,-1]);
+
+  // Nested
+  IsNotMatching('NESTED: Match is not changed, if pattern fails after atomic',
+                'a(?>(b.*?c)|.)x..8', '1ab__cx__9cx__8...56Yb');
+  IsMatching('NESTED: Atomic backtrace until match is found ',
+             'a(?>((?>b.*?cx..8))|.)',
+             '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
+  // The outer atomic must not backtrace, the inner group must not undo the flag for the outer
+  IsNotMatching('NESTED: Atomic backtrace inner and outer',
+             'a(?>((?>b.*?cx..8))|.)_',
+             '1ab__cx__9cx__8...56Yb');
+  IsMatching('NESTED: Atomic backtrace inner, outer can still try and find ',
+             'a(?>((?>b.*?cx..8|.)_)|.)',
+             '1ab__cx__9cx__8...56Yb',  [2,2,  -1,-1]);
+
+  IsNotMatching('NESTED 2: Match is not changed, if pattern fails after atomic',
+                'a(?>(b.*?c)|.)x..8', '1ab__cx__9cx__8...56Yb');
+  IsMatching('NESTED 2: Atomic backtrace until match is found ',
+             'a(?>((?>b.*?cx..8))|.)',
+             '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
 end;
 
 procedure TTestRegexpr.RunTest1;
@@ -1207,12 +1445,11 @@ begin
   RunRETest(72);
 end;
 
-
 procedure TTestRegexpr.TestGroups;
 var
-  R: TRegExpr;
+  R: TTestableRegExpr;
 begin
-  R:= TRegExpr.Create;
+  R:= TTestableRegExpr.Create;
   try
     R.Expression:= '(\w+) (?:\w+) (\w+) (?:\w+) (\d+)';
     R.InputString:= 'abc wall dirt wert 234';
@@ -1228,7 +1465,7 @@ procedure TTestRegexpr.CompileRE(const AExpression: RegExprString);
 begin
   if (RE = Nil) then
   begin
-    RE := TRegExpr.Create;
+    RE := TTestableRegExpr.Create;
     RE.ReplaceLineEnd := #10;
   end;
   RE.Expression := AExpression;
@@ -1248,6 +1485,13 @@ procedure TTestRegexpr.RunRETest(aIndex: Integer);
 var
   T: TRegExTest;
   S: RegExprString;
+
+  procedure DoMatchAssertions;
+  begin
+    AreEqual('Search position', T.MatchStart, RE.MatchPos[0]);
+    AreEqual('Matched text', PrintableString(T.ExpectedResult), PrintableString(RE.Match[0]));
+  end;
+
 begin
   T:= testCases[aIndex];
 {$IFDEF DUMPTESTS}
@@ -1262,9 +1506,43 @@ begin
   else
   begin
     RE.Exec(T.inputText);
-    AreEqual('Search position', T.MatchStart, RE.MatchPos[0]);
-    AreEqual('Matched text', PrintableString(T.ExpectedResult), PrintableString(RE.Match[0]));
+    DoMatchAssertions;
+
+    // Test via InputString
+    RE.InputString := T.InputText;
+    RE.Exec;
+    DoMatchAssertions;
+
+    // Test via SetInputSubString
+    RE.SetInputSubString('abc' + T.InputText + '12345', 4, Length(t.InputText));
+    RE.Exec;
+    DoMatchAssertions;
   end;
+end;
+
+procedure TTestableRegExpr.Error(AErrorID: integer);
+begin
+  if FTestErrorCatching then
+    FTestLastError := AErrorID
+  else
+    inherited Error(AErrorID);
+end;
+
+procedure TTestableRegExpr.TestStartErrorCatching;
+begin
+  FTestErrorCatching := True;
+  TestClearError;
+end;
+
+procedure TTestableRegExpr.TestEndErrorCatching;
+begin
+  FTestErrorCatching := False;
+  TestClearError;
+end;
+
+procedure TTestableRegExpr.TestClearError;
+begin
+  FTestLastError := 0;
 end;
 
 initialization

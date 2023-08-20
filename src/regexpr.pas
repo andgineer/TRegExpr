@@ -205,8 +205,8 @@ const
   RegExprUsePairedBreak: boolean = True;
   RegExprReplaceLineBreak: RegExprString = sLineBreak;
 
-  RegExprLookaheadIsAtomic: boolean = False;
-  RegExprLookbehindIsAtomic: boolean = True;
+  RegExprLookaheadIsAtomic: boolean = True;
+  RegExprLookbehindIsAtomic: boolean = False;
 
 const
   // Max number of groups.
@@ -283,7 +283,11 @@ type
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
     GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
-    GrpAtomicDone: array [0 .. RegexMaxGroups - 1] of boolean; // atomic group[i] is "done" (used in Exec* only)
+    GrpBacktrackingAsAtom: array [0 .. RegexMaxGroups - 1] of boolean; // close of group[i] has set IsBacktrackingGroupAsAtom
+    IsBacktrackingGroupAsAtom: Boolean;  // Backtracking an entire atomic group that had matched.
+    // Once the group matched it should not try any alternative matches within the group
+    // If the pattern after the group fails, then the group fails (regardless of any alternative match in the group)
+
     GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
     GrpSubCalled: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is called by OP_SUBCALL*
     GrpCount: integer;
@@ -324,6 +328,7 @@ type
     // work variables for Exec routines - save stack in recursion
     regInput: PRegExprChar; // pointer to currently handling char of input string
     fInputStart: PRegExprChar; // pointer to first char of input string
+    fInputContinue: PRegExprChar; // pointer to char specified with Exec(AOffset), or start pos of ExecNext
     fInputEnd: PRegExprChar; // pointer after last char of input string
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
@@ -422,6 +427,7 @@ type
     function DumpCategoryChars(ch, ch2: REChar; Positive: boolean): RegExprString;
 
     procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure ClearInternalExecData; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: boolean; var ARes: TRegExprCharset);
@@ -457,11 +463,6 @@ type
     procedure SetModifierR(AValue: boolean);
     procedure SetModifierS(AValue: boolean);
     procedure SetModifierX(AValue: boolean);
-
-    // Default handler raises exception ERegExpr with
-    // Message = ErrorMsg (AErrorID), ErrorCode = AErrorID
-    // and CompilerErrorPos = value of property CompilerErrorPos.
-    procedure Error(AErrorID: integer); virtual; // error handler.
 
     { ==================== Compiler section =================== }
     // compile a regular expression into internal code
@@ -539,12 +540,18 @@ type
     function GetMatch(Idx: integer): RegExprString;
 
     procedure SetInputString(const AInputString: RegExprString);
-    procedure SetInputRange(AStart, AEnd: PRegExprChar);
+    procedure SetInputRange(AStart, AEnd, AContinueAnchor: PRegExprChar);
 
     {$IFDEF UseLineSep}
     procedure SetLineSeparators(const AStr: RegExprString);
     {$ENDIF}
     procedure SetUsePairedBreak(AValue: boolean);
+
+  protected
+    // Default handler raises exception ERegExpr with
+    // Message = ErrorMsg (AErrorID), ErrorCode = AErrorID
+    // and CompilerErrorPos = value of property CompilerErrorPos.
+    procedure Error(AErrorID: integer); virtual; // error handler.
 
   public
     constructor Create; {$IFDEF OverMeth} overload;
@@ -683,6 +690,9 @@ type
     // to this property).
     // Any assignment to this property clear Match* properties !
     property InputString: RegExprString read fInputString write SetInputString;
+    // SetInputSubString
+    // Only looks at copy(AInputString, AInputStartPos, AInputLen)
+    procedure SetInputSubString(const AInputString: RegExprString; AInputStartPos, AInputLen: integer);
 
     // Number of subexpressions has been found in last Exec* call.
     // If there are no subexpr. but whole expr was found (Exec* returned True),
@@ -840,7 +850,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 158;
+  REVersionMinor = 160;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -969,6 +979,47 @@ begin
   {$ELSE}
   Result := p;
   {$ENDIF}
+end;
+
+function StrLScan(P: PRegExprChar; C: REChar; len: SizeInt): PRegExprChar;
+Var
+   count: SizeInt;
+Begin
+  count := 0;
+  { Find first matching character of Ch in Str }
+  while (count < len) do
+  begin
+    if C = P[count] then
+     begin
+         StrLScan := @(P[count]);
+         exit;
+     end;
+    Inc(count);
+  end;
+  { nothing found. }
+  StrLScan := nil;
+end;
+
+
+function StrLPos(str1,str2 : PRegExprChar; len1, len2: SizeInt) : PRegExprChar;
+var
+  p : PRegExprChar;
+begin
+  StrLPos := nil;
+  if (str1 = nil) or (str2 = nil) then
+    exit;
+  len1 := len1 - len2 + 1;
+  p := StrLScan(str1,str2^, len1);
+  while p <> nil do
+    begin
+      if strlcomp(p, str2, len2)=0 then
+        begin
+           StrLPos := p;
+           exit;
+        end;
+      inc(p);
+      p := StrLScan(p, str2^, len1 - (p-str1));
+    end;
 end;
 
 {$IFDEF FastUnicodeData}
@@ -1462,6 +1513,7 @@ const
   // Node - next node in sequence,
   // LoopEntryJmp - associated LOOPENTRY node addr
   OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
+  OP_CONTINUE_POS = TReOp(26); // \G last match end or "Exec(AOffset)"
   OP_BSUBEXP = TREOp(28);
   // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
   OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
@@ -1816,7 +1868,7 @@ begin
   if (AStr <> fExpression) or not IsCompiled then
   begin
     fExpression := AStr;
-    UniqueString(fExpression);
+    //UniqueString(fExpression);
     fRegexStart := PRegExprChar(fExpression);
     fRegexEnd := fRegexStart + Length(fExpression);
     InvalidateProgramm;
@@ -3385,9 +3437,9 @@ begin
           Exit;
         end;
         if BracesMin > 0 then
-          FlagParse := FLAG_WORST;
+          FlagParse := FLAG_WORST or FLAG_HASWIDTH;
         if BracesMax > 0 then
-          FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SPECSTART;
+          FlagParse := FlagParse or FLAG_SPECSTART;
 
         nextch := (regParse + 1)^;
         PossessiveCh := nextch = '+';
@@ -4167,6 +4219,8 @@ begin
             ret := EmitNode(OP_EOL);
           'Z':
             ret := EmitNode(OP_EOL2);
+          'G':
+            ret := EmitNode(OP_CONTINUE_POS);
           'd':
             begin // r.e.extension - any digit ('0' .. '9')
               ret := EmitNode(OP_ANYDIGIT);
@@ -4758,7 +4812,7 @@ var
   SavedLoopStackIdx: integer;
   {$ENDIF}
   bound1, bound2: boolean;
-  checkAtomicGroup: boolean;
+  saveSubCalled: boolean;
 begin
   Result := False;
   {
@@ -4797,6 +4851,12 @@ begin
       OP_BOL:
         begin
           if regInput <> fInputStart then
+            Exit;
+        end;
+
+      OP_CONTINUE_POS:
+        begin
+          if regInput <> fInputContinue then
             Exit;
         end;
 
@@ -5119,6 +5179,9 @@ begin
           save := GrpBounds[regRecursion].GrpStart[no];
           GrpBounds[regRecursion].GrpStart[no] := regInput;
           Result := MatchPrim(next);
+          if GrpBacktrackingAsAtom[no] then
+            IsBacktrackingGroupAsAtom := False;
+          GrpBacktrackingAsAtom[no] := False;
           if not Result then
             GrpBounds[regRecursion].GrpStart[no] := save;
           // handle negative lookahead
@@ -5145,8 +5208,6 @@ begin
           regCurrentGrp := -1;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
-          if GrpAtomic[no] then
-            GrpAtomicDone[no] := True;
           save := GrpBounds[regRecursion].GrpEnd[no];
           GrpBounds[regRecursion].GrpEnd[no] := regInput;
 
@@ -5159,15 +5220,19 @@ begin
           end;
 
           Result := MatchPrim(next);
-          if not Result then // ###0.936
+          if not Result then begin// ###0.936
             GrpBounds[regRecursion].GrpEnd[no] := save;
+            if GrpAtomic[no] and not IsBacktrackingGroupAsAtom then begin
+              GrpBacktrackingAsAtom[no] := True;
+              IsBacktrackingGroupAsAtom := True;
+            end;
+          end;
           Exit;
         end;
 
       OP_BRANCH:
         begin
           saveCurrentGrp := regCurrentGrp;
-          checkAtomicGroup := (regCurrentGrp >= 0) and GrpAtomic[regCurrentGrp];
           if (next^ <> OP_BRANCH) // No next choice in group
           then
             next := scan + REOpSz + RENextOffSz // Avoid recursion
@@ -5180,10 +5245,9 @@ begin
               if Result then
                 Exit;
               // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
-              if checkAtomicGroup then
-                if GrpAtomicDone[regCurrentGrp] then
-                  Exit;
               regInput := save;
+              if IsBacktrackingGroupAsAtom then
+                Exit;
               scan := regNext(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
             Exit;
@@ -5331,6 +5395,8 @@ begin
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
                 LoopStackIdx := SavedLoopStackIdx;
                 {$ENDIF}
+                if IsBacktrackingGroupAsAtom then
+                  Exit;
               end;
               Inc(no); // Couldn't or didn't - move forward.
             end; { of while }
@@ -5358,6 +5424,8 @@ begin
                 System.Move(SavedLoopStack, LoopStack, SizeOf(LoopStack));
                 LoopStackIdx := SavedLoopStackIdx;
                 {$ENDIF}
+                if IsBacktrackingGroupAsAtom then
+                  Exit;
               end;
               Dec(no); // Couldn't or didn't - back up.
               regInput := save + no;
@@ -5453,12 +5521,12 @@ begin
           if regRecursion < RegexMaxRecursion then
           begin
             // mark group in GrpSubCalled array so opcode can detect subcall
-            checkAtomicGroup := GrpSubCalled[no];
+            saveSubCalled := GrpSubCalled[no];
             GrpSubCalled[no] := True;
             Inc(regRecursion);
             bound1 := MatchPrim(save);
             Dec(regRecursion);
-            GrpSubCalled[no] := checkAtomicGroup;
+            GrpSubCalled[no] := saveSubCalled;
           end
           else
             bound1 := False;
@@ -5492,7 +5560,7 @@ function TRegExpr.Exec: boolean;
 var
   SlowChecks: boolean;
 begin
-  SlowChecks := Length(fInputString) < fSlowChecksSizeMax;
+  SlowChecks := fInputEnd - fInputStart < fSlowChecksSizeMax;
   Result := ExecPrim(1, False, SlowChecks, False);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
@@ -5523,7 +5591,8 @@ begin
   if Assigned(fHelper) then
     if (APos - fHelperLen) >= fInputStart then
     begin
-      fHelper.SetInputRange(APos - fHelperLen, APos);
+      fHelper.SetInputRange(APos - fHelperLen, APos, fInputContinue);
+      fHelper.ClearInternalExecData;
       if fHelper.MatchAtOnePos(APos - fHelperLen) then
       begin
         Result := False;
@@ -5554,8 +5623,13 @@ end;
 procedure TRegExpr.ClearMatches;
 begin
   FillChar(GrpBounds, SizeOf(GrpBounds), 0);
-  FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
+end;
+
+procedure TRegExpr.ClearInternalExecData;
+begin
+  FillChar(GrpBacktrackingAsAtom, SizeOf(GrpBacktrackingAsAtom), 0);
+  IsBacktrackingGroupAsAtom := False;
 end;
 
 procedure TRegExpr.ClearInternalIndexes;
@@ -5564,7 +5638,6 @@ var
 begin
   FillChar(GrpBounds, SizeOf(GrpBounds), 0);
   FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
-  FillChar(GrpAtomicDone, SizeOf(GrpAtomicDone), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
   FillChar(GrpOpCodes, SizeOf(GrpOpCodes), 0);
 
@@ -5588,6 +5661,8 @@ begin
   // will lead to leaving ExecPrim without actual search. That is
   // important for ExecNext logic and so on.
   ClearMatches;
+  ClearInternalExecData;
+
 
   // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
   if programm = nil then
@@ -5597,7 +5672,7 @@ begin
       Exit;
   end;
 
-  if fInputString = '' then
+  if fInputEnd = fInputStart then
   begin
     // Empty string can match e.g. '^$'
     if regMustLen > 0 then
@@ -5612,15 +5687,17 @@ begin
   end;
 
   // Check that the start position is not longer than the line
-  if AOffset > (Length(fInputString) + 1) then
+  if (AOffset - 1) > (fInputEnd - fInputStart) then
     Exit;
 
   Ptr := fInputStart + AOffset - 1;
+  fInputContinue := Ptr;
 
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
     if regMustString <> '' then
-      if Pos(regMustString, fInputString) = 0 then Exit;
+      if StrLPos(fInputStart, PRegExprChar(regMustString), fInputEnd - fInputStart, length(regMustString)) = nil then
+        exit;
 
   {$IFDEF ComplexBraces}
   // no loops started
@@ -5705,17 +5782,20 @@ begin
   ClearMatches;
 
   fInputString := AInputString;
-  UniqueString(fInputString);
+  //UniqueString(fInputString);
 
   fInputStart := PRegExprChar(fInputString);
   fInputEnd := fInputStart + Length(fInputString);
+  fInputContinue := fInputStart;
 end;
 
-procedure TRegExpr.SetInputRange(AStart, AEnd: PRegExprChar);
+procedure TRegExpr.SetInputRange(AStart, AEnd, AContinueAnchor: PRegExprChar);
 begin
+  ClearMatches;
   fInputString := '';
   fInputStart := AStart;
   fInputEnd := AEnd;
+  fInputContinue := AContinueAnchor;
 end;
 
 {$IFDEF UseLineSep}
@@ -6076,7 +6156,8 @@ begin
         end;
 
       OP_BOL,
-      OP_BOLML:
+      OP_BOLML,
+      OP_CONTINUE_POS:
         ; // Exit; //###0.937
 
       OP_EOL,
@@ -6468,6 +6549,8 @@ begin
       Result := 'EOL2';
     OP_BOLML:
       Result := 'BOLML';
+    OP_CONTINUE_POS:
+      Result := 'CONTINUE_POS';
     OP_EOLML:
       Result := 'EOLML';
     OP_BOUND:
@@ -6809,7 +6892,13 @@ begin
 
       OP_COMMENT,
       OP_BOUND,
-      OP_NOTBOUND:
+      OP_NOTBOUND,
+      OP_BOL,
+      OP_BOLML,
+      OP_EOL,
+      OP_EOL2,
+      OP_EOLML,
+      OP_CONTINUE_POS:
         Continue;
 
       OP_ANY,
@@ -6903,6 +6992,30 @@ begin
         Exit;
     end;
   until False;
+end;
+
+procedure TRegExpr.SetInputSubString(const AInputString: RegExprString;
+  AInputStartPos, AInputLen: integer);
+begin
+  ClearMatches;
+
+  if AInputStartPos < 1 then
+    AInputStartPos := 1
+  else
+  if AInputStartPos > Length(AInputString) then
+    AInputStartPos := Length(AInputString);
+  if AInputLen > Length(AInputString) + 1 - AInputStartPos then
+    AInputLen := Length(AInputString) + 1 - AInputStartPos;
+
+  if AInputLen < 1 then
+    exit;
+
+  fInputString := AInputString;
+  //UniqueString(fInputString);
+
+  fInputStart := PRegExprChar(fInputString) + AInputStartPos - 1;
+  fInputEnd := fInputStart + AInputLen;
+  fInputContinue := fInputStart;
 end;
 
 {$IFDEF reRealExceptionAddr}

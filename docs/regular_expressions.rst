@@ -193,6 +193,7 @@ Meta-char     Matches
 ``\A``        zero-length match at the very beginning
 ``\z``        zero-length match at the very end
 ``\Z``        like ``\z`` but also matches before the final line-break
+``\G``        zero-length match at the end pos of the previous match
 ============= ================================================
 
 Examples:

@@ -74,9 +74,9 @@ begin
 
     reg.Compile;
     if reg.IsFixedLength(op, i) then
-      ListDump.Items.Add('Fixed length: '+IntToStr(i))
+      ListDump.Items.Add('Match has fixed len: '+IntToStr(i))
     else
-      ListDump.Items.Add('Not fixed op: '+reg.DumpOp(op));
+      ListDump.Items.Add('Match has not fixed len, operator: '+reg.DumpOp(op));
 
     ListDump.Items.AddText(reg.Dump);
   except

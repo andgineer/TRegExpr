@@ -6,6 +6,19 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.161 2023.08.17
+ -=- (-) Fix atomic groups. Allow backtracking the entire group.
+  Make '*','+',... operators aware of the atomic behaviour. Allow nesting.
+  By Martin Friebe.
+
+ v. 1.160 2023.08.15
+ -=- (+) Add \G for ExecNext to match the position where the previous match ended.
+  Or in Exec(AOffset) match the AOffset position
+  By Martin Friebe and Alexey Torgashin.
+ -=- (+) Add SetInputSubString(Text, Start, Len)
+  to only match within the selected substring.
+  By Martin Friebe and Alexey Torgashin.
+
  v. 1.158 2022.05.30
  -=- (-) Fix Substitute() result when 'subroutine' (?1) is used.
  -=- (-) Fix work of recursion (?R) with back-references.
