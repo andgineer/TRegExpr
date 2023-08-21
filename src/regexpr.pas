@@ -257,6 +257,14 @@ type
   end;
   TRegExprCharCheckerInfos = array of TRegExprCharCheckerInfo;
 
+  TRegExAncho = (
+    raNone,     // Not anchored
+    raBOL,      // Must start at BOL
+    raEOL,      // Must start at EOL (maybe look behind)
+    raContinue, // Must start at continue pos \G
+    raOnlyOnce  // Starts with .* must match from the start pos only. Must not be tried from a later pos
+  );
+
   {$IFDEF Compat}
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
   {$ENDIF}
@@ -301,7 +309,7 @@ type
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
 
-    regAnchored: REChar; // is the match anchored (at beginning-of-line only)?
+    regAnchored: TRegExAncho; // is the match anchored (at beginning-of-line only)?
     // regAnchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. regMust permits fast rejection
     // of lines that cannot possibly match. The regMust tests are costly enough
@@ -2978,7 +2986,7 @@ begin
       FirstCharArray[Len] := byte(Len) in FirstCharSet;
     {$ENDIF}
 
-    regAnchored := #0;
+    regAnchored := raNone;
     regMust := nil;
     regMustLen := 0;
     regMustString := '';
@@ -2990,7 +2998,19 @@ begin
 
       // Starting-point info.
       if PREOp(scan)^ = OP_BOL then
-        Inc(regAnchored);
+        regAnchored := raBOL
+      else
+      if PREOp(scan)^ = OP_EOL then
+        regAnchored := raEOL
+      else
+      if PREOp(scan)^ = OP_CONTINUE_POS then
+        regAnchored := raContinue
+      else
+      if PREOp(scan)^ = OP_STAR then begin
+        longest := scan + REOpSz + RENextOffSz;
+        if PREOp(longest)^ = OP_ANY then
+          regAnchored := raOnlyOnce;
+      end;
 
       // If there's something expensive in the r.e., find the longest
       // literal string that must appear and make it the regMust. Resolve
@@ -5696,11 +5716,15 @@ begin
         exit;
 
   // ATryOnce or anchored match (it needs to be tried only once).
-  if ATryOnce or (regAnchored <> #0) then
+  if ATryOnce or (regAnchored in [raBOL, raOnlyOnce, raContinue]) then
   begin
+    case regAnchored of
+      raBOL: if AOffset > 1 then Exit; // can't match the BOL
+      raEOL: Ptr := fInputEnd;
+    end;
     {$IFDEF UseFirstCharSet}
     {$IFDEF UnicodeRE}
-    if Ord(Ptr^) <= $FF then
+    if (Ptr < fInputEnd) and (Ord(Ptr^) <= $FF) then
     {$ENDIF}
       if not FirstCharArray[byte(Ptr^)] then
         Exit;
@@ -6835,8 +6859,13 @@ begin
   end; { of while }
 
   // Header fields of interest.
-  if regAnchored <> #0 then
-    Result := Result + 'Anchored; ';
+  case regAnchored of
+    raBOL:      Result := Result + 'Anchored(BOL); ';
+    raEOL:      Result := Result + 'Anchored(EOL); ';
+    raContinue: Result := Result + 'Anchored(\G); ';
+    raOnlyOnce: Result := Result + 'Anchored(start); ';
+  end;
+
   if regMustString <> '' then
     Result := Result + 'Must have: "' + regMustString + '"; ';
 
