@@ -11,6 +11,7 @@
   of the inner loop.
  -=- (^) Removed limit "LoopStackMax = 10" for nested loops (OP_LOOP)
  -=- (^) Added indent for RegEx.Dump()
+ -=- (^) Detect fixed length for in branches, if all paths are of equal length.
   By Martin Friebe.
 
  v. 1.161 2023.08.17
