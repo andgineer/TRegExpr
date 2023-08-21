@@ -3020,7 +3020,9 @@ begin
       // "{0,} is the same as ".*". So the same optimization applies
       if (PREOp(scan)^ = OP_BRACES) or (PREOp(scan)^ = OP_BRACESNG) or (PREOp(scan)^ = OP_BRACES_POSS) then begin
         scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
-        if (PREBracesArg(scanTemp)^ = 0) and (PREBracesArg(scanTemp + REBracesArgSz)^ = MaxBracesArg) then begin
+        if (PREBracesArg(scanTemp)^ = 0)  // BracesMinCount
+        and (PREBracesArg(scanTemp + REBracesArgSz)^ = MaxBracesArg)  // BracesMaxCount
+        then begin
           scanTemp := AlignToPtr(scanTemp + REBracesArgSz + REBracesArgSz);
           if PREOp(scanTemp)^ = OP_ANY then
             regAnchored := raOnlyOnce;
