@@ -2913,7 +2913,7 @@ function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): boolean;
 // Beware that the optimization-preparation code in here knows about some
 // of the structure of the compiled regexp.
 var
-  scan, longest, longestTemp: PRegExprChar;
+  scan, scanTemp, longest, longestTemp: PRegExprChar;
   Len, LenTemp: integer;
   FlagTemp: integer;
 begin
@@ -3006,10 +3006,19 @@ begin
       if PREOp(scan)^ = OP_CONTINUE_POS then
         regAnchored := raContinue
       else
-      if PREOp(scan)^ = OP_STAR then begin
-        longest := scan + REOpSz + RENextOffSz;
-        if PREOp(longest)^ = OP_ANY then
+      if (PREOp(scan)^ = OP_STAR) or (PREOp(scan)^ = OP_STARNG) or (PREOp(scan)^ = OP_STAR_POSS) then begin
+        scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
+        if PREOp(scanTemp)^ = OP_ANY then
           regAnchored := raOnlyOnce;
+      end
+      else
+      if (PREOp(scan)^ = OP_BRACES) or (PREOp(scan)^ = OP_BRACESNG) or (PREOp(scan)^ = OP_BRACES_POSS) then begin
+        scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
+        if (PREBracesArg(scanTemp)^ = 0) and (PREBracesArg(scanTemp + REBracesArgSz)^ = MaxBracesArg) then begin
+          scanTemp := AlignToPtr(scanTemp + REBracesArgSz + REBracesArgSz);
+          if PREOp(scanTemp)^ = OP_ANY then
+            regAnchored := raOnlyOnce;
+        end;
       end;
 
       // If there's something expensive in the r.e., find the longest

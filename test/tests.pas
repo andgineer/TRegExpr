@@ -72,6 +72,7 @@ type
     procedure TestAtomic;
     procedure TestLoop;
     procedure TestIsFixedLength;
+    procedure TestAnchor;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -1268,6 +1269,86 @@ begin
   HasLength('branch () nested', '(A(x)|B(DD|E))',   -1);
 
   HasLength('branch () some zero len', 'x(A|B\b|Cx{0})',   2);
+
+end;
+
+procedure TTestRegexpr.TestAnchor;
+
+  procedure HasAnchor(AErrorMessage: String; ARegEx: RegExprString; ExpAnchor: TRegExAnchor);
+  var
+    d: RegExprString;
+  begin
+    CompileRE(ARegEx);
+    d := RE.Dump;
+    case ExpAnchor of
+      raNone:     IsTrue(AErrorMessage, pos('Anchored', d) < 1);
+      raBOL:      IsTrue(AErrorMessage, pos('Anchored(BOL)', d) > 0);
+      raEOL:      IsTrue(AErrorMessage, pos('Anchored(EOL)', d) > 0);
+      raContinue: IsTrue(AErrorMessage, pos('Anchored(\G)', d) > 0);
+      raOnlyOnce: IsTrue(AErrorMessage, pos('Anchored(start)', d) > 0);
+    end;
+  end;
+
+const
+  TestOnlyOnceData: array [1..6] of RegExprString = (
+    '.{0,}+', '.{0,}?', '.{0,}', '.*+', '.*', '.*?'
+  );
+  TestNotOnlyOnceData: array [1..9] of RegExprString = (
+    '.{1,}+', '.{1,}?', '.{1,}', '.{0,2}+', '.{0,2}?', '.{0,2}',
+    '.+', '.++', '.?'
+  );
+var
+  i: Integer;
+  s: RegExprString;
+begin
+  HasAnchor('', 'abc', raNone);
+  HasAnchor('', '.a', raNone);
+  HasAnchor('', '(a)', raNone);
+  HasAnchor('', '(.a)', raNone);
+  HasAnchor('', 'a*', raNone);
+  HasAnchor('', '.a*', raNone);
+  HasAnchor('', '(a)*', raNone);
+  HasAnchor('', '(.a)*', raNone);
+
+  HasAnchor('', '^', raBOL);
+  HasAnchor('', '^a', raBOL);
+  HasAnchor('', '^a|a', raNone);
+  HasAnchor('', '^|a', raNone);
+  HasAnchor('', '^?a', raNone);
+  HasAnchor('', '^?|a', raNone);
+  HasAnchor('', '(^?|a)', raNone);
+
+  HasAnchor('', '$', raEOL);
+  HasAnchor('', '$a', raEOL);
+  HasAnchor('', '$?', raNone);
+  HasAnchor('', '$|a', raNone);
+  HasAnchor('', '($)?', raNone);
+  HasAnchor('', '($|a)?', raNone);
+
+  HasAnchor('', '\G', raContinue);
+  HasAnchor('', '\Ga', raContinue);
+  HasAnchor('', '\Ga|a', raNone);
+  HasAnchor('', '\G|a', raNone);
+  HasAnchor('', '\G?a', raNone);
+  HasAnchor('', '\G?|a', raNone);
+  HasAnchor('', '(\G?|a)', raNone);
+
+  for i := low(TestOnlyOnceData) to high(TestOnlyOnceData) do begin
+    s := TestOnlyOnceData[i];
+    HasAnchor('', s, raOnlyOnce);
+    HasAnchor('', s+'a', raOnlyOnce);
+    HasAnchor('', s+'|a', raNone);
+    HasAnchor('', '('+s+'|a)', raNone);
+  end;
+
+  for i := low(TestNotOnlyOnceData) to high(TestNotOnlyOnceData) do begin
+    s := TestNotOnlyOnceData[i];
+    HasAnchor('', s, raNone);
+    HasAnchor('', s+'a', raNone);
+    HasAnchor('', s+'|a', raNone);
+    HasAnchor('', '('+s+'|a)', raNone);
+  end;
+
 
 end;
 
