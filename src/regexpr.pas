@@ -3006,12 +3006,18 @@ begin
       if PREOp(scan)^ = OP_CONTINUE_POS then
         regAnchored := raContinue
       else
+      // ".*", ".*?", ".*+" at the very start of the pattern, only need to be
+      // tested from the start-pos of the InputString.
+      // If a pattern matches, then the ".*" will always go forward to where the
+      // rest of the pattern starts matching
+      // OP_ANY is "ModifierS=True"
       if (PREOp(scan)^ = OP_STAR) or (PREOp(scan)^ = OP_STARNG) or (PREOp(scan)^ = OP_STAR_POSS) then begin
         scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
         if PREOp(scanTemp)^ = OP_ANY then
           regAnchored := raOnlyOnce;
       end
       else
+      // "{0,} is the same as ".*". So the same optimization applies
       if (PREOp(scan)^ = OP_BRACES) or (PREOp(scan)^ = OP_BRACESNG) or (PREOp(scan)^ = OP_BRACES_POSS) then begin
         scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
         if (PREBracesArg(scanTemp)^ = 0) and (PREBracesArg(scanTemp + REBracesArgSz)^ = MaxBracesArg) then begin
