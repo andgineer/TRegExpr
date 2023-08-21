@@ -527,7 +527,7 @@ type
     procedure FillFirstCharSet(prog: PRegExprChar);
     {$ENDIF}
 
-    function IsPartFixedLength(var prog: PRegExprChar; var op: TREOp; var ALen: integer; StopAt: TREOp): boolean; overload;
+    function IsPartFixedLength(var prog: PRegExprChar; var op: TREOp; var ALen: integer; StopAt: TREOp): boolean;
 
     { ===================== Matching section =================== }
     // repeatedly match something simple, report how many
@@ -671,7 +671,7 @@ type
     function IsCompiled: boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Opcode contains only operations for fixed match length: EXACTLY*, ANY*, etc
-    function IsFixedLength(var op: TREOp; var ALen: integer): boolean; overload;
+    function IsFixedLength(var op: TREOp; var ALen: integer): boolean;
 
     // Regular expression.
     // For optimization, TRegExpr will automatically compiles it into 'P-code'
