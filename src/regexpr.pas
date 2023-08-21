@@ -518,6 +518,9 @@ type
     {$IFDEF UseFirstCharSet} // ###0.929
     procedure FillFirstCharSet(prog: PRegExprChar);
     {$ENDIF}
+
+    function IsPartFixedLength(var prog: PRegExprChar; var op: TREOp; var ALen: integer; StopAt: TREOp): boolean; overload;
+
     { ===================== Matching section =================== }
     // repeatedly match something simple, report how many
     function FindRepeated(p: PRegExprChar; AMax: integer): integer;
@@ -661,7 +664,6 @@ type
 
     // Opcode contains only operations for fixed match length: EXACTLY*, ANY*, etc
     function IsFixedLength(var op: TREOp; var ALen: integer): boolean; overload;
-    function IsPartFixedLength(var prog: PRegExprChar; var op: TREOp; var ALen: integer; StopAt: TREOp): boolean; overload;
 
     // Regular expression.
     // For optimization, TRegExpr will automatically compiles it into 'P-code'
