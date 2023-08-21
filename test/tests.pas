@@ -1335,18 +1335,34 @@ begin
 
   for i := low(TestOnlyOnceData) to high(TestOnlyOnceData) do begin
     s := TestOnlyOnceData[i];
+    RE.ModifierS := True;
     HasAnchor('', s, raOnlyOnce);
     HasAnchor('', s+'a', raOnlyOnce);
     HasAnchor('', s+'|a', raNone);
     HasAnchor('', '('+s+'|a)', raNone);
+    RE.ModifierS := False;
+    if i <> 1 then begin    // {0,}+ possesive not allowed
+      HasAnchor('', s, raNone);
+      HasAnchor('', s+'a', raNone);
+      HasAnchor('', s+'|a', raNone);
+      HasAnchor('', '('+s+'|a)', raNone);
+    end;
   end;
 
   for i := low(TestNotOnlyOnceData) to high(TestNotOnlyOnceData) do begin
     s := TestNotOnlyOnceData[i];
+    RE.ModifierS := True;
     HasAnchor('', s, raNone);
     HasAnchor('', s+'a', raNone);
     HasAnchor('', s+'|a', raNone);
     HasAnchor('', '('+s+'|a)', raNone);
+    RE.ModifierS := False;
+    if (i <> 1) and (i <> 4) then begin
+      HasAnchor('', s, raNone);
+      HasAnchor('', s+'a', raNone);
+      HasAnchor('', s+'|a', raNone);
+      HasAnchor('', '('+s+'|a)', raNone);
+    end;
   end;
 
 
