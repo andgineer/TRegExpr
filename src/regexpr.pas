@@ -5297,12 +5297,16 @@ begin
                 Result := MatchPrim(opnd);
                 if Result then
                   Exit;
+                if IsBacktrackingGroupAsAtom then
+                  Exit;
                 Dec(Local.LoopInfoListPtr^.Count);
                 regInput := save;
               end;
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+              if IsBacktrackingGroupAsAtom then
+                Exit;
               if not Result then
                 regInput := save;
               Exit;
@@ -5315,12 +5319,16 @@ begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
               if Result then
                 Exit;
+              if IsBacktrackingGroupAsAtom then
+                Exit;
               regInput := save; // failed - move next and try again
               if Local.LoopInfoListPtr^.Count < BracesMax then
               begin
                 Inc(Local.LoopInfoListPtr^.Count);
                 Result := MatchPrim(opnd);
                 if Result then
+                  Exit;
+                if IsBacktrackingGroupAsAtom then
                   Exit;
                 Dec(Local.LoopInfoListPtr^.Count);
                 regInput := save;
@@ -5333,6 +5341,8 @@ begin
             Inc(Local.LoopInfoListPtr^.Count);
             Result := MatchPrim(opnd);
             if Result then
+              Exit;
+            if IsBacktrackingGroupAsAtom then
               Exit;
             Dec(Local.LoopInfoListPtr^.Count);
             regInput := save;

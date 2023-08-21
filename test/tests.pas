@@ -1150,6 +1150,18 @@ begin
              );
 
 
+  IsMatching('atomic nested {} no greedy / no branches',
+             '(?:(?>Aa(y){3,4}?)|.*)B',
+             'AayyyyBB',   [1,8,   -1,-1] ); // 40 y
+  IsMatching('NOT atomic nested {} no greedy / no branches', // ensure non-atomic has different result
+             '(?:(?:Aa(y){3,4}?)|.*)B',
+             'AayyyyBB',   [1,7,   6,1] ); // 40 y
+
+  IsMatching('atomic nested {} no greedy ',
+             '(?:(?>Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?)|.*)B',
+             'AayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyBB',   [1,44,   -1,-1, -1,-1, -1,-1] ); // 40 y
+
+
 end;
 
 procedure TTestRegexpr.RunTest1;
