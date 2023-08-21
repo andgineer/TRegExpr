@@ -904,9 +904,8 @@ procedure TTestRegexpr.TestBads;
 begin
   TestBadRegex('Error for matching zero width {}', '(a{0,2})*', 115);
 //  TestBadRegex('Error for optional lookaround', '(?=a)?', 115);
-  TestBadRegex('Error for optional lookaround', '(?=a)+', 115);
-  TestBadRegex('Error for optional lookaround', '(?=a)*', 115);
-  TestBadRegex('Error for optional lookaround', '(?=a){0,}', 106);
+  TestBadRegex('Error for empty group (only look ahead)', '((?=a))+', 115);
+  TestBadRegex('Error for empty group (only look ahead)', '((?=a))*', 115);
   TestBadRegex('No Error for bad braces', 'd{');
   TestBadRegex('No Error for bad braces', 'd{22');
   TestBadRegex('No Error for bad braces', 'd{}');
@@ -1467,39 +1466,36 @@ begin
                 'A(?=[^_]*$)',    '_A_1_B_AxyzB123_A_');
 
   // Optional
-//  IsMatching('Ahead *',
-//                '(?=B)*.A',    'BA',                [1,2]);
-//  IsMatching('Optional Ahead found after "A"',
-//                'A(?=B)?',    '_A2AB34AB_',                [2,1]);
-//  IsMatching('Optional Ahead found after "A"',
-//                'A(?=X)?',    '_A2AB34AB_',                [2,1]);
-//  IsNotMatching('Ahead not found stand alone',
-//                '(?=X)',     '_A2AB34AB_');
-//  IsMatching('Optional Ahead found stand alone',
-//                '(?=X)?',     '_A2AB34AB_',                [1,0]);
-//  IsMatching('Optional Ahead found (too long)',
-//                'A(?=......)?',     '_A2_',                [1,0]);
+  IsMatching('Ahead *',
+                '(?=B)*.A',    'BA',                [1,2]);
+  IsMatching('Optional Ahead found after "A"',
+                'A(?=B)?',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional Ahead found after "A"',
+                'A(?=X)?',    '_A2AB34AB_',                [2,1]);
+  IsNotMatching('Ahead not found stand alone',
+                '(?=X)',     '_A2AB34AB_');
+  IsMatching('Optional Ahead found stand alone',
+                '(?=X)?',     '_A2AB34AB_',                [1,0]);
+  IsMatching('Optional Ahead found (too long)',
+                'A(?=......)?',     '_A2_',                [2,1]);
 
-//  IsMatching('Optional * Ahead found after "A"',
-//                'A(?=B)*',    '_A2AB34AB_',                [2,1]);
-//  IsMatching('Optional * Ahead found after "A"',
-//                'A(?=X)*',    '_A2AB34AB_',                [2,1]);
-//  IsMatching('Optional * Ahead found stand alone',
-//                '(?=X)*',     '_A2AB34AB_',                [1,0]);
-//  IsMatching('Optional * Ahead found (too long)',
-//                'A(?=......)*',     '_A2_',                [2,1]);
+  IsMatching('Optional * Ahead found after "A"',
+                'A(?=B)*',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional * Ahead found after "A"',
+                'A(?=X)*',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional * Ahead found stand alone',
+                '(?=X)*',     '_A2AB34AB_',                [1,0]);
+  IsMatching('Optional * Ahead found (too long)',
+                'A(?=......)*',     '_A2_',                [2,1]);
 
-//  IsMatching('Optional {0] Ahead found after "A"',
-//                'A(?=B){0]',    '_A2AB34AB_',                [2,1]);
-//  IsMatching('Optional {0] Ahead found after "A"',
-//                'A(?=X){0]',    '_A2AB34AB_',                [2,1]);
-//  IsMatching('Optional {0] Ahead found stand alone',
-//                '(?=X){0]',     '_A2AB34AB_',                [1,0]);
-//  IsMatching('Optional {0] Ahead found (too long)',
-//                'A(?=......){0]',     '_A2_',                [1,0]);
-
-                // {0,1}
-                // non optional {1} {1,3}  {3}
+  IsMatching('Optional {0} Ahead found after "A"',
+                'A(?=B){0}',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional {0} Ahead found after "A"',
+                'A(?=X){0}',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional {0} Ahead found stand alone',
+                '(?=X){0}',     '_A2AB34AB_',                [1,0]);
+  IsMatching('Optional {0} Ahead found (too long)',
+                'A(?=......){0}',     '_A2_',                [2,1]);
 
 
   // Match look-ahead: In capture and branch
@@ -1652,6 +1648,30 @@ begin
                 'A(?!.*$)',    '_A_1_B_AxyzB123_A_');
 
   // Optional
+  IsMatching('Neg-Ahead *',
+                '(?!B)*A',    'BA',                [2,1]);
+  IsMatching('Optional Neg-Ahead found after "A"',
+                'A(?!.)?',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional Neg-Ahead found after "A"',
+                'A(?!X)?',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional Neg-Ahead found stand alone',
+                '(?!)?',     '_A2AB34AB_',                [1,0]);
+
+  IsMatching('Optional * Neg-Ahead found after "A"',
+                'A(?!.)*',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional * Neg-Ahead found after "A"',
+                'A(?!X)*',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional * Neg-Ahead found stand alone',
+                '(?!)*',     '_A2AB34AB_',                [1,0]);
+
+  IsMatching('Optional {0} Neg-Ahead found after "A"',
+                'A(?!.){0}',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional {0} Neg-Ahead found after "A"',
+                'A(?!X){0}',    '_A2AB34AB_',                [2,1]);
+  IsMatching('Optional {0} Neg-Ahead found stand alone',
+                '(?!){0}',     '_A2AB34AB_',                [1,0]);
+
+
 
   // Match look-ahead: In capture and branch
   IsMatching('Neg-Ahead found for capture/branch"',
@@ -1781,6 +1801,8 @@ begin
                 '(?<=[^_]*$)A',    '_A_1_B_AxyzB123_A_');
 
   // Optional
+  IsMatching('behind ',
+                '(?<=X)?A',    'BA',                [2,1]);
 
 
   // Match look-behind: In capture and branch
@@ -1902,6 +1924,12 @@ begin
                 '(..)(?<!XX)(A)', '12BBA34',               [3,3,  3,2, 5,1]);
   IsMatching('Neg-behind found, then capture in pattern (longer)',
                 '(...)(?<!XX)(A)', '12BBA34',              [2,4,  2,3, 5,1]);
+
+  // Optional
+  IsMatching('behind ',
+                '(?<!)?A',    'BA',                [2,1]);
+  IsNotMatching('behind ',
+                '(?<!)A',    'BA' );
 
   // Match look-behind: One look-behind - variable len
   IsMatching('Neg-behind (var-len) found "B" after "A"',
