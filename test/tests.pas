@@ -1283,6 +1283,8 @@ begin
 
   HasLength('branch () some zero len', 'x(A|B\b|Cx{0})',   2);
 
+
+  HasLength('look behind is not (yet) fixed', '(?<=.A...)(X)',   -1);
 end;
 
 procedure TTestRegexpr.TestAnchor;

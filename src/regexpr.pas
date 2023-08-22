@@ -262,6 +262,12 @@ type
     raOnlyOnce  // Starts with .* must match from the start pos only. Must not be tried from a later pos
   );
 
+  TRegExprFindFixedLengthFlag = (
+    flfForceToStopAt,
+    flfSkipLookAround
+  );
+  TRegExprFindFixedLengthFlags = set of TRegExprFindFixedLengthFlag;
+
   {$IFDEF Compat}
   TRegExprInvertCaseFunction = function(const Ch: REChar): REChar of object;
   {$ENDIF}
@@ -528,7 +534,7 @@ type
     procedure FillFirstCharSet(prog: PRegExprChar);
     {$ENDIF}
 
-    function IsPartFixedLength(var prog: PRegExprChar; var op: TREOp; var ALen: integer; StopAt: TREOp): boolean;
+    function IsPartFixedLength(var prog: PRegExprChar; var op: TREOp; var ALen: integer; StopAt: TREOp; Flags: TRegExprFindFixedLengthFlags = []): boolean;
 
     { ===================== Matching section =================== }
     // repeatedly match something simple, report how many
@@ -7087,19 +7093,21 @@ function TRegExpr.IsFixedLength(var op: TREOp; var ALen: integer): boolean;
 var
   s: PRegExprChar;
 begin
+  Result := False;
+  if not IsCompiled then Exit;
   s := regCodeWork;
-  Result := IsPartFixedLength(s, op, ALen, OP_EEND);
+  Result := IsPartFixedLength(s, op, ALen, OP_EEND, []);
 end;
 
 function TRegExpr.IsPartFixedLength(var prog: PRegExprChar; var op: TREOp;
-  var ALen: integer; StopAt: TREOp): boolean;
+  var ALen: integer; StopAt: TREOp; Flags: TRegExprFindFixedLengthFlags): boolean;
 var
   s, next: PRegExprChar;
   N, N2, ASubLen, ABranchLen: integer;
+  NotFixedLen: Boolean;
 begin
   Result := False;
   ALen := 0;
-  if not IsCompiled then Exit;
   s := prog;
 
   repeat
@@ -7115,20 +7123,33 @@ begin
     case op of
       OP_EEND:
         begin
-          Result := True;
+          if not NotFixedLen then
+            Result := True;
           Exit;
         end;
 
       OP_BRANCH:
         begin
           if next^ = OP_BRANCH then begin
-            if not IsPartFixedLength(s, op, ABranchLen, OP_BRANCH) then Exit;
+            if not IsPartFixedLength(s, op, ABranchLen, OP_BRANCH) then
+              if flfForceToStopAt in Flags then
+                NotFixedLen := True
+              else
+                Exit;
             repeat
               next := regNext(s);
               Inc(s, REOpSz + RENextOffSz);
-              if not IsPartFixedLength(s, op, ASubLen, next^) then Exit;
+              if not IsPartFixedLength(s, op, ASubLen, next^) then
+                if flfForceToStopAt in Flags then
+                  NotFixedLen := True
+                else
+                  Exit;
               op := OP_BRANCH;
-              if (ASubLen <> ABranchLen) then Exit;
+              if (ASubLen <> ABranchLen) then
+                if flfForceToStopAt in Flags then
+                  NotFixedLen := True
+                else
+                  Exit;
             until next^ <> OP_BRANCH;
             ALen := ALen + ABranchLen;
           end;
@@ -7145,6 +7166,41 @@ begin
 
       OP_CLOSE_FIRST..OP_CLOSE_LAST:
         continue;
+
+      OP_LOOKAHEAD, OP_LOOKAHEAD_NEG:
+        begin
+          if flfSkipLookAround in Flags then
+          begin
+            IsPartFixedLength(s, op, ASubLen, OP_LOOKAHEAD_END, [flfSkipLookAround, flfForceToStopAt]);
+            Inc(s, REOpSz + RENextOffSz); // skip the OP_LOOKAHEAD_END
+          end
+          else
+          if flfForceToStopAt in Flags then
+            NotFixedLen := True
+          else
+            Exit;
+        end;
+
+      OP_LOOKBEHIND, OP_LOOKBEHIND_NEG:
+        begin
+          Inc(s, ReOpLookBehindOptionsSz);
+          if flfSkipLookAround in Flags then
+          begin
+            IsPartFixedLength(s, op, ASubLen, OP_LOOKBEHIND_END, [flfSkipLookAround, flfForceToStopAt]);
+            Inc(s, REOpSz + RENextOffSz); // skip the OP_LOOKBEHIND_END
+          end
+          else
+          if flfForceToStopAt in Flags then
+            NotFixedLen := True
+          else
+            Exit;
+        end;
+
+      OP_LOOKAHEAD_END, OP_LOOKBEHIND_END:
+        if flfSkipLookAround in Flags then
+        begin
+          continue;
+        end;
 
       OP_NOTHING,
       OP_COMMENT,
@@ -7246,7 +7302,10 @@ begin
         end;
 
       else
-        Exit;
+        if flfForceToStopAt in Flags then
+          NotFixedLen := True
+        else
+          Exit;
     end;
   until False;
 end;
