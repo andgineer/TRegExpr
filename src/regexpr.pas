@@ -908,6 +908,14 @@ type
     gkSubCall
     );
 
+  TReOpLookBehindOptionIsGreedy = REChar;
+  PReOpLookBehindOptionIsGreedy = ^TReOpLookBehindOptionIsGreedy;
+
+const
+  ReOpLookBehindOptionsSz = SizeOf(TReOpLookBehindOptionIsGreedy) div SizeOf(REChar);
+  OPT_LOOKBEHIND_NON_GREEDY = REChar(0);
+  OPT_LOOKBEHIND_GREEDY = REChar(1);
+
 // Alexey T.: handling of that define FPC_REQUIRES_PROPER_ALIGNMENT was present even 15 years ago,
 // but with it, we have failing of some RegEx tests, on ARM64 CPU.
 // If I undefine FPC_REQUIRES_PROPER_ALIGNMENT, all tests run OK on ARM64 again.
@@ -2597,6 +2605,8 @@ const
   FLAG_HASWIDTH = 1; // Cannot match empty string
   FLAG_SIMPLE = 2; // Simple enough to be OP_STAR/OP_PLUS/OP_BRACES operand
   FLAG_SPECSTART = 4; // Starts with * or +
+  FLAG_LOOP = 8; // Has eithe *, + or {,n} with n>=2
+  FLAG_GREEDY = 16; // Has any greedy code
 
   {$IFDEF UnicodeRE}
   RusRangeLoLow = #$430; // 'а'
@@ -3131,7 +3141,7 @@ begin
     ret := br;
   if (FlagTemp and FLAG_HASWIDTH) = 0 then
     FlagParse := FlagParse and not FLAG_HASWIDTH;
-  FlagParse := FlagParse or FlagTemp and FLAG_SPECSTART;
+  FlagParse := FlagParse or FlagTemp and (FLAG_SPECSTART or FLAG_LOOP or FLAG_GREEDY);
   while (regParse^ = '|') do
   begin
     Inc(regParse);
@@ -3144,7 +3154,7 @@ begin
     Tail(ret, br); // OP_BRANCH -> OP_BRANCH.
     if (FlagTemp and FLAG_HASWIDTH) = 0 then
       FlagParse := FlagParse and not FLAG_HASWIDTH;
-    FlagParse := FlagParse or FlagTemp and FLAG_SPECSTART;
+    FlagParse := FlagParse or FlagTemp and (FLAG_SPECSTART or FLAG_LOOP or FLAG_GREEDY);
   end;
 
   // Make a closing node, and hook it on the end.
@@ -3207,7 +3217,7 @@ begin
       Result := nil;
       Exit;
     end;
-    FlagParse := FlagParse or FlagTemp and FLAG_HASWIDTH;
+    FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_LOOP or FLAG_GREEDY);
     if chain = nil // First piece.
     then
       FlagParse := FlagParse or FlagTemp and FLAG_SPECSTART
@@ -3337,7 +3347,7 @@ begin
   case op of
     '*':
       begin
-        FlagParse := FLAG_WORST or FLAG_SPECSTART;
+        FlagParse := FLAG_WORST or FLAG_SPECSTART or FLAG_LOOP;
         nextch := (regParse + 1)^;
         PossessiveCh := nextch = '+';
         if PossessiveCh then
@@ -3350,6 +3360,8 @@ begin
           NonGreedyCh := nextch = '?';
           NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         end;
+        if not NonGreedyCh then
+          FlagParse := FlagParse or FLAG_GREEDY;
         if (FlagTemp and FLAG_SIMPLE) = 0 then
         begin
           if NonGreedyOp then
@@ -3379,7 +3391,7 @@ begin
       end; { of case '*' }
     '+':
       begin
-        FlagParse := FLAG_WORST or FLAG_SPECSTART or FLAG_HASWIDTH;
+        FlagParse := FLAG_WORST or FLAG_SPECSTART or FLAG_HASWIDTH or FLAG_LOOP;
         nextch := (regParse + 1)^;
         PossessiveCh := nextch = '+';
         if PossessiveCh then
@@ -3392,6 +3404,8 @@ begin
           NonGreedyCh := nextch = '?';
           NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         end;
+        if not NonGreedyCh then
+          FlagParse := FlagParse or FLAG_GREEDY;
         if (FlagTemp and FLAG_SIMPLE) = 0 then
         begin
           if NonGreedyOp then
@@ -3434,6 +3448,8 @@ begin
           NonGreedyCh := nextch = '?';
           NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         end;
+        if not NonGreedyCh then
+          FlagParse := FlagParse or FLAG_GREEDY;
         if NonGreedyOp or PossessiveCh then
         begin // ###0.940  // We emit x?? as x{0,1}?
           if (FlagTemp and FLAG_SIMPLE) = 0 then
@@ -3508,6 +3524,10 @@ begin
           NonGreedyCh := nextch = '?';
           NonGreedyOp := NonGreedyCh or not fCompModifiers.G;
         end;
+        if not NonGreedyCh then
+          FlagParse := FlagParse or FLAG_GREEDY;
+        if BracesMax >= 2 then
+          FlagParse := FlagParse or FLAG_LOOP;
         if (FlagTemp and FLAG_SIMPLE) <> 0 then
           EmitSimpleBraces(BracesMin, BracesMax, NonGreedyOp, PossessiveCh)
         else
@@ -3522,6 +3542,7 @@ begin
     // else // here we can't be
   end; { of case op }
 
+  FlagParse := FlagParse or FlagTemp and (FLAG_LOOP or FLAG_GREEDY);
   Inc(regParse);
   op := regParse^;
   if (op = '*') or (op = '+') or (op = '?') or (op = '{') then
@@ -3644,7 +3665,7 @@ function TRegExpr.ParseAtom(var FlagParse: integer): PRegExprChar;
 // faster to run. Backslashed characters are exceptions, each becoming a
 // separate node; the code is simpler that way and it's not worth fixing.
 var
-  ret: PRegExprChar;
+  ret, regLookBehindOption: PRegExprChar;
   RangeBeg, RangeEnd: REChar;
   CanBeRange: boolean;
   AddrOfLen: PLongInt;
@@ -4123,7 +4144,7 @@ begin
                 Result := nil;
                 Exit;
               end;
-              FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_SPECSTART);
+              FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_SPECSTART or FLAG_LOOP or FLAG_GREEDY);
             end;
 
           gkLookahead,
@@ -4137,6 +4158,14 @@ begin
                 gkLookbehind: ret := EmitNode(OP_LOOKBEHIND);
                 gkLookbehindNeg: ret := EmitNode(OP_LOOKBEHIND_NEG);
               end;
+
+              regLookBehindOption := regCode;
+              if (regCode <> @regDummy) and (GrpKind in [gkLookbehind, gkLookbehindNeg]) then
+                Inc(regCode, ReOpLookBehindOptionsSz)
+              else
+                Inc(regCodeSize, ReOpLookBehindOptionsSz);
+
+
               case GrpKind of
                 gkLookahead,
                 gkLookaheadNeg: Result := ParseReg(False, FlagTemp, True, OP_LOOKAHEAD_END);
@@ -4144,11 +4173,18 @@ begin
                 gkLookbehindNeg: Result := ParseReg(False, FlagTemp, True, OP_LOOKBEHIND_END);
               end;
 
+              if (regCode <> @regDummy) and (GrpKind in [gkLookbehind, gkLookbehindNeg]) then begin
+                if (FlagTemp and (FLAG_GREEDY)) = (FLAG_GREEDY) then
+                  PReOpLookBehindOptionIsGreedy(regLookBehindOption)^ := OPT_LOOKBEHIND_GREEDY
+                else
+                  PReOpLookBehindOptionIsGreedy(regLookBehindOption)^ := OPT_LOOKBEHIND_NON_GREEDY;
+              end;
+
               if Result = nil then
                 Exit;
 
               Tail(ret, regLast(Result));
-              FlagParse := FlagParse or FlagTemp and (FLAG_SPECSTART);
+              FlagParse := FlagParse and not FLAG_HASWIDTH;
             end;
 
           gkNamedGroupReference:
@@ -4832,7 +4868,7 @@ type
       );
       {$ENDIF}
       OP_LOOKAHEAD, OP_LOOKBEHIND: (
-        IsNegativeLook: boolean;
+        IsNegativeLook, IsNotGreedy: boolean;
         LookAroundInfo: TRegExprLookAroundInfo;
         InpStart: PRegExprChar; // only OP_LOOKBEHIND
       );
@@ -5310,6 +5346,9 @@ begin
       OP_LOOKBEHIND, OP_LOOKBEHIND_NEG:
         begin
           Local.IsNegativeLook := (scan^ = OP_LOOKBEHIND_NEG);
+          scan := AlignToPtr(scan + 1) + SizeOf(TRENextOff);
+          Local.IsNotGreedy := PReOpLookBehindOptionIsGreedy(scan)^ = OPT_LOOKBEHIND_NON_GREEDY;
+          inc(scan, ReOpLookBehindOptionsSz);
 
           Local.LookAroundInfo.InputPos := regInput;
           Local.LookAroundInfo.IsNegative := Local.IsNegativeLook;
@@ -5320,14 +5359,20 @@ begin
           LookAroundInfoList := @Local.LookAroundInfo;
           fInputCurrentEnd := regInput;
 
-          scan := AlignToPtr(scan + 1) + SizeOf(TRENextOff);
-          Local.InpStart := fInputStart;
+          if Local.IsNotGreedy then
+            Local.InpStart := regInput
+          else
+            Local.InpStart := fInputStart;
           repeat
             regInput := Local.InpStart;
-            inc(Local.InpStart);
+            if Local.IsNotGreedy then
+              dec(Local.InpStart)
+            else
+              inc(Local.InpStart);
 
             Result := MatchPrim(scan);
-          until Local.LookAroundInfo.HasMatchedToEnd or (Local.InpStart > Local.LookAroundInfo.InputPos);
+          until Local.LookAroundInfo.HasMatchedToEnd or
+            (Local.InpStart > Local.LookAroundInfo.InputPos) or (Local.InpStart < fInputStart);
 
           if Local.LookAroundInfo.IsBackTracking then
             IsBacktrackingGroupAsAtom := False;
@@ -6997,6 +7042,14 @@ begin
         Result := Result + '{' + ch + ch2 + '}'
       else
         Result := Result + '{' + ch + '}';
+    end;
+    if (op = OP_LOOKBEHIND) or (op = OP_LOOKBEHIND_NEG) then
+    begin
+      if PReOpLookBehindOptionIsGreedy(s)^ = OPT_LOOKBEHIND_NON_GREEDY then
+        Result := Result + ' (not greedy)'
+      else
+        Result := Result + ' (greedy)';
+      Inc(s, ReOpLookBehindOptionsSz);
     end;
     Result := Result + #$d#$a;
   end; { of while }

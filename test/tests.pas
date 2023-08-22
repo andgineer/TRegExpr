@@ -1910,6 +1910,21 @@ begin
                 '(?<!^.*)A',    '_A_1_B_AxyzB123_A_');
 
 
+  // GREEDY and NOT...
+  IsMatching('behind greedy',
+                '(?<=(.*))X',       'abcX ',              [4,1,   1,3]);
+  IsMatching('behind greedy',
+                '(?<=(.+))X',       'abcX ',              [4,1,   1,3]);
+  IsMatching('behind greedy',
+                '(?<=(.{0,2}))X',   'abcX ',              [4,1,   2,2]);
+
+  IsMatching('behind not greedy',
+                '(?<=(.*?))X',      'abcX ',              [4,1,   4,0]);
+  IsMatching('behind not greedy',
+                '(?<=(.+?))X',      'abcX ',              [4,1,   3,1]);
+  IsMatching('behind not greedy',
+                '(?<=(.{0,2}?))X',  'abcX ',              [4,1,   4,0]);
+
 end;
 
 procedure TTestRegexpr.TestRegLookAroundMixed;
