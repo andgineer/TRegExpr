@@ -3808,6 +3808,7 @@ var
   GrpIndex, ALen, RegGrpCountBefore: integer;
   NextCh: REChar;
   op: TREOp;
+  SavedModifiers: TRegExprModifiers;
 begin
   Result := nil;
   FlagTemp := 0;
@@ -4266,18 +4267,32 @@ begin
           gkModifierString:
             begin
               SavedPtr := regParse;
-              while (regParse < fRegexEnd) and (regParse^ <> ')') do
+              while (regParse < fRegexEnd) and (regParse^ <> ')') and (regParse^ <> ':') do
                 Inc(regParse);
-              if (regParse^ <> ')') or
-                not ParseModifiers(SavedPtr, regParse - SavedPtr, fCompModifiers) then
+              SavedModifiers := fCompModifiers;
+              if (regParse^ = ':') and ParseModifiers(SavedPtr, regParse - SavedPtr, fCompModifiers) then
+              begin
+                Inc(regParse); // skip ')'
+                ret := ParseReg(True, FlagTemp);
+                fCompModifiers := SavedModifiers;
+                if ret = nil then
+                begin
+                  Result := nil;
+                  Exit;
+                end;
+                FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_SPECSTART or FLAG_LOOP or FLAG_GREEDY);
+              end
+              else
+              if (regParse^ = ')') and ParseModifiers(SavedPtr, regParse - SavedPtr, fCompModifiers) then
+              begin
+                Inc(regParse); // skip ')'
+                ret := EmitNode(OP_COMMENT); // comment
+              end
+              else
               begin
                 Error(reeUnrecognizedModifier);
                 Exit;
               end;
-              Inc(regParse); // skip ')'
-              ret := EmitNode(OP_COMMENT); // comment
-              // Error (reeQuantifFollowsNothing);
-              // Exit;
             end;
 
           gkComment:

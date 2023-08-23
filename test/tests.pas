@@ -68,6 +68,7 @@ type
     procedure TestEmpty;
     procedure TestNotFound;
     procedure TestBads;
+    procedure TestModifiers;
     procedure TestContinueAnchor;
     procedure TestRegMustExist;
     procedure TestAtomic;
@@ -912,6 +913,54 @@ begin
 
   RE.AllowUnsafeLookBehind := False;
   TestBadRegex('No Error for var-len look behind with capture', '.(?<=(.+))', 153);
+end;
+
+procedure TTestRegexpr.TestModifiers;
+begin
+  RE.ModifierI := True;
+  IsMatching   ('NOT-CaseSens',                  'A',            '1A2',     [2,1]);
+  IsMatching   ('NOT-CaseSens (?i)',             '(?i)A',        '1A2',     [2,1]);
+  IsMatching   ('NOT-CaseSens (?-i)(?i)',        '(?-i)(?i)A',   '1A2',     [2,1]);
+  IsMatching   ('NOT-CaseSens (?i)(?-i)',        '(?i)(?-i)A',   '1A2',     [2,1]);
+  IsMatching   ('NOT-CaseSens diff',             'A',            '1a2',     [2,1]);
+  IsNotMatching('NOT-CaseSens diff (?-i)',       '(?-i)A',       '1a2');
+  IsMatching   ('NOT-CaseSens diff (?-i)(?i)',   '(?-i)(?i)A',   '1a2',     [2,1]);
+  IsNotMatching('NOT-CaseSens diff (?i)(?-i)',   '(?i)(?-i)A',   '1a2');
+
+  RE.ModifierI := False;
+  IsMatching   ('CaseSens',                  'A',            '1A2',     [2,1]);
+  IsMatching   ('CaseSens (?i)',             '(?i)A',        '1A2',     [2,1]);
+  IsMatching   ('CaseSens (?-i)(?i)',        '(?-i)(?i)A',   '1A2',     [2,1]);
+  IsMatching   ('CaseSens (?i)(?-i)',        '(?i)(?-i)A',   '1A2',     [2,1]);
+  IsNotMatching('CaseSens diff',             'A',            '1a2');
+  IsNotMatching('CaseSens diff (?-i)',       '(?-i)A',       '1a2');
+  IsMatching   ('CaseSens diff (?-i)(?i)',   '(?-i)(?i)A',   '1a2',     [2,1]);
+  IsNotMatching('CaseSens diff (?i)(?-i)',   '(?i)(?-i)A',   '1a2');
+
+
+
+  IsMatching   ('CaseSens On/Off',          '(?i)A(?-i)BC',     '1aBC',     [2,3]);
+  IsNotMatching('CaseSens On/Off',          '(?i)A(?-i)BC',     '1abC');
+  IsNotMatching('CaseSens On/Off',          '(?i)A(?-i)BC',     '1aBc');
+  IsNotMatching('CaseSens On/Off',          '(?i)A(?-i)BC',     '1abc');
+
+  // (?i) to the end of the enclosing bracket
+  IsMatching   ('CaseSens On/Off in ()',    '(?i)A(?:(?-i))BC',     '1aBC',     [2,3]);
+  IsMatching   ('CaseSens On/Off in ()',    '(?i)A(?:(?-i))BC',     '1abC',     [2,3]);
+  IsMatching   ('CaseSens On/Off in ()',    '(?i)A(?:(?-i))BC',     '1aBc',     [2,3]);
+  IsMatching   ('CaseSens On/Off in ()',    '(?i)A(?:(?-i))BC',     '1abc',     [2,3]);
+
+  // (?i) to the end of the enclosing bracket
+  IsMatching   ('CaseSens On/Off in () for B',  '(?i)A(?:(?-i)B)C',     '1aBC',     [2,3]);
+  IsNotMatching('CaseSens On/Off in () for B',  '(?i)A(?:(?-i)B)C',     '1abC');
+  IsMatching   ('CaseSens On/Off in () for B',  '(?i)A(?:(?-i)B)C',     '1aBc',     [2,3]);
+  IsNotMatching('CaseSens On/Off in () for B',  '(?i)A(?:(?-i)B)C',     '1abc');
+
+  IsMatching   ('CaseSens On/Off (?i:B)',   '(?i)A(?-i:B)C',     '1aBC',     [2,3]);
+  IsNotMatching('CaseSens On/Off (?i:B)',   '(?i)A(?-i:B)C',     '1abC');
+  IsMatching   ('CaseSens On/Off (?i:B)',   '(?i)A(?-i:B)C',     '1aBc',     [2,3]);
+  IsNotMatching('CaseSens On/Off (?i:B)',   '(?i)A(?-i:B)C',     '1abc');
+
 end;
 
 procedure TTestRegexpr.TestContinueAnchor;
