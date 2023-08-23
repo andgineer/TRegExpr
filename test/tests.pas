@@ -70,6 +70,9 @@ type
     procedure TestContinueAnchor;
     procedure TestRegMustExist;
     procedure TestAtomic;
+    procedure TestLoop;
+    procedure TestIsFixedLength;
+    procedure TestAnchor;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -1064,6 +1067,305 @@ begin
   IsMatching('NESTED 2: Atomic backtrace until match is found ',
              'a(?>((?>b.*?cx..8))|.)',
              '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
+end;
+
+procedure TTestRegexpr.TestLoop;
+begin
+  // The patterns below **should** use OP_LOOP[ng]
+
+  (* 'Aa(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+      The most inner () matches minimum  3 y each run
+      The 2nd inner ()  matches minimum  3 times 1 y + 3y   = 12 y
+      The outer ()      matches minimum  3 times 1 y + 12 y = 3*13 = 39 y
+  *)
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y){3,4}){3,4}',
+             'Aayyyyyyyyyyyy',  [1,14,   11,4,  14,1]); // minimum y
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y){3,4}){3,4}',
+             'Aayyyyyyyyyyyyy',  [1,15,   12,4,  15,1]); // one extra y
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y){3,4}){3,4}',
+             'Aayyyyyyyyyyyyyy',  [1,16,   13,4,  16,1]); // two extra y
+
+  IsNotMatching('nested {} greedy ',
+             'Aa(x|y(x|y){3,4}){3,4}',
+             'Aayyyyyyyyyyy'  );
+
+
+
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',  [1,41,   29,13,  38,4,  41,1]); // 39 y
+
+  IsMatching('nested {} greedy ',
+             'Aa(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',  [1,42,   30,13,  39,4,  42,1]); // 40 y
+
+  IsNotMatching('nested {} greedy ',
+             'Aa(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');  // 38 y
+
+
+  IsMatching('nested {} no greedy ',
+             'Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',  [1,41,   29,13,  38,4,  41,1]); // 39 y
+
+  IsMatching('nested {} no greedy ',
+             'Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',  [1,41,   29,13,  38,4,  41,1]); // 40 y
+
+  IsNotMatching('nested {} no greedy ',
+             'Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?',
+             'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');  // 38 y
+
+
+
+  IsMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e)*?)*?_)a',
+             'Acece_x_Acece_a_',  [9,7]);
+
+  IsMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e(?:f|g)*?)*?)*?_)a',
+             'Acece_x_Acecegg_a_',  [9,9]);
+
+  IsMatching('nested branch *? ',  // uses OP_BACK
+             'A((ce+?)c?|ce)*a',
+             'Aceecea_',  [1,7,   5,2,  5,2]);
+
+  IsMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e(?:f|g){0,2}?){1,1}?){2,2}?_)a',
+             'Acece_x_Acecegg_a_',  [9,9]);
+
+  IsMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e(?:f|g){0,2}?){1,1}?){2,2}?_)a(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Acece_x_Acecegg_ayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',
+             [9,93,   81,21,  97,5,  101, 1]);
+
+  IsNotMatching('nested branch *? ',
+             'A(?>(?:b|c(?:d|e(?:f|g){0,2}?){1,1}?){2,2}?_)a(x|y(x|y(x|y){3,4}){3,4}){3,4}',
+             'Acece_x_Acecegg_ayyyyyyyyyyyyyyyyyyyyyyyyy'
+             );
+
+
+  IsMatching('atomic nested {} no greedy / no branches',
+             '(?:(?>Aa(y){3,4}?)|.*)B',
+             'AayyyyBB',   [1,8,   -1,-1] ); // 40 y
+  IsMatching('NOT atomic nested {} no greedy / no branches', // ensure non-atomic has different result
+             '(?:(?:Aa(y){3,4}?)|.*)B',
+             'AayyyyBB',   [1,7,   6,1] ); // 40 y
+
+  IsMatching('atomic nested {} no greedy ',
+             '(?:(?>Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?)|.*)B',
+             'AayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyBB',   [1,44,   -1,-1, -1,-1, -1,-1] ); // 40 y
+
+
+end;
+
+procedure TTestRegexpr.TestIsFixedLength;
+
+  procedure HasLength(AErrorMessage: String; ARegEx: RegExprString; ExpLen: Integer);
+  var
+    r: Boolean;
+    op: TREOp;
+    ALen: integer;
+  begin
+    CompileRE(ARegEx);
+    r := RE.IsFixedLength(op, ALen);
+    if ExpLen < 0 then begin
+      IsFalse(AErrorMessage, r);
+    end
+    else begin
+      IsTrue(AErrorMessage, r);
+      AreEqual(AErrorMessage, ExpLen, ALen);
+    end;
+  end;
+
+begin
+  HasLength('bound', '^',      0);
+  HasLength('bound', '$',      0);
+  HasLength('bound', '\G',     0);
+  HasLength('bound', '\b',     0);
+  HasLength('{0}', 'a{0}',     0);
+  HasLength('{0,0}', 'a{0,0}', 0);
+
+  HasLength('A', 'A', 1);
+  HasLength('branch', 'A|B',     1);
+  HasLength('branch', 'A|B|C',   1);
+  HasLength('branch', 'AA|B',   -1);
+  HasLength('branch', 'A|BB',   -1);
+  HasLength('branch', 'A|^',    -1);
+  HasLength('branch', '$|B',    -1);
+  HasLength('branch', 'AA|B|C', -1);
+  HasLength('branch', 'A|BB|C', -1);
+  HasLength('branch', 'A|B|CC', -1);
+  HasLength('branch', '\b|B|C', -1);
+  HasLength('branch', 'A|\b|C', -1);
+  HasLength('branch', 'A|B|\b', -1);
+
+  HasLength('branch ()', '(A)',       1);
+  HasLength('branch ()', '(A|B)',     1);
+  HasLength('branch ()', '(A|B|C)',   1);
+  HasLength('branch ()', '(A|BB)',   -1);
+  HasLength('branch ()', '(AA|B)',   -1);
+  HasLength('branch ()', 'A|^',      -1);
+  HasLength('branch ()', '$|B',      -1);
+  HasLength('branch ()', '(AA|B|C)', -1);
+  HasLength('branch ()', '(A|BB|C)', -1);
+  HasLength('branch ()', '(A|B|CC)', -1);
+  HasLength('branch ()', '(\b|B|C)', -1);
+  HasLength('branch ()', '(A|\b|C)', -1);
+  HasLength('branch ()', '(A|B|\b)', -1);
+
+  HasLength('branch () mixed', 'x(A|B)',     2);
+  HasLength('branch () mixed', 'x(A|B|C)',   2);
+  HasLength('branch () mixed', 'x(A|BB)',   -1);
+  HasLength('branch () mixed', 'x(AA|B|C)', -1);
+  HasLength('branch () mixed', 'x(A|\b|C)', -1);
+
+  HasLength('branch () mixed', 'xx(A|B)',     3);
+  HasLength('branch () mixed', 'xx(A|B|C)',   3);
+  HasLength('branch () mixed', 'xx(A|BB)',   -1);
+  HasLength('branch () mixed', 'xx(AA|B|C)', -1);
+  HasLength('branch () mixed', 'xx(A|\b|C)', -1);
+
+  HasLength('branch () mixed', '\b(A|B)',     1);
+  HasLength('branch () mixed', '\b(A|B|C)',   1);
+  HasLength('branch () mixed', '\b(A|BB)',   -1);
+  HasLength('branch () mixed', '\b(AA|B|C)', -1);
+  HasLength('branch () mixed', '\b(A|\b|C)', -1);
+
+  HasLength('branch () mixed', '(A|B)xxx',     4);
+  HasLength('branch () mixed', '(A|B|C)xxx',   4);
+  HasLength('branch () mixed', '(A|BB)xxx',   -1);
+  HasLength('branch () mixed', '(AA|B|C)xxx', -1);
+  HasLength('branch () mixed', '(A|\b|C)xxx', -1);
+
+  HasLength('branch () twice', '(A|B)(D|E)',     2);
+  HasLength('branch () twice', '(A|B|C)(D|E)',   2);
+  HasLength('branch () twice', '(A|BB)(D|E)',   -1);
+  HasLength('branch () twice', '(A|B)(DD|E)',   -1);
+  HasLength('branch () twice', '(AA|B|C)(D|E)', -1);
+  HasLength('branch () twice', '(A|B|C)(D|EE)', -1);
+  HasLength('branch () twice', '(A|\b|C)(D|E)', -1);
+  HasLength('branch () twice', '(A|B|C)(D|^)',  -1);
+
+  HasLength('branch () twice |', '(A|B)|(D|E)',     1);
+  HasLength('branch () twice |', '(A|B|C)|(D|E)',   1);
+  HasLength('branch () twice |', '(A|BB)|(D|E)',   -1);
+  HasLength('branch () twice |', '(A|B)|(DD|E)',   -1);
+  HasLength('branch () twice |', '(AA|B|C)|(D|E)', -1);
+  HasLength('branch () twice |', '(A|B|C)|(D|EE)', -1);
+  HasLength('branch () twice |', '(A|\b|C)|(D|E)', -1);
+  HasLength('branch () twice |', '(A|B|C)|(D|^)',  -1);
+
+  HasLength('branch () nested', '(A(x)|B(D|E))',     2);
+  HasLength('branch () nested', '(A(x)|Bx|C(D|E))',   2);
+  HasLength('branch () nested', '(A(x)|BB(D|E))',   -1);
+  HasLength('branch () nested', '(A(x)|B(DD|E))',   -1);
+
+  HasLength('branch () some zero len', 'x(A|B\b|Cx{0})',   2);
+
+end;
+
+procedure TTestRegexpr.TestAnchor;
+
+  procedure HasAnchor(AErrorMessage: String; ARegEx: RegExprString; ExpAnchor: TRegExAnchor);
+  var
+    d: RegExprString;
+  begin
+    CompileRE(ARegEx);
+    d := RE.Dump;
+    case ExpAnchor of
+      raNone:     IsTrue(AErrorMessage, pos('Anchored', d) < 1);
+      raBOL:      IsTrue(AErrorMessage, pos('Anchored(BOL)', d) > 0);
+      raEOL:      IsTrue(AErrorMessage, pos('Anchored(EOL)', d) > 0);
+      raContinue: IsTrue(AErrorMessage, pos('Anchored(\G)', d) > 0);
+      raOnlyOnce: IsTrue(AErrorMessage, pos('Anchored(start)', d) > 0);
+    end;
+  end;
+
+const
+  TestOnlyOnceData: array [1..6] of RegExprString = (
+    '.{0,}+', '.{0,}?', '.{0,}', '.*+', '.*', '.*?'
+  );
+  TestNotOnlyOnceData: array [1..9] of RegExprString = (
+    '.{1,}+', '.{1,}?', '.{1,}', '.{0,2}+', '.{0,2}?', '.{0,2}',
+    '.+', '.++', '.?'
+  );
+var
+  i: Integer;
+  s: RegExprString;
+begin
+  HasAnchor('', 'abc', raNone);
+  HasAnchor('', '.a', raNone);
+  HasAnchor('', '(a)', raNone);
+  HasAnchor('', '(.a)', raNone);
+  HasAnchor('', 'a*', raNone);
+  HasAnchor('', '.a*', raNone);
+  HasAnchor('', '(a)*', raNone);
+  HasAnchor('', '(.a)*', raNone);
+
+  HasAnchor('', '^', raBOL);
+  HasAnchor('', '^a', raBOL);
+  HasAnchor('', '^a|a', raNone);
+  HasAnchor('', '^|a', raNone);
+  HasAnchor('', '^?a', raNone);
+  HasAnchor('', '^?|a', raNone);
+  HasAnchor('', '(^?|a)', raNone);
+
+  HasAnchor('', '$', raEOL);
+  HasAnchor('', '$a', raEOL);
+  HasAnchor('', '$?', raNone);
+  HasAnchor('', '$|a', raNone);
+  HasAnchor('', '($)?', raNone);
+  HasAnchor('', '($|a)?', raNone);
+
+  HasAnchor('', '\G', raContinue);
+  HasAnchor('', '\Ga', raContinue);
+  HasAnchor('', '\Ga|a', raNone);
+  HasAnchor('', '\G|a', raNone);
+  HasAnchor('', '\G?a', raNone);
+  HasAnchor('', '\G?|a', raNone);
+  HasAnchor('', '(\G?|a)', raNone);
+
+  for i := low(TestOnlyOnceData) to high(TestOnlyOnceData) do begin
+    s := TestOnlyOnceData[i];
+    RE.ModifierS := True;
+    HasAnchor('', s, raOnlyOnce);
+    HasAnchor('', s+'a', raOnlyOnce);
+    HasAnchor('', s+'|a', raNone);
+    HasAnchor('', '('+s+'|a)', raNone);
+    RE.ModifierS := False;
+    if i <> 1 then begin    // {0,}+ possesive not allowed
+      HasAnchor('', s, raNone);
+      HasAnchor('', s+'a', raNone);
+      HasAnchor('', s+'|a', raNone);
+      HasAnchor('', '('+s+'|a)', raNone);
+    end;
+  end;
+
+  for i := low(TestNotOnlyOnceData) to high(TestNotOnlyOnceData) do begin
+    s := TestNotOnlyOnceData[i];
+    RE.ModifierS := True;
+    HasAnchor('', s, raNone);
+    HasAnchor('', s+'a', raNone);
+    HasAnchor('', s+'|a', raNone);
+    HasAnchor('', '('+s+'|a)', raNone);
+    RE.ModifierS := False;
+    if (i <> 1) and (i <> 4) then begin
+      HasAnchor('', s, raNone);
+      HasAnchor('', s+'a', raNone);
+      HasAnchor('', s+'|a', raNone);
+      HasAnchor('', '('+s+'|a)', raNone);
+    end;
+  end;
+
+
 end;
 
 procedure TTestRegexpr.RunTest1;
