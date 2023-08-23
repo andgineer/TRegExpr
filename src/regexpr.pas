@@ -1245,7 +1245,15 @@ begin
   for i := 0 to ALen-1 do
     case APtr[i] of
       '-':
-        IsOn := False;
+        if IsOn then
+        begin
+          IsOn := False;
+        end
+        else
+        begin
+          Result := False;
+          Exit;
+        end;
       'I', 'i':
         AValue.I := IsOn;
       'R', 'r':
