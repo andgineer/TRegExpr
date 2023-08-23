@@ -300,7 +300,9 @@ type
 
   TRegExpr = class
   private
+    FAllowBraceWithoutMin: boolean;
     FAllowUnsafeLookBehind: boolean;
+    FAllowLiteralBraceWithoutRange: boolean;
     GrpBounds: TRegExprBoundsArray;
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
@@ -787,6 +789,11 @@ type
     property SlowChecksSizeMax: integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
 
     property AllowUnsafeLookBehind: boolean read FAllowUnsafeLookBehind write FAllowUnsafeLookBehind;
+
+    // Make sure a { always is a range / don't allow unescaped literal usage
+    property AllowLiteralBraceWithoutRange: boolean read FAllowLiteralBraceWithoutRange write FAllowLiteralBraceWithoutRange;
+    // support {,123} defaulting the min-matches to 0
+    property AllowBraceWithoutMin: boolean read FAllowBraceWithoutMin write FAllowBraceWithoutMin;
   end;
 
 type
@@ -3350,12 +3357,21 @@ var
     p := regParse;
     while IsDigitChar(regParse^) do // <min> MUST appear
       Inc(regParse);
+    if FAllowBraceWithoutMin and (regParse^ = ',') and (p = regParse) then
+    begin
+      if not (((regParse+1)^ >= '0') and ((regParse+1)^ <= '9')) then
+        Exit;
+      BMin := 0
+    end
+    else
     if (regParse^ <> '}') and (regParse^ <> ',') or (p = regParse) then
     begin
-      Error(reeIncorrectBraces);
+      if not FAllowLiteralBraceWithoutRange then
+        Error(reeIncorrectBraces);
       Exit;
-    end;
-    BMin := ParseNumber(p, regParse - 1);
+    end
+    else
+      BMin := ParseNumber(p, regParse - 1);
     if regParse^ = ',' then
     begin
       Inc(regParse);
@@ -3364,7 +3380,8 @@ var
         Inc(regParse);
       if regParse^ <> '}' then
       begin
-        Error(reeIncorrectBraces);
+        if not FAllowLiteralBraceWithoutRange then
+          Error(reeIncorrectBraces);
         Exit;
       end;
       if p = regParse then
@@ -3387,6 +3404,7 @@ var
   NonGreedyOp, NonGreedyCh, PossessiveCh: boolean;
   FlagTemp: integer;
   BracesMin, BracesMax: TREBracesArg;
+  savedRegParse: PRegExprChar;
 begin
   FlagTemp := 0;
   Result := ParseAtom(FlagTemp);
@@ -3405,9 +3423,13 @@ begin
     FlagParse := FlagParse or FlagTemp and (FLAG_LOOP or FLAG_GREEDY);
     BracesMin := 0;
     if op = '{' then begin
+      savedRegParse := regParse;
       Inc(regParse);
       if not ParseBraceMinMax(BracesMin, BracesMax) then
+      begin
+        regParse := savedRegParse;
         Exit;
+      end;
     end;
     if op = '+' then
       BracesMin := 1;
@@ -3560,9 +3582,13 @@ begin
       end; { of case '?' }
     '{':
       begin
+        savedRegParse := regParse;
         Inc(regParse);
         if not ParseBraceMinMax(BracesMin, BracesMax) then
+        begin
+          regParse := savedRegParse;
           Exit;
+        end;
         if BracesMin > 0 then
           FlagParse := FLAG_WORST or FLAG_HASWIDTH;
         if BracesMax > 0 then
