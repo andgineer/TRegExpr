@@ -6,6 +6,12 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.163 2023.08.23
+ -=- (+) Added full look-ahead support. Added full fixed length look-behind
+  support.Added limited variable length look-behind support.
+ -=- (+) Added (?modifier:pattern) support
+  By Martin Friebe.
+
  v. 1.162 2023.08.21
  -=- (-) Fix nested loops using OP_LOOP. Outer loops were run with the counter
   of the inner loop.
