@@ -909,6 +909,9 @@ begin
   TestBadRegex('No Error for bad braces', 'd{');
   TestBadRegex('No Error for bad braces', 'd{22');
   TestBadRegex('No Error for bad braces', 'd{}');
+
+  RE.AllowUnsafeLookBehind := False;
+  TestBadRegex('No Error for var-len look behind with capture', '.(?<=(.+))', 153);
 end;
 
 procedure TTestRegexpr.TestContinueAnchor;
@@ -1707,6 +1710,7 @@ end;
 
 procedure TTestRegexpr.TestRegLookBehind;
 begin
+  re.AllowUnsafeLookBehind := True;
   (* ***************************************************************************
    *** look behind
    ************************************************************************** *)

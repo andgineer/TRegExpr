@@ -300,6 +300,7 @@ type
 
   TRegExpr = class
   private
+    FAllowUnsafeLookBehind: boolean;
     GrpBounds: TRegExprBoundsArray;
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
@@ -784,6 +785,8 @@ type
     property ReplaceLineEnd: RegExprString read fReplaceLineEnd write fReplaceLineEnd;
 
     property SlowChecksSizeMax: integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
+
+    property AllowUnsafeLookBehind: boolean read FAllowUnsafeLookBehind write FAllowUnsafeLookBehind;
   end;
 
 type
@@ -1701,8 +1704,7 @@ const
   reeNamedGroupDupName = 143;
   reeLookaheadBad = 150;
   reeLookbehindBad = 152;
-  reeLookbehindTooComplex = 153;
-  reeLookaroundNotAtEdge = 154;
+  reeLookaroundNotSafe = 153;
   // Runtime errors must be >= reeFirstRuntimeCode
   reeFirstRuntimeCode = 1000;
   reeRegRepeatCalledInappropriately = 1000;
@@ -1803,10 +1805,8 @@ begin
       Result := 'TRegExpr compile: bad lookahead';
     reeLookbehindBad:
       Result := 'TRegExpr compile: bad lookbehind';
-    reeLookbehindTooComplex:
-      Result := 'TRegExpr compile: lookbehind (?<!foo) must have fixed length';
-    reeLookaroundNotAtEdge:
-      Result := 'TRegExpr compile: lookaround brackets must be at the very beginning/ending';
+    reeLookaroundNotSafe:
+      Result := 'TRegExpr compile: lookbehind brackets with variable length do not support captures';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -1889,6 +1889,7 @@ begin
   fReplaceLineEnd := RegExprReplaceLineBreak;
 
   fSlowChecksSizeMax := 2000;
+  FAllowUnsafeLookBehind := False;
 
   {$IFDEF UseLineSep}
   InitLineSepArray;
@@ -3004,6 +3005,7 @@ begin
     fCompModifiers := fModifiers;
     regParse := ARegExp;
     regNumBrackets := 1;
+    GrpCount := 0;
     regCode := programm;
     regCodeWork := programm + REOpSz;
 
@@ -3803,7 +3805,7 @@ var
   DashForRange: Boolean;
   GrpKind: TREGroupKind;
   GrpName: RegExprString;
-  GrpIndex, ALen: integer;
+  GrpIndex, ALen, RegGrpCountBefore: integer;
   NextCh: REChar;
   op: TREOp;
 begin
@@ -4173,16 +4175,19 @@ begin
             begin
               // skip this block for one of passes, to not double groups count;
               // must take first pass (we need GrpNames filled)
-              if (GrpKind = gkNormalGroup) and not fSecondPass then
+              if (GrpKind = gkNormalGroup) then
                 if GrpCount < RegexMaxGroups - 1 then
                 begin
                   Inc(GrpCount);
-                  GrpIndexes[GrpCount] := regNumBrackets;
-                  if GrpName <> '' then
+                  if not fSecondPass then
                   begin
-                    if MatchIndexFromName(GrpName) >= 0 then
-                      Error(reeNamedGroupDupName);
-                    GrpNames[GrpCount] := GrpName;
+                    GrpIndexes[GrpCount] := regNumBrackets;
+                    if GrpName <> '' then
+                    begin
+                      if MatchIndexFromName(GrpName) >= 0 then
+                        Error(reeNamedGroupDupName);
+                      GrpNames[GrpCount] := GrpName;
+                    end;
                   end;
                 end;
               ret := ParseReg(True, FlagTemp);
@@ -4223,6 +4228,7 @@ begin
               else
                 Inc(regCodeSize, ReOpLookBehindOptionsSz);
 
+              RegGrpCountBefore := GrpCount;
               Result := ParseReg(False, FlagTemp, True, OP_LOOKBEHIND_END);
               if Result = nil then
                 Exit;
@@ -4234,6 +4240,9 @@ begin
                 ALen := 0;
                 if IsPartFixedLength(ret2, op, ALen, OP_LOOKBEHIND_END, [flfSkipLookAround]) then
                   PReOpLookBehindOptions(regLookBehindOption)^.IsGreedy := OPT_LOOKBEHIND_FIXED
+                else
+                if (GrpCount > RegGrpCountBefore) and (not FAllowUnsafeLookBehind) then
+                  Error(reeLookaroundNotSafe)
                 else
                 if (FlagTemp and (FLAG_GREEDY)) = (FLAG_GREEDY) then
                   PReOpLookBehindOptions(regLookBehindOption)^.IsGreedy := OPT_LOOKBEHIND_GREEDY
