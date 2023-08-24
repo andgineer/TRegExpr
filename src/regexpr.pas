@@ -257,7 +257,7 @@ type
   end;
   TRegExprCharCheckerInfos = array of TRegExprCharCheckerInfo;
 
-  TRegExAnchor = (
+  TRegExprAnchor = (
     raNone,     // Not anchored
     raBOL,      // Must start at BOL
     raEOL,      // Must start at EOL (maybe look behind)
@@ -309,7 +309,7 @@ type
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
 
-    regAnchored: TRegExAnchor; // is the match anchored (at beginning-of-line only)?
+    regAnchored: TRegExprAnchor; // is the match anchored (at beginning-of-line only)?
     // regAnchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. regMust permits fast rejection
     // of lines that cannot possibly match. The regMust tests are costly enough
