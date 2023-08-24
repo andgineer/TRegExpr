@@ -5436,7 +5436,7 @@ begin
           LookAroundInfoList := @Local.LookAroundInfo;
           fInputCurrentEnd := fInputEnd;
 
-          scan := AlignToPtr(scan + 1) + SizeOf(TRENextOff);
+          scan := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
           Result := MatchPrim(scan);
 
           if Local.LookAroundInfo.IsBackTracking then
@@ -5444,11 +5444,11 @@ begin
           LookAroundInfoList := Local.LookAroundInfo.OuterInfo;
           fInputCurrentEnd := Local.LookAroundInfo.savedInputCurrentEnd;
 
-          next := AlignToPtr(next + 1) + SizeOf(TRENextOff);
+          next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
           if Local.IsNegativeLook then begin
             Result := (next^ = OP_LOOKAROUND_OPTIONAL);
             if Result then
-              next := AlignToPtr(next + 1) + SizeOf(TRENextOff)
+              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz
             else
               Result := (not Local.LookAroundInfo.HasMatchedToEnd);
             if Result then begin
@@ -5459,7 +5459,7 @@ begin
           end
           else
           if (next^ = OP_LOOKAROUND_OPTIONAL) then begin
-            next := AlignToPtr(next + 1) + SizeOf(TRENextOff);
+            next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
             if not Local.LookAroundInfo.HasMatchedToEnd then begin
               regInput := Local.LookAroundInfo.InputPos;
               Result := MatchPrim(next);
@@ -5476,7 +5476,7 @@ begin
       OP_LOOKBEHIND, OP_LOOKBEHIND_NEG:
         begin
           Local.IsNegativeLook := (scan^ = OP_LOOKBEHIND_NEG);
-          scan := AlignToPtr(scan + 1) + SizeOf(TRENextOff);
+          scan := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
           Local.IsGreedy := PReOpLookBehindOptions(scan)^.IsGreedy;
 
           Local.LookAroundInfo.InputPos := regInput;
@@ -5520,11 +5520,11 @@ begin
           LookAroundInfoList := Local.LookAroundInfo.OuterInfo;
           fInputCurrentEnd := Local.LookAroundInfo.savedInputCurrentEnd;
 
-          next := AlignToPtr(next + 1) + SizeOf(TRENextOff);
+          next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
           if Local.IsNegativeLook then begin
             Result := (next^ = OP_LOOKAROUND_OPTIONAL);
             if Result then
-              next := AlignToPtr(next + 1) + SizeOf(TRENextOff)
+              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz
             else
               Result := not Local.LookAroundInfo.HasMatchedToEnd;
             if Result then begin
@@ -5535,7 +5535,7 @@ begin
           end
           else
           if (next^ = OP_LOOKAROUND_OPTIONAL) then begin
-            next := AlignToPtr(next + 1) + SizeOf(TRENextOff);
+            next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
             if not Local.LookAroundInfo.HasMatchedToEnd then begin
               regInput := Local.LookAroundInfo.InputPos;
               Result := MatchPrim(next);
@@ -5561,7 +5561,7 @@ begin
             LookAroundInfoList := Local.LookAroundInfoPtr^.OuterInfo;
 
             if (next^ = OP_LOOKAROUND_OPTIONAL) then
-              next := AlignToPtr(next + 1) + SizeOf(TRENextOff);
+              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
             Result := MatchPrim(next);
             LookAroundInfoList := Local.LookAroundInfoPtr;
           end;
@@ -5590,7 +5590,7 @@ begin
             LookAroundInfoList := Local.LookAroundInfoPtr^.OuterInfo;
 
             if (next^ = OP_LOOKAROUND_OPTIONAL) then
-              next := AlignToPtr(next + 1) + SizeOf(TRENextOff);
+              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
             Result := MatchPrim(next);
             LookAroundInfoList := Local.LookAroundInfoPtr;
           end;
@@ -6648,7 +6648,7 @@ begin
       OP_BACK:
         begin
           // No point to rescan the code again
-          Next := AlignToPtr(scan + 1) + SizeOf(TRENextOff);
+          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;;
         end;
 
       OP_OPEN_FIRST .. OP_OPEN_LAST:
