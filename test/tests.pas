@@ -2064,6 +2064,12 @@ begin
   IsMatching('behind not greedy',
                 '(?<=(.{0,2}?))X',  'abcX ',              [4,1,   4,0]);
 
+
+  IsMatching('',  '(?<=.A...)(X)',  '_A123X3',              [6,1,   6,1]);
+  IsMatching('',  '(?<=.A...)(X)',  '_A123X3',              [6,1,   6,1], 1);
+  IsMatching('',  '(?<=.A...)(X)',  '_A123X3',              [6,1,   6,1], 2);
+  IsMatching('',  '(?<=.A...)(X)',  '_A123X3',              [6,1,   6,1], 3);
+
 end;
 
 procedure TTestRegexpr.TestRegLookAroundMixed;
