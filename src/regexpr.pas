@@ -257,7 +257,7 @@ type
   end;
   TRegExprCharCheckerInfos = array of TRegExprCharCheckerInfo;
 
-  TRegExAnchor = (
+  TRegExprAnchor = (
     raNone,     // Not anchored
     raBOL,      // Must start at BOL
     raEOL,      // Must start at EOL (maybe look behind)
@@ -309,7 +309,7 @@ type
     // to execute that permits the execute phase to run lots faster on
     // simple cases.
 
-    regAnchored: TRegExAnchor; // is the match anchored (at beginning-of-line only)?
+    regAnchored: TRegExprAnchor; // is the match anchored (at beginning-of-line only)?
     // regAnchored permits very fast decisions on suitable starting points
     // for a match, cutting down the work a lot. regMust permits fast rejection
     // of lines that cannot possibly match. The regMust tests are costly enough
@@ -992,9 +992,9 @@ begin
   {$ENDIF}
 end;
 
-function StrLScan(P: PRegExprChar; C: REChar; len: SizeInt): PRegExprChar;
+function StrLScan(P: PRegExprChar; C: REChar; len: PtrInt): PRegExprChar;
 Var
-   count: SizeInt;
+   count: PtrInt;
 Begin
   count := 0;
   { Find first matching character of Ch in Str }
@@ -1002,8 +1002,8 @@ Begin
   begin
     if C = P[count] then
      begin
-         StrLScan := @(P[count]);
-         exit;
+       StrLScan := @(P[count]);
+       exit;
      end;
     Inc(count);
   end;
@@ -1011,8 +1011,26 @@ Begin
   StrLScan := nil;
 end;
 
+function StrLComp(str1,str2 : PRegExprChar; len : PtrInt) : PtrInt;
+var
+  counter: PtrInt;
+  c1, c2: REChar;
+begin
+  if len = 0 then
+  begin
+    StrLComp := 0;
+    exit;
+  end;
+  counter:=0;
+  repeat
+    c1:=str1[counter];
+    c2:=str2[counter];
+    inc(counter);
+  until (c1<>c2) or (counter>=len) or (c1=#0) or (c2=#0);
+  StrLComp:=ord(c1)-ord(c2);
+end;
 
-function StrLPos(str1,str2 : PRegExprChar; len1, len2: SizeInt) : PRegExprChar;
+function StrLPos(str1,str2 : PRegExprChar; len1, len2: PtrInt) : PRegExprChar;
 var
   p : PRegExprChar;
 begin
@@ -1022,15 +1040,15 @@ begin
   len1 := len1 - len2 + 1;
   p := StrLScan(str1,str2^, len1);
   while p <> nil do
+  begin
+    if StrLComp(p, str2, len2)=0 then
     begin
-      if strlcomp(p, str2, len2)=0 then
-        begin
-           StrLPos := p;
-           exit;
-        end;
-      inc(p);
-      p := StrLScan(p, str2^, len1 - (p-str1));
+       StrLPos := p;
+       exit;
     end;
+    inc(p);
+    p := StrLScan(p, str2^, len1 - (p-str1));
+  end;
 end;
 
 {$IFDEF FastUnicodeData}

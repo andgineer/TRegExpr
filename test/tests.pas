@@ -1274,7 +1274,7 @@ end;
 
 procedure TTestRegexpr.TestAnchor;
 
-  procedure HasAnchor(AErrorMessage: String; ARegEx: RegExprString; ExpAnchor: TRegExAnchor);
+  procedure HasAnchor(AErrorMessage: String; ARegEx: RegExprString; ExpAnchor: TRegExprAnchor);
   var
     d: RegExprString;
   begin
