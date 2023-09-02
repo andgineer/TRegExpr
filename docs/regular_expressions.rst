@@ -142,6 +142,7 @@ more compact, "meta-classes":
 ======     ==============================================
 RegEx      Matches
 ======     ==============================================
+``.``      any character (can include line-break chars or not)
 ``\w``     an alphanumeric character, including ``_``
 ``\W``     a non-alphanumeric
 ``\d``     a numeric character (same as ``[0-9]``)
@@ -187,7 +188,6 @@ Line Boundaries
 ============= ================================================
 Meta-char     Matches
 ============= ================================================
-``.``         any character, can include line-breaks
 ``^``         zero-length match at start of line
 ``$``         zero-length match at end of line
 ``\A``        zero-length match at the very beginning
