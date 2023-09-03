@@ -582,9 +582,8 @@ Negative lookbehind assertion: ``(?<!foo)bar`` matches "bar" only if it's not pr
 
 Limitations:
 
-* Brackets for lookahead must be at the very ending of expression, and brackets for lookbehind must be at the very beginning. So assertions between choices ``|``, or inside groups, are not supported.
-* For lookbehind ``(?<!foo)bar``, regex "foo" must be of fixed length, ie contains only operations of fixed length matches. Quantifiers are not allowed, except braces with the repeated numbers ``{n}`` or ``{n,n}``. Char-classes are allowed here, dot is allowed, ``\b`` and ``\B`` are allowed. Groups and choices are not allowed.
-* For other 3 assertion kinds, expression in brackets can be of any complexity.
+* Variable length lookbehind are not allowed to contain capture groups. This can be allowed by setting the property ``AllowUnsafeLookBehind``. If this is enabled and there is more than one match in the text that the group might capture, then the wrong match may be captured. This does not affect the correctness of the overall assertion. (I.e., the lookbehind will correctly return if the text before matched the pattern).
+* Variable length lookbehind may be slow to execute, if they do not match. 
 
 Non-capturing Groups
 --------------------
