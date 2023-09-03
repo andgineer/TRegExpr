@@ -278,6 +278,7 @@ RegEx      Matches
 ========== ============================================================
 ``{n}``    exactly ``n`` times
 ``{n,}``   at least ``n`` times
+``{,m}``   not more than ``m`` times (only with AllowBraceWithoutMin)
 ``{n,m}``  at least ``n`` but not more than ``m`` times
 ``*``      zero or more, similar to ``{0,}``
 ``+``      one or more, similar to ``{1,}``
@@ -290,7 +291,12 @@ number of times to match ``n`` and the maximum ``m``.
 The ``{n}`` is equivalent to ``{n,n}`` and matches exactly ``n`` times.
 The ``{n,}`` matches ``n`` or more times.
 
+The variant ``{,m}`` is only supported if the property AllowBraceWithoutMin is set.
+
 There is no practical limit to the values n and m (limit is maximal signed 32-bit value).
+
+Using ``{`` without a correct range will give an error. This behaviour can be changed by setting the property AllowLiteralBraceWithoutRange, which will accept ``{`` as a literal char, if not followed by a range.
+A range with a low value bigger than the high value will always give an error.
 
 ================== ========================================================================
 RegEx              Matches
