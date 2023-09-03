@@ -139,6 +139,9 @@ Dot Meta-Char
 Meta-char ``.`` (dot) by default matches any character.
 But if you turn **off** the `modifier /s <#s>`_, then it won't match line-break characters.
 
+The ``.`` does not act as meta-class inside `user character classes <User Character Classes_>`_.
+``[.]`` means a literal ".".
+
 Meta-Classes
 ~~~~~~~~~~~~
 
