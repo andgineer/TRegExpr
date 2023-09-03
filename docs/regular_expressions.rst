@@ -627,6 +627,8 @@ that follows the modifiers. So in ``((?i)Saint)-Petersburg`` it affects
 only group ``((?i)Saint)`` so it will match ``saint-Petersburg``
 but not ``saint-petersburg``.
 
+Inline modifiers can also be given as part of a non-capturing group: ``(?i:pattern)``.
+
 ============================= ==================================================
 RegEx                         Matches
 ============================= ==================================================
