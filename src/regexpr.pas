@@ -5963,6 +5963,7 @@ end;
 
 procedure TRegExpr.ClearInternalExecData;
 begin
+  fLastError := reeOk;
   FillChar(GrpBacktrackingAsAtom, SizeOf(GrpBacktrackingAsAtom), 0);
   IsBacktrackingGroupAsAtom := False;
   {$IFDEF ComplexBraces}
