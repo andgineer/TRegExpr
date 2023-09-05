@@ -133,6 +133,15 @@ RegEx         Matches
 ``[\n-\x0D]`` characters from chr(10) to chr(13)
 ============= ==================================
 
+Dot Meta-Char
+~~~~~~~~~~~~~
+
+Meta-char ``.`` (dot) by default matches any character.
+But if you turn **off** the `modifier /s <#s>`_, then it won't match line-break characters.
+
+The ``.`` does not act as meta-class inside `user character classes <User Character Classes_>`_.
+``[.]`` means a literal ".".
+
 Meta-Classes
 ~~~~~~~~~~~~
 
@@ -187,7 +196,6 @@ Line Boundaries
 ============= ================================================
 Meta-char     Matches
 ============= ================================================
-``.``         any character, can include line-breaks
 ``^``         zero-length match at start of line
 ``$``         zero-length match at end of line
 ``\A``        zero-length match at the very beginning
@@ -225,9 +233,6 @@ Meta-char ``\A`` matches zero-length position at the very beginning of the input
 ``\z`` - at the very ending. They ignore `modifier /m <#m>`_.
 ``\Z`` is like ``\z`` but also matches before the final line-break (LF and CR LF).
 Behaviour of ``\A``, ``\z``, ``\Z`` is made like in most of major regex engines (Perl, PCRE, etc).
-
-Meta-char ``.`` (dot) by default matches any character, but if you
-turn **off** the `modifier /s <#s>`_, then it won't match line-breaks inside the string.
 
 Note that ``^.*$`` does not match a string between ``\x0D\x0A``,
 because this is unbreakable line separator.
