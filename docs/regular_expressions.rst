@@ -283,6 +283,7 @@ RegEx      Matches
 ========== ============================================================
 ``{n}``    exactly ``n`` times
 ``{n,}``   at least ``n`` times
+``{,m}``   not more than ``m`` times (only with AllowBraceWithoutMin)
 ``{n,m}``  at least ``n`` but not more than ``m`` times
 ``*``      zero or more, similar to ``{0,}``
 ``+``      one or more, similar to ``{1,}``
@@ -295,7 +296,12 @@ number of times to match ``n`` and the maximum ``m``.
 The ``{n}`` is equivalent to ``{n,n}`` and matches exactly ``n`` times.
 The ``{n,}`` matches ``n`` or more times.
 
+The variant ``{,m}`` is only supported if the property AllowBraceWithoutMin is set.
+
 There is no practical limit to the values n and m (limit is maximal signed 32-bit value).
+
+Using ``{`` without a correct range will give an error. This behaviour can be changed by setting the property AllowLiteralBraceWithoutRange, which will accept ``{`` as a literal char, if not followed by a range.
+A range with a low value bigger than the high value will always give an error.
 
 ================== ========================================================================
 RegEx              Matches
@@ -587,9 +593,8 @@ Negative lookbehind assertion: ``(?<!foo)bar`` matches "bar" only if it's not pr
 
 Limitations:
 
-* Brackets for lookahead must be at the very ending of expression, and brackets for lookbehind must be at the very beginning. So assertions between choices ``|``, or inside groups, are not supported.
-* For lookbehind ``(?<!foo)bar``, regex "foo" must be of fixed length, ie contains only operations of fixed length matches. Quantifiers are not allowed, except braces with the repeated numbers ``{n}`` or ``{n,n}``. Char-classes are allowed here, dot is allowed, ``\b`` and ``\B`` are allowed. Groups and choices are not allowed.
-* For other 3 assertion kinds, expression in brackets can be of any complexity.
+* Variable length lookbehind are not allowed to contain capture groups. This can be allowed by setting the property ``AllowUnsafeLookBehind``. If this is enabled and there is more than one match in the text that the group might capture, then the wrong match may be captured. This does not affect the correctness of the overall assertion. (I.e., the lookbehind will correctly return if the text before matched the pattern).
+* Variable length lookbehind may be slow to execute, if they do not match. 
 
 Non-capturing Groups
 --------------------
@@ -632,6 +637,8 @@ And if it's inside group, it will affect only this group - specifically the part
 that follows the modifiers. So in ``((?i)Saint)-Petersburg`` it affects
 only group ``((?i)Saint)`` so it will match ``saint-Petersburg``
 but not ``saint-petersburg``.
+
+Inline modifiers can also be given as part of a non-capturing group: ``(?i:pattern)``.
 
 ============================= ==================================================
 RegEx                         Matches
