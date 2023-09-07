@@ -782,7 +782,7 @@ const
     ),
     // 74
     (
-    expression: '\R+';
+    expression: '[\R]+';
     inputText: '<'#10#13#13#10#10#$0B#$0C#$85'>';
     substitutionText: 'many';
     expectedResult: '<many>';

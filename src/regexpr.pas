@@ -416,6 +416,7 @@ type
     CheckerIndex_NotVertSep: byte;
     CheckerIndex_LowerAZ: byte;
     CheckerIndex_UpperAZ: byte;
+    CheckerIndex_AnyLineBreak: byte;
 
     {$IFDEF Compat}
     fUseUnicodeWordDetection: boolean;
@@ -439,6 +440,7 @@ type
     function CharChecker_NotHorzSep(ch: REChar): boolean;
     function CharChecker_VertSep(ch: REChar): boolean;
     function CharChecker_NotVertSep(ch: REChar): boolean;
+    function CharChecker_AnyLineBreak(ch: REChar): boolean;
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
     function DumpCheckerIndex(N: byte): RegExprString;
@@ -1017,7 +1019,8 @@ begin
     's', 'S',
     'w', 'W',
     'v', 'V',
-    'h', 'H':
+    'h', 'H',
+    'R':
       Result := True
     else
       Result := False;
@@ -2906,6 +2909,12 @@ begin
               ARes := ARes + RegExprUpperAzSet;
           end
           else
+          if N = CheckerIndex_AnyLineBreak then
+          begin
+            ARes := ARes + RegExprLineSeparatorsSet;
+            //we miss U+2028 and U+2029 here
+          end
+          else
             Error(reeBadOpcodeInCharClass);
         end;
 
@@ -4009,6 +4018,8 @@ begin
                     EmitC(REChar(CheckerIndex_HorzSep));
                   'H':
                     EmitC(REChar(CheckerIndex_NotHorzSep));
+                  'R':
+                    EmitC(REChar(CheckerIndex_AnyLineBreak));
                   else
                     Error(reeBadOpcodeInCharClass);
                 end;
@@ -6845,6 +6856,7 @@ begin
   //CheckerIndex_AllAZ := Add(CharChecker_AllAZ);
   CheckerIndex_LowerAZ := Add(CharChecker_LowerAZ);
   CheckerIndex_UpperAZ := Add(CharChecker_UpperAZ);
+  CheckerIndex_AnyLineBreak := Add(CharChecker_AnyLineBreak);
 
   SetLength(CharCheckerInfos, 3);
   with CharCheckerInfos[0] do
@@ -6905,6 +6917,11 @@ end;
 function TRegExpr.CharChecker_NotVertSep(ch: REChar): boolean;
 begin
   Result := not IsVertLineSeparator(ch);
+end;
+
+function TRegExpr.CharChecker_AnyLineBreak(ch: REChar): boolean;
+begin
+  Result := IsAnyLineBreak(ch);
 end;
 
 function TRegExpr.CharChecker_HorzSep(ch: REChar): boolean;
