@@ -5925,7 +5925,7 @@ begin
             Exit;
           nextch := regInput^;
           Inc(regInput);
-          if (nextch = #13) and (regInput^ = #10) then
+          if (nextch = #13) and (regInput < fInputCurrentEnd) and (regInput^ = #10) then
             Inc(regInput);
         end;
 
