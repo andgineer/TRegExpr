@@ -163,17 +163,12 @@ RegEx      Matches
 ``\v``     | vertical whitespace: all characters treated as
            | line-breaks in the Unicode standard
 ``\V``     not a vertical whitespace
+``\R``     | unicode line break: LF, CR, pair CR LF,
+           | FF, VT, U+0085, U+2028, U+2029
 ======     ==============================================
 
 You may use all meta-classes, mentioned in the table above, within
 `user character classes <User Character Classes_>`_.
-
-======     ==============================================
-RegEx      Matches
-======     ==============================================
-``\R``     | unicode line break: LF, CR, pair CR LF,
-           | FF, VT, U+0085, U+2028, U+2029
-======     ==============================================
 
 =============== =====================================================================================
 RegEx           Matches
