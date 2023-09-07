@@ -974,12 +974,12 @@ begin
     #10,
     #13,
     #$0B,
-    #$0C,
+    #$0C
     {$ifdef UnicodeRE}
-    #$2028,
-    #$2029,
-    {$endif}
-    #$85:
+    , #$85
+    , #$2028
+    , #$2029
+    {$endif}:
       Result := True;
     else
       Result := False;
