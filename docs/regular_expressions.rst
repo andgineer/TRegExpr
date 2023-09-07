@@ -70,6 +70,7 @@ RegEx               Matches
 ``\cA`` ... ``\cZ`` | chr(0) to chr(25).
                     | For example, ``\cI`` matches the tab-char. 
                     | Lower-case letters "a"..."z" are also supported.
+``\R``              any line break: LF, CR, pair CR LF, FF, VT, U+0085, U+2028, U+2029
 =================== ==========================================================================
 
 .. _escape:
