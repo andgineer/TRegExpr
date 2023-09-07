@@ -159,6 +159,7 @@ type
     procedure RunTest71;
     procedure RunTest72;
     procedure RunTest73;
+    procedure RunTest74;
   end;
 
 implementation
@@ -192,7 +193,7 @@ end;
 
 
 const
-  testCases: array [1 .. 73] of TRegExTest = (
+  testCases: array [1 .. 74] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -777,6 +778,14 @@ const
     substitutionText: 'R';
     expectedResult: '<R-R-R-RR;R-R-R>'
       {$IFDEF UnicodeRE} + '<RR>' {$ENDIF};
+    MatchStart: 0
+    ),
+    // 74
+    (
+    expression: '\R+';
+    inputText: '<'#10#13#13#10#10#$0B#$0C#$85'>';
+    substitutionText: 'many';
+    expectedResult: '<many>';
     MatchStart: 0
     )
   );
@@ -2485,6 +2494,11 @@ end;
 procedure TTestRegexpr.RunTest73;
 begin
   RunRETest(73);
+end;
+
+procedure TTestRegexpr.RunTest74;
+begin
+  RunRETest(74);
 end;
 
 procedure TTestRegexpr.TestGroups;
