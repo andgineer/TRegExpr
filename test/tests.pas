@@ -12,7 +12,7 @@ unit tests;
 {$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
 {$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
 
-{$DEFINE Unicode}
+{$DEFINE UnicodeRE}
 
 interface
 
@@ -772,9 +772,11 @@ const
     // 73
     (
     expression: '\R';
-    inputText: '<'#10'-'#13'-'#13#10'-'#10#13';'#$0B'-'#$0C'-'#$85';'#$2028#$2029'>';
+    inputText: '<'#10'-'#13'-'#13#10'-'#10#13';'#$0B'-'#$0C'-'#$85'>'
+      {$IFDEF UnicodeRE} + '<'#$2028#$2029'>' {$ENDIF};
     substitutionText: 'R';
-    expectedResult: '<R-R-R-RR;R-R-R;RR>';
+    expectedResult: '<R-R-R-RR;R-R-R>'
+      {$IFDEF UnicodeRE} + '<RR>' {$ENDIF};
     MatchStart: 0
     )
   );
