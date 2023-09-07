@@ -881,7 +881,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 163;
+  REVersionMinor = 164;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -966,6 +966,24 @@ const
   cBreak = {$IFDEF UnicodeRE} $000D000A; {$ELSE} $0D0A; {$ENDIF}
 begin
   Result := PtrPair(p)^ = cBreak;
+end;
+
+function IsAnyLineBreak(C: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case C of
+    #10,
+    #13,
+    #$0B,
+    #$0C,
+    {$ifdef UnicodeRE}
+    #$2028,
+    #$2029,
+    {$endif}
+    #$85:
+      Result := True;
+    else
+      Result := False;
+  end;
 end;
 
 function _FindCharInBuffer(SBegin, SEnd: PRegExprChar; Ch: REChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -1583,6 +1601,7 @@ const
   // LoopEntryJmp - associated LOOPENTRY node addr
   OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
   OP_CONTINUE_POS = TReOp(26); // \G last match end or "Exec(AOffset)"
+  OP_ANYLINEBREAK = TReOp(27); // \R
   OP_BSUBEXP = TREOp(28);
   // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
   OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
@@ -4457,6 +4476,11 @@ begin
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
             end;
           {$ENDIF}
+          'R':
+            begin
+              ret := EmitNode(OP_ANYLINEBREAK);
+              FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
+            end;
         else
           EmitExactly(UnQuoteChar(regParse, fRegexEnd));
         end; { of case }
@@ -4926,6 +4950,13 @@ begin
       end;
       {$ENDIF}
     {$ENDIF}
+
+    OP_ANYLINEBREAK:
+      while (Result < TheMax) and IsAnyLineBreak(scan^) do
+      begin
+        Inc(Result);
+        Inc(scan);
+      end;
 
   else
     begin // Oh dear. Called inappropriately.
@@ -5888,6 +5919,16 @@ begin
           if not bound1 then Exit;
         end;
 
+      OP_ANYLINEBREAK:
+        begin
+          if (regInput >= fInputCurrentEnd) or not IsAnyLineBreak(regInput^) then
+            Exit;
+          nextch := regInput^;
+          Inc(regInput);
+          if (nextch = #13) and (regInput^ = #10) then
+            Inc(regInput);
+        end;
+
     else
       begin
         Error(reeMatchPrimMemoryCorruption);
@@ -6750,7 +6791,16 @@ begin
       OP_RECUR,
       OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
         begin
-        end
+        end;
+
+      OP_ANYLINEBREAK:
+        begin
+          Include(FirstCharSet, byte(10));
+          Include(FirstCharSet, byte(13));
+          Include(FirstCharSet, byte($0B));
+          Include(FirstCharSet, byte($0C));
+          Include(FirstCharSet, byte($85));
+        end;
 
       else
         begin
@@ -7012,6 +7062,8 @@ begin
       Result := 'RECURSION';
     OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
       Result := Format('SUBCALL[%d]', [Ord(op) - Ord(OP_SUBCALL)]);
+    OP_ANYLINEBREAK:
+      Result := 'ANYLINEBREAK';
   else
     Error(reeDumpCorruptedOpcode);
   end;
