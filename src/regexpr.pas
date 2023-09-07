@@ -7115,6 +7115,7 @@ begin
   if N = CheckerIndex_NotVertSep then Result := '\V' else
   if N = CheckerIndex_LowerAZ    then Result := 'az' else
   if N = CheckerIndex_UpperAZ    then Result := 'AZ' else
+  if N = CheckerIndex_AnyLineBreak then Result := '\R'
   ;
 end;
 
