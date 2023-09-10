@@ -7553,12 +7553,12 @@ begin
     AInputStartPos := 1
   else
   if AInputStartPos > Length(AInputString) then
-    AInputStartPos := Length(AInputString);
+    AInputStartPos := Length(AInputString) + 1;
+  if AInputLen < 0 then
+    AInputLen := 0
+  else
   if AInputLen > Length(AInputString) + 1 - AInputStartPos then
     AInputLen := Length(AInputString) + 1 - AInputStartPos;
-
-  if AInputLen < 1 then
-    exit;
 
   fInputString := AInputString;
   //UniqueString(fInputString);
