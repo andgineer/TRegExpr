@@ -60,8 +60,8 @@ type
     procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString; ExpErrorId: Integer = 0);
     // CheckMatches: returns error message
     procedure IsMatching(AErrorMessage: String; ARegEx, AInput: RegExprString;
-      AExpectStartLenPairs: array of Integer; AOffset: integer = 1);
-    procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AOffset: integer = 1);
+      AExpectStartLenPairs: array of Integer; AOffset: integer = 1; AMustMatchBefore: integer = 0);
+    procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AOffset: integer = 1; AMustMatchBefore: integer = 0);
     procedure SetUp; override;
     procedure TearDown; override;
   published
@@ -75,6 +75,7 @@ type
     procedure TestBraces;
     procedure TestLoop;
     procedure TestIsFixedLength;
+    procedure TestMatchBefore;
     procedure TestAnchor;
     procedure TestRegLookAhead;
     procedure TestRegLookBehind;
@@ -849,7 +850,7 @@ end;
 
 procedure TTestRegexpr.IsMatching(AErrorMessage: String; ARegEx,
   AInput: RegExprString; AExpectStartLenPairs: array of Integer;
-  AOffset: integer);
+  AOffset: integer; AMustMatchBefore: integer);
 var
   i: Integer;
   L: SizeInt;
@@ -857,7 +858,7 @@ begin
   CompileRE(ARegEx);
   RE.InputString:= AInput;
 
-  IsTrue(AErrorMessage + ' Exec must give True', RE.Exec(AOffset));
+  IsTrue(AErrorMessage + ' Exec must give True', RE.ExecPos(AOffset, AMustMatchBefore));
 
   L := Length(AExpectStartLenPairs) div 2;
   AreEqual(AErrorMessage + ': MatchCount', L - 1, RE.SubExprMatchCount);
@@ -868,13 +869,13 @@ begin
 end;
 
 procedure TTestRegexpr.IsNotMatching(AErrorMessage: String; ARegEx,
-  AInput: RegExprString; AOffset: integer);
+  AInput: RegExprString; AOffset: integer; AMustMatchBefore: integer);
 var
   r: Boolean;
 begin
   CompileRE(ARegEx);
   RE.InputString:= AInput;
-  r := RE.Exec(AOffset);
+  r := RE.ExecPos(AOffset, AMustMatchBefore);
 
   if r then
     IsFalse(AErrorMessage + ': Exec must give False, but found at ' + IntToStr(RE.MatchPos[0]), r);
@@ -1412,6 +1413,15 @@ begin
 
 
   HasLength('look behind is not (yet) fixed', '(?<=.A...)(X)',   -1);
+end;
+
+procedure TTestRegexpr.TestMatchBefore;
+begin
+  IsMatching('',   '2',    '123456789',     [2,1], 1, 0);
+  IsMatching('',   '2',    '123456789',     [2,1], 1, 4);
+  IsMatching('',   '2',    '123456789',     [2,1], 1, 3);
+  IsNotMatching('',  '2',    '123456789',     1, 2);
+  IsNotMatching('',  '2',    '123456789',     1, 1);
 end;
 
 procedure TTestRegexpr.TestAnchor;
