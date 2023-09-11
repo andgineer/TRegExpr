@@ -556,7 +556,7 @@ type
     function MatchAtOnePos(APos: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean): boolean;
+    function ExecPrim(AOffset: integer; ATryOnce, ASlowChecks, ABackward: boolean; ATryMatchOnlyStartingBefore: Integer): boolean;
 
     function GetSubExprCount: integer;
     function GetMatchPos(Idx: integer): PtrInt;
@@ -612,7 +612,12 @@ type
     // (AOffset=1 - first char of InputString)
     function ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
     {$IFDEF OverMeth} overload;
+    // find match for InputString at AOffset.
+    // if ATryOnce=True then only match exactly at AOffset (like anchor \G)
+    // if ATryMatchOnlyStartingBefore then only when the match can start before
+    // that position: Result := MatchPos[0] < ATryMatchOnlyStartingBefore;
     function ExecPos(AOffset: integer; ATryOnce, ABackward: boolean): boolean; overload;
+    function ExecPos(AOffset, ATryMatchOnlyStartingBefore: integer): boolean; overload;
     {$ENDIF}
 
     // Returns ATemplate with '$&' or '$0' replaced by whole r.e.
@@ -5906,7 +5911,7 @@ end; { of function TRegExpr.MatchPrim
 function TRegExpr.Exec(const AInputString: RegExprString): boolean;
 begin
   InputString := AInputString;
-  Result := ExecPrim(1, False, False, False);
+  Result := ExecPrim(1, False, False, False, 0);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
@@ -5916,27 +5921,32 @@ var
   SlowChecks: boolean;
 begin
   SlowChecks := fInputEnd - fInputStart < fSlowChecksSizeMax;
-  Result := ExecPrim(1, False, SlowChecks, False);
+  Result := ExecPrim(1, False, SlowChecks, False, 0);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 function TRegExpr.Exec(AOffset: integer): boolean;
 begin
-  Result := ExecPrim(AOffset, False, False, False);
+  Result := ExecPrim(AOffset, False, False, False, 0);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 {$ENDIF}
 
 function TRegExpr.ExecPos(AOffset: integer {$IFDEF DefParam} = 1{$ENDIF}): boolean;
 begin
-  Result := ExecPrim(AOffset, False, False, False);
+  Result := ExecPrim(AOffset, False, False, False, 0);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
 
 {$IFDEF OverMeth}
 function TRegExpr.ExecPos(AOffset: integer; ATryOnce, ABackward: boolean): boolean;
 begin
-  Result := ExecPrim(AOffset, ATryOnce, False, ABackward);
+  Result := ExecPrim(AOffset, ATryOnce, False, ABackward, 0);
+end;
+
+function TRegExpr.ExecPos(AOffset, ATryMatchOnlyStartingBefore: integer): boolean;
+begin
+  Result := ExecPrim(AOffset, False, False, False, ATryMatchOnlyStartingBefore);
 end;
 {$ENDIF}
 
@@ -5991,8 +6001,8 @@ begin
   GrpCount := 0;
 end;
 
-function TRegExpr.ExecPrim(AOffset: integer;
-  ATryOnce, ASlowChecks, ABackward: boolean): boolean;
+function TRegExpr.ExecPrim(AOffset: integer; ATryOnce, ASlowChecks,
+  ABackward: boolean; ATryMatchOnlyStartingBefore: Integer): boolean;
 var
   Ptr: PRegExprChar;
 begin
@@ -6025,6 +6035,8 @@ begin
     Error(reeOffsetMustBePositive);
     Exit;
   end;
+  if (ATryMatchOnlyStartingBefore > 0) and (AOffset >= ATryMatchOnlyStartingBefore) then
+    Exit;
 
   // Check that the start position is not longer than the line
   if (AOffset - 1) > (fInputEnd - fInputStart) then
@@ -6075,6 +6087,8 @@ begin
       Inc(Ptr);
       if Ptr > fInputEnd then
         Exit;
+      if (ATryMatchOnlyStartingBefore > 0) and (Ptr - fInputStart >= ATryMatchOnlyStartingBefore - 1) then
+        Exit;
     end;
 
     {$IFDEF UseFirstCharSet}
@@ -6112,7 +6126,7 @@ begin
   if PtrBegin = PtrEnd then
     Inc(Offset);
 
-  Result := ExecPrim(Offset, False, False, ABackward);
+  Result := ExecPrim(Offset, False, False, ABackward, 0);
 end; { of function TRegExpr.ExecNext
   -------------------------------------------------------------- }
 
@@ -7538,7 +7552,7 @@ end; { of procedure TRegExpr.Error
 {$IFDEF Compat} // APIs needed only for users of old FPC 3.0
 function TRegExpr.ExecPos(AOffset: integer; ATryOnce: boolean): boolean; overload;
 begin
-  Result := ExecPrim(AOffset, ATryOnce, False, False);
+  Result := ExecPrim(AOffset, ATryOnce, False, False, 0);
 end;
 
 function TRegExpr.OldInvertCase(const Ch: REChar): REChar;
