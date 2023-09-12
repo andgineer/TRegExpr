@@ -303,6 +303,7 @@ type
     FAllowBraceWithoutMin: boolean;
     FAllowUnsafeLookBehind: boolean;
     FAllowLiteralBraceWithoutRange: boolean;
+    FMatchesCleared: Boolean;
     GrpBounds: TRegExprBoundsArray;
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
@@ -6026,6 +6027,9 @@ end;
 
 procedure TRegExpr.ClearMatches;
 begin
+  if FMatchesCleared then
+    exit;
+  FMatchesCleared := True;
   FillChar(GrpBounds[0].GrpStart, SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
   FillChar(GrpBounds[0].GrpEnd,   SizeOf(GrpBounds[0].GrpEnd[0])  *regNumBrackets, 0);
   FillChar(GrpSubCalled[0], SizeOf(GrpSubCalled[0])*regNumBrackets, 0);
@@ -6110,6 +6114,7 @@ begin
       if StrLPos(fInputStart, PRegExprChar(regMustString), fInputEnd - fInputStart, length(regMustString)) = nil then
         exit;
 
+  FMatchesCleared := False;
   // ATryOnce or anchored match (it needs to be tried only once).
   if (ATryMatchOnlyStartingBefore = AOffset + 1) or (regAnchored in [raBOL, raOnlyOnce, raContinue]) then
   begin
