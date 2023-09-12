@@ -5905,7 +5905,8 @@ begin
           if regRecursion < RegexMaxRecursion then
           begin
             Inc(regRecursion);
-            FillChar(GrpBounds[regRecursion], SizeOf(GrpBounds[regRecursion]), 0);
+            FillChar(GrpBounds[regRecursion].GrpStart, SizeOf(GrpBounds[0].GrpStart[regRecursion])*regNumBrackets, 0);
+            FillChar(GrpBounds[regRecursion].GrpEnd,   SizeOf(GrpBounds[0].GrpEnd[regRecursion])  *regNumBrackets, 0);
             bound1 := MatchPrim(regCodeWork);
             Dec(regRecursion);
           end
@@ -5927,7 +5928,8 @@ begin
             saveSubCalled := GrpSubCalled[no];
             GrpSubCalled[no] := True;
             Inc(regRecursion);
-            FillChar(GrpBounds[regRecursion], SizeOf(GrpBounds[regRecursion]), 0);
+            FillChar(GrpBounds[regRecursion].GrpStart, SizeOf(GrpBounds[0].GrpStart[regRecursion])*regNumBrackets, 0);
+            FillChar(GrpBounds[regRecursion].GrpEnd,   SizeOf(GrpBounds[0].GrpEnd[regRecursion])  *regNumBrackets, 0);
             bound1 := MatchPrim(save);
             Dec(regRecursion);
             GrpSubCalled[no] := saveSubCalled;
@@ -6024,14 +6026,15 @@ end;
 
 procedure TRegExpr.ClearMatches;
 begin
-  FillChar(GrpBounds[0], SizeOf(GrpBounds[0]), 0);
-  FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
+  FillChar(GrpBounds[0].GrpStart, SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
+  FillChar(GrpBounds[0].GrpEnd,   SizeOf(GrpBounds[0].GrpEnd[0])  *regNumBrackets, 0);
+  FillChar(GrpSubCalled[0], SizeOf(GrpSubCalled[0])*regNumBrackets, 0);
 end;
 
 procedure TRegExpr.ClearInternalExecData;
 begin
   fLastError := reeOk;
-  FillChar(GrpBacktrackingAsAtom, SizeOf(GrpBacktrackingAsAtom), 0);
+  FillChar(GrpBacktrackingAsAtom[0], SizeOf(GrpBacktrackingAsAtom[0])*regNumBrackets, 0);
   IsBacktrackingGroupAsAtom := False;
   {$IFDEF ComplexBraces}
   // no loops started
@@ -6046,7 +6049,6 @@ var
 begin
   FillChar(GrpBounds[0], SizeOf(GrpBounds[0]), 0);
   FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
-  FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
   FillChar(GrpOpCodes, SizeOf(GrpOpCodes), 0);
 
   for i := 0 to RegexMaxGroups - 1 do
