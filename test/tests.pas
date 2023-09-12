@@ -74,6 +74,7 @@ type
     procedure TestAtomic;
     procedure TestBraces;
     procedure TestLoop;
+    procedure TestRecurseAndCaptures;
     procedure TestIsFixedLength;
     procedure TestMatchBefore;
     procedure TestAnchor;
@@ -1303,6 +1304,32 @@ begin
   IsMatching('atomic nested {} no greedy ',
              '(?:(?>Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?)|.*)B',
              'AayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyBB',   [1,44,   -1,-1, -1,-1, -1,-1] ); // 40 y
+
+
+end;
+
+procedure TTestRegexpr.TestRecurseAndCaptures;
+begin
+  // recurse capture "B", but outer does not capture
+  IsMatching('Capture in recurse does not bleed into result',
+             '[aA](?R)?(?:X|([bB]))',
+             'aABXc',  [1,4,  -1,-1]);
+
+  IsMatching('backref does NOT see outer capture',
+             '(?:x|([abc]))(?R)?-\1*',  'aabxa-a-b-b-a-a',  [4, 5,  -1,-1]);
+  IsMatching('backref does NOT see outer capture',
+             '(?:x|([abc]))(?R)?-\1*',  'aabxa-a--b-a-a',  [1, 14,  1,1]);
+  IsMatching('backref does NOT see outer capture',
+             '(?:x|([abc]))(?R)?-\1',  'aabxa-a-b-b-a-a',  [5, 3,  5,1]);
+
+
+  IsMatching('2nd recurse does NOT see capture from earlier recurse',
+             '[aA](?R)?(?:X|([bcBC]))(?R)?\1',
+             'aABBcAXBc',  [2,3,  3,1]);
+
+  IsMatching('2nd recurse does NOT see capture from earlier recurse',
+             '[aA]((?R))?(?:X|([bcBC]))((?R))?\2',
+             'aABBcAXBc',  [2,3,  -1,-1,  3,1,  -1,-1]);
 
 
 end;

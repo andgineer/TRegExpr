@@ -5905,6 +5905,7 @@ begin
           if regRecursion < RegexMaxRecursion then
           begin
             Inc(regRecursion);
+            FillChar(GrpBounds[regRecursion], SizeOf(GrpBounds[regRecursion]), 0);
             bound1 := MatchPrim(regCodeWork);
             Dec(regRecursion);
           end
@@ -5926,6 +5927,7 @@ begin
             saveSubCalled := GrpSubCalled[no];
             GrpSubCalled[no] := True;
             Inc(regRecursion);
+            FillChar(GrpBounds[regRecursion], SizeOf(GrpBounds[regRecursion]), 0);
             bound1 := MatchPrim(save);
             Dec(regRecursion);
             GrpSubCalled[no] := saveSubCalled;
@@ -6022,7 +6024,7 @@ end;
 
 procedure TRegExpr.ClearMatches;
 begin
-  FillChar(GrpBounds, SizeOf(GrpBounds), 0);
+  FillChar(GrpBounds[0], SizeOf(GrpBounds[0]), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
 end;
 
@@ -6042,7 +6044,7 @@ procedure TRegExpr.ClearInternalIndexes;
 var
   i: integer;
 begin
-  FillChar(GrpBounds, SizeOf(GrpBounds), 0);
+  FillChar(GrpBounds[0], SizeOf(GrpBounds[0]), 0);
   FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
   FillChar(GrpSubCalled, SizeOf(GrpSubCalled), 0);
   FillChar(GrpOpCodes, SizeOf(GrpOpCodes), 0);
