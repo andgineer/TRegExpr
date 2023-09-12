@@ -6,6 +6,12 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.166 2023.09.13
+ -=- (+) Added Exec(AOffset, AMatchMustStartBefore: integer)
+  Limit the search for the first matched position to AMatchMustStartBefore
+ -=- (-) Fixed recursive calls accessing outer captures
+ -=- (^) Improved speed by reducing clean-up before each match execution
+
  v. 1.165 2023.09.08
  -=- (+) Added support for \R (any unicode line break).
   by Alexey Torgashin.
