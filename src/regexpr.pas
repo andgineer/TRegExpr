@@ -3383,7 +3383,7 @@ var
     end;
   end;
 
-  function ParseBraceMinMax(var BMin, BMax: TREBracesArg): boolean;
+  function DoParseBraceMinMax(var BMin, BMax: TREBracesArg): boolean;
   var
     p: PRegExprChar;
   begin
@@ -3425,12 +3425,31 @@ var
     end
     else
       BMax := BMin; // {n} == {n,n}
+    Result := True;
+  end;
+
+  function ParseBraceMinMax(var BMin, BMax: TREBracesArg): boolean;
+  begin
+    Result := DoParseBraceMinMax(BMin, BMax);
     if BMin > BMax then
     begin
       Error(reeBracesMinParamGreaterMax);
       Exit;
     end;
-    Result := True;
+  end;
+
+  function CheckBraceIsLiteral: boolean;
+  var
+    dummyBracesMin, dummyBracesMax: TREBracesArg;
+    savedRegParse: PRegExprChar;
+  begin
+    Result := False;
+    if not FAllowLiteralBraceWithoutRange then
+      exit;
+    savedRegParse := regParse;
+    Inc(regParse);
+    Result := not DoParseBraceMinMax(dummyBracesMin, dummyBracesMax);
+    regParse := savedRegParse;
   end;
 
 var
@@ -3475,7 +3494,9 @@ begin
       Inc(regParse);
     Inc(regParse);
     op := regParse^;
-    if (op = '*') or (op = '+') or (op = '?') or (op = '{') then
+    if (op = '*') or (op = '+') or (op = '?') or
+       ( (op = '{') and not CheckBraceIsLiteral)
+    then
       Error(reeNestedQuantif);
     Exit;
   end;
@@ -3661,7 +3682,9 @@ begin
   FlagParse := FlagParse or FlagTemp and (FLAG_LOOP or FLAG_GREEDY);
   Inc(regParse);
   op := regParse^;
-  if (op = '*') or (op = '+') or (op = '?') or (op = '{') then
+  if (op = '*') or (op = '+') or (op = '?') or
+     ( (op = '{') and not CheckBraceIsLiteral)
+  then
     Error(reeNestedQuantif);
 end; { of function TRegExpr.ParsePiece
   -------------------------------------------------------------- }

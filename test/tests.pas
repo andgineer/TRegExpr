@@ -1154,21 +1154,41 @@ begin
 end;
 
 procedure TTestRegexpr.TestBraces;
+var
+  i: Integer;
+  s: RegExprString;
 begin
-  RE.AllowLiteralBraceWithoutRange:= False;
-  TestBadRegex('No Error for bad braces', 'd{');
-  TestBadRegex('No Error for bad braces', 'd{22');
-  TestBadRegex('No Error for bad braces', 'd{}');
-  TestBadRegex('No Error for bad braces', 'd{,}');
-  TestBadRegex('No Error for bad braces', 'd{x}');
-  TestBadRegex('No Error for bad braces', 'd{1x}');
-  TestBadRegex('No Error for bad braces', 'd{1,x}');
-  TestBadRegex('No Error for bad braces', 'd{1,2{');
-  TestBadRegex('No Error for bad braces', 'd{1,2,3}');
-  RE.AllowBraceWithoutMin := False;
-  TestBadRegex('No Error for bad braces', 'd{,2}');
+  for i := 0 to 9 do begin
+    case i of
+      0: s := 'd';
+      1: s := 'd?';
+      2: s := 'd+';
+      3: s := 'd*';
+      4: s := 'd*?';
+      5: s := 'd*+';
+      6: s := '(?=.)';
+      7: s := '(?=.)?';
+      8: s := '(?=.)*';
+      9: s := '(?=.)+';
+    end;
+    RE.AllowLiteralBraceWithoutRange:= False;
+    TestBadRegex('No Error for bad braces', s+'{');
+    TestBadRegex('No Error for bad braces', s+'{22');
+    TestBadRegex('No Error for bad braces', s+'{}');
+    TestBadRegex('No Error for bad braces', s+'{,}');
+    TestBadRegex('No Error for bad braces', s+'{x}');
+    TestBadRegex('No Error for bad braces', s+'{1x}');
+    TestBadRegex('No Error for bad braces', s+'{1,x}');
+    TestBadRegex('No Error for bad braces', s+'{1,2{');
+    TestBadRegex('No Error for bad braces', s+'{1,2,3}');
+    RE.AllowBraceWithoutMin := False;
+    TestBadRegex('No Error for bad braces', s+'{,2}');
+  end;
+
+
   RE.AllowBraceWithoutMin := True;
   IsMatching('{,5} ',  'a{,5}',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,0]);
+
 
   RE.AllowLiteralBraceWithoutRange := True;
   RE.AllowBraceWithoutMin := True;
@@ -1176,20 +1196,41 @@ begin
   IsMatching('{,5} ',  'a{,5}',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,0]);
   IsMatching('{,5} ',  '.{,5}',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,5]);
   IsMatching('{2,} ',  'a{2,}',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [3,8]);
-  IsMatching('{}',     'a{}',    'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [25,3]);
-  IsMatching('{,} ',   'a{,}',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
-  IsMatching('{x} ',   'a{x}',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
+
+  for i := 0 to 6 do begin
+    case i of
+      0: s := 'a';
+      1: s := 'a?';
+      2: s := '.';
+      3: s := 'a(?=.)';
+      4: s := 'a(?=.)?';
+      5: s := 'a(?=.)+';
+      6: s := 'a(?=.)*';
+    end;
+    IsMatching('{}',     s+'{}',    'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [25,3]);
+    IsMatching('{,} ',   s+'{,}',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
+    IsMatching('{x} ',   s+'{x}',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
+  end;
 
   IsMatching('{2,5}?', 'a{2,5}?', 'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [3,2]);
   IsMatching('{,5}?',  'a{,5}?',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,0]);
   IsMatching('{,5}?',  '.{,5}?',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,0]);
   IsMatching('{2,}?',  'a{2,}?',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [3,2]);
-  IsMatching('{}?',    'a{}?',    'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [12,2]);
-  IsMatching('{,}?',   'a{,}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
-  IsMatching('{x}?',   'a{x}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
 
-  TestBadRegex('No Error for bad braces', 'd{2,1}');
-
+  for i := 0 to 6 do begin
+    case i of
+      0: s := 'a';
+      1: s := 'a?';
+      2: s := '.';
+      3: s := 'a(?=.)';
+      4: s := 'a(?=.)?';
+      5: s := 'a(?=.)+';
+      6: s := 'a(?=.)*';
+    end;
+    IsMatching('{}?',    'a{}?',    'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [12,2]);
+    IsMatching('{,}?',   'a{,}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
+    IsMatching('{x}?',   'a{x}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
+  end;
 
   RE.AllowBraceWithoutMin := False;
   IsMatching('{2,5} ', 'a{2,5}', 'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [3,5]);
@@ -1208,6 +1249,8 @@ begin
   IsMatching('{,}?',   'a{,}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
   IsMatching('{x} ',   'a{x}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
 
+
+  TestBadRegex('No Error for bad braces', 'd{2,1}');
   TestBadRegex('No Error for bad braces', 'd{2,1}');
 end;
 
