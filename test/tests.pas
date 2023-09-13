@@ -12,7 +12,7 @@ unit tests;
 {$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
 {$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
 
-{$DEFINE Unicode}
+{$DEFINE UnicodeRE}
 
 interface
 
@@ -158,6 +158,8 @@ type
     procedure RunTest70;
     procedure RunTest71;
     procedure RunTest72;
+    procedure RunTest73;
+    procedure RunTest74;
   end;
 
 implementation
@@ -191,7 +193,7 @@ end;
 
 
 const
-  testCases: array [1 .. 72] of TRegExTest = (
+  testCases: array [1 .. 74] of TRegExTest = (
     // 1
     (
     expression: '\nd';
@@ -767,6 +769,24 @@ const
     substitutionText: '';
     expectedResult: '12344321';
     matchStart: 8
+    ),
+    // 73
+    (
+    expression: '\R';
+    inputText: '<'#10'-'#13'-'#13#10'-'#10#13';'#$0B'-'#$0C'-'#$85'>'
+      {$IFDEF UnicodeRE} + '<'#$2028#$2029'>' {$ENDIF};
+    substitutionText: 'R';
+    expectedResult: '<R-R-R-RR;R-R-R>'
+      {$IFDEF UnicodeRE} + '<RR>' {$ENDIF};
+    MatchStart: 0
+    ),
+    // 74
+    (
+    expression: '[\R]+';
+    inputText: '<'#10#13#13#10#10#$0B#$0C#$85'>';
+    substitutionText: 'many';
+    expectedResult: '<many>';
+    MatchStart: 0
     )
   );
 
@@ -2469,6 +2489,16 @@ end;
 procedure TTestRegexpr.RunTest72;
 begin
   RunRETest(72);
+end;
+
+procedure TTestRegexpr.RunTest73;
+begin
+  RunRETest(73);
+end;
+
+procedure TTestRegexpr.RunTest74;
+begin
+  RunRETest(74);
 end;
 
 procedure TTestRegexpr.TestGroups;

@@ -416,6 +416,7 @@ type
     CheckerIndex_NotVertSep: byte;
     CheckerIndex_LowerAZ: byte;
     CheckerIndex_UpperAZ: byte;
+    CheckerIndex_AnyLineBreak: byte;
 
     {$IFDEF Compat}
     fUseUnicodeWordDetection: boolean;
@@ -439,6 +440,7 @@ type
     function CharChecker_NotHorzSep(ch: REChar): boolean;
     function CharChecker_VertSep(ch: REChar): boolean;
     function CharChecker_NotVertSep(ch: REChar): boolean;
+    function CharChecker_AnyLineBreak(ch: REChar): boolean;
     function CharChecker_LowerAZ(ch: REChar): boolean;
     function CharChecker_UpperAZ(ch: REChar): boolean;
     function DumpCheckerIndex(N: byte): RegExprString;
@@ -881,7 +883,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 163;
+  REVersionMinor = 165;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -968,6 +970,24 @@ begin
   Result := PtrPair(p)^ = cBreak;
 end;
 
+function IsAnyLineBreak(C: REChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+begin
+  case C of
+    #10,
+    #13,
+    #$0B,
+    #$0C
+    {$ifdef UnicodeRE}
+    , #$85
+    , #$2028
+    , #$2029
+    {$endif}:
+      Result := True;
+    else
+      Result := False;
+  end;
+end;
+
 function _FindCharInBuffer(SBegin, SEnd: PRegExprChar; Ch: REChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 begin
   while SBegin < SEnd do
@@ -999,7 +1019,8 @@ begin
     's', 'S',
     'w', 'W',
     'v', 'V',
-    'h', 'H':
+    'h', 'H',
+    'R':
       Result := True
     else
       Result := False;
@@ -1583,6 +1604,7 @@ const
   // LoopEntryJmp - associated LOOPENTRY node addr
   OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
   OP_CONTINUE_POS = TReOp(26); // \G last match end or "Exec(AOffset)"
+  OP_ANYLINEBREAK = TReOp(27); // \R
   OP_BSUBEXP = TREOp(28);
   // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
   OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
@@ -2887,6 +2909,12 @@ begin
               ARes := ARes + RegExprUpperAzSet;
           end
           else
+          if N = CheckerIndex_AnyLineBreak then
+          begin
+            ARes := ARes + RegExprLineSeparatorsSet;
+            //we miss U+2028 and U+2029 here
+          end
+          else
             Error(reeBadOpcodeInCharClass);
         end;
 
@@ -3990,6 +4018,8 @@ begin
                     EmitC(REChar(CheckerIndex_HorzSep));
                   'H':
                     EmitC(REChar(CheckerIndex_NotHorzSep));
+                  'R':
+                    EmitC(REChar(CheckerIndex_AnyLineBreak));
                   else
                     Error(reeBadOpcodeInCharClass);
                 end;
@@ -4457,6 +4487,11 @@ begin
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
             end;
           {$ENDIF}
+          'R':
+            begin
+              ret := EmitNode(OP_ANYLINEBREAK);
+              FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
+            end;
         else
           EmitExactly(UnQuoteChar(regParse, fRegexEnd));
         end; { of case }
@@ -4926,6 +4961,13 @@ begin
       end;
       {$ENDIF}
     {$ENDIF}
+
+    OP_ANYLINEBREAK:
+      while (Result < TheMax) and IsAnyLineBreak(scan^) do
+      begin
+        Inc(Result);
+        Inc(scan);
+      end;
 
   else
     begin // Oh dear. Called inappropriately.
@@ -5888,6 +5930,16 @@ begin
           if not bound1 then Exit;
         end;
 
+      OP_ANYLINEBREAK:
+        begin
+          if (regInput >= fInputCurrentEnd) or not IsAnyLineBreak(regInput^) then
+            Exit;
+          nextch := regInput^;
+          Inc(regInput);
+          if (nextch = #13) and (regInput < fInputCurrentEnd) and (regInput^ = #10) then
+            Inc(regInput);
+        end;
+
     else
       begin
         Error(reeMatchPrimMemoryCorruption);
@@ -6750,7 +6802,16 @@ begin
       OP_RECUR,
       OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
         begin
-        end
+        end;
+
+      OP_ANYLINEBREAK:
+        begin
+          Include(FirstCharSet, byte(10));
+          Include(FirstCharSet, byte(13));
+          Include(FirstCharSet, byte($0B));
+          Include(FirstCharSet, byte($0C));
+          Include(FirstCharSet, byte($85));
+        end;
 
       else
         begin
@@ -6795,6 +6856,7 @@ begin
   //CheckerIndex_AllAZ := Add(CharChecker_AllAZ);
   CheckerIndex_LowerAZ := Add(CharChecker_LowerAZ);
   CheckerIndex_UpperAZ := Add(CharChecker_UpperAZ);
+  CheckerIndex_AnyLineBreak := Add(CharChecker_AnyLineBreak);
 
   SetLength(CharCheckerInfos, 3);
   with CharCheckerInfos[0] do
@@ -6855,6 +6917,11 @@ end;
 function TRegExpr.CharChecker_NotVertSep(ch: REChar): boolean;
 begin
   Result := not IsVertLineSeparator(ch);
+end;
+
+function TRegExpr.CharChecker_AnyLineBreak(ch: REChar): boolean;
+begin
+  Result := IsAnyLineBreak(ch);
 end;
 
 function TRegExpr.CharChecker_HorzSep(ch: REChar): boolean;
@@ -7012,6 +7079,8 @@ begin
       Result := 'RECURSION';
     OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
       Result := Format('SUBCALL[%d]', [Ord(op) - Ord(OP_SUBCALL)]);
+    OP_ANYLINEBREAK:
+      Result := 'ANYLINEBREAK';
   else
     Error(reeDumpCorruptedOpcode);
   end;
@@ -7046,6 +7115,7 @@ begin
   if N = CheckerIndex_NotVertSep then Result := '\V' else
   if N = CheckerIndex_LowerAZ    then Result := 'az' else
   if N = CheckerIndex_UpperAZ    then Result := 'AZ' else
+  if N = CheckerIndex_AnyLineBreak then Result := '\R'
   ;
 end;
 
