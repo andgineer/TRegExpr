@@ -1748,6 +1748,7 @@ const
   reeLookaheadBad = 150;
   reeLookbehindBad = 152;
   reeLookaroundNotSafe = 153;
+  reeBadReference = 154;
   // Runtime errors must be >= reeFirstRuntimeCode
   reeFirstRuntimeCode = 1000;
   reeRegRepeatCalledInappropriately = 1000;
@@ -1850,6 +1851,8 @@ begin
       Result := 'TRegExpr compile: bad lookbehind';
     reeLookaroundNotSafe:
       Result := 'TRegExpr compile: lookbehind brackets with variable length do not support captures';
+    reeBadReference:
+      Result := 'TRegExpr compile: invalid syntax for reference to capture group';
 
     reeRegRepeatCalledInappropriately:
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
@@ -4155,23 +4158,32 @@ begin
             '<':
               begin
                 // lookbehind: (?<=foo)bar
-                if (regParse + 4 >= fRegexEnd) then
-                  Error(reeLookbehindBad);
                 case (regParse + 2)^ of
                   '=':
                     begin
+                      if (regParse + 4 >= fRegexEnd) then
+                        Error(reeLookbehindBad);
                       GrpKind := gkLookbehind;
                       Inc(regParse, 3);
-//TODO: if it has fixed length, then store this
                     end;
-
                   '!':
                     begin
+                      if (regParse + 4 >= fRegexEnd) then
+                        Error(reeLookbehindBad);
                       GrpKind := gkLookbehindNeg;
                       Inc(regParse, 3);
                     end;
+                  'A'..'Z', 'a'..'z':
+                    begin
+                      // named group: (?<name>regex)
+                      if (regParse + 4 >= fRegexEnd) then
+                        Error(reeNamedGroupBad);
+                      GrpKind := gkNormalGroup;
+                      FindGroupName(regParse + 2, fRegexEnd, '>', GrpName);
+                      Inc(regParse, Length(GrpName) + 3);
+                    end;
                   else
-                    Error(reeLookbehindBad);
+                    Error(reeIncorrectSpecialBrackets);
                 end;
               end;
             '=', '!':
@@ -4504,6 +4516,72 @@ begin
               ret := EmitGroupRef(Ord(regParse^) - Ord('0'), fCompModifiers.I);
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
             end;
+          'g':
+            begin
+              case (regParse + 1)^ of
+                '<', '''':
+                  begin
+                    // subroutine call to named group
+                    case (regParse + 1)^ of
+                      '<':  FindGroupName(regParse + 2, fRegexEnd, '>', GrpName);
+                      '''': FindGroupName(regParse + 2, fRegexEnd, '''', GrpName);
+                    end;
+                    Inc(regParse, Length(GrpName) + 2);
+                    GrpIndex := MatchIndexFromName(GrpName);
+                    if GrpIndex < 1 then
+                      Error(reeNamedGroupBadRef);
+                    ret := EmitNode(TReOp(Ord(OP_SUBCALL) + GrpIndex));
+                    FlagParse := FlagParse or FLAG_HASWIDTH;
+                  end;
+                '{':
+                  begin
+                    // back-reference to named group
+                    FindGroupName(regParse + 2, fRegexEnd, '}', GrpName);
+                    Inc(regParse, Length(GrpName) + 2);
+                    GrpIndex := MatchIndexFromName(GrpName);
+                    if GrpIndex < 1 then
+                      Error(reeNamedGroupBadRef);
+                    ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
+                    FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
+                  end;
+                '0'..'9':
+                  begin
+                    GrpIndex := 0;
+                    inc(regParse);
+                    while (regParse^ >= '0') and (regParse^ <= '9') do begin
+                      GrpIndex := GrpIndex * 10 + (Ord(regParse^) - Ord('0'));
+                      inc(regParse);
+                    end;
+                    dec(regParse);
+                    if GrpIndex = 0 then
+                      Error(reeBadReference);
+                    ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
+                    FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
+                  end;
+                else
+                  Error(reeBadReference);
+              end;
+            end;
+          'k':
+            begin
+              // back-reference to named group
+              case (regParse + 1)^ of
+                '<':
+                  FindGroupName(regParse + 2, fRegexEnd, '>', GrpName);
+                '''':
+                  FindGroupName(regParse + 2, fRegexEnd, '''', GrpName);
+                '{':
+                  FindGroupName(regParse + 2, fRegexEnd, '}', GrpName);
+                else
+                  Error(reeBadReference);
+              end;
+              Inc(regParse, Length(GrpName) + 2);
+              GrpIndex := MatchIndexFromName(GrpName);
+              if GrpIndex < 1 then
+                Error(reeNamedGroupBadRef);
+              ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
+              FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
+            end;
           {$IFDEF FastUnicodeData}
           'p':
             begin
@@ -4622,7 +4700,7 @@ begin
       Error(reeNamedGroupBad);
     if P^ = AEndChar then
       Break;
-    if not IsWordChar(P^) then
+    if not (IsWordChar(P^) or (P^ = '_')) then
       Error(reeNamedGroupBadName);
     Inc(P);
   until False;

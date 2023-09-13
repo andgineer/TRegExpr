@@ -74,6 +74,8 @@ type
     procedure TestAtomic;
     procedure TestBraces;
     procedure TestLoop;
+    procedure TestReferences;
+    procedure TestNamedGroups;
     procedure TestRecurseAndCaptures;
     procedure TestIsFixedLength;
     procedure TestMatchBefore;
@@ -1347,6 +1349,124 @@ begin
   IsMatching('atomic nested {} no greedy ',
              '(?:(?>Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?)|.*)B',
              'AayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyBB',   [1,44,   -1,-1, -1,-1, -1,-1] ); // 40 y
+
+
+end;
+
+procedure TTestRegexpr.TestReferences;
+begin
+  IsMatching('match backref greater 9 (two digit) ',
+             '(?i)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)\g11',
+             'x123456789ABCbD',   [2,13,   2,1, 3,1, 4,1, 5,1, 6,1, 7,1, 8,1, 9,1, 10,1,  11,1,  12,1,  13,1] );
+
+end;
+
+procedure TTestRegexpr.TestNamedGroups;
+
+  function ExprNamedGrp(ASyntax: integer; AName, AMatch: RegExprString): RegExprString;
+  begin
+    case ASyntax of
+      0: Result := '(?P<' + AName + '>'  + AMatch + ')';
+      1: Result := '(?<'  + AName + '>'  + AMatch + ')';
+      2: Result := '(?''' + AName + '''' + AMatch + ')';
+    end;
+  end;
+
+  function ExprNamedRef(ASyntax: integer; AName: RegExprString; AGrpNum: Integer): RegExprString;
+  begin
+    case ASyntax of
+      0: Result := '(?P=' + AName + ')';
+      1: Result := '\g{'  + AName + '}';
+      2: Result := '\k{'  + AName + '}';
+      3: Result := '\k<'  + AName + '>';
+      4: Result := '\k''' + AName + '''';
+      // Test ref to named group by number
+      5: Result := '\' + IntToStr(AGrpNum);
+      6: Result := '\g' + IntToStr(AGrpNum);
+      7: Result := '\g0' + IntToStr(AGrpNum); // with leading zero
+    end;
+  end;
+
+  function ExprNamedCall(ASyntax: integer; AName: RegExprString; AGrpNum: Integer): RegExprString;
+  begin
+    case ASyntax of
+      0: Result := '(?P>' + AName + ')';
+      1: Result := '(?&'  + AName + ')';
+      2: Result := '\g<'  + AName + '>';
+      3: Result := '\g''' + AName + '''';
+      // Test ref to named group by number
+      4: Result := '(?' + IntToStr(AGrpNum) + ')';
+    end;
+  end;
+
+var
+  NameSyntax, RefSyntax, CallSyntax: Integer;
+  n, r, c, n2, r2, c2: RegExprString;
+begin
+  for NameSyntax := 0 to 2 do begin
+    n := ExprNamedGrp(NameSyntax, 'Foo_1', '[aA].');
+    n2 := ExprNamedGrp(NameSyntax, 'Foo_2', '[bB].');
+    for RefSyntax := 0 to 7 do begin
+      r := ExprNamedRef(RefSyntax, 'Foo_1', 1);
+      IsMatching('Named ref',
+                 '^' + n + r + '_',      'abab_ab',  [1,5,  1,2]);
+      IsNotMatching('Named ref (is REF, not CALL)',
+                 '^' + n + r,      'abAB_ab');
+
+      if RefSyntax <= 4 then begin
+        TestBadRegex('Named ref (wrong name)',
+                   '^' + n + ExprNamedRef(RefSyntax, 'Foo_2', 0),      142);
+        TestBadRegex('Named ref (wrong name)',
+                   '^' + n + ExprNamedRef(RefSyntax, 'Foo_', 0),       142);
+        TestBadRegex('Named ref  (wrong name)',
+                   '^' + n + ExprNamedRef(RefSyntax, 'Foo_11', 0),     142);
+      end;
+
+      // 2 named patterns
+      r2 := ExprNamedRef(RefSyntax, 'Foo_2', 2);
+      IsMatching('2 Named ref',
+                 '^' + n + n2 + r + r2 + '_',      'axbxaxbx__',  [1,9,  1,2,  3,2]);
+      IsMatching('2 Named ref backwards',
+                 '^' + n + n2 + r2 + r + '_',      'axbxbxax__',  [1,9,  1,2,  3,2]);
+      IsNotMatching('2 Named ref',
+                 '^' + n + n2 + r + r2,      'axbxbxax__' );
+      IsNotMatching('2 Named ref backwards',
+                 '^' + n + n2 + r2 + r,      'axbxaxbx__' );
+
+    end;
+
+
+    for CallSyntax := 0 to 4 do begin
+      c := ExprNamedCall(CallSyntax, 'Foo_1', 1);
+      IsMatching('Named call',
+                 '^' + n + c + '_',      'abab_ab',  [1,5,  1,2]);
+      IsMatching('Named call (match changed text)',
+                 '^' + n + c + '_',      'abAB_ab',  [1,5,  1,2]);
+
+      if CallSyntax <= 3 then begin
+        TestBadRegex('Named ref (wrong name)',
+                   '^' + n + ExprNamedRef(CallSyntax, 'Foo_2', 0),      142);
+        TestBadRegex('Named ref (wrong name)',
+                   '^' + n + ExprNamedRef(CallSyntax, 'Foo_', 0),       142);
+        TestBadRegex('Named ref  (wrong name)',
+                   '^' + n + ExprNamedRef(CallSyntax, 'Foo_11', 0),     142);
+      end;
+
+      // 2 named patterns
+      c2 := ExprNamedCall(CallSyntax, 'Foo_2', 2);
+      IsMatching('2 Named ref',
+                 '^' + n + n2 + c + c2 + '_',      'axbxAxBx__',  [1,9,  1,2,  3,2]);
+      IsMatching('2 Named ref backwards',
+                 '^' + n + n2 + c2 + c + '_',      'axbxBxAx__',  [1,9,  1,2,  3,2]);
+      IsNotMatching('2 Named ref',
+                 '^' + n + n2 + c + c2,      'axbxbxax__' );
+      IsNotMatching('2 Named ref backwards',
+                 '^' + n + n2 + c2 + c,      'axbxaxbx__' );
+
+    end;
+  end;
+
+
 
 
 end;
