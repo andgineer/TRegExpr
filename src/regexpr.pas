@@ -504,6 +504,9 @@ type
     // emit LongInt value
     procedure EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
 
+    // for groups
+    function EmitNodeWithGroupIndex(op: TREOp; AIndex: integer): PRegExprChar;
+
     // emit back-reference to group
     function EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
 
@@ -966,6 +969,12 @@ const
   // size of BRACES arguments in REChars
   {$ENDIF}
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
+
+type
+  TReGroupIndex = LongInt;
+  PReGroupIndex = ^TReGroupIndex;
+const
+  ReGroupIndexSz = SizeOf(TReGroupIndex) div SizeOf(REChar);
 
 type
   PtrPair = {$IFDEF UnicodeRE} ^LongInt; {$ELSE} ^Word; {$ENDIF}
@@ -1664,13 +1673,6 @@ const
   OP_LOOKAROUND_OPTIONAL = Succ(OP_LOOKBEHIND_END);
 
   OP_SUBCALL = Succ(OP_LOOKAROUND_OPTIONAL); // Call of subroutine; OP_SUBCALL+i is for group i
-  OP_SUBCALL_FIRST = Succ(OP_SUBCALL);
-  OP_SUBCALL_LAST =
-    {$IFDEF UnicodeRE}
-    TReOp(Ord(OP_SUBCALL) + RegexMaxGroups - 1);
-    {$ELSE}
-    High(REChar); // must fit to 0..255 range
-    {$ENDIF}
 
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
@@ -2524,13 +2526,19 @@ begin
     Inc(regCodeSize, RENumberSz);
 end;
 
+function TRegExpr.EmitNodeWithGroupIndex(op: TREOp; AIndex: integer): PRegExprChar;
+begin
+  Result := EmitNode(op);
+  EmitInt(AIndex);  // TReGroupIndex = LongInt;
+end;
+
 function TRegExpr.EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
 begin
   if AIgnoreCase then
     Result := EmitNode(OP_BSUBEXPCI)
   else
     Result := EmitNode(OP_BSUBEXP);
-  EmitC(REChar(AIndex));
+  EmitInt(AIndex);  // TReGroupIndex = LongInt;
 end;
 
 {$IFDEF FastUnicodeData}
@@ -4432,7 +4440,7 @@ begin
             begin
               // set FLAG_HASWIDTH like for (?R)
               FlagParse := FlagParse or FLAG_HASWIDTH;
-              ret := EmitNode(TReOp(Ord(OP_SUBCALL) + GrpIndex));
+              ret := EmitNodeWithGroupIndex(OP_SUBCALL, GrpIndex);
             end;
         end; // case GrpKind of
       end;
@@ -4538,7 +4546,7 @@ begin
                     GrpIndex := MatchIndexFromName(GrpName);
                     if GrpIndex < 1 then
                       Error(reeNamedGroupBadRef);
-                    ret := EmitNode(TReOp(Ord(OP_SUBCALL) + GrpIndex));
+                    ret := EmitNodeWithGroupIndex(OP_SUBCALL, GrpIndex);
                     FlagParse := FlagParse or FLAG_HASWIDTH;
                   end;
                 '{':
@@ -4793,7 +4801,7 @@ begin
 
     OP_BSUBEXP:
       begin // ###0.936
-        ArrayIndex := GrpIndexes[Ord(opnd^)];
+        ArrayIndex := GrpIndexes[PReGroupIndex(opnd)^];
         if ArrayIndex < 0 then
           Exit;
         CurStart := GrpBounds[regRecursion].GrpStart[ArrayIndex];
@@ -4818,7 +4826,7 @@ begin
 
     OP_BSUBEXPCI:
       begin // ###0.936
-        ArrayIndex := GrpIndexes[Ord(opnd^)];
+        ArrayIndex := GrpIndexes[PReGroupIndex(opnd)^];
         if ArrayIndex < 0 then
           Exit;
         CurStart := GrpBounds[regRecursion].GrpStart[ArrayIndex];
@@ -5437,7 +5445,7 @@ begin
 
       OP_BSUBEXP:
         begin // ###0.936
-          no := Ord((scan + REOpSz + RENextOffSz)^);
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
@@ -5460,7 +5468,7 @@ begin
 
       OP_BSUBEXPCI:
         begin // ###0.936
-          no := Ord((scan + REOpSz + RENextOffSz)^);
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
@@ -6024,10 +6032,11 @@ begin
           if not bound1 then Exit;
         end;
 
-      OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
+      OP_SUBCALL:
         begin
           // call subroutine
-          no := GrpIndexes[Ord(scan^) - Ord(OP_SUBCALL)];
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
+          no := GrpIndexes[no];
           if no < 0 then Exit;
           save := GrpOpCodes[no];
           if save = nil then Exit;
@@ -6935,8 +6944,11 @@ begin
         end;
 
       OP_RECUR,
-      OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
+      OP_SUBCALL:
         begin
+          // we cannot optimize // TODO: lookup the called group
+          FirstCharSet := RegExprAllSet; //###0.930
+          Exit;
         end;
 
       OP_ANYLINEBREAK:
@@ -7212,8 +7224,8 @@ begin
       Result := 'NOTCATEG';
     OP_RECUR:
       Result := 'RECURSION';
-    OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
-      Result := Format('SUBCALL[%d]', [Ord(op) - Ord(OP_SUBCALL)]);
+    OP_SUBCALL:
+      Result := 'SUBCALL';
     OP_ANYLINEBREAK:
       Result := 'ANYLINEBREAK';
   else
@@ -7380,8 +7392,13 @@ begin
     end;
     if (op = OP_BSUBEXP) or (op = OP_BSUBEXPCI) then
     begin
-      Result := Result + ' \' + IntToStr(Ord(s^));
-      Inc(s);
+      Result := Result + ' \' + IntToStr(PReGroupIndex(s)^);
+      Inc(s, ReGroupIndexSz);
+    end;
+    if (op = OP_SUBCALL) then
+    begin
+      Result := Result + ' (?' + IntToStr(PReGroupIndex(s)^) + ')';
+      Inc(s, ReGroupIndexSz);
     end;
     if (op = OP_BRACES) or (op = OP_BRACESNG) or (op = OP_BRACES_POSS) then
     begin // ###0.941
@@ -7670,9 +7687,9 @@ begin
           Inc(s, REBracesArgSz * 2);
         end;
 
-      OP_BSUBEXP, OP_BSUBEXPCI:
+      OP_BSUBEXP, OP_BSUBEXPCI, OP_SUBCALL:
         begin
-          Inc(s, 1);
+          Inc(s, ReGroupIndexSz);
           if flfForceToStopAt in Flags then
             NotFixedLen := True
           else
