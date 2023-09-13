@@ -1654,25 +1654,18 @@ const
 
   OP_RECUR = TReOp(48);
 
-  // !!! Change OP_OPEN value if you add new opcodes !!!
+  OP_OPEN = TREOp(50); // Opening of group
+  OP_CLOSE = TREOp(51); // Closing of group
 
-  OP_OPEN = TREOp(50); // Opening of group; OP_OPEN+i is for group i
-  OP_OPEN_FIRST = Succ(OP_OPEN);
-  OP_OPEN_LAST = TREOp(Ord(OP_OPEN) + RegexMaxGroups - 1);
+  OP_LOOKAHEAD = TREOp(52);
+  OP_LOOKAHEAD_NEG = TREOp(53);
+  OP_LOOKAHEAD_END = TREOp(54);
+  OP_LOOKBEHIND = TREOp(55);
+  OP_LOOKBEHIND_NEG = TREOp(56);
+  OP_LOOKBEHIND_END = TREOp(57);
+  OP_LOOKAROUND_OPTIONAL = TREOp(58);
 
-  OP_CLOSE = Succ(OP_OPEN_LAST); // Closing of group; OP_CLOSE+i is for group i
-  OP_CLOSE_FIRST = Succ(OP_CLOSE);
-  OP_CLOSE_LAST = TReOp(Ord(OP_CLOSE) + RegexMaxGroups - 1);
-
-  OP_LOOKAHEAD = Succ(OP_CLOSE_LAST);
-  OP_LOOKAHEAD_NEG = Succ(OP_LOOKAHEAD);
-  OP_LOOKAHEAD_END = Succ(OP_LOOKAHEAD_NEG);
-  OP_LOOKBEHIND = Succ(OP_LOOKAHEAD_END);
-  OP_LOOKBEHIND_NEG = Succ(OP_LOOKBEHIND);
-  OP_LOOKBEHIND_END = Succ(OP_LOOKBEHIND_NEG);
-  OP_LOOKAROUND_OPTIONAL = Succ(OP_LOOKBEHIND_END);
-
-  OP_SUBCALL = Succ(OP_LOOKAROUND_OPTIONAL); // Call of subroutine; OP_SUBCALL+i is for group i
+  OP_SUBCALL = TREOp(60); // Call of subroutine; OP_SUBCALL+i is for group i
 
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
@@ -3204,7 +3197,7 @@ begin
     end;
     NBrackets := regNumBrackets;
     Inc(regNumBrackets);
-    ret := EmitNode(TREOp(Ord(OP_OPEN) + NBrackets));
+    ret := EmitNodeWithGroupIndex(OP_OPEN, NBrackets);
     GrpOpCodes[NBrackets] := ret;
   end
   else
@@ -3244,7 +3237,7 @@ begin
     ender := EmitNode(EnderOP)
   else
   if InBrackets then
-    ender := EmitNode(TREOp(Ord(OP_CLOSE) + NBrackets))
+    ender := EmitNodeWithGroupIndex(OP_CLOSE, NBrackets)
   else
     ender := EmitNode(OP_EEND);
   Tail(ret, ender);
@@ -5545,9 +5538,9 @@ begin
       OP_BACK:
         ;
 
-      OP_OPEN_FIRST .. OP_OPEN_LAST:
+      OP_OPEN:
         begin
-          no := Ord(scan^) - Ord(OP_OPEN);
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           regCurrentGrp := no;
           save := GrpBounds[regRecursion].GrpStart[no];
           GrpBounds[regRecursion].GrpStart[no] := regInput;
@@ -5560,9 +5553,9 @@ begin
           Exit;
         end;
 
-      OP_CLOSE_FIRST .. OP_CLOSE_LAST:
+      OP_CLOSE:
         begin
-          no := Ord(scan^) - Ord(OP_CLOSE);
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           regCurrentGrp := -1;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
@@ -6848,13 +6841,13 @@ begin
           Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;;
         end;
 
-      OP_OPEN_FIRST .. OP_OPEN_LAST:
+      OP_OPEN:
         begin
           FillFirstCharSet(Next);
           Exit;
         end;
 
-      OP_CLOSE_FIRST .. OP_CLOSE_LAST:
+      OP_CLOSE:
         begin
           FillFirstCharSet(Next);
           Exit;
@@ -7174,10 +7167,10 @@ begin
       Result := 'BSUBEXP';
     OP_BSUBEXPCI:
       Result := 'BSUBEXP/CI';
-    OP_OPEN_FIRST .. OP_OPEN_LAST:
-      Result := Format('OPEN[%d]', [Ord(op) - Ord(OP_OPEN)]);
-    OP_CLOSE_FIRST .. OP_CLOSE_LAST:
-      Result := Format('CLOSE[%d]', [Ord(op) - Ord(OP_CLOSE)]);
+    OP_OPEN:
+      Result := 'OPEN';
+    OP_CLOSE:
+      Result := 'CLOSE';
     OP_LOOKAHEAD:
       Result := 'LOOKAHEAD';
     OP_LOOKAHEAD_NEG:
@@ -7297,10 +7290,10 @@ begin
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    if (((op >=OP_CLOSE_FIRST) and (op <= OP_CLOSE_LAST)) or (op = OP_LOOP) or (op = OP_LOOPNG)) and (CurIndent > 0) then
+    if ((op =OP_CLOSE) or (op = OP_LOOP) or (op = OP_LOOPNG)) and (CurIndent > 0) then
       dec(CurIndent, Indent);
     Result := Result + Format('%2d:%s %s', [s - programm, StringOfChar(' ', CurIndent), DumpOp(s^)]);
-    if (((op >=OP_OPEN_FIRST) and (op <= OP_OPEN_LAST)) or (op = OP_LOOPENTRY)) then
+    if ((op = OP_OPEN) or (op = OP_LOOPENTRY)) then
       inc(CurIndent, Indent);
     // Where, what.
     next := regNext(s);
@@ -7398,6 +7391,11 @@ begin
     if (op = OP_SUBCALL) then
     begin
       Result := Result + ' (?' + IntToStr(PReGroupIndex(s)^) + ')';
+      Inc(s, ReGroupIndexSz);
+    end;
+    if (op = OP_OPEN) or (op = OP_CLOSE) then
+    begin
+      Result := Result + ' [' + IntToStr(PReGroupIndex(s)^) + ']';
       Inc(s, ReGroupIndexSz);
     end;
     if (op = OP_BRACES) or (op = OP_BRACESNG) or (op = OP_BRACES_POSS) then
@@ -7538,17 +7536,21 @@ begin
           end;
         end;
 
-      OP_OPEN_FIRST..OP_OPEN_LAST:
+      OP_OPEN:
         begin
-          if not IsPartFixedLength(s, op, ASubLen, TREOp(ord(OP_CLOSE_FIRST) + ord(op) - ord(OP_OPEN_FIRST))) then
+          Inc(s, ReGroupIndexSz);
+          if not IsPartFixedLength(s, op, ASubLen, OP_CLOSE) then
             Exit;
           ALen := ALen + ASubLen;
-          Inc(s, REOpSz + RENextOffSz); // consume the OP_CLOSE
+          Inc(s, REOpSz + RENextOffSz + ReGroupIndexSz); // consume the OP_CLOSE
           continue;
         end;
 
-      OP_CLOSE_FIRST..OP_CLOSE_LAST:
-        continue;
+      OP_CLOSE:
+        begin
+          Inc(s, ReGroupIndexSz);
+          continue;
+        end;
 
       OP_LOOKAHEAD, OP_LOOKAHEAD_NEG:
         begin
