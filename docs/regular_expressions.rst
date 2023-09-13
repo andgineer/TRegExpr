@@ -428,14 +428,18 @@ The entire regex has index 0.
 Backreferences
 --------------
 
-Meta-chars ``\1`` through ``\9`` are interpreted as backreferences to groups.
+Meta-chars ``\1`` through ``\9`` are interpreted as backreferences to capture groups.
 They match the previously found group with the specified index.
+
+The meta char ``\g`` followed by a number is also interpreted as backreferences to capture groups. It can be followed by a multi-digit number.
+
 
 =========== ============================
 RegEx       Matches
 =========== ============================
 ``(.)\1+``  ``aaaa`` and ``cc``
 ``(.+)\1+`` also ``abab`` and ``123123``
+``(.)\g1+`` ``aaaa`` and ``cc``
 =========== ============================
 
 RegEx ``(['"]?)(\d+)\1`` matches ``"13"`` (in double quotes), or ``'4'`` (in
@@ -444,11 +448,22 @@ single quotes) or ``77`` (without quotes) etc.
 Named Groups and Backreferences
 -------------------------------
 
-To make some group named, use this syntax: ``(?P<name>expr)``. Also Perl syntax is supported: ``(?'name'expr)``.
+To make some group named, use this syntax: ``(?P<name>expr)``. Also Perl syntax is supported: ``(?'name'expr)``. And further: ``(?<name>expr)``
 
 Name of group must be valid identifier: first char is letter or "_", other chars are alphanumeric or "_". All named groups are also usual groups and share the same numbers 1 to 9.
 
-Backreferences to named groups are ``(?P=name)``, the numbers ``\1`` to ``\9`` can also be used.
+Backreferences to named groups are ``(?P=name)``, the numbers ``\1`` to ``\9`` can also be used. As well as the example ``\g`` and ``\k`` in the table below.
+
+Supported syntax are
+==========================
+``(?P=name)``
+``\g{name}``
+``\k{name}``
+``\k<name>``
+``\k'name'``
+==========================
+
+Example
 
 ========================== ============================
 RegEx                      Matches
@@ -676,6 +691,16 @@ Subroutine calls
 Syntax for call to numbered groups: ``(?1)`` ... ``(?90)`` (maximal index is limited by code).
 
 Syntax for call to named groups: ``(?P>name)``. Also Perl syntax is supported: ``(?&name)``.
+
+Supported syntax are
+==========================
+``(?number)``
+``(?P>name)``
+``(?&name)``
+``\g<name>``
+``\g'name'``
+==========================
+
 
 This is like recursion but calls only code of capturing group with specified index.
 
