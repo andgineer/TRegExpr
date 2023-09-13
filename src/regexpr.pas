@@ -7662,6 +7662,15 @@ begin
           Inc(s, REBracesArgSz * 2);
         end;
 
+      OP_BSUBEXP, OP_BSUBEXPCI:
+        begin
+          Inc(s, 1);
+          if flfForceToStopAt in Flags then
+            NotFixedLen := True
+          else
+            Exit;
+        end;
+
       else
         if flfForceToStopAt in Flags then
           NotFixedLen := True

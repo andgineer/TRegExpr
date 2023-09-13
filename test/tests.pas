@@ -1516,6 +1516,26 @@ procedure TTestRegexpr.TestIsFixedLength;
     end;
   end;
 
+  procedure HasFixedLookBehind(AErrorMessage: String; ARegEx: RegExprString);
+  var
+    s: RegExprString;
+  begin
+    CompileRE(ARegEx);
+    s := RE.Dump();
+    //IsTrue(AErrorMessage, pos('Len:', s) > 0);
+    IsTrue(AErrorMessage, pos('greedy', s) <= 0);
+  end;
+
+  procedure HasVarLenLookBehind(AErrorMessage: String; ARegEx: RegExprString);
+  var
+    s: RegExprString;
+  begin
+    CompileRE(ARegEx);
+    s := RE.Dump();
+    //IsTrue(AErrorMessage, pos('Len:', s) <= 0);
+    IsTrue(AErrorMessage, pos('greedy', s) > 0);
+  end;
+
 begin
   HasLength('bound', '^',      0);
   HasLength('bound', '$',      0);
@@ -1603,6 +1623,15 @@ begin
 
 
   HasLength('look behind is not (yet) fixed', '(?<=.A...)(X)',   -1);
+
+  HasVarLenLookBehind('', '()A(?<=.(?<=\1))');
+  HasVarLenLookBehind('', '()A(?<=.(?<=\4))');
+  HasVarLenLookBehind('', '()A(?<=.(?<=(?1)))');
+  HasVarLenLookBehind('', '()A(?<=.(?<=(?4)))');
+  HasVarLenLookBehind('', '()A(?<=.(?<=(?R)))');
+  HasFixedLookBehind ('', '()A(?<=.(?<=\p{Lu}))');
+  HasFixedLookBehind ('', '()A(?<=.(?<=[a-x]))');
+
 end;
 
 procedure TTestRegexpr.TestMatchBefore;
