@@ -6138,13 +6138,13 @@ begin
     exit;
   FMatchesCleared := True;
   FillChar(GrpBounds[0].GrpStart, SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
-  FillChar(GrpSubCalled[0], SizeOf(GrpSubCalled[0])*regNumBrackets, 0);
 end;
 
 procedure TRegExpr.ClearInternalExecData;
 begin
   fLastError := reeOk;
   FillChar(GrpBacktrackingAsAtom[0], SizeOf(GrpBacktrackingAsAtom[0])*regNumBrackets, 0);
+  FillChar(GrpSubCalled[0], SizeOf(GrpSubCalled[0])*regNumBrackets, 0);
   IsBacktrackingGroupAsAtom := False;
   {$IFDEF ComplexBraces}
   // no loops started
