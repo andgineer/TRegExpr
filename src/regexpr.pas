@@ -2012,7 +2012,9 @@ function TRegExpr.GetMatch(Idx: integer): RegExprString;
 begin
   Result := '';
   Idx := GrpIndexes[Idx];
-  if (Idx >= 0) and (GrpBounds[0].GrpEnd[Idx] > GrpBounds[0].GrpStart[Idx]) then
+  if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) and
+     (GrpBounds[0].GrpEnd[Idx] > GrpBounds[0].GrpStart[Idx])
+  then
     SetString(Result, GrpBounds[0].GrpStart[Idx], GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx]);
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
@@ -6008,7 +6010,6 @@ begin
           begin
             Inc(regRecursion);
             FillChar(GrpBounds[regRecursion].GrpStart, SizeOf(GrpBounds[0].GrpStart[regRecursion])*regNumBrackets, 0);
-            FillChar(GrpBounds[regRecursion].GrpEnd,   SizeOf(GrpBounds[0].GrpEnd[regRecursion])  *regNumBrackets, 0);
             bound1 := MatchPrim(regCodeWork);
             Dec(regRecursion);
           end
@@ -6031,7 +6032,6 @@ begin
             GrpSubCalled[no] := True;
             Inc(regRecursion);
             FillChar(GrpBounds[regRecursion].GrpStart, SizeOf(GrpBounds[0].GrpStart[regRecursion])*regNumBrackets, 0);
-            FillChar(GrpBounds[regRecursion].GrpEnd,   SizeOf(GrpBounds[0].GrpEnd[regRecursion])  *regNumBrackets, 0);
             bound1 := MatchPrim(save);
             Dec(regRecursion);
             GrpSubCalled[no] := saveSubCalled;
@@ -6132,7 +6132,6 @@ begin
     exit;
   FMatchesCleared := True;
   FillChar(GrpBounds[0].GrpStart, SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
-  FillChar(GrpBounds[0].GrpEnd,   SizeOf(GrpBounds[0].GrpEnd[0])  *regNumBrackets, 0);
   FillChar(GrpSubCalled[0], SizeOf(GrpSubCalled[0])*regNumBrackets, 0);
 end;
 
@@ -6429,7 +6428,7 @@ begin
       FindSubstGroupIndex(p, n, GroupFound);
     if GroupFound then
     begin
-      if n >= 0 then
+      if (n >= 0) and (GrpBounds[0].GrpStart[n] <> nil) then
         Inc(ResultLen, GrpBounds[0].GrpEnd[n] - GrpBounds[0].GrpStart[n]);
     end
     else
@@ -6489,7 +6488,10 @@ begin
       if n >= 0 then
       begin
         p0 := GrpBounds[0].GrpStart[n];
-        p1 := GrpBounds[0].GrpEnd[n];
+        if p0 = nil then
+          p1 := nil
+        else
+          p1 := GrpBounds[0].GrpEnd[n];
       end
       else
         p1 := p0;
