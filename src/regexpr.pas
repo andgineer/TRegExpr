@@ -6015,7 +6015,7 @@ begin
           if regRecursion < RegexMaxRecursion then
           begin
             Inc(regRecursion);
-            FillChar(GrpBounds[regRecursion].GrpStart, SizeOf(GrpBounds[0].GrpStart[regRecursion])*regNumBrackets, 0);
+            FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
             bound1 := MatchPrim(regCodeWork);
             Dec(regRecursion);
           end
@@ -6037,7 +6037,7 @@ begin
             saveSubCalled := GrpSubCalled[no];
             GrpSubCalled[no] := True;
             Inc(regRecursion);
-            FillChar(GrpBounds[regRecursion].GrpStart, SizeOf(GrpBounds[0].GrpStart[regRecursion])*regNumBrackets, 0);
+            FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
             bound1 := MatchPrim(save);
             Dec(regRecursion);
             GrpSubCalled[no] := saveSubCalled;
@@ -6137,7 +6137,7 @@ begin
   if FMatchesCleared then
     exit;
   FMatchesCleared := True;
-  FillChar(GrpBounds[0].GrpStart, SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
+  FillChar(GrpBounds[0].GrpStart[0], SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
 end;
 
 procedure TRegExpr.ClearInternalExecData;
