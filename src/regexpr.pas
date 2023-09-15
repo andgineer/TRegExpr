@@ -518,7 +518,8 @@ type
     // ###0.90
 
     // regular expression, i.e. main body or parenthesized thing
-    function ParseReg(InBrackets: boolean; var FlagParse: integer; EndOnBracket: boolean = False; EnderOP: TReOp = TReOp(0)): PRegExprChar;
+    function ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
+    function DoParseReg(InBrackets: boolean; var FlagParse: integer; EndOnBracket: boolean; EnderOP: TReOp): PRegExprChar;
 
     // one alternative of an | operator
     function ParseBranch(var FlagParse: integer): PRegExprChar;
@@ -3161,7 +3162,12 @@ begin
 end; { of function TRegExpr.CompileRegExpr
   -------------------------------------------------------------- }
 
-function TRegExpr.ParseReg(InBrackets: boolean; var FlagParse: integer;
+function TRegExpr.ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
+begin
+  Result := DoParseReg(InBrackets, FlagParse, False, TReOp(0));
+end;
+
+function TRegExpr.DoParseReg(InBrackets: boolean; var FlagParse: integer;
   EndOnBracket: boolean; EnderOP: TReOp): PRegExprChar;
 // regular expression, i.e. main body or parenthesized thing
 // Caller must absorb opening parenthesis.
@@ -4315,7 +4321,7 @@ begin
                 gkLookaheadNeg: ret := EmitNode(OP_LOOKAHEAD_NEG);
               end;
 
-              Result := ParseReg(False, FlagTemp, True, OP_LOOKAHEAD_END);
+              Result := DoParseReg(False, FlagTemp, True, OP_LOOKAHEAD_END);
               if Result = nil then
                 Exit;
 
@@ -4337,7 +4343,7 @@ begin
                 Inc(regCodeSize, ReOpLookBehindOptionsSz);
 
               RegGrpCountBefore := GrpCount;
-              Result := ParseReg(False, FlagTemp, True, OP_LOOKBEHIND_END);
+              Result := DoParseReg(False, FlagTemp, True, OP_LOOKBEHIND_END);
               if Result = nil then
                 Exit;
 
