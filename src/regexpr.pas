@@ -315,7 +315,7 @@ type
     GrpOpCodes: array of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
     GrpSubCalled: array of boolean; // group[i] is called by OP_SUBCALL*
     GrpNamesClearedToIndex: integer;
-    GrpCount, FullGrpCount: integer;
+    GrpCount, ParsedGrpCount: integer;
 
     {$IFDEF ComplexBraces}
     CurrentLoopInfoListPtr: POpLoopInfo;
@@ -3045,6 +3045,7 @@ begin
   regExactlyLen := nil;
 
   GrpCount := 0;
+  ParsedGrpCount := 0;
   GrpNamesClearedToIndex := 0;
   fLastError := reeOk;
   fLastErrorOpcode := TREOp(0);
@@ -3092,8 +3093,8 @@ begin
     fCompModifiers := fModifiers;
     regParse := ARegExp;
     regNumBrackets := 1;
-    FullGrpCount := GrpCount;
-    GrpCount := 0;
+    GrpCount := ParsedGrpCount;
+    ParsedGrpCount := 0;
     regCode := programm;
     regCodeWork := programm + REOpSz;
 
@@ -4194,9 +4195,11 @@ begin
                       GrpKind := gkSubCall;
                       FindGroupName(regParse + 3, fRegexEnd, ')', GrpName);
                       Inc(regParse, Length(GrpName) + 4);
-                      GrpIndex := MatchIndexFromName(GrpName);
-                      if GrpIndex < 1 then
-                        Error(reeNamedGroupBadRef);
+                      if fSecondPass then begin
+                        GrpIndex := MatchIndexFromName(GrpName);
+                        if GrpIndex < 1 then
+                          Error(reeNamedGroupBadRef);
+                      end;
                     end;
                   else
                     Error(reeNamedGroupBad);
@@ -4292,7 +4295,7 @@ begin
                       Error(reeBadRecursion);
                   end;
                 until False;
-                if fSecondPass and (GrpIndex > FullGrpCount) then
+                if fSecondPass and (GrpIndex > GrpCount) then
                   Error(reeBadSubCall);
               end;
             '''':
@@ -4312,9 +4315,11 @@ begin
                 GrpKind := gkSubCall;
                 FindGroupName(regParse + 2, fRegexEnd, ')', GrpName);
                 Inc(regParse, Length(GrpName) + 3);
-                GrpIndex := MatchIndexFromName(GrpName);
-                if GrpIndex < 1 then
-                  Error(reeNamedGroupBadRef);
+                if fSecondPass then begin
+                  GrpIndex := MatchIndexFromName(GrpName);
+                  if GrpIndex < 1 then
+                    Error(reeNamedGroupBadRef);
+                end;
               end;
             else
               Error(reeIncorrectSpecialBrackets);
@@ -4332,24 +4337,25 @@ begin
               if (GrpKind = gkNormalGroup) then begin
                 if (not fSecondPass) and (GrpName <> '') then
                 begin
+                  GrpCount := ParsedGrpCount;
                   if MatchIndexFromName(GrpName) >= 0 then
                     Error(reeNamedGroupDupName);
-                  for i := GrpNamesClearedToIndex to Min(GrpCount, Length(GrpNames)-1) do
+                  for i := GrpNamesClearedToIndex to Min(ParsedGrpCount, Length(GrpNames)-1) do
                     GrpNames[i] := '';
-                  Inc(GrpCount);
-                  GrpNamesClearedToIndex := GrpCount + 1;
-                  if GrpCount >= Length(GrpNames) then begin
-                    SetLength(GrpNames, GrpCount + 1 + RegexGroupCountIncrement);
+                  Inc(ParsedGrpCount);
+                  GrpNamesClearedToIndex := ParsedGrpCount + 1;
+                  if ParsedGrpCount >= Length(GrpNames) then begin
+                    SetLength(GrpNames, ParsedGrpCount + 1 + RegexGroupCountIncrement);
                     // Newly added entries are already cleared
                     GrpNamesClearedToIndex := high(GrpNamesClearedToIndex);
                   end;
-                  GrpNames[GrpCount] := GrpName;
+                  GrpNames[ParsedGrpCount] := GrpName;
                 end
                 else
-                  Inc(GrpCount);
+                  Inc(ParsedGrpCount);
 
                 if fSecondPass then
-                  GrpIndexes[GrpCount] := regNumBrackets;
+                  GrpIndexes[ParsedGrpCount] := regNumBrackets;
               end;
 
               if GrpKind = gkAtomicGroup then
@@ -4393,7 +4399,7 @@ begin
               else
                 Inc(regCodeSize, ReOpLookBehindOptionsSz);
 
-              RegGrpCountBefore := GrpCount;
+              RegGrpCountBefore := ParsedGrpCount;
               Result := DoParseReg(True, False, FlagTemp, OP_NONE, OP_LOOKBEHIND_END);
               if Result = nil then
                 Exit;
@@ -4406,7 +4412,7 @@ begin
                 if IsPartFixedLength(ret2, op, ALen, OP_LOOKBEHIND_END, [flfSkipLookAround]) then
                   PReOpLookBehindOptions(regLookBehindOption)^.IsGreedy := OPT_LOOKBEHIND_FIXED
                 else
-                if (GrpCount > RegGrpCountBefore) and (not FAllowUnsafeLookBehind) then
+                if (ParsedGrpCount > RegGrpCountBefore) and (not FAllowUnsafeLookBehind) then
                   Error(reeLookaroundNotSafe)
                 else
                 if (FlagTemp and (FLAG_GREEDY)) = (FLAG_GREEDY) then
@@ -4422,7 +4428,7 @@ begin
           gkNamedGroupReference:
             begin
               Len := MatchIndexFromName(GrpName);
-              if Len < 0 then
+              if fSecondPass and (Len < 0) then
                 Error(reeNamedGroupBadRef);
               ret := EmitGroupRef(Len, fCompModifiers.I);
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
@@ -4572,7 +4578,7 @@ begin
             end;
           '1' .. '9':
             begin
-              if fSecondPass and (Ord(regParse^) - Ord('0') > FullGrpCount) then
+              if fSecondPass and (Ord(regParse^) - Ord('0') > GrpCount) then
                 Error(reeBadReference);
               ret := EmitGroupRef(Ord(regParse^) - Ord('0'), fCompModifiers.I);
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
@@ -4589,7 +4595,7 @@ begin
                     end;
                     Inc(regParse, Length(GrpName) + 2);
                     GrpIndex := MatchIndexFromName(GrpName);
-                    if GrpIndex < 1 then
+                    if fSecondPass and (GrpIndex < 1) then
                       Error(reeNamedGroupBadRef);
                     ret := EmitNodeWithGroupIndex(OP_SUBCALL, GrpIndex);
                     FlagParse := FlagParse or FLAG_HASWIDTH;
@@ -4600,7 +4606,7 @@ begin
                     FindGroupName(regParse + 2, fRegexEnd, '}', GrpName);
                     Inc(regParse, Length(GrpName) + 2);
                     GrpIndex := MatchIndexFromName(GrpName);
-                    if GrpIndex < 1 then
+                    if fSecondPass and  (GrpIndex < 1) then
                       Error(reeNamedGroupBadRef);
                     ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
                     FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
@@ -4616,7 +4622,7 @@ begin
                     dec(regParse);
                     if GrpIndex = 0 then
                       Error(reeBadReference);
-                    if fSecondPass and (GrpIndex > FullGrpCount) then
+                    if fSecondPass and (GrpIndex > GrpCount) then
                       Error(reeBadReference);
                     ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
                     FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
@@ -4640,7 +4646,7 @@ begin
               end;
               Inc(regParse, Length(GrpName) + 2);
               GrpIndex := MatchIndexFromName(GrpName);
-              if GrpIndex < 1 then
+              if fSecondPass and (GrpIndex < 1) then
                 Error(reeNamedGroupBadRef);
               ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;

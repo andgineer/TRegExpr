@@ -1443,6 +1443,9 @@ begin
       IsNotMatching('2 Named ref backwards',
                  '^' + n + n2 + r2 + r,      'axbxaxbx__' );
 
+      // forward ref
+      IsMatching('Named forward ref',
+                 '(?:(?:' + r + '|x)' + n + ')+_',      'abxababab_ab',  [3,8,  8,2]);
     end;
 
 
@@ -1473,6 +1476,9 @@ begin
       IsNotMatching('2 Named ref backwards',
                  '^' + n + n2 + c2 + c,      'axbxaxbx__' );
 
+      // forward call
+      IsMatching('Named forward call',
+                 '(?:(?:' + c + '|x)' + n + ')+_',      'abxabABab_ab',  [3,8,  8,2]);
     end;
   end;
 
