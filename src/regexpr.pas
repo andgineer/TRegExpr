@@ -307,7 +307,6 @@ type
     GrpBounds: TRegExprBoundsArray;
     GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
     GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
-    GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
     GrpBacktrackingAsAtom: array [0 .. RegexMaxGroups - 1] of boolean; // close of group[i] has set IsBacktrackingGroupAsAtom
     IsBacktrackingGroupAsAtom: Boolean;  // Backtracking an entire atomic group that had matched.
     // Once the group matched it should not try any alternative matches within the group
@@ -522,7 +521,7 @@ type
 
     // regular expression, i.e. main body or parenthesized thing
     function ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
-    function DoParseReg(InBrackets: boolean; var FlagParse: integer; EndOnBracket: boolean; EnderOP: TReOp): PRegExprChar;
+    function DoParseReg(InBrackets, IndexBrackets: boolean; var FlagParse: integer; BeginGroupOp, EndGroupOP: TReOp): PRegExprChar;
 
     // one alternative of an | operator
     function ParseBranch(var FlagParse: integer): PRegExprChar;
@@ -925,6 +924,7 @@ type
   TREGroupKind = (
     gkNormalGroup,
     gkNonCapturingGroup,
+    gkAtomicGroup,
     gkNamedGroupReference,
     gkComment,
     gkModifierString,
@@ -1656,16 +1656,20 @@ const
 
   OP_OPEN = TREOp(50); // Opening of group
   OP_CLOSE = TREOp(51); // Closing of group
+  OP_OPEN_ATOMIC = TREOp(52); // Opening of group
+  OP_CLOSE_ATOMIC = TREOp(53); // Closing of group
 
-  OP_LOOKAHEAD = TREOp(52);
-  OP_LOOKAHEAD_NEG = TREOp(53);
-  OP_LOOKAHEAD_END = TREOp(54);
-  OP_LOOKBEHIND = TREOp(55);
-  OP_LOOKBEHIND_NEG = TREOp(56);
-  OP_LOOKBEHIND_END = TREOp(57);
-  OP_LOOKAROUND_OPTIONAL = TREOp(58);
+  OP_LOOKAHEAD = TREOp(55);
+  OP_LOOKAHEAD_NEG = TREOp(56);
+  OP_LOOKAHEAD_END = TREOp(57);
+  OP_LOOKBEHIND = TREOp(58);
+  OP_LOOKBEHIND_NEG = TREOp(59);
+  OP_LOOKBEHIND_END = TREOp(60);
+  OP_LOOKAROUND_OPTIONAL = TREOp(61);
 
-  OP_SUBCALL = TREOp(60); // Call of subroutine; OP_SUBCALL+i is for group i
+  OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
+
+  OP_NONE = high(TREOp);
 
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
@@ -3165,11 +3169,11 @@ end; { of function TRegExpr.CompileRegExpr
 
 function TRegExpr.ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
 begin
-  Result := DoParseReg(InBrackets, FlagParse, False, TReOp(0));
+  Result := DoParseReg(InBrackets, True, FlagParse, OP_OPEN, OP_CLOSE);
 end;
 
-function TRegExpr.DoParseReg(InBrackets: boolean; var FlagParse: integer;
-  EndOnBracket: boolean; EnderOP: TReOp): PRegExprChar;
+function TRegExpr.DoParseReg(InBrackets, IndexBrackets: boolean;
+  var FlagParse: integer; BeginGroupOp, EndGroupOP: TReOp): PRegExprChar;
 // regular expression, i.e. main body or parenthesized thing
 // Caller must absorb opening parenthesis.
 // Combining parenthesis handling with the base level of regular expression
@@ -3188,20 +3192,25 @@ begin
   SavedModifiers := fCompModifiers;
 
   // Make an OP_OPEN node, if parenthesized.
+  ret := nil;
   if InBrackets then
   begin
-    if regNumBrackets >= RegexMaxGroups then
-    begin
-      Error(reeCompParseRegTooManyBrackets);
-      Exit;
-    end;
-    NBrackets := regNumBrackets;
-    Inc(regNumBrackets);
-    ret := EmitNodeWithGroupIndex(OP_OPEN, NBrackets);
-    GrpOpCodes[NBrackets] := ret;
-  end
-  else
-    ret := nil;
+    if IndexBrackets then begin
+      if regNumBrackets >= RegexMaxGroups then
+      begin
+        Error(reeCompParseRegTooManyBrackets);
+        Exit;
+      end;
+      NBrackets := regNumBrackets;
+      Inc(regNumBrackets);
+      if BeginGroupOp <> OP_NONE then
+        ret := EmitNodeWithGroupIndex(BeginGroupOp, NBrackets);
+      GrpOpCodes[NBrackets] := ret;
+    end
+    else
+    if BeginGroupOp <> OP_NONE then
+      ret := EmitNode(BeginGroupOp);
+  end;
 
   // Pick up the branches, linking them together.
   br := ParseBranch(FlagTemp);
@@ -3233,11 +3242,12 @@ begin
   end;
 
   // Make a closing node, and hook it on the end.
-  if EnderOP <> TReOp(0) then
-    ender := EmitNode(EnderOP)
-  else
-  if InBrackets then
-    ender := EmitNodeWithGroupIndex(OP_CLOSE, NBrackets)
+  if InBrackets and (EndGroupOP <> OP_NONE) then begin
+    if IndexBrackets then
+      ender := EmitNodeWithGroupIndex(EndGroupOP, NBrackets)
+    else
+      ender := EmitNode(EndGroupOP);
+  end
   else
     ender := EmitNode(OP_EEND);
   Tail(ret, ender);
@@ -3251,7 +3261,7 @@ begin
   end;
 
   // Check for proper termination.
-  if InBrackets or EndOnBracket then
+  if InBrackets then
     if regParse^ <> ')' then
     begin
       Error(reeCompParseRegUnmatchedBrackets);
@@ -3259,7 +3269,7 @@ begin
     end
     else
       Inc(regParse); // skip trailing ')'
-  if (not (InBrackets or EndOnBracket)) and (regParse < fRegexEnd) then
+  if (not InBrackets) and (regParse < fRegexEnd) then
   begin
     if regParse^ = ')' then
       Error(reeCompParseRegUnmatchedBrackets2)
@@ -4127,9 +4137,8 @@ begin
             '>':
               begin
                 // atomic group: (?>regex)
-                GrpKind := gkNonCapturingGroup;
+                GrpKind := gkAtomicGroup;
                 Inc(regParse, 2);
-                GrpAtomic[regNumBrackets] := True;
               end;
             'P':
               begin
@@ -4286,7 +4295,8 @@ begin
         // B: process found kind of brackets
         case GrpKind of
           gkNormalGroup,
-          gkNonCapturingGroup:
+          gkNonCapturingGroup,
+          gkAtomicGroup:
             begin
               // skip this block for one of passes, to not double groups count;
               // must take first pass (we need GrpNames filled)
@@ -4305,7 +4315,10 @@ begin
                     end;
                   end;
                 end;
-              ret := ParseReg(True, FlagTemp);
+              if GrpKind = gkAtomicGroup then
+                ret := DoParseReg(True, True, FlagTemp, OP_OPEN_ATOMIC, OP_CLOSE_ATOMIC)
+              else
+                ret := ParseReg(True, FlagTemp);
               if ret = nil then
               begin
                 Result := nil;
@@ -4322,7 +4335,7 @@ begin
                 gkLookaheadNeg: ret := EmitNode(OP_LOOKAHEAD_NEG);
               end;
 
-              Result := DoParseReg(False, FlagTemp, True, OP_LOOKAHEAD_END);
+              Result := DoParseReg(True, False, FlagTemp, OP_NONE, OP_LOOKAHEAD_END);
               if Result = nil then
                 Exit;
 
@@ -4344,7 +4357,7 @@ begin
                 Inc(regCodeSize, ReOpLookBehindOptionsSz);
 
               RegGrpCountBefore := GrpCount;
-              Result := DoParseReg(False, FlagTemp, True, OP_LOOKBEHIND_END);
+              Result := DoParseReg(True, False, FlagTemp, OP_NONE, OP_LOOKBEHIND_END);
               if Result = nil then
                 Exit;
 
@@ -5133,6 +5146,9 @@ end;
 type
   TRegExprMatchPrimLocals =   record
     case TREOp of
+      OP_CLOSE_ATOMIC: (
+        IsAtomic: Boolean;
+      );
       {$IFDEF ComplexBraces}
       OP_LOOPENTRY: (
         LoopInfo: TOpLoopInfo;
@@ -5538,7 +5554,7 @@ begin
       OP_BACK:
         ;
 
-      OP_OPEN:
+      OP_OPEN, OP_OPEN_ATOMIC:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           regCurrentGrp := no;
@@ -5553,8 +5569,9 @@ begin
           Exit;
         end;
 
-      OP_CLOSE:
+      OP_CLOSE, OP_CLOSE_ATOMIC:
         begin
+          Local.IsAtomic := scan^ = OP_CLOSE_ATOMIC;
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           regCurrentGrp := -1;
           // handle atomic group, mark it as "done"
@@ -5573,7 +5590,7 @@ begin
           Result := MatchPrim(next);
           if not Result then begin// ###0.936
             GrpBounds[regRecursion].GrpEnd[no] := save;
-            if GrpAtomic[no] and not IsBacktrackingGroupAsAtom then begin
+            if Local.IsAtomic and not IsBacktrackingGroupAsAtom then begin
               GrpBacktrackingAsAtom[no] := True;
               IsBacktrackingGroupAsAtom := True;
             end;
@@ -6160,7 +6177,6 @@ var
   i: integer;
 begin
   FillChar(GrpBounds[0], SizeOf(GrpBounds[0]), 0);
-  FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
   FillChar(GrpOpCodes, SizeOf(GrpOpCodes), 0);
 
   for i := 0 to RegexMaxGroups - 1 do
@@ -6841,13 +6857,13 @@ begin
           Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;;
         end;
 
-      OP_OPEN:
+      OP_OPEN, OP_OPEN_ATOMIC:
         begin
           FillFirstCharSet(Next);
           Exit;
         end;
 
-      OP_CLOSE:
+      OP_CLOSE, OP_CLOSE_ATOMIC:
         begin
           FillFirstCharSet(Next);
           Exit;
@@ -7171,6 +7187,10 @@ begin
       Result := 'OPEN';
     OP_CLOSE:
       Result := 'CLOSE';
+    OP_OPEN_ATOMIC:
+      Result := 'OPEN/ATOMIC';
+    OP_CLOSE_ATOMIC:
+      Result := 'CLOSE/ATOMIC';
     OP_LOOKAHEAD:
       Result := 'LOOKAHEAD';
     OP_LOOKAHEAD_NEG:
@@ -7290,10 +7310,10 @@ begin
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    if ((op =OP_CLOSE) or (op = OP_LOOP) or (op = OP_LOOPNG)) and (CurIndent > 0) then
+    if ((op =OP_CLOSE) or (op = OP_CLOSE_ATOMIC) or (op = OP_LOOP) or (op = OP_LOOPNG)) and (CurIndent > 0) then
       dec(CurIndent, Indent);
     Result := Result + Format('%2d:%s %s', [s - programm, StringOfChar(' ', CurIndent), DumpOp(s^)]);
-    if ((op = OP_OPEN) or (op = OP_LOOPENTRY)) then
+    if ((op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_LOOPENTRY)) then
       inc(CurIndent, Indent);
     // Where, what.
     next := regNext(s);
@@ -7393,7 +7413,7 @@ begin
       Result := Result + ' (?' + IntToStr(PReGroupIndex(s)^) + ')';
       Inc(s, ReGroupIndexSz);
     end;
-    if (op = OP_OPEN) or (op = OP_CLOSE) then
+    if (op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_CLOSE) or (op = OP_CLOSE_ATOMIC) then
     begin
       Result := Result + ' [' + IntToStr(PReGroupIndex(s)^) + ']';
       Inc(s, ReGroupIndexSz);
@@ -7546,7 +7566,17 @@ begin
           continue;
         end;
 
-      OP_CLOSE:
+      OP_OPEN_ATOMIC:
+        begin
+          Inc(s, ReGroupIndexSz);
+          if not IsPartFixedLength(s, op, ASubLen, OP_CLOSE_ATOMIC) then
+            Exit;
+          ALen := ALen + ASubLen;
+          Inc(s, REOpSz + RENextOffSz + ReGroupIndexSz); // consume the OP_CLOSE_ATOMIC;
+          continue;
+        end;
+
+      OP_CLOSE, OP_CLOSE_ATOMIC:
         begin
           Inc(s, ReGroupIndexSz);
           continue;
