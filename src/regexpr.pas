@@ -313,7 +313,6 @@ type
     // If the pattern after the group fails, then the group fails (regardless of any alternative match in the group)
 
     GrpOpCodes: array of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
-    GrpSubCalled: array of boolean; // group[i] is called by OP_SUBCALL*
     GrpNamesClearedToIndex: integer;
     GrpCount, ParsedGrpCount: integer;
 
@@ -340,6 +339,7 @@ type
     regMustString: RegExprString; // string which must occur in match (got from regMust/regMustLen)
     LookAroundInfoList: PRegExprLookAroundInfo;
     regNestedCalls: integer; // some attempt to prevent 'catastrophic backtracking' but not used
+    CurrentSubCalled: integer;
 
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
@@ -5213,6 +5213,9 @@ type
       OP_LOOKAHEAD_END, OP_LOOKBEHIND_END: (
         LookAroundInfoPtr: PRegExprLookAroundInfo;
       );
+      OP_SUBCALL: (
+        savedCurrentSubCalled: integer;
+      );
   end;
 
 function TRegExpr.MatchPrim(prog: PRegExprChar): boolean;
@@ -5236,7 +5239,6 @@ var
   BracesMin, BracesMax: integer;
   // we use integer instead of TREBracesArg to better support */+
   bound1, bound2: boolean;
-  saveSubCalled: boolean;
   Local: TRegExprMatchPrimLocals;
 begin
   Result := False;
@@ -5628,7 +5630,7 @@ begin
 
           // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
           // in OP_CLOSE, without going to next opcode
-          if GrpSubCalled[no] then
+          if CurrentSubCalled = no then
           begin
             Result := True;
             Exit;
@@ -6099,14 +6101,13 @@ begin
           if save = nil then Exit;
           if regRecursion < RegexMaxRecursion then
           begin
-            // mark group in GrpSubCalled array so opcode can detect subcall
-            saveSubCalled := GrpSubCalled[no];
-            GrpSubCalled[no] := True;
+            Local.savedCurrentSubCalled := CurrentSubCalled;
+            CurrentSubCalled := no;
             Inc(regRecursion);
             FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
             bound1 := MatchPrim(save);
             Dec(regRecursion);
-            GrpSubCalled[no] := saveSubCalled;
+            CurrentSubCalled := Local.savedCurrentSubCalled;
           end
           else
             bound1 := False;
@@ -6211,13 +6212,13 @@ procedure TRegExpr.ClearInternalExecData;
 begin
   fLastError := reeOk;
   FillChar(GrpBacktrackingAsAtom[0], SizeOf(GrpBacktrackingAsAtom[0])*regNumBrackets, 0);
-  FillChar(GrpSubCalled[0], SizeOf(GrpSubCalled[0])*regNumBrackets, 0);
   IsBacktrackingGroupAsAtom := False;
   {$IFDEF ComplexBraces}
   // no loops started
   CurrentLoopInfoListPtr := nil;
   {$ENDIF}
   LookAroundInfoList := nil;
+  CurrentSubCalled := -1;
 end;
 
 procedure TRegExpr.InitInternalGroupData;
@@ -6236,7 +6237,6 @@ begin
   GrpIndexes[0] := 0;
 
   SetLength(GrpOpCodes, GroupDataArraySize(regNumBrackets, Length(GrpOpCodes)));
-  SetLength(GrpSubCalled, GroupDataArraySize(regNumBrackets, Length(GrpSubCalled)));
   SetLength(GrpBacktrackingAsAtom, GroupDataArraySize(regNumBrackets, Length(GrpBacktrackingAsAtom)));
 
   GrpOpCodes[0] := nil;

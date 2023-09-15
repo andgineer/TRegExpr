@@ -75,6 +75,7 @@ type
     procedure TestBraces;
     procedure TestLoop;
     procedure TestReferences;
+    procedure TestSubCall;
     procedure TestNamedGroups;
     procedure TestRecurseAndCaptures;
     procedure TestIsFixedLength;
@@ -1368,6 +1369,25 @@ begin
 
   IsMatching('Valid call idx', '(.)(.)(?2)',  'aABBC',  [1,3,  1,1, 2,1]);
   TestBadRegex('Invalid call idx', '(.)(.)(?3)');
+
+end;
+
+procedure TTestRegexpr.TestSubCall;
+begin
+  IsMatching('simple call', '(1)_(?1)',  '1_1',  [1,3,  1,1]);
+  IsNotMatching('simple call', '(1)_(?1)',  '1_2'  );
+
+  IsMatching('recurse call', '(1(?1)?_)',  'x11__',  [2,4,  2,4]);
+  IsMatching('recurse call', '(1(?1)?_)',  'x11_1',  [3,2,  3,2]);
+  IsMatching('recurse call', '(1(?1)?_)',  'x1__',   [2,2,  2,2]);
+  IsMatching('recurse call', '(1(?1)?_)',  'x111__', [3,4,  3,4]);
+
+  IsMatching('deep recurse call', '(1(?1)?_)',  'x1111____',   [2,8,  2,8]);
+
+  IsMatching('side by side recurse call', '(1((?1)?)_((?1)?)2)',  'x1111_2_1_22_1_222_',   [3,15,  3,15, 4,9, 14,3]);
+
+  IsMatching('nested call to outer', '(1(2(3(?1)?))A)_((?3))',  '123A_3123',  [1,6,  1,4, 2,2, 3,1, 6,1]);
+  IsMatching('nested call to outer', '(1(2(3(?1)?))A)_((?3))',  '123A_3123A',  [1,10,  1,4, 2,2, 3,1, 6,5]);
 
 end;
 
