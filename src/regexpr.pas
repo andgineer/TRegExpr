@@ -3888,6 +3888,20 @@ var
   CanBeRange: boolean;
   AddrOfLen: PLongInt;
 
+  function ParseNumber(var AParsePos: PRegExprChar; out ANumber: integer): boolean;
+  begin
+    Result := False;
+    ANumber := 0;
+    while (AParsePos^ >= '0') and (AParsePos^ <= '9') do
+    begin
+      if ANumber > (High(ANumber)-10) div 10 then
+        exit;
+      ANumber := ANumber * 10 + (Ord(AParsePos^) - Ord('0'));
+      inc(AParsePos);
+    end;
+    Result := True;
+  end;
+
   procedure EmitExactly(Ch: REChar);
   begin
     if fCompModifiers.I then
@@ -4303,29 +4317,13 @@ begin
               begin
                 // subroutine call (?1)..(?99)
                 GrpKind := gkSubCall;
-                GrpIndex := Ord(NextCh) - Ord('0');
-                Inc(regParse, 2);
-                repeat
-                  // support multi-digit group numbers
-                  case regParse^ of
-                    ')':
-                      begin
-                        Inc(regParse);
-                        break;
-                      end;
-                    '0'..'9':
-                      begin
-                        if GrpIndex > (High(GrpIndex)-10) div 10 then begin
-                          Error(reeBadRecursion);
-                          exit;
-                        end;
-                        GrpIndex := GrpIndex * 10 + Ord(regParse^) - Ord('0');
-                        Inc(regParse);
-                      end
-                    else
-                      Error(reeBadRecursion);
-                  end;
-                until False;
+                Inc(regParse, 1);
+                if not ParseNumber(regParse, GrpIndex) or (regParse^ <> ')') then
+                begin
+                  Error(reeBadRecursion);
+                  Exit;
+                end;
+                Inc(regParse, 1);
                 if fSecondPass and (GrpIndex > GrpCount) then
                   Error(reeBadSubCall);
               end;
@@ -4635,15 +4633,10 @@ begin
                   end;
                 '0'..'9':
                   begin
-                    GrpIndex := 0;
                     inc(regParse);
-                    while (regParse^ >= '0') and (regParse^ <= '9') do begin
-                      if GrpIndex > (High(GrpIndex)-10) div 10 then begin
-                        Error(reeBadReference);
-                        exit;
-                      end;
-                      GrpIndex := GrpIndex * 10 + (Ord(regParse^) - Ord('0'));
-                      inc(regParse);
+                    if not ParseNumber(regParse, GrpIndex) then begin
+                      Error(reeBadReference);
+                      Exit;
                     end;
                     dec(regParse);
                     if GrpIndex = 0 then
