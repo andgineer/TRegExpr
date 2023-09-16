@@ -296,6 +296,23 @@ type
     OuterInfo: PRegExprLookAroundInfo; // for nested lookaround
   end;
 
+  TRegExprGroupName = record
+    Name: RegExprString;
+    Index: integer;
+  end;
+
+  { TRegExprGroupNameList }
+
+  TRegExprGroupNameList = object
+    Names: array of TRegExprGroupName;
+    NameCount: integer;
+    // get index of group (subexpression) by name, to support named groups
+    // like in Python: (?P<name>regex)
+    function MatchIndexFromName(const AName: RegExprString): integer;
+    procedure Clear;
+    procedure Add(const AName: RegExprString; AnIndex: integer);
+  end;
+
   { TRegExpr }
 
   TRegExpr = class
@@ -306,14 +323,13 @@ type
     FMatchesCleared: Boolean;
     GrpBounds: TRegExprBoundsArray;
     GrpIndexes: array of integer; // map global group index to _capturing_ group index
-    GrpNames: array of RegExprString; // names of groups, if non-empty
+    GrpNames: TRegExprGroupNameList; // names of groups, if non-empty
     GrpBacktrackingAsAtom: array of boolean; // close of group[i] has set IsBacktrackingGroupAsAtom
     IsBacktrackingGroupAsAtom: Boolean;  // Backtracking an entire atomic group that had matched.
     // Once the group matched it should not try any alternative matches within the group
     // If the pattern after the group fails, then the group fails (regardless of any alternative match in the group)
 
     GrpOpCodes: array of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
-    GrpNamesClearedToIndex: integer;
     GrpCount, ParsedGrpCount: integer;
 
     {$IFDEF ComplexBraces}
@@ -763,10 +779,6 @@ type
     // Returns '' if in r.e. no such subexpr. or this subexpr.
     // not found in input string.
     property Match[Idx: integer]: RegExprString read GetMatch;
-
-    // get index of group (subexpression) by name, to support named groups
-    // like in Python: (?P<name>regex)
-    function MatchIndexFromName(const AName: RegExprString): integer;
 
     function MatchFromName(const AName: RegExprString): RegExprString;
 
@@ -1961,6 +1973,39 @@ begin
 end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
 
+{ TRegExprGroupNameList }
+
+function TRegExprGroupNameList.MatchIndexFromName(const AName: RegExprString
+  ): integer;
+var
+  i: integer;
+begin
+  for i := 0 to NameCount - 1 do
+    if Names[i].Name = AName then
+    begin
+      Result := Names[i].Index;
+      Exit;
+    end;
+  Result := -1;
+end;
+
+procedure TRegExprGroupNameList.Clear;
+begin
+  NameCount := 0;
+  if Length(Names) > RegexGroupCountIncrement then
+    SetLength(Names, RegexGroupCountIncrement);
+end;
+
+procedure TRegExprGroupNameList.Add(const AName: RegExprString; AnIndex: integer
+  );
+begin
+  if NameCount >= Length(Names) then
+    SetLength(Names, Length(Names) + 1 + RegexGroupCountIncrement);
+  Names[NameCount].Name := AName;
+  Names[NameCount].Index := AnIndex;
+  inc(NameCount);
+end;
+
 {$IFDEF OverMeth}
 constructor TRegExpr.Create(const AExpression: RegExprString);
 begin
@@ -2036,19 +2081,6 @@ begin
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
 
-function TRegExpr.MatchIndexFromName(const AName: RegExprString): integer;
-var
-  i: integer;
-begin
-  for i := 1 {not 0} to Min(GrpCount, Length(GrpNames)-1) do
-    if GrpNames[i] = AName then
-    begin
-      Result := i;
-      Exit;
-    end;
-  Result := -1;
-end;
-
 function TRegExpr.MatchFromName(const AName: RegExprString): RegExprString;
 var
   Idx: integer;
@@ -2056,7 +2088,7 @@ begin
   Result := '';
   if Length(GrpIndexes) = 0 then
     Exit;
-  Idx := MatchIndexFromName(AName);
+  Idx := GrpNames.MatchIndexFromName(AName);
   if Idx >= 0 then
     Result := GetMatch(Idx)
   else
@@ -3046,7 +3078,7 @@ begin
 
   GrpCount := 0;
   ParsedGrpCount := 0;
-  GrpNamesClearedToIndex := 0;
+  GrpNames.Clear;
   fLastError := reeOk;
   fLastErrorOpcode := TREOp(0);
 
@@ -3080,9 +3112,6 @@ begin
       regNumBrackets := 0; // Not calling InitInternalGroupData => array sizes not adjusted for FillChar
       Exit;
     end;
-    for i := GrpNamesClearedToIndex to Min(ParsedGrpCount, Length(GrpNames)-1) do
-      GrpNames[i] := '';
-
 
     // Allocate memory
     GetMem(programm, regCodeSize * SizeOf(REChar));
@@ -4196,7 +4225,7 @@ begin
                       FindGroupName(regParse + 3, fRegexEnd, ')', GrpName);
                       Inc(regParse, Length(GrpName) + 4);
                       if fSecondPass then begin
-                        GrpIndex := MatchIndexFromName(GrpName);
+                        GrpIndex := GrpNames.MatchIndexFromName(GrpName);
                         if GrpIndex < 1 then
                           Error(reeNamedGroupBadRef);
                       end;
@@ -4316,7 +4345,7 @@ begin
                 FindGroupName(regParse + 2, fRegexEnd, ')', GrpName);
                 Inc(regParse, Length(GrpName) + 3);
                 if fSecondPass then begin
-                  GrpIndex := MatchIndexFromName(GrpName);
+                  GrpIndex := GrpNames.MatchIndexFromName(GrpName);
                   if GrpIndex < 1 then
                     Error(reeNamedGroupBadRef);
                 end;
@@ -4335,27 +4364,18 @@ begin
               // skip this block for one of passes, to not double groups count;
               // must take first pass (we need GrpNames filled)
               if (GrpKind = gkNormalGroup) then begin
-                if (not fSecondPass) and (GrpName <> '') then
-                begin
-                  GrpCount := ParsedGrpCount;
-                  if MatchIndexFromName(GrpName) >= 0 then
-                    Error(reeNamedGroupDupName);
-                  for i := GrpNamesClearedToIndex to Min(ParsedGrpCount, Length(GrpNames)-1) do
-                    GrpNames[i] := '';
-                  Inc(ParsedGrpCount);
-                  GrpNamesClearedToIndex := ParsedGrpCount + 1;
-                  if ParsedGrpCount >= Length(GrpNames) then begin
-                    SetLength(GrpNames, ParsedGrpCount + 1 + RegexGroupCountIncrement);
-                    // Newly added entries are already cleared
-                    GrpNamesClearedToIndex := high(GrpNamesClearedToIndex);
-                  end;
-                  GrpNames[ParsedGrpCount] := GrpName;
+                Inc(ParsedGrpCount);
+                if fSecondPass then begin
+                  GrpIndexes[ParsedGrpCount] := regNumBrackets;
                 end
                 else
-                  Inc(ParsedGrpCount);
-
-                if fSecondPass then
-                  GrpIndexes[ParsedGrpCount] := regNumBrackets;
+                if (GrpName <> '') then
+                begin
+                  // first pass
+                  if GrpNames.MatchIndexFromName(GrpName) >= 0 then
+                    Error(reeNamedGroupDupName);
+                  GrpNames.Add(GrpName, ParsedGrpCount);
+                end;
               end;
 
               if GrpKind = gkAtomicGroup then
@@ -4427,7 +4447,7 @@ begin
 
           gkNamedGroupReference:
             begin
-              Len := MatchIndexFromName(GrpName);
+              Len := GrpNames.MatchIndexFromName(GrpName);
               if fSecondPass and (Len < 0) then
                 Error(reeNamedGroupBadRef);
               ret := EmitGroupRef(Len, fCompModifiers.I);
@@ -4594,7 +4614,7 @@ begin
                       '''': FindGroupName(regParse + 2, fRegexEnd, '''', GrpName);
                     end;
                     Inc(regParse, Length(GrpName) + 2);
-                    GrpIndex := MatchIndexFromName(GrpName);
+                    GrpIndex := GrpNames.MatchIndexFromName(GrpName);
                     if fSecondPass and (GrpIndex < 1) then
                       Error(reeNamedGroupBadRef);
                     ret := EmitNodeWithGroupIndex(OP_SUBCALL, GrpIndex);
@@ -4605,7 +4625,7 @@ begin
                     // back-reference to named group
                     FindGroupName(regParse + 2, fRegexEnd, '}', GrpName);
                     Inc(regParse, Length(GrpName) + 2);
-                    GrpIndex := MatchIndexFromName(GrpName);
+                    GrpIndex := GrpNames.MatchIndexFromName(GrpName);
                     if fSecondPass and  (GrpIndex < 1) then
                       Error(reeNamedGroupBadRef);
                     ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
@@ -4645,7 +4665,7 @@ begin
                   Error(reeBadReference);
               end;
               Inc(regParse, Length(GrpName) + 2);
-              GrpIndex := MatchIndexFromName(GrpName);
+              GrpIndex := GrpNames.MatchIndexFromName(GrpName);
               if fSecondPass and (GrpIndex < 1) then
                 Error(reeNamedGroupBadRef);
               ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
@@ -6451,7 +6471,7 @@ var
       if Delimited then
       begin
         FindGroupName(p, TemplateEnd, '}', GrpName);
-        Result := MatchIndexFromName(GrpName);
+        Result := GrpNames.MatchIndexFromName(GrpName);
         Inc(p, Length(GrpName));
       end;
     end;
