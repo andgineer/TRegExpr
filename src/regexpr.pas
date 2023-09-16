@@ -3510,7 +3510,7 @@ var
   function ParseBraceMinMax(var BMin, BMax: TREBracesArg): boolean;
   begin
     Result := DoParseBraceMinMax(BMin, BMax);
-    if BMin > BMax then
+    if Result and (BMin > BMax) then
     begin
       Error(reeBracesMinParamGreaterMax);
       Exit;
@@ -7583,6 +7583,7 @@ var
   NotFixedLen: Boolean;
 begin
   Result := False;
+  NotFixedLen := False;
   ALen := 0;
   s := prog;
 
