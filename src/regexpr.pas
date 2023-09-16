@@ -4315,6 +4315,10 @@ begin
                       end;
                     '0'..'9':
                       begin
+                        if GrpIndex > (High(GrpIndex)-10) div 10 then begin
+                          Error(reeBadRecursion);
+                          exit;
+                        end;
                         GrpIndex := GrpIndex * 10 + Ord(regParse^) - Ord('0');
                         Inc(regParse);
                       end
@@ -4634,6 +4638,10 @@ begin
                     GrpIndex := 0;
                     inc(regParse);
                     while (regParse^ >= '0') and (regParse^ <= '9') do begin
+                      if GrpIndex > (High(GrpIndex)-10) div 10 then begin
+                        Error(reeBadReference);
+                        exit;
+                      end;
                       GrpIndex := GrpIndex * 10 + (Ord(regParse^) - Ord('0'));
                       inc(regParse);
                     end;

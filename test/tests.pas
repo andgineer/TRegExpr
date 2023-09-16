@@ -936,6 +936,9 @@ begin
 
   RE.AllowUnsafeLookBehind := False;
   TestBadRegex('No Error for var-len look behind with capture', '.(?<=(.+))', 153);
+
+  TestBadRegex('value for reference to big', '()\9999999999999999999999999999999999999999999999999999()');
+  TestBadRegex('value for reference to big', '()\g9999999999999999999999999999999999999999999999999999()');
 end;
 
 procedure TTestRegexpr.TestModifiers;
