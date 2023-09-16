@@ -60,8 +60,8 @@ type
     procedure TestBadRegex(const AErrorMessage: string; const AExpression: RegExprString; ExpErrorId: Integer = 0);
     // CheckMatches: returns error message
     procedure IsMatching(AErrorMessage: String; ARegEx, AInput: RegExprString;
-      AExpectStartLenPairs: array of Integer; AOffset: integer = 1);
-    procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AOffset: integer = 1);
+      AExpectStartLenPairs: array of Integer; AOffset: integer = 1; AMustMatchBefore: integer = 0);
+    procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AOffset: integer = 1; AMustMatchBefore: integer = 0);
     procedure SetUp; override;
     procedure TearDown; override;
   published
@@ -74,7 +74,11 @@ type
     procedure TestAtomic;
     procedure TestBraces;
     procedure TestLoop;
+    procedure TestReferences;
+    procedure TestNamedGroups;
+    procedure TestRecurseAndCaptures;
     procedure TestIsFixedLength;
+    procedure TestMatchBefore;
     procedure TestAnchor;
     procedure TestRegLookAhead;
     procedure TestRegLookBehind;
@@ -849,7 +853,7 @@ end;
 
 procedure TTestRegexpr.IsMatching(AErrorMessage: String; ARegEx,
   AInput: RegExprString; AExpectStartLenPairs: array of Integer;
-  AOffset: integer);
+  AOffset: integer; AMustMatchBefore: integer);
 var
   i: Integer;
   L: SizeInt;
@@ -857,7 +861,7 @@ begin
   CompileRE(ARegEx);
   RE.InputString:= AInput;
 
-  IsTrue(AErrorMessage + ' Exec must give True', RE.Exec(AOffset));
+  IsTrue(AErrorMessage + ' Exec must give True', RE.ExecPos(AOffset, AMustMatchBefore));
 
   L := Length(AExpectStartLenPairs) div 2;
   AreEqual(AErrorMessage + ': MatchCount', L - 1, RE.SubExprMatchCount);
@@ -868,13 +872,13 @@ begin
 end;
 
 procedure TTestRegexpr.IsNotMatching(AErrorMessage: String; ARegEx,
-  AInput: RegExprString; AOffset: integer);
+  AInput: RegExprString; AOffset: integer; AMustMatchBefore: integer);
 var
   r: Boolean;
 begin
   CompileRE(ARegEx);
   RE.InputString:= AInput;
-  r := RE.Exec(AOffset);
+  r := RE.ExecPos(AOffset, AMustMatchBefore);
 
   if r then
     IsFalse(AErrorMessage + ': Exec must give False, but found at ' + IntToStr(RE.MatchPos[0]), r);
@@ -1152,21 +1156,41 @@ begin
 end;
 
 procedure TTestRegexpr.TestBraces;
+var
+  i: Integer;
+  s: RegExprString;
 begin
-  RE.AllowLiteralBraceWithoutRange:= False;
-  TestBadRegex('No Error for bad braces', 'd{');
-  TestBadRegex('No Error for bad braces', 'd{22');
-  TestBadRegex('No Error for bad braces', 'd{}');
-  TestBadRegex('No Error for bad braces', 'd{,}');
-  TestBadRegex('No Error for bad braces', 'd{x}');
-  TestBadRegex('No Error for bad braces', 'd{1x}');
-  TestBadRegex('No Error for bad braces', 'd{1,x}');
-  TestBadRegex('No Error for bad braces', 'd{1,2{');
-  TestBadRegex('No Error for bad braces', 'd{1,2,3}');
-  RE.AllowBraceWithoutMin := False;
-  TestBadRegex('No Error for bad braces', 'd{,2}');
+  for i := 0 to 9 do begin
+    case i of
+      0: s := 'd';
+      1: s := 'd?';
+      2: s := 'd+';
+      3: s := 'd*';
+      4: s := 'd*?';
+      5: s := 'd*+';
+      6: s := '(?=.)';
+      7: s := '(?=.)?';
+      8: s := '(?=.)*';
+      9: s := '(?=.)+';
+    end;
+    RE.AllowLiteralBraceWithoutRange:= False;
+    TestBadRegex('No Error for bad braces', s+'{');
+    TestBadRegex('No Error for bad braces', s+'{22');
+    TestBadRegex('No Error for bad braces', s+'{}');
+    TestBadRegex('No Error for bad braces', s+'{,}');
+    TestBadRegex('No Error for bad braces', s+'{x}');
+    TestBadRegex('No Error for bad braces', s+'{1x}');
+    TestBadRegex('No Error for bad braces', s+'{1,x}');
+    TestBadRegex('No Error for bad braces', s+'{1,2{');
+    TestBadRegex('No Error for bad braces', s+'{1,2,3}');
+    RE.AllowBraceWithoutMin := False;
+    TestBadRegex('No Error for bad braces', s+'{,2}');
+  end;
+
+
   RE.AllowBraceWithoutMin := True;
   IsMatching('{,5} ',  'a{,5}',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,0]);
+
 
   RE.AllowLiteralBraceWithoutRange := True;
   RE.AllowBraceWithoutMin := True;
@@ -1174,20 +1198,41 @@ begin
   IsMatching('{,5} ',  'a{,5}',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,0]);
   IsMatching('{,5} ',  '.{,5}',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,5]);
   IsMatching('{2,} ',  'a{2,}',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [3,8]);
-  IsMatching('{}',     'a{}',    'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [25,3]);
-  IsMatching('{,} ',   'a{,}',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
-  IsMatching('{x} ',   'a{x}',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
+
+  for i := 0 to 6 do begin
+    case i of
+      0: s := 'a';
+      1: s := 'a?';
+      2: s := '.';
+      3: s := 'a(?=.)';
+      4: s := 'a(?=.)?';
+      5: s := 'a(?=.)+';
+      6: s := 'a(?=.)*';
+    end;
+    IsMatching('{}',     s+'{}',    'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [25,3]);
+    IsMatching('{,} ',   s+'{,}',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
+    IsMatching('{x} ',   s+'{x}',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
+  end;
 
   IsMatching('{2,5}?', 'a{2,5}?', 'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [3,2]);
   IsMatching('{,5}?',  'a{,5}?',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,0]);
   IsMatching('{,5}?',  '.{,5}?',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [1,0]);
   IsMatching('{2,}?',  'a{2,}?',  'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [3,2]);
-  IsMatching('{}?',    'a{}?',    'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [12,2]);
-  IsMatching('{,}?',   'a{,}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
-  IsMatching('{x}?',   'a{x}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
 
-  TestBadRegex('No Error for bad braces', 'd{2,1}');
-
+  for i := 0 to 6 do begin
+    case i of
+      0: s := 'a';
+      1: s := 'a?';
+      2: s := '.';
+      3: s := 'a(?=.)';
+      4: s := 'a(?=.)?';
+      5: s := 'a(?=.)+';
+      6: s := 'a(?=.)*';
+    end;
+    IsMatching('{}?',    'a{}?',    'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [12,2]);
+    IsMatching('{,}?',   'a{,}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
+    IsMatching('{x}?',   'a{x}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
+  end;
 
   RE.AllowBraceWithoutMin := False;
   IsMatching('{2,5} ', 'a{2,5}', 'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [3,5]);
@@ -1206,6 +1251,8 @@ begin
   IsMatching('{,}?',   'a{,}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [29,4]);
   IsMatching('{x} ',   'a{x}?',   'bcaaaaaaaaXa{2,5}Xa{2,}Xa{}Xa{,}Xa{,5}Xa{x}_',  [40,4]);
 
+
+  TestBadRegex('No Error for bad braces', 'd{2,1}');
   TestBadRegex('No Error for bad braces', 'd{2,1}');
 end;
 
@@ -1306,6 +1353,150 @@ begin
 
 end;
 
+procedure TTestRegexpr.TestReferences;
+begin
+  IsMatching('match backref greater 9 (two digit) ',
+             '(?i)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)\g11',
+             'x123456789ABCbD',   [2,13,   2,1, 3,1, 4,1, 5,1, 6,1, 7,1, 8,1, 9,1, 10,1,  11,1,  12,1,  13,1] );
+
+end;
+
+procedure TTestRegexpr.TestNamedGroups;
+
+  function ExprNamedGrp(ASyntax: integer; AName, AMatch: RegExprString): RegExprString;
+  begin
+    case ASyntax of
+      0: Result := '(?P<' + AName + '>'  + AMatch + ')';
+      1: Result := '(?<'  + AName + '>'  + AMatch + ')';
+      2: Result := '(?''' + AName + '''' + AMatch + ')';
+    end;
+  end;
+
+  function ExprNamedRef(ASyntax: integer; AName: RegExprString; AGrpNum: Integer): RegExprString;
+  begin
+    case ASyntax of
+      0: Result := '(?P=' + AName + ')';
+      1: Result := '\g{'  + AName + '}';
+      2: Result := '\k{'  + AName + '}';
+      3: Result := '\k<'  + AName + '>';
+      4: Result := '\k''' + AName + '''';
+      // Test ref to named group by number
+      5: Result := '\' + IntToStr(AGrpNum);
+      6: Result := '\g' + IntToStr(AGrpNum);
+      7: Result := '\g0' + IntToStr(AGrpNum); // with leading zero
+    end;
+  end;
+
+  function ExprNamedCall(ASyntax: integer; AName: RegExprString; AGrpNum: Integer): RegExprString;
+  begin
+    case ASyntax of
+      0: Result := '(?P>' + AName + ')';
+      1: Result := '(?&'  + AName + ')';
+      2: Result := '\g<'  + AName + '>';
+      3: Result := '\g''' + AName + '''';
+      // Test ref to named group by number
+      4: Result := '(?' + IntToStr(AGrpNum) + ')';
+    end;
+  end;
+
+var
+  NameSyntax, RefSyntax, CallSyntax: Integer;
+  n, r, c, n2, r2, c2: RegExprString;
+begin
+  for NameSyntax := 0 to 2 do begin
+    n := ExprNamedGrp(NameSyntax, 'Foo_1', '[aA].');
+    n2 := ExprNamedGrp(NameSyntax, 'Foo_2', '[bB].');
+    for RefSyntax := 0 to 7 do begin
+      r := ExprNamedRef(RefSyntax, 'Foo_1', 1);
+      IsMatching('Named ref',
+                 '^' + n + r + '_',      'abab_ab',  [1,5,  1,2]);
+      IsNotMatching('Named ref (is REF, not CALL)',
+                 '^' + n + r,      'abAB_ab');
+
+      if RefSyntax <= 4 then begin
+        TestBadRegex('Named ref (wrong name)',
+                   '^' + n + ExprNamedRef(RefSyntax, 'Foo_2', 0),      142);
+        TestBadRegex('Named ref (wrong name)',
+                   '^' + n + ExprNamedRef(RefSyntax, 'Foo_', 0),       142);
+        TestBadRegex('Named ref  (wrong name)',
+                   '^' + n + ExprNamedRef(RefSyntax, 'Foo_11', 0),     142);
+      end;
+
+      // 2 named patterns
+      r2 := ExprNamedRef(RefSyntax, 'Foo_2', 2);
+      IsMatching('2 Named ref',
+                 '^' + n + n2 + r + r2 + '_',      'axbxaxbx__',  [1,9,  1,2,  3,2]);
+      IsMatching('2 Named ref backwards',
+                 '^' + n + n2 + r2 + r + '_',      'axbxbxax__',  [1,9,  1,2,  3,2]);
+      IsNotMatching('2 Named ref',
+                 '^' + n + n2 + r + r2,      'axbxbxax__' );
+      IsNotMatching('2 Named ref backwards',
+                 '^' + n + n2 + r2 + r,      'axbxaxbx__' );
+
+    end;
+
+
+    for CallSyntax := 0 to 4 do begin
+      c := ExprNamedCall(CallSyntax, 'Foo_1', 1);
+      IsMatching('Named call',
+                 '^' + n + c + '_',      'abab_ab',  [1,5,  1,2]);
+      IsMatching('Named call (match changed text)',
+                 '^' + n + c + '_',      'abAB_ab',  [1,5,  1,2]);
+
+      if CallSyntax <= 3 then begin
+        TestBadRegex('Named ref (wrong name)',
+                   '^' + n + ExprNamedRef(CallSyntax, 'Foo_2', 0),      142);
+        TestBadRegex('Named ref (wrong name)',
+                   '^' + n + ExprNamedRef(CallSyntax, 'Foo_', 0),       142);
+        TestBadRegex('Named ref  (wrong name)',
+                   '^' + n + ExprNamedRef(CallSyntax, 'Foo_11', 0),     142);
+      end;
+
+      // 2 named patterns
+      c2 := ExprNamedCall(CallSyntax, 'Foo_2', 2);
+      IsMatching('2 Named ref',
+                 '^' + n + n2 + c + c2 + '_',      'axbxAxBx__',  [1,9,  1,2,  3,2]);
+      IsMatching('2 Named ref backwards',
+                 '^' + n + n2 + c2 + c + '_',      'axbxBxAx__',  [1,9,  1,2,  3,2]);
+      IsNotMatching('2 Named ref',
+                 '^' + n + n2 + c + c2,      'axbxbxax__' );
+      IsNotMatching('2 Named ref backwards',
+                 '^' + n + n2 + c2 + c,      'axbxaxbx__' );
+
+    end;
+  end;
+
+
+
+
+end;
+
+procedure TTestRegexpr.TestRecurseAndCaptures;
+begin
+  // recurse capture "B", but outer does not capture
+  IsMatching('Capture in recurse does not bleed into result',
+             '[aA](?R)?(?:X|([bB]))',
+             'aABXc',  [1,4,  -1,-1]);
+
+  IsMatching('backref does NOT see outer capture',
+             '(?:x|([abc]))(?R)?-\1*',  'aabxa-a-b-b-a-a',  [4, 5,  -1,-1]);
+  IsMatching('backref does NOT see outer capture',
+             '(?:x|([abc]))(?R)?-\1*',  'aabxa-a--b-a-a',  [1, 14,  1,1]);
+  IsMatching('backref does NOT see outer capture',
+             '(?:x|([abc]))(?R)?-\1',  'aabxa-a-b-b-a-a',  [5, 3,  5,1]);
+
+
+  IsMatching('2nd recurse does NOT see capture from earlier recurse',
+             '[aA](?R)?(?:X|([bcBC]))(?R)?\1',
+             'aABBcAXBc',  [2,3,  3,1]);
+
+  IsMatching('2nd recurse does NOT see capture from earlier recurse',
+             '[aA]((?R))?(?:X|([bcBC]))((?R))?\2',
+             'aABBcAXBc',  [2,3,  -1,-1,  3,1,  -1,-1]);
+
+
+end;
+
 procedure TTestRegexpr.TestIsFixedLength;
 
   procedure HasLength(AErrorMessage: String; ARegEx: RegExprString; ExpLen: Integer);
@@ -1323,6 +1514,26 @@ procedure TTestRegexpr.TestIsFixedLength;
       IsTrue(AErrorMessage, r);
       AreEqual(AErrorMessage, ExpLen, ALen);
     end;
+  end;
+
+  procedure HasFixedLookBehind(AErrorMessage: String; ARegEx: RegExprString);
+  var
+    s: RegExprString;
+  begin
+    CompileRE(ARegEx);
+    s := RE.Dump();
+    //IsTrue(AErrorMessage, pos('Len:', s) > 0);
+    IsTrue(AErrorMessage, pos('greedy', s) <= 0);
+  end;
+
+  procedure HasVarLenLookBehind(AErrorMessage: String; ARegEx: RegExprString);
+  var
+    s: RegExprString;
+  begin
+    CompileRE(ARegEx);
+    s := RE.Dump();
+    //IsTrue(AErrorMessage, pos('Len:', s) <= 0);
+    IsTrue(AErrorMessage, pos('greedy', s) > 0);
   end;
 
 begin
@@ -1412,6 +1623,24 @@ begin
 
 
   HasLength('look behind is not (yet) fixed', '(?<=.A...)(X)',   -1);
+
+  HasVarLenLookBehind('', '()A(?<=.(?<=\1))');
+  HasVarLenLookBehind('', '()A(?<=.(?<=\4))');
+  HasVarLenLookBehind('', '()A(?<=.(?<=(?1)))');
+  HasVarLenLookBehind('', '()A(?<=.(?<=(?4)))');
+  HasVarLenLookBehind('', '()A(?<=.(?<=(?R)))');
+  HasFixedLookBehind ('', '()A(?<=.(?<=\p{Lu}))');
+  HasFixedLookBehind ('', '()A(?<=.(?<=[a-x]))');
+
+end;
+
+procedure TTestRegexpr.TestMatchBefore;
+begin
+  IsMatching('',   '2',    '123456789',     [2,1], 1, 0);
+  IsMatching('',   '2',    '123456789',     [2,1], 1, 4);
+  IsMatching('',   '2',    '123456789',     [2,1], 1, 3);
+  IsNotMatching('',  '2',    '123456789',     1, 2);
+  IsNotMatching('',  '2',    '123456789',     1, 1);
 end;
 
 procedure TTestRegexpr.TestAnchor;

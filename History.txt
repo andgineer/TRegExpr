@@ -6,6 +6,17 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.167 2023.09.13
+ -=- (+) Added Exec(AOffset, AMatchMustStartBefore: integer)
+  Limit the search for the first matched position to AMatchMustStartBefore
+ -=- (+) Added named group syntax: (?<name>regex)
+ -=- (+) Added named group reference/call syntax with \g and \k
+ -=- (^) Allow underscore in named group name
+ -=- (-) Fixed recursive calls accessing outer captures
+ -=- (^) Improved speed by reducing clean-up before each match execution
+ -=- (-) Fixed literal brace "{" after quantifier.
+  By Martin Friebe.
+
  v. 1.165 2023.09.08
  -=- (+) Added support for \R (any unicode line break).
   by Alexey Torgashin.
