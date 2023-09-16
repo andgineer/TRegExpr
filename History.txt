@@ -6,6 +6,11 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.169 2023.09.16
+ -=- (^) Removed limit to "Max number of groups" (RegexMaxGroups).
+ -=- (-) Fixed recursive sub calls. Sub call could return to early.
+  By Martin Friebe.
+
  v. 1.167 2023.09.13
  -=- (+) Added Exec(AOffset, AMatchMustStartBefore: integer)
   Limit the search for the first matched position to AMatchMustStartBefore
