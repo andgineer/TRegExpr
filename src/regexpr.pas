@@ -206,10 +206,8 @@ const
   RegExprReplaceLineBreak: RegExprString = sLineBreak;
 
 const
-  // Max number of groups.
-  // Be carefull - don't use values which overflow OP_CLOSE* opcode
-  // (in this case you'll get compiler error).
-  // Big value causes slower work and more stack required.
+  // Increment/keep-capacity for the size of arrays holding 'Group' related data
+  // e.g., GrpBounds, GrpIndexes, GrpOpCodes and GrpNames
   RegexGroupCountIncrement = 50;
 
   // Max possible amount of groups.
