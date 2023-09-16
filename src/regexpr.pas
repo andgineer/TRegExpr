@@ -123,7 +123,7 @@ uses
     Character,
     {$ENDIF}
   {$ENDIF}
-  Classes, Math; // TStrings in Split method
+  Classes; // TStrings in Split method
 
 type
   {$IFNDEF FPC}
@@ -3067,7 +3067,7 @@ function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): boolean;
 var
   scan, scanTemp, longest, longestTemp: PRegExprChar;
   Len, LenTemp: integer;
-  FlagTemp, i: integer;
+  FlagTemp: integer;
 begin
   Result := False;
   FlagTemp := 0;
@@ -3975,7 +3975,7 @@ var
   DashForRange: Boolean;
   GrpKind: TREGroupKind;
   GrpName: RegExprString;
-  GrpIndex, ALen, RegGrpCountBefore, i: integer;
+  GrpIndex, ALen, RegGrpCountBefore: integer;
   NextCh: REChar;
   op: TREOp;
   SavedModifiers: TRegExprModifiers;
