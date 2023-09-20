@@ -1782,7 +1782,6 @@ const
   reeExecNextWithoutExec = 1007;
   reeBadOpcodeInCharClass = 1008;
   reeDumpCorruptedOpcode = 1011;
-  reeModifierUnsupported = 1013;
   reeLoopStackExceeded = 1014;
   reeLoopWithoutEntry = 1015;
 
@@ -1846,7 +1845,7 @@ begin
     reeComplexBracesNotImplemented:
       Result := 'TRegExpr compile: if you use braces {} and non-greedy ops *?, +?, ?? for complex cases, enable {$DEFINE ComplexBraces}';
     reeUnrecognizedModifier:
-      Result := 'TRegExpr compile: incorrect modifier in (?...)';
+      Result := 'TRegExpr compile: incorrect modifier';
     reeBadLinePairedSeparator:
       Result := 'TRegExpr compile: LinePairedSeparator must countain two different chars or be empty';
     reeBadUnicodeCategory:
@@ -1894,8 +1893,6 @@ begin
       Result := 'TRegExpr exec: invalid opcode in char class';
     reeDumpCorruptedOpcode:
       Result := 'TRegExpr dump: corrupted opcode';
-    reeModifierUnsupported:
-      Result := 'TRegExpr compile: incorrect  modifier';
     reeLoopStackExceeded:
       Result := 'TRegExpr exec: loop stack exceeded';
     reeLoopWithoutEntry:
@@ -2187,7 +2184,7 @@ begin
   if ParseModifiers(PRegExprChar(AStr), Length(AStr), fModifiers) then
     InvalidateProgramm
   else
-    Error(reeModifierUnsupported);
+    Error(reeUnrecognizedModifier);
 end;
 
 { ============================================================= }
