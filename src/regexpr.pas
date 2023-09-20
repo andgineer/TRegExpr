@@ -159,7 +159,7 @@ type
   PREOp = ^TREOp;
 
 type
-  TRegExprCharset = set of byte;
+  TRegExprCharset = set of Byte;
 
 const
   // Escape char ('\' in common r.e.) used for escaping metachars (\w, \d etc)
@@ -357,7 +357,7 @@ type
 
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
-    FirstCharArray: array[byte] of Boolean;
+    FirstCharArray: array[Byte] of Boolean;
     {$ENDIF}
 
     // work variables for Exec routines - save stack in recursion
@@ -413,25 +413,25 @@ type
 
     {$IFDEF UseLineSep}
       {$IFNDEF UnicodeRE}
-      fLineSepArray: array[byte] of Boolean;
+      fLineSepArray: array[Byte] of Boolean;
       {$ENDIF}
     {$ENDIF}
 
     CharCheckers: TRegExprCharCheckerArray;
     CharCheckerInfos: TRegExprCharCheckerInfos;
-    CheckerIndex_Word: byte;
-    CheckerIndex_NotWord: byte;
-    CheckerIndex_Digit: byte;
-    CheckerIndex_NotDigit: byte;
-    CheckerIndex_Space: byte;
-    CheckerIndex_NotSpace: byte;
-    CheckerIndex_HorzSep: byte;
-    CheckerIndex_NotHorzSep: byte;
-    CheckerIndex_VertSep: byte;
-    CheckerIndex_NotVertSep: byte;
-    CheckerIndex_LowerAZ: byte;
-    CheckerIndex_UpperAZ: byte;
-    CheckerIndex_AnyLineBreak: byte;
+    CheckerIndex_Word: Byte;
+    CheckerIndex_NotWord: Byte;
+    CheckerIndex_Digit: Byte;
+    CheckerIndex_NotDigit: Byte;
+    CheckerIndex_Space: Byte;
+    CheckerIndex_NotSpace: Byte;
+    CheckerIndex_HorzSep: Byte;
+    CheckerIndex_NotHorzSep: Byte;
+    CheckerIndex_VertSep: Byte;
+    CheckerIndex_NotVertSep: Byte;
+    CheckerIndex_LowerAZ: Byte;
+    CheckerIndex_UpperAZ: Byte;
+    CheckerIndex_AnyLineBreak: Byte;
 
     {$IFDEF Compat}
     fUseUnicodeWordDetection: Boolean;
@@ -458,7 +458,7 @@ type
     function CharChecker_AnyLineBreak(ch: REChar): Boolean;
     function CharChecker_LowerAZ(ch: REChar): Boolean;
     function CharChecker_UpperAZ(ch: REChar): Boolean;
-    function DumpCheckerIndex(N: byte): RegExprString;
+    function DumpCheckerIndex(N: Byte): RegExprString;
     function DumpCategoryChars(ch, ch2: REChar; Positive: Boolean): RegExprString;
 
     procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -2300,7 +2300,7 @@ function CheckCharCategory(AChar: REChar; Ch0, Ch1: REChar): Boolean;
 // AChar: check this char against opcode
 // Ch0, Ch1: opcode operands after OP_*CATEGORY
 var
-  N: byte;
+  N: Byte;
   Name0, Name1: REChar;
 begin
   Result := False;
@@ -2362,7 +2362,7 @@ begin
     {$IFDEF UnicodeRE}
     Result := Pos(AChar, fLineSeparators) > 0;
     {$ELSE}
-    Result := fLineSepArray[byte(AChar)];
+    Result := fLineSepArray[Byte(AChar)];
     {$ENDIF}
   {$ELSE}
   case AChar of
@@ -2449,7 +2449,7 @@ begin
   {$IFNDEF UnicodeRE}
   FillChar(fLineSepArray, SizeOf(fLineSepArray), 0);
   for i := 1 to Length(fLineSeparators) do
-    fLineSepArray[byte(fLineSeparators[i])] := True;
+    fLineSepArray[Byte(fLineSeparators[i])] := True;
   {$ENDIF}
 end;
 {$ENDIF}
@@ -2848,7 +2848,7 @@ begin
     {$IFDEF UnicodeRE}
     if Ord(ch) <= $FF then
     {$ENDIF}
-      Include(ARes, byte(ch));
+      Include(ARes, Byte(ch));
   end;
   {$ELSE}
   ARes := RegExprWordSet;
@@ -2870,7 +2870,7 @@ begin
     {$IFDEF UnicodeRE}
     if Ord(ch) <= $FF then
     {$ENDIF}
-      Include(ARes, byte(ch));
+      Include(ARes, Byte(ch));
   end;
   {$ELSE}
   ARes := RegExprSpaceSet;
@@ -2903,9 +2903,9 @@ begin
           Inc(ABuffer);
           for i := Ord(ch) to Ord(ch2) do
           begin
-            Include(ARes, byte(i));
+            Include(ARes, Byte(i));
             if AIgnoreCase then
-              Include(ARes, byte(InvertCase(REChar(i))));
+              Include(ARes, Byte(InvertCase(REChar(i))));
           end;
         end;
 
@@ -2995,9 +2995,9 @@ begin
             if Ord(ch) <= $FF then
             {$ENDIF}
             begin
-              Include(ARes, byte(ch));
+              Include(ARes, Byte(ch));
               if AIgnoreCase then
-                Include(ARes, byte(InvertCase(ch)));
+                Include(ARes, Byte(InvertCase(ch)));
             end;
           end;
         end;
@@ -3131,7 +3131,7 @@ begin
     FirstCharSet := [];
     FillFirstCharSet(regCodeWork);
     for Len := 0 to 255 do
-      FirstCharArray[Len] := byte(Len) in FirstCharSet;
+      FirstCharArray[Len] := Byte(Len) in FirstCharSet;
     {$ENDIF}
 
     regAnchored := raNone;
@@ -6321,7 +6321,7 @@ begin
     {$IFDEF UnicodeRE}
     if (Ptr < fInputEnd) and (Ord(Ptr^) <= $FF) then
     {$ENDIF}
-      if not FirstCharArray[byte(Ptr^)] then
+      if not FirstCharArray[Byte(Ptr^)] then
         Exit;
     {$ENDIF}
 
@@ -6354,7 +6354,7 @@ begin
     {$IFDEF UnicodeRE}
     if Ord(Ptr^) <= $FF then
     {$ENDIF}
-      if not FirstCharArray[byte(Ptr^)] then
+      if not FirstCharArray[Byte(Ptr^)] then
         Continue;
     {$ENDIF}
 
@@ -6786,7 +6786,7 @@ begin
           begin
             {$IFDEF UseLineSep}
             for i := 1 to Length(LineSeparators) do
-              Include(FirstCharSet, byte(LineSeparators[i]));
+              Include(FirstCharSet, Byte(LineSeparators[i]));
             {$ELSE}
             FirstCharSet := FirstCharSet + RegExprLineSeparatorsSet;
             {$ENDIF}
@@ -6876,8 +6876,8 @@ begin
           if Ord(ch) <= $FF then
           {$ENDIF}
           begin
-            Include(FirstCharSet, byte(ch));
-            Include(FirstCharSet, byte(InvertCase(ch)));
+            Include(FirstCharSet, Byte(ch));
+            Include(FirstCharSet, Byte(InvertCase(ch)));
           end;
           Exit;
         end;
@@ -6888,7 +6888,7 @@ begin
           {$IFDEF UnicodeRE}
           if Ord(ch) <= $FF then
           {$ENDIF}
-            Include(FirstCharSet, byte(ch));
+            Include(FirstCharSet, Byte(ch));
           Exit;
         end;
 
@@ -7035,11 +7035,11 @@ begin
 
       OP_ANYLINEBREAK:
         begin
-          Include(FirstCharSet, byte(10));
-          Include(FirstCharSet, byte(13));
-          Include(FirstCharSet, byte($0B));
-          Include(FirstCharSet, byte($0C));
-          Include(FirstCharSet, byte($85));
+          Include(FirstCharSet, Byte(10));
+          Include(FirstCharSet, Byte(13));
+          Include(FirstCharSet, Byte($0B));
+          Include(FirstCharSet, Byte($0C));
+          Include(FirstCharSet, Byte($85));
         end;
 
       else
@@ -7059,7 +7059,7 @@ procedure TRegExpr.InitCharCheckers;
 var
   Cnt: Integer;
   //
-  function Add(AChecker: TRegExprCharChecker): byte;
+  function Add(AChecker: TRegExprCharChecker): Byte;
   begin
     Inc(Cnt);
     if Cnt > High(CharCheckers) then
@@ -7333,7 +7333,7 @@ begin
     Result := AChar;
 end;
 
-function TRegExpr.DumpCheckerIndex(N: byte): RegExprString;
+function TRegExpr.DumpCheckerIndex(N: Byte): RegExprString;
 begin
   Result := '?';
   if N = CheckerIndex_Word       then Result := '\w' else
@@ -7370,7 +7370,7 @@ var
   next: PRegExprChar;
   i, NLen, CurIndent: Integer;
   Diff: PtrInt;
-  iByte: byte;
+  iByte: Byte;
   ch, ch2: REChar;
 begin
   if not IsProgrammOk then
@@ -7426,7 +7426,7 @@ begin
           OpKind_MetaClass:
             begin
               Inc(s);
-              Result := Result + DumpCheckerIndex(byte(s^)) + ' ';
+              Result := Result + DumpCheckerIndex(Byte(s^)) + ' ';
               Inc(s);
             end;
           OpKind_Char:
