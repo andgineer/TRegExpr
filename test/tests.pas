@@ -75,6 +75,7 @@ type
     procedure TestBraces;
     procedure TestLoop;
     procedure TestReferences;
+    procedure TestSubCall;
     procedure TestNamedGroups;
     procedure TestRecurseAndCaptures;
     procedure TestIsFixedLength;
@@ -935,6 +936,9 @@ begin
 
   RE.AllowUnsafeLookBehind := False;
   TestBadRegex('No Error for var-len look behind with capture', '.(?<=(.+))', 153);
+
+  TestBadRegex('value for reference to big', '()\9999999999999999999999999999999999999999999999999999()');
+  TestBadRegex('value for reference to big', '()\g9999999999999999999999999999999999999999999999999999()');
 end;
 
 procedure TTestRegexpr.TestModifiers;
@@ -1359,6 +1363,35 @@ begin
              '(?i)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)\g11',
              'x123456789ABCbD',   [2,13,   2,1, 3,1, 4,1, 5,1, 6,1, 7,1, 8,1, 9,1, 10,1,  11,1,  12,1,  13,1] );
 
+
+  IsMatching('Valid capture idx', '(.)(.)\2',  'aABBC',  [2,3,  2,1, 3,1]);
+  TestBadRegex('Invalid capture idx', '(.)(.)\3');
+
+  IsMatching('Valid capture idx \g', '(.)(.)\g2',  'aABBC',  [2,3,  2,1, 3,1]);
+  TestBadRegex('Invalid capture idx \c', '(.)(.)\g3');
+
+  IsMatching('Valid call idx', '(.)(.)(?2)',  'aABBC',  [1,3,  1,1, 2,1]);
+  TestBadRegex('Invalid call idx', '(.)(.)(?3)');
+
+end;
+
+procedure TTestRegexpr.TestSubCall;
+begin
+  IsMatching('simple call', '(1)_(?1)',  '1_1',  [1,3,  1,1]);
+  IsNotMatching('simple call', '(1)_(?1)',  '1_2'  );
+
+  IsMatching('recurse call', '(1(?1)?_)',  'x11__',  [2,4,  2,4]);
+  IsMatching('recurse call', '(1(?1)?_)',  'x11_1',  [3,2,  3,2]);
+  IsMatching('recurse call', '(1(?1)?_)',  'x1__',   [2,2,  2,2]);
+  IsMatching('recurse call', '(1(?1)?_)',  'x111__', [3,4,  3,4]);
+
+  IsMatching('deep recurse call', '(1(?1)?_)',  'x1111____',   [2,8,  2,8]);
+
+  IsMatching('side by side recurse call', '(1((?1)?)_((?1)?)2)',  'x1111_2_1_22_1_222_',   [3,15,  3,15, 4,9, 14,3]);
+
+  IsMatching('nested call to outer', '(1(2(3(?1)?))A)_((?3))',  '123A_3123',  [1,6,  1,4, 2,2, 3,1, 6,1]);
+  IsMatching('nested call to outer', '(1(2(3(?1)?))A)_((?3))',  '123A_3123A',  [1,10,  1,4, 2,2, 3,1, 6,5]);
+
 end;
 
 procedure TTestRegexpr.TestNamedGroups;
@@ -1433,6 +1466,9 @@ begin
       IsNotMatching('2 Named ref backwards',
                  '^' + n + n2 + r2 + r,      'axbxaxbx__' );
 
+      // forward ref
+      IsMatching('Named forward ref',
+                 '(?:(?:' + r + '|x)' + n + ')+_',      'abxababab_ab',  [3,8,  8,2]);
     end;
 
 
@@ -1463,6 +1499,9 @@ begin
       IsNotMatching('2 Named ref backwards',
                  '^' + n + n2 + c2 + c,      'axbxaxbx__' );
 
+      // forward call
+      IsMatching('Named forward call',
+                 '(?:(?:' + c + '|x)' + n + ')+_',      'abxabABab_ab',  [3,8,  8,2]);
     end;
   end;
 
@@ -1625,9 +1664,9 @@ begin
   HasLength('look behind is not (yet) fixed', '(?<=.A...)(X)',   -1);
 
   HasVarLenLookBehind('', '()A(?<=.(?<=\1))');
-  HasVarLenLookBehind('', '()A(?<=.(?<=\4))');
+  HasVarLenLookBehind('', '()()()()A(?<=.(?<=\4))');
   HasVarLenLookBehind('', '()A(?<=.(?<=(?1)))');
-  HasVarLenLookBehind('', '()A(?<=.(?<=(?4)))');
+  HasVarLenLookBehind('', '()()()()A(?<=.(?<=(?4)))');
   HasVarLenLookBehind('', '()A(?<=.(?<=(?R)))');
   HasFixedLookBehind ('', '()A(?<=.(?<=\p{Lu}))');
   HasFixedLookBehind ('', '()A(?<=.(?<=[a-x]))');

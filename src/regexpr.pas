@@ -206,15 +206,13 @@ const
   RegExprReplaceLineBreak: RegExprString = sLineBreak;
 
 const
-  // Max number of groups.
-  // Be carefull - don't use values which overflow OP_CLOSE* opcode
-  // (in this case you'll get compiler error).
-  // Big value causes slower work and more stack required.
-  RegexMaxGroups = 90;
+  // Increment/keep-capacity for the size of arrays holding 'Group' related data
+  // e.g., GrpBounds, GrpIndexes, GrpOpCodes and GrpNames
+  RegexGroupCountIncrement = 50;
 
-  // Max possible value for RegexMaxGroups.
+  // Max possible amount of groups.
   // Don't change it! It's defined by internal TRegExpr design.
-  RegexMaxMaxGroups = 255;
+  RegexMaxMaxGroups = MaxInt div 16;
 
   // Max depth of recursion for (?R) and (?1)..(?9)
   RegexMaxRecursion = 20;
@@ -282,8 +280,8 @@ type
 
 
   TRegExprBounds = record
-    GrpStart: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group start in InputString
-    GrpEnd: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to group end in InputString
+    GrpStart: array of PRegExprChar; // pointer to group start in InputString
+    GrpEnd: array of PRegExprChar; // pointer to group end in InputString
   end;
   TRegExprBoundsArray = array[0 .. RegexMaxRecursion] of TRegExprBounds;
 
@@ -296,6 +294,23 @@ type
     OuterInfo: PRegExprLookAroundInfo; // for nested lookaround
   end;
 
+  TRegExprGroupName = record
+    Name: RegExprString;
+    Index: integer;
+  end;
+
+  { TRegExprGroupNameList }
+
+  TRegExprGroupNameList = object
+    Names: array of TRegExprGroupName;
+    NameCount: integer;
+    // get index of group (subexpression) by name, to support named groups
+    // like in Python: (?P<name>regex)
+    function MatchIndexFromName(const AName: RegExprString): integer;
+    procedure Clear;
+    procedure Add(const AName: RegExprString; AnIndex: integer);
+  end;
+
   { TRegExpr }
 
   TRegExpr = class
@@ -305,17 +320,15 @@ type
     FAllowLiteralBraceWithoutRange: boolean;
     FMatchesCleared: Boolean;
     GrpBounds: TRegExprBoundsArray;
-    GrpIndexes: array [0 .. RegexMaxGroups - 1] of integer; // map global group index to _capturing_ group index
-    GrpNames: array [0 .. RegexMaxGroups - 1] of RegExprString; // names of groups, if non-empty
-    GrpAtomic: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is atomic (filled in Compile)
-    GrpBacktrackingAsAtom: array [0 .. RegexMaxGroups - 1] of boolean; // close of group[i] has set IsBacktrackingGroupAsAtom
+    GrpIndexes: array of integer; // map global group index to _capturing_ group index
+    GrpNames: TRegExprGroupNameList; // names of groups, if non-empty
+    GrpBacktrackingAsAtom: array of boolean; // close of group[i] has set IsBacktrackingGroupAsAtom
     IsBacktrackingGroupAsAtom: Boolean;  // Backtracking an entire atomic group that had matched.
     // Once the group matched it should not try any alternative matches within the group
     // If the pattern after the group fails, then the group fails (regardless of any alternative match in the group)
 
-    GrpOpCodes: array [0 .. RegexMaxGroups - 1] of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
-    GrpSubCalled: array [0 .. RegexMaxGroups - 1] of boolean; // group[i] is called by OP_SUBCALL*
-    GrpCount: integer;
+    GrpOpCodes: array of PRegExprChar; // pointer to opcode of group[i] (used by OP_SUBCALL*)
+    GrpCount, ParsedGrpCount: integer;
 
     {$IFDEF ComplexBraces}
     CurrentLoopInfoListPtr: POpLoopInfo;
@@ -340,6 +353,7 @@ type
     regMustString: RegExprString; // string which must occur in match (got from regMust/regMustLen)
     LookAroundInfoList: PRegExprLookAroundInfo;
     regNestedCalls: integer; // some attempt to prevent 'catastrophic backtracking' but not used
+    CurrentSubCalled: integer;
 
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
@@ -449,7 +463,7 @@ type
 
     procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure ClearInternalExecData; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    procedure ClearInternalIndexes; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure InitInternalGroupData; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: boolean): boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: boolean; var ARes: TRegExprCharset);
     procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -504,6 +518,9 @@ type
     // emit LongInt value
     procedure EmitInt(AValue: LongInt); {$IFDEF InlineFuncs}inline;{$ENDIF}
 
+    // for groups
+    function EmitNodeWithGroupIndex(op: TREOp; AIndex: integer): PRegExprChar;
+
     // emit back-reference to group
     function EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
 
@@ -519,7 +536,7 @@ type
 
     // regular expression, i.e. main body or parenthesized thing
     function ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
-    function DoParseReg(InBrackets: boolean; var FlagParse: integer; EndOnBracket: boolean; EnderOP: TReOp): PRegExprChar;
+    function DoParseReg(InBrackets, IndexBrackets: boolean; var FlagParse: integer; BeginGroupOp, EndGroupOP: TReOp): PRegExprChar;
 
     // one alternative of an | operator
     function ParseBranch(var FlagParse: integer): PRegExprChar;
@@ -761,10 +778,6 @@ type
     // not found in input string.
     property Match[Idx: integer]: RegExprString read GetMatch;
 
-    // get index of group (subexpression) by name, to support named groups
-    // like in Python: (?P<name>regex)
-    function MatchIndexFromName(const AName: RegExprString): integer;
-
     function MatchFromName(const AName: RegExprString): RegExprString;
 
     // Returns position in r.e. where compiler stopped.
@@ -890,7 +903,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 167;
+  REVersionMinor = 169;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -922,6 +935,7 @@ type
   TREGroupKind = (
     gkNormalGroup,
     gkNonCapturingGroup,
+    gkAtomicGroup,
     gkNamedGroupReference,
     gkComment,
     gkModifierString,
@@ -968,7 +982,24 @@ const
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
 
 type
+  TReGroupIndex = LongInt;
+  PReGroupIndex = ^TReGroupIndex;
+const
+  ReGroupIndexSz = SizeOf(TReGroupIndex) div SizeOf(REChar);
+
+type
   PtrPair = {$IFDEF UnicodeRE} ^LongInt; {$ELSE} ^Word; {$ENDIF}
+
+function GroupDataArraySize(ARequired, ACurrent: Integer): Integer;
+begin
+  Result := ARequired;
+  if Result > ACurrent then
+    Exit;
+
+  // Keep some extra
+  if Result > ACurrent - RegexGroupCountIncrement then
+    Result := ACurrent;
+end;
 
 function IsPairedBreak(p: PRegExprChar): boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 const
@@ -1645,32 +1676,22 @@ const
 
   OP_RECUR = TReOp(48);
 
-  // !!! Change OP_OPEN value if you add new opcodes !!!
+  OP_OPEN = TREOp(50); // Opening of group
+  OP_CLOSE = TREOp(51); // Closing of group
+  OP_OPEN_ATOMIC = TREOp(52); // Opening of group
+  OP_CLOSE_ATOMIC = TREOp(53); // Closing of group
 
-  OP_OPEN = TREOp(50); // Opening of group; OP_OPEN+i is for group i
-  OP_OPEN_FIRST = Succ(OP_OPEN);
-  OP_OPEN_LAST = TREOp(Ord(OP_OPEN) + RegexMaxGroups - 1);
+  OP_LOOKAHEAD = TREOp(55);
+  OP_LOOKAHEAD_NEG = TREOp(56);
+  OP_LOOKAHEAD_END = TREOp(57);
+  OP_LOOKBEHIND = TREOp(58);
+  OP_LOOKBEHIND_NEG = TREOp(59);
+  OP_LOOKBEHIND_END = TREOp(60);
+  OP_LOOKAROUND_OPTIONAL = TREOp(61);
 
-  OP_CLOSE = Succ(OP_OPEN_LAST); // Closing of group; OP_CLOSE+i is for group i
-  OP_CLOSE_FIRST = Succ(OP_CLOSE);
-  OP_CLOSE_LAST = TReOp(Ord(OP_CLOSE) + RegexMaxGroups - 1);
+  OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
 
-  OP_LOOKAHEAD = Succ(OP_CLOSE_LAST);
-  OP_LOOKAHEAD_NEG = Succ(OP_LOOKAHEAD);
-  OP_LOOKAHEAD_END = Succ(OP_LOOKAHEAD_NEG);
-  OP_LOOKBEHIND = Succ(OP_LOOKAHEAD_END);
-  OP_LOOKBEHIND_NEG = Succ(OP_LOOKBEHIND);
-  OP_LOOKBEHIND_END = Succ(OP_LOOKBEHIND_NEG);
-  OP_LOOKAROUND_OPTIONAL = Succ(OP_LOOKBEHIND_END);
-
-  OP_SUBCALL = Succ(OP_LOOKAROUND_OPTIONAL); // Call of subroutine; OP_SUBCALL+i is for group i
-  OP_SUBCALL_FIRST = Succ(OP_SUBCALL);
-  OP_SUBCALL_LAST =
-    {$IFDEF UnicodeRE}
-    TReOp(Ord(OP_SUBCALL) + RegexMaxGroups - 1);
-    {$ELSE}
-    High(REChar); // must fit to 0..255 range
-    {$ENDIF}
+  OP_NONE = high(TREOp);
 
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
@@ -1950,6 +1971,39 @@ begin
 end; { of constructor TRegExpr.Create
   -------------------------------------------------------------- }
 
+{ TRegExprGroupNameList }
+
+function TRegExprGroupNameList.MatchIndexFromName(const AName: RegExprString
+  ): integer;
+var
+  i: integer;
+begin
+  for i := 0 to NameCount - 1 do
+    if Names[i].Name = AName then
+    begin
+      Result := Names[i].Index;
+      Exit;
+    end;
+  Result := -1;
+end;
+
+procedure TRegExprGroupNameList.Clear;
+begin
+  NameCount := 0;
+  if Length(Names) > RegexGroupCountIncrement then
+    SetLength(Names, RegexGroupCountIncrement);
+end;
+
+procedure TRegExprGroupNameList.Add(const AName: RegExprString; AnIndex: integer
+  );
+begin
+  if NameCount >= Length(Names) then
+    SetLength(Names, Length(Names) + 1 + RegexGroupCountIncrement);
+  Names[NameCount].Name := AName;
+  Names[NameCount].Index := AnIndex;
+  inc(NameCount);
+end;
+
 {$IFDEF OverMeth}
 constructor TRegExpr.Create(const AExpression: RegExprString);
 begin
@@ -1982,36 +2036,41 @@ end; { of procedure TRegExpr.SetExpression
 
 function TRegExpr.GetSubExprCount: integer;
 begin
+  Result := -1;
+  if Length(GrpIndexes) = 0 then
+    Exit;
   // if nothing found, we must return -1 per TRegExpr docs
-  if GrpBounds[0].GrpStart[0] = nil then
-    Result := -1
-  else
+  if (GrpBounds[0].GrpStart[0] <> nil) then
     Result := GrpCount;
 end;
 
 function TRegExpr.GetMatchPos(Idx: integer): PtrInt;
 begin
+  Result := -1;
+  if Length(GrpIndexes) = 0 then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
-    Result := GrpBounds[0].GrpStart[Idx] - fInputStart + 1
-  else
-    Result := -1;
+    Result := GrpBounds[0].GrpStart[Idx] - fInputStart + 1;
 end; { of function TRegExpr.GetMatchPos
   -------------------------------------------------------------- }
 
 function TRegExpr.GetMatchLen(Idx: integer): PtrInt;
 begin
+  Result := -1;
+  if Length(GrpIndexes) = 0 then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
-    Result := GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx]
-  else
-    Result := -1;
+    Result := GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx];
 end; { of function TRegExpr.GetMatchLen
   -------------------------------------------------------------- }
 
 function TRegExpr.GetMatch(Idx: integer): RegExprString;
 begin
   Result := '';
+  if Length(GrpIndexes) = 0 then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) and
      (GrpBounds[0].GrpEnd[Idx] > GrpBounds[0].GrpStart[Idx])
@@ -2020,24 +2079,14 @@ begin
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
 
-function TRegExpr.MatchIndexFromName(const AName: RegExprString): integer;
-var
-  i: integer;
-begin
-  for i := 1 {not 0} to GrpCount do
-    if GrpNames[i] = AName then
-    begin
-      Result := i;
-      Exit;
-    end;
-  Result := -1;
-end;
-
 function TRegExpr.MatchFromName(const AName: RegExprString): RegExprString;
 var
   Idx: integer;
 begin
-  Idx := MatchIndexFromName(AName);
+  Result := '';
+  if Length(GrpIndexes) = 0 then
+    Exit;
+  Idx := GrpNames.MatchIndexFromName(AName);
   if Idx >= 0 then
     Result := GetMatch(Idx)
   else
@@ -2524,13 +2573,19 @@ begin
     Inc(regCodeSize, RENumberSz);
 end;
 
+function TRegExpr.EmitNodeWithGroupIndex(op: TREOp; AIndex: integer): PRegExprChar;
+begin
+  Result := EmitNode(op);
+  EmitInt(AIndex);  // TReGroupIndex = LongInt;
+end;
+
 function TRegExpr.EmitGroupRef(AIndex: integer; AIgnoreCase: boolean): PRegExprChar;
 begin
   if AIgnoreCase then
     Result := EmitNode(OP_BSUBEXPCI)
   else
     Result := EmitNode(OP_BSUBEXP);
-  EmitC(REChar(AIndex));
+  EmitInt(AIndex);  // TReGroupIndex = LongInt;
 end;
 
 {$IFDEF FastUnicodeData}
@@ -3019,7 +3074,9 @@ begin
   regParse := nil; // for correct error handling
   regExactlyLen := nil;
 
-  ClearInternalIndexes;
+  GrpCount := 0;
+  ParsedGrpCount := 0;
+  GrpNames.Clear;
   fLastError := reeOk;
   fLastErrorOpcode := TREOp(0);
 
@@ -3049,18 +3106,22 @@ begin
     regCodeWork := nil;
 
     EmitC(OP_MAGIC);
-    if ParseReg(False, FlagTemp) = nil then
+    if ParseReg(False, FlagTemp) = nil then begin
+      regNumBrackets := 0; // Not calling InitInternalGroupData => array sizes not adjusted for FillChar
       Exit;
+    end;
 
     // Allocate memory
     GetMem(programm, regCodeSize * SizeOf(REChar));
+    InitInternalGroupData;
 
     // Second pass: emit opcode
     fSecondPass := True;
     fCompModifiers := fModifiers;
     regParse := ARegExp;
     regNumBrackets := 1;
-    GrpCount := 0;
+    GrpCount := ParsedGrpCount;
+    ParsedGrpCount := 0;
     regCode := programm;
     regCodeWork := programm + REOpSz;
 
@@ -3164,11 +3225,11 @@ end; { of function TRegExpr.CompileRegExpr
 
 function TRegExpr.ParseReg(InBrackets: boolean; var FlagParse: integer): PRegExprChar;
 begin
-  Result := DoParseReg(InBrackets, FlagParse, False, TReOp(0));
+  Result := DoParseReg(InBrackets, True, FlagParse, OP_OPEN, OP_CLOSE);
 end;
 
-function TRegExpr.DoParseReg(InBrackets: boolean; var FlagParse: integer;
-  EndOnBracket: boolean; EnderOP: TReOp): PRegExprChar;
+function TRegExpr.DoParseReg(InBrackets, IndexBrackets: boolean;
+  var FlagParse: integer; BeginGroupOp, EndGroupOP: TReOp): PRegExprChar;
 // regular expression, i.e. main body or parenthesized thing
 // Caller must absorb opening parenthesis.
 // Combining parenthesis handling with the base level of regular expression
@@ -3187,20 +3248,26 @@ begin
   SavedModifiers := fCompModifiers;
 
   // Make an OP_OPEN node, if parenthesized.
+  ret := nil;
   if InBrackets then
   begin
-    if regNumBrackets >= RegexMaxGroups then
-    begin
-      Error(reeCompParseRegTooManyBrackets);
-      Exit;
-    end;
-    NBrackets := regNumBrackets;
-    Inc(regNumBrackets);
-    ret := EmitNode(TREOp(Ord(OP_OPEN) + NBrackets));
-    GrpOpCodes[NBrackets] := ret;
-  end
-  else
-    ret := nil;
+    if IndexBrackets then begin
+      if regNumBrackets >= RegexMaxMaxGroups then
+      begin
+        Error(reeCompParseRegTooManyBrackets);
+        Exit;
+      end;
+      NBrackets := regNumBrackets;
+      Inc(regNumBrackets);
+      if BeginGroupOp <> OP_NONE then
+        ret := EmitNodeWithGroupIndex(BeginGroupOp, NBrackets);
+      if fSecondPass then
+        GrpOpCodes[NBrackets] := ret;
+    end
+    else
+    if BeginGroupOp <> OP_NONE then
+      ret := EmitNode(BeginGroupOp);
+  end;
 
   // Pick up the branches, linking them together.
   br := ParseBranch(FlagTemp);
@@ -3232,11 +3299,12 @@ begin
   end;
 
   // Make a closing node, and hook it on the end.
-  if EnderOP <> TReOp(0) then
-    ender := EmitNode(EnderOP)
-  else
-  if InBrackets then
-    ender := EmitNode(TREOp(Ord(OP_CLOSE) + NBrackets))
+  if InBrackets and (EndGroupOP <> OP_NONE) then begin
+    if IndexBrackets then
+      ender := EmitNodeWithGroupIndex(EndGroupOP, NBrackets)
+    else
+      ender := EmitNode(EndGroupOP);
+  end
   else
     ender := EmitNode(OP_EEND);
   Tail(ret, ender);
@@ -3250,7 +3318,7 @@ begin
   end;
 
   // Check for proper termination.
-  if InBrackets or EndOnBracket then
+  if InBrackets then
     if regParse^ <> ')' then
     begin
       Error(reeCompParseRegUnmatchedBrackets);
@@ -3258,7 +3326,7 @@ begin
     end
     else
       Inc(regParse); // skip trailing ')'
-  if (not (InBrackets or EndOnBracket)) and (regParse < fRegexEnd) then
+  if (not InBrackets) and (regParse < fRegexEnd) then
   begin
     if regParse^ = ')' then
       Error(reeCompParseRegUnmatchedBrackets2)
@@ -3442,7 +3510,7 @@ var
   function ParseBraceMinMax(var BMin, BMax: TREBracesArg): boolean;
   begin
     Result := DoParseBraceMinMax(BMin, BMax);
-    if BMin > BMax then
+    if Result and (BMin > BMax) then
     begin
       Error(reeBracesMinParamGreaterMax);
       Exit;
@@ -3820,6 +3888,20 @@ var
   CanBeRange: boolean;
   AddrOfLen: PLongInt;
 
+  function ParseNumber(var AParsePos: PRegExprChar; out ANumber: integer): boolean;
+  begin
+    Result := False;
+    ANumber := 0;
+    while (AParsePos^ >= '0') and (AParsePos^ <= '9') do
+    begin
+      if ANumber > (High(ANumber)-10) div 10 then
+        exit;
+      ANumber := ANumber * 10 + (Ord(AParsePos^) - Ord('0'));
+      inc(AParsePos);
+    end;
+    Result := True;
+  end;
+
   procedure EmitExactly(Ch: REChar);
   begin
     if fCompModifiers.I then
@@ -4126,9 +4208,8 @@ begin
             '>':
               begin
                 // atomic group: (?>regex)
-                GrpKind := gkNonCapturingGroup;
+                GrpKind := gkAtomicGroup;
                 Inc(regParse, 2);
-                GrpAtomic[regNumBrackets] := True;
               end;
             'P':
               begin
@@ -4155,9 +4236,11 @@ begin
                       GrpKind := gkSubCall;
                       FindGroupName(regParse + 3, fRegexEnd, ')', GrpName);
                       Inc(regParse, Length(GrpName) + 4);
-                      GrpIndex := MatchIndexFromName(GrpName);
-                      if GrpIndex < 1 then
-                        Error(reeNamedGroupBadRef);
+                      if fSecondPass then begin
+                        GrpIndex := GrpNames.MatchIndexFromName(GrpName);
+                        if GrpIndex < 1 then
+                          Error(reeNamedGroupBadRef);
+                      end;
                     end;
                   else
                     Error(reeNamedGroupBad);
@@ -4234,27 +4317,15 @@ begin
               begin
                 // subroutine call (?1)..(?99)
                 GrpKind := gkSubCall;
-                GrpIndex := Ord(NextCh) - Ord('0');
-                Inc(regParse, 2);
-                // support 2-digit group numbers
-                case regParse^ of
-                  ')':
-                    begin
-                      Inc(regParse);
-                    end;
-                  '0'..'9':
-                    begin
-                      GrpIndex := GrpIndex * 10 + Ord(regParse^) - Ord('0');
-                      if GrpIndex >= RegexMaxGroups then
-                        Error(reeBadSubCall);
-                      Inc(regParse);
-                      if regParse^ <> ')' then
-                        Error(reeBadSubCall);
-                      Inc(regParse);
-                    end
-                  else
-                    Error(reeBadRecursion);
+                Inc(regParse, 1);
+                if not ParseNumber(regParse, GrpIndex) or (regParse^ <> ')') then
+                begin
+                  Error(reeBadRecursion);
+                  Exit;
                 end;
+                Inc(regParse, 1);
+                if fSecondPass and (GrpIndex > GrpCount) then
+                  Error(reeBadSubCall);
               end;
             '''':
               begin
@@ -4273,9 +4344,11 @@ begin
                 GrpKind := gkSubCall;
                 FindGroupName(regParse + 2, fRegexEnd, ')', GrpName);
                 Inc(regParse, Length(GrpName) + 3);
-                GrpIndex := MatchIndexFromName(GrpName);
-                if GrpIndex < 1 then
-                  Error(reeNamedGroupBadRef);
+                if fSecondPass then begin
+                  GrpIndex := GrpNames.MatchIndexFromName(GrpName);
+                  if GrpIndex < 1 then
+                    Error(reeNamedGroupBadRef);
+                end;
               end;
             else
               Error(reeIncorrectSpecialBrackets);
@@ -4285,26 +4358,30 @@ begin
         // B: process found kind of brackets
         case GrpKind of
           gkNormalGroup,
-          gkNonCapturingGroup:
+          gkNonCapturingGroup,
+          gkAtomicGroup:
             begin
               // skip this block for one of passes, to not double groups count;
               // must take first pass (we need GrpNames filled)
-              if (GrpKind = gkNormalGroup) then
-                if GrpCount < RegexMaxGroups - 1 then
+              if (GrpKind = gkNormalGroup) then begin
+                Inc(ParsedGrpCount);
+                if fSecondPass then begin
+                  GrpIndexes[ParsedGrpCount] := regNumBrackets;
+                end
+                else
+                if (GrpName <> '') then
                 begin
-                  Inc(GrpCount);
-                  if not fSecondPass then
-                  begin
-                    GrpIndexes[GrpCount] := regNumBrackets;
-                    if GrpName <> '' then
-                    begin
-                      if MatchIndexFromName(GrpName) >= 0 then
-                        Error(reeNamedGroupDupName);
-                      GrpNames[GrpCount] := GrpName;
-                    end;
-                  end;
+                  // first pass
+                  if GrpNames.MatchIndexFromName(GrpName) >= 0 then
+                    Error(reeNamedGroupDupName);
+                  GrpNames.Add(GrpName, ParsedGrpCount);
                 end;
-              ret := ParseReg(True, FlagTemp);
+              end;
+
+              if GrpKind = gkAtomicGroup then
+                ret := DoParseReg(True, True, FlagTemp, OP_OPEN_ATOMIC, OP_CLOSE_ATOMIC)
+              else
+                ret := ParseReg(True, FlagTemp);
               if ret = nil then
               begin
                 Result := nil;
@@ -4321,7 +4398,7 @@ begin
                 gkLookaheadNeg: ret := EmitNode(OP_LOOKAHEAD_NEG);
               end;
 
-              Result := DoParseReg(False, FlagTemp, True, OP_LOOKAHEAD_END);
+              Result := DoParseReg(True, False, FlagTemp, OP_NONE, OP_LOOKAHEAD_END);
               if Result = nil then
                 Exit;
 
@@ -4342,8 +4419,8 @@ begin
               else
                 Inc(regCodeSize, ReOpLookBehindOptionsSz);
 
-              RegGrpCountBefore := GrpCount;
-              Result := DoParseReg(False, FlagTemp, True, OP_LOOKBEHIND_END);
+              RegGrpCountBefore := ParsedGrpCount;
+              Result := DoParseReg(True, False, FlagTemp, OP_NONE, OP_LOOKBEHIND_END);
               if Result = nil then
                 Exit;
 
@@ -4355,7 +4432,7 @@ begin
                 if IsPartFixedLength(ret2, op, ALen, OP_LOOKBEHIND_END, [flfSkipLookAround]) then
                   PReOpLookBehindOptions(regLookBehindOption)^.IsGreedy := OPT_LOOKBEHIND_FIXED
                 else
-                if (GrpCount > RegGrpCountBefore) and (not FAllowUnsafeLookBehind) then
+                if (ParsedGrpCount > RegGrpCountBefore) and (not FAllowUnsafeLookBehind) then
                   Error(reeLookaroundNotSafe)
                 else
                 if (FlagTemp and (FLAG_GREEDY)) = (FLAG_GREEDY) then
@@ -4370,8 +4447,8 @@ begin
 
           gkNamedGroupReference:
             begin
-              Len := MatchIndexFromName(GrpName);
-              if Len < 0 then
+              Len := GrpNames.MatchIndexFromName(GrpName);
+              if fSecondPass and (Len < 0) then
                 Error(reeNamedGroupBadRef);
               ret := EmitGroupRef(Len, fCompModifiers.I);
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
@@ -4432,7 +4509,7 @@ begin
             begin
               // set FLAG_HASWIDTH like for (?R)
               FlagParse := FlagParse or FLAG_HASWIDTH;
-              ret := EmitNode(TReOp(Ord(OP_SUBCALL) + GrpIndex));
+              ret := EmitNodeWithGroupIndex(OP_SUBCALL, GrpIndex);
             end;
         end; // case GrpKind of
       end;
@@ -4521,6 +4598,8 @@ begin
             end;
           '1' .. '9':
             begin
+              if fSecondPass and (Ord(regParse^) - Ord('0') > GrpCount) then
+                Error(reeBadReference);
               ret := EmitGroupRef(Ord(regParse^) - Ord('0'), fCompModifiers.I);
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
             end;
@@ -4535,10 +4614,10 @@ begin
                       '''': FindGroupName(regParse + 2, fRegexEnd, '''', GrpName);
                     end;
                     Inc(regParse, Length(GrpName) + 2);
-                    GrpIndex := MatchIndexFromName(GrpName);
-                    if GrpIndex < 1 then
+                    GrpIndex := GrpNames.MatchIndexFromName(GrpName);
+                    if fSecondPass and (GrpIndex < 1) then
                       Error(reeNamedGroupBadRef);
-                    ret := EmitNode(TReOp(Ord(OP_SUBCALL) + GrpIndex));
+                    ret := EmitNodeWithGroupIndex(OP_SUBCALL, GrpIndex);
                     FlagParse := FlagParse or FLAG_HASWIDTH;
                   end;
                 '{':
@@ -4546,22 +4625,23 @@ begin
                     // back-reference to named group
                     FindGroupName(regParse + 2, fRegexEnd, '}', GrpName);
                     Inc(regParse, Length(GrpName) + 2);
-                    GrpIndex := MatchIndexFromName(GrpName);
-                    if GrpIndex < 1 then
+                    GrpIndex := GrpNames.MatchIndexFromName(GrpName);
+                    if fSecondPass and  (GrpIndex < 1) then
                       Error(reeNamedGroupBadRef);
                     ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
                     FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
                   end;
                 '0'..'9':
                   begin
-                    GrpIndex := 0;
                     inc(regParse);
-                    while (regParse^ >= '0') and (regParse^ <= '9') do begin
-                      GrpIndex := GrpIndex * 10 + (Ord(regParse^) - Ord('0'));
-                      inc(regParse);
+                    if not ParseNumber(regParse, GrpIndex) then begin
+                      Error(reeBadReference);
+                      Exit;
                     end;
                     dec(regParse);
                     if GrpIndex = 0 then
+                      Error(reeBadReference);
+                    if fSecondPass and (GrpIndex > GrpCount) then
                       Error(reeBadReference);
                     ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
                     FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
@@ -4584,8 +4664,8 @@ begin
                   Error(reeBadReference);
               end;
               Inc(regParse, Length(GrpName) + 2);
-              GrpIndex := MatchIndexFromName(GrpName);
-              if GrpIndex < 1 then
+              GrpIndex := GrpNames.MatchIndexFromName(GrpName);
+              if fSecondPass and (GrpIndex < 1) then
                 Error(reeNamedGroupBadRef);
               ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
@@ -4793,7 +4873,7 @@ begin
 
     OP_BSUBEXP:
       begin // ###0.936
-        ArrayIndex := GrpIndexes[Ord(opnd^)];
+        ArrayIndex := GrpIndexes[PReGroupIndex(opnd)^];
         if ArrayIndex < 0 then
           Exit;
         CurStart := GrpBounds[regRecursion].GrpStart[ArrayIndex];
@@ -4818,7 +4898,7 @@ begin
 
     OP_BSUBEXPCI:
       begin // ###0.936
-        ArrayIndex := GrpIndexes[Ord(opnd^)];
+        ArrayIndex := GrpIndexes[PReGroupIndex(opnd)^];
         if ArrayIndex < 0 then
           Exit;
         CurStart := GrpBounds[regRecursion].GrpStart[ArrayIndex];
@@ -5132,6 +5212,9 @@ end;
 type
   TRegExprMatchPrimLocals =   record
     case TREOp of
+      OP_CLOSE_ATOMIC: (
+        IsAtomic: Boolean;
+      );
       {$IFDEF ComplexBraces}
       OP_LOOPENTRY: (
         LoopInfo: TOpLoopInfo;
@@ -5148,6 +5231,9 @@ type
       );
       OP_LOOKAHEAD_END, OP_LOOKBEHIND_END: (
         LookAroundInfoPtr: PRegExprLookAroundInfo;
+      );
+      OP_SUBCALL: (
+        savedCurrentSubCalled: integer;
       );
   end;
 
@@ -5172,7 +5258,6 @@ var
   BracesMin, BracesMax: integer;
   // we use integer instead of TREBracesArg to better support */+
   bound1, bound2: boolean;
-  saveSubCalled: boolean;
   Local: TRegExprMatchPrimLocals;
 begin
   Result := False;
@@ -5437,7 +5522,7 @@ begin
 
       OP_BSUBEXP:
         begin // ###0.936
-          no := Ord((scan + REOpSz + RENextOffSz)^);
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
@@ -5460,7 +5545,7 @@ begin
 
       OP_BSUBEXPCI:
         begin // ###0.936
-          no := Ord((scan + REOpSz + RENextOffSz)^);
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
@@ -5537,9 +5622,9 @@ begin
       OP_BACK:
         ;
 
-      OP_OPEN_FIRST .. OP_OPEN_LAST:
+      OP_OPEN, OP_OPEN_ATOMIC:
         begin
-          no := Ord(scan^) - Ord(OP_OPEN);
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           regCurrentGrp := no;
           save := GrpBounds[regRecursion].GrpStart[no];
           GrpBounds[regRecursion].GrpStart[no] := regInput;
@@ -5552,9 +5637,10 @@ begin
           Exit;
         end;
 
-      OP_CLOSE_FIRST .. OP_CLOSE_LAST:
+      OP_CLOSE, OP_CLOSE_ATOMIC:
         begin
-          no := Ord(scan^) - Ord(OP_CLOSE);
+          Local.IsAtomic := scan^ = OP_CLOSE_ATOMIC;
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           regCurrentGrp := -1;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
@@ -5563,7 +5649,7 @@ begin
 
           // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
           // in OP_CLOSE, without going to next opcode
-          if GrpSubCalled[no] then
+          if CurrentSubCalled = no then
           begin
             Result := True;
             Exit;
@@ -5572,7 +5658,7 @@ begin
           Result := MatchPrim(next);
           if not Result then begin// ###0.936
             GrpBounds[regRecursion].GrpEnd[no] := save;
-            if GrpAtomic[no] and not IsBacktrackingGroupAsAtom then begin
+            if Local.IsAtomic and not IsBacktrackingGroupAsAtom then begin
               GrpBacktrackingAsAtom[no] := True;
               IsBacktrackingGroupAsAtom := True;
             end;
@@ -6024,23 +6110,23 @@ begin
           if not bound1 then Exit;
         end;
 
-      OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
+      OP_SUBCALL:
         begin
           // call subroutine
-          no := GrpIndexes[Ord(scan^) - Ord(OP_SUBCALL)];
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
+          no := GrpIndexes[no];
           if no < 0 then Exit;
           save := GrpOpCodes[no];
           if save = nil then Exit;
           if regRecursion < RegexMaxRecursion then
           begin
-            // mark group in GrpSubCalled array so opcode can detect subcall
-            saveSubCalled := GrpSubCalled[no];
-            GrpSubCalled[no] := True;
+            Local.savedCurrentSubCalled := CurrentSubCalled;
+            CurrentSubCalled := no;
             Inc(regRecursion);
             FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
             bound1 := MatchPrim(save);
             Dec(regRecursion);
-            GrpSubCalled[no] := saveSubCalled;
+            CurrentSubCalled := Local.savedCurrentSubCalled;
           end
           else
             bound1 := False;
@@ -6137,37 +6223,42 @@ begin
   if FMatchesCleared then
     exit;
   FMatchesCleared := True;
-  FillChar(GrpBounds[0].GrpStart[0], SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
+  if Length(GrpBounds[0].GrpStart) > 0 then
+    FillChar(GrpBounds[0].GrpStart[0], SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
 end;
 
 procedure TRegExpr.ClearInternalExecData;
 begin
   fLastError := reeOk;
   FillChar(GrpBacktrackingAsAtom[0], SizeOf(GrpBacktrackingAsAtom[0])*regNumBrackets, 0);
-  FillChar(GrpSubCalled[0], SizeOf(GrpSubCalled[0])*regNumBrackets, 0);
   IsBacktrackingGroupAsAtom := False;
   {$IFDEF ComplexBraces}
   // no loops started
   CurrentLoopInfoListPtr := nil;
   {$ENDIF}
   LookAroundInfoList := nil;
+  CurrentSubCalled := -1;
 end;
 
-procedure TRegExpr.ClearInternalIndexes;
+procedure TRegExpr.InitInternalGroupData;
 var
-  i: integer;
+  BndLen, i: Integer;
 begin
-  FillChar(GrpBounds[0], SizeOf(GrpBounds[0]), 0);
-  FillChar(GrpAtomic, SizeOf(GrpAtomic), 0);
-  FillChar(GrpOpCodes, SizeOf(GrpOpCodes), 0);
-
-  for i := 0 to RegexMaxGroups - 1 do
-  begin
-    GrpIndexes[i] := -1;
-    GrpNames[i] := '';
+  BndLen := GroupDataArraySize(regNumBrackets, Length(GrpBounds[0].GrpStart));
+  for i := low(GrpBounds) to high(GrpBounds) do begin
+    SetLength(GrpBounds[i].GrpStart, BndLen);
+    SetLength(GrpBounds[i].GrpEnd, BndLen);
   end;
+
+  SetLength(GrpIndexes, GroupDataArraySize(regNumBrackets, Length(GrpIndexes)));
+  for i := 1 to regNumBrackets - 1 do
+    GrpIndexes[i] := -1;
   GrpIndexes[0] := 0;
-  GrpCount := 0;
+
+  SetLength(GrpOpCodes, GroupDataArraySize(regNumBrackets, Length(GrpOpCodes)));
+  SetLength(GrpBacktrackingAsAtom, GroupDataArraySize(regNumBrackets, Length(GrpBacktrackingAsAtom)));
+
+  GrpOpCodes[0] := nil;
 end;
 
 function TRegExpr.ExecPrim(AOffset: integer; ASlowChecks, ABackward: boolean;
@@ -6181,7 +6272,6 @@ begin
   // will lead to leaving ExecPrim without actual search. That is
   // important for ExecNext logic and so on.
   ClearMatches;
-  ClearInternalExecData;
 
   // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
   if programm = nil then
@@ -6210,6 +6300,8 @@ begin
   // Check that the start position is not longer than the line
   if (AOffset - 1) > (fInputEnd - fInputStart) then
     Exit;
+
+  ClearInternalExecData;
 
   Ptr := fInputStart + AOffset - 1;
   fInputContinue := Ptr;
@@ -6378,7 +6470,7 @@ var
       if Delimited then
       begin
         FindGroupName(p, TemplateEnd, '}', GrpName);
-        Result := MatchIndexFromName(GrpName);
+        Result := GrpNames.MatchIndexFromName(GrpName);
         Inc(p, Length(GrpName));
       end;
     end;
@@ -6395,9 +6487,11 @@ var
   procedure FindSubstGroupIndex(var p: PRegExprChar; var Idx: integer; var NumberFound: boolean);
   begin
     Idx := ParseVarName(p);
-    NumberFound := (Idx >= 0) and (Idx <= High(GrpIndexes));
-    if NumberFound then
-      Idx := GrpIndexes[Idx];
+    NumberFound := Idx >= 0;
+    if NumberFound and (Idx <= High(GrpIndexes)) then
+      Idx := GrpIndexes[Idx]
+    else
+      Idx := -1;
   end;
 
 type
@@ -6839,13 +6933,13 @@ begin
           Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;;
         end;
 
-      OP_OPEN_FIRST .. OP_OPEN_LAST:
+      OP_OPEN, OP_OPEN_ATOMIC:
         begin
           FillFirstCharSet(Next);
           Exit;
         end;
 
-      OP_CLOSE_FIRST .. OP_CLOSE_LAST:
+      OP_CLOSE, OP_CLOSE_ATOMIC:
         begin
           FillFirstCharSet(Next);
           Exit;
@@ -6935,8 +7029,11 @@ begin
         end;
 
       OP_RECUR,
-      OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
+      OP_SUBCALL:
         begin
+          // we cannot optimize // TODO: lookup the called group
+          FirstCharSet := RegExprAllSet; //###0.930
+          Exit;
         end;
 
       OP_ANYLINEBREAK:
@@ -7162,10 +7259,14 @@ begin
       Result := 'BSUBEXP';
     OP_BSUBEXPCI:
       Result := 'BSUBEXP/CI';
-    OP_OPEN_FIRST .. OP_OPEN_LAST:
-      Result := Format('OPEN[%d]', [Ord(op) - Ord(OP_OPEN)]);
-    OP_CLOSE_FIRST .. OP_CLOSE_LAST:
-      Result := Format('CLOSE[%d]', [Ord(op) - Ord(OP_CLOSE)]);
+    OP_OPEN:
+      Result := 'OPEN';
+    OP_CLOSE:
+      Result := 'CLOSE';
+    OP_OPEN_ATOMIC:
+      Result := 'OPEN/ATOMIC';
+    OP_CLOSE_ATOMIC:
+      Result := 'CLOSE/ATOMIC';
     OP_LOOKAHEAD:
       Result := 'LOOKAHEAD';
     OP_LOOKAHEAD_NEG:
@@ -7212,8 +7313,8 @@ begin
       Result := 'NOTCATEG';
     OP_RECUR:
       Result := 'RECURSION';
-    OP_SUBCALL_FIRST .. OP_SUBCALL_LAST:
-      Result := Format('SUBCALL[%d]', [Ord(op) - Ord(OP_SUBCALL)]);
+    OP_SUBCALL:
+      Result := 'SUBCALL';
     OP_ANYLINEBREAK:
       Result := 'ANYLINEBREAK';
   else
@@ -7285,10 +7386,10 @@ begin
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    if (((op >=OP_CLOSE_FIRST) and (op <= OP_CLOSE_LAST)) or (op = OP_LOOP) or (op = OP_LOOPNG)) and (CurIndent > 0) then
+    if ((op =OP_CLOSE) or (op = OP_CLOSE_ATOMIC) or (op = OP_LOOP) or (op = OP_LOOPNG)) and (CurIndent > 0) then
       dec(CurIndent, Indent);
     Result := Result + Format('%2d:%s %s', [s - programm, StringOfChar(' ', CurIndent), DumpOp(s^)]);
-    if (((op >=OP_OPEN_FIRST) and (op <= OP_OPEN_LAST)) or (op = OP_LOOPENTRY)) then
+    if ((op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_LOOPENTRY)) then
       inc(CurIndent, Indent);
     // Where, what.
     next := regNext(s);
@@ -7380,8 +7481,18 @@ begin
     end;
     if (op = OP_BSUBEXP) or (op = OP_BSUBEXPCI) then
     begin
-      Result := Result + ' \' + IntToStr(Ord(s^));
-      Inc(s);
+      Result := Result + ' \' + IntToStr(PReGroupIndex(s)^);
+      Inc(s, ReGroupIndexSz);
+    end;
+    if (op = OP_SUBCALL) then
+    begin
+      Result := Result + ' (?' + IntToStr(PReGroupIndex(s)^) + ')';
+      Inc(s, ReGroupIndexSz);
+    end;
+    if (op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_CLOSE) or (op = OP_CLOSE_ATOMIC) then
+    begin
+      Result := Result + ' [' + IntToStr(PReGroupIndex(s)^) + ']';
+      Inc(s, ReGroupIndexSz);
     end;
     if (op = OP_BRACES) or (op = OP_BRACESNG) or (op = OP_BRACES_POSS) then
     begin // ###0.941
@@ -7473,6 +7584,7 @@ var
   NotFixedLen: Boolean;
 begin
   Result := False;
+  NotFixedLen := False;
   ALen := 0;
   s := prog;
 
@@ -7521,17 +7633,31 @@ begin
           end;
         end;
 
-      OP_OPEN_FIRST..OP_OPEN_LAST:
+      OP_OPEN:
         begin
-          if not IsPartFixedLength(s, op, ASubLen, TREOp(ord(OP_CLOSE_FIRST) + ord(op) - ord(OP_OPEN_FIRST))) then
+          Inc(s, ReGroupIndexSz);
+          if not IsPartFixedLength(s, op, ASubLen, OP_CLOSE) then
             Exit;
           ALen := ALen + ASubLen;
-          Inc(s, REOpSz + RENextOffSz); // consume the OP_CLOSE
+          Inc(s, REOpSz + RENextOffSz + ReGroupIndexSz); // consume the OP_CLOSE
           continue;
         end;
 
-      OP_CLOSE_FIRST..OP_CLOSE_LAST:
-        continue;
+      OP_OPEN_ATOMIC:
+        begin
+          Inc(s, ReGroupIndexSz);
+          if not IsPartFixedLength(s, op, ASubLen, OP_CLOSE_ATOMIC) then
+            Exit;
+          ALen := ALen + ASubLen;
+          Inc(s, REOpSz + RENextOffSz + ReGroupIndexSz); // consume the OP_CLOSE_ATOMIC;
+          continue;
+        end;
+
+      OP_CLOSE, OP_CLOSE_ATOMIC:
+        begin
+          Inc(s, ReGroupIndexSz);
+          continue;
+        end;
 
       OP_LOOKAHEAD, OP_LOOKAHEAD_NEG:
         begin
@@ -7670,9 +7796,9 @@ begin
           Inc(s, REBracesArgSz * 2);
         end;
 
-      OP_BSUBEXP, OP_BSUBEXPCI:
+      OP_BSUBEXP, OP_BSUBEXPCI, OP_SUBCALL:
         begin
-          Inc(s, 1);
+          Inc(s, ReGroupIndexSz);
           if flfForceToStopAt in Flags then
             NotFixedLen := True
           else
