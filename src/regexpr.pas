@@ -1021,8 +1021,8 @@ begin
     , #$2029
     {$endif}:
       Result := True;
-    else
-      Result := False;
+  else
+    Result := False;
   end;
 end;
 
@@ -1045,8 +1045,8 @@ begin
   case AChar of
     ' ', #9, #$d, #$a:
       Result := True
-    else
-      Result := False;
+  else
+    Result := False;
   end;
 end;
 
@@ -1060,8 +1060,8 @@ begin
     'h', 'H',
     'R':
       Result := True
-    else
-      Result := False;
+  else
+    Result := False;
   end;
 end;
 
@@ -1333,10 +1333,8 @@ begin
       'X', 'x':
         AValue.X := IsOn;
     else
-      begin
-        Result := False;
-        Exit;
-      end;
+      Result := False;
+      Exit;
     end;
 end;
 
@@ -1421,8 +1419,8 @@ begin
   case ch of
     '^', '$', '.', '[', '(', ')', '|', '?', '+', '*', EscChar, '{':
       Result := True
-    else
-      Result := False
+  else
+    Result := False
   end;
 end;
 
@@ -1432,8 +1430,8 @@ begin
     '^', '$', '.', '[', '(', ')', '|', '?', '+', '*', EscChar, '{',
     ']', '}':
       Result := True
-    else
-      Result := False
+  else
+    Result := False
   end;
 end;
 
@@ -2277,8 +2275,8 @@ begin
   case AChar of
     'L', 'M', 'N', 'P', 'S', 'C', 'Z':
       Result := True;
-    else
-      Result := False;
+  else
+    Result := False;
   end;
 end;
 
@@ -2335,8 +2333,8 @@ begin
     'A' .. 'Z',
     '0' .. '9', '_':
       Result := True
-    else
-      Result := False;
+  else
+    Result := False;
   end;
   {$ENDIF}
 end;
@@ -2350,8 +2348,8 @@ begin
   case AChar of
     ' ', #$9, #$A, #$D, #$C:
       Result := True
-    else
-      Result := False;
+  else
+    Result := False;
   end;
   {$ENDIF}
 end;
@@ -2372,8 +2370,8 @@ begin
     {$ENDIF}
     #$b, #$c:
       Result := True;
-    else
-      Result := False;
+  else
+    Result := False;
   end;
   {$ENDIF}
 end;
@@ -2826,8 +2824,8 @@ begin
         end;
       {$ENDIF}
 
-      else
-        Error(reeBadOpcodeInCharClass);
+    else
+      Error(reeBadOpcodeInCharClass);
     end;
   until False; // assume that Buffer is ended correctly
 end;
@@ -3012,8 +3010,8 @@ begin
         end;
       {$ENDIF}
 
-      else
-        Error(reeBadOpcodeInCharClass);
+    else
+      Error(reeBadOpcodeInCharClass);
     end;
   until False; // assume that Buffer is ended correctly
 end;
@@ -3774,11 +3772,9 @@ begin
       Result := Ord(Ch) - Ord('a') + 10;
     'A' .. 'F':
       Result := Ord(Ch) - Ord('A') + 10;
-    else
-      begin
-        Result := 0;
-        Error(reeBadHexDigit);
-      end;
+  else
+    Result := 0;
+    Error(reeBadHexDigit);
   end;
 end;
 
@@ -3862,13 +3858,11 @@ begin
         end;
       end;
   else
+    Result := APtr^;
+    if (Result <> '_') and IsWordChar(Result) then
     begin
-      Result := APtr^;
-      if (Result <> '_') and IsWordChar(Result) then
-      begin
-        fLastErrorSymbol := Result;
-        Error(reeUnknownMetaSymbol);
-      end;
+      fLastErrorSymbol := Result;
+      Error(reeUnknownMetaSymbol);
     end;
   end;
 end;
@@ -4139,8 +4133,8 @@ begin
                     EmitC(REChar(CheckerIndex_NotHorzSep));
                   'R':
                     EmitC(REChar(CheckerIndex_AnyLineBreak));
-                  else
-                    Error(reeBadOpcodeInCharClass);
+                else
+                  Error(reeBadOpcodeInCharClass);
                 end;
               end
               else
@@ -4643,8 +4637,8 @@ begin
                     ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
                     FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
                   end;
-                else
-                  Error(reeBadReference);
+              else
+                Error(reeBadReference);
               end;
             end;
           'k':
@@ -4657,8 +4651,8 @@ begin
                   FindGroupName(regParse + 2, fRegexEnd, '''', GrpName);
                 '{':
                   FindGroupName(regParse + 2, fRegexEnd, '}', GrpName);
-                else
-                  Error(reeBadReference);
+              else
+                Error(reeBadReference);
               end;
               Inc(regParse, Length(GrpName) + 2);
               GrpIndex := GrpNames.MatchIndexFromName(GrpName);
@@ -5162,11 +5156,9 @@ begin
       end;
 
   else
-    begin // Oh dear. Called inappropriately.
-      Result := 0;
-      Error(reeRegRepeatCalledInappropriately);
-      Exit;
-    end;
+    Result := 0;
+    Error(reeRegRepeatCalledInappropriately);
+    Exit;
   end; { of case }
   regInput := scan;
 end; { of function TRegExpr.FindRepeated
@@ -6141,10 +6133,8 @@ begin
         end;
 
     else
-      begin
-        Error(reeMatchPrimMemoryCorruption);
-        Exit;
-      end;
+      Error(reeMatchPrimMemoryCorruption);
+      Exit;
     end; { of case scan^ }
     scan := next;
   end; { of while scan <> nil }
@@ -6636,10 +6626,8 @@ begin
               p1 := p0;
             end;
         else
-          begin
-            Inc(p0);
-            Inc(p1);
-          end;
+          Inc(p0);
+          Inc(p1);
         end;
       end
     end;
@@ -7042,12 +7030,10 @@ begin
           Include(FirstCharSet, Byte($85));
         end;
 
-      else
-        begin
-          fLastErrorOpcode := Oper;
-          Error(reeUnknownOpcodeInFillFirst);
-          Exit;
-        end;
+    else
+      fLastErrorOpcode := Oper;
+      Error(reeUnknownOpcodeInFillFirst);
+      Exit;
     end; { of case scan^}
     scan := Next;
   end; { of while scan <> nil}
@@ -7168,8 +7154,8 @@ begin
   case ch of
     'a' .. 'z':
       Result := True;
-    else
-      Result := False;
+  else
+    Result := False;
   end;
 end;
 
@@ -7178,8 +7164,8 @@ begin
   case ch of
     'A' .. 'Z':
       Result := True;
-    else
-      Result := False;
+  else
+    Result := False;
   end;
 end;
 
@@ -7460,8 +7446,8 @@ begin
               Result := Result + DumpCategoryChars(ch, ch2, False);
               Inc(s);
             end;
-          else
-            Error(reeDumpCorruptedOpcode);
+        else
+          Error(reeDumpCorruptedOpcode);
         end;
       until false;
     end;
@@ -7802,11 +7788,11 @@ begin
             Exit;
         end;
 
+    else
+      if flfForceToStopAt in Flags then
+        NotFixedLen := True
       else
-        if flfForceToStopAt in Flags then
-          NotFixedLen := True
-        else
-          Exit;
+        Exit;
     end;
   until False;
 end;
