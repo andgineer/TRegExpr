@@ -1605,60 +1605,56 @@ end; { of function RegExprSubExpressions
 const
   OP_MAGIC = TREOp(216); // programm signature
 
-  // name            opcode    opnd? meaning
-  OP_EEND = TREOp(0); // -    End of program
-  OP_BOL = TREOp(1); // -    Match "" at beginning of line
-  OP_EOL = TREOp(2); // -    Match "" at end of line
-  OP_ANY = TREOp(3); // -    Match any one character
-  OP_ANYOF = TREOp(4); // Str  Match any character in string Str
-  OP_ANYBUT = TREOp(5); // Str  Match any char. not in string Str
-  OP_BRANCH = TREOp(6); // Node Match this alternative, or the next
-  OP_BACK = TREOp(7); // -    Jump backward (Next < 0)
-  OP_EXACTLY = TREOp(8); // Str  Match string Str
-  OP_NOTHING = TREOp(9); // -    Match empty string
-  OP_STAR = TREOp(10); // Node Match this (simple) thing 0 or more times
-  OP_PLUS = TREOp(11); // Node Match this (simple) thing 1 or more times
-  OP_ANYDIGIT = TREOp(12); // -    Match any digit (equiv [0-9])
-  OP_NOTDIGIT = TREOp(13); // -    Match not digit (equiv [0-9])
-  OP_ANYLETTER = TREOp(14); // -    Match any letter from property WordChars
-  OP_NOTLETTER = TREOp(15); // -    Match not letter from property WordChars
-  OP_ANYSPACE = TREOp(16); // -    Match any space char (see property SpaceChars)
-  OP_NOTSPACE = TREOp(17); // -    Match not space char (see property SpaceChars)
+  OP_EEND = TREOp(0); // End of program
+  OP_BOL = TREOp(1); // Empty match at beginning of line
+  OP_EOL = TREOp(2); // Empty match at end of line
+  OP_ANY = TREOp(3); // Match any one character
+  OP_ANYOF = TREOp(4); // Match any character in string
+  OP_ANYBUT = TREOp(5); // Match any character not in string
+  OP_BRANCH = TREOp(6); // Match this alternative, or the next
+  OP_BACK = TREOp(7); // Jump backward (Next < 0)
+  OP_EXACTLY = TREOp(8); // Match string exactly
+  OP_NOTHING = TREOp(9); // Match empty string
+  OP_STAR = TREOp(10); // Match this (simple) thing 0 or more times
+  OP_PLUS = TREOp(11); // Match this (simple) thing 1 or more times
+  OP_ANYDIGIT = TREOp(12); // Match any digit (equiv [0-9])
+  OP_NOTDIGIT = TREOp(13); // Match not digit (equiv [0-9])
+  OP_ANYLETTER = TREOp(14); // Match any 'word' char
+  OP_NOTLETTER = TREOp(15); // Match any 'non-word' char
+  OP_ANYSPACE = TREOp(16); // Match any 'space' char
+  OP_NOTSPACE = TREOp(17); // Match 'not space' char
   OP_BRACES = TREOp(18);
   // Node,Min,Max Match this (simple) thing from Min to Max times.
   // Min and Max are TREBracesArg
-  OP_COMMENT = TREOp(19); // -    Comment ;)
-  OP_EXACTLYCI = TREOp(20); // Str  Match string Str case insensitive
-  OP_ANYOFCI = TREOp(21);
-  // Str  Match any character in string Str, case insensitive
-  OP_ANYBUTCI = TREOp(22);
-  // Str  Match any char. not in string Str, case insensitive
-  OP_LOOPENTRY = TREOp(23); // Node Start of loop (Node - LOOP for this loop)
-  OP_LOOP = TREOp(24); // Node,Min,Max,LoopEntryJmp - back jump for LOOPENTRY.
+  OP_COMMENT = TREOp(19); // Comment
+  OP_EXACTLY_CI = TREOp(20); // Match string, case insensitive
+  OP_ANYOF_CI = TREOp(21); // Match any character in string, case insensitive
+  OP_ANYBUT_CI = TREOp(22); // Match any char not in string, case insensitive
+  OP_LOOPENTRY = TREOp(23); // Start of loop (Node - LOOP for this loop)
+  OP_LOOP = TREOp(24); // Back jump for LOOPENTRY
   // Min and Max are TREBracesArg
   // Node - next node in sequence,
   // LoopEntryJmp - associated LOOPENTRY node addr
-  OP_EOL2 = TReOp(25); // like OP_EOL but also matches before final line-break
-  OP_CONTINUE_POS = TReOp(26); // \G last match end or "Exec(AOffset)"
+  OP_EOL2 = TReOp(25); // like OP_EOL, but also matches before final line-break
+  OP_CONTINUE_POS = TReOp(26); // \G, where offset is from last match end or from Exec(AOffset)
   OP_ANYLINEBREAK = TReOp(27); // \R
-  OP_BSUBEXP = TREOp(28);
-  // Idx  Match previously matched subexpression #Idx (stored as REChar) //###0.936
-  OP_BSUBEXPCI = TREOp(29); // Idx  -"- in case-insensitive mode
+  OP_BSUBEXP = TREOp(28); // Match previously matched subexpression #Idx (stored as REChar)
+  OP_BSUBEXP_CI = TREOp(29); // -"- in case-insensitive mode
 
-  // Non-Greedy Style Ops //###0.940
-  OP_STARNG = TREOp(30); // Same as OP_START but in non-greedy mode
-  OP_PLUSNG = TREOp(31); // Same as OP_PLUS but in non-greedy mode
-  OP_BRACESNG = TREOp(32); // Same as OP_BRACES but in non-greedy mode
-  OP_LOOPNG = TREOp(33); // Same as OP_LOOP but in non-greedy mode
+  // Non-greedy ops
+  OP_STAR_NG = TREOp(30); // Same as OP_START but in non-greedy mode
+  OP_PLUS_NG = TREOp(31); // Same as OP_PLUS but in non-greedy mode
+  OP_BRACES_NG = TREOp(32); // Same as OP_BRACES but in non-greedy mode
+  OP_LOOP_NG = TREOp(33); // Same as OP_LOOP but in non-greedy mode
 
   // Multiline mode \m
-  OP_BOLML = TREOp(34); // -    Match "" at beginning of line
-  OP_EOLML = TREOp(35); // -    Match "" at end of line
-  OP_ANYML = TREOp(36); // -    Match any one character
+  OP_BOL_ML = TREOp(34); // Match "" at beginning of line
+  OP_EOL_ML = TREOp(35); // Match "" at end of line
+  OP_ANY_ML = TREOp(36); // Match any one character
 
   // Word boundary
-  OP_BOUND = TREOp(37); // Match "" between words //###0.943
-  OP_NOTBOUND = TREOp(38); // Match "" not between words //###0.943
+  OP_BOUND = TREOp(37); // Match "" between word char and non-word char
+  OP_NOTBOUND = TREOp(38); // Opposite to OP_BOUND
 
   OP_ANYHORZSEP = TREOp(39); // Any horizontal whitespace \h
   OP_NOTHORZSEP = TREOp(40); // Not horizontal whitespace \H
@@ -1668,6 +1664,7 @@ const
   OP_ANYCATEGORY = TREOp(43); // \p{L}
   OP_NOTCATEGORY = TREOp(44); // \P{L}
 
+  // Possessive quantifiers
   OP_STAR_POSS = TReOp(45);
   OP_PLUS_POSS = TReOp(46);
   OP_BRACES_POSS = TReOp(47);
@@ -1689,7 +1686,7 @@ const
 
   OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
 
-  OP_NONE = high(TREOp);
+  OP_NONE = High(TREOp);
 
   // We work with p-code through pointers, compatible with PRegExprChar.
   // Note: all code components (TRENextOff, TREOp, TREBracesArg, etc)
@@ -2521,7 +2518,7 @@ begin
     PRENextOff(AlignToPtr(regCode))^ := 0; // Next "pointer" := nil
     Inc(regCode, RENextOffSz);
 
-    if (op = OP_EXACTLY) or (op = OP_EXACTLYCI) then
+    if (op = OP_EXACTLY) or (op = OP_EXACTLY_CI) then
       regExactlyLen := PLongInt(regCode)
     else
       regExactlyLen := nil;
@@ -2577,7 +2574,7 @@ end;
 function TRegExpr.EmitGroupRef(AIndex: Integer; AIgnoreCase: Boolean): PRegExprChar;
 begin
   if AIgnoreCase then
-    Result := EmitNode(OP_BSUBEXPCI)
+    Result := EmitNode(OP_BSUBEXP_CI)
   else
     Result := EmitNode(OP_BSUBEXP);
   EmitInt(AIndex);  // TReGroupIndex = LongInt;
@@ -3157,14 +3154,14 @@ begin
       // If a pattern matches, then the ".*" will always go forward to where the
       // rest of the pattern starts matching
       // OP_ANY is "ModifierS=True"
-      if (PREOp(scan)^ = OP_STAR) or (PREOp(scan)^ = OP_STARNG) or (PREOp(scan)^ = OP_STAR_POSS) then begin
+      if (PREOp(scan)^ = OP_STAR) or (PREOp(scan)^ = OP_STAR_NG) or (PREOp(scan)^ = OP_STAR_POSS) then begin
         scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
         if PREOp(scanTemp)^ = OP_ANY then
           regAnchored := raOnlyOnce;
       end
       else
       // "{0,} is the same as ".*". So the same optimization applies
-      if (PREOp(scan)^ = OP_BRACES) or (PREOp(scan)^ = OP_BRACESNG) or (PREOp(scan)^ = OP_BRACES_POSS) then begin
+      if (PREOp(scan)^ = OP_BRACES) or (PREOp(scan)^ = OP_BRACES_NG) or (PREOp(scan)^ = OP_BRACES_POSS) then begin
         scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
         if (PREBracesArg(scanTemp)^ = 0)  // BracesMinCount
         and (PREBracesArg(scanTemp + REBracesArgSz)^ = MaxBracesArg)  // BracesMaxCount
@@ -3411,7 +3408,7 @@ var
     Error(reeComplexBracesNotImplemented);
     {$ELSE}
     if ANonGreedyOp then
-      TheOp := OP_LOOPNG
+      TheOp := OP_LOOP_NG
     else
       TheOp := OP_LOOP;
     InsertOperator(OP_LOOPENTRY, Result, REOpSz + RENextOffSz);
@@ -3446,7 +3443,7 @@ var
       TheOp := OP_BRACES_POSS
     else
     if ANonGreedyOp then
-      TheOp := OP_BRACESNG
+      TheOp := OP_BRACES_NG
     else
       TheOp := OP_BRACES;
     InsertOperator(TheOp, Result, REOpSz + RENextOffSz + REBracesArgSz * 2);
@@ -3618,7 +3615,7 @@ begin
             TheOp := OP_STAR_POSS
           else
           if NonGreedyOp then
-            TheOp := OP_STARNG
+            TheOp := OP_STAR_NG
           else
             TheOp := OP_STAR;
           InsertOperator(TheOp, Result, REOpSz + RENextOffSz);
@@ -3662,7 +3659,7 @@ begin
             TheOp := OP_PLUS_POSS
           else
           if NonGreedyOp then
-            TheOp := OP_PLUSNG
+            TheOp := OP_PLUS_NG
           else
             TheOp := OP_PLUS;
           InsertOperator(TheOp, Result, REOpSz + RENextOffSz);
@@ -3896,7 +3893,7 @@ var
   procedure EmitExactly(Ch: REChar);
   begin
     if fCompModifiers.I then
-      ret := EmitNode(OP_EXACTLYCI)
+      ret := EmitNode(OP_EXACTLY_CI)
     else
       ret := EmitNode(OP_EXACTLY);
     EmitInt(1);
@@ -3999,7 +3996,7 @@ begin
         {$IFDEF UseLineSep} or (fLineSeparators = '') {$ENDIF} then
         ret := EmitNode(OP_BOL)
       else
-        ret := EmitNode(OP_BOLML);
+        ret := EmitNode(OP_BOL_ML);
      end;
 
     '$':
@@ -4008,7 +4005,7 @@ begin
         {$IFDEF UseLineSep} or (fLineSeparators = '') {$ENDIF} then
         ret := EmitNode(OP_EOL)
       else
-        ret := EmitNode(OP_EOLML);
+        ret := EmitNode(OP_EOL_ML);
      end;
 
     '.':
@@ -4020,7 +4017,7 @@ begin
       end
       else
       begin // not /s, so emit [^:LineSeparators:]
-        ret := EmitNode(OP_ANYML);
+        ret := EmitNode(OP_ANY_ML);
         FlagParse := FlagParse or FLAG_HASWIDTH; // not so simple ;)
       end;
      end;
@@ -4030,13 +4027,13 @@ begin
         if regParse^ = '^' then
         begin // Complement of range.
           if fCompModifiers.I then
-            ret := EmitNode(OP_ANYBUTCI)
+            ret := EmitNode(OP_ANYBUT_CI)
           else
             ret := EmitNode(OP_ANYBUT);
           Inc(regParse);
         end
         else if fCompModifiers.I then
-          ret := EmitNode(OP_ANYOFCI)
+          ret := EmitNode(OP_ANYOF_CI)
         else
           ret := EmitNode(OP_ANYOF);
 
@@ -4728,7 +4725,7 @@ begin
         if Len = 1 then
           FlagParse := FlagParse or FLAG_SIMPLE;
         if fCompModifiers.I then
-          ret := EmitNode(OP_EXACTLYCI)
+          ret := EmitNode(OP_EXACTLY_CI)
         else
           ret := EmitNode(OP_EXACTLY);
         EmitInt(0);
@@ -4810,7 +4807,7 @@ begin
   case PREOp(p)^ of
     OP_ANY:
       begin
-        // note - OP_ANYML cannot be proceeded in FindRepeated because can skip
+        // note - OP_ANY_ML cannot be proceeded in FindRepeated because can skip
         // more than one char at once
         {$IFDEF UnicodeEx}
         for i := 1 to TheMax do
@@ -4837,7 +4834,7 @@ begin
         end;
       end;
 
-    OP_EXACTLYCI:
+    OP_EXACTLY_CI:
       begin // in opnd can be only ONE char !!!
         {
         // Alexey: commented because of https://github.com/andgineer/TRegExpr/issues/145
@@ -4887,7 +4884,7 @@ begin
         until Result >= AMax;
       end;
 
-    OP_BSUBEXPCI:
+    OP_BSUBEXP_CI:
       begin // ###0.936
         ArrayIndex := GrpIndexes[PReGroupIndex(opnd)^];
         if ArrayIndex < 0 then
@@ -5074,7 +5071,7 @@ begin
       end;
       {$ENDIF}
 
-    OP_ANYOFCI:
+    OP_ANYOF_CI:
       {$IFDEF UNICODEEX}
       begin
         i := 0;
@@ -5092,7 +5089,7 @@ begin
       end;
       {$ENDIF}
 
-    OP_ANYBUTCI:
+    OP_ANYBUT_CI:
       {$IFDEF UNICODEEX}
       begin
         i := 0;
@@ -5208,7 +5205,7 @@ type
       OP_LOOPENTRY: (
         LoopInfo: TOpLoopInfo;
       );
-      OP_LOOP: ( // and OP_LOOPNG
+      OP_LOOP: ( // and OP_LOOP_NG
         LoopInfoListPtr: POpLoopInfo;
       );
       {$ENDIF}
@@ -5317,7 +5314,7 @@ begin
           end;
         end;
 
-      OP_BOLML:
+      OP_BOL_ML:
         if regInput > fInputStart then
         begin
           if ((regInput - 1) <= fInputStart) or
@@ -5331,7 +5328,7 @@ begin
           end;
         end;
 
-      OP_EOLML:
+      OP_EOL_ML:
         if regInput < fInputEnd then
         begin
           if not IsPairedBreak(regInput) then
@@ -5355,7 +5352,7 @@ begin
           {$ENDIF}
         end;
 
-      OP_ANYML:
+      OP_ANY_ML:
         begin
           if (regInput >= fInputCurrentEnd) or
             IsPairedBreak(regInput) or
@@ -5459,7 +5456,7 @@ begin
           {$ENDIF}
         end;
 
-      OP_EXACTLYCI:
+      OP_EXACTLY_CI:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
           Len := PLongInt(opnd)^;
@@ -5532,7 +5529,7 @@ begin
           regInput := save;
         end;
 
-      OP_BSUBEXPCI:
+      OP_BSUBEXP_CI:
         begin // ###0.936
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           no := GrpIndexes[no];
@@ -5580,7 +5577,7 @@ begin
           {$ENDIF}
         end;
 
-      OP_ANYOFCI:
+      OP_ANYOF_CI:
         begin
           if (regInput >= fInputCurrentEnd) or
             not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
@@ -5592,7 +5589,7 @@ begin
           {$ENDIF}
         end;
 
-      OP_ANYBUTCI:
+      OP_ANYBUT_CI:
         begin
           if (regInput >= fInputCurrentEnd) or
             FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
@@ -5872,7 +5869,7 @@ begin
           Exit;
         end;
 
-      OP_LOOP, OP_LOOPNG:
+      OP_LOOP, OP_LOOP_NG:
         begin // ###0.940
           if CurrentLoopInfoListPtr = nil then begin
             Error(reeLoopWithoutEntry);
@@ -5948,7 +5945,7 @@ begin
         end;
       {$ENDIF}
 
-      OP_STAR, OP_PLUS, OP_BRACES, OP_STARNG, OP_PLUSNG, OP_BRACESNG:
+      OP_STAR, OP_PLUS, OP_BRACES, OP_STAR_NG, OP_PLUS_NG, OP_BRACES_NG:
         begin
           // Lookahead to avoid useless match attempts when we know
           // what character comes next.
@@ -5956,9 +5953,9 @@ begin
           if next^ = OP_EXACTLY then
             nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
           BracesMax := MaxInt; // infinite loop for * and + //###0.92
-          if (scan^ = OP_STAR) or (scan^ = OP_STARNG) then
+          if (scan^ = OP_STAR) or (scan^ = OP_STAR_NG) then
             BracesMin := 0 // star
-          else if (scan^ = OP_PLUS) or (scan^ = OP_PLUSNG) then
+          else if (scan^ = OP_PLUS) or (scan^ = OP_PLUS_NG) then
             BracesMin := 1 // plus
           else
           begin // braces
@@ -5967,10 +5964,10 @@ begin
           end;
           save := regInput;
           opnd := scan + REOpSz + RENextOffSz;
-          if (scan^ = OP_BRACES) or (scan^ = OP_BRACESNG) then
+          if (scan^ = OP_BRACES) or (scan^ = OP_BRACES_NG) then
             Inc(opnd, 2 * REBracesArgSz);
 
-          if (scan^ = OP_PLUSNG) or (scan^ = OP_STARNG) or (scan^ = OP_BRACESNG) then
+          if (scan^ = OP_PLUS_NG) or (scan^ = OP_STAR_NG) or (scan^ = OP_BRACES_NG) then
           begin
             // non-greedy mode
             BracesMax := FindRepeated(opnd, BracesMax);
@@ -6753,7 +6750,7 @@ begin
     Oper := PREOp(scan)^;
     case Oper of
       OP_BSUBEXP,
-      OP_BSUBEXPCI:
+      OP_BSUBEXP_CI:
         begin
           // we cannot optimize r.e. if it starts with back reference
           FirstCharSet := RegExprAllSet; //###0.930
@@ -6761,13 +6758,13 @@ begin
         end;
 
       OP_BOL,
-      OP_BOLML,
+      OP_BOL_ML,
       OP_CONTINUE_POS:
         ; // Exit; //###0.937
 
       OP_EOL,
       OP_EOL2,
-      OP_EOLML:
+      OP_EOL_ML:
         begin //###0.948 was empty in 0.947, was EXIT in 0.937
           Include(FirstCharSet, 0);
           if ModifierM then
@@ -6787,7 +6784,7 @@ begin
         ; //###0.943 ?!!
 
       OP_ANY,
-      OP_ANYML:
+      OP_ANY_ML:
         begin // we can better define ANYML !!!
           FirstCharSet := RegExprAllSet; //###0.930
           Exit;
@@ -6857,7 +6854,7 @@ begin
           Exit;
         end;
 
-      OP_EXACTLYCI:
+      OP_EXACTLY_CI:
         begin
           ch := (scan + REOpSz + RENextOffSz + RENumberSz)^;
           {$IFDEF UnicodeRE}
@@ -6894,14 +6891,14 @@ begin
           Exit;
         end;
 
-      OP_ANYOFCI:
+      OP_ANYOF_CI:
         begin
           GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, True, TempSet);
           FirstCharSet := FirstCharSet + TempSet;
           Exit;
         end;
 
-      OP_ANYBUTCI:
+      OP_ANYBUT_CI:
         begin
           GetCharSetFromCharClass(scan + REOpSz + RENextOffSz, True, TempSet);
           FirstCharSet := FirstCharSet + (RegExprAllSet - TempSet);
@@ -6965,7 +6962,7 @@ begin
         end;
 
       OP_LOOP,
-      OP_LOOPNG:
+      OP_LOOP_NG:
         begin //###0.940
           opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz * 2))^;
           min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
@@ -6977,12 +6974,12 @@ begin
       {$ENDIF}
 
       OP_STAR,
-      OP_STARNG,
+      OP_STAR_NG,
       OP_STAR_POSS: //###0.940
         FillFirstCharSet(scan + REOpSz + RENextOffSz);
 
       OP_PLUS,
-      OP_PLUSNG,
+      OP_PLUS_NG,
       OP_PLUS_POSS:
         begin //###0.940
           FillFirstCharSet(scan + REOpSz + RENextOffSz);
@@ -6990,7 +6987,7 @@ begin
         end;
 
       OP_BRACES,
-      OP_BRACESNG,
+      OP_BRACES_NG,
       OP_BRACES_POSS:
         begin //###0.940
           opnd := scan + REOpSz + RENextOffSz + REBracesArgSz * 2;
@@ -7182,20 +7179,20 @@ begin
       Result := 'EOL';
     OP_EOL2:
       Result := 'EOL2';
-    OP_BOLML:
-      Result := 'BOLML';
+    OP_BOL_ML:
+      Result := 'BOL_ML';
     OP_CONTINUE_POS:
       Result := 'CONTINUE_POS';
-    OP_EOLML:
-      Result := 'EOLML';
+    OP_EOL_ML:
+      Result := 'EOL_ML';
     OP_BOUND:
       Result := 'BOUND';
     OP_NOTBOUND:
       Result := 'NOTBOUND';
     OP_ANY:
       Result := 'ANY';
-    OP_ANYML:
-      Result := 'ANYML';
+    OP_ANY_ML:
+      Result := 'ANY_ML';
     OP_ANYLETTER:
       Result := 'ANYLETTER';
     OP_NOTLETTER:
@@ -7220,16 +7217,16 @@ begin
       Result := 'ANYOF';
     OP_ANYBUT:
       Result := 'ANYBUT';
-    OP_ANYOFCI:
-      Result := 'ANYOF/CI';
-    OP_ANYBUTCI:
-      Result := 'ANYBUT/CI';
+    OP_ANYOF_CI:
+      Result := 'ANYOF_CI';
+    OP_ANYBUT_CI:
+      Result := 'ANYBUT_CI';
     OP_BRANCH:
       Result := 'BRANCH';
     OP_EXACTLY:
       Result := 'EXACTLY';
-    OP_EXACTLYCI:
-      Result := 'EXACTLY/CI';
+    OP_EXACTLY_CI:
+      Result := 'EXACTLY_CI';
     OP_NOTHING:
       Result := 'NOTHING';
     OP_COMMENT:
@@ -7240,16 +7237,16 @@ begin
       Result := 'END';
     OP_BSUBEXP:
       Result := 'BSUBEXP';
-    OP_BSUBEXPCI:
-      Result := 'BSUBEXP/CI';
+    OP_BSUBEXP_CI:
+      Result := 'BSUBEXP_CI';
     OP_OPEN:
       Result := 'OPEN';
     OP_CLOSE:
       Result := 'CLOSE';
     OP_OPEN_ATOMIC:
-      Result := 'OPEN/ATOMIC';
+      Result := 'OPEN_ATOMIC';
     OP_CLOSE_ATOMIC:
-      Result := 'CLOSE/ATOMIC';
+      Result := 'CLOSE_ATOMIC';
     OP_LOOKAHEAD:
       Result := 'LOOKAHEAD';
     OP_LOOKAHEAD_NEG:
@@ -7275,15 +7272,15 @@ begin
       Result := 'LOOPENTRY';
     OP_LOOP:
       Result := 'LOOP';
-    OP_LOOPNG:
-      Result := 'LOOPNG';
+    OP_LOOP_NG:
+      Result := 'LOOP_NG';
     {$ENDIF}
-    OP_STARNG:
-      Result := 'STARNG';
-    OP_PLUSNG:
-      Result := 'PLUSNG';
-    OP_BRACESNG:
-      Result := 'BRACESNG';
+    OP_STAR_NG:
+      Result := 'STAR_NG';
+    OP_PLUS_NG:
+      Result := 'PLUS_NG';
+    OP_BRACES_NG:
+      Result := 'BRACES_NG';
     OP_STAR_POSS:
       Result := 'STAR_POSS';
     OP_PLUS_POSS:
@@ -7291,9 +7288,9 @@ begin
     OP_BRACES_POSS:
       Result := 'BRACES_POSS';
     OP_ANYCATEGORY:
-      Result := 'ANYCATEG';
+      Result := 'ANYCATEGORY';
     OP_NOTCATEGORY:
-      Result := 'NOTCATEG';
+      Result := 'NOTCATEGORY';
     OP_RECUR:
       Result := 'RECURSION';
     OP_SUBCALL:
@@ -7369,7 +7366,7 @@ begin
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    if ((op =OP_CLOSE) or (op = OP_CLOSE_ATOMIC) or (op = OP_LOOP) or (op = OP_LOOPNG)) and (CurIndent > 0) then
+    if ((op =OP_CLOSE) or (op = OP_CLOSE_ATOMIC) or (op = OP_LOOP) or (op = OP_LOOP_NG)) and (CurIndent > 0) then
       dec(CurIndent, Indent);
     Result := Result + Format('%2d:%s %s', [s - programm, StringOfChar(' ', CurIndent), DumpOp(s^)]);
     if ((op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_LOOPENTRY)) then
@@ -7390,7 +7387,7 @@ begin
       Result := Result + Format(' (%d) ', [(s - programm) + Diff]);
     end;
     Inc(s, REOpSz + RENextOffSz);
-    if (op = OP_ANYOF) or (op = OP_ANYOFCI) or (op = OP_ANYBUT) or (op = OP_ANYBUTCI) then
+    if (op = OP_ANYOF) or (op = OP_ANYOF_CI) or (op = OP_ANYBUT) or (op = OP_ANYBUT_CI) then
     begin
       repeat
         case s^ of
@@ -7451,7 +7448,7 @@ begin
         end;
       until false;
     end;
-    if (op = OP_EXACTLY) or (op = OP_EXACTLYCI) then
+    if (op = OP_EXACTLY) or (op = OP_EXACTLY_CI) then
     begin
       // Literal string, where present.
       NLen := PLongInt(s)^;
@@ -7462,7 +7459,7 @@ begin
         Inc(s);
       end;
     end;
-    if (op = OP_BSUBEXP) or (op = OP_BSUBEXPCI) then
+    if (op = OP_BSUBEXP) or (op = OP_BSUBEXP_CI) then
     begin
       Result := Result + ' \' + IntToStr(PReGroupIndex(s)^);
       Inc(s, ReGroupIndexSz);
@@ -7477,7 +7474,7 @@ begin
       Result := Result + ' [' + IntToStr(PReGroupIndex(s)^) + ']';
       Inc(s, ReGroupIndexSz);
     end;
-    if (op = OP_BRACES) or (op = OP_BRACESNG) or (op = OP_BRACES_POSS) then
+    if (op = OP_BRACES) or (op = OP_BRACES_NG) or (op = OP_BRACES_POSS) then
     begin // ###0.941
       // show min/max argument of braces operator
       Result := Result + Format('{%d,%d}', [PREBracesArg(AlignToInt(s))^,
@@ -7485,7 +7482,7 @@ begin
       Inc(s, REBracesArgSz * 2);
     end;
     {$IFDEF ComplexBraces}
-    if (op = OP_LOOP) or (op = OP_LOOPNG) then
+    if (op = OP_LOOP) or (op = OP_LOOP_NG) then
     begin // ###0.940
       Result := Result + Format(' -> (%d) {%d,%d}',
         [(s - programm - (REOpSz + RENextOffSz)) +
@@ -7685,15 +7682,15 @@ begin
       OP_BOUND,
       OP_NOTBOUND,
       OP_BOL,
-      OP_BOLML,
+      OP_BOL_ML,
       OP_EOL,
       OP_EOL2,
-      OP_EOLML,
+      OP_EOL_ML,
       OP_CONTINUE_POS:
         Continue;
 
       OP_ANY,
-      OP_ANYML,
+      OP_ANY_ML,
       OP_ANYDIGIT,
       OP_NOTDIGIT,
       OP_ANYLETTER,
@@ -7710,9 +7707,9 @@ begin
         end;
 
       OP_ANYOF,
-      OP_ANYOFCI,
+      OP_ANYOF_CI,
       OP_ANYBUT,
-      OP_ANYBUTCI:
+      OP_ANYBUT_CI:
         begin
           Inc(ALen);
           repeat
@@ -7750,7 +7747,7 @@ begin
         end;
 
       OP_EXACTLY,
-      OP_EXACTLYCI:
+      OP_EXACTLY_CI:
         begin
           N := PLongInt(s)^;
           Inc(ALen, N);
@@ -7767,7 +7764,7 @@ begin
         end;
 
       OP_BRACES,
-      OP_BRACESNG,
+      OP_BRACES_NG,
       OP_BRACES_POSS:
         begin
           // allow only d{n,n}
@@ -7779,7 +7776,7 @@ begin
           Inc(s, REBracesArgSz * 2);
         end;
 
-      OP_BSUBEXP, OP_BSUBEXPCI, OP_SUBCALL:
+      OP_BSUBEXP, OP_BSUBEXP_CI, OP_SUBCALL:
         begin
           Inc(s, ReGroupIndexSz);
           if flfForceToStopAt in Flags then
