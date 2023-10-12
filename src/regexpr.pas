@@ -461,9 +461,9 @@ type
     function DumpCheckerIndex(N: Byte): RegExprString;
     function DumpCategoryChars(ch, ch2: REChar; Positive: Boolean): RegExprString;
 
-    procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    procedure ClearInternalExecData; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    procedure InitInternalGroupData; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure ClearMatches;
+    procedure ClearInternalExecData;
+    procedure InitInternalGroupData;
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: Boolean): Boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: Boolean; var ARes: TRegExprCharset);
     procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
