@@ -778,6 +778,10 @@ type
     // not found in input string.
     property Match[Idx: Integer]: RegExprString read GetMatch;
 
+    // get index of group (subexpression) by name, to support named groups
+    // like in Python: (?P<name>regex)
+    function MatchIndexFromName(const AName: RegExprString): Integer;
+
     function MatchFromName(const AName: RegExprString): RegExprString;
 
     // Returns position in r.e. where compiler stopped.
@@ -903,7 +907,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 169;
+  REVersionMinor = 170;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -2070,6 +2074,11 @@ begin
     SetString(Result, GrpBounds[0].GrpStart[Idx], GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx]);
 end; { of function TRegExpr.GetMatch
   -------------------------------------------------------------- }
+
+function TRegExpr.MatchIndexFromName(const AName: RegExprString): Integer;
+begin
+  Result := GrpNames.MatchIndexFromName(AName);
+end;
 
 function TRegExpr.MatchFromName(const AName: RegExprString): RegExprString;
 var
