@@ -907,7 +907,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 170;
+  REVersionMinor = 171;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -2027,8 +2027,7 @@ begin
     fRegexEnd := fRegexStart + Length(fExpression);
     InvalidateProgramm;
   end;
-end; { of procedure TRegExpr.SetExpression
-  -------------------------------------------------------------- }
+end;
 
 function TRegExpr.GetSubExprCount: Integer;
 begin
@@ -2045,35 +2044,38 @@ begin
   Result := -1;
   if Length(GrpIndexes) = 0 then
     Exit;
+  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
     Result := GrpBounds[0].GrpStart[Idx] - fInputStart + 1;
-end; { of function TRegExpr.GetMatchPos
-  -------------------------------------------------------------- }
+end;
 
 function TRegExpr.GetMatchLen(Idx: Integer): PtrInt;
 begin
   Result := -1;
   if Length(GrpIndexes) = 0 then
     Exit;
+  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
     Result := GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx];
-end; { of function TRegExpr.GetMatchLen
-  -------------------------------------------------------------- }
+end;
 
 function TRegExpr.GetMatch(Idx: Integer): RegExprString;
 begin
   Result := '';
   if Length(GrpIndexes) = 0 then
     Exit;
+  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) and
      (GrpBounds[0].GrpEnd[Idx] > GrpBounds[0].GrpStart[Idx])
   then
     SetString(Result, GrpBounds[0].GrpStart[Idx], GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx]);
-end; { of function TRegExpr.GetMatch
-  -------------------------------------------------------------- }
+end;
 
 function TRegExpr.MatchIndexFromName(const AName: RegExprString): Integer;
 begin
