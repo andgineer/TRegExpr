@@ -778,6 +778,10 @@ type
     // not found in input string.
     property Match[Idx: Integer]: RegExprString read GetMatch;
 
+    // get index of group (subexpression) by name, to support named groups
+    // like in Python: (?P<name>regex)
+    function MatchIndexFromName(const AName: RegExprString): Integer;
+
     function MatchFromName(const AName: RegExprString): RegExprString;
 
     // Returns position in r.e. where compiler stopped.
@@ -903,7 +907,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 169;
+  REVersionMinor = 171;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -2023,8 +2027,7 @@ begin
     fRegexEnd := fRegexStart + Length(fExpression);
     InvalidateProgramm;
   end;
-end; { of procedure TRegExpr.SetExpression
-  -------------------------------------------------------------- }
+end;
 
 function TRegExpr.GetSubExprCount: Integer;
 begin
@@ -2041,35 +2044,43 @@ begin
   Result := -1;
   if Length(GrpIndexes) = 0 then
     Exit;
+  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
     Result := GrpBounds[0].GrpStart[Idx] - fInputStart + 1;
-end; { of function TRegExpr.GetMatchPos
-  -------------------------------------------------------------- }
+end;
 
 function TRegExpr.GetMatchLen(Idx: Integer): PtrInt;
 begin
   Result := -1;
   if Length(GrpIndexes) = 0 then
     Exit;
+  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
     Result := GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx];
-end; { of function TRegExpr.GetMatchLen
-  -------------------------------------------------------------- }
+end;
 
 function TRegExpr.GetMatch(Idx: Integer): RegExprString;
 begin
   Result := '';
   if Length(GrpIndexes) = 0 then
     Exit;
+  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
+    Exit;
   Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) and
      (GrpBounds[0].GrpEnd[Idx] > GrpBounds[0].GrpStart[Idx])
   then
     SetString(Result, GrpBounds[0].GrpStart[Idx], GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx]);
-end; { of function TRegExpr.GetMatch
-  -------------------------------------------------------------- }
+end;
+
+function TRegExpr.MatchIndexFromName(const AName: RegExprString): Integer;
+begin
+  Result := GrpNames.MatchIndexFromName(AName);
+end;
 
 function TRegExpr.MatchFromName(const AName: RegExprString): RegExprString;
 var
