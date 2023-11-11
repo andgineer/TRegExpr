@@ -7413,12 +7413,12 @@ var
   iByte: Byte;
   ch, ch2: REChar;
 begin
+  Result := '';
   if not IsProgrammOk then
     Exit;
 
   CurIndent := 0;
   op := OP_EXACTLY;
-  Result := '';
   s := regCodeWork;
   while op <> OP_EEND do
   begin // While that wasn't END last time...
