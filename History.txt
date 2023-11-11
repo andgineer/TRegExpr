@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.173 2023.11.11
+ -=- (+) Allow loops (*/+/{}) on potentially zero-len patterns
+ -=- (-) Fixed uninitialized Result in Dump()
+
  v. 1.169 2023.09.16
  -=- (^) Removed limit to "Max number of groups" (RegexMaxGroups).
  -=- (-) Fixed recursive sub calls. Sub call could return to early.
