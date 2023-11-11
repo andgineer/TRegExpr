@@ -320,6 +320,7 @@ type
     FAllowUnsafeLookBehind: Boolean;
     FAllowLiteralBraceWithoutRange: Boolean;
     FMatchesCleared: Boolean;
+    fRaiseForRuntimeError: Boolean;
     GrpBounds: TRegExprBoundsArray;
     GrpIndexes: array of Integer; // map global group index to _capturing_ group index
     GrpNames: TRegExprGroupNameList; // names of groups, if non-empty
@@ -578,7 +579,8 @@ type
     function MatchAtOnePos(APos: PRegExprChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
+    function ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function ExecPrimProtected(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 
     function GetSubExprCount: Integer;
     function GetMatchPos(Idx: Integer): PtrInt;
@@ -814,6 +816,10 @@ type
     property ReplaceLineEnd: RegExprString read fReplaceLineEnd write fReplaceLineEnd;
 
     property SlowChecksSizeMax: Integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
+
+    // Errors during Exec() return false and set LastError. This option allows
+    // them to raise an Exception
+    property RaiseForRuntimeError: Boolean read fRaiseForRuntimeError write fRaiseForRuntimeError;
 
     property AllowUnsafeLookBehind: Boolean read FAllowUnsafeLookBehind write FAllowUnsafeLookBehind;
 
@@ -1784,6 +1790,7 @@ const
   reeDumpCorruptedOpcode = 1011;
   reeLoopStackExceeded = 1014;
   reeLoopWithoutEntry = 1015;
+  reeUnknown = 1016;
 
 function TRegExpr.ErrorMsg(AErrorID: Integer): RegExprString;
 begin
@@ -1897,6 +1904,8 @@ begin
       Result := 'TRegExpr exec: loop stack exceeded';
     reeLoopWithoutEntry:
       Result := 'TRegExpr exec: loop without loop entry';
+    reeUnknown:
+      Result := 'TRegExpr exec: unknow error';
   else
     Result := 'Unknown error';
   end;
@@ -1955,6 +1964,7 @@ begin
 
   fSlowChecksSizeMax := 2000;
   FAllowUnsafeLookBehind := False;
+  fRaiseForRuntimeError := True;
 
   {$IFDEF UseLineSep}
   InitLineSepArray;
@@ -6249,7 +6259,8 @@ begin
   regNestedCalls := 0;
   regRecursion := 0;
   fInputCurrentEnd := fInputEnd;
-  Result := MatchPrim(regCodeWork);
+  Result := False;
+    Result := MatchPrim(regCodeWork);
   if Result then
   begin
     GrpBounds[0].GrpStart[0] := APos;
@@ -6302,6 +6313,33 @@ end;
 
 function TRegExpr.ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean;
   ATryMatchOnlyStartingBefore: Integer): Boolean;
+begin
+  if fRaiseForRuntimeError then begin
+    Result := ExecPrimProtected(AOffset, ASlowChecks, ABackward, ATryMatchOnlyStartingBefore);
+  end
+  else begin
+    try
+      Result := ExecPrimProtected(AOffset, ASlowChecks, ABackward, ATryMatchOnlyStartingBefore);
+    except
+      on E: EStackOverflow do begin
+        Result := False;
+        fLastError := reeLoopStackExceeded;
+        Error(reeLoopStackExceeded);
+      end;
+      on E: ERegExpr do begin
+        Result := False;
+        raise;
+      end;
+      else begin
+        fLastError := reeUnknown;
+        Error(reeUnknown);
+      end;
+    end;
+  end;
+end;
+
+function TRegExpr.ExecPrimProtected(AOffset: Integer; ASlowChecks,
+  ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 var
   Ptr: PRegExprChar;
 begin
