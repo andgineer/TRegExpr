@@ -87,6 +87,7 @@ interface
 {$IFDEF FPC}
   {$DEFINE FastUnicodeData} // Use arrays for UpperCase/LowerCase/IsWordChar, they take 320K more memory
 {$ENDIF}
+{ off $DEFINE RegExpWithStackOverflowCheck} // Check the recursion depth and abort matching before stack overflows (available only for some OS/CPU)
 {$DEFINE UseFirstCharSet} // Enable optimization, which finds possible first chars of input string
 {$DEFINE RegExpPCodeDump} // Enable method Dump() to show opcode as string
 {$IFNDEF FPC} // Not supported in FreePascal
@@ -114,6 +115,11 @@ interface
 {$IFDEF D8} {$DEFINE InlineFuncs} {$ENDIF}
 {$IFDEF FPC} {$DEFINE InlineFuncs} {$ENDIF}
 
+{$IFDEF RegExpWithStackOverflowCheck} // Define the stack checking algorithm for the current platform/CPU
+  {$IF defined(Linux) or defined(Windows)}{$IF defined(CPU386) or defined(CPUX86_64)}
+    {$DEFINE RegExpWithStackOverflowCheck_DecStack_Frame} // Stack-pointer decrements // use getframe over Sptr()
+  {$ENDIF}{$ENDIF}
+{$ENDIF}
 uses
   SysUtils, // Exception
   {$IFDEF D2009}
@@ -434,6 +440,9 @@ type
     CheckerIndex_LowerAZ: Byte;
     CheckerIndex_UpperAZ: Byte;
     CheckerIndex_AnyLineBreak: Byte;
+    {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+    StackLimit: Pointer;
+    {$ENDIF}
 
     {$IFDEF Compat}
     fUseUnicodeWordDetection: Boolean;
@@ -5298,6 +5307,14 @@ var
   Local: TRegExprMatchPrimLocals;
 begin
   Result := False;
+  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+  if get_frame < StackLimit then begin
+    error(reeLoopStackExceeded);
+    exit;
+  end;
+  {$ENDIF}
+
+
   {
   // Alexey: not sure it's ok for long searches in big texts, so disabled
   if regNestedCalls > MaxRegexBackTracking then
@@ -6260,7 +6277,12 @@ begin
   regRecursion := 0;
   fInputCurrentEnd := fInputEnd;
   Result := False;
-    Result := MatchPrim(regCodeWork);
+  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+  StackLimit := StackBottom;
+  if StackLimit <> nil then
+    StackLimit := StackLimit + 36000; // Add for any calls within the current MatchPrim // FPC has "STACK_MARGIN = 16384;", but we need to call Error, ..., raise
+  {$ENDIF}
+  Result := MatchPrim(regCodeWork);
   if Result then
   begin
     GrpBounds[0].GrpStart[0] := APos;

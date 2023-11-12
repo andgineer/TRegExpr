@@ -62,6 +62,7 @@ type
     procedure IsMatching(AErrorMessage: String; ARegEx, AInput: RegExprString;
       AExpectStartLenPairs: array of Integer; AOffset: integer = 1; AMustMatchBefore: integer = 0);
     procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AOffset: integer = 1; AMustMatchBefore: integer = 0);
+    procedure IsErrorOnMatch(AErrorMessage: String; ARegEx, AInput: RegExprString; AOffset: integer = 1; AMustMatchBefore: integer = 0; ExpErrorId: Integer = 0);
     procedure SetUp; override;
     procedure TearDown; override;
   published
@@ -886,6 +887,28 @@ begin
     IsFalse(AErrorMessage + ': Exec must give False, but found at ' + IntToStr(RE.MatchPos[0]), r);
 end;
 
+procedure TTestRegexpr.IsErrorOnMatch(AErrorMessage: String; ARegEx,
+  AInput: RegExprString; AOffset: integer; AMustMatchBefore: integer;
+  ExpErrorId: Integer);
+var
+  r: Boolean;
+begin
+  CompileRE(ARegEx);
+  RE.InputString:= AInput;
+  r := True;
+  try
+    r := RE.ExecPos(AOffset, AMustMatchBefore);
+  except
+    r := False;
+  end;
+
+  if r then
+    IsFalse(AErrorMessage + ': Exec must give False, but found at ' + IntToStr(RE.MatchPos[0]), r);
+
+  if ExpErrorId <> 0 then
+    AreEqual(AErrorMessage, ExpErrorId, RE.TestLastError);
+end;
+
 procedure TTestRegexpr.SetUp;
 begin
   inherited SetUp;
@@ -946,6 +969,9 @@ begin
 
   TestBadRegex('value for reference to big', '()\9999999999999999999999999999999999999999999999999999()');
   TestBadRegex('value for reference to big', '()\g9999999999999999999999999999999999999999999999999999()');
+
+  // Only if RegExpWithStackOverflowCheck is enabled and supported
+  //IsErrorOnMatch('Too Complex',   '^((b|a){1,5000}){1,5000}',   StringOfChar('a', 991*503)); // both factors are prime
 end;
 
 procedure TTestRegexpr.TestModifiers;
