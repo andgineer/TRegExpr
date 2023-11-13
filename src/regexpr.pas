@@ -3935,7 +3935,10 @@ var
     else
       ret := EmitNode(OP_EXACTLY);
     EmitInt(1);
-    EmitC(Ch);
+    if fCompModifiers.I then
+      EmitC(_UpperCase(Ch))
+    else
+      EmitC(Ch);
     FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
   end;
 
@@ -4793,7 +4796,10 @@ begin
         begin
           if not fCompModifiers.X or not IsIgnoredChar(regParse^) then
           begin
-            EmitC(regParse^);
+            if fCompModifiers.I then
+              EmitC(_UpperCase(regParse^))
+            else
+              EmitC(regParse^);
             if regCode <> @regDummy then
               Inc(regExactlyLen^);
           end;
@@ -4910,7 +4916,7 @@ begin
         end;
         if Result < TheMax then
         begin // ###0.931
-          InvChar := InvertCase(opnd^); // store in register
+          InvChar := _LowerCase(opnd^); // store in register
           while (Result < TheMax) and ((opnd^ = scan^) or (InvChar = scan^)) do
           begin
             Inc(Result);
@@ -5532,7 +5538,7 @@ begin
             Exit;
           Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
-          if (opnd^ <> regInput^) and (InvertCase(opnd^) <> regInput^) then
+          if (opnd^ <> regInput^) and (_LowerCase(opnd^) <> regInput^) then
             Exit;
           // ###0.929 begin
           no := Len;
@@ -5541,7 +5547,7 @@ begin
           begin
             Inc(save);
             Inc(opnd);
-            if (opnd^ <> save^) and (InvertCase(opnd^) <> save^) then
+            if (opnd^ <> save^) and (_LowerCase(opnd^) <> save^) then
               Exit;
             Dec(no);
           end;
