@@ -87,6 +87,7 @@ interface
 {$IFDEF FPC}
   {$DEFINE FastUnicodeData} // Use arrays for UpperCase/LowerCase/IsWordChar, they take 320K more memory
 {$ENDIF}
+{ off $DEFINE RegExpWithStackOverflowCheck} // Check the recursion depth and abort matching before stack overflows (available only for some OS/CPU)
 {$DEFINE UseFirstCharSet} // Enable optimization, which finds possible first chars of input string
 {$DEFINE RegExpPCodeDump} // Enable method Dump() to show opcode as string
 {$IFNDEF FPC} // Not supported in FreePascal
@@ -114,6 +115,11 @@ interface
 {$IFDEF D8} {$DEFINE InlineFuncs} {$ENDIF}
 {$IFDEF FPC} {$DEFINE InlineFuncs} {$ENDIF}
 
+{$IFDEF RegExpWithStackOverflowCheck} // Define the stack checking algorithm for the current platform/CPU
+  {$IF defined(Linux) or defined(Windows)}{$IF defined(CPU386) or defined(CPUX86_64)}
+    {$DEFINE RegExpWithStackOverflowCheck_DecStack_Frame} // Stack-pointer decrements // use getframe over Sptr()
+  {$ENDIF}{$ENDIF}
+{$ENDIF}
 uses
   SysUtils, // Exception
   {$IFDEF D2009}
@@ -274,6 +280,7 @@ type
   POpLoopInfo = ^TOpLoopInfo;
   TOpLoopInfo = record
     Count: Integer;
+    CurrentRegInput: PRegExprChar;
     OuterLoop: POpLoopInfo; // for nested loops
   end;
   {$ENDIF}
@@ -319,6 +326,7 @@ type
     FAllowUnsafeLookBehind: Boolean;
     FAllowLiteralBraceWithoutRange: Boolean;
     FMatchesCleared: Boolean;
+    fRaiseForRuntimeError: Boolean;
     GrpBounds: TRegExprBoundsArray;
     GrpIndexes: array of Integer; // map global group index to _capturing_ group index
     GrpNames: TRegExprGroupNameList; // names of groups, if non-empty
@@ -374,7 +382,7 @@ type
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
     regNumBrackets: Integer; // count of () brackets
-    regDummy: REChar; // dummy pointer, used to detect 1st/2nd pass of Compile
+    regDummy: array [0..8 div SizeOf(REChar)] of REChar; // dummy pointer, used to detect 1st/2nd pass of Compile
                       // if p=@regDummy, it is pass-1: opcode memory is not yet allocated
     programm: PRegExprChar; // pointer to opcode, =nil in pass-1
     regCode: PRegExprChar; // pointer to last emitted opcode; changing in pass-2, but =@regDummy in pass-1
@@ -432,6 +440,9 @@ type
     CheckerIndex_LowerAZ: Byte;
     CheckerIndex_UpperAZ: Byte;
     CheckerIndex_AnyLineBreak: Byte;
+    {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+    StackLimit: Pointer;
+    {$ENDIF}
 
     {$IFDEF Compat}
     fUseUnicodeWordDetection: Boolean;
@@ -577,7 +588,8 @@ type
     function MatchAtOnePos(APos: PRegExprChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
+    function ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function ExecPrimProtected(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 
     function GetSubExprCount: Integer;
     function GetMatchPos(Idx: Integer): PtrInt;
@@ -814,6 +826,10 @@ type
 
     property SlowChecksSizeMax: Integer read fSlowChecksSizeMax write fSlowChecksSizeMax;
 
+    // Errors during Exec() return false and set LastError. This option allows
+    // them to raise an Exception
+    property RaiseForRuntimeError: Boolean read fRaiseForRuntimeError write fRaiseForRuntimeError;
+
     property AllowUnsafeLookBehind: Boolean read FAllowUnsafeLookBehind write FAllowUnsafeLookBehind;
 
     // Make sure a { always is a range / don't allow unescaped literal usage
@@ -907,7 +923,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 171;
+  REVersionMinor = 173;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -1734,7 +1750,7 @@ const
   reeCompParseRegUnmatchedBrackets = 103;
   reeCompParseRegUnmatchedBrackets2 = 104;
   reeCompParseRegJunkOnEnd = 105;
-  reePlusStarOperandCouldBeEmpty = 106;
+  reeNotQuantifiable = 106;
   reeNestedQuantif = 107;
   reeBadHexDigit = 108;
   reeInvalidRange = 109;
@@ -1783,6 +1799,7 @@ const
   reeDumpCorruptedOpcode = 1011;
   reeLoopStackExceeded = 1014;
   reeLoopWithoutEntry = 1015;
+  reeUnknown = 1016;
 
 function TRegExpr.ErrorMsg(AErrorID: Integer): RegExprString;
 begin
@@ -1801,8 +1818,8 @@ begin
       Result := 'TRegExpr compile: ParseReg: unmatched ()';
     reeCompParseRegJunkOnEnd:
       Result := 'TRegExpr compile: ParseReg: junk at end';
-    reePlusStarOperandCouldBeEmpty:
-      Result := 'TRegExpr compile: *+ operand could be empty';
+    reeNotQuantifiable:
+      Result := 'TRegExpr compile: Token before *+ operand is not quantifiable';
     reeNestedQuantif:
       Result := 'TRegExpr compile: nested quantifier *?+';
     reeBadHexDigit:
@@ -1896,6 +1913,8 @@ begin
       Result := 'TRegExpr exec: loop stack exceeded';
     reeLoopWithoutEntry:
       Result := 'TRegExpr exec: loop without loop entry';
+    reeUnknown:
+      Result := 'TRegExpr exec: unknow error';
   else
     Result := 'Unknown error';
   end;
@@ -1954,6 +1973,7 @@ begin
 
   fSlowChecksSizeMax := 2000;
   FAllowUnsafeLookBehind := False;
+  fRaiseForRuntimeError := True;
 
   {$IFDEF UseLineSep}
   InitLineSepArray;
@@ -2727,6 +2747,7 @@ const
   FLAG_LOOP = 8; // Has eithe *, + or {,n} with n>=2
   FLAG_GREEDY = 16; // Has any greedy code
   FLAG_LOOKAROUND = 32; // "Piece" (ParsePiece) is look-around
+  FLAG_NOT_QUANTIFIABLE = 64; // "Piece" (ParsePiece) is look-around
 
   {$IFDEF UnicodeRE}
   RusRangeLoLow = #$430; // 'а'
@@ -3583,15 +3604,13 @@ begin
     Exit;
   end;
 
-  if ((FlagTemp and FLAG_HASWIDTH) = 0) and (op <> '?') then
-  begin
-    Error(reePlusStarOperandCouldBeEmpty);
-    Exit;
-  end;
-
   case op of
     '*':
       begin
+        if (FlagTemp and FLAG_NOT_QUANTIFIABLE) <> 0 then begin
+          Error(reeNotQuantifiable);
+          exit;
+        end;
         FlagParse := FLAG_WORST or FLAG_SPECSTART or FLAG_LOOP;
         nextch := (regParse + 1)^;
         PossessiveCh := nextch = '+';
@@ -3607,9 +3626,9 @@ begin
         end;
         if not NonGreedyCh then
           FlagParse := FlagParse or FLAG_GREEDY;
-        if (FlagTemp and FLAG_SIMPLE) = 0 then
+        if (FlagTemp and (FLAG_SIMPLE or FLAG_HASWIDTH)) <> (FLAG_SIMPLE or FLAG_HASWIDTH) then
         begin
-          if NonGreedyOp then
+          if NonGreedyOp or ((FlagTemp and FLAG_HASWIDTH) = 0) then
             EmitComplexBraces(0, MaxBracesArg, NonGreedyOp)
           else
           begin // Emit x* as (x&|), where & means "self".
@@ -3621,7 +3640,7 @@ begin
           end
         end
         else
-        begin // Simple
+        begin // Simple AND has Width
           if PossessiveCh then
             TheOp := OP_STAR_POSS
           else
@@ -3636,7 +3655,11 @@ begin
       end; { of case '*' }
     '+':
       begin
-        FlagParse := FLAG_WORST or FLAG_SPECSTART or FLAG_HASWIDTH or FLAG_LOOP;
+        if (FlagTemp and FLAG_NOT_QUANTIFIABLE) <> 0 then begin
+          Error(reeNotQuantifiable);
+          exit;
+        end;
+        FlagParse := FLAG_WORST or FLAG_SPECSTART or (FlagTemp and FLAG_HASWIDTH) or FLAG_LOOP;
         nextch := (regParse + 1)^;
         PossessiveCh := nextch = '+';
         if PossessiveCh then
@@ -3651,9 +3674,9 @@ begin
         end;
         if not NonGreedyCh then
           FlagParse := FlagParse or FLAG_GREEDY;
-        if (FlagTemp and FLAG_SIMPLE) = 0 then
+        if (FlagTemp and (FLAG_SIMPLE or FLAG_HASWIDTH)) <> (FLAG_SIMPLE or FLAG_HASWIDTH) then
         begin
-          if NonGreedyOp then
+          if NonGreedyOp or ((FlagTemp and FLAG_HASWIDTH) = 0) then
             EmitComplexBraces(1, MaxBracesArg, NonGreedyOp)
           else
           begin // Emit x+ as x(&|), where & means "self".
@@ -3726,8 +3749,12 @@ begin
           regParse := savedRegParse;
           Exit;
         end;
+        if (FlagTemp and FLAG_NOT_QUANTIFIABLE) <> 0 then begin
+          Error(reeNotQuantifiable);
+          exit;
+        end;
         if BracesMin > 0 then
-          FlagParse := FLAG_WORST or FLAG_HASWIDTH;
+          FlagParse := FLAG_WORST or (FlagTemp and FLAG_HASWIDTH);
         if BracesMax > 0 then
           FlagParse := FlagParse or FLAG_SPECSTART;
 
@@ -3747,7 +3774,7 @@ begin
           FlagParse := FlagParse or FLAG_GREEDY;
         if BracesMax >= 2 then
           FlagParse := FlagParse or FLAG_LOOP;
-        if (FlagTemp and FLAG_SIMPLE) <> 0 then
+        if (FlagTemp and (FLAG_SIMPLE or FLAG_HASWIDTH)) = (FLAG_SIMPLE or FLAG_HASWIDTH) then
           EmitSimpleBraces(BracesMin, BracesMax, NonGreedyOp, PossessiveCh)
         else
         begin
@@ -3908,7 +3935,10 @@ var
     else
       ret := EmitNode(OP_EXACTLY);
     EmitInt(1);
-    EmitC(Ch);
+    if fCompModifiers.I then
+      EmitC(_UpperCase(Ch))
+    else
+      EmitC(Ch);
     FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
   end;
 
@@ -4003,6 +4033,7 @@ begin
   case (regParse - 1)^ of
     '^':
      begin
+      FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
       if not fCompModifiers.M
         {$IFDEF UseLineSep} or (fLineSeparators = '') {$ENDIF} then
         ret := EmitNode(OP_BOL)
@@ -4012,6 +4043,7 @@ begin
 
     '$':
      begin
+      FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
       if not fCompModifiers.M
         {$IFDEF UseLineSep} or (fLineSeparators = '') {$ENDIF} then
         ret := EmitNode(OP_EOL)
@@ -4294,12 +4326,14 @@ begin
             '#':
               begin
                 // (?#comment)
+                FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
                 GrpKind := gkComment;
                 Inc(regParse, 2);
               end;
             'a'..'z', '-':
               begin
                 // modifiers string like (?mxr)
+                FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
                 GrpKind := gkModifierString;
                 Inc(regParse);
               end;
@@ -4534,17 +4568,35 @@ begin
         end;
         case regParse^ of
           'b':
-            ret := EmitNode(OP_BOUND);
+            begin
+              FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
+              ret := EmitNode(OP_BOUND);
+            end;
           'B':
-            ret := EmitNode(OP_NOTBOUND);
+            begin
+              FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
+              ret := EmitNode(OP_NOTBOUND);
+            end;
           'A':
-            ret := EmitNode(OP_BOL);
+            begin
+              FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
+              ret := EmitNode(OP_BOL);
+            end;
           'z':
-            ret := EmitNode(OP_EOL);
+            begin
+              FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
+              ret := EmitNode(OP_EOL);
+            end;
           'Z':
-            ret := EmitNode(OP_EOL2);
+            begin
+              FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
+              ret := EmitNode(OP_EOL2);
+            end;
           'G':
-            ret := EmitNode(OP_CONTINUE_POS);
+            begin
+              FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
+              ret := EmitNode(OP_CONTINUE_POS);
+            end;
           'd':
             begin // r.e.extension - any digit ('0' .. '9')
               ret := EmitNode(OP_ANYDIGIT);
@@ -4744,7 +4796,10 @@ begin
         begin
           if not fCompModifiers.X or not IsIgnoredChar(regParse^) then
           begin
-            EmitC(regParse^);
+            if fCompModifiers.I then
+              EmitC(_UpperCase(regParse^))
+            else
+              EmitC(regParse^);
             if regCode <> @regDummy then
               Inc(regExactlyLen^);
           end;
@@ -4861,7 +4916,7 @@ begin
         end;
         if Result < TheMax then
         begin // ###0.931
-          InvChar := InvertCase(opnd^); // store in register
+          InvChar := _LowerCase(opnd^); // store in register
           while (Result < TheMax) and ((opnd^ = scan^) or (InvChar = scan^)) do
           begin
             Inc(Result);
@@ -5258,6 +5313,14 @@ var
   Local: TRegExprMatchPrimLocals;
 begin
   Result := False;
+  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+  if get_frame < StackLimit then begin
+    error(reeLoopStackExceeded);
+    exit;
+  end;
+  {$ENDIF}
+
+
   {
   // Alexey: not sure it's ok for long searches in big texts, so disabled
   if regNestedCalls > MaxRegexBackTracking then
@@ -5475,7 +5538,7 @@ begin
             Exit;
           Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
-          if (opnd^ <> regInput^) and (InvertCase(opnd^) <> regInput^) then
+          if (opnd^ <> regInput^) and (_LowerCase(opnd^) <> regInput^) then
             Exit;
           // ###0.929 begin
           no := Len;
@@ -5484,7 +5547,7 @@ begin
           begin
             Inc(save);
             Inc(opnd);
-            if (opnd^ <> save^) and (InvertCase(opnd^) <> save^) then
+            if (opnd^ <> save^) and (_LowerCase(opnd^) <> save^) then
               Exit;
             Dec(no);
           end;
@@ -5870,6 +5933,7 @@ begin
       OP_LOOPENTRY:
         begin // ###0.925
           Local.LoopInfo.Count := 0;
+          Local.LoopInfo.CurrentRegInput := nil;
           Local.LoopInfo.OuterLoop := CurrentLoopInfoListPtr;
           CurrentLoopInfoListPtr := @Local.LoopInfo;
           save := regInput;
@@ -5893,6 +5957,18 @@ begin
           Local.LoopInfoListPtr := CurrentLoopInfoListPtr;
           if Local.LoopInfoListPtr^.Count >= BracesMin then
           begin // Min alredy matched - we can work
+            Result := (BracesMax = MaxBracesArg) and // * or +
+                      (Local.LoopInfoListPtr^.CurrentRegInput = regInput);
+            if Result then begin
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
+              Result := MatchPrim(next);
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+              if not Result then
+                regInput := save;
+              exit;
+            end;
+
+            Local.LoopInfoListPtr^.CurrentRegInput := regInput;
             if scan^ = OP_LOOP then
             begin
               // greedy way - first try to max deep of greed ;)
@@ -5944,6 +6020,7 @@ begin
           else
           begin // first match a min_cnt times
             Inc(Local.LoopInfoListPtr^.Count);
+            Local.LoopInfoListPtr^.CurrentRegInput := regInput;
             Result := MatchPrim(opnd);
             if Result then
               Exit;
@@ -6205,6 +6282,12 @@ begin
   regNestedCalls := 0;
   regRecursion := 0;
   fInputCurrentEnd := fInputEnd;
+  Result := False;
+  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+  StackLimit := StackBottom;
+  if StackLimit <> nil then
+    StackLimit := StackLimit + 36000; // Add for any calls within the current MatchPrim // FPC has "STACK_MARGIN = 16384;", but we need to call Error, ..., raise
+  {$ENDIF}
   Result := MatchPrim(regCodeWork);
   if Result then
   begin
@@ -6258,6 +6341,33 @@ end;
 
 function TRegExpr.ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean;
   ATryMatchOnlyStartingBefore: Integer): Boolean;
+begin
+  if fRaiseForRuntimeError then begin
+    Result := ExecPrimProtected(AOffset, ASlowChecks, ABackward, ATryMatchOnlyStartingBefore);
+  end
+  else begin
+    try
+      Result := ExecPrimProtected(AOffset, ASlowChecks, ABackward, ATryMatchOnlyStartingBefore);
+    except
+      on E: EStackOverflow do begin
+        Result := False;
+        fLastError := reeLoopStackExceeded;
+        Error(reeLoopStackExceeded);
+      end;
+      on E: ERegExpr do begin
+        Result := False;
+        raise;
+      end;
+      else begin
+        fLastError := reeUnknown;
+        Error(reeUnknown);
+      end;
+    end;
+  end;
+end;
+
+function TRegExpr.ExecPrimProtected(AOffset: Integer; ASlowChecks,
+  ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 var
   Ptr: PRegExprChar;
 begin
@@ -6967,20 +7077,22 @@ begin
       {$IFDEF ComplexBraces}
       OP_LOOPENTRY:
         begin //###0.925
-          //LoopStack [LoopStackIdx] := 0; //###0.940 line removed
-          FillFirstCharSet(Next); // execute LOOP
-          Exit;
+          min_cnt := PREBracesArg(AlignToPtr(Next + REOpSz + RENextOffSz))^;
+          if min_cnt = 0 then begin
+            opnd := AlignToPtr(Next + REOpSz + 2 * RENextOffSz + 2 * REBracesArgSz);
+            FillFirstCharSet(opnd); // FirstChar may be after loop
+          end;
+          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
         end;
 
       OP_LOOP,
       OP_LOOP_NG:
         begin //###0.940
-          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz * 2))^;
           min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-          FillFirstCharSet(opnd);
           if min_cnt = 0 then
-            FillFirstCharSet(Next);
-          Exit;
+            Exit;
+          // zero width loop
+          Next := AlignToPtr(scan + REOpSz + 2 * RENextOffSz + 2 * REBracesArgSz);
         end;
       {$ENDIF}
 
@@ -7367,12 +7479,12 @@ var
   iByte: Byte;
   ch, ch2: REChar;
 begin
+  Result := '';
   if not IsProgrammOk then
     Exit;
 
   CurIndent := 0;
   op := OP_EXACTLY;
-  Result := '';
   s := regCodeWork;
   while op <> OP_EEND do
   begin // While that wasn't END last time...

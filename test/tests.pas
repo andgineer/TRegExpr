@@ -62,6 +62,7 @@ type
     procedure IsMatching(AErrorMessage: String; ARegEx, AInput: RegExprString;
       AExpectStartLenPairs: array of Integer; AOffset: integer = 1; AMustMatchBefore: integer = 0);
     procedure IsNotMatching(AErrorMessage: String; ARegEx, AInput: RegExprString; AOffset: integer = 1; AMustMatchBefore: integer = 0);
+    procedure IsErrorOnMatch(AErrorMessage: String; ARegEx, AInput: RegExprString; AOffset: integer = 1; AMustMatchBefore: integer = 0; ExpErrorId: Integer = 0);
     procedure SetUp; override;
     procedure TearDown; override;
   published
@@ -74,6 +75,7 @@ type
     procedure TestAtomic;
     procedure TestBraces;
     procedure TestLoop;
+    procedure TestEmptyLoop;
     procedure TestReferences;
     procedure TestSubCall;
     procedure TestNamedGroups;
@@ -885,6 +887,28 @@ begin
     IsFalse(AErrorMessage + ': Exec must give False, but found at ' + IntToStr(RE.MatchPos[0]), r);
 end;
 
+procedure TTestRegexpr.IsErrorOnMatch(AErrorMessage: String; ARegEx,
+  AInput: RegExprString; AOffset: integer; AMustMatchBefore: integer;
+  ExpErrorId: Integer);
+var
+  r: Boolean;
+begin
+  CompileRE(ARegEx);
+  RE.InputString:= AInput;
+  r := True;
+  try
+    r := RE.ExecPos(AOffset, AMustMatchBefore);
+  except
+    r := False;
+  end;
+
+  if r then
+    IsFalse(AErrorMessage + ': Exec must give False, but found at ' + IntToStr(RE.MatchPos[0]), r);
+
+  if ExpErrorId <> 0 then
+    AreEqual(AErrorMessage, ExpErrorId, RE.TestLastError);
+end;
+
 procedure TTestRegexpr.SetUp;
 begin
   inherited SetUp;
@@ -929,16 +953,25 @@ end;
 
 procedure TTestRegexpr.TestBads;
 begin
-  TestBadRegex('Error for matching zero width {}', '(a{0,2})*', 115);
-//  TestBadRegex('Error for optional lookaround', '(?=a)?', 115);
-  TestBadRegex('Error for empty group (only look ahead)', '((?=a))+', 115);
-  TestBadRegex('Error for empty group (only look ahead)', '((?=a))*', 115);
+  TestBadRegex('Error for invalid loop', '*');
+  TestBadRegex('Error for invalid loop', '^*');
+  TestBadRegex('Error for invalid loop', '\b*');
+  TestBadRegex('Error for invalid loop', '+');
+  TestBadRegex('Error for invalid loop', '^+');
+  TestBadRegex('Error for invalid loop', '\b+');
+  TestBadRegex('Error for invalid loop', '.?*');
+  TestBadRegex('Error for invalid loop', '.**');
+  TestBadRegex('Error for invalid loop', '.+*');
+  TestBadRegex('Error for invalid loop', '.++?');
 
   RE.AllowUnsafeLookBehind := False;
   TestBadRegex('No Error for var-len look behind with capture', '.(?<=(.+))', 153);
 
   TestBadRegex('value for reference to big', '()\9999999999999999999999999999999999999999999999999999()');
   TestBadRegex('value for reference to big', '()\g9999999999999999999999999999999999999999999999999999()');
+
+  // Only if RegExpWithStackOverflowCheck is enabled and supported
+  //IsErrorOnMatch('Too Complex',   '^((b|a){1,5000}){1,5000}',   StringOfChar('a', 991*503)); // both factors are prime
 end;
 
 procedure TTestRegexpr.TestModifiers;
@@ -1353,6 +1386,137 @@ begin
   IsMatching('atomic nested {} no greedy ',
              '(?:(?>Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?)|.*)B',
              'AayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyBB',   [1,44,   -1,-1, -1,-1, -1,-1] ); // 40 y
+
+
+end;
+
+procedure TTestRegexpr.TestEmptyLoop;
+var
+  WithAtomic, LoopIdx, PtnIdx, ExpGrpPos1, ExpGrpLen1: Integer;
+  LoopTxt, PtnText: RegExprString;
+  s: String;
+  MatchZeroTimes, ForceMatchZeroTimes: Boolean;
+begin
+  for LoopIdx := 0 to 18 do begin
+    case LoopIdx of
+       0: LoopTxt := '';
+       1: LoopTxt := '?';
+       2: LoopTxt := '??';
+       3: LoopTxt := '+';
+       4: LoopTxt := '+?';
+       5: LoopTxt := '++';
+       6: LoopTxt := '*';
+       7: LoopTxt := '*?';
+       8: LoopTxt := '*+';
+       9: LoopTxt := '{0}';
+      10: LoopTxt := '{1}';
+      11: LoopTxt := '{5}';
+      12: LoopTxt := '{0,5}';
+      13: LoopTxt := '{1,5}';
+      14: LoopTxt := '{0}?';
+      15: LoopTxt := '{1}?';
+      16: LoopTxt := '{5}?';
+      17: LoopTxt := '{0,5}?';
+      18: LoopTxt := '{1,5}?';
+      //19: LoopTxt := '{0}+';
+      //20: LoopTxt := '{1}+';
+      //21: LoopTxt := '{5}+';
+      //22: LoopTxt := '{0,5}+';
+      //23: LoopTxt := '{1,5}+';
+    end;
+
+    for PtnIdx := 0 to 18 do
+    for WithAtomic := 0 to 2 do begin
+      case PtnIdx of
+         0: PtnText := '()';
+         1: PtnText := '(xx|)';
+         2: PtnText := '(|xx)';
+         3: PtnText := '(xx|(?:xx)?)';
+         4: PtnText := '(xx|(?:))';
+         5: PtnText := '(xx|(?:)*)'; // nested
+         6: PtnText := '(xx|(?:)*?)'; // nested
+         7: PtnText := '(xx|(?:)*+)'; // nested
+         8: PtnText := '(xx|(?:)+)'; // nested
+         9: PtnText := '(xx|(?:)+?)'; // nested
+        10: PtnText := '(xx|(?:)++)'; // nested
+        11: PtnText := '((?:(?:)+)*|(?:(?:)*)+)'; // nested
+        12: PtnText := '((?=))';
+        13: PtnText := '((?!X))';
+        14: PtnText := '((?=(?:)*))'; // nested in look-around
+        15: PtnText := '((?:(?:(?:)*){10,11}){20,21})';
+        16: PtnText := '((?>(?:)+)*|(?:(?:)*)+)'; // nested inner atom
+        17: PtnText := '((?:(?>)+)*|(?:(?>)*)+)'; // nested inner atom
+        18: PtnText := '(\b)';
+      end;
+       // (?> atomic
+      case WithAtomic of
+        0: ;
+        1: begin
+          Insert('(?>', PtnText, 2);
+          PtnText := PtnText + ')';
+        end;
+        2: PtnText := '(?>' + PtnText + ')';
+      end;
+
+      MatchZeroTimes := LoopIdx in [2,7,9,14,17,19];
+      ForceMatchZeroTimes := LoopIdx in [9,14,19];
+
+      ExpGrpPos1 := 1;
+      ExpGrpLen1 := 0;
+      if MatchZeroTimes then begin
+        ExpGrpPos1 := -1;
+        ExpGrpLen1 := -1;
+      end;
+
+      s := LoopTxt + ' / ' + PtnText;
+      IsMatching('Empty group '+s,                PtnText+LoopTxt,      'a',   [1,0,  ExpGrpPos1,ExpGrpLen1]);
+      if PtnIdx < 18 then
+        IsMatching('Empty group in empty text '+s,  PtnText+LoopTxt,      '',    [1,0,  ExpGrpPos1,ExpGrpLen1]);
+      IsMatching('Empty group before text '+s,    PtnText+LoopTxt+'a',  'a',   [1,1,  ExpGrpPos1,ExpGrpLen1]);
+
+      if ForceMatchZeroTimes then
+        IsNotMatching('Empty group backref '+s,   PtnText+LoopTxt+'\1', 'a')
+      else
+        IsMatching('Empty group backref '+s,          PtnText+LoopTxt+'\1', 'a',   [1,0,  1,0]);
+
+      if ForceMatchZeroTimes or (PtnIdx = 18) then
+        IsNotMatching('Empty group backref in empty'+s,  PtnText+LoopTxt+'\1', '')
+      else
+        IsMatching('Empty group backref in empty'+s,  PtnText+LoopTxt+'\1', '',    [1,0,  1,0]);
+
+
+
+      if ExpGrpPos1 > 0 then ExpGrpPos1 := 2;
+      IsMatching('Empty group after text '+s,     'a'+PtnText+LoopTxt,     'a',   [1,1,  ExpGrpPos1,ExpGrpLen1]);
+
+      if PtnIdx < 18 then begin
+        IsMatching('Empty group mid   text '+s,     'a'+PtnText+LoopTxt,     'aa',  [1,1,  ExpGrpPos1,ExpGrpLen1]);
+        IsMatching('Empty group mid   text '+s,     'a'+PtnText+LoopTxt+'a', 'aa',  [1,2,  ExpGrpPos1,ExpGrpLen1]);
+
+        if ForceMatchZeroTimes then begin
+          IsNotMatching('Empty group mid + backref at end '+s,  'a'+PtnText+LoopTxt+'a\1', 'aa');
+        end
+        else begin
+          IsMatching('Empty group mid + backref at end '+s,  'a'+PtnText+LoopTxt+'a\1', 'aa',  [1,2,  2,0]);
+          IsMatching('Empty group mid + backref at end '+s,  'a'+PtnText+LoopTxt+'a(\1)', 'aa',  [1,2,  2,0,  3,0]);
+        end;
+      end;
+
+    end;
+  end;
+
+  // The backref in the loop changes each iteration. So even if the match is empty, it must be executed the correct amount of times
+  IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$){1,4}', '1234567890abcdefghi',   [1,0,  1,0,  15,1]);
+  IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$){1,5}', '1234567890abcdefghi',   [1,0,  1,0,  16,1]);
+
+  IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$){1,4}?', '1234567890abcdefghi',   [1,0,  1,0,  12,1]);
+  IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$){1,5}?', '1234567890abcdefghi',   [1,0,  1,0,  12,1]);
+
+  IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$)+', '1234567890abcdefghi',   [1,0,  1,0,  12,1]);
+  IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$)+?', '1234567890abcdefghi',   [1,0,  1,0,  12,1]);
+  IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$)*', '1234567890abcdefghi',   [1,0,  1,0,  12,1]);
+
+  IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$)*?', '1234567890abcdefghi',   [1,0,  -1,-1,  -1,-1]);
 
 
 end;

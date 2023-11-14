@@ -29,10 +29,20 @@ const BenchmarkPatterns:array[0..4] of ansistring=('installation',
                                                    '([0-9][0-9]?)/([0-9][0-9]?)/([0-9][0-9]([0-9][0-9])?)',
                                                    '([a-zA-Z][a-zA-Z0-9]*)://([^ /]+)(/[^ ]*)?|([^ @]+)@([^ @]+)');
 }
-const BenchmarkPatterns:array[0..14] of ansistring=('Twain',
+const BenchmarkPatterns:array[0..35] of ansistring=('Twain',
                                                    '(?i)Twain',
                                                    '[a-z]shing',
                                                    'Huck[a-zA-Z]+|Saw[a-zA-Z]+',
+                                                   '.',   // Benchmark invocation time.
+                                                   '(.)',
+                                                   'e',
+                                                   '(e)',
+                                                   '(?s).{1,45} ',
+                                                   '(?s)\G.{1,45} ',
+                                                   '\G(?s).{1,45} ',
+                                                   '(?s).{1,45}? ',
+                                                   '(?s)\G.{1,45}? ',
+                                                   '\G(?s).{1,45}? ',
                                                    '\b\w+nn\b',
                                                    '[a-q][^u-z]{13}x',
                                                    'Tom|Sawyer|Huckleberry|Finn',
@@ -44,15 +54,35 @@ const BenchmarkPatterns:array[0..14] of ansistring=('Twain',
 //                                                 '[a-zA-Z]{0,12}ing',
                                                    '\s[a-zA-Z]{0,12}ing\s',
                                                    '([A-Za-z]awyer|[A-Za-z]inn)\s',
-                                                   '["''][^"'']{0,30}[?!\.]["'']');
+                                                   '["''][^"'']{0,30}[?!\.]["'']',
+                                                   'Tom(.{3,3}|.{5,5})*Finn',
+                                                   'Tom(...|.....)*Finn',
+                                                   'Tom(...|.....)*?Finn',
+                                                   'Tom((...|.....){2,9}\s){1,5}?Finn',
+                                                   'Tom((...|.....){2,9}?\s){1,5}Finn',
+                                                   '\G(?is).(?=.*$)',
+                                                   '\G(?is).(?=(.){1,5}?$)?',
+                                                   '\G(?is).(?=.*+$)',
+                                                   '\G(?is).{10,10}(?=(e|y|on|fin|.){0,20})',
+                                                   '\G(?is).{10,10}(?=(?>e|y|on|fin|.){0,20})',
+                                                   'Tom(?!.*Finn)'
+                                                   );
 
 
-var i,j:integer;
+var i,j, r, RCount:integer;
     stext,expr:ansistring;
     sl:TFileStream;
-    t1,t2:longword;
+    t1,t2,t_all:longword;
     Regex:TRegExpr;
 begin
+ RCount := 1;
+ for i := 0 to argc - 2 do begin
+   if argv[i] = '-c' then begin
+     RCount := StrToIntDef(argv[i+1], 1);
+     if RCount > 200 then RCount := 200;
+     break;
+   end;
+ end;
  try
   sl:=TFileStream.Create('mtent12.txt',fmOpenRead);
   try
@@ -62,10 +92,13 @@ begin
    sl.Free;
   end;
 
+  writeln('Running ', RCount, ' repeats for each benchmark. Use -c <n> to change');
+  writeln;
   writeln(' ':50,'      Time     | Match count');
   writeln('==============================================================================');
   writeln('regexpr.pas:');
 
+  t_all := 0;
   for i:=low(BenchmarkPatterns) to high(BenchmarkPatterns) do begin
    try
     expr:=BenchmarkPatterns[i];
@@ -86,14 +119,17 @@ begin
     try
      write('/'+BenchmarkPatterns[i]+'/ : ':50);
      t1:=GetTickCount;
-     j:=0;
-     if Regex.Exec(stext) then begin
-      repeat
-       inc(j);
-      until not Regex.ExecNext;
+     for r := 1 to RCount do begin
+       j:=0;
+       if Regex.Exec(stext) then begin
+        repeat
+         inc(j);
+        until not Regex.ExecNext;
+       end;
      end;
      t2:=GetTickCount;
-     writeln(t2-t1:11,' ms |',j:12);
+     writeln(((t2-t1) div RCount):11,' ms |',j:12);
+     t_all := t_all + (t2-t1);
     finally
      Regex.Free;
     end;
@@ -103,6 +139,7 @@ begin
     end;
    end;
   end;{}
+ writeln('Total:', '':44, (t_all div RCount):11,' ms |');
  finally
   stext:='';
  end;
