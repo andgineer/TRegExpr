@@ -382,7 +382,7 @@ type
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
     regNumBrackets: Integer; // count of () brackets
-    regDummy: REChar; // dummy pointer, used to detect 1st/2nd pass of Compile
+    regDummy: array [0..8 div SizeOf(REChar)] of REChar; // dummy pointer, used to detect 1st/2nd pass of Compile
                       // if p=@regDummy, it is pass-1: opcode memory is not yet allocated
     programm: PRegExprChar; // pointer to opcode, =nil in pass-1
     regCode: PRegExprChar; // pointer to last emitted opcode; changing in pass-2, but =@regDummy in pass-1
