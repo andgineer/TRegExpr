@@ -29,7 +29,7 @@ const BenchmarkPatterns:array[0..4] of ansistring=('installation',
                                                    '([0-9][0-9]?)/([0-9][0-9]?)/([0-9][0-9]([0-9][0-9])?)',
                                                    '([a-zA-Z][a-zA-Z0-9]*)://([^ /]+)(/[^ ]*)?|([^ @]+)@([^ @]+)');
 }
-const BenchmarkPatterns:array[0..35] of ansistring=('Twain',
+const BenchmarkPatterns:array[0..37] of ansistring=('Twain',
                                                    '(?i)Twain',
                                                    '[a-z]shing',
                                                    'Huck[a-zA-Z]+|Saw[a-zA-Z]+',
@@ -65,7 +65,9 @@ const BenchmarkPatterns:array[0..35] of ansistring=('Twain',
                                                    '\G(?is).(?=.*+$)',
                                                    '\G(?is).{10,10}(?=(e|y|on|fin|.){0,20})',
                                                    '\G(?is).{10,10}(?=(?>e|y|on|fin|.){0,20})',
-                                                   'Tom(?!.*Finn)'
+                                                   'Tom(?!.*Finn)',
+                                                   '(?i)(?>[aeoui][bcdfghjklmnpqrstvwxyz \r\n]*){1,40}',
+                                                   '(?i)[ bdlm][abdegij][mnoprst]'
                                                    );
 
 
@@ -117,7 +119,7 @@ begin
     Regex.SlowChecksSizeMax:=0;
 
     try
-     write('/'+BenchmarkPatterns[i]+'/ : ':50);
+     write('/'+BenchmarkPatterns[i]+'/ : ':60);
      t1:=GetTickCount;
      for r := 1 to RCount do begin
        j:=0;
@@ -139,7 +141,7 @@ begin
     end;
    end;
   end;{}
- writeln('Total:', '':44, (t_all div RCount):11,' ms |');
+ writeln('Total:', '':54, (t_all div RCount):11,' ms |');
  finally
   stext:='';
  end;
