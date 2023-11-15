@@ -2784,9 +2784,10 @@ begin
         begin
           Inc(ABuffer);
           ch := ABuffer^;
+          if (AChar >= ch) then
+          begin
           Inc(ABuffer);
           ch2 := ABuffer^;
-          Inc(ABuffer);
           {
           // if AIgnoreCase, ch, ch2 are upcased in opcode
           if AIgnoreCase then
@@ -2795,23 +2796,27 @@ begin
             ch2 := _UpperCase(ch2);
           end;
           }
-          if (AChar >= ch) and (AChar <= ch2) then
+            if (AChar <= ch2) then
           begin
             Result := True;
             Exit;
           end;
+          Inc(ABuffer);
+          end
+          else
+            Inc(ABuffer, 2);
         end;
 
       OpKind_MetaClass:
         begin
           Inc(ABuffer);
           N := Ord(ABuffer^);
-          Inc(ABuffer);
           if CharCheckers[N](AChar) then
           begin
             Result := True;
             Exit
           end;
+          Inc(ABuffer);
         end;
 
       OpKind_Char:
@@ -2822,7 +2827,6 @@ begin
           for i := 1 to N do
           begin
             ch := ABuffer^;
-            Inc(ABuffer);
             {
             // already upcased in opcode
             if AIgnoreCase then
@@ -2833,6 +2837,7 @@ begin
               Result := True;
               Exit;
             end;
+            Inc(ABuffer);
           end;
         end;
 
