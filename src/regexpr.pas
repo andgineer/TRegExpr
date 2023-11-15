@@ -5923,7 +5923,7 @@ begin
               regInput := save;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-              scan := regNext(scan);
+              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
             until (scan = nil) or (scan^ <> OP_BRANCH);
             Exit;
           end;
@@ -6867,7 +6867,7 @@ begin
   scan := prog;
   while scan <> nil do
   begin
-    Next := regNext(scan);
+    Next := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
     Oper := PREOp(scan)^;
     case Oper of
       OP_BSUBEXP,
@@ -7068,7 +7068,7 @@ begin
           begin
             repeat
               FillFirstCharSet(scan + REOpSz + RENextOffSz);
-              scan := regNext(scan);
+              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
             until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
             Exit;
           end;
