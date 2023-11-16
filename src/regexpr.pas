@@ -100,11 +100,11 @@ interface
 {$ENDIF}
 {.$DEFINE Compat} // Enable compatability methods/properties for forked version in Free Pascal 3.0
 // ======== Define Pascal-language options
-// Define 'UseAsserts' option (do not edit this definitions).
+// Define 'WITH_REGEX_ASSERT' option (do not edit this definitions).
 // Asserts used to catch 'strange bugs' in TRegExpr implementation (when something goes
 // completely wrong). You can swith asserts on/off with help of {$C+}/{$C-} compiler options.
-{$IFDEF D3} {$DEFINE UseAsserts} {$ENDIF}
-{$IFDEF FPC} {$DEFINE UseAsserts} {$ENDIF}
+{$IFDEF D3} { $DEFINE WITH_REGEX_ASSERT} {$ENDIF}
+{$IFDEF FPC}{$IFOPT C+} {$DEFINE WITH_REGEX_ASSERT} {$ENDIF}{$ENDIF} // Only if compile with -Sa
 // Define 'use subroutine parameters default values' option (do not edit this definition).
 {$IFDEF D4} {$DEFINE DefParam} {$ENDIF}
 {$IFDEF FPC} {$DEFINE DefParam} {$ENDIF}
@@ -577,7 +577,7 @@ type
 
     // dig the "next" pointer out of a node
     function regNext(p: PRegExprChar): PRegExprChar;
-    function regNextInlined(p: PRegExprChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function regNextQuick(p: PRegExprChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // dig the "last" pointer out of a chain of node
     function regLast(p: PRegExprChar): PRegExprChar;
@@ -1791,7 +1791,6 @@ const
   reeFirstRuntimeCode = 1000;
   reeRegRepeatCalledInappropriately = 1000;
   reeMatchPrimMemoryCorruption = 1001;
-  reeMatchPrimCorruptedPointers = 1002;
   reeNoExpression = 1003;
   reeCorruptedProgram = 1004;
   reeOffsetMustBePositive = 1006;
@@ -1896,8 +1895,6 @@ begin
       Result := 'TRegExpr exec: RegRepeat called inappropriately';
     reeMatchPrimMemoryCorruption:
       Result := 'TRegExpr exec: MatchPrim memory corruption';
-    reeMatchPrimCorruptedPointers:
-      Result := 'TRegExpr exec: MatchPrim corrupted pointers';
     reeNoExpression:
       Result := 'TRegExpr exec: empty expression';
     reeCorruptedProgram:
@@ -2859,8 +2856,10 @@ begin
         end;
       {$ENDIF}
 
+    {$IFDEF WITH_REGEX_ASSERT}
     else
       Error(reeBadOpcodeInCharClass);
+    {$ENDIF}
     end;
   until False; // assume that Buffer is ended correctly
 end;
@@ -3045,8 +3044,10 @@ begin
         end;
       {$ENDIF}
 
+    {$IFDEF WITH_REGEX_ASSERT}
     else
       Error(reeBadOpcodeInCharClass);
+    {$ENDIF}
     end;
   until False; // assume that Buffer is ended correctly
 end;
@@ -5250,24 +5251,24 @@ begin
     Result := p + offset;
 end;
 
-function TRegExpr.regNextInlined(p: PRegExprChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.regNextQuick(p: PRegExprChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 var
   offset: TRENextOff;
 begin
   // The inlined version is never called in the first pass.
   Assert(fSecondPass); // fSecondPass will also be true in MatchPrim.
-  {
-  if p = @regDummy then
-  begin
-    Result := nil;
-    Exit;
-  end;
-  }
   offset := PRENextOff(AlignToPtr(p + REOpSz))^;
+  {$IFDEF WITH_REGEX_ASSERT}
   if offset = 0 then
     Result := nil
   else
+  begin
+  {$ENDIF}
     Result := p + offset;
+  {$IFDEF WITH_REGEX_ASSERT}
+    assert((Result >= programm) and (Result < programm + regCodeSize * SizeOf(REChar)));
+  end;
+  {$ENDIF}
 end;
 
 function TRegExpr.regLast(p: PRegExprChar): PRegExprChar;
@@ -5354,13 +5355,10 @@ begin
   }
 
   scan := prog;
-  while scan <> nil do
+  while True do
   begin
-    Len := PRENextOff(AlignToPtr(scan + 1))^; // ###0.932 inlined regNext
-    if Len = 0 then
-      next := nil
-    else
-      next := scan + Len;
+    Assert(scan <> nil);
+    next := regNextQuick(scan);
 
     case scan^ of
       OP_BOUND:
@@ -5948,8 +5946,12 @@ begin
               regInput := save;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-              scan := regNextInlined(scan);
-            until (scan = nil) or (scan^ <> OP_BRANCH);
+              scan := next;
+              Assert(scan <> nil);
+              if  (scan^ <> OP_BRANCH) then
+                break;
+              next := regNextQuick(scan);
+            until  False;
             Exit;
           end;
         end;
@@ -6242,16 +6244,14 @@ begin
             Inc(regInput);
         end;
 
+    {$IFDEF WITH_REGEX_ASSERT}
     else
       Error(reeMatchPrimMemoryCorruption);
       Exit;
+    {$ENDIF}
     end; { of case scan^ }
     scan := next;
   end; { of while scan <> nil }
-
-  // We get here only if there's trouble -- normally "case EEND" is the
-  // terminating point.
-  Error(reeMatchPrimCorruptedPointers);
 end; { of function TRegExpr.MatchPrim
   -------------------------------------------------------------- }
 
@@ -6892,7 +6892,7 @@ begin
   scan := prog;
   while scan <> nil do
   begin
-    Next := regNextInlined(scan);
+    Next := regNextQuick(scan);
     Oper := PREOp(scan)^;
     case Oper of
       OP_BSUBEXP,
@@ -7093,7 +7093,7 @@ begin
           begin
             repeat
               FillFirstCharSet(scan + REOpSz + RENextOffSz);
-              scan := regNextInlined(scan);
+              scan := regNextQuick(scan);
             until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
             Exit;
           end;
