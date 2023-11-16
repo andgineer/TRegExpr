@@ -5254,11 +5254,15 @@ function TRegExpr.regNextInlined(p: PRegExprChar): PRegExprChar; {$IFDEF InlineF
 var
   offset: TRENextOff;
 begin
+  // The inlined version is never called in the first pass.
+  Assert(fSecondPass); // fSecondPass will also be true in MatchPrim.
+  {
   if p = @regDummy then
   begin
     Result := nil;
     Exit;
   end;
+  }
   offset := PRENextOff(AlignToPtr(p + REOpSz))^;
   if offset = 0 then
     Result := nil
