@@ -2784,9 +2784,10 @@ begin
         begin
           Inc(ABuffer);
           ch := ABuffer^;
+          if (AChar >= ch) then
+          begin
           Inc(ABuffer);
           ch2 := ABuffer^;
-          Inc(ABuffer);
           {
           // if AIgnoreCase, ch, ch2 are upcased in opcode
           if AIgnoreCase then
@@ -2795,23 +2796,27 @@ begin
             ch2 := _UpperCase(ch2);
           end;
           }
-          if (AChar >= ch) and (AChar <= ch2) then
+            if (AChar <= ch2) then
           begin
             Result := True;
             Exit;
           end;
+          Inc(ABuffer);
+          end
+          else
+            Inc(ABuffer, 2);
         end;
 
       OpKind_MetaClass:
         begin
           Inc(ABuffer);
           N := Ord(ABuffer^);
-          Inc(ABuffer);
           if CharCheckers[N](AChar) then
           begin
             Result := True;
             Exit
           end;
+          Inc(ABuffer);
         end;
 
       OpKind_Char:
@@ -2822,7 +2827,6 @@ begin
           for i := 1 to N do
           begin
             ch := ABuffer^;
-            Inc(ABuffer);
             {
             // already upcased in opcode
             if AIgnoreCase then
@@ -2833,6 +2837,7 @@ begin
               Result := True;
               Exit;
             end;
+            Inc(ABuffer);
           end;
         end;
 
@@ -5923,7 +5928,7 @@ begin
               regInput := save;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-              scan := regNext(scan);
+              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
             until (scan = nil) or (scan^ <> OP_BRANCH);
             Exit;
           end;
@@ -6867,7 +6872,7 @@ begin
   scan := prog;
   while scan <> nil do
   begin
-    Next := regNext(scan);
+    Next := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
     Oper := PREOp(scan)^;
     case Oper of
       OP_BSUBEXP,
@@ -7068,7 +7073,7 @@ begin
           begin
             repeat
               FillFirstCharSet(scan + REOpSz + RENextOffSz);
-              scan := regNext(scan);
+              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
             until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
             Exit;
           end;
