@@ -577,6 +577,7 @@ type
 
     // dig the "next" pointer out of a node
     function regNext(p: PRegExprChar): PRegExprChar;
+    function regNextInlined(p: PRegExprChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // dig the "last" pointer out of a chain of node
     function regLast(p: PRegExprChar): PRegExprChar;
@@ -5242,13 +5243,28 @@ begin
     Result := nil;
     Exit;
   end;
-  offset := PRENextOff(AlignToPtr(p + REOpSz))^; // ###0.933 inlined NEXT
+  offset := PRENextOff(AlignToPtr(p + REOpSz))^;
   if offset = 0 then
     Result := nil
   else
     Result := p + offset;
-end; { of function TRegExpr.regNext
-  -------------------------------------------------------------- }
+end;
+
+function TRegExpr.regNextInlined(p: PRegExprChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+var
+  offset: TRENextOff;
+begin
+  if p = @regDummy then
+  begin
+    Result := nil;
+    Exit;
+  end;
+  offset := PRENextOff(AlignToPtr(p + REOpSz))^;
+  if offset = 0 then
+    Result := nil
+  else
+    Result := p + offset;
+end;
 
 function TRegExpr.regLast(p: PRegExprChar): PRegExprChar;
 var
@@ -5928,7 +5944,7 @@ begin
               regInput := save;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext(scan);
+              scan := regNextInlined(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
             Exit;
           end;
@@ -6872,7 +6888,7 @@ begin
   scan := prog;
   while scan <> nil do
   begin
-    Next := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext(scan);
+    Next := regNextInlined(scan);
     Oper := PREOp(scan)^;
     case Oper of
       OP_BSUBEXP,
@@ -7073,7 +7089,7 @@ begin
           begin
             repeat
               FillFirstCharSet(scan + REOpSz + RENextOffSz);
-              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext(scan);
+              scan := regNextInlined(scan);
             until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
             Exit;
           end;
