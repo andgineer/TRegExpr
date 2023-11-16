@@ -2786,22 +2786,22 @@ begin
           ch := ABuffer^;
           if (AChar >= ch) then
           begin
-          Inc(ABuffer);
-          ch2 := ABuffer^;
-          {
-          // if AIgnoreCase, ch, ch2 are upcased in opcode
-          if AIgnoreCase then
-          begin
-            ch := _UpperCase(ch);
-            ch2 := _UpperCase(ch2);
-          end;
-          }
+            Inc(ABuffer);
+            ch2 := ABuffer^;
+            {
+            // if AIgnoreCase, ch, ch2 are upcased in opcode
+            if AIgnoreCase then
+            begin
+              ch := _UpperCase(ch);
+              ch2 := _UpperCase(ch2);
+            end;
+            }
             if (AChar <= ch2) then
-          begin
-            Result := True;
-            Exit;
-          end;
-          Inc(ABuffer);
+            begin
+              Result := True;
+              Exit;
+            end;
+            Inc(ABuffer);
           end
           else
             Inc(ABuffer, 2);
@@ -5928,7 +5928,7 @@ begin
               regInput := save;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
+              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext(scan);
             until (scan = nil) or (scan^ <> OP_BRANCH);
             Exit;
           end;
@@ -6872,7 +6872,7 @@ begin
   scan := prog;
   while scan <> nil do
   begin
-    Next := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
+    Next := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext(scan);
     Oper := PREOp(scan)^;
     case Oper of
       OP_BSUBEXP,
@@ -7073,7 +7073,7 @@ begin
           begin
             repeat
               FillFirstCharSet(scan + REOpSz + RENextOffSz);
-              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext;
+              scan := scan + PRENextOff(AlignToPtr(scan + 1))^; // inlined regNext(scan);
             until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
             Exit;
           end;
