@@ -6451,9 +6451,9 @@ begin
       raEOL: Ptr := fInputEnd;
     end;
     {$IFDEF UseFirstCharSet}
-    {$IFDEF UnicodeRE}
-    if (Ptr < fInputEnd) and (Ord(Ptr^) <= $FF) then
-    {$ENDIF}
+    if (Ptr < fInputEnd)
+    {$IFDEF UnicodeRE} and (Ord(Ptr^) <= $FF)  {$ENDIF}
+    then
       if not FirstCharArray[Byte(Ptr^)] then
         Exit;
     {$ENDIF}
