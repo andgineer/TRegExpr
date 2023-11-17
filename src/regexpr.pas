@@ -5982,11 +5982,11 @@ begin
                 Exit;
               scan := next;
               Assert(scan <> nil);
-              if  (scan^ <> OP_BRANCH) then
-                break;
               next := regNextQuick(scan);
+              if  (next^ <> OP_BRANCH) then
+                break;
             until  False;
-            Exit;
+            next := scan  + REOpSz + RENextOffSz;
           end;
         end;
 
