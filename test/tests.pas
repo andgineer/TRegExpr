@@ -73,6 +73,7 @@ type
     procedure TestContinueAnchor;
     procedure TestRegMustExist;
     procedure TestAtomic;
+    procedure TestQuesitonMark;
     procedure TestBraces;
     procedure TestLoop;
     procedure TestEmptyLoop;
@@ -1192,6 +1193,35 @@ begin
              '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
 end;
 
+procedure TTestRegexpr.TestQuesitonMark;
+var
+  i: Integer;
+  c: RegExprString;
+begin
+  for i := 0 to 5 do begin
+    case i of
+      0: c := 'c';
+      1: c := '(?:c)';
+      2: c := '(?:c|x)';
+      3: c := '(?>c)';
+      4: c := '(?>c?)';
+      5: c := '(?>c|x)';
+    end;
+
+    IsMatching(   '?',  'abcc'+c+'?d',  'abccd',  [1,5]);
+    IsMatching(   '??', 'abcc'+c+'??d', 'abccd',  [1,5]);
+    IsMatching(   '?+', 'abcc'+c+'?+d',  'abccd',  [1,5]);
+    IsMatching(   '?+', 'abc'+c+'?+d',  'abccd',  [1,5]);
+
+    IsMatching(   '?',  'ab'+c+'?ccd',  'abccd',  [1,5]);
+    IsMatching(   '??', 'ab'+c+'??ccd', 'abccd',  [1,5]);
+    IsMatching(   '?+', 'ab'+c+'?+cd',  'abccd',  [1,5]);
+    IsMatching(   '?+', 'abc'+c+'?+d',  'abccd',  [1,5]);
+
+    IsNotMatching('?+', 'ab'+c+'?+ccd', 'abccd');
+  end;
+end;
+
 procedure TTestRegexpr.TestBraces;
 var
   i: Integer;
@@ -1294,6 +1324,9 @@ begin
 end;
 
 procedure TTestRegexpr.TestLoop;
+var
+  i, j: Integer;
+  y, q: RegExprString;
 begin
   // The patterns below **should** use OP_LOOP[ng]
 
@@ -1347,6 +1380,98 @@ begin
              'Aa(x|y(x|y(x|y){3,4}?){3,4}?){3,4}?',
              'Aayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');  // 38 y
 
+
+  IsMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}){3,4}+',
+             'Aayyyyyyyyyyyy',  [1,14,   11,4,  14,1]); // minimum y
+  IsNotMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}+){3,4}+',
+             'Aayyyyyyyyyyyy'); // minimum y
+  IsNotMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}+){3,4}',
+             'Aayyyyyyyyyyyy'); // minimum y
+  IsMatching('nested {} poss',
+             'Aa(x|y(x|y){2,3}+){3,4}+',
+             'Aayyyyyyyyyyyy',  [1,14,   11,4,  14,1]); // minimum y
+
+  IsMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}){3,4}+',
+             'Aayyyyyyyyyyyyy',  [1,15,   12,4,  15,1]); // minimum y
+  IsNotMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}+){3,4}+',
+             'Aayyyyyyyyyyyyy'); // minimum y
+  IsNotMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}+){3,4}',
+             'Aayyyyyyyyyyyyy'); // minimum y
+
+  IsMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}+){3,4}',
+             'Aayyyyyyyyyyyyyy',  [1,16,   13,4,  16,1]); // two extra y
+  IsMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}+){3,4}+',
+             'Aayyyyyyyyyyyyyy',  [1,16,   13,4,  16,1]); // two extra y
+  IsMatching('nested {} poss',
+             'Aa(x|y(x|y){3,4}){3,4}+',
+             'Aayyyyyyyyyyyyyy',  [1,16,   13,4,  16,1]); // two extra y
+
+
+  for i := 0 to 3 do
+  for j := 0 to 3 do begin
+    case i of
+      0: y := 'y';
+      1: y := '(?:y)';
+      2: y := 'z|y';
+      3: y := 'z|(?:y)';
+    end;
+    case j of
+      0: q := '*';
+      1: q := '*?';
+      2: q := '+';
+      3: q := '+?';
+    end;
+    IsMatching('nested not poss',
+               'Aa((('+y+q+'b)*)y*b)',
+               'Aayyybyyybyyybyyybyyybyyy',  [1,22,   3,20, 3,16,  15,4]);
+    IsNotMatching('nested  poss',
+               'Aa((('+y+q+'b)*+)y*b)',
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsMatching('nested not poss',
+               'Aa((('+y+q+'b)*){0,1}y*b)',
+               'Aayyybyyybyyybyyybyyybyyy',  [1,22,   3,20, 3,16,  15,4]);
+    IsMatching('nested not poss',
+               'Aa((((?>'+y+q+'b))*){0,1}y*b)',
+               'Aayyybyyybyyybyyybyyybyyy',  [1,22,   3,20, 3,16,  15,4]);
+    IsNotMatching('nested not poss',
+               'Aa((?>(((?>'+y+q+'b))*))+y*b)',
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsNotMatching('nested not poss',
+               'Aa((?>(('+y+q+'b)*))+y*b)',  // The possesive ?> will match to much, and wont allow the inner * to back-track
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsNotMatching('nested not poss',
+               'Aa((('+y+q+'b)*){0,1}+y*b)',  // The possesive {0,1}+ will match to much, and wont allow the inner * to back-track
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsNotMatching('nested not poss',
+               'Aa((((?>'+y+q+'b))*){0,1}+y*b)',  // The possesive {0,1}+ will match to much, and wont allow the inner * to back-track
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsNotMatching('nested not poss',
+               'Aa((?>(((?>'+y+q+'b))*)){0,1}+y*b)',  // The possesive {0,1}+ will match to much, and wont allow the inner * to back-track
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsNotMatching('nested not poss',
+               'Aa((?>(('+y+q+'b)*)){0,1}+y*b)',  // The possesive {0,1}+ will match to much, and wont allow the inner * to back-track
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsNotMatching('nested not poss',
+               'Aa((('+y+q+'b)*){1,1}+y*b)',  //
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsNotMatching('nested  poss',
+               'Aa((('+y+q+'b)*+){1,2}y*b)',
+               'Aayyybyyybyyybyyybyyybyyy');
+    IsMatching('nested not poss',
+               'Aa((('+y+q+'b)*)y*b){1,2}',
+               'Aayyybyyybyyybyyybyyybyyy',  [1,22,   3,20, 3,16,  15,4]);
+    IsNotMatching('nested  poss',
+               'Aa((('+y+q+'b)*+)y*b){1,2}',
+               'Aayyybyyybyyybyyybyyybyyy');
+  end;
 
 
   IsMatching('nested branch *? ',

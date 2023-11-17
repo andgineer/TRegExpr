@@ -282,6 +282,7 @@ type
   TOpLoopInfo = record
     Count: Integer;
     CurrentRegInput: PRegExprChar;
+    BackTrackingAsAtom: Boolean;
     OuterLoop: POpLoopInfo; // for nested loops
   end;
   {$ENDIF}
@@ -1708,6 +1709,7 @@ const
   OP_LOOKAROUND_OPTIONAL = TREOp(61);
 
   OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
+  OP_LOOP_POSS = TREOp(66); // Same as OP_LOOP but in non-greedy mode
 
   OP_NONE = High(TREOp);
 
@@ -1778,7 +1780,6 @@ const
   reeBadLinePairedSeparator = 128;
   reeBadUnicodeCategory = 129;
   reeTooSmallCheckersArray = 130;
-  reePossessiveAfterComplexBraces = 131;
   reeBadRecursion = 132;
   reeBadSubCall = 133;
   reeNamedGroupBad = 140;
@@ -1870,8 +1871,6 @@ begin
       Result := 'TRegExpr compile: invalid category after \p or \P';
     reeTooSmallCheckersArray:
       Result := 'TRegExpr compile: too small CharCheckers array';
-    reePossessiveAfterComplexBraces:
-      Result := 'TRegExpr compile: possessive + after complex braces: (foo){n,m}+';
     reeBadRecursion:
       Result := 'TRegExpr compile: bad recursion (?R)';
     reeBadSubCall:
@@ -3439,7 +3438,7 @@ var
   TheOp: TREOp;
   NextNode: PRegExprChar;
 
-  procedure EmitComplexBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp: Boolean); // ###0.940
+  procedure EmitComplexBraces(ABracesMin, ABracesMax: TREBracesArg; ANonGreedyOp, APossesive: boolean); // ###0.940
   {$IFDEF ComplexBraces}
   var
     off: TRENextOff;
@@ -3448,6 +3447,9 @@ var
     {$IFNDEF ComplexBraces}
     Error(reeComplexBracesNotImplemented);
     {$ELSE}
+    if APossesive then
+      TheOp := OP_LOOP_POSS
+    else
     if ANonGreedyOp then
       TheOp := OP_LOOP_NG
     else
@@ -3637,8 +3639,8 @@ begin
           FlagParse := FlagParse or FLAG_GREEDY;
         if (FlagTemp and (FLAG_SIMPLE or FLAG_HASWIDTH)) <> (FLAG_SIMPLE or FLAG_HASWIDTH) then
         begin
-          if NonGreedyOp or ((FlagTemp and FLAG_HASWIDTH) = 0) then
-            EmitComplexBraces(0, MaxBracesArg, NonGreedyOp)
+          if NonGreedyOp or PossessiveCh or ((FlagTemp and FLAG_HASWIDTH) = 0) then
+            EmitComplexBraces(0, MaxBracesArg, NonGreedyOp, PossessiveCh)
           else
           begin // Emit x* as (x&|), where & means "self".
             InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz); // Either x
@@ -3685,8 +3687,8 @@ begin
           FlagParse := FlagParse or FLAG_GREEDY;
         if (FlagTemp and (FLAG_SIMPLE or FLAG_HASWIDTH)) <> (FLAG_SIMPLE or FLAG_HASWIDTH) then
         begin
-          if NonGreedyOp or ((FlagTemp and FLAG_HASWIDTH) = 0) then
-            EmitComplexBraces(1, MaxBracesArg, NonGreedyOp)
+          if NonGreedyOp or PossessiveCh or ((FlagTemp and FLAG_HASWIDTH) = 0) then
+            EmitComplexBraces(1, MaxBracesArg, NonGreedyOp, PossessiveCh)
           else
           begin // Emit x+ as x(&|), where & means "self".
             NextNode := EmitNode(OP_BRANCH); // Either
@@ -3731,9 +3733,7 @@ begin
         begin // ###0.940  // We emit x?? as x{0,1}?
           if (FlagTemp and FLAG_SIMPLE) = 0 then
           begin
-            if PossessiveCh then
-              Error(reePossessiveAfterComplexBraces);
-            EmitComplexBraces(0, 1, NonGreedyOp);
+            EmitComplexBraces(0, 1, NonGreedyOp, PossessiveCh);
           end
           else
             EmitSimpleBraces(0, 1, NonGreedyOp, PossessiveCh);
@@ -3787,9 +3787,7 @@ begin
           EmitSimpleBraces(BracesMin, BracesMax, NonGreedyOp, PossessiveCh)
         else
         begin
-          if PossessiveCh then
-            Error(reePossessiveAfterComplexBraces);
-          EmitComplexBraces(BracesMin, BracesMax, NonGreedyOp);
+          EmitComplexBraces(BracesMin, BracesMax, NonGreedyOp, PossessiveCh);
         end;
         if NonGreedyCh or PossessiveCh then
           Inc(regParse); // Skip extra char '?'
@@ -5994,18 +5992,21 @@ begin
       OP_LOOPENTRY:
         begin // ###0.925
           Local.LoopInfo.Count := 0;
+          Local.LoopInfo.BackTrackingAsAtom := False;
           Local.LoopInfo.CurrentRegInput := nil;
           Local.LoopInfo.OuterLoop := CurrentLoopInfoListPtr;
           CurrentLoopInfoListPtr := @Local.LoopInfo;
           save := regInput;
           Result := MatchPrim(next); // execute loop
           CurrentLoopInfoListPtr := Local.LoopInfo.OuterLoop;
+          if Local.LoopInfo.BackTrackingAsAtom then
+            IsBacktrackingGroupAsAtom := False;
           if not Result then
             regInput := save;
           Exit;
         end;
 
-      OP_LOOP, OP_LOOP_NG:
+      OP_LOOP, OP_LOOP_NG, OP_LOOP_POSS:
         begin // ###0.940
           if CurrentLoopInfoListPtr = nil then begin
             Error(reeLoopWithoutEntry);
@@ -6030,7 +6031,7 @@ begin
             end;
 
             Local.LoopInfoListPtr^.CurrentRegInput := regInput;
-            if scan^ = OP_LOOP then
+            if not(scan^ = OP_LOOP_NG) then
             begin
               // greedy way - first try to max deep of greed ;)
               if Local.LoopInfoListPtr^.Count < BracesMax then
@@ -6047,8 +6048,14 @@ begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+
               if IsBacktrackingGroupAsAtom then
                 Exit;
+              if (scan^ = OP_LOOP_POSS) and (not Result) then begin
+                Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
+                IsBacktrackingGroupAsAtom := True;
+                exit;
+              end;
               if not Result then
                 regInput := save;
               Exit;
@@ -7145,7 +7152,8 @@ begin
         end;
 
       OP_LOOP,
-      OP_LOOP_NG:
+      OP_LOOP_NG,
+      OP_LOOP_POSS:
         begin //###0.940
           min_cnt := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
           if min_cnt = 0 then
@@ -7456,6 +7464,8 @@ begin
       Result := 'LOOP';
     OP_LOOP_NG:
       Result := 'LOOP_NG';
+    OP_LOOP_POSS:
+      Result := 'LOOP_POSS';
     {$ENDIF}
     OP_STAR_NG:
       Result := 'STAR_NG';
@@ -7548,7 +7558,7 @@ begin
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    if ((op =OP_CLOSE) or (op = OP_CLOSE_ATOMIC) or (op = OP_LOOP) or (op = OP_LOOP_NG)) and (CurIndent > 0) then
+    if ((op =OP_CLOSE) or (op = OP_CLOSE_ATOMIC) or (op = OP_LOOP) or (op = OP_LOOP_NG) or (op = OP_LOOP_POSS)) and (CurIndent > 0) then
       dec(CurIndent, Indent);
     Result := Result + Format('%2d:%s %s', [s - programm, StringOfChar(' ', CurIndent), DumpOp(s^)]);
     if ((op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_LOOPENTRY)) then
@@ -7664,7 +7674,7 @@ begin
       Inc(s, REBracesArgSz * 2);
     end;
     {$IFDEF ComplexBraces}
-    if (op = OP_LOOP) or (op = OP_LOOP_NG) then
+    if (op = OP_LOOP) or (op = OP_LOOP_NG) or (op = OP_LOOP_POSS) then
     begin // ###0.940
       Result := Result + Format(' -> (%d) {%d,%d}',
         [(s - programm - (REOpSz + RENextOffSz)) +
