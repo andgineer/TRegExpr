@@ -2822,8 +2822,7 @@ begin
           Inc(ABuffer);
           N := PLongInt(ABuffer)^;
           Inc(ABuffer, RENumberSz);
-          for i := 1 to N do
-          begin
+          repeat
             ch := ABuffer^;
             {
             // already upcased in opcode
@@ -2836,7 +2835,8 @@ begin
               Exit;
             end;
             Inc(ABuffer);
-          end;
+            dec(n);
+          until n = 0;
         end;
 
       {$IFDEF FastUnicodeData}
