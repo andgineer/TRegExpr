@@ -5838,23 +5838,26 @@ begin
           LookAroundInfoList := Local.LookAroundInfo.OuterInfo;
           fInputCurrentEnd := Local.LookAroundInfo.savedInputCurrentEnd;
 
-          next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
+          opnd := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz; // Successor of OP_LOOKAHEAD_END;
           if Local.IsNegativeLook then begin
-            Result := (next^ = OP_LOOKAROUND_OPTIONAL);
-            if Result then
-              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz
-            else
+            Result := (opnd^ = OP_LOOKAROUND_OPTIONAL);
+            if not Result then
               Result := (not Local.LookAroundInfo.HasMatchedToEnd);
             if Result then begin
+              next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
+              if (next^ = OP_LOOKAROUND_OPTIONAL) then
+                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
               Result := MatchPrim(next);
               Exit;
             end;
           end
           else
-          if (next^ = OP_LOOKAROUND_OPTIONAL) then begin
-            next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
+          if (opnd^ = OP_LOOKAROUND_OPTIONAL) then begin
             if not Local.LookAroundInfo.HasMatchedToEnd then begin
+              next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
+              if (next^ = OP_LOOKAROUND_OPTIONAL) then
+                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
               Result := MatchPrim(next);
               Exit;
@@ -5923,23 +5926,26 @@ begin
           LookAroundInfoList := Local.LookAroundInfo.OuterInfo;
           fInputCurrentEnd := Local.LookAroundInfo.savedInputCurrentEnd;
 
-          next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
+          opnd := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz; // Successor of OP_LOOKAHEAD_END;
           if Local.IsNegativeLook then begin
-            Result := (next^ = OP_LOOKAROUND_OPTIONAL);
-            if Result then
-              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz
-            else
+            Result := (opnd^ = OP_LOOKAROUND_OPTIONAL);
+            if not Result then
               Result := not Local.LookAroundInfo.HasMatchedToEnd;
             if Result then begin
+              next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
+              if (next^ = OP_LOOKAROUND_OPTIONAL) then
+                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
               Result := MatchPrim(next);
               Exit;
             end;
           end
           else
-          if (next^ = OP_LOOKAROUND_OPTIONAL) then begin
-            next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
+          if (opnd^ = OP_LOOKAROUND_OPTIONAL) then begin
             if not Local.LookAroundInfo.HasMatchedToEnd then begin
+              next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
+              if (next^ = OP_LOOKAROUND_OPTIONAL) then
+                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
               Result := MatchPrim(next);
               Exit;
