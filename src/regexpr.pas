@@ -1707,6 +1707,9 @@ const
   OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_LOOP_POSS = TREOp(66); // Same as OP_LOOP but in non-greedy mode
 
+  OP_BRANCH_EX = TREOp(67);
+  OP_BRANCH_EXI = TREOp(68);
+
   OP_NONE = High(TREOp);
 
   // We work with p-code through pointers, compatible with PRegExprChar.
@@ -2527,9 +2530,13 @@ procedure TRegExpr.OpTail(p: PRegExprChar; val: PRegExprChar);
 // regtail on operand of first argument; nop if operandless
 begin
   // "Operandless" and "op != OP_BRANCH" are synonymous in practice.
-  if (p = nil) or (p = @regDummy) or (PREOp(p)^ <> OP_BRANCH) then
+  if (p = nil) or (p = @regDummy) then
     Exit;
-  Tail(p + REOpSz + RENextOffSz, val);
+  case PREOp(p)^ of
+    OP_BRANCH: Tail(p + REOpSz + RENextOffSz, val);
+    OP_BRANCH_EX: Tail(p + REOpSz + RENextOffSz + 1, val);
+    OP_BRANCH_EXI: Tail(p + REOpSz + RENextOffSz + 2, val);
+  end;
 end; { of procedure TRegExpr.OpTail
   -------------------------------------------------------------- }
 
@@ -3173,7 +3180,11 @@ begin
     scan := regCodeWork; // First OP_BRANCH.
     if PREOp(regNext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
-      scan := scan + REOpSz + RENextOffSz;
+      case PREOp(scan)^ of
+        OP_BRANCH:     scan := scan + REOpSz + RENextOffSz;
+        OP_BRANCH_EX:  scan := scan + REOpSz + RENextOffSz + 1;
+        OP_BRANCH_EXI: scan := scan + REOpSz + RENextOffSz + 2;
+      end;
 
       // Starting-point info.
       if PREOp(scan)^ = OP_BOL then
@@ -3371,7 +3382,8 @@ function TRegExpr.ParseBranch(var FlagParse: Integer): PRegExprChar;
 // one alternative of an | operator
 // Implements the concatenation operator.
 var
-  ret, chain, latest: PRegExprChar;
+  ret, chain, latest, opnd: PRegExprChar;
+  ch: REChar;
   FlagTemp: Integer;
 begin
   FlagTemp := 0;
@@ -3389,8 +3401,32 @@ begin
     end;
     FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_LOOP or FLAG_GREEDY);
     if chain = nil // First piece.
-    then
-      FlagParse := FlagParse or FlagTemp and FLAG_SPECSTART
+    then begin
+      FlagParse := FlagParse or FlagTemp and FLAG_SPECSTART;
+      if fSecondPass then begin
+        case latest^ of
+          OP_EXACTLY: begin
+              ret^ := OP_BRANCH_EX;
+              opnd := ret + REOpSz + RENextOffSz;
+              ch := (latest + REOpSz + RENextOffSz + RENumberSz)^;
+              InsertOperator(TREOp(ch), opnd, 1);
+              inc(latest, 1);
+            end;
+          OP_EXACTLY_CI: begin
+              ret^ := OP_BRANCH_EXI;
+              opnd := ret + REOpSz + RENextOffSz;
+              ch := (latest + REOpSz + RENextOffSz + RENumberSz)^;
+              InsertOperator(TREOp(_UpperCase(ch)), opnd, 1);
+              InsertOperator(TREOp(_LowerCase(ch)), opnd, 1);
+              inc(latest, 2);
+            end;
+        end;
+      end
+      else begin
+        EmitC(#0);
+        EmitC(#0);
+      end;
+    end
     else
       Tail(chain, latest);
     chain := latest;
@@ -5949,16 +5985,30 @@ begin
           Exit;
         end;
 
-      OP_BRANCH:
+      OP_BRANCH, OP_BRANCH_EX, OP_BRANCH_EXI:
         begin
-          if (next^ <> OP_BRANCH) // No next choice in group
+          if (next^ <> OP_BRANCH) and (next^ <> OP_BRANCH_EX) and (next^ <> OP_BRANCH_EXI) // No next choice in group
           then
-            next := scan + REOpSz + RENextOffSz // Avoid recursion
+            case scan^ of
+              OP_BRANCH: next := scan + REOpSz + RENextOffSz; // Avoid recursion
+              OP_BRANCH_EX: next := scan + REOpSz + RENextOffSz + 1; // Avoid recursion
+              OP_BRANCH_EXI: next := scan + REOpSz + RENextOffSz + 2; // Avoid recursion
+            end
           else
           begin
             repeat
               save := regInput;
-              Result := MatchPrim(scan + REOpSz + RENextOffSz);
+              case scan^ of
+                OP_BRANCH: Result := MatchPrim(scan + REOpSz + RENextOffSz);
+                OP_BRANCH_EX:
+                  if (regInput^ = (scan + REOpSz + RENextOffSz)^) then
+                    Result := MatchPrim(scan + REOpSz + RENextOffSz + 1);
+                OP_BRANCH_EXI:
+                  if (regInput^ = (scan + REOpSz + RENextOffSz)^) or
+                     (regInput^ = (scan + REOpSz + RENextOffSz + 1)^)
+                  then
+                    Result := MatchPrim(scan + REOpSz + RENextOffSz + 2);
+              end;
               if Result then
                 Exit;
               // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
@@ -5971,7 +6021,11 @@ begin
               if  (next^ <> OP_BRANCH) then
                 break;
             until  False;
-            next := scan  + REOpSz + RENextOffSz;
+            case scan^ of
+              OP_BRANCH: next := scan + REOpSz + RENextOffSz; // Avoid recursion
+              OP_BRANCH_EX: next := scan + REOpSz + RENextOffSz + 1; // Avoid recursion
+              OP_BRANCH_EXI: next := scan + REOpSz + RENextOffSz + 2; // Avoid recursion
+            end
           end;
         end;
 
@@ -7111,17 +7165,26 @@ begin
       OP_LOOKAROUND_OPTIONAL:
         ;
 
-      OP_BRANCH:
+      OP_BRANCH, OP_BRANCH_EX, OP_BRANCH_EXI:
         begin
-          if (PREOp(Next)^ <> OP_BRANCH) // No choice.
+          if (PREOp(Next)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_BRANCH_EX) and (PREOp(Next)^ <> OP_BRANCH_EXI) // No choice.
           then
-            Next := scan + REOpSz + RENextOffSz // Avoid recursion.
+            case Oper of
+              OP_BRANCH: Next := scan + REOpSz + RENextOffSz; // Avoid recursion.
+              OP_BRANCH_EX: Next := scan + REOpSz + RENextOffSz + 1; // Avoid recursion.
+              OP_BRANCH_EXI: Next := scan + REOpSz + RENextOffSz + 2; // Avoid recursion.
+            end
           else
           begin
             repeat
-              FillFirstCharSet(scan + REOpSz + RENextOffSz);
+              case scan^ of
+                OP_BRANCH: FillFirstCharSet(scan + REOpSz + RENextOffSz);
+                OP_BRANCH_EX: FillFirstCharSet(scan + REOpSz + RENextOffSz + 1);
+                OP_BRANCH_EXI: FillFirstCharSet(scan + REOpSz + RENextOffSz + 2);
+              end;
               scan := regNextQuick(scan);
-            until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
+            until (scan = nil) or
+              ( (PREOp(scan)^ <> OP_BRANCH) and (PREOp(scan)^ <> OP_BRANCH_EX) and (PREOp(scan)^ <> OP_BRANCH_EXI));
             Exit;
           end;
         end;
@@ -7399,6 +7462,10 @@ begin
       Result := 'ANYBUT_CI';
     OP_BRANCH:
       Result := 'BRANCH';
+    OP_BRANCH_EX:
+      Result := 'OP_BRANCH_EX';
+    OP_BRANCH_EXI:
+      Result := 'OP_BRANCH_EXI';
     OP_EXACTLY:
       Result := 'EXACTLY';
     OP_EXACTLY_CI:
@@ -7694,6 +7761,16 @@ begin
                + ' Len: ' + IntToStr(PReOpLookBehindOptions(s)^.MatchLenMin)
                + '..' + IntToStr(PReOpLookBehindOptions(s)^.MatchLenMax);
       Inc(s, ReOpLookBehindOptionsSz);
+    end
+    else
+    if (op = OP_BRANCH_EX) then
+    begin
+      Inc(s, 1);
+    end
+    else
+    if (op = OP_BRANCH_EXI) then
+    begin
+      Inc(s, 2);
     end;
     Result := Result + #$d#$a;
   end; { of while }
@@ -7815,9 +7892,13 @@ begin
           Exit;
         end;
 
-      OP_BRANCH:
+      OP_BRANCH, OP_BRANCH_EX, OP_BRANCH_EXI:
         begin
-          if next^ = OP_BRANCH then begin
+          if (next^ = OP_BRANCH) or (next^ = OP_BRANCH_EX) or (next^ = OP_BRANCH_EXI) then begin
+            case op of
+              OP_BRANCH_EX:  s := s + 1;
+              OP_BRANCH_EXI: s := s + 2;
+            end;
             if not IsPartFixedLength(s, op, ABranchLen, ABranchMaxLen, OP_EEND, next, []) then
             begin
               if not NotFixedLen then
@@ -7829,6 +7910,10 @@ begin
             s := next;
             repeat
               next := regNext(s);
+              case s^ of
+                OP_BRANCH_EX:  s := s + 1;
+                OP_BRANCH_EXI: s := s + 2;
+              end;
               Inc(s, REOpSz + RENextOffSz);
               if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, next, []) then
               begin
@@ -7845,9 +7930,14 @@ begin
                 ABranchLen := ASubLen;
               if ASubMaxLen > ABranchMaxLen then
                 ABranchMaxLen := ASubMaxLen;
-            until next^ <> OP_BRANCH;
+            until (next^ <> OP_BRANCH) and (next^ <> OP_BRANCH_EX) and (next^ <> OP_BRANCH_EXI);
             AMinLen := AMinLen + ABranchLen;
             IncMaxLen(FndMaxLen, ABranchMaxLen);
+          end
+          else
+          case op of
+            OP_BRANCH_EX: s := s + 1;
+            OP_BRANCH_EXI: s := s + 2;
           end;
         end;
 
