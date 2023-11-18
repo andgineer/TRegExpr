@@ -378,7 +378,6 @@ type
     fInputCurrentEnd: PRegExprChar; // pointer after last char of the current visible part of input string (can be limited by look-behind)
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
-    regCurrentGrp: Integer; // index of group handling by OP_OPEN* opcode
     regRecursion: Integer; // current level of recursion (?R) (?1); always 0 if no recursion is used
 
     // work variables for compiler's routines
@@ -5354,7 +5353,6 @@ var
   opnd, opGrpEnd: PRegExprChar;
   no: Integer;
   save: PRegExprChar;
-  saveCurrentGrp: Integer;
   nextch: REChar;
   BracesMin, BracesMax: Integer;
   // we use integer instead of TREBracesArg to better support */+
@@ -5731,7 +5729,6 @@ begin
       OP_OPEN, OP_OPEN_ATOMIC:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          regCurrentGrp := no;
           save := GrpBounds[regRecursion].GrpStart[no];
           GrpBounds[regRecursion].GrpStart[no] := regInput;
           Result := MatchPrim(next);
@@ -5747,7 +5744,6 @@ begin
         begin
           Local.IsAtomic := scan^ = OP_CLOSE_ATOMIC;
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          regCurrentGrp := -1;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
           save := GrpBounds[regRecursion].GrpEnd[no];
@@ -5962,7 +5958,6 @@ begin
 
       OP_BRANCH:
         begin
-          saveCurrentGrp := regCurrentGrp;
           if (next^ <> OP_BRANCH) // No next choice in group
           then
             next := scan + REOpSz + RENextOffSz // Avoid recursion
@@ -5971,7 +5966,6 @@ begin
             repeat
               save := regInput;
               Result := MatchPrim(scan + REOpSz + RENextOffSz);
-              regCurrentGrp := saveCurrentGrp;
               if Result then
                 Exit;
               // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
@@ -6344,7 +6338,6 @@ end;
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): Boolean;
 begin
   regInput := APos;
-  regCurrentGrp := -1;
   regNestedCalls := 0;
   regRecursion := 0;
   fInputCurrentEnd := fInputEnd;
