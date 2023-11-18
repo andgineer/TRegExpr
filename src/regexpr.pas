@@ -5270,7 +5270,7 @@ begin
     Result := p + offset;
 end;
 
-function TRegExpr.regNextQuick(p: PRegExprChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+function TRegExpr.regNextQuick(p: PRegExprChar): PRegExprChar;
 var
   offset: TRENextOff;
 begin
