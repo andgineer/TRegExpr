@@ -577,7 +577,7 @@ type
 
     // dig the "next" pointer out of a node
     function regNext(p: PRegExprChar): PRegExprChar;
-    function regNextQuick(p: PRegExprChar): PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function regNextQuick(p: PRegExprChar): PRegExprChar; {$IFDEF FPC}inline;{$ENDIF}
 
     // dig the "last" pointer out of a chain of node
     function regLast(p: PRegExprChar): PRegExprChar;
@@ -5270,7 +5270,7 @@ begin
     Result := p + offset;
 end;
 
-function TRegExpr.regNextQuick(p: PRegExprChar): PRegExprChar;
+function TRegExpr.regNextQuick(p: PRegExprChar): PRegExprChar; {$IFDEF FPC}inline;{$ENDIF}
 var
   offset: TRENextOff;
 begin
