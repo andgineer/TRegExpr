@@ -523,6 +523,9 @@ type
     // regnode - emit a node, return location
     function EmitNode(op: TREOp): PRegExprChar;
 
+    // emit OP_BRANCH (and fillchars)
+    function EmitBranch: PRegExprChar;
+
     // emit (if appropriate) a byte of code
     procedure EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
 
@@ -999,6 +1002,8 @@ const
   // size of BRACES arguments in REChars
   {$ENDIF}
   RENumberSz = SizeOf(LongInt) div SizeOf(REChar);
+
+  REBranchArgSz = 2; // 2 * (REChar div REChar)
 
 type
   TReGroupIndex = LongInt;
@@ -1705,6 +1710,10 @@ const
 
   OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_LOOP_POSS = TREOp(66); // Same as OP_LOOP but in non-greedy mode
+
+  OP_GBRANCH = TREOp(67); // Guarded branch
+  OP_GBRANCH_EX = TREOp(68);
+  OP_GBRANCH_EX_CI = TREOp(69);
 
   OP_NONE = High(TREOp);
 
@@ -2526,9 +2535,12 @@ procedure TRegExpr.OpTail(p: PRegExprChar; val: PRegExprChar);
 // regtail on operand of first argument; nop if operandless
 begin
   // "Operandless" and "op != OP_BRANCH" are synonymous in practice.
-  if (p = nil) or (p = @regDummy) or (PREOp(p)^ <> OP_BRANCH) then
+  if (p = nil) or (p = @regDummy) or
+     (PREOp(p)^ <> OP_BRANCH) and (PREOp(p)^ <> OP_GBRANCH) and
+     (PREOp(p)^ <> OP_GBRANCH_EX) and (PREOp(p)^ <> OP_GBRANCH_EX_CI)
+  then
     Exit;
-  Tail(p + REOpSz + RENextOffSz, val);
+  Tail(p + REOpSz + RENextOffSz + REBranchArgSz, val);
 end; { of procedure TRegExpr.OpTail
   -------------------------------------------------------------- }
 
@@ -2558,6 +2570,13 @@ begin
     // compute code size without code generation
 end; { of function TRegExpr.EmitNode
   -------------------------------------------------------------- }
+
+function TRegExpr.EmitBranch: PRegExprChar;
+begin
+  Result := EmitNode(OP_BRANCH);
+  EmitC(#0);
+  EmitC(#0);
+end;
 
 procedure TRegExpr.EmitC(ch: REChar);
 begin
@@ -2715,6 +2734,9 @@ begin
     place^ := #0;
     Inc(place);
   end;
+  for i := 0 to regNumBrackets - 1 do
+    if (GrpOpCodes[i] <> nil) and (GrpOpCodes[i] >= opnd) then
+      GrpOpCodes[i] := GrpOpCodes[i] + sz;
 end; { of procedure TRegExpr.InsertOperator
   -------------------------------------------------------------- }
 
@@ -3172,7 +3194,7 @@ begin
     scan := regCodeWork; // First OP_BRANCH.
     if PREOp(regNext(scan))^ = OP_EEND then
     begin // Only one top-level choice.
-      scan := scan + REOpSz + RENextOffSz;
+      scan := scan + REOpSz + RENextOffSz + REBranchArgSz;
 
       // Starting-point info.
       if PREOp(scan)^ = OP_BOL then
@@ -3263,10 +3285,11 @@ function TRegExpr.DoParseReg(InBrackets, IndexBrackets: Boolean;
 // is a trifle forced, but the need to tie the tails of the branches to what
 // follows makes it hard to avoid.
 var
-  ret, br, ender: PRegExprChar;
+  ret, br, ender, brStart: PRegExprChar;
   NBrackets: Integer;
   FlagTemp: Integer;
   SavedModifiers: TRegExprModifiers;
+  HasGBranch, HasChoice: Boolean;
 begin
   Result := nil;
   FlagTemp := 0;
@@ -3298,6 +3321,7 @@ begin
 
   // Pick up the branches, linking them together.
   br := ParseBranch(FlagTemp);
+  brStart := br;
   if br = nil then
   begin
     Result := nil;
@@ -3310,6 +3334,8 @@ begin
   if (FlagTemp and FLAG_HASWIDTH) = 0 then
     FlagParse := FlagParse and not FLAG_HASWIDTH;
   FlagParse := FlagParse or FlagTemp and (FLAG_SPECSTART or FLAG_LOOP or FLAG_GREEDY);
+  HasGBranch := False;
+  HasChoice := regParse^ = '|';
   while (regParse^ = '|') do
   begin
     Inc(regParse);
@@ -3319,10 +3345,21 @@ begin
       Result := nil;
       Exit;
     end;
+    if br^ <> OP_BRANCH then
+      HasGBranch := True;
     Tail(ret, br); // OP_BRANCH -> OP_BRANCH.
     if (FlagTemp and FLAG_HASWIDTH) = 0 then
       FlagParse := FlagParse and not FLAG_HASWIDTH;
     FlagParse := FlagParse or FlagTemp and (FLAG_SPECSTART or FLAG_LOOP or FLAG_GREEDY);
+  end;
+  if fSecondPass then begin
+    if HasGBranch then begin
+      if brStart^ = OP_BRANCH then
+        brStart^ := OP_GBRANCH;
+    end
+    else
+    if not HasChoice then
+      brStart^ := OP_BRANCH;
   end;
 
   // Make a closing node, and hook it on the end.
@@ -3371,12 +3408,13 @@ function TRegExpr.ParseBranch(var FlagParse: Integer): PRegExprChar;
 // Implements the concatenation operator.
 var
   ret, chain, latest: PRegExprChar;
+  ch: REChar;
   FlagTemp: Integer;
 begin
   FlagTemp := 0;
   FlagParse := FLAG_WORST; // Tentatively.
 
-  ret := EmitNode(OP_BRANCH);
+  ret := EmitBranch;
   chain := nil;
   while (regParse < fRegexEnd) and (regParse^ <> '|') and (regParse^ <> ')') do
   begin
@@ -3388,8 +3426,26 @@ begin
     end;
     FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_LOOP or FLAG_GREEDY);
     if chain = nil // First piece.
-    then
-      FlagParse := FlagParse or FlagTemp and FLAG_SPECSTART
+    then begin
+      FlagParse := FlagParse or FlagTemp and FLAG_SPECSTART;
+      if fSecondPass then begin
+        case latest^ of
+          OP_EXACTLY: begin
+              ret^ := OP_GBRANCH_EX;
+              ch := (latest + REOpSz + RENextOffSz + RENumberSz)^;
+              (ret + REOpSz + RENextOffSz)^ := ch;
+            end;
+          OP_EXACTLY_CI: begin
+              ret^ := OP_GBRANCH_EX_CI;
+              ch := (latest + REOpSz + RENextOffSz + RENumberSz)^;
+              (ret + REOpSz + RENextOffSz)^ := _UpperCase(ch);
+              (ret + REOpSz + RENextOffSz + 1)^ := _LowerCase(ch);
+            end;
+        end;
+      end
+      else begin
+      end;
+    end
     else
       Tail(chain, latest);
     chain := latest;
@@ -3638,10 +3694,10 @@ begin
             EmitComplexBraces(0, MaxBracesArg, NonGreedyOp, PossessiveCh)
           else
           begin // Emit x* as (x&|), where & means "self".
-            InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz); // Either x
+            InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz + REBranchArgSz); // Either x
             OpTail(Result, EmitNode(OP_BACK)); // and loop
             OpTail(Result, Result); // back
-            Tail(Result, EmitNode(OP_BRANCH)); // or
+            Tail(Result, EmitBranch); // or
             Tail(Result, EmitNode(OP_NOTHING)); // nil.
           end
         end
@@ -3686,10 +3742,10 @@ begin
             EmitComplexBraces(1, MaxBracesArg, NonGreedyOp, PossessiveCh)
           else
           begin // Emit x+ as x(&|), where & means "self".
-            NextNode := EmitNode(OP_BRANCH); // Either
+            NextNode := EmitBranch; // Either
             Tail(Result, NextNode);
             Tail(EmitNode(OP_BACK), Result); // loop back
-            Tail(NextNode, EmitNode(OP_BRANCH)); // or
+            Tail(NextNode, EmitBranch); // or
             Tail(Result, EmitNode(OP_NOTHING)); // nil.
           end
         end
@@ -3735,8 +3791,8 @@ begin
         end
         else
         begin // greedy '?'
-          InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz); // Either x
-          Tail(Result, EmitNode(OP_BRANCH)); // or
+          InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz + REBranchArgSz); // Either x
+          Tail(Result, EmitBranch); // or
           NextNode := EmitNode(OP_NOTHING); // nil.
           Tail(Result, NextNode);
           OpTail(Result, NextNode);
@@ -5950,14 +6006,14 @@ begin
 
       OP_BRANCH:
         begin
-          if (next^ <> OP_BRANCH) // No next choice in group
+          if (next^ <> OP_BRANCH)  // No next choice in group
           then
-            next := scan + REOpSz + RENextOffSz // Avoid recursion
+            next := scan + REOpSz + RENextOffSz + REBranchArgSz // Avoid recursion
           else
           begin
             repeat
               save := regInput;
-              Result := MatchPrim(scan + REOpSz + RENextOffSz);
+              Result := MatchPrim(scan + REOpSz + RENextOffSz + REBranchArgSz);
               if Result then
                 Exit;
               // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
@@ -5970,8 +6026,50 @@ begin
               if  (next^ <> OP_BRANCH) then
                 break;
             until  False;
-            next := scan  + REOpSz + RENextOffSz;
+            next := scan + REOpSz + RENextOffSz + REBranchArgSz; // Avoid recursion
           end;
+        end;
+
+      OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
+        begin
+          Assert((next^ = OP_BRANCH) or (next^ = OP_GBRANCH) or (next^ = OP_GBRANCH_EX) or (next^ = OP_GBRANCH_EX_CI));
+          repeat
+            save := regInput;
+            case scan^ of
+              OP_GBRANCH, OP_BRANCH:
+                Result := MatchPrim(scan + REOpSz + RENextOffSz + REBranchArgSz);
+              OP_GBRANCH_EX:
+                if (regInput^ = (scan + REOpSz + RENextOffSz)^) then
+                  Result := MatchPrim(scan + REOpSz + RENextOffSz + REBranchArgSz);
+              OP_GBRANCH_EX_CI:
+                if (regInput^ = (scan + REOpSz + RENextOffSz)^) or
+                   (regInput^ = (scan + REOpSz + RENextOffSz + 1)^)
+                then
+                  Result := MatchPrim(scan + REOpSz + RENextOffSz + REBranchArgSz);
+            end;
+            if Result then
+              Exit;
+            // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
+            regInput := save;
+            if IsBacktrackingGroupAsAtom then
+              Exit;
+            scan := next;
+            Assert(scan <> nil);
+            next := regNextQuick(scan);
+            if  (next^ <> OP_BRANCH) and (next^ <> OP_GBRANCH) and (next^ <> OP_GBRANCH_EX) and (next^ <> OP_GBRANCH_EX_CI) then
+              break;
+          until  False;
+          case scan^ of
+            OP_GBRANCH_EX:
+              if (regInput^ <> (scan + REOpSz + RENextOffSz)^) then
+                exit;
+            OP_GBRANCH_EX_CI:
+              if (regInput^ <> (scan + REOpSz + RENextOffSz)^) and
+                 (regInput^ <> (scan + REOpSz + RENextOffSz + 1)^)
+              then
+                exit;
+          end;
+          next := scan + REOpSz + RENextOffSz + REBranchArgSz; // Avoid recursion
         end;
 
       {$IFDEF ComplexBraces}
@@ -7110,17 +7208,20 @@ begin
       OP_LOOKAROUND_OPTIONAL:
         ;
 
-      OP_BRANCH:
+      OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
         begin
-          if (PREOp(Next)^ <> OP_BRANCH) // No choice.
+          if (PREOp(Next)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
+             (PREOp(Next)^ <> OP_GBRANCH_EX) and (PREOp(Next)^ <> OP_GBRANCH_EX_CI) // No choice.
           then
-            Next := scan + REOpSz + RENextOffSz // Avoid recursion.
+            Next := scan + REOpSz + RENextOffSz + REBranchArgSz // Avoid recursion.
           else
           begin
             repeat
-              FillFirstCharSet(scan + REOpSz + RENextOffSz);
+              FillFirstCharSet(scan + REOpSz + RENextOffSz + REBranchArgSz);
               scan := regNextQuick(scan);
-            until (scan = nil) or (PREOp(scan)^ <> OP_BRANCH);
+            until (scan = nil) or
+              ( (PREOp(scan)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
+                (PREOp(scan)^ <> OP_GBRANCH_EX) and (PREOp(scan)^ <> OP_GBRANCH_EX_CI) );
             Exit;
           end;
         end;
@@ -7398,6 +7499,12 @@ begin
       Result := 'ANYBUT_CI';
     OP_BRANCH:
       Result := 'BRANCH';
+    OP_GBRANCH:
+      Result := 'G_BRANCH';
+    OP_GBRANCH_EX:
+      Result := 'G_BRANCH_EX';
+    OP_GBRANCH_EX_CI:
+      Result := 'G_BRANCH_EX_CI';
     OP_EXACTLY:
       Result := 'EXACTLY';
     OP_EXACTLY_CI:
@@ -7643,7 +7750,7 @@ begin
     end;
     if (op = OP_SUBCALL) then
     begin
-      Result := Result + ' (?' + IntToStr(PReGroupIndex(s)^) + ')';
+      Result := Result + ' (?' + IntToStr(PReGroupIndex(s)^) + ') @'  + IntToStr(GrpOpCodes[PReGroupIndex(s)^]-programm);
       Inc(s, ReGroupIndexSz);
     end;
     if (op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_CLOSE) or (op = OP_CLOSE_ATOMIC) then
@@ -7693,6 +7800,13 @@ begin
                + ' Len: ' + IntToStr(PReOpLookBehindOptions(s)^.MatchLenMin)
                + '..' + IntToStr(PReOpLookBehindOptions(s)^.MatchLenMax);
       Inc(s, ReOpLookBehindOptionsSz);
+    end
+    else
+    if (op = OP_BRANCH) or (op = OP_GBRANCH) or
+       (op = OP_GBRANCH_EX) or (op = OP_GBRANCH_EX_CI)
+    then
+    begin
+      Inc(s, REBranchArgSz);
     end;
     Result := Result + #$d#$a;
   end; { of while }
@@ -7814,9 +7928,10 @@ begin
           Exit;
         end;
 
-      OP_BRANCH:
+      OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
         begin
-          if next^ = OP_BRANCH then begin
+          if (next^ = OP_BRANCH) or (PREOp(Next)^ = OP_GBRANCH) or (next^ = OP_GBRANCH_EX) or (next^ = OP_GBRANCH_EX_CI) then begin
+            s := s + REBranchArgSz;
             if not IsPartFixedLength(s, op, ABranchLen, ABranchMaxLen, OP_EEND, next, []) then
             begin
               if not NotFixedLen then
@@ -7828,6 +7943,7 @@ begin
             s := next;
             repeat
               next := regNext(s);
+              s := s + REBranchArgSz;
               Inc(s, REOpSz + RENextOffSz);
               if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, next, []) then
               begin
@@ -7844,10 +7960,13 @@ begin
                 ABranchLen := ASubLen;
               if ASubMaxLen > ABranchMaxLen then
                 ABranchMaxLen := ASubMaxLen;
-            until next^ <> OP_BRANCH;
+            until (next^ <> OP_BRANCH) and (next^ <> OP_GBRANCH) and
+                  (next^ <> OP_GBRANCH_EX) and (next^ <> OP_GBRANCH_EX_CI);
             AMinLen := AMinLen + ABranchLen;
             IncMaxLen(FndMaxLen, ABranchMaxLen);
-          end;
+          end
+          else
+            s := s + REBranchArgSz;
         end;
 
       OP_OPEN:

@@ -1662,6 +1662,8 @@ begin
   IsMatching('Valid call idx', '(.)(.)(?2)',  'aABBC',  [1,3,  1,1, 2,1]);
   TestBadRegex('Invalid call idx', '(.)(.)(?3)');
 
+  IsMatching('ref in branch', '((A)|B|C\2)*',  'AACACB',  [1,4,  3,2, 2,1]);
+  IsMatching('ref in call', '[^A]*((A)|B|C\2)*',  'DAACACBE',  [1,5,  4,2, 3,1]);
 end;
 
 procedure TTestRegexpr.TestSubCall;
@@ -1681,6 +1683,9 @@ begin
   IsMatching('nested call to outer', '(1(2(3(?1)?))A)_((?3))',  '123A_3123',  [1,6,  1,4, 2,2, 3,1, 6,1]);
   IsMatching('nested call to outer', '(1(2(3(?1)?))A)_((?3))',  '123A_3123A',  [1,10,  1,4, 2,2, 3,1, 6,5]);
 
+  IsMatching('ref in branch', '((A)|B|C(?2))*',  'AACACB',  [1,4,  3,2, 2,1]);
+  IsMatching('ref in branch', '[^A]*((A)|B|C(?2))*',  'DAACACBE',  [1,5,  4,2, 3,1]);
+  IsMatching('ref in branch', '((A)|B|C(?2))+',  'AACB',  [1,2,  2,1, 2,1]);
 end;
 
 procedure TTestRegexpr.TestNamedGroups;
