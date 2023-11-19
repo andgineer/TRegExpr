@@ -8127,7 +8127,7 @@ begin
         begin
           N := PLongInt(s)^;
           Inc(AMinLen, N);
-          inc(FndMaxLen, N);
+          IncMaxLen(FndMaxLen, N);
           Inc(s, RENumberSz + N);
           Continue;
         end;
@@ -8157,7 +8157,6 @@ begin
             if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
               exit;
           end;
-          assert(s=next);
 
           Inc(AMinLen, MultiplyLen(ASubLen, N));
           IncMaxLen(FndMaxLen, MultiplyLen(ASubMaxLen, N2));
