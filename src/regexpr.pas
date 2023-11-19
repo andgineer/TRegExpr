@@ -1714,7 +1714,6 @@ const
   OP_LOOKBEHIND = TREOp(58);
   OP_LOOKBEHIND_NEG = TREOp(59);
   OP_LOOKBEHIND_END = TREOp(60);
-  OP_LOOKAROUND_OPTIONAL = TREOp(61);
 
   OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_LOOP_POSS = TREOp(66); // Same as OP_LOOP but in non-greedy mode
@@ -2808,7 +2807,6 @@ const
   FLAG_SPECSTART = 4; // Starts with * or +
   FLAG_LOOP = 8; // Has eithe *, + or {,n} with n>=2
   FLAG_GREEDY = 16; // Has any greedy code
-  FLAG_LOOKAROUND = 32; // "Piece" (ParsePiece) is look-around
   FLAG_NOT_QUANTIFIABLE = 64; // "Piece" (ParsePiece) is look-around
 
   {$IFDEF UnicodeRE}
@@ -3534,14 +3532,11 @@ begin
           opnd := opnd + REOpSz + RENextOffSz;
         break;
       end;
-    OP_LOOKAROUND_OPTIONAL:
-      opnd := (opnd + 1 + RENextOffSz);
     OP_LOOKAHEAD:  // could contain OP_OPEN....
       begin
         if ( ((opnd + 1 + RENextOffSz)^ = OP_EXACTLY) or
             ((opnd + 1 + RENextOffSz)^ = OP_EXACTLY_CI)
-           ) and
-           ((regNext(opnd) + 1 + RENextOffSz)^ <> OP_LOOKAROUND_OPTIONAL)
+           )
         then begin
           opnd := (opnd + 1 + RENextOffSz);
           break;
@@ -3746,37 +3741,7 @@ begin
   op := regParse^;
   if not ((op = '*') or (op = '+') or (op = '?') or (op = '{')) then
   begin
-    FlagParse := FlagTemp and not FLAG_LOOKAROUND;
-    Exit;
-  end;
-
-  if (FlagTemp and FLAG_LOOKAROUND) <> 0 then begin
-    FlagTemp:= FlagTemp and not FLAG_LOOKAROUND;
-    FlagParse := FlagParse or FlagTemp and (FLAG_LOOP or FLAG_GREEDY);
-    BracesMin := 0;
-    if op = '{' then begin
-      savedRegParse := regParse;
-      Inc(regParse);
-      if not ParseBraceMinMax(BracesMin, BracesMax) then
-      begin
-        regParse := savedRegParse;
-        Exit;
-      end;
-    end;
-    if op = '+' then
-      BracesMin := 1;
-    if BracesMin = 0 then
-      EmitNode(OP_LOOKAROUND_OPTIONAL);
-
-    nextch := (regParse + 1)^;
-    if (nextch = '+') or  (nextch = '?') then
-      Inc(regParse);
-    Inc(regParse);
-    op := regParse^;
-    if (op = '*') or (op = '+') or (op = '?') or
-       ( (op = '{') and not CheckBraceIsLiteral)
-    then
-      Error(reeNestedQuantif);
+    FlagParse := FlagTemp;
     Exit;
   end;
 
@@ -4654,7 +4619,7 @@ begin
                 Exit;
 
               Tail(ret, regLast(Result));
-              FlagParse := FlagParse and not FLAG_HASWIDTH or FLAG_LOOKAROUND;
+              FlagParse := FlagParse and not FLAG_HASWIDTH;
             end;
 
           gkLookbehind,
@@ -4694,7 +4659,7 @@ begin
                 PReOpLookBehindOptions(regLookBehindOption)^.MatchLenMax := AMaxLen;
               end;
 
-              FlagParse := FlagParse and not FLAG_HASWIDTH or FLAG_LOOKAROUND;
+              FlagParse := FlagParse and not FLAG_HASWIDTH;
             end;
 
           gkNamedGroupReference:
@@ -5997,25 +5962,9 @@ begin
 
           opnd := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz; // Successor of OP_LOOKAHEAD_END;
           if Local.IsNegativeLook then begin
-            Result := (opnd^ = OP_LOOKAROUND_OPTIONAL);
-            if not Result then
-              Result := (not Local.LookAroundInfo.HasMatchedToEnd);
+            Result := (not Local.LookAroundInfo.HasMatchedToEnd);
             if Result then begin
               next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
-              if (next^ = OP_LOOKAROUND_OPTIONAL) then
-                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
-              regInput := Local.LookAroundInfo.InputPos;
-              Result := False;
-              scan := next;
-              continue;
-            end;
-          end
-          else
-          if (opnd^ = OP_LOOKAROUND_OPTIONAL) then begin
-            if not Local.LookAroundInfo.HasMatchedToEnd then begin
-              next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
-              if (next^ = OP_LOOKAROUND_OPTIONAL) then
-                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
               Result := False;
               scan := next;
@@ -6087,25 +6036,9 @@ begin
 
           opnd := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz; // Successor of OP_LOOKAHEAD_END;
           if Local.IsNegativeLook then begin
-            Result := (opnd^ = OP_LOOKAROUND_OPTIONAL);
-            if not Result then
-              Result := not Local.LookAroundInfo.HasMatchedToEnd;
+            Result := not Local.LookAroundInfo.HasMatchedToEnd;
             if Result then begin
               next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
-              if (next^ = OP_LOOKAROUND_OPTIONAL) then
-                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
-              regInput := Local.LookAroundInfo.InputPos;
-              Result := False;
-              scan := next;
-              continue;
-            end;
-          end
-          else
-          if (opnd^ = OP_LOOKAROUND_OPTIONAL) then begin
-            if not Local.LookAroundInfo.HasMatchedToEnd then begin
-              next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
-              if (next^ = OP_LOOKAROUND_OPTIONAL) then
-                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
               Result := False;
               scan := next;
@@ -6130,8 +6063,6 @@ begin
             regInput := Local.LookAroundInfoPtr^.InputPos;
             LookAroundInfoList := Local.LookAroundInfoPtr^.OuterInfo;
 
-            if (next^ = OP_LOOKAROUND_OPTIONAL) then
-              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
             Result := MatchPrim(next);
             LookAroundInfoList := Local.LookAroundInfoPtr;
           end;
@@ -6159,8 +6090,6 @@ begin
             fInputCurrentEnd := Local.LookAroundInfoPtr^.savedInputCurrentEnd;
             LookAroundInfoList := Local.LookAroundInfoPtr^.OuterInfo;
 
-            if (next^ = OP_LOOKAROUND_OPTIONAL) then
-              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
             Result := MatchPrim(next);
             LookAroundInfoList := Local.LookAroundInfoPtr;
           end;
@@ -7386,25 +7315,23 @@ begin
           opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
           Next := regNextQuick(Next);
 
-          if opnd^ <> OP_LOOKAROUND_OPTIONAL then begin
-            TempSet := FirstCharSet;
-            FirstCharSet := [];
-            FillFirstCharSet(Next); // after the lookahead
+          TempSet := FirstCharSet;
+          FirstCharSet := [];
+          FillFirstCharSet(Next); // after the lookahead
 
-            Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
-            TmpFirstCharSet := FirstCharSet;
-            FirstCharSet := [];
-            FillFirstCharSet(Next); // inside the lookahead
+          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
+          TmpFirstCharSet := FirstCharSet;
+          FirstCharSet := [];
+          FillFirstCharSet(Next); // inside the lookahead
 
-            if TmpFirstCharSet = [] then
-              FirstCharSet := TempSet + FirstCharSet
-            else
-            if FirstCharSet = [] then
-              FirstCharSet := TempSet + TmpFirstCharSet
-            else
-              FirstCharSet := TempSet + (FirstCharSet * TmpFirstCharSet);
-            exit;
-          end;
+          if TmpFirstCharSet = [] then
+            FirstCharSet := TempSet + FirstCharSet
+          else
+          if FirstCharSet = [] then
+            FirstCharSet := TempSet + TmpFirstCharSet
+          else
+            FirstCharSet := TempSet + (FirstCharSet * TmpFirstCharSet);
+          exit;
         end;
 
       OP_LOOKAHEAD_NEG,
@@ -7416,11 +7343,6 @@ begin
       OP_LOOKAHEAD_END, OP_LOOKBEHIND_END:
         begin
           Exit;
-        end;
-
-      OP_LOOKAROUND_OPTIONAL:
-        begin
-          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
         end;
 
       OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
@@ -7751,8 +7673,6 @@ begin
       Result := 'LOOKAHEAD_END';
     OP_LOOKBEHIND_END:
       Result := 'LOOKBEHIND_END';
-    OP_LOOKAROUND_OPTIONAL:
-      Result := 'OP_LOOKAROUND_OPTIONAL';
     OP_STAR:
       Result := 'STAR';
     OP_PLUS:
@@ -8283,9 +8203,6 @@ begin
         begin
           continue;
         end;
-
-      OP_LOOKAROUND_OPTIONAL:
-        continue;
 
       OP_NOTHING,
       OP_COMMENT,
