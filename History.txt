@@ -6,9 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.177 2023.11.18
+ v. 1.178 2023.11.19
  -=- (+) Support possessive complex braces: (...){}+.
  -=- (^) Some small optimizations.
+ -=- (-) Bugfixes for look-around.
   By Martin Friebe.
  
  v. 1.173 2023.11.11
