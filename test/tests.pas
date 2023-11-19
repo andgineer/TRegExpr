@@ -2393,6 +2393,10 @@ begin
   IsMatching('Three Neg-Ahead found before/after/nested-var-len',
                 '(?!a)[aA](?!.2)(?!(?!.{0,4}9).3)',    '_aB3_AB2_AB38_AB39_A_3_',  [15,1]);
 
+  // Test success without OP_LOOKAHEAD_END reached
+  IsMatching('look-ahead (opt) in branch',     '^.(?:a|.(?=2)?|b)',    '.xb9',  [1,2]);
+  IsMatching('look-ahead-neg (opt) in branch', '^.(?:a|.(?!.)?|b)',    '.xb9',  [1,2]);
+  IsMatching('look-ahead-neg in branch',       '^.(?:a|.(?!Y)|b)',     '.xb9',  [1,2]);
 end;
 
 procedure TTestRegexpr.TestRegLookBehind;
@@ -2652,6 +2656,10 @@ begin
   IsMatching('',  '(?<=.A...)(X)',  '_A123X3',              [6,1,   6,1], 2);
   IsMatching('',  '(?<=.A...)(X)',  '_A123X3',              [6,1,   6,1], 3);
 
+  // Test success without OP_LOOKBEHIND_END reached
+  IsMatching('look-behind (opt) in branch',     '^.(?:a|.(?<=Y)?|b)',    '.xb9',  [1,2]);
+  IsMatching('look-behind-neg (opt) in branch', '^.(?:a|.(?<!.)?|b)',    '.xb9',  [1,2]);
+  IsMatching('look-behind-neg in branch',       '^.(?:a|.(?<!Y)|b)',     '.xb9',  [1,2]);
 end;
 
 procedure TTestRegexpr.TestRegLookAroundMixed;
