@@ -546,6 +546,7 @@ type
     // insert an operator in front of already-emitted operand
     // Means relocating the operand.
     procedure InsertOperator(op: TREOp; opnd: PRegExprChar; sz: Integer);
+    procedure RemoveOperator(opnd: PRegExprChar; sz: Integer);
 
     // regular expression, i.e. main body or parenthesized thing
     function ParseReg(InBrackets: Boolean; var FlagParse: Integer): PRegExprChar;
@@ -2716,8 +2717,8 @@ begin
   {$IFDEF DebugSynRegExpr}
   if regCode - programm > regCodeSize then
     raise Exception.Create('TRegExpr.InsertOperator buffer overrun');
-  // if (opnd<regCode) or (opnd-regCode>regCodeSize) then
-  // raise Exception.Create('TRegExpr.InsertOperator invalid opnd');
+   if fSecondPass and ( (opnd<regCodeWork) or (opnd-regCodeWork>regCodeSize) ) then
+   raise Exception.Create('TRegExpr.InsertOperator invalid opnd');
   {$ENDIF}
   dst := regCode;
   while src > opnd do
@@ -2739,6 +2740,39 @@ begin
       GrpOpCodes[i] := GrpOpCodes[i] + sz;
 end; { of procedure TRegExpr.InsertOperator
   -------------------------------------------------------------- }
+
+procedure TRegExpr.RemoveOperator(opnd: PRegExprChar; sz: Integer);
+// remove an operator in front of already-emitted operand
+// Means relocating the operand.
+var
+  src, dst: PRegExprChar;
+  i: Integer;
+begin
+  if regCode = @regDummy then
+  begin
+    // Do not decrement regCodeSize => the fSecondPass may temporary fill the extra memory;
+    Exit;
+  end;
+  // move code behind insert position
+  {$IFDEF DebugSynRegExpr}
+   if fSecondPass and ( (opnd<regCodeWork) or (opnd>=regCodeWork+regCodeSize) ) then
+   raise Exception.Create('TRegExpr.RemoveOperator() invalid opnd');
+  if (sz > regCodeSize-(opnd-regCodeWork)) then
+    raise Exception.Create('TRegExpr.RemoveOperator buffer underrun');
+  {$ENDIF}
+  src := opnd + sz;
+  dst := opnd;
+  while src < regCode do
+  begin
+    dst^ := src^;
+    Inc(dst);
+    Inc(src);
+  end;
+  Dec(regCode, sz);
+  for i := 0 to regNumBrackets - 1 do
+    if (GrpOpCodes[i] <> nil) and (GrpOpCodes[i] > opnd) then
+      GrpOpCodes[i] := GrpOpCodes[i] - sz;
+end;
 
 function FindSkippedMetaLen(PStart, PEnd: PRegExprChar): Integer; {$IFDEF InlineFuncs}inline;{$ENDIF}
 // find length of initial segment of PStart string consisting
@@ -3192,72 +3226,67 @@ begin
     regMustString := '';
 
     scan := regCodeWork; // First OP_BRANCH.
-    if PREOp(regNext(scan))^ = OP_EEND then
-    begin // Only one top-level choice.
-      scan := scan + REOpSz + RENextOffSz + REBranchArgSz;
-
-      // Starting-point info.
-      if PREOp(scan)^ = OP_BOL then
-        regAnchored := raBOL
-      else
-      if PREOp(scan)^ = OP_EOL then
-        regAnchored := raEOL
-      else
-      if PREOp(scan)^ = OP_CONTINUE_POS then
-        regAnchored := raContinue
-      else
-      // ".*", ".*?", ".*+" at the very start of the pattern, only need to be
-      // tested from the start-pos of the InputString.
-      // If a pattern matches, then the ".*" will always go forward to where the
-      // rest of the pattern starts matching
-      // OP_ANY is "ModifierS=True"
-      if (PREOp(scan)^ = OP_STAR) or (PREOp(scan)^ = OP_STAR_NG) or (PREOp(scan)^ = OP_STAR_POSS) then begin
-        scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
+    // Starting-point info.
+    if PREOp(scan)^ = OP_BOL then
+      regAnchored := raBOL
+    else
+    if PREOp(scan)^ = OP_EOL then
+      regAnchored := raEOL
+    else
+    if PREOp(scan)^ = OP_CONTINUE_POS then
+      regAnchored := raContinue
+    else
+    // ".*", ".*?", ".*+" at the very start of the pattern, only need to be
+    // tested from the start-pos of the InputString.
+    // If a pattern matches, then the ".*" will always go forward to where the
+    // rest of the pattern starts matching
+    // OP_ANY is "ModifierS=True"
+    if (PREOp(scan)^ = OP_STAR) or (PREOp(scan)^ = OP_STAR_NG) or (PREOp(scan)^ = OP_STAR_POSS) then begin
+      scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
+      if PREOp(scanTemp)^ = OP_ANY then
+        regAnchored := raOnlyOnce;
+    end
+    else
+    // "{0,} is the same as ".*". So the same optimization applies
+    if (PREOp(scan)^ = OP_BRACES) or (PREOp(scan)^ = OP_BRACES_NG) or (PREOp(scan)^ = OP_BRACES_POSS) then begin
+      scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
+      if (PREBracesArg(scanTemp)^ = 0)  // BracesMinCount
+      and (PREBracesArg(scanTemp + REBracesArgSz)^ = MaxBracesArg)  // BracesMaxCount
+      then begin
+        scanTemp := AlignToPtr(scanTemp + REBracesArgSz + REBracesArgSz);
         if PREOp(scanTemp)^ = OP_ANY then
           regAnchored := raOnlyOnce;
-      end
-      else
-      // "{0,} is the same as ".*". So the same optimization applies
-      if (PREOp(scan)^ = OP_BRACES) or (PREOp(scan)^ = OP_BRACES_NG) or (PREOp(scan)^ = OP_BRACES_POSS) then begin
-        scanTemp := AlignToInt(scan + REOpSz + RENextOffSz);
-        if (PREBracesArg(scanTemp)^ = 0)  // BracesMinCount
-        and (PREBracesArg(scanTemp + REBracesArgSz)^ = MaxBracesArg)  // BracesMaxCount
-        then begin
-          scanTemp := AlignToPtr(scanTemp + REBracesArgSz + REBracesArgSz);
-          if PREOp(scanTemp)^ = OP_ANY then
-            regAnchored := raOnlyOnce;
-        end;
       end;
+    end;
 
-      // If there's something expensive in the r.e., find the longest
-      // literal string that must appear and make it the regMust. Resolve
-      // ties in favor of later strings, since the regstart check works
-      // with the beginning of the r.e. and avoiding duplication
-      // strengthens checking. Not a strong reason, but sufficient in the
-      // absence of others.
-      if (FlagTemp and FLAG_SPECSTART) <> 0 then
+    // If there's something expensive in the r.e., find the longest
+    // literal string that must appear and make it the regMust. Resolve
+    // ties in favor of later strings, since the regstart check works
+    // with the beginning of the r.e. and avoiding duplication
+    // strengthens checking. Not a strong reason, but sufficient in the
+    // absence of others.
+    if (FlagTemp and FLAG_SPECSTART) <> 0 then
+    begin
+      longest := nil;
+      Len := 0;
+      while scan <> nil do
       begin
-        longest := nil;
-        Len := 0;
-        while scan <> nil do
+        if PREOp(scan)^ = OP_EXACTLY then
         begin
-          if PREOp(scan)^ = OP_EXACTLY then
+          longestTemp := scan + REOpSz + RENextOffSz + RENumberSz;
+          LenTemp := PLongInt(scan + REOpSz + RENextOffSz)^;
+          if LenTemp >= Len then
           begin
-            longestTemp := scan + REOpSz + RENextOffSz + RENumberSz;
-            LenTemp := PLongInt(scan + REOpSz + RENextOffSz)^;
-            if LenTemp >= Len then
-            begin
-              longest := longestTemp;
-              Len := LenTemp;
-            end;
+            longest := longestTemp;
+            Len := LenTemp;
           end;
-          scan := regNext(scan);
         end;
-        regMust := longest;
-        regMustLen := Len;
-        if regMustLen > 1 then // don't use regMust if too short
-          SetString(regMustString, regMust, regMustLen);
+        scan := regNext(scan);
       end;
+      regMust := longest;
+      regMustLen := Len;
+      if regMustLen > 1 then // don't use regMust if too short
+        SetString(regMustString, regMust, regMustLen);
     end;
 
     Result := True;
@@ -3359,7 +3388,7 @@ begin
     end
     else
     if not HasChoice then
-      brStart^ := OP_BRANCH;
+      RemoveOperator(brStart, REOpSz + RENextOffSz + REBranchArgSz);
   end;
 
   // Make a closing node, and hook it on the end.
