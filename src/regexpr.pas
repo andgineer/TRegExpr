@@ -3399,15 +3399,25 @@ begin
       ender := EmitNode(EndGroupOP);
   end
   else
+  if (EndGroupOP = OP_NONE) then begin
+    if HasChoice then
+      ender := EmitNode(OP_COMMENT) // need something to hook the branches' tails too
+    else
+      ender := nil;
+  end
+  else
     ender := EmitNode(OP_EEND);
-  Tail(ret, ender);
 
-  // Hook the tails of the branches to the closing node.
-  br := ret;
-  while br <> nil do
-  begin
-    OpTail(br, ender);
-    br := regNext(br);
+  if ender <> nil then begin
+    Tail(ret, ender);
+
+    // Hook the tails of the branches to the closing node.
+    br := ret;
+    while br <> nil do
+    begin
+      OpTail(br, ender);
+      br := regNext(br);
+    end;
   end;
 
   // Check for proper termination.
@@ -4509,8 +4519,18 @@ begin
 
         // B: process found kind of brackets
         case GrpKind of
+          gkNonCapturingGroup:
+            begin
+              ret := DoParseReg(True, False, FlagTemp, OP_NONE, OP_NONE);
+              if ret = nil then
+              begin
+                Result := nil;
+                Exit;
+              end;
+              FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_SPECSTART or FLAG_LOOP or FLAG_GREEDY);
+            end;
+
           gkNormalGroup,
-          gkNonCapturingGroup,
           gkAtomicGroup:
             begin
               // skip this block for one of passes, to not double groups count;
