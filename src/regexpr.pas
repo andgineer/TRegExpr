@@ -2561,7 +2561,7 @@ begin
       regExactlyLen := nil;
 
     {$IFDEF DebugSynRegExpr}
-    if regcode - programm > regsize then
+    if regcode - programm > regCodeSize then
       raise Exception.Create('TRegExpr.EmitNode buffer overrun');
     {$ENDIF}
   end
@@ -2585,7 +2585,7 @@ begin
     regCode^ := ch;
     Inc(regCode);
     {$IFDEF DebugSynRegExpr}
-    if regcode - programm > regsize then
+    if regcode - programm > regCodeSize then
       raise Exception.Create('TRegExpr.EmitC buffer overrun');
     {$ENDIF}
   end
@@ -2601,7 +2601,7 @@ begin
     PLongInt(regCode)^ := AValue;
     Inc(regCode, RENumberSz);
     {$IFDEF DebugSynRegExpr}
-    if regcode - programm > regsize then
+    if regcode - programm > regCodeSize then
       raise Exception.Create('TRegExpr.EmitInt buffer overrun');
     {$ENDIF}
   end
@@ -3528,7 +3528,7 @@ var
       PRENextOff(AlignToPtr(regCode))^ := off;
       Inc(regCode, RENextOffSz);
       {$IFDEF DebugSynRegExpr}
-      if regcode - programm > regsize then
+      if regcode - programm > regCodeSize then
         raise Exception.Create
           ('TRegExpr.ParsePiece.EmitComplexBraces buffer overrun');
       {$ENDIF}
