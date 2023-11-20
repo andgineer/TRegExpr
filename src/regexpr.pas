@@ -6071,28 +6071,22 @@ begin
 
       OP_BRANCH:
         begin
-          if (next^ <> OP_BRANCH)  // No next choice in group
-          then
-            next := scan + REOpSz + RENextOffSz + REBranchArgSz // Avoid recursion
-          else
-          begin
-            repeat
-              save := regInput;
-              Result := MatchPrim(scan + REOpSz + RENextOffSz + REBranchArgSz);
-              if Result then
-                Exit;
-              // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
-              regInput := save;
-              if IsBacktrackingGroupAsAtom then
-                Exit;
-              scan := next;
-              Assert(scan <> nil);
-              next := regNextQuick(scan);
-              if  (next^ <> OP_BRANCH) then
-                break;
-            until  False;
-            next := scan + REOpSz + RENextOffSz + REBranchArgSz; // Avoid recursion
-          end;
+          repeat
+            save := regInput;
+            Result := MatchPrim(scan + REOpSz + RENextOffSz + REBranchArgSz);
+            if Result then
+              Exit;
+            // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
+            regInput := save;
+            if IsBacktrackingGroupAsAtom then
+              Exit;
+            scan := next;
+            Assert(scan <> nil);
+            next := regNextQuick(scan);
+            if  (next^ <> OP_BRANCH) then
+              break;
+          until  False;
+          next := scan + REOpSz + RENextOffSz + REBranchArgSz; // Avoid recursion
         end;
 
       OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
@@ -7302,23 +7296,16 @@ begin
 
       OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
         begin
-          if (PREOp(Next)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
-             (PREOp(Next)^ <> OP_GBRANCH_EX) and (PREOp(Next)^ <> OP_GBRANCH_EX_CI) // No choice.
-          then
-            Next := scan + REOpSz + RENextOffSz + REBranchArgSz // Avoid recursion.
-          else
-          begin
-            repeat
-              TmpFirstCharSet := FirstCharSet;
-              FirstCharSet := [];
-              FillFirstCharSet(scan + REOpSz + RENextOffSz + REBranchArgSz);
-              FirstCharSet := FirstCharSet + TmpFirstCharSet;
-              scan := regNextQuick(scan);
-            until (scan = nil) or
-              ( (PREOp(scan)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
-                (PREOp(scan)^ <> OP_GBRANCH_EX) and (PREOp(scan)^ <> OP_GBRANCH_EX_CI) );
-            Exit;
-          end;
+          repeat
+            TmpFirstCharSet := FirstCharSet;
+            FirstCharSet := [];
+            FillFirstCharSet(scan + REOpSz + RENextOffSz + REBranchArgSz);
+            FirstCharSet := FirstCharSet + TmpFirstCharSet;
+            scan := regNextQuick(scan);
+          until (scan = nil) or
+            ( (PREOp(scan)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
+              (PREOp(scan)^ <> OP_GBRANCH_EX) and (PREOp(scan)^ <> OP_GBRANCH_EX_CI) );
+          Exit;
         end;
 
       {$IFDEF ComplexBraces}
@@ -8025,9 +8012,21 @@ begin
 
       OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
         begin
-          if (next^ = OP_BRANCH) or (PREOp(Next)^ = OP_GBRANCH) or (next^ = OP_GBRANCH_EX) or (next^ = OP_GBRANCH_EX_CI) then begin
+          s := s + REBranchArgSz;
+          if not IsPartFixedLength(s, op, ABranchLen, ABranchMaxLen, OP_EEND, next, []) then
+          begin
+            if not NotFixedLen then
+              FirstVarLenOp := op;
+            NotFixedLen := True;
+            if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
+              exit;
+          end;
+          s := next;
+          repeat
+            next := regNext(s);
             s := s + REBranchArgSz;
-            if not IsPartFixedLength(s, op, ABranchLen, ABranchMaxLen, OP_EEND, next, []) then
+            Inc(s, REOpSz + RENextOffSz);
+            if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, next, []) then
             begin
               if not NotFixedLen then
                 FirstVarLenOp := op;
@@ -8036,32 +8035,16 @@ begin
                 exit;
             end;
             s := next;
-            repeat
-              next := regNext(s);
-              s := s + REBranchArgSz;
-              Inc(s, REOpSz + RENextOffSz);
-              if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, next, []) then
-              begin
-                if not NotFixedLen then
-                  FirstVarLenOp := op;
-                NotFixedLen := True;
-                if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
-                  exit;
-              end;
-              s := next;
-              if (ASubLen <> ABranchLen) then
-                NotFixedLen := True;
-              if ASubLen < ABranchLen then
-                ABranchLen := ASubLen;
-              if ASubMaxLen > ABranchMaxLen then
-                ABranchMaxLen := ASubMaxLen;
-            until (next^ <> OP_BRANCH) and (next^ <> OP_GBRANCH) and
-                  (next^ <> OP_GBRANCH_EX) and (next^ <> OP_GBRANCH_EX_CI);
-            AMinLen := AMinLen + ABranchLen;
-            IncMaxLen(FndMaxLen, ABranchMaxLen);
-          end
-          else
-            s := s + REBranchArgSz;
+            if (ASubLen <> ABranchLen) then
+              NotFixedLen := True;
+            if ASubLen < ABranchLen then
+              ABranchLen := ASubLen;
+            if ASubMaxLen > ABranchMaxLen then
+              ABranchMaxLen := ASubMaxLen;
+          until (next^ <> OP_BRANCH) and (next^ <> OP_GBRANCH) and
+                (next^ <> OP_GBRANCH_EX) and (next^ <> OP_GBRANCH_EX_CI);
+          AMinLen := AMinLen + ABranchLen;
+          IncMaxLen(FndMaxLen, ABranchMaxLen);
         end;
 
       OP_OPEN:
