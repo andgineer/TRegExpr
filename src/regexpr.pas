@@ -3424,6 +3424,16 @@ begin
       Result := nil;
       Exit;
     end;
+    if fSecondPass and
+       (latest <> nil) and (latest^ = OP_COMMENT) and
+       ( ((regParse < fRegexEnd) and (regParse^ <> '|') and (regParse^ <> ')')) or
+         (chain <> nil)
+       )
+    then begin
+      regCode := latest;
+      continue;
+    end;
+
     FlagParse := FlagParse or FlagTemp and (FLAG_HASWIDTH or FLAG_LOOP or FLAG_GREEDY);
     if chain = nil // First piece.
     then begin
