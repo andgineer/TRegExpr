@@ -8091,7 +8091,7 @@ begin
             if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
               exit;
           end;
-          assert(s^=OP_CLOSE);
+          assert(s^=OP_CLOSE_ATOMIC);
           AMinLen := AMinLen + ASubLen;
           IncMaxLen(FndMaxLen, ASubMaxLen);
           Inc(s, REOpSz + RENextOffSz + ReGroupIndexSz); // consume the OP_CLOSE_ATOMIC;
