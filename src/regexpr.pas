@@ -7075,7 +7075,7 @@ var
   {$IFDEF UseLineSep}
   i: Integer;
   {$ENDIF}
-  TempSet: TRegExprCharset;
+  TempSet, TmpFirstCharSet: TRegExprCharset;
 begin
   TempSet := [];
   scan := prog;
@@ -7262,16 +7262,43 @@ begin
           Exit;
         end;
 
-      OP_LOOKAHEAD, OP_LOOKAHEAD_NEG,
-      OP_LOOKBEHIND, OP_LOOKBEHIND_NEG,
+      OP_LOOKAHEAD:
+        begin
+          opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
+          Next := regNextQuick(Next);
+          FillFirstCharSet(Next);
+          if opnd^ = OP_LOOKAROUND_OPTIONAL then
+            Exit;
+
+          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
+          TmpFirstCharSet := FirstCharSet;
+          FirstCharSet := [];
+          FillFirstCharSet(Next);
+
+          if TmpFirstCharSet = [] then
+            exit;
+          if FirstCharSet = [] then
+            FirstCharSet := TmpFirstCharSet
+          else
+            FirstCharSet := FirstCharSet * TmpFirstCharSet;
+          exit;
+        end;
+
+      OP_LOOKAHEAD_NEG,
+      OP_LOOKBEHIND, OP_LOOKBEHIND_NEG:
+        begin
+          Next := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
+        end;
+
       OP_LOOKAHEAD_END, OP_LOOKBEHIND_END:
         begin
-          FillFirstCharSet(Next); // skip to the end
           Exit;
         end;
 
       OP_LOOKAROUND_OPTIONAL:
-        ;
+        begin
+          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
+        end;
 
       OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
         begin
@@ -7282,7 +7309,10 @@ begin
           else
           begin
             repeat
+              TmpFirstCharSet := FirstCharSet;
+              FirstCharSet := [];
               FillFirstCharSet(scan + REOpSz + RENextOffSz + REBranchArgSz);
+              FirstCharSet := FirstCharSet + TmpFirstCharSet;
               scan := regNextQuick(scan);
             until (scan = nil) or
               ( (PREOp(scan)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
