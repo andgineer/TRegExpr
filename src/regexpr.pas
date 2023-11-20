@@ -361,7 +361,7 @@ type
     regMustLen: Integer; // length of regMust string
     regMustString: RegExprString; // string which must occur in match (got from regMust/regMustLen)
     LookAroundInfoList: PRegExprLookAroundInfo;
-    regNestedCalls: Integer; // some attempt to prevent 'catastrophic backtracking' but not used
+    //regNestedCalls: integer; // some attempt to prevent 'catastrophic backtracking' but not used
     CurrentSubCalled: Integer;
 
     FMinMatchLen: integer;
@@ -6490,7 +6490,7 @@ end;
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): Boolean;
 begin
   regInput := APos;
-  regNestedCalls := 0;
+  //regNestedCalls := 0;
   regRecursion := 0;
   fInputCurrentEnd := fInputEnd;
   Result := MatchPrim(regCodeWork);
