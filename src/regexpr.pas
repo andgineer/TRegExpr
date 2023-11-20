@@ -364,6 +364,7 @@ type
     regNestedCalls: Integer; // some attempt to prevent 'catastrophic backtracking' but not used
     CurrentSubCalled: Integer;
 
+    FMinMatchLen: integer;
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
     FirstCharArray: array[Byte] of Boolean;
@@ -3150,7 +3151,8 @@ function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): Boolean;
 var
   scan, scanTemp, longest, longestTemp: PRegExprChar;
   Len, LenTemp: Integer;
-  FlagTemp: Integer;
+  FlagTemp, MaxMatchLen: integer;
+  op: TREOp;
 begin
   Result := False;
   FlagTemp := 0;
@@ -3213,6 +3215,7 @@ begin
       Exit;
 
     // Dig out information for optimizations.
+    IsFixedLengthEx(op, FMinMatchLen, MaxMatchLen);
     {$IFDEF UseFirstCharSet}
     FirstCharSet := [];
     FillFirstCharSet(regCodeWork);
@@ -6577,7 +6580,7 @@ end;
 function TRegExpr.ExecPrimProtected(AOffset: Integer; ASlowChecks,
   ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 var
-  Ptr: PRegExprChar;
+  Ptr, SearchEnd: PRegExprChar;
 begin
   Result := False;
 
@@ -6646,39 +6649,51 @@ begin
   end;
 
   // Messy cases: unanchored match.
-  if ABackward then
-    Inc(Ptr, 2)
-  else
-    Dec(Ptr);
-  repeat
-    if ABackward then
-    begin
+  if ABackward then begin
+    Inc(Ptr, 2);
+    repeat
       Dec(Ptr);
       if Ptr < fInputStart then
         Exit;
-    end
-    else
-    begin
+
+      {$IFDEF UseFirstCharSet}
+      {$IFDEF UnicodeRE}
+      if Ord(Ptr^) <= $FF then
+      {$ENDIF}
+        if not FirstCharArray[byte(Ptr^)] then
+          Continue;
+      {$ENDIF}
+
+      Result := MatchAtOnePos(Ptr);
+      // Exit on a match or after testing the end-of-string
+      if Result then
+        Exit;
+    until False;
+  end
+  else begin
+    Dec(Ptr);
+    SearchEnd := fInputEnd - FMinMatchLen;
+    if (ATryMatchOnlyStartingBefore > 0) and (fInputStart + ATryMatchOnlyStartingBefore < SearchEnd) then
+      SearchEnd := fInputStart + ATryMatchOnlyStartingBefore - 2;
+    repeat
       Inc(Ptr);
-      if Ptr > fInputEnd then
+      if Ptr > SearchEnd then
         Exit;
-      if (ATryMatchOnlyStartingBefore > 0) and (Ptr - fInputStart >= ATryMatchOnlyStartingBefore - 1) then
+
+      {$IFDEF UseFirstCharSet}
+      {$IFDEF UnicodeRE}
+      if Ord(Ptr^) <= $FF then
+      {$ENDIF}
+        if not FirstCharArray[byte(Ptr^)] then
+          Continue;
+      {$ENDIF}
+
+      Result := MatchAtOnePos(Ptr);
+      // Exit on a match or after testing the end-of-string
+      if Result then
         Exit;
-    end;
-
-    {$IFDEF UseFirstCharSet}
-    {$IFDEF UnicodeRE}
-    if Ord(Ptr^) <= $FF then
-    {$ENDIF}
-      if not FirstCharArray[Byte(Ptr^)] then
-        Continue;
-    {$ENDIF}
-
-    Result := MatchAtOnePos(Ptr);
-    // Exit on a match or after testing the end-of-string
-    if Result then
-      Exit;
-  until False;
+    until False;
+  end;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
