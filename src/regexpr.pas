@@ -6493,12 +6493,6 @@ begin
   regNestedCalls := 0;
   regRecursion := 0;
   fInputCurrentEnd := fInputEnd;
-  Result := False;
-  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
-  StackLimit := StackBottom;
-  if StackLimit <> nil then
-    StackLimit := StackLimit + 36000; // Add for any calls within the current MatchPrim // FPC has "STACK_MARGIN = 16384;", but we need to call Error, ..., raise
-  {$ENDIF}
   Result := MatchPrim(regCodeWork);
   if Result then
   begin
@@ -6627,6 +6621,12 @@ begin
     if regMustString <> '' then
       if StrLPos(fInputStart, PRegExprChar(regMustString), fInputEnd - fInputStart, length(regMustString)) = nil then
         exit;
+
+  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+  StackLimit := StackBottom;
+  if StackLimit <> nil then
+    StackLimit := StackLimit + 36000; // Add for any calls within the current MatchPrim // FPC has "STACK_MARGIN = 16384;", but we need to call Error, ..., raise
+  {$ENDIF}
 
   FMatchesCleared := False;
   // ATryOnce or anchored match (it needs to be tried only once).
