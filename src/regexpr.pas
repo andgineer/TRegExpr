@@ -524,7 +524,7 @@ type
     function EmitNode(op: TREOp): PRegExprChar;
 
     // emit OP_BRANCH (and fillchars)
-    function EmitBranch: PRegExprChar;
+    function EmitBranch: PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // emit (if appropriate) a byte of code
     procedure EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -627,10 +627,10 @@ type
     // For Delphi 5 and higher available overloaded versions - first without
     // parameter (uses already assigned to InputString property value)
     // and second that has int parameter and is same as ExecPos
-    function Exec(const AInputString: RegExprString): Boolean;
+    function Exec(const AInputString: RegExprString): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     {$IFDEF OverMeth} overload;
-    function Exec: Boolean; overload;
-    function Exec(AOffset: Integer): Boolean; overload;
+    function Exec: Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function Exec(AOffset: Integer): Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
     {$ENDIF}
 
     // find next match:
@@ -646,14 +646,14 @@ type
 
     // find match for InputString starting from AOffset position
     // (AOffset=1 - first char of InputString)
-    function ExecPos(AOffset: Integer {$IFDEF DefParam} = 1{$ENDIF}): Boolean;
+    function ExecPos(AOffset: Integer {$IFDEF DefParam} = 1{$ENDIF}): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
     {$IFDEF OverMeth} overload;
     // find match for InputString at AOffset.
     // if ATryOnce=True then only match exactly at AOffset (like anchor \G)
     // if ATryMatchOnlyStartingBefore then only when the match can start before
     // that position: Result := MatchPos[0] < ATryMatchOnlyStartingBefore;
-    function ExecPos(AOffset: Integer; ATryOnce, ABackward: Boolean): Boolean; overload;
-    function ExecPos(AOffset, ATryMatchOnlyStartingBefore: Integer): Boolean; overload;
+    function ExecPos(AOffset: Integer; ATryOnce, ABackward: Boolean): Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function ExecPos(AOffset, ATryMatchOnlyStartingBefore: Integer): Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
     {$ENDIF}
 
     // Returns ATemplate with '$&' or '$0' replaced by whole r.e.
