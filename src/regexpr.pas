@@ -6491,7 +6491,6 @@ function TRegExpr.MatchAtOnePos(APos: PRegExprChar): Boolean;
 begin
   regInput := APos;
   //regNestedCalls := 0;
-  regRecursion := 0;
   fInputCurrentEnd := fInputEnd;
   Result := MatchPrim(regCodeWork);
   if Result then
@@ -6521,6 +6520,7 @@ begin
   {$ENDIF}
   LookAroundInfoList := nil;
   CurrentSubCalled := -1;
+  regRecursion := 0;
 end;
 
 procedure TRegExpr.InitInternalGroupData;
