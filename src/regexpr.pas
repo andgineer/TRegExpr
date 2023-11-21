@@ -361,9 +361,10 @@ type
     regMustLen: Integer; // length of regMust string
     regMustString: RegExprString; // string which must occur in match (got from regMust/regMustLen)
     LookAroundInfoList: PRegExprLookAroundInfo;
-    regNestedCalls: Integer; // some attempt to prevent 'catastrophic backtracking' but not used
+    //regNestedCalls: integer; // some attempt to prevent 'catastrophic backtracking' but not used
     CurrentSubCalled: Integer;
 
+    FMinMatchLen: integer;
     {$IFDEF UseFirstCharSet}
     FirstCharSet: TRegExprCharset;
     FirstCharArray: array[Byte] of Boolean;
@@ -3150,7 +3151,8 @@ function TRegExpr.CompileRegExpr(ARegExp: PRegExprChar): Boolean;
 var
   scan, scanTemp, longest, longestTemp: PRegExprChar;
   Len, LenTemp: Integer;
-  FlagTemp: Integer;
+  FlagTemp, MaxMatchLen: integer;
+  op: TREOp;
 begin
   Result := False;
   FlagTemp := 0;
@@ -3213,6 +3215,7 @@ begin
       Exit;
 
     // Dig out information for optimizations.
+    IsFixedLengthEx(op, FMinMatchLen, MaxMatchLen);
     {$IFDEF UseFirstCharSet}
     FirstCharSet := [];
     FillFirstCharSet(regCodeWork);
@@ -6071,28 +6074,22 @@ begin
 
       OP_BRANCH:
         begin
-          if (next^ <> OP_BRANCH)  // No next choice in group
-          then
-            next := scan + REOpSz + RENextOffSz + REBranchArgSz // Avoid recursion
-          else
-          begin
-            repeat
-              save := regInput;
-              Result := MatchPrim(scan + REOpSz + RENextOffSz + REBranchArgSz);
-              if Result then
-                Exit;
-              // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
-              regInput := save;
-              if IsBacktrackingGroupAsAtom then
-                Exit;
-              scan := next;
-              Assert(scan <> nil);
-              next := regNextQuick(scan);
-              if  (next^ <> OP_BRANCH) then
-                break;
-            until  False;
-            next := scan + REOpSz + RENextOffSz + REBranchArgSz; // Avoid recursion
-          end;
+          repeat
+            save := regInput;
+            Result := MatchPrim(scan + REOpSz + RENextOffSz + REBranchArgSz);
+            if Result then
+              Exit;
+            // if branch worked until OP_CLOSE, and marked atomic group as "done", then exit
+            regInput := save;
+            if IsBacktrackingGroupAsAtom then
+              Exit;
+            scan := next;
+            Assert(scan <> nil);
+            next := regNextQuick(scan);
+            if  (next^ <> OP_BRANCH) then
+              break;
+          until  False;
+          next := scan + REOpSz + RENextOffSz + REBranchArgSz; // Avoid recursion
         end;
 
       OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
@@ -6493,15 +6490,8 @@ end;
 function TRegExpr.MatchAtOnePos(APos: PRegExprChar): Boolean;
 begin
   regInput := APos;
-  regNestedCalls := 0;
-  regRecursion := 0;
+  //regNestedCalls := 0;
   fInputCurrentEnd := fInputEnd;
-  Result := False;
-  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
-  StackLimit := StackBottom;
-  if StackLimit <> nil then
-    StackLimit := StackLimit + 36000; // Add for any calls within the current MatchPrim // FPC has "STACK_MARGIN = 16384;", but we need to call Error, ..., raise
-  {$ENDIF}
   Result := MatchPrim(regCodeWork);
   if Result then
   begin
@@ -6530,6 +6520,7 @@ begin
   {$ENDIF}
   LookAroundInfoList := nil;
   CurrentSubCalled := -1;
+  regRecursion := 0;
 end;
 
 procedure TRegExpr.InitInternalGroupData;
@@ -6583,7 +6574,7 @@ end;
 function TRegExpr.ExecPrimProtected(AOffset: Integer; ASlowChecks,
   ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 var
-  Ptr: PRegExprChar;
+  Ptr, SearchEnd: PRegExprChar;
 begin
   Result := False;
 
@@ -6631,6 +6622,12 @@ begin
       if StrLPos(fInputStart, PRegExprChar(regMustString), fInputEnd - fInputStart, length(regMustString)) = nil then
         exit;
 
+  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+  StackLimit := StackBottom;
+  if StackLimit <> nil then
+    StackLimit := StackLimit + 36000; // Add for any calls within the current MatchPrim // FPC has "STACK_MARGIN = 16384;", but we need to call Error, ..., raise
+  {$ENDIF}
+
   FMatchesCleared := False;
   // ATryOnce or anchored match (it needs to be tried only once).
   if (ATryMatchOnlyStartingBefore = AOffset + 1) or (regAnchored in [raBOL, raOnlyOnce, raContinue]) then
@@ -6652,39 +6649,51 @@ begin
   end;
 
   // Messy cases: unanchored match.
-  if ABackward then
-    Inc(Ptr, 2)
-  else
-    Dec(Ptr);
-  repeat
-    if ABackward then
-    begin
+  if ABackward then begin
+    Inc(Ptr, 2);
+    repeat
       Dec(Ptr);
       if Ptr < fInputStart then
         Exit;
-    end
-    else
-    begin
+
+      {$IFDEF UseFirstCharSet}
+      {$IFDEF UnicodeRE}
+      if Ord(Ptr^) <= $FF then
+      {$ENDIF}
+        if not FirstCharArray[byte(Ptr^)] then
+          Continue;
+      {$ENDIF}
+
+      Result := MatchAtOnePos(Ptr);
+      // Exit on a match or after testing the end-of-string
+      if Result then
+        Exit;
+    until False;
+  end
+  else begin
+    Dec(Ptr);
+    SearchEnd := fInputEnd - FMinMatchLen;
+    if (ATryMatchOnlyStartingBefore > 0) and (fInputStart + ATryMatchOnlyStartingBefore < SearchEnd) then
+      SearchEnd := fInputStart + ATryMatchOnlyStartingBefore - 2;
+    repeat
       Inc(Ptr);
-      if Ptr > fInputEnd then
+      if Ptr > SearchEnd then
         Exit;
-      if (ATryMatchOnlyStartingBefore > 0) and (Ptr - fInputStart >= ATryMatchOnlyStartingBefore - 1) then
+
+      {$IFDEF UseFirstCharSet}
+      {$IFDEF UnicodeRE}
+      if Ord(Ptr^) <= $FF then
+      {$ENDIF}
+        if not FirstCharArray[byte(Ptr^)] then
+          Continue;
+      {$ENDIF}
+
+      Result := MatchAtOnePos(Ptr);
+      // Exit on a match or after testing the end-of-string
+      if Result then
         Exit;
-    end;
-
-    {$IFDEF UseFirstCharSet}
-    {$IFDEF UnicodeRE}
-    if Ord(Ptr^) <= $FF then
-    {$ENDIF}
-      if not FirstCharArray[Byte(Ptr^)] then
-        Continue;
-    {$ENDIF}
-
-    Result := MatchAtOnePos(Ptr);
-    // Exit on a match or after testing the end-of-string
-    if Result then
-      Exit;
-  until False;
+    until False;
+  end;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
 
@@ -7075,7 +7084,7 @@ var
   {$IFDEF UseLineSep}
   i: Integer;
   {$ENDIF}
-  TempSet: TRegExprCharset;
+  TempSet, TmpFirstCharSet: TRegExprCharset;
 begin
   TempSet := [];
   scan := prog;
@@ -7262,33 +7271,56 @@ begin
           Exit;
         end;
 
-      OP_LOOKAHEAD, OP_LOOKAHEAD_NEG,
-      OP_LOOKBEHIND, OP_LOOKBEHIND_NEG,
+      OP_LOOKAHEAD:
+        begin
+          opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
+          Next := regNextQuick(Next);
+          FillFirstCharSet(Next);
+          if opnd^ = OP_LOOKAROUND_OPTIONAL then
+            Exit;
+
+          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
+          TmpFirstCharSet := FirstCharSet;
+          FirstCharSet := [];
+          FillFirstCharSet(Next);
+
+          if TmpFirstCharSet = [] then
+            exit;
+          if FirstCharSet = [] then
+            FirstCharSet := TmpFirstCharSet
+          else
+            FirstCharSet := FirstCharSet * TmpFirstCharSet;
+          exit;
+        end;
+
+      OP_LOOKAHEAD_NEG,
+      OP_LOOKBEHIND, OP_LOOKBEHIND_NEG:
+        begin
+          Next := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
+        end;
+
       OP_LOOKAHEAD_END, OP_LOOKBEHIND_END:
         begin
-          FillFirstCharSet(Next); // skip to the end
           Exit;
         end;
 
       OP_LOOKAROUND_OPTIONAL:
-        ;
+        begin
+          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
+        end;
 
       OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
         begin
-          if (PREOp(Next)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
-             (PREOp(Next)^ <> OP_GBRANCH_EX) and (PREOp(Next)^ <> OP_GBRANCH_EX_CI) // No choice.
-          then
-            Next := scan + REOpSz + RENextOffSz + REBranchArgSz // Avoid recursion.
-          else
-          begin
-            repeat
-              FillFirstCharSet(scan + REOpSz + RENextOffSz + REBranchArgSz);
-              scan := regNextQuick(scan);
-            until (scan = nil) or
-              ( (PREOp(scan)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
-                (PREOp(scan)^ <> OP_GBRANCH_EX) and (PREOp(scan)^ <> OP_GBRANCH_EX_CI) );
-            Exit;
-          end;
+          repeat
+            TmpFirstCharSet := FirstCharSet;
+            FirstCharSet := [];
+            FillFirstCharSet(scan + REOpSz + RENextOffSz + REBranchArgSz);
+            FirstCharSet := FirstCharSet + TmpFirstCharSet;
+            scan := regNextQuick(scan);
+          until (scan = nil) or
+            ( (PREOp(scan)^ <> OP_BRANCH) and (PREOp(Next)^ <> OP_GBRANCH) and
+              (PREOp(scan)^ <> OP_GBRANCH_EX) and (PREOp(scan)^ <> OP_GBRANCH_EX_CI) );
+          Exit;
         end;
 
       {$IFDEF ComplexBraces}
@@ -7995,9 +8027,21 @@ begin
 
       OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
         begin
-          if (next^ = OP_BRANCH) or (PREOp(Next)^ = OP_GBRANCH) or (next^ = OP_GBRANCH_EX) or (next^ = OP_GBRANCH_EX_CI) then begin
+          s := s + REBranchArgSz;
+          if not IsPartFixedLength(s, op, ABranchLen, ABranchMaxLen, OP_EEND, next, []) then
+          begin
+            if not NotFixedLen then
+              FirstVarLenOp := op;
+            NotFixedLen := True;
+            if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
+              exit;
+          end;
+          s := next;
+          repeat
+            next := regNext(s);
             s := s + REBranchArgSz;
-            if not IsPartFixedLength(s, op, ABranchLen, ABranchMaxLen, OP_EEND, next, []) then
+            Inc(s, REOpSz + RENextOffSz);
+            if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, next, []) then
             begin
               if not NotFixedLen then
                 FirstVarLenOp := op;
@@ -8006,32 +8050,16 @@ begin
                 exit;
             end;
             s := next;
-            repeat
-              next := regNext(s);
-              s := s + REBranchArgSz;
-              Inc(s, REOpSz + RENextOffSz);
-              if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, next, []) then
-              begin
-                if not NotFixedLen then
-                  FirstVarLenOp := op;
-                NotFixedLen := True;
-                if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
-                  exit;
-              end;
-              s := next;
-              if (ASubLen <> ABranchLen) then
-                NotFixedLen := True;
-              if ASubLen < ABranchLen then
-                ABranchLen := ASubLen;
-              if ASubMaxLen > ABranchMaxLen then
-                ABranchMaxLen := ASubMaxLen;
-            until (next^ <> OP_BRANCH) and (next^ <> OP_GBRANCH) and
-                  (next^ <> OP_GBRANCH_EX) and (next^ <> OP_GBRANCH_EX_CI);
-            AMinLen := AMinLen + ABranchLen;
-            IncMaxLen(FndMaxLen, ABranchMaxLen);
-          end
-          else
-            s := s + REBranchArgSz;
+            if (ASubLen <> ABranchLen) then
+              NotFixedLen := True;
+            if ASubLen < ABranchLen then
+              ABranchLen := ASubLen;
+            if ASubMaxLen > ABranchMaxLen then
+              ABranchMaxLen := ASubMaxLen;
+          until (next^ <> OP_BRANCH) and (next^ <> OP_GBRANCH) and
+                (next^ <> OP_GBRANCH_EX) and (next^ <> OP_GBRANCH_EX_CI);
+          AMinLen := AMinLen + ABranchLen;
+          IncMaxLen(FndMaxLen, ABranchMaxLen);
         end;
 
       OP_OPEN:
@@ -8063,7 +8091,7 @@ begin
             if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
               exit;
           end;
-          assert(s^=OP_CLOSE);
+          assert(s^=OP_CLOSE_ATOMIC);
           AMinLen := AMinLen + ASubLen;
           IncMaxLen(FndMaxLen, ASubMaxLen);
           Inc(s, REOpSz + RENextOffSz + ReGroupIndexSz); // consume the OP_CLOSE_ATOMIC;
