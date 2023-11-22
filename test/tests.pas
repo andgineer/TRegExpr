@@ -80,6 +80,7 @@ type
     procedure TestReferences;
     procedure TestSubCall;
     procedure TestNamedGroups;
+    procedure TestCaptures;
     procedure TestRecurseAndCaptures;
     procedure TestIsFixedLength;
     procedure TestMatchBefore;
@@ -87,6 +88,7 @@ type
     procedure TestRegLookAhead;
     procedure TestRegLookBehind;
     procedure TestRegLookAroundMixed;
+    procedure TestResetMatchPos;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -1804,6 +1806,34 @@ begin
 
 end;
 
+procedure TTestRegexpr.TestCaptures;
+begin
+  IsMatching('simple capture', '(a)',    'abc',  [1,1,  1,1]);
+  IsMatching('simple capture', '(b)',    'abc',  [2,1,  2,1]);
+  IsMatching('simple capture', '(c)',    'abc',  [3,1,  3,1]);
+  IsMatching('simple capture .', '(.)',  'abc',  [1,1,  1,1]);
+
+  IsMatching('capture optional content',    '(d?)',  'abc',  [1,0,  1,0]);
+  IsMatching('optional capture not found',  '(d)?',  'abc',  [1,0,  -1,-1]);
+  IsMatching('optional capture found',      '(a)?',  'abc',  [1,1,  1,1]);
+
+  IsMatching('zero width capture', '(^)',    'abc',  [1,0,  1,0]);
+  IsMatching('zero width capture', '($)',    'abc',  [4,0,  4,0]);
+  IsMatching('zero width capture', '(\b)',   'abc',  [1,0,  1,0]);
+  IsMatching('zero width capture', '(\b).',  'abc',  [1,1,  1,0]);
+
+  IsMatching('backtracking', '(ad)',  'abcade',  [4,2,  4,2]);
+  IsMatching('backtracking', '^.*(a)',   'abcade',  [1,4,  4,1]);
+  IsMatching('backtracking', '^.*(a)b',  'abcade',  [1,2,  1,1]);
+  IsMatching('backtracking', '^.*(ab)',   'abcade',  [1,2,  1,2]);
+
+  IsMatching('backtracking', '(ad)*',  'adadae',  [1,4,  3,2]);
+
+  IsMatching('backtracking many', '^.*(a).(b)c',  'a.bda.bc',     [1,8,  5,1, 7,1]);
+  IsMatching('backtracking many', '^.*?(a).(b)c',  'a.bda.bc',    [1,8,  5,1, 7,1]);
+  IsMatching('backtracking many', '^.*?(a).*?(b)c',  'a.bda.bc',  [1,8,  1,1, 7,1]);
+end;
+
 procedure TTestRegexpr.TestRecurseAndCaptures;
 begin
   // recurse capture "B", but outer does not capture
@@ -2679,6 +2709,40 @@ begin
                 '(?<=^(?=.*$).*)B',        '_A_1_B_AxyzB123_A_',     [6,1]);
 
   IsNotMatching('behind not found before "A=2" for dot', '(?=A).(?<=2)',    'A2AB34AB_');
+
+end;
+
+procedure TTestRegexpr.TestResetMatchPos;
+begin
+  IsMatching('Set Matchstart middle',          'a\Kb',  'ab',    [2,1]);
+  IsMatching('Set Matchstart end of match',    'a\K',   'ab',    [2,0]);
+  IsMatching('Set Matchstart begin of match',  '\Ka',   'ab',    [1,1]);
+  IsMatching('Set Matchstart stand-alone',     '\K',    'ab',    [1,0]);
+
+  IsMatching('Set Matchstart middle',          'a\Kb',  'xab',    [3,1]);
+  IsMatching('Set Matchstart end of match',    'a\K',   'xab',    [3,0]);
+  IsMatching('Set Matchstart begin of match',  '\Ka',   'xab',    [2,1]);
+  IsMatching('Set Matchstart stand-alone',     '\K',    'xab',    [1,0]);
+  IsMatching('Set Matchstart stand-alone with offset',  '\K',    'xabde',    [3,0], 3);
+
+  IsMatching('Set Matchstart EOL',     '$\K',    'xab',    [4,0]);
+  IsMatching('Set Matchstart EOL',     '\K$',    'xab',    [4,0]);
+
+
+  IsMatching('backtracking',     '(?:.\K)*?b',    'xabc',    [3,1]);
+  IsMatching('backtracking',     '(?:.\K)*b',     'xabc',    [3,1]);
+
+
+  IsMatching('backtracking',     '^(?=.*\Kx)?.*c',    'abcd',    [1,3]);
+  IsMatching('backtracking',     '^(?=\K.*x)?.*c',    'abcd',    [1,3]);
+  IsMatching('backtracking',     '^(?:.*\Kx)?.*c',    'abcd',    [1,3]);
+  IsMatching('backtracking',     '^(?:\K.*x)?.*c',    'abcd',    [1,3]);
+
+  IsMatching('multiple \K',     '^a\Kb\Kc',    'abcd',    [3,1]);
+
+  IsNotMatching('lookahead not possible',   '^(?=.*\K).*c',    'abcd');
+  IsMatching('lookahead',   '^(?=.\K).*c',    'abcd',    [2,2]);
+  IsMatching('lookbehind',  '(?<=\K.)c',    'abcd',    [2,2]);
 
 end;
 
