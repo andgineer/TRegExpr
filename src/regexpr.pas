@@ -1717,6 +1717,8 @@ const
   OP_GBRANCH_EX = TREOp(68);
   OP_GBRANCH_EX_CI = TREOp(69);
 
+  OP_RESET_MATCHPOS = TReOp(70);
+
   OP_NONE = High(TREOp);
 
   // We work with p-code through pointers, compatible with PRegExprChar.
@@ -4864,6 +4866,11 @@ begin
               ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
               FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
             end;
+          'K':
+            begin
+              ret := EmitNode(OP_RESET_MATCHPOS);
+              FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
+            end;
           {$IFDEF FastUnicodeData}
           'p':
             begin
@@ -5519,6 +5526,16 @@ begin
         begin
           if regInput <> fInputContinue then
             Exit;
+        end;
+
+      OP_RESET_MATCHPOS:
+        begin
+          save := GrpBounds[0].GrpStart[0];
+          GrpBounds[0].GrpStart[0] := regInput;
+          Result := MatchPrim(next);
+          if not Result then
+            GrpBounds[0].GrpStart[0] := save;
+          exit;
         end;
 
       OP_EOL:
@@ -6503,12 +6520,14 @@ begin
   regInput := APos;
   //regNestedCalls := 0;
   fInputCurrentEnd := fInputEnd;
+  GrpBounds[0].GrpStart[0] := APos;
   Result := MatchPrim(regCodeWork);
   if Result then
-  begin
-    GrpBounds[0].GrpStart[0] := APos;
-    GrpBounds[0].GrpEnd[0] := regInput;
-  end;
+    Result := regInput >= GrpBounds[0].GrpStart[0];
+  if Result then
+    GrpBounds[0].GrpEnd[0] := regInput
+  else
+    GrpBounds[0].GrpStart[0] := nil;
 end;
 
 procedure TRegExpr.ClearMatches;
@@ -7114,7 +7133,8 @@ begin
 
       OP_BOL,
       OP_BOL_ML,
-      OP_CONTINUE_POS:
+      OP_CONTINUE_POS,
+      OP_RESET_MATCHPOS:
         ; // Exit;
 
       OP_EOL,
@@ -7689,6 +7709,8 @@ begin
       Result := 'SUBCALL';
     OP_ANYLINEBREAK:
       Result := 'ANYLINEBREAK';
+    OP_RESET_MATCHPOS:
+      Result := 'RESET_MATCHPOS';
   else
     Error(reeDumpCorruptedOpcode);
   end;

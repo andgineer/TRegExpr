@@ -88,6 +88,7 @@ type
     procedure TestRegLookAhead;
     procedure TestRegLookBehind;
     procedure TestRegLookAroundMixed;
+    procedure TestResetMatchPos;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -2708,6 +2709,40 @@ begin
                 '(?<=^(?=.*$).*)B',        '_A_1_B_AxyzB123_A_',     [6,1]);
 
   IsNotMatching('behind not found before "A=2" for dot', '(?=A).(?<=2)',    'A2AB34AB_');
+
+end;
+
+procedure TTestRegexpr.TestResetMatchPos;
+begin
+  IsMatching('Set Matchstart middle',          'a\Kb',  'ab',    [2,1]);
+  IsMatching('Set Matchstart end of match',    'a\K',   'ab',    [2,0]);
+  IsMatching('Set Matchstart begin of match',  '\Ka',   'ab',    [1,1]);
+  IsMatching('Set Matchstart stand-alone',     '\K',    'ab',    [1,0]);
+
+  IsMatching('Set Matchstart middle',          'a\Kb',  'xab',    [3,1]);
+  IsMatching('Set Matchstart end of match',    'a\K',   'xab',    [3,0]);
+  IsMatching('Set Matchstart begin of match',  '\Ka',   'xab',    [2,1]);
+  IsMatching('Set Matchstart stand-alone',     '\K',    'xab',    [1,0]);
+  IsMatching('Set Matchstart stand-alone with offset',  '\K',    'xabde',    [3,0], 3);
+
+  IsMatching('Set Matchstart EOL',     '$\K',    'xab',    [4,0]);
+  IsMatching('Set Matchstart EOL',     '\K$',    'xab',    [4,0]);
+
+
+  IsMatching('backtracking',     '(?:.\K)*?b',    'xabc',    [3,1]);
+  IsMatching('backtracking',     '(?:.\K)*b',     'xabc',    [3,1]);
+
+
+  IsMatching('backtracking',     '^(?=.*\Kx)?.*c',    'abcd',    [1,3]);
+  IsMatching('backtracking',     '^(?=\K.*x)?.*c',    'abcd',    [1,3]);
+  IsMatching('backtracking',     '^(?:.*\Kx)?.*c',    'abcd',    [1,3]);
+  IsMatching('backtracking',     '^(?:\K.*x)?.*c',    'abcd',    [1,3]);
+
+  IsMatching('multiple \K',     '^a\Kb\Kc',    'abcd',    [3,1]);
+
+  IsNotMatching('lookahead not possible',   '^(?=.*\K).*c',    'abcd');
+  IsMatching('lookahead',   '^(?=.\K).*c',    'abcd',    [2,2]);
+  IsMatching('lookbehind',  '(?<=\K.)c',    'abcd',    [2,2]);
 
 end;
 
