@@ -5914,8 +5914,9 @@ begin
               if (next^ = OP_LOOKAROUND_OPTIONAL) then
                 next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
-              Result := MatchPrim(next);
-              Exit;
+              Result := False;
+              scan := next;
+              continue;
             end;
           end
           else
@@ -5925,8 +5926,9 @@ begin
               if (next^ = OP_LOOKAROUND_OPTIONAL) then
                 next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
-              Result := MatchPrim(next);
-              Exit;
+              Result := False;
+              scan := next;
+              continue;
             end;
           end;
 
@@ -6002,8 +6004,9 @@ begin
               if (next^ = OP_LOOKAROUND_OPTIONAL) then
                 next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
-              Result := MatchPrim(next);
-              Exit;
+              Result := False;
+              scan := next;
+              continue;
             end;
           end
           else
@@ -6013,8 +6016,9 @@ begin
               if (next^ = OP_LOOKAROUND_OPTIONAL) then
                 next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
-              Result := MatchPrim(next);
-              Exit;
+              Result := False;
+              scan := next;
+              continue;
             end;
           end;
 
@@ -6353,8 +6357,10 @@ begin
           end;
           no := FindRepeated(opnd, BracesMax);
           if no >= BracesMin then
-            if (nextch = #0) or (regInput^ = nextch) then
-              Result := MatchPrim(next);
+            if (nextch = #0) or (regInput^ = nextch) then begin
+              scan := next;
+              continue;
+            end;
           Exit;
         end;
 
