@@ -5426,9 +5426,6 @@ end;
 type
   TRegExprMatchPrimLocals =   record
     case TREOp of
-      OP_CLOSE_ATOMIC: (
-        IsAtomic: Boolean;
-      );
       {$IFDEF ComplexBraces}
       OP_LOOPENTRY: (
         LoopInfo: TOpLoopInfo;
@@ -5840,23 +5837,24 @@ begin
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           save := GrpBounds[regRecursion].GrpStart[no];
+          opnd := GrpBounds[regRecursion].GrpEnd[no]; // save2
           GrpBounds[regRecursion].GrpStart[no] := regInput;
           Result := MatchPrim(next);
           if GrpBacktrackingAsAtom[no] then
             IsBacktrackingGroupAsAtom := False;
           GrpBacktrackingAsAtom[no] := False;
-          if not Result then
+          if not Result then begin
             GrpBounds[regRecursion].GrpStart[no] := save;
+            GrpBounds[regRecursion].GrpEnd[no] := opnd;
+          end;
           Exit;
         end;
 
-      OP_CLOSE, OP_CLOSE_ATOMIC:
+      OP_CLOSE:
         begin
-          Local.IsAtomic := scan^ = OP_CLOSE_ATOMIC;
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
-          save := GrpBounds[regRecursion].GrpEnd[no];
           GrpBounds[regRecursion].GrpEnd[no] := regInput;
 
           // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
@@ -5866,11 +5864,18 @@ begin
             Result := True;
             Exit;
           end;
+        end;
+
+      OP_CLOSE_ATOMIC:
+        begin
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
+          // handle atomic group, mark it as "done"
+          // (we are here because some OP_BRANCH is matched)
+          GrpBounds[regRecursion].GrpEnd[no] := regInput;
 
           Result := MatchPrim(next);
           if not Result then begin
-            GrpBounds[regRecursion].GrpEnd[no] := save;
-            if Local.IsAtomic and not IsBacktrackingGroupAsAtom then begin
+            if not IsBacktrackingGroupAsAtom then begin
               GrpBacktrackingAsAtom[no] := True;
               IsBacktrackingGroupAsAtom := True;
             end;

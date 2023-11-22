@@ -80,6 +80,7 @@ type
     procedure TestReferences;
     procedure TestSubCall;
     procedure TestNamedGroups;
+    procedure TestCaptures;
     procedure TestRecurseAndCaptures;
     procedure TestIsFixedLength;
     procedure TestMatchBefore;
@@ -1802,6 +1803,34 @@ begin
 
 
 
+end;
+
+procedure TTestRegexpr.TestCaptures;
+begin
+  IsMatching('simple capture', '(a)',    'abc',  [1,1,  1,1]);
+  IsMatching('simple capture', '(b)',    'abc',  [2,1,  2,1]);
+  IsMatching('simple capture', '(c)',    'abc',  [3,1,  3,1]);
+  IsMatching('simple capture .', '(.)',  'abc',  [1,1,  1,1]);
+
+  IsMatching('capture optional content',    '(d?)',  'abc',  [1,0,  1,0]);
+  IsMatching('optional capture not found',  '(d)?',  'abc',  [1,0,  -1,-1]);
+  IsMatching('optional capture found',      '(a)?',  'abc',  [1,1,  1,1]);
+
+  IsMatching('zero width capture', '(^)',    'abc',  [1,0,  1,0]);
+  IsMatching('zero width capture', '($)',    'abc',  [4,0,  4,0]);
+  IsMatching('zero width capture', '(\b)',   'abc',  [1,0,  1,0]);
+  IsMatching('zero width capture', '(\b).',  'abc',  [1,1,  1,0]);
+
+  IsMatching('backtracking', '(ad)',  'abcade',  [4,2,  4,2]);
+  IsMatching('backtracking', '^.*(a)',   'abcade',  [1,4,  4,1]);
+  IsMatching('backtracking', '^.*(a)b',  'abcade',  [1,2,  1,1]);
+  IsMatching('backtracking', '^.*(ab)',   'abcade',  [1,2,  1,2]);
+
+  IsMatching('backtracking', '(ad)*',  'adadae',  [1,4,  3,2]);
+
+  IsMatching('backtracking many', '^.*(a).(b)c',  'a.bda.bc',     [1,8,  5,1, 7,1]);
+  IsMatching('backtracking many', '^.*?(a).(b)c',  'a.bda.bc',    [1,8,  5,1, 7,1]);
+  IsMatching('backtracking many', '^.*?(a).*?(b)c',  'a.bda.bc',  [1,8,  1,1, 7,1]);
 end;
 
 procedure TTestRegexpr.TestRecurseAndCaptures;
