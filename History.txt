@@ -6,7 +6,8 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.178 2023.11.19
+ v. 1.181 2023.11.22
+ -=- (+) Support \K.
  -=- (+) Support possessive complex braces: (...){}+.
  -=- (^) Some small optimizations.
  -=- (-) Bugfixes for look-around.
