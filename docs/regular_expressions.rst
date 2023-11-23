@@ -471,6 +471,22 @@ RegEx                      Matches
 ``(?P<qq>['"])\w+(?P=qq)`` ``"word"`` and ``'word'``
 ========================== ============================
 
+Matched Result
+--------------
+
+The begin of the reported match can be set using ``\K``.
+
+By default the entire text covered by a pattern is considered matched. However it is possible to set explicitly what will be reported.
+
+The pattern ``a\Kb`` will require the text to contain "ab". But only the "b" will be reported as having been matched.
+Their can be several ``\K`` in a pattern, The last one will set the match-start position.
+Only ``\K`` in active parts of the pattern are considered. E.g. ``a(\Kb)?`` will not consider ``\K`` if there is no "b".
+Captures can exist outside the match set by ``\K``.
+
+If used in other constructs that can apply outside the reported match (like look-ahead), then the position marked by ``\K`` must be before or at the reported end of the match. If the position is marked later, the match is considered failed.
+
+``\K`` is somewhat similar to a look-behind. Unlike a look-behind the part of the pattern before the ``\K`` must be after the start position of the matching, if the pattern is applied from an offset position within the text.
+
 Modifiers
 ---------
 
