@@ -17,7 +17,9 @@ object Form1: TForm1
     Width = 792
     Align = alClient
     BorderSpacing.Around = 6
+    Font.Pitch = fpFixed
     ItemHeight = 0
+    ParentFont = False
     ScrollWidth = 790
     TabOrder = 3
     TopIndex = -1

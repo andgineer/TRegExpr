@@ -7807,7 +7807,8 @@ function TRegExpr.Dump(Indent: Integer): RegExprString;
 var
   s: PRegExprChar;
   op: TREOp; // Arbitrary non-END op.
-  next: PRegExprChar;
+  next, BranchEnd: PRegExprChar;
+  BranchEndStack: Array of PRegExprChar;
   i, NLen, CurIndent: Integer;
   Diff: PtrInt;
   iByte: Byte;
@@ -7820,16 +7821,43 @@ begin
   CurIndent := 0;
   op := OP_EXACTLY;
   s := regCodeWork;
+  BranchEnd := nil;
   while op <> OP_EEND do
   begin // While that wasn't END last time...
     op := s^;
-    if ((op =OP_CLOSE) or (op = OP_CLOSE_ATOMIC) or (op = OP_LOOP) or (op = OP_LOOP_NG) or (op = OP_LOOP_POSS)) and (CurIndent > 0) then
-      dec(CurIndent, Indent);
-    Result := Result + Format('%2d:%s %s', [s - programm, StringOfChar(' ', CurIndent), DumpOp(s^)]);
-    if ((op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_LOOPENTRY)) then
-      inc(CurIndent, Indent);
-    // Where, what.
     next := regNext(s);
+
+    if ((op =OP_CLOSE) or (op = OP_CLOSE_ATOMIC) or (op = OP_LOOP) or (op = OP_LOOP_NG) or (op = OP_LOOP_POSS) or
+        (op = OP_LOOKAHEAD_END) or (op = OP_LOOKBEHIND_END)
+       ) and
+       (CurIndent > 0)
+    then
+      dec(CurIndent, Indent);
+    if s = BranchEnd then begin
+      dec(CurIndent, Indent);
+      BranchEnd := nil;
+      if Length(BranchEndStack) > 0 then begin
+        BranchEnd := BranchEndStack[Length(BranchEndStack)-1];
+        SetLength(BranchEndStack, Length(BranchEndStack)-1);
+      end;
+    end;
+
+    Result := Result + Format('%3d:%s %s', [s - programm, StringOfChar(' ', CurIndent), DumpOp(s^)]);
+
+    if (op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_LOOPENTRY) or
+       (op = OP_LOOKAHEAD) or (op = OP_LOOKAHEAD_NEG) or (op = OP_LOOKBEHIND) or (op = OP_LOOKBEHIND_NEG)
+    then
+      inc(CurIndent, Indent);
+    if (op = OP_BRANCH) or (op = OP_GBRANCH) or (op = OP_GBRANCH_EX) or (op = OP_GBRANCH_EX_CI) then begin
+      inc(CurIndent, Indent);
+      if BranchEnd <> nil then begin
+        SetLength(BranchEndStack, Length(BranchEndStack)+1);
+        BranchEndStack[Length(BranchEndStack)-1] := BranchEnd;
+      end;
+      BranchEnd := next;
+    end;
+
+    // Where, what.
     if next = nil // Next ptr.
     then
       Result := Result + ' (0)'
