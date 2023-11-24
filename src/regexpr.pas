@@ -7359,7 +7359,7 @@ begin
         begin
           min_cnt := PREBracesArg(AlignToPtr(Next + REOpSz + RENextOffSz))^;
           if min_cnt = 0 then begin
-            opnd := AlignToPtr(Next + REOpSz + 2 * RENextOffSz + 2 * REBracesArgSz);
+            opnd := regNext(Next);
             FillFirstCharSet(opnd); // FirstChar may be after loop
           end;
           Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
@@ -7373,7 +7373,6 @@ begin
           if min_cnt = 0 then
             Exit;
           // zero width loop
-          Next := AlignToPtr(scan + REOpSz + 2 * RENextOffSz + 2 * REBracesArgSz);
         end;
       {$ENDIF}
 
