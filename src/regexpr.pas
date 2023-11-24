@@ -3489,9 +3489,10 @@ begin
           OP_OPEN, OP_OPEN_ATOMIC, OP_CLOSE, OP_CLOSE_ATOMIC,
           OP_COMMENT,
           OP_BOL, OP_CONTINUE_POS, OP_RESET_MATCHPOS,
-          OP_PLUS, OP_PLUS_NG, OP_PLUS_POSS,
           OP_BOUND, OP_NOTBOUND:
             opnd := regNext(opnd);
+          OP_PLUS, OP_PLUS_NG, OP_PLUS_POSS:
+            opnd := opnd + REOpSz + RENextOffSz;
           OP_BRACES, OP_BRACES_NG, OP_BRACES_POSS:
             begin
               if PREBracesArg(AlignToPtr(opnd + REOpSz + RENextOffSz))^ >= 1 then

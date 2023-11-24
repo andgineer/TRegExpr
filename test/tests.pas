@@ -1744,6 +1744,10 @@ begin
   IsMatching('branch ', '(?:(?=[abc])|d)+c|e',  '.c',  [2, 1  ]);
   IsMatching('branch ', '(?:(?=[abc])|d)+c|e',  '.dc',  [2, 2  ]);
   IsMatching('branch ', '(?:(?=[abc])|d)+c|e',  '.ec',  [2, 1  ]);
+
+
+  IsMatching('branch ', '(?:a+b)|c',  '.ab',  [2, 2 ]);
+  IsMatching('branch ', '(?:a+b)|c',  '.c',   [2, 1 ]);
 end;
 
 procedure TTestRegexpr.TestReferences;
