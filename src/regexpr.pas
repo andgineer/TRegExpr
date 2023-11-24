@@ -1715,7 +1715,10 @@ const
   OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_LOOP_POSS = TREOp(66); // Same as OP_LOOP but in non-greedy mode
 
-  OP_GBRANCH = TREOp(67); // Guarded branch
+  // Guarded branch
+  // If a branch is know to begin with a specific letter (starts with OP_EXACTLY[_CI])
+  // then that letter can be tested before recursively calling MatchPrim. (guarded from non-match entering)
+  OP_GBRANCH = TREOp(67);
   OP_GBRANCH_EX = TREOp(68);
   OP_GBRANCH_EX_CI = TREOp(69);
 
