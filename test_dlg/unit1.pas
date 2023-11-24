@@ -58,7 +58,7 @@ end;
 procedure TForm1.EditRegexChange(Sender: TObject);
 var
   op: TREOp;
-  i: integer;
+  i, j: integer;
 begin
   ListRes.Items.Clear;
   ListDump.Items.Clear;
@@ -73,12 +73,12 @@ begin
     reg.ModifierG:= chk_g.Checked;
 
     reg.Compile;
-    if reg.IsFixedLength(op, i) then
+    if reg.IsFixedLengthEx(op, i, j) then
       ListDump.Items.Add('Match has fixed len: '+IntToStr(i))
     else
-      ListDump.Items.Add('Match has not fixed len, operator: '+reg.DumpOp(op));
+      ListDump.Items.Add('Match has not fixed len, operator: '+reg.DumpOp(op)+' Min: '+IntToStr(i)+' Max: '+IntToStr(j));
 
-    ListDump.Items.AddText(reg.Dump);
+    ListDump.Items.AddText(reg.Dump(3));
   except
     on e: Exception do
     begin
