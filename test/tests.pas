@@ -49,6 +49,7 @@ type
   TTestRegexpr= class(TTestCase)
   private
     RE: TTestableRegExpr;
+    FErrorInfo: String;
   protected
     procedure RunRETest(aIndex: Integer);
     procedure CompileRE(const AExpression: RegExprString);
@@ -77,6 +78,7 @@ type
     procedure TestBraces;
     procedure TestLoop;
     procedure TestEmptyLoop;
+    procedure TestBranches; // Also checks "FillFirstChar"
     procedure TestReferences;
     procedure TestSubCall;
     procedure TestNamedGroups;
@@ -802,13 +804,13 @@ const
 
 procedure TTestRegexpr.IsFalse(AErrorMessage: string; AConditionToCheck: boolean);
 begin
-  IsTrue(AErrorMessage, not AConditionToCheck)
+  IsTrue(AErrorMessage+FErrorInfo, not AConditionToCheck)
 end;
 
 procedure TTestRegexpr.IsTrue(AErrorMessage: string; AConditionToCheck: boolean);
 begin
   {$IFDEF FPC}
-  AssertTrue(AErrorMessage, AConditionToCheck);
+  AssertTrue(AErrorMessage+FErrorInfo, AConditionToCheck);
   {$ELSE}
   CheckTrue(AConditionToCheck, AErrorMessage)
   {$ENDIF}
@@ -818,7 +820,7 @@ procedure TTestRegexpr.IsNotNull(AErrorMessage: string; AObjectToCheck: TObject
   );
 begin
   {$IFDEF FPC}
-  AssertNotNull(AErrorMessage, AObjectToCheck);
+  AssertNotNull(AErrorMessage+FErrorInfo, AObjectToCheck);
   {$ELSE}
   CheckNotNull(AObjectToCheck, AErrorMessage)
   {$ENDIF}
@@ -827,7 +829,7 @@ end;
 procedure TTestRegexpr.AreEqual(AErrorMessage: string; s1, s2: string);
 begin
   {$IFDEF FPC}
-  AssertEquals(AErrorMessage, s1,s2);
+  AssertEquals(AErrorMessage+FErrorInfo, s1,s2);
   {$ELSE}
   CheckEquals(s1,s2, AErrorMessage)
   {$ENDIF}
@@ -836,7 +838,7 @@ end;
 procedure TTestRegexpr.AreEqual(AErrorMessage: string; i1, i2: integer);
 begin
   {$IFDEF FPC}
-  AssertEquals(AErrorMessage, i1,i2);
+  AssertEquals(AErrorMessage+FErrorInfo, i1,i2);
   {$ELSE}
   CheckEquals(i1,i2, AErrorMessage)
   {$ENDIF}
@@ -849,7 +851,7 @@ begin
     RE.TestStartErrorCatching;
     CompileRE(AExpression);
     if ExpErrorId <> 0 then
-      AreEqual(AErrorMessage, ExpErrorId, RE.TestLastError)
+      AreEqual(AErrorMessage+FErrorInfo, ExpErrorId, RE.TestLastError)
     else
       IsTrue(AErrorMessage, RE.TestLastError <> 0);
   finally
@@ -1646,6 +1648,102 @@ begin
   IsMatching('Empty group match-count',  '((?=.*(?:\2|a)(.))|$)*?', '1234567890abcdefghi',   [1,0,  -1,-1,  -1,-1]);
 
 
+end;
+
+procedure TTestRegexpr.TestBranches;
+
+  const
+    MAX_A =  5*32 -1;
+    MAX_B = 14 + 4;
+  function BArg(Base: string; a, b: Integer; out L: integer): string;
+  var
+    OBase: String;
+  begin
+    L := 1;
+    OBase := Base;
+    if (a and  1) <> 0 then Base := '[' +Base+']';
+    if (a and  2) <> 0 then Base := Base+'+';
+    if (a and  4) <> 0 then
+      if (a and  2) <> 0 then Base := '(?>X|' +Base+ ')'  // already has a quantifier +
+      else Base := Base+ '{1,9}';
+
+    if (a and   8) <> 0 then Base := Base+ '(?>.){0,0}+';
+    if (a and  16) <> 0 then Base := '\b' + Base;
+    case a and (not 31) of
+      0 *32: Result := Base;
+      1 *32: Result := '(?='+Base+').';
+      2 *32: Result := '(?='+Base+')'+Base;
+      3 *32: begin
+          Result := '(?='+Base+')';     // zero len
+          L := 0;
+        end;
+      4 *32: begin
+          Result := '(?='+Base+')\b';     // zero len
+          L := 0;
+        end;
+    end;
+
+    case b mod 14 of
+       0: ;
+       1: Result := '\K' + Result;
+       2: Result := '(?=\b)' + Result;
+       3: Result := '(?=\w)' + Result;
+       4: Result := '(?=X)?' + Result;
+       5: Result := '(?!X)' + Result;
+       6: Result := '(?!X)?' + Result;
+       7: Result := '(?!'+OBase+')?' + Result;
+       8: Result := '(?<=\b)' + Result;
+       9: Result := '(?<=\b)?' + Result;
+      10: Result := '(?<!\B)?' + Result;
+      11: Result := '\b?' + Result;
+      12: Result := '(?>)' + Result;
+      13: Result := '(?>(?<=\b)|X){0,9}' + Result;
+    end;
+    if b > 13 then Result := '(?:X|' +Result+ ')+';
+  end;
+
+var
+  Lead: Integer;
+  a1, a2, b1, b2: integer;
+  L1, L2: Integer;
+  sLead, sB1, sB2: RegExprString;
+begin
+  (* Hide the canditate for (each) branch, in all and any surrounding expressions
+     Make sure it still matches
+     - must NOT be missing in FirstChar
+     - must NOT be missing GBranch (if GBranch is used)
+
+     This test does not assert that
+     - FirstChar does not have unwanted extra (that does not invalidate the result)
+     - GBranch is used whenever possible, only that if it happens to be used, it works
+  *)
+  for Lead := 0 to 1 do
+  for a1 := 0 to MAX_A do
+  for b1 := 0 to MAX_B do
+  for a2 := 0 to 1 do
+  for b2 := 1 to 2 do
+  begin
+    sLead := '';
+    if Lead = 1 then sLead := ' ';
+
+    sB1 := BArg('a', a1, b1, L1);
+    sB2 := BArg('b', a2*32, b2, L2);
+
+    IsMatching('branch ', sB1+'|'+sB2,  sLead+'a',  [1+Lead, L1  ]);
+    IsMatching('branch ', sB2+'|'+sB1,  sLead+'a',  [1+Lead, L1  ]);
+    IsMatching('branch ', sB1+'|'+sB2,  sLead+'b',  [1+Lead, L2  ]);
+    IsMatching('branch ', sB2+'|'+sB1,  sLead+'ba',  [1+Lead, L2  ]);
+    IsMatching('branch ', '('+sB1+'|'+sB2+')',  sLead+'aba',  [1+Lead, L1,   1+Lead, L1]);
+
+    IsMatching('branch ', '[d-m]|'+sB1+'|'+sB2,  sLead+'a',  [1+Lead, L1  ]);
+    IsMatching('branch ', sB1+'|[d-m]|'+sB2,     sLead+'a',  [1+Lead, L1  ]);
+    IsMatching('branch ', sB1+'|'+sB2+'|[d-m]',  sLead+'a',  [1+Lead, L1  ]);
+  end;
+
+  IsNotMatching('branch ', '(?:(?=[abc])|d)+c|e',  '.a');
+  IsMatching('branch ', '(?:(?=[abc])|d)+c|e',  '.c',  [2, 1  ]);
+  IsMatching('branch ', '(?:(?=[abc])|d)+c|e',  '.dc',  [2, 2  ]);
+  IsMatching('branch ', '(?:(?=[abc])|d)+c|e',  '.ec',  [2, 1  ]);
 end;
 
 procedure TTestRegexpr.TestReferences;
@@ -3153,6 +3251,7 @@ end;
 
 procedure TTestRegexpr.CompileRE(const AExpression: RegExprString);
 begin
+  FErrorInfo := LineEnding + AExpression;
   if (RE = Nil) then
   begin
     RE := TTestableRegExpr.Create;
@@ -3160,6 +3259,7 @@ begin
   end;
   RE.Expression := AExpression;
   RE.Compile;
+  FErrorInfo := LineEnding + AExpression + LineEnding + RE.Dump(2);
 {$IFDEF DUMPTESTS}
   writeln('  Modifiers "', RE.ModifierStr, '"');
   writeln('  Regular expression: ', T.Expression,' ,');
