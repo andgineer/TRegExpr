@@ -3804,17 +3804,17 @@ begin
             EmitComplexBraces(0, MaxBracesArg, NonGreedyOp, PossessiveCh)
           else
           begin
-            // To complex for OP_STAR. Write loop using OP_BRANCH and OP_BACK
-            // 1: OP_Branch with 2 branches - to allow backtracking
+            // Too complex for OP_STAR. Write loop using OP_BRANCH and OP_BACK.
+            // 1: OP_BRANCH with 2 branches - to allow backtracking
             // 1st choice: loop-content
             //             OP_BACK back to the branch
-            //                     execute another iteration of the branch, so each can Backtrack
-            // 2nd choice  OP_NOTHING to exit
-            InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz + REBranchArgSz); // Either x
-            OpTail(Result, EmitNode(OP_BACK)); // and loop
-            OpTail(Result, Result); // back
-            Tail(Result, EmitBranch); // or
-            Tail(Result, EmitNode(OP_NOTHING)); // nil.
+            //                     execute another iteration of the branch, so each can backtrack
+            // 2nd choice: OP_NOTHING to exit
+            InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz + REBranchArgSz);
+            OpTail(Result, EmitNode(OP_BACK));
+            OpTail(Result, Result);
+            Tail(Result, EmitBranch);
+            Tail(Result, EmitNode(OP_NOTHING));
             MaybeGuardBranchPiece(Result);
           end
         end
@@ -3859,16 +3859,16 @@ begin
             EmitComplexBraces(1, MaxBracesArg, NonGreedyOp, PossessiveCh)
           else
           begin
-            // To complex for OP_PLUS. Write loop using OP_BRANCH and OP_BACK
+            // Too complex for OP_PLUS. Write loop using OP_BRANCH and OP_BACK.
             // 1: loop-content
-            // 2: OP_Branch with 2 choices - to allow backtracking
+            // 2: OP_BRANCH with 2 choices - to allow backtracking
             // 2a: OP_BACK(1) to match the loop again (goto back, include another iteration of the branch in this choice)
-            // 2b  OP_NOTHING to exit, if the loop can match no more (branch 2a did not match)
-            NextNode := EmitBranch; // Either
+            // 2b: OP_NOTHING to exit, if the loop can match no more (branch 2a did not match)
+            NextNode := EmitBranch;
             Tail(Result, NextNode);
-            Tail(EmitNode(OP_BACK), Result); // loop back
-            Tail(NextNode, EmitBranch); // or
-            Tail(Result, EmitNode(OP_NOTHING)); // nil.
+            Tail(EmitNode(OP_BACK), Result);
+            Tail(NextNode, EmitBranch);
+            Tail(Result, EmitNode(OP_NOTHING));
             MaybeGuardBranchPiece(NextNode);
           end
         end
