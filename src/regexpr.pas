@@ -3803,7 +3803,13 @@ begin
           if NonGreedyOp or PossessiveCh or ((FlagTemp and FLAG_HASWIDTH) = 0) then
             EmitComplexBraces(0, MaxBracesArg, NonGreedyOp, PossessiveCh)
           else
-          begin // Emit x* as (x&|), where & means "self".
+          begin
+            // To complex for OP_STAR. Write loop using OP_BRANCH and OP_BACK
+            // 1: OP_Branch with 2 branches - to allow backtracking
+            // 1st choice: loop-content
+            //             OP_BACK back to the branch
+            //                     execute another iteration of the branch, so each can Backtrack
+            // 2nd choice  OP_NOTHING to exit
             InsertOperator(OP_BRANCH, Result, REOpSz + RENextOffSz + REBranchArgSz); // Either x
             OpTail(Result, EmitNode(OP_BACK)); // and loop
             OpTail(Result, Result); // back
@@ -3852,7 +3858,12 @@ begin
           if NonGreedyOp or PossessiveCh or ((FlagTemp and FLAG_HASWIDTH) = 0) then
             EmitComplexBraces(1, MaxBracesArg, NonGreedyOp, PossessiveCh)
           else
-          begin // Emit x+ as x(&|), where & means "self".
+          begin
+            // To complex for OP_PLUS. Write loop using OP_BRANCH and OP_BACK
+            // 1: loop-content
+            // 2: OP_Branch with 2 choices - to allow backtracking
+            // 2a: OP_BACK(1) to match the loop again (goto back, include another iteration of the branch in this choice)
+            // 2b  OP_NOTHING to exit, if the loop can match no more (branch 2a did not match)
             NextNode := EmitBranch; // Either
             Tail(Result, NextNode);
             Tail(EmitNode(OP_BACK), Result); // loop back
