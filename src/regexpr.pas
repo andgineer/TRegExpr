@@ -525,7 +525,7 @@ type
     function EmitNode(op: TREOp): PRegExprChar;
 
     // emit OP_BRANCH (and fillchars)
-    function EmitBranch: PRegExprChar; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    function EmitBranch: PRegExprChar; {$IFDEF FPC}inline;{$ENDIF}
 
     // emit (if appropriate) a byte of code
     procedure EmitC(ch: REChar); {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -627,12 +627,14 @@ type
     class function VersionMinor: Integer;
 
     // match a programm against a string AInputString
-    // !!! Exec store AInputString into InputString property
-    // For Delphi 5 and higher available overloaded versions - first without
-    // parameter (uses already assigned to InputString property value)
-    // and second that has int parameter and is same as ExecPos
-    function Exec(const AInputString: RegExprString): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    {$IFDEF OverMeth} overload;
+    // Exec stores AInputString into InputString property
+    // For Delphi 5 and higher overloaded versions are available: first without
+    // parameter (uses already assigned InputString property value)
+    // and second has int parameter, same as for ExecPos
+    function Exec(const AInputString: RegExprString): Boolean;
+    {$IFDEF OverMeth}overload;{$endif} {$IFDEF InlineFuncs}inline;{$ENDIF}
+
+    {$IFDEF OverMeth}
     function Exec: Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
     function Exec(AOffset: Integer): Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
     {$ENDIF}
@@ -650,8 +652,10 @@ type
 
     // find match for InputString starting from AOffset position
     // (AOffset=1 - first char of InputString)
-    function ExecPos(AOffset: Integer {$IFDEF DefParam} = 1{$ENDIF}): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    {$IFDEF OverMeth} overload;
+    function ExecPos(AOffset: Integer {$IFDEF DefParam} = 1{$ENDIF}): Boolean;
+    {$IFDEF OverMeth}overload;{$endif} {$IFDEF InlineFuncs}inline;{$ENDIF}
+
+    {$IFDEF OverMeth}
     // find match for InputString at AOffset.
     // if ATryOnce=True then only match exactly at AOffset (like anchor \G)
     // if ATryMatchOnlyStartingBefore then only when the match can start before
