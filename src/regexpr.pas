@@ -6271,8 +6271,13 @@ begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
-              if not Result then
+              if not Result then begin
                 regInput := save;
+                if (scan^ = OP_LOOP_POSS) then begin
+                  Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
+                  IsBacktrackingGroupAsAtom := True;
+                end;
+              end;
               exit;
             end;
 
