@@ -476,7 +476,7 @@ type
     procedure ClearMatches;
     procedure ClearInternalExecData;
     procedure InitInternalGroupData;
-    function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: Boolean): Boolean;
+    function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar): Boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: Boolean; var ARes: TRegExprCharset);
     procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure GetCharSetFromWordChars(var ARes: TRegExprCharSet); {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -2821,16 +2821,16 @@ const
   RusRangeHiHigh = #$DF; // 'Я' in cp1251
   {$ENDIF}
 
-function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: Boolean): Boolean;
+function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar): Boolean;
 // Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
 // and Data depends on Kind
 var
   OpKind: REChar;
+  {$IFDEF FastUnicodeData}
   ch, ch2: REChar;
-  N, i: Integer;
+  {$ENDIF}
+  N: integer;
 begin
-  if AIgnoreCase then
-    AChar := _UpperCase(AChar);
   repeat
     OpKind := ABuffer^;
     case OpKind of
@@ -2843,20 +2843,10 @@ begin
       OpKind_Range:
         begin
           Inc(ABuffer);
-          ch := ABuffer^;
-          if (AChar >= ch) then
+          if (AChar >= ABuffer^) then
           begin
             Inc(ABuffer);
-            ch2 := ABuffer^;
-            {
-            // if AIgnoreCase, ch, ch2 are upcased in opcode
-            if AIgnoreCase then
-            begin
-              ch := _UpperCase(ch);
-              ch2 := _UpperCase(ch2);
-            end;
-            }
-            if (AChar <= ch2) then
+            if (AChar <= ABuffer^) then
             begin
               Result := True;
               Exit;
@@ -2885,13 +2875,7 @@ begin
           N := PLongInt(ABuffer)^;
           Inc(ABuffer, RENumberSz);
           repeat
-            ch := ABuffer^;
-            {
-            // already upcased in opcode
-            if AIgnoreCase then
-              ch := _UpperCase(ch);
-            }
-            if ch = AChar then
+            if ABuffer^ = AChar then
             begin
               Result := True;
               Exit;
@@ -5294,14 +5278,14 @@ begin
       {$IFDEF UNICODEEX}
       begin
         i := 0;
-        while (i < TheMax) and FindInCharClass(opnd, scan^, False) do
+        while (i < TheMax) and FindInCharClass(opnd, scan^) do
         begin
           Inc(i);
           IncUnicode2(scan, Result);
         end;
       end;
       {$ELSE}
-      while (Result < TheMax) and FindInCharClass(opnd, scan^, False) do
+      while (Result < TheMax) and FindInCharClass(opnd, scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -5312,14 +5296,14 @@ begin
       {$IFDEF UNICODEEX}
       begin
         i := 0;
-        while (i < TheMax) and not FindInCharClass(opnd, scan^, False) do
+        while (i < TheMax) and not FindInCharClass(opnd, scan^) do
         begin
           Inc(i);
           IncUnicode2(scan, Result);
         end;
       end;
       {$ELSE}
-      while (Result < TheMax) and not FindInCharClass(opnd, scan^, False) do
+      while (Result < TheMax) and not FindInCharClass(opnd, scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -5330,14 +5314,14 @@ begin
       {$IFDEF UNICODEEX}
       begin
         i := 0;
-        while (i < TheMax) and FindInCharClass(opnd, scan^, True) do
+        while (i < TheMax) and FindInCharClass(opnd, _UpperCase(scan^)) do
         begin
           Inc(i);
           IncUnicode2(scan, Result);
         end;
       end;
       {$ELSE}
-      while (Result < TheMax) and FindInCharClass(opnd, scan^, True) do
+      while (Result < TheMax) and FindInCharClass(opnd, _UpperCase(scan^)) do
       begin
         Inc(Result);
         Inc(scan);
@@ -5348,14 +5332,14 @@ begin
       {$IFDEF UNICODEEX}
       begin
         i := 0;
-        while (i < TheMax) and not FindInCharClass(opnd, scan^, True) do
+        while (i < TheMax) and not FindInCharClass(opnd, _UpperCase(scan^)) do
         begin
           Inc(i);
           IncUnicode2(scan, Result);
         end;
       end;
       {$ELSE}
-      while (Result < TheMax) and not FindInCharClass(opnd, scan^, True) do
+      while (Result < TheMax) and not FindInCharClass(opnd, _UpperCase(scan^)) do
       begin
         Inc(Result);
         Inc(scan);
@@ -5837,7 +5821,7 @@ begin
       OP_ANYOF:
         begin
           if (regInput >= fInputCurrentEnd) or
-            not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
+            not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5849,7 +5833,7 @@ begin
       OP_ANYBUT:
         begin
           if (regInput >= fInputCurrentEnd) or
-            FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
+            FindInCharClass(scan + REOpSz + RENextOffSz, regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5861,7 +5845,7 @@ begin
       OP_ANYOF_CI:
         begin
           if (regInput >= fInputCurrentEnd) or
-            not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
+            not FindInCharClass(scan + REOpSz + RENextOffSz, _UpperCase(regInput^)) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5873,7 +5857,7 @@ begin
       OP_ANYBUT_CI:
         begin
           if (regInput >= fInputCurrentEnd) or
-            FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
+            FindInCharClass(scan + REOpSz + RENextOffSz, _UpperCase(regInput^)) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
