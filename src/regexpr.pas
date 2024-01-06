@@ -5417,6 +5417,9 @@ type
       OP_SUBCALL: (
         savedCurrentSubCalled: Integer;
       );
+      OP_STAR: (
+        nextch: REChar;
+      );
   end;
 
 function TRegExpr.MatchPrim(prog: PRegExprChar): Boolean;
@@ -5429,15 +5432,11 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): Boolean;
 // by recursion.
 
 var
-  scan: PRegExprChar; // current node
+  scan: PRegExprChar;
   next: PRegExprChar; // next node
-  Len: PtrInt;
-  opnd, opGrpEnd: PRegExprChar;
+  opnd, save: PRegExprChar;
   no: Integer;
-  save: PRegExprChar;
-  nextch: REChar;
-  BracesMin, BracesMax: Integer;
-  // we use integer instead of TREBracesArg to better support */+
+  LoopCnt: Integer;
   Local: TRegExprMatchPrimLocals;
 begin
   Result := False;
@@ -5670,15 +5669,15 @@ begin
       OP_EXACTLY_CI:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
-          Len := PLongInt(opnd)^;
-          if (regInput + Len > fInputCurrentEnd) then
+          no := PLongInt(opnd)^;
+          if (regInput + no > fInputCurrentEnd) then
             Exit;
           Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
           if (opnd^ <> regInput^) and (_LowerCase(opnd^) <> regInput^) then
             Exit;
-          no := Len;
           save := regInput;
+          Inc(regInput, no);
           while no > 1 do
           begin
             Inc(save);
@@ -5687,21 +5686,20 @@ begin
               Exit;
             Dec(no);
           end;
-          Inc(regInput, Len);
         end;
 
       OP_EXACTLY:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
-          Len := PLongInt(opnd)^;
-          if (regInput + Len > fInputCurrentEnd) then
+          no := PLongInt(opnd)^;
+          if (regInput + no > fInputCurrentEnd) then
             Exit;
           Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
           if opnd^ <> regInput^ then
             Exit;
-          no := Len;
           save := regInput;
+          Inc(regInput, no);
           while no > 1 do
           begin
             Inc(save);
@@ -5710,7 +5708,6 @@ begin
               Exit;
             Dec(no);
           end;
-          Inc(regInput, Len);
         end;
 
       OP_BSUBEXP:
@@ -5722,10 +5719,10 @@ begin
           opnd := GrpBounds[regRecursion].GrpStart[no];
           if opnd = nil then
             Exit;
-          opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
-          if opGrpEnd = nil then
+          save := GrpBounds[regRecursion].GrpEnd[no];
+          if save = nil then
             Exit;
-          no := opGrpEnd - opnd;
+          no := save - opnd;
           save := regInput;
           if save + no - 1 >= fInputCurrentEnd then
             Exit;
@@ -5750,10 +5747,10 @@ begin
           opnd := GrpBounds[regRecursion].GrpStart[no];
           if opnd = nil then
             Exit;
-          opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
-          if opGrpEnd = nil then
+          save := GrpBounds[regRecursion].GrpEnd[no];
+          if save = nil then
             Exit;
-          no := opGrpEnd - opnd;
+          no := save - opnd;
           save := regInput;
           if save + no - 1 >= fInputCurrentEnd then
             Exit;
@@ -6114,12 +6111,11 @@ begin
             Exit;
           end;
           opnd := AlignToPtr(scan + REOpSz + RENextOffSz);
-          BracesMin := PREBracesArg(opnd)^;
           Local.LoopInfoListPtr := CurrentLoopInfoListPtr;
-          if Local.LoopInfoListPtr^.Count >= BracesMin then
+          if Local.LoopInfoListPtr^.Count >= PREBracesArg(opnd)^ then  // Min-Count
           begin // Min alredy matched - we can work
-            BracesMax := PREBracesArg(opnd + REBracesArgSz)^;
-            Result := (BracesMax = MaxBracesArg) and // * or +
+            LoopCnt := PREBracesArg(opnd + REBracesArgSz)^;  // Max-Count
+            Result := (LoopCnt = MaxBracesArg) and // * or +
                       (Local.LoopInfoListPtr^.CurrentRegInput = regInput);
             if Result then begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
@@ -6133,7 +6129,7 @@ begin
             end;
 
             // greedy way - first try to max deep of greed ;)
-            if Local.LoopInfoListPtr^.Count < BracesMax then
+            if Local.LoopInfoListPtr^.Count < LoopCnt then
             begin
               save := regInput;
               Local.LoopInfoListPtr^.CurrentRegInput := save;
@@ -6175,12 +6171,11 @@ begin
             Exit;
           end;
           opnd := AlignToPtr(scan + REOpSz + RENextOffSz);
-          BracesMin := PREBracesArg(opnd)^;
           Local.LoopInfoListPtr := CurrentLoopInfoListPtr;
-          if Local.LoopInfoListPtr^.Count >= BracesMin then
+          if Local.LoopInfoListPtr^.Count >= PREBracesArg(opnd)^ then // Min-Count
           begin // Min alredy matched - we can work
-            BracesMax := PREBracesArg(opnd + REBracesArgSz)^;
-            Result := (BracesMax = MaxBracesArg) and // * or +
+            LoopCnt := PREBracesArg(opnd + REBracesArgSz)^;  // Max-Count
+            Result := (LoopCnt = MaxBracesArg) and // * or +
                       (Local.LoopInfoListPtr^.CurrentRegInput = regInput);
             if Result then begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
@@ -6197,7 +6192,7 @@ begin
             CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
             if Result or IsBacktrackingGroupAsAtom then
               Exit;
-            if Local.LoopInfoListPtr^.Count < BracesMax then
+            if Local.LoopInfoListPtr^.Count < LoopCnt then
             begin
               regInput := save; // failed - move next and try again
               Inc(Local.LoopInfoListPtr^.Count);
@@ -6229,21 +6224,21 @@ begin
             OP_STAR:
               begin
                 no := FindRepeated(opnd, MaxInt);
-                BracesMin := 0 // star
+                LoopCnt := 0 // star
               end;
             OP_PLUS:
               begin
                 no := FindRepeated(opnd, MaxInt);
                 if no < 1 then
                   Exit;
-                BracesMin := 1 // star
+                LoopCnt := 1 // star
               end;
             else
               begin // braces
                 opnd := AlignToPtr(opnd);
                 no := FindRepeated(opnd + 2 * REBracesArgSz, PREBracesArg(opnd + REBracesArgSz)^);
-                BracesMin := PREBracesArg(opnd)^;
-                if no < BracesMin then
+                LoopCnt := PREBracesArg(opnd)^;
+                if no < LoopCnt then
                   Exit;
               end;
           end;
@@ -6251,11 +6246,11 @@ begin
           if next^ = OP_EXACTLY then begin
             // Lookahead to avoid useless match attempts when we know
             // what character comes next.
-            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
-            while no >= BracesMin do
+            Local.nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
+            while no >= LoopCnt do
             begin
               // If it could work, try it.
-              if (nextch = #0) or (regInput^ = nextch) then
+              if (Local.nextch = #0) or (regInput^ = Local.nextch) then
               begin
                 if MatchPrim(next) then
                 begin
@@ -6270,7 +6265,7 @@ begin
             end; { of while }
           end
           else begin
-            while no >= BracesMin do
+            while no >= LoopCnt do
             begin
               if MatchPrim(next) then
               begin
@@ -6294,21 +6289,21 @@ begin
             OP_STAR_NG:
               begin
                 no := FindRepeated(opnd, MaxInt);
-                BracesMin := 0 // star
+                LoopCnt := 0 // star
               end;
             OP_PLUS_NG:
               begin
                 no := FindRepeated(opnd, MaxInt);
                 if no < 1 then
                   Exit;
-                BracesMin := 1 // star
+                LoopCnt := 1 // star
               end;
             else
               begin // braces
                 opnd := AlignToPtr(opnd);
                 no := FindRepeated(opnd + 2 * REBracesArgSz, PREBracesArg(opnd + REBracesArgSz)^);
-                BracesMin := PREBracesArg(opnd)^;
-                if no < BracesMin then
+                LoopCnt := PREBracesArg(opnd)^;
+                if no < LoopCnt then
                   Exit;
               end;
           end;
@@ -6323,12 +6318,12 @@ begin
           if next^ = OP_EXACTLY then begin
             // Lookahead to avoid useless match attempts when we know
             // what character comes next.
-            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
-            while BracesMin <= no do
+            Local.nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
+            while LoopCnt <= no do
             begin
-              regInput := save + BracesMin;
+              regInput := save + LoopCnt;
               // If it could work, try it.
-              if (nextch = #0) or (regInput^ = nextch) then
+              if (Local.nextch = #0) or (regInput^ = Local.nextch) then
               begin
                 if MatchPrim(next) then
                 begin
@@ -6338,13 +6333,13 @@ begin
                 if IsBacktrackingGroupAsAtom then
                   Exit;
               end;
-              Inc(BracesMin); // Couldn't or didn't - move forward.
+              Inc(LoopCnt); // Couldn't or didn't - move forward.
             end; { of while }
           end
           else begin
-            while BracesMin <= no do
+            while LoopCnt <= no do
             begin
-              regInput := save + BracesMin;
+              regInput := save + LoopCnt;
               if MatchPrim(next) then
               begin
                 Result := True;
@@ -6352,7 +6347,7 @@ begin
               end;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-              Inc(BracesMin); // Couldn't or didn't - move forward.
+              Inc(LoopCnt); // Couldn't or didn't - move forward.
             end; { of while }
           end;
           Exit;
@@ -6456,9 +6451,12 @@ begin
         begin
           if (regInput >= fInputCurrentEnd) or not IsAnyLineBreak(regInput^) then
             Exit;
-          nextch := regInput^;
-          Inc(regInput);
-          if (nextch = #13) and (regInput < fInputCurrentEnd) and (regInput^ = #10) then
+          if regInput^ = #13 then begin
+            Inc(regInput);
+            if (regInput < fInputCurrentEnd) and (regInput^ = #10) then
+              Inc(regInput);
+          end
+          else
             Inc(regInput);
         end;
 
