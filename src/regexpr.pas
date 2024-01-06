@@ -7380,22 +7380,26 @@ begin
         begin
           opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
           Next := regNextQuick(Next);
-          FillFirstCharSet(Next);
-          if opnd^ = OP_LOOKAROUND_OPTIONAL then
-            Exit;
 
-          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
-          TmpFirstCharSet := FirstCharSet;
-          FirstCharSet := [];
-          FillFirstCharSet(Next);
+          if opnd^ <> OP_LOOKAROUND_OPTIONAL then begin
+            TempSet := FirstCharSet;
+            FirstCharSet := [];
+            FillFirstCharSet(Next); // after the lookahead
 
-          if TmpFirstCharSet = [] then
+            Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
+            TmpFirstCharSet := FirstCharSet;
+            FirstCharSet := [];
+            FillFirstCharSet(Next); // inside the lookahead
+
+            if TmpFirstCharSet = [] then
+              FirstCharSet := TempSet + FirstCharSet
+            else
+            if FirstCharSet = [] then
+              FirstCharSet := TempSet + TmpFirstCharSet
+            else
+              FirstCharSet := TempSet + (FirstCharSet * TmpFirstCharSet);
             exit;
-          if FirstCharSet = [] then
-            FirstCharSet := TmpFirstCharSet
-          else
-            FirstCharSet := FirstCharSet * TmpFirstCharSet;
-          exit;
+          end;
         end;
 
       OP_LOOKAHEAD_NEG,

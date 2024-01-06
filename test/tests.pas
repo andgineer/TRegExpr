@@ -2529,6 +2529,10 @@ begin
   IsMatching('look-ahead (opt) in branch',     '^.(?:a|.(?=2)?|b)',    '.xb9',  [1,2]);
   IsMatching('look-ahead-neg (opt) in branch', '^.(?:a|.(?!.)?|b)',    '.xb9',  [1,2]);
   IsMatching('look-ahead-neg in branch',       '^.(?:a|.(?!Y)|b)',     '.xb9',  [1,2]);
+
+  // first char
+  IsMatching('',       'a*(?=[bc])[cd]',     'aacd',  [1,3]);
+
 end;
 
 procedure TTestRegexpr.TestRegLookBehind;
