@@ -5438,7 +5438,6 @@ var
   nextch: REChar;
   BracesMin, BracesMax: Integer;
   // we use integer instead of TREBracesArg to better support */+
-  bound1, bound2: Boolean;
   Local: TRegExprMatchPrimLocals;
 begin
   Result := False;
@@ -5466,17 +5465,19 @@ begin
     case scan^ of
       OP_BOUND:
         begin
-          bound1 := (regInput = fInputStart) or not IsWordChar((regInput - 1)^);
-          bound2 := (regInput >= fInputEnd) or not IsWordChar(regInput^);
-          if bound1 = bound2 then
+          if ( (regInput = fInputStart) or not IsWordChar((regInput - 1)^) )
+             =
+             ( (regInput >= fInputEnd)  or not IsWordChar(regInput^) )
+          then
             Exit;
         end;
 
       OP_NOTBOUND:
         begin
-          bound1 := (regInput = fInputStart) or not IsWordChar((regInput - 1)^);
-          bound2 := (regInput >= fInputEnd) or not IsWordChar(regInput^);
-          if bound1 <> bound2 then
+          if ( (regInput = fInputStart) or not IsWordChar((regInput - 1)^) )
+             <>
+             ( (regInput >= fInputEnd)  or not IsWordChar(regInput^) )
+          then
             Exit;
         end;
 
@@ -6418,12 +6419,13 @@ begin
           begin
             Inc(regRecursion);
             FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
-            bound1 := MatchPrim(regCodeWork);
+            Result := MatchPrim(regCodeWork);
             Dec(regRecursion);
+            if not Result then Exit;
+            Result := False;
           end
           else
-            bound1 := False;
-          if not bound1 then Exit;
+            Exit;
         end;
 
       OP_SUBCALL:
@@ -6440,13 +6442,14 @@ begin
             CurrentSubCalled := no;
             Inc(regRecursion);
             FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
-            bound1 := MatchPrim(save);
+            Result := MatchPrim(save);
             Dec(regRecursion);
             CurrentSubCalled := Local.savedCurrentSubCalled;
+            if not Result then Exit;
+            Result := False;
           end
           else
-            bound1 := False;
-          if not bound1 then Exit;
+            Exit;
         end;
 
       OP_ANYLINEBREAK:
