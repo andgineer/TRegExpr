@@ -72,6 +72,7 @@ type
     procedure TestBads;
     procedure TestModifiers;
     procedure TestContinueAnchor;
+    procedure TestLineBreak;
     procedure TestRegMustExist;
     procedure TestAtomic;
     procedure TestQuesitonMark;
@@ -1142,6 +1143,22 @@ begin
   RE.InputString:= '_A123X3';
   IsTrue('Exec must give True', RE.Exec(2));
   AssertMatch('(?<=^.\GA...)(X)  _A123X3 offset 2 ', 6, 1);
+end;
+
+procedure TTestRegexpr.TestLineBreak;
+begin
+  IsNotMatching('no linebreak (stand alone)', '\R', 'abcd');
+  IsMatching('no linebreak (stand alone / loop)', '\R*', 'abcd', [1,0]);
+
+  IsMatching('no loop linebreak', 'a\Rb', 'a'#13'b',      [1,3] );
+  IsMatching('no loop linebreak', 'a\Rb', 'a'#10'b',      [1,3] );
+  IsMatching('no loop linebreak', 'a\Rb', 'a'#13#10'b',   [1,4] );
+  IsMatching('loop linebreak', 'a\R*b', 'a'#13'b',      [1,3] );
+  IsMatching('loop linebreak', 'a\R*b', 'a'#10'b',      [1,3] );
+  IsMatching('loop linebreak', 'a\R*b', 'a'#13#10'b',   [1,4] );
+
+  IsNotMatching('no loop linebreak', 'a\R\Rb', 'a'#13#10'b');
+//  IsNotMatching('   loop linebreak', 'a\R+\Rb', 'a'#13#10'b');
 end;
 
 procedure TTestRegexpr.TestRegMustExist;

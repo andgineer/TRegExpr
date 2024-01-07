@@ -7425,6 +7425,7 @@ begin
           Include(FirstCharSet, Byte($0B));
           Include(FirstCharSet, Byte($0C));
           Include(FirstCharSet, Byte($85));
+          Exit;
         end;
 
     else
