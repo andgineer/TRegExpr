@@ -2529,6 +2529,58 @@ begin
   IsMatching('look-ahead (opt) in branch',     '^.(?:a|.(?=2)?|b)',    '.xb9',  [1,2]);
   IsMatching('look-ahead-neg (opt) in branch', '^.(?:a|.(?!.)?|b)',    '.xb9',  [1,2]);
   IsMatching('look-ahead-neg in branch',       '^.(?:a|.(?!Y)|b)',     '.xb9',  [1,2]);
+
+  // first char
+  IsMatching('',       'a*(?=[bc])[cd]',     'aacd',  [1,3]);
+
+
+  // possesive optional lookahead
+  // ?+
+  IsMatching('look-ahead-poss-opt ? ', '^(.*?)1(?=(2))?.*x1(?!\2)',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-poss-opt ?+', '^(.*?)1(?=(2))?+.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,6, -1,-1]);
+  // *+
+  IsMatching('look-ahead-poss-opt * ', '^(.*?)1(?=(2))*.*x1(?!\2)',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-poss-opt *+', '^(.*?)1(?=(2))*+.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,6, -1,-1]);
+  // {0,1}+
+  IsMatching('look-ahead-poss-opt {0,1} ', '^(.*?)1(?=(2)){0,1}.*x1(?!\2)',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-poss-opt {0,1}+', '^(.*?)1(?=(2)){0,1}+.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,6, -1,-1]);
+  // {0,0}+ // no diff
+  IsMatching('look-ahead-poss-opt {0,0} ', '^(.*?)1(?=(2)){0,0}.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-poss-opt {0,0}+', '^(.*?)1(?=(2)){0,0}+.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  // {1,1}+ // no diff
+  IsNotMatching('look-ahead-poss-opt {1,1} ', '^(.*?)1(?=(2)){1,1}.*x1(?!\2)',  '.12...1a...x12');
+  IsNotMatching('look-ahead-poss-opt {1,1}+', '^(.*?)1(?=(2)){1,1}+.*x1(?!\2)',  '.12...1a...x12');
+
+  // greedy vs non greedy
+  // ? vs ??
+  IsMatching('look-ahead-opt-ng 1', '^(.*?)1(?=(2))?.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  IsMatching('look-ahead-opt-ng 2', '^(.*?)1(?=(2))??.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-opt-ng 3', '^(.*?)1(?=(2))??.*x1(?=\2)',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  // * vs *?
+  IsMatching('look-ahead-opt-ng 1', '^(.*?)1(?=(2))*.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  IsMatching('look-ahead-opt-ng 2', '^(.*?)1(?=(2))*?.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-opt-ng 3', '^(.*?)1(?=(2))*?.*x1(?=\2)',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  // {0,1} vs {0,1}?
+  IsMatching('look-ahead-opt-ng 1', '^(.*?)1(?=(2)){0,1}.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  IsMatching('look-ahead-opt-ng 2', '^(.*?)1(?=(2)){0,1}?.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-opt-ng 3', '^(.*?)1(?=(2)){0,1}?.*x1(?=\2)',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+
+
+  // PCRE-2 will apply a look ahead several times...
+  IsMatching('look-ahead match-count',  '(?=(?=.*(?:\1|a)(.))|$){1,3}', '1234567890abcdefghi',   [1,0,  14,1]);
+  IsMatching('look-ahead match-count',  '(?=(?=.*(?:\1|a)(.))|$){1,4}', '1234567890abcdefghi',   [1,0,  15,1]);
+  IsMatching('look-ahead match-count',  '(?=(?=.*(?:\1|a)(.))|$){1,4}?', '1234567890abcdefghi',   [1,0,  12,1]);
+  IsMatching('look-ahead match-count',  '(?=(?=.*(?:\1|a)(.))|$){2,4}?', '1234567890abcdefghi',   [1,0,  13,1]);
+
+  IsMatching('look-ahead match-count',  '(?=(?:.*(?:\1|a)(.))|$){1,3}', '1234567890abcdefghi',   [1,0,  14,1]);
+  IsMatching('look-ahead match-count',  '(?=(?:.*(?:\1|a)(.))|$){1,4}', '1234567890abcdefghi',   [1,0,  15,1]);
+  IsMatching('look-ahead match-count',  '(?=(?:.*(?:\1|a)(.))|$){1,4}?', '1234567890abcdefghi',   [1,0,  12,1]);
+  IsMatching('look-ahead match-count',  '(?=(?:.*(?:\1|a)(.))|$){2,4}?', '1234567890abcdefghi',   [1,0,  13,1]);
+
+  // Neg look ahead
+  // ? vs ??
+  IsMatching('NEG look-ahead-opt-ng 1', '^.1((?!(?1))??)',   '.12.',  [1,2, 3,0]);
+//  IsErrorOnMatch('NEG look-ahead-opt-g (recurse)', '^.1((?!(?1))?)',   '.12.'); // OP_SUBCALL does not give error on endless recursion
 end;
 
 procedure TTestRegexpr.TestRegLookBehind;
@@ -2792,6 +2844,43 @@ begin
   IsMatching('look-behind (opt) in branch',     '^.(?:a|.(?<=Y)?|b)',    '.xb9',  [1,2]);
   IsMatching('look-behind-neg (opt) in branch', '^.(?:a|.(?<!.)?|b)',    '.xb9',  [1,2]);
   IsMatching('look-behind-neg in branch',       '^.(?:a|.(?<!Y)|b)',     '.xb9',  [1,2]);
+
+  // possesive optional lookahead
+  // ?+
+  IsMatching('look-behind-poss-opt ?',  '^(.*?)1.(?<=(2))?.*x1(?!\2)',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-behind-poss-opt ??', '^(.*?)1.(?<=(2))?+.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,6, -1,-1]);
+  // *+
+  IsMatching('look-behind-poss-opt *',  '^(.*?)1.(?<=(2))*.*x1(?!\2)',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-behind-poss-opt *?', '^(.*?)1.(?<=(2))*+.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,6, -1,-1]);
+  // {0,1}+
+  IsMatching('look-behind-poss-opt {0,1}',  '^(.*?)1.(?<=(2)){0,1}.*x1(?!\2)',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-behind-poss-opt {0,1}+', '^(.*?)1.(?<=(2)){0,1}+.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,6, -1,-1]);
+  // {0,0}+ // no diff
+  IsMatching('look-ahead-poss-opt {0,0} ', '^(.*?)1.(?<=(2)){0,0}.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-poss-opt {0,0}+', '^(.*?)1.(?<=(2)){0,0}+.*x1(?!\2)',  '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  // {1,1}+ // no diff
+  IsNotMatching('look-ahead-poss-opt {1,1} ', '^(.*?)1.(?<=(2)){1,1}.*x1(?!\2)',  '.12...1a...x12');
+  IsNotMatching('look-ahead-poss-opt {1,1}+', '^(.*?)1.(?<=(2)){1,1}+.*x1(?!\2)',  '.12...1a...x12');
+
+  // greedy vs non greedy
+  // ? vs ??
+  IsMatching('look-ahead-opt-ng ? 1', '^(.*?)1.(?<=(2))?.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  IsMatching('look-ahead-opt-ng ? 2', '^(.*?)1.(?<=(2))??.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-opt-ng ? 3', '^(.*?)1.(?<=(2))??.*x1(?=\2)',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  // * vs *?
+  IsMatching('look-ahead-opt-ng * 1', '^(.*?)1.(?<=(2))*.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  IsMatching('look-ahead-opt-ng * 2', '^(.*?)1.(?<=(2))*?.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-opt-ng * 3', '^(.*?)1.(?<=(2))*?.*x1(?=\2)',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  // {0,1} vs {0,1}?
+  IsMatching('look-ahead-opt-ng {} 1', '^(.*?)1.(?<=(2)){0,1}.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+  IsMatching('look-ahead-opt-ng {} 2', '^(.*?)1.(?<=(2)){0,1}?.*x1(?=\2)?',   '.12...1a...x12',  [1,13, 1,1, -1,-1]);
+  IsMatching('look-ahead-opt-ng {} 3', '^(.*?)1.(?<=(2)){0,1}?.*x1(?=\2)',   '.12...1a...x12',  [1,13, 1,1, 3,1]);
+
+  // PCRE-2 will apply a look ahead several times...
+  IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){1,3}', '1234567890abcdefghi',   [1,0,  14,1]);
+  IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){1,4}', '1234567890abcdefghi',   [1,0,  15,1]);
+  IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){1,4}?', '1234567890abcdefghi',   [1,0,  12,1]);
+  IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){2,4}?', '1234567890abcdefghi',   [1,0,  13,1]);
 end;
 
 procedure TTestRegexpr.TestRegLookAroundMixed;

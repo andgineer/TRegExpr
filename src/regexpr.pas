@@ -476,7 +476,7 @@ type
     procedure ClearMatches;
     procedure ClearInternalExecData;
     procedure InitInternalGroupData;
-    function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: Boolean): Boolean;
+    function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar): Boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: Boolean; var ARes: TRegExprCharset);
     procedure GetCharSetFromSpaceChars(var ARes: TRegExprCharset); {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure GetCharSetFromWordChars(var ARes: TRegExprCharSet); {$IFDEF InlineFuncs}inline;{$ENDIF}
@@ -1714,7 +1714,6 @@ const
   OP_LOOKBEHIND = TREOp(58);
   OP_LOOKBEHIND_NEG = TREOp(59);
   OP_LOOKBEHIND_END = TREOp(60);
-  OP_LOOKAROUND_OPTIONAL = TREOp(61);
 
   OP_SUBCALL = TREOp(65); // Call of subroutine; OP_SUBCALL+i is for group i
   OP_LOOP_POSS = TREOp(66); // Same as OP_LOOP but in non-greedy mode
@@ -2808,7 +2807,6 @@ const
   FLAG_SPECSTART = 4; // Starts with * or +
   FLAG_LOOP = 8; // Has eithe *, + or {,n} with n>=2
   FLAG_GREEDY = 16; // Has any greedy code
-  FLAG_LOOKAROUND = 32; // "Piece" (ParsePiece) is look-around
   FLAG_NOT_QUANTIFIABLE = 64; // "Piece" (ParsePiece) is look-around
 
   {$IFDEF UnicodeRE}
@@ -2823,16 +2821,16 @@ const
   RusRangeHiHigh = #$DF; // 'Я' in cp1251
   {$ENDIF}
 
-function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar; AIgnoreCase: Boolean): Boolean;
+function TRegExpr.FindInCharClass(ABuffer: PRegExprChar; AChar: REChar): Boolean;
 // Buffer contains char pairs: (Kind, Data), where Kind is one of OpKind_ values,
 // and Data depends on Kind
 var
   OpKind: REChar;
+  {$IFDEF FastUnicodeData}
   ch, ch2: REChar;
-  N, i: Integer;
+  {$ENDIF}
+  N: integer;
 begin
-  if AIgnoreCase then
-    AChar := _UpperCase(AChar);
   repeat
     OpKind := ABuffer^;
     case OpKind of
@@ -2845,20 +2843,10 @@ begin
       OpKind_Range:
         begin
           Inc(ABuffer);
-          ch := ABuffer^;
-          if (AChar >= ch) then
+          if (AChar >= ABuffer^) then
           begin
             Inc(ABuffer);
-            ch2 := ABuffer^;
-            {
-            // if AIgnoreCase, ch, ch2 are upcased in opcode
-            if AIgnoreCase then
-            begin
-              ch := _UpperCase(ch);
-              ch2 := _UpperCase(ch2);
-            end;
-            }
-            if (AChar <= ch2) then
+            if (AChar <= ABuffer^) then
             begin
               Result := True;
               Exit;
@@ -2887,13 +2875,7 @@ begin
           N := PLongInt(ABuffer)^;
           Inc(ABuffer, RENumberSz);
           repeat
-            ch := ABuffer^;
-            {
-            // already upcased in opcode
-            if AIgnoreCase then
-              ch := _UpperCase(ch);
-            }
-            if ch = AChar then
+            if ABuffer^ = AChar then
             begin
               Result := True;
               Exit;
@@ -3534,14 +3516,11 @@ begin
           opnd := opnd + REOpSz + RENextOffSz;
         break;
       end;
-    OP_LOOKAROUND_OPTIONAL:
-      opnd := (opnd + 1 + RENextOffSz);
     OP_LOOKAHEAD:  // could contain OP_OPEN....
       begin
         if ( ((opnd + 1 + RENextOffSz)^ = OP_EXACTLY) or
             ((opnd + 1 + RENextOffSz)^ = OP_EXACTLY_CI)
-           ) and
-           ((regNext(opnd) + 1 + RENextOffSz)^ <> OP_LOOKAROUND_OPTIONAL)
+           )
         then begin
           opnd := (opnd + 1 + RENextOffSz);
           break;
@@ -3746,37 +3725,7 @@ begin
   op := regParse^;
   if not ((op = '*') or (op = '+') or (op = '?') or (op = '{')) then
   begin
-    FlagParse := FlagTemp and not FLAG_LOOKAROUND;
-    Exit;
-  end;
-
-  if (FlagTemp and FLAG_LOOKAROUND) <> 0 then begin
-    FlagTemp:= FlagTemp and not FLAG_LOOKAROUND;
-    FlagParse := FlagParse or FlagTemp and (FLAG_LOOP or FLAG_GREEDY);
-    BracesMin := 0;
-    if op = '{' then begin
-      savedRegParse := regParse;
-      Inc(regParse);
-      if not ParseBraceMinMax(BracesMin, BracesMax) then
-      begin
-        regParse := savedRegParse;
-        Exit;
-      end;
-    end;
-    if op = '+' then
-      BracesMin := 1;
-    if BracesMin = 0 then
-      EmitNode(OP_LOOKAROUND_OPTIONAL);
-
-    nextch := (regParse + 1)^;
-    if (nextch = '+') or  (nextch = '?') then
-      Inc(regParse);
-    Inc(regParse);
-    op := regParse^;
-    if (op = '*') or (op = '+') or (op = '?') or
-       ( (op = '{') and not CheckBraceIsLiteral)
-    then
-      Error(reeNestedQuantif);
+    FlagParse := FlagTemp;
     Exit;
   end;
 
@@ -4654,7 +4603,7 @@ begin
                 Exit;
 
               Tail(ret, regLast(Result));
-              FlagParse := FlagParse and not FLAG_HASWIDTH or FLAG_LOOKAROUND;
+              FlagParse := FlagParse and not FLAG_HASWIDTH;
             end;
 
           gkLookbehind,
@@ -4694,7 +4643,7 @@ begin
                 PReOpLookBehindOptions(regLookBehindOption)^.MatchLenMax := AMaxLen;
               end;
 
-              FlagParse := FlagParse and not FLAG_HASWIDTH or FLAG_LOOKAROUND;
+              FlagParse := FlagParse and not FLAG_HASWIDTH;
             end;
 
           gkNamedGroupReference:
@@ -5329,14 +5278,14 @@ begin
       {$IFDEF UNICODEEX}
       begin
         i := 0;
-        while (i < TheMax) and FindInCharClass(opnd, scan^, False) do
+        while (i < TheMax) and FindInCharClass(opnd, scan^) do
         begin
           Inc(i);
           IncUnicode2(scan, Result);
         end;
       end;
       {$ELSE}
-      while (Result < TheMax) and FindInCharClass(opnd, scan^, False) do
+      while (Result < TheMax) and FindInCharClass(opnd, scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -5347,14 +5296,14 @@ begin
       {$IFDEF UNICODEEX}
       begin
         i := 0;
-        while (i < TheMax) and not FindInCharClass(opnd, scan^, False) do
+        while (i < TheMax) and not FindInCharClass(opnd, scan^) do
         begin
           Inc(i);
           IncUnicode2(scan, Result);
         end;
       end;
       {$ELSE}
-      while (Result < TheMax) and not FindInCharClass(opnd, scan^, False) do
+      while (Result < TheMax) and not FindInCharClass(opnd, scan^) do
       begin
         Inc(Result);
         Inc(scan);
@@ -5365,14 +5314,14 @@ begin
       {$IFDEF UNICODEEX}
       begin
         i := 0;
-        while (i < TheMax) and FindInCharClass(opnd, scan^, True) do
+        while (i < TheMax) and FindInCharClass(opnd, _UpperCase(scan^)) do
         begin
           Inc(i);
           IncUnicode2(scan, Result);
         end;
       end;
       {$ELSE}
-      while (Result < TheMax) and FindInCharClass(opnd, scan^, True) do
+      while (Result < TheMax) and FindInCharClass(opnd, _UpperCase(scan^)) do
       begin
         Inc(Result);
         Inc(scan);
@@ -5383,14 +5332,14 @@ begin
       {$IFDEF UNICODEEX}
       begin
         i := 0;
-        while (i < TheMax) and not FindInCharClass(opnd, scan^, True) do
+        while (i < TheMax) and not FindInCharClass(opnd, _UpperCase(scan^)) do
         begin
           Inc(i);
           IncUnicode2(scan, Result);
         end;
       end;
       {$ELSE}
-      while (Result < TheMax) and not FindInCharClass(opnd, scan^, True) do
+      while (Result < TheMax) and not FindInCharClass(opnd, _UpperCase(scan^)) do
       begin
         Inc(Result);
         Inc(scan);
@@ -5872,7 +5821,7 @@ begin
       OP_ANYOF:
         begin
           if (regInput >= fInputCurrentEnd) or
-            not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
+            not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5884,7 +5833,7 @@ begin
       OP_ANYBUT:
         begin
           if (regInput >= fInputCurrentEnd) or
-            FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, False) then
+            FindInCharClass(scan + REOpSz + RENextOffSz, regInput^) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5896,7 +5845,7 @@ begin
       OP_ANYOF_CI:
         begin
           if (regInput >= fInputCurrentEnd) or
-            not FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
+            not FindInCharClass(scan + REOpSz + RENextOffSz, _UpperCase(regInput^)) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5908,7 +5857,7 @@ begin
       OP_ANYBUT_CI:
         begin
           if (regInput >= fInputCurrentEnd) or
-            FindInCharClass(scan + REOpSz + RENextOffSz, regInput^, True) then
+            FindInCharClass(scan + REOpSz + RENextOffSz, _UpperCase(regInput^)) then
             Exit;
           {$IFDEF UNICODEEX}
           IncUnicode(regInput);
@@ -5997,25 +5946,9 @@ begin
 
           opnd := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz; // Successor of OP_LOOKAHEAD_END;
           if Local.IsNegativeLook then begin
-            Result := (opnd^ = OP_LOOKAROUND_OPTIONAL);
-            if not Result then
-              Result := (not Local.LookAroundInfo.HasMatchedToEnd);
+            Result := (not Local.LookAroundInfo.HasMatchedToEnd);
             if Result then begin
               next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
-              if (next^ = OP_LOOKAROUND_OPTIONAL) then
-                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
-              regInput := Local.LookAroundInfo.InputPos;
-              Result := False;
-              scan := next;
-              continue;
-            end;
-          end
-          else
-          if (opnd^ = OP_LOOKAROUND_OPTIONAL) then begin
-            if not Local.LookAroundInfo.HasMatchedToEnd then begin
-              next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
-              if (next^ = OP_LOOKAROUND_OPTIONAL) then
-                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
               Result := False;
               scan := next;
@@ -6087,25 +6020,9 @@ begin
 
           opnd := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz; // Successor of OP_LOOKAHEAD_END;
           if Local.IsNegativeLook then begin
-            Result := (opnd^ = OP_LOOKAROUND_OPTIONAL);
-            if not Result then
-              Result := not Local.LookAroundInfo.HasMatchedToEnd;
+            Result := not Local.LookAroundInfo.HasMatchedToEnd;
             if Result then begin
               next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
-              if (next^ = OP_LOOKAROUND_OPTIONAL) then
-                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
-              regInput := Local.LookAroundInfo.InputPos;
-              Result := False;
-              scan := next;
-              continue;
-            end;
-          end
-          else
-          if (opnd^ = OP_LOOKAROUND_OPTIONAL) then begin
-            if not Local.LookAroundInfo.HasMatchedToEnd then begin
-              next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
-              if (next^ = OP_LOOKAROUND_OPTIONAL) then
-                next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
               regInput := Local.LookAroundInfo.InputPos;
               Result := False;
               scan := next;
@@ -6130,8 +6047,6 @@ begin
             regInput := Local.LookAroundInfoPtr^.InputPos;
             LookAroundInfoList := Local.LookAroundInfoPtr^.OuterInfo;
 
-            if (next^ = OP_LOOKAROUND_OPTIONAL) then
-              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
             Result := MatchPrim(next);
             LookAroundInfoList := Local.LookAroundInfoPtr;
           end;
@@ -6159,8 +6074,6 @@ begin
             fInputCurrentEnd := Local.LookAroundInfoPtr^.savedInputCurrentEnd;
             LookAroundInfoList := Local.LookAroundInfoPtr^.OuterInfo;
 
-            if (next^ = OP_LOOKAROUND_OPTIONAL) then
-              next := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz;
             Result := MatchPrim(next);
             LookAroundInfoList := Local.LookAroundInfoPtr;
           end;
@@ -6271,8 +6184,13 @@ begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
-              if not Result then
+              if not Result then begin
                 regInput := save;
+                if (scan^ = OP_LOOP_POSS) then begin
+                  Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
+                  IsBacktrackingGroupAsAtom := True;
+                end;
+              end;
               exit;
             end;
 
@@ -7380,21 +7298,23 @@ begin
         begin
           opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
           Next := regNextQuick(Next);
-          FillFirstCharSet(Next);
-          if opnd^ = OP_LOOKAROUND_OPTIONAL then
-            Exit;
+
+          TempSet := FirstCharSet;
+          FirstCharSet := [];
+          FillFirstCharSet(Next); // after the lookahead
 
           Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
           TmpFirstCharSet := FirstCharSet;
           FirstCharSet := [];
-          FillFirstCharSet(Next);
+          FillFirstCharSet(Next); // inside the lookahead
 
           if TmpFirstCharSet = [] then
-            exit;
-          if FirstCharSet = [] then
-            FirstCharSet := TmpFirstCharSet
+            FirstCharSet := TempSet + FirstCharSet
           else
-            FirstCharSet := FirstCharSet * TmpFirstCharSet;
+          if FirstCharSet = [] then
+            FirstCharSet := TempSet + TmpFirstCharSet
+          else
+            FirstCharSet := TempSet + (FirstCharSet * TmpFirstCharSet);
           exit;
         end;
 
@@ -7407,11 +7327,6 @@ begin
       OP_LOOKAHEAD_END, OP_LOOKBEHIND_END:
         begin
           Exit;
-        end;
-
-      OP_LOOKAROUND_OPTIONAL:
-        begin
-          Next := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
         end;
 
       OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
@@ -7742,8 +7657,6 @@ begin
       Result := 'LOOKAHEAD_END';
     OP_LOOKBEHIND_END:
       Result := 'LOOKBEHIND_END';
-    OP_LOOKAROUND_OPTIONAL:
-      Result := 'OP_LOOKAROUND_OPTIONAL';
     OP_STAR:
       Result := 'STAR';
     OP_PLUS:
@@ -8274,9 +8187,6 @@ begin
         begin
           continue;
         end;
-
-      OP_LOOKAROUND_OPTIONAL:
-        continue;
 
       OP_NOTHING,
       OP_COMMENT,
