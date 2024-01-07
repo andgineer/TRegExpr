@@ -6107,101 +6107,115 @@ begin
           Exit;
         end;
 
-      OP_LOOP, OP_LOOP_NG, OP_LOOP_POSS:
+      OP_LOOP, OP_LOOP_POSS:
         begin
           if CurrentLoopInfoListPtr = nil then begin
             Error(reeLoopWithoutEntry);
             Exit;
           end;
-          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + 2 * REBracesArgSz))^;
-          BracesMin := PREBracesArg(AlignToInt(scan + REOpSz + RENextOffSz))^;
-          BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
-          save := regInput;
+          opnd := AlignToPtr(scan + REOpSz + RENextOffSz);
+          BracesMin := PREBracesArg(opnd)^;
           Local.LoopInfoListPtr := CurrentLoopInfoListPtr;
           if Local.LoopInfoListPtr^.Count >= BracesMin then
           begin // Min alredy matched - we can work
+            BracesMax := PREBracesArg(opnd + REBracesArgSz)^;
             Result := (BracesMax = MaxBracesArg) and // * or +
                       (Local.LoopInfoListPtr^.CurrentRegInput = regInput);
             if Result then begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
-              if not Result then begin
-                regInput := save;
-                if (scan^ = OP_LOOP_POSS) then begin
-                  Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
-                  IsBacktrackingGroupAsAtom := True;
-                end;
+              if (not Result) and (scan^ = OP_LOOP_POSS) then begin
+                Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
+                IsBacktrackingGroupAsAtom := True;
               end;
               exit;
             end;
 
-            Local.LoopInfoListPtr^.CurrentRegInput := regInput;
-            if not (scan^ = OP_LOOP_NG) then
+            // greedy way - first try to max deep of greed ;)
+            if Local.LoopInfoListPtr^.Count < BracesMax then
             begin
-              // greedy way - first try to max deep of greed ;)
-              if Local.LoopInfoListPtr^.Count < BracesMax then
-              begin
-                Inc(Local.LoopInfoListPtr^.Count);
-                Result := MatchPrim(opnd);
-                if Result then
-                  Exit;
-                if IsBacktrackingGroupAsAtom then
-                  Exit;
-                Dec(Local.LoopInfoListPtr^.Count);
-                regInput := save;
-              end;
-              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
-              Result := MatchPrim(next);
-              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+              save := regInput;
+              Local.LoopInfoListPtr^.CurrentRegInput := save;
+              Inc(Local.LoopInfoListPtr^.Count);
+              Result := MatchPrim(scan + PRENextOff(opnd + 2 * REBracesArgSz)^);
+              if Result or IsBacktrackingGroupAsAtom then
+                Exit;
+              Dec(Local.LoopInfoListPtr^.Count);
+              regInput := save;
+            end;
+            CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
+            Result := MatchPrim(next);
+            CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
 
-              if IsBacktrackingGroupAsAtom then
-                Exit;
-              if (scan^ = OP_LOOP_POSS) and (not Result) then begin
-                Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
-                IsBacktrackingGroupAsAtom := True;
-                exit;
-              end;
-              if not Result then
-                regInput := save;
+            if Result or IsBacktrackingGroupAsAtom then
               Exit;
-            end
-            else
-            begin
-              // non-greedy - try just now
-              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
-              Result := MatchPrim(next);
-              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
-              if Result then
-                Exit;
-              if IsBacktrackingGroupAsAtom then
-                Exit;
-              regInput := save; // failed - move next and try again
-              if Local.LoopInfoListPtr^.Count < BracesMax then
-              begin
-                Inc(Local.LoopInfoListPtr^.Count);
-                Result := MatchPrim(opnd);
-                if Result then
-                  Exit;
-                if IsBacktrackingGroupAsAtom then
-                  Exit;
-                Dec(Local.LoopInfoListPtr^.Count);
-                regInput := save;
-              end;
-              Exit;
-            end
+            if (scan^ = OP_LOOP_POSS) then begin
+              Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
+              IsBacktrackingGroupAsAtom := True;
+            end;
+            Exit;
           end
           else
           begin // first match a min_cnt times
             Inc(Local.LoopInfoListPtr^.Count);
             Local.LoopInfoListPtr^.CurrentRegInput := regInput;
-            Result := MatchPrim(opnd);
-            if Result then
-              Exit;
-            if IsBacktrackingGroupAsAtom then
+            Result := MatchPrim(scan + PRENextOff(opnd + 2 * REBracesArgSz)^);
+            if Result or IsBacktrackingGroupAsAtom then
               Exit;
             Dec(Local.LoopInfoListPtr^.Count);
-            regInput := save;
+            Exit;
+          end;
+        end;
+
+      OP_LOOP_NG:
+        begin
+          if CurrentLoopInfoListPtr = nil then begin
+            Error(reeLoopWithoutEntry);
+            Exit;
+          end;
+          opnd := AlignToPtr(scan + REOpSz + RENextOffSz);
+          BracesMin := PREBracesArg(opnd)^;
+          Local.LoopInfoListPtr := CurrentLoopInfoListPtr;
+          if Local.LoopInfoListPtr^.Count >= BracesMin then
+          begin // Min alredy matched - we can work
+            BracesMax := PREBracesArg(opnd + REBracesArgSz)^;
+            Result := (BracesMax = MaxBracesArg) and // * or +
+                      (Local.LoopInfoListPtr^.CurrentRegInput = regInput);
+            if Result then begin
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
+              Result := MatchPrim(next);
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+              exit;
+            end;
+
+            save := regInput;
+            Local.LoopInfoListPtr^.CurrentRegInput := save;
+            // non-greedy - try just now
+            CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
+            Result := MatchPrim(next);
+            CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+            if Result or IsBacktrackingGroupAsAtom then
+              Exit;
+            if Local.LoopInfoListPtr^.Count < BracesMax then
+            begin
+              regInput := save; // failed - move next and try again
+              Inc(Local.LoopInfoListPtr^.Count);
+              Result := MatchPrim(scan + PRENextOff(opnd + 2 * REBracesArgSz)^);
+              if Result or IsBacktrackingGroupAsAtom then
+                Exit;
+              Dec(Local.LoopInfoListPtr^.Count);
+            end;
+            Exit;
+          end
+          else
+          begin // first match a min_cnt times
+            Inc(Local.LoopInfoListPtr^.Count);
+            Local.LoopInfoListPtr^.CurrentRegInput := regInput;
+            Result := MatchPrim(scan + PRENextOff(opnd + 2 * REBracesArgSz)^);
+            if Result or IsBacktrackingGroupAsAtom then
+              Exit;
+            Dec(Local.LoopInfoListPtr^.Count);
             Exit;
           end;
         end;
