@@ -6207,77 +6207,114 @@ begin
         end;
       {$ENDIF}
 
-      OP_STAR, OP_PLUS, OP_BRACES, OP_STAR_NG, OP_PLUS_NG, OP_BRACES_NG:
+      OP_STAR, OP_PLUS, OP_BRACES:
         begin
+          opnd := scan + REOpSz + RENextOffSz;
+          save := regInput;
+          case scan^ of
+            OP_STAR:
+              begin
+                no := FindRepeated(opnd, MaxInt);
+                BracesMin := 0 // star
+              end;
+            OP_PLUS:
+              begin
+                no := FindRepeated(opnd, MaxInt);
+                if no < 1 then
+                  Exit;
+                BracesMin := 1 // star
+              end;
+            else
+              begin // braces
+                opnd := AlignToPtr(opnd);
+                no := FindRepeated(opnd + 2 * REBracesArgSz, PREBracesArg(opnd + REBracesArgSz)^);
+                BracesMin := PREBracesArg(opnd)^;
+                if no < BracesMin then
+                  Exit;
+              end;
+          end;
+
           // Lookahead to avoid useless match attempts when we know
           // what character comes next.
           nextch := #0;
           if next^ = OP_EXACTLY then
             nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
-          BracesMax := MaxInt; // infinite loop for * and +
-          if (scan^ = OP_STAR) or (scan^ = OP_STAR_NG) then
-            BracesMin := 0 // star
-          else if (scan^ = OP_PLUS) or (scan^ = OP_PLUS_NG) then
-            BracesMin := 1 // plus
-          else
-          begin // braces
-            BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-            BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
-          end;
-          save := regInput;
-          opnd := scan + REOpSz + RENextOffSz;
-          if (scan^ = OP_BRACES) or (scan^ = OP_BRACES_NG) then
-            Inc(opnd, 2 * REBracesArgSz);
 
-          if (scan^ = OP_PLUS_NG) or (scan^ = OP_STAR_NG) or (scan^ = OP_BRACES_NG) then
+          while no >= BracesMin do
           begin
-            // non-greedy mode
-            BracesMax := FindRepeated(opnd, BracesMax);
-            // don't repeat more than BracesMax
-            // Now we know real Max limit to move forward (for recursion 'back up')
-            // In some cases it can be faster to check only Min positions first,
-            // but after that we have to check every position separtely instead
-            // of fast scannig in loop.
-            no := BracesMin;
-            while no <= BracesMax do
+            // If it could work, try it.
+            if (nextch = #0) or (regInput^ = nextch) then
             begin
-              regInput := save + no;
-              // If it could work, try it.
-              if (nextch = #0) or (regInput^ = nextch) then
+              if MatchPrim(next) then
               begin
-                if MatchPrim(next) then
-                begin
-                  Result := True;
+                Result := True;
+                Exit;
+              end;
+              if IsBacktrackingGroupAsAtom then
+                Exit;
+            end;
+            Dec(no); // Couldn't or didn't - back up.
+            regInput := save + no;
+          end; { of while }
+          Exit;
+        end;
+
+      OP_STAR_NG, OP_PLUS_NG, OP_BRACES_NG:
+        begin
+          opnd := scan + REOpSz + RENextOffSz;
+          save := regInput;
+          case scan^ of
+            OP_STAR_NG:
+              begin
+                no := FindRepeated(opnd, MaxInt);
+                BracesMin := 0 // star
+              end;
+            OP_PLUS_NG:
+              begin
+                no := FindRepeated(opnd, MaxInt);
+                if no < 1 then
                   Exit;
-                end;
-                if IsBacktrackingGroupAsAtom then
+                BracesMin := 1 // star
+              end;
+            else
+              begin // braces
+                opnd := AlignToPtr(opnd);
+                no := FindRepeated(opnd + 2 * REBracesArgSz, PREBracesArg(opnd + REBracesArgSz)^);
+                BracesMin := PREBracesArg(opnd)^;
+                if no < BracesMin then
                   Exit;
               end;
-              Inc(no); // Couldn't or didn't - move forward.
-            end; { of while }
-            Exit;
-          end
-          else
-          begin // greedy mode
-            no := FindRepeated(opnd, BracesMax); // don't repeat more than max_cnt
-            while no >= BracesMin do
-            begin
-              // If it could work, try it.
-              if (nextch = #0) or (regInput^ = nextch) then
-              begin
-                if MatchPrim(next) then
-                begin
-                  Result := True;
-                  Exit;
-                end;
-                if IsBacktrackingGroupAsAtom then
-                  Exit;
-              end;
-              Dec(no); // Couldn't or didn't - back up.
-              regInput := save + no;
-            end; { of while }
-            Exit;
           end;
+
+          // Lookahead to avoid useless match attempts when we know
+          // what character comes next.
+          nextch := #0;
+          if next^ = OP_EXACTLY then
+            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
+
+          // non-greedy mode
+          // don't repeat more than "no" times
+          // Now we know real Max limit to move forward (for recursion 'back up')
+          // In some cases it can be faster to check only Min positions first,
+          // but after that we have to check every position separtely instead
+          // of fast scannig in loop.
+          while BracesMin <= no do
+          begin
+            regInput := save + BracesMin;
+            // If it could work, try it.
+            if (nextch = #0) or (regInput^ = nextch) then
+            begin
+              if MatchPrim(next) then
+              begin
+                Result := True;
+                Exit;
+              end;
+              if IsBacktrackingGroupAsAtom then
+                Exit;
+            end;
+            Inc(BracesMin); // Couldn't or didn't - move forward.
+          end; { of while }
+          Exit;
         end;
 
       OP_STAR_POSS, OP_PLUS_POSS, OP_BRACES_POSS:
