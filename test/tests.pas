@@ -2885,6 +2885,9 @@ begin
   IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){1,4}', '1234567890abcdefghi',   [1,0,  15,1]);
   IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){1,4}?', '1234567890abcdefghi',   [1,0,  12,1]);
   IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){2,4}?', '1234567890abcdefghi',   [1,0,  13,1]);
+
+
+  IsMatching('look-behind op-star',  '^aa(?<=^(a*))', 'aaaaaa',   [1,2,  1,2]);
 end;
 
 procedure TTestRegexpr.TestRegLookAroundMixed;

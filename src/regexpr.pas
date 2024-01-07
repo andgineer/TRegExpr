@@ -5033,7 +5033,7 @@ begin
   Result := 0;
   scan := regInput; // points into InputString
   opnd := p + REOpSz + RENextOffSz; // points to operand of opcode (after OP_nnn code)
-  TheMax := fInputEnd - scan;
+  TheMax := fInputCurrentEnd - scan;
   if TheMax > AMax then
     TheMax := AMax;
   case PREOp(p)^ of
