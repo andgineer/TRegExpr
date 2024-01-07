@@ -5724,13 +5724,18 @@ begin
           opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
           if opGrpEnd = nil then
             Exit;
+          no := opGrpEnd - opnd;
           save := regInput;
-          while opnd < opGrpEnd do
+          if save + no - 1 >= fInputCurrentEnd then
+            Exit;
+
+          while no > 0 do
           begin
-            if (save >= fInputCurrentEnd) or (save^ <> opnd^) then
+            if (save^ <> opnd^) then
               Exit;
             Inc(save);
             Inc(opnd);
+            Dec(no);
           end;
           regInput := save;
         end;
@@ -5747,14 +5752,18 @@ begin
           opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
           if opGrpEnd = nil then
             Exit;
+          no := opGrpEnd - opnd;
           save := regInput;
-          while opnd < opGrpEnd do
+          if save + no - 1 >= fInputCurrentEnd then
+            Exit;
+
+          while no > 0 do
           begin
-            if (save >= fInputCurrentEnd) or
-              ((save^ <> opnd^) and (save^ <> InvertCase(opnd^))) then
+            if ((save^ <> opnd^) and (save^ <> InvertCase(opnd^))) then
               Exit;
             Inc(save);
             Inc(opnd);
+            Dec(no);
           end;
           regInput := save;
         end;
