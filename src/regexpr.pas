@@ -6247,16 +6247,29 @@ begin
               end;
           end;
 
-          // Lookahead to avoid useless match attempts when we know
-          // what character comes next.
-          nextch := #0;
-          if next^ = OP_EXACTLY then
+          if next^ = OP_EXACTLY then begin
+            // Lookahead to avoid useless match attempts when we know
+            // what character comes next.
             nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
-
-          while no >= BracesMin do
-          begin
-            // If it could work, try it.
-            if (nextch = #0) or (regInput^ = nextch) then
+            while no >= BracesMin do
+            begin
+              // If it could work, try it.
+              if (nextch = #0) or (regInput^ = nextch) then
+              begin
+                if MatchPrim(next) then
+                begin
+                  Result := True;
+                  Exit;
+                end;
+                if IsBacktrackingGroupAsAtom then
+                  Exit;
+              end;
+              Dec(no); // Couldn't or didn't - back up.
+              regInput := save + no;
+            end; { of while }
+          end
+          else begin
+            while no >= BracesMin do
             begin
               if MatchPrim(next) then
               begin
@@ -6265,10 +6278,10 @@ begin
               end;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-            end;
-            Dec(no); // Couldn't or didn't - back up.
-            regInput := save + no;
-          end; { of while }
+              Dec(no); // Couldn't or didn't - back up.
+              regInput := save + no;
+            end; { of while }
+          end;
           Exit;
         end;
 
@@ -6299,11 +6312,6 @@ begin
               end;
           end;
 
-          // Lookahead to avoid useless match attempts when we know
-          // what character comes next.
-          nextch := #0;
-          if next^ = OP_EXACTLY then
-            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
 
           // non-greedy mode
           // don't repeat more than "no" times
@@ -6311,12 +6319,31 @@ begin
           // In some cases it can be faster to check only Min positions first,
           // but after that we have to check every position separtely instead
           // of fast scannig in loop.
-          while BracesMin <= no do
-          begin
-            regInput := save + BracesMin;
-            // If it could work, try it.
-            if (nextch = #0) or (regInput^ = nextch) then
+          if next^ = OP_EXACTLY then begin
+            // Lookahead to avoid useless match attempts when we know
+            // what character comes next.
+            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
+            while BracesMin <= no do
             begin
+              regInput := save + BracesMin;
+              // If it could work, try it.
+              if (nextch = #0) or (regInput^ = nextch) then
+              begin
+                if MatchPrim(next) then
+                begin
+                  Result := True;
+                  Exit;
+                end;
+                if IsBacktrackingGroupAsAtom then
+                  Exit;
+              end;
+              Inc(BracesMin); // Couldn't or didn't - move forward.
+            end; { of while }
+          end
+          else begin
+            while BracesMin <= no do
+            begin
+              regInput := save + BracesMin;
               if MatchPrim(next) then
               begin
                 Result := True;
@@ -6324,9 +6351,9 @@ begin
               end;
               if IsBacktrackingGroupAsAtom then
                 Exit;
-            end;
-            Inc(BracesMin); // Couldn't or didn't - move forward.
-          end; { of while }
+              Inc(BracesMin); // Couldn't or didn't - move forward.
+            end; { of while }
+          end;
           Exit;
         end;
 
