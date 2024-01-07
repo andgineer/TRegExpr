@@ -6282,37 +6282,26 @@ begin
 
       OP_STAR_POSS, OP_PLUS_POSS, OP_BRACES_POSS:
         begin
-          // Lookahead to avoid useless match attempts when we know
-          // what character comes next.
-          nextch := #0;
-          if next^ = OP_EXACTLY then
-            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
           opnd := scan + REOpSz + RENextOffSz;
           case scan^ of
             OP_STAR_POSS:
               begin
-                BracesMin := 0;
-                BracesMax := MaxInt;
+                FindRepeated(opnd, MaxInt);
               end;
             OP_PLUS_POSS:
               begin
-                BracesMin := 1;
-                BracesMax := MaxInt;
+                if FindRepeated(opnd, MaxInt) < 1 then
+                  Exit;
               end;
             else
               begin // braces
-                BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-                BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
-                Inc(opnd, 2 * REBracesArgSz);
+                opnd := AlignToPtr(opnd);
+                if FindRepeated(opnd + 2 * REBracesArgSz, PREBracesArg(opnd + REBracesArgSz)^)
+                   < PREBracesArg(opnd)^
+                then
+                  Exit;
               end;
           end;
-          no := FindRepeated(opnd, BracesMax);
-          if no >= BracesMin then
-            if (nextch = #0) or (regInput^ = nextch) then begin
-              scan := next;
-              continue;
-            end;
-          Exit;
         end;
 
       OP_EEND:
