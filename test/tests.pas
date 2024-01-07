@@ -1517,6 +1517,10 @@ begin
              'AayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyBB',   [1,44,   -1,-1, -1,-1, -1,-1] ); // 40 y
 
 
+  IsMatching('loop group-ref', '^(123)\1*1..a', '123123123abcde',   [1,10,   1,3] );
+  IsNotMatching('loop group-ref (empty)', '(\b)\1*3', '.. test 2345' );
+  IsMatching('loop group-ref (empty)', '(\b)\1*.*3', '.. test 2345',   [4,7,   4,0] );
+
 end;
 
 procedure TTestRegexpr.TestEmptyLoop;
