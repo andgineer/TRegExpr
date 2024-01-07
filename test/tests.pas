@@ -1789,6 +1789,17 @@ begin
 
   IsMatching('ref in branch', '((A)|B|C\2)*',  'AACACB',  [1,4,  3,2, 2,1]);
   IsMatching('ref in call', '[^A]*((A)|B|C\2)*',  'DAACACBE',  [1,5,  4,2, 3,1]);
+
+
+  IsMatching('ref in branch', '(...).\1',  'abcxabc',  [1,7,  1,3]);
+  IsNotMatching('ref in branch', '(...).\1',  'abcxab');
+  CompileRE('(...).\1');
+  RE.SetInputSubString('abcxabc', 1,7);
+  IsTrue('Matches on full string', RE.Exec);
+  CompileRE('(...).\1');
+  RE.SetInputSubString('abcxabc', 1,6);
+  IsFalse('Does NOT match on short string', RE.Exec);
+
 end;
 
 procedure TTestRegexpr.TestSubCall;
