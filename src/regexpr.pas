@@ -565,7 +565,7 @@ type
     procedure RemoveOperator(opnd: PRegExprChar; sz: Integer);
 
     // regular expression, i.e. main body or parenthesized thing
-    function ParseReg(InBrackets: Boolean; var FlagParse: Integer): PRegExprChar;
+    function ParseReg(var FlagParse: Integer): PRegExprChar;
     function DoParseReg(InBrackets: Boolean; BracketCounter: PInteger; var FlagParse: Integer; BeginGroupOp, EndGroupOP: TReOp): PRegExprChar;
 
     // one alternative of an | operator
@@ -3201,7 +3201,7 @@ begin
     regCodeWork := nil;
 
     EmitC(OP_MAGIC);
-    if ParseReg(False, FlagTemp) = nil then begin
+    if ParseReg(FlagTemp) = nil then begin
       regNumBrackets := 0; // Not calling InitInternalGroupData => array sizes not adjusted for FillChar
       regNumAtomicBrackets := 0;
       Exit;
@@ -3223,7 +3223,7 @@ begin
     regCodeWork := programm + REOpSz;
 
     EmitC(OP_MAGIC);
-    if ParseReg(False, FlagTemp) = nil then
+    if ParseReg(FlagTemp) = nil then
       Exit;
 
     // Dig out information for optimizations.
@@ -3316,9 +3316,9 @@ begin
 end; { of function TRegExpr.CompileRegExpr
   -------------------------------------------------------------- }
 
-function TRegExpr.ParseReg(InBrackets: Boolean; var FlagParse: Integer): PRegExprChar;
+function TRegExpr.ParseReg(var FlagParse: Integer): PRegExprChar;
 begin
-  Result := DoParseReg(InBrackets, @regNumBrackets, FlagParse, OP_OPEN, OP_CLOSE);
+  Result := DoParseReg(False, nil, FlagParse, OP_NONE, OP_COMMENT); // can't use OP_NONE // The "ender" op will not be omitted anyway
 end;
 
 function TRegExpr.DoParseReg(InBrackets: Boolean; BracketCounter: PInteger;
@@ -4600,7 +4600,7 @@ begin
               if GrpKind = gkAtomicGroup then
                 ret := DoParseReg(True, @regNumAtomicBrackets, FlagTemp, OP_OPEN_ATOMIC, OP_CLOSE_ATOMIC)
               else
-                ret := ParseReg(True, FlagTemp);
+                ret := DoParseReg(True, @regNumBrackets, FlagTemp, OP_OPEN, OP_CLOSE);
               if ret = nil then
               begin
                 Result := nil;
@@ -4682,7 +4682,7 @@ begin
               if (regParse^ = ':') and ParseModifiers(SavedPtr, regParse - SavedPtr, fCompModifiers) then
               begin
                 Inc(regParse); // skip ')'
-                ret := ParseReg(True, FlagTemp);
+                ret := DoParseReg(True, nil, FlagTemp, OP_NONE, OP_COMMENT); // can't use OP_NONE // The "ender" op will not be omitted anyway
                 fCompModifiers := SavedModifiers;
                 if ret = nil then
                 begin
