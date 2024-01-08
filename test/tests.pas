@@ -1807,6 +1807,21 @@ begin
   RE.SetInputSubString('abcxabc', 1,6);
   IsFalse('Does NOT match on short string', RE.Exec);
 
+  (* ECMA does have diff results - as it can match \1 when the first capture had not yet been executed *)
+
+  IsMatching('nested ref', '(?i)^(.(?:(\1)|(.)))*',  'aAaaAa',  [1,5,  3,3, 4,2, 2,1]);
+  IsMatching('nested ref', '^.*(.(?:(\1)|(.))){2,2}x(\2)',  'aaaaaxaa',  [1,8,  3,3, 4,2, 2,1, 7,2]);
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2))+',  'aaaaaxaaaaaaxa',   [1,8 ,  3,3, 4,2, 2,1, 7,2]);
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2)){2,2}',  'aaaaaxaaaaaaaaxaaaa',
+             [1,18 ,  13,2, 10,3, 14,1, 16,3]);
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2))+',  'aaaaaxaaaaaaaaxaaaa',
+             [1,18 ,  13,2, 10,3, 14,1, 16,3]);
+
+  IsMatching('loop ref', '^(?:a*(a+x)\1+)',  'aaaaaxaaaxaaaxaaaxaa',  [1,18,  3,4]);
+  IsMatching('loop ref', '^(?:a*(a+x)\1)+',  'aaaaaxaaaxaaaxaaaxaa',  [1,18,  11,4]);
+
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2))+',  'aaaaaxaaaaaaxaa',  [1,15,  11,2,  4,2, 12,1, 14,2]);
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2))+',  'aaaaaxaaaaaaaxaa', [1,16,  11,3, 12,2, 10,1, 15,2]);
 end;
 
 procedure TTestRegexpr.TestSubCall;

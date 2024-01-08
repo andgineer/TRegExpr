@@ -288,6 +288,9 @@ type
 
 
   TRegExprBounds = record
+    TmpStart: array of PRegExprChar; // pointer start of not yet finished group start in InputString
+                                     // OP_CLOSE not yet reached
+                                     // does not need to be cleared
     GrpStart: array of PRegExprChar; // pointer to group start in InputString
     GrpEnd: array of PRegExprChar; // pointer to group end in InputString
   end;
@@ -5823,28 +5826,35 @@ begin
       OP_BACK:
         ;
 
-      OP_OPEN, OP_OPEN_ATOMIC:
+      OP_OPEN:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          save := GrpBounds[regRecursion].GrpStart[no];
-          opnd := GrpBounds[regRecursion].GrpEnd[no]; // save2
-          GrpBounds[regRecursion].GrpStart[no] := regInput;
+          save := GrpBounds[regRecursion].TmpStart[no];
+          GrpBounds[regRecursion].TmpStart[no] := regInput;
           Result := MatchPrim(next);
+          GrpBounds[regRecursion].TmpStart[no] := save;
+          exit;
+        end;
+
+      OP_OPEN_ATOMIC:
+        begin
+          no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
+          save := GrpBounds[regRecursion].TmpStart[no];
+          GrpBounds[regRecursion].TmpStart[no] := regInput;
+          Result := MatchPrim(next);
+          GrpBounds[regRecursion].TmpStart[no] := save;
           if GrpBacktrackingAsAtom[no] then
             IsBacktrackingGroupAsAtom := False;
           GrpBacktrackingAsAtom[no] := False;
-          if not Result then begin
-            GrpBounds[regRecursion].GrpStart[no] := save;
-            GrpBounds[regRecursion].GrpEnd[no] := opnd;
-          end;
           Exit;
         end;
 
       OP_CLOSE:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          // handle atomic group, mark it as "done"
-          // (we are here because some OP_BRANCH is matched)
+          save := GrpBounds[regRecursion].GrpStart[no];
+          opnd := GrpBounds[regRecursion].GrpEnd[no]; // save2
+          GrpBounds[regRecursion].GrpStart[no] := GrpBounds[regRecursion].TmpStart[no];
           GrpBounds[regRecursion].GrpEnd[no] := regInput;
 
           // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
@@ -5854,6 +5864,14 @@ begin
             Result := True;
             Exit;
           end;
+
+          Result := MatchPrim(next);
+          if not Result then begin
+            GrpBounds[regRecursion].GrpStart[no] := save;
+            GrpBounds[regRecursion].GrpEnd[no] := opnd;
+          end;
+
+          Exit;
         end;
 
       OP_CLOSE_ATOMIC:
@@ -5861,10 +5879,15 @@ begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
+          save := GrpBounds[regRecursion].GrpStart[no];
+          opnd := GrpBounds[regRecursion].GrpEnd[no]; // save2
+          GrpBounds[regRecursion].GrpStart[no] := GrpBounds[regRecursion].TmpStart[no];
           GrpBounds[regRecursion].GrpEnd[no] := regInput;
 
           Result := MatchPrim(next);
           if not Result then begin
+            GrpBounds[regRecursion].GrpStart[no] := save;
+            GrpBounds[regRecursion].GrpEnd[no] := opnd;
             if not IsBacktrackingGroupAsAtom then begin
               GrpBacktrackingAsAtom[no] := True;
               IsBacktrackingGroupAsAtom := True;
@@ -6562,6 +6585,7 @@ var
 begin
   BndLen := GroupDataArraySize(regNumBrackets, Length(GrpBounds[0].GrpStart));
   for i := low(GrpBounds) to high(GrpBounds) do begin
+    SetLength(GrpBounds[i].TmpStart, BndLen);
     SetLength(GrpBounds[i].GrpStart, BndLen);
     SetLength(GrpBounds[i].GrpEnd, BndLen);
   end;
