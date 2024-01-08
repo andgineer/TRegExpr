@@ -1517,6 +1517,10 @@ begin
              'AayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyBB',   [1,44,   -1,-1, -1,-1, -1,-1] ); // 40 y
 
 
+  IsMatching('loop group-ref', '^(123)\1*1..a', '123123123abcde',   [1,10,   1,3] );
+  IsNotMatching('loop group-ref (empty)', '(\b)\1*3', '.. test 2345' );
+  IsMatching('loop group-ref (empty)', '(\b)\1*.*3', '.. test 2345',   [4,7,   4,0] );
+
 end;
 
 procedure TTestRegexpr.TestEmptyLoop;
@@ -2881,6 +2885,9 @@ begin
   IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){1,4}', '1234567890abcdefghi',   [1,0,  15,1]);
   IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){1,4}?', '1234567890abcdefghi',   [1,0,  12,1]);
   IsMatching('look-behind match-count',  '(?<=(?=.*(?:\1|a)(.))|$){2,4}?', '1234567890abcdefghi',   [1,0,  13,1]);
+
+
+  IsMatching('look-behind op-star',  '^aa(?<=^(a*))', 'aaaaaa',   [1,2,  1,2]);
 end;
 
 procedure TTestRegexpr.TestRegLookAroundMixed;

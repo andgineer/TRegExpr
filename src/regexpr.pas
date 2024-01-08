@@ -4652,7 +4652,6 @@ begin
               if fSecondPass and (Len < 0) then
                 Error(reeNamedGroupBadRef);
               ret := EmitGroupRef(Len, fCompModifiers.I);
-              FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
             end;
 
           gkModifierString:
@@ -4820,7 +4819,6 @@ begin
               if fSecondPass and (Ord(regParse^) - Ord('0') > GrpCount) then
                 Error(reeBadReference);
               ret := EmitGroupRef(Ord(regParse^) - Ord('0'), fCompModifiers.I);
-              FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
             end;
           'g':
             begin
@@ -4848,7 +4846,6 @@ begin
                     if fSecondPass and  (GrpIndex < 1) then
                       Error(reeNamedGroupBadRef);
                     ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
-                    FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
                   end;
                 '0'..'9':
                   begin
@@ -4863,7 +4860,6 @@ begin
                     if fSecondPass and (GrpIndex > GrpCount) then
                       Error(reeBadReference);
                     ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
-                    FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
                   end;
               else
                 Error(reeBadReference);
@@ -4887,7 +4883,6 @@ begin
               if fSecondPass and (GrpIndex < 1) then
                 Error(reeNamedGroupBadRef);
               ret := EmitGroupRef(GrpIndex, fCompModifiers.I);
-              FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
             end;
           'K':
             begin
@@ -5031,8 +5026,6 @@ var
   opnd: PRegExprChar;
   TheMax: PtrInt; // PtrInt, gets diff of 2 pointers
   InvChar: REChar;
-  CurStart, CurEnd: PRegExprChar;
-  ArrayIndex: Integer;
   {$IFDEF UnicodeEx}
   i: Integer;
   {$ENDIF}
@@ -5040,7 +5033,7 @@ begin
   Result := 0;
   scan := regInput; // points into InputString
   opnd := p + REOpSz + RENextOffSz; // points to operand of opcode (after OP_nnn code)
-  TheMax := fInputEnd - scan;
+  TheMax := fInputCurrentEnd - scan;
   if TheMax > AMax then
     TheMax := AMax;
   case PREOp(p)^ of
@@ -5096,57 +5089,6 @@ begin
             Inc(scan);
           end;
         end;
-      end;
-
-    OP_BSUBEXP:
-      begin
-        ArrayIndex := GrpIndexes[PReGroupIndex(opnd)^];
-        if ArrayIndex < 0 then
-          Exit;
-        CurStart := GrpBounds[regRecursion].GrpStart[ArrayIndex];
-        if CurStart = nil then
-          Exit;
-        CurEnd := GrpBounds[regRecursion].GrpEnd[ArrayIndex];
-        if CurEnd = nil then
-          Exit;
-        repeat
-          opnd := CurStart;
-          while opnd < CurEnd do
-          begin
-            if (scan >= fInputEnd) or (scan^ <> opnd^) then
-              Exit;
-            Inc(scan);
-            Inc(opnd);
-          end;
-          Inc(Result);
-          regInput := scan;
-        until Result >= AMax;
-      end;
-
-    OP_BSUBEXP_CI:
-      begin
-        ArrayIndex := GrpIndexes[PReGroupIndex(opnd)^];
-        if ArrayIndex < 0 then
-          Exit;
-        CurStart := GrpBounds[regRecursion].GrpStart[ArrayIndex];
-        if CurStart = nil then
-          Exit;
-        CurEnd := GrpBounds[regRecursion].GrpEnd[ArrayIndex];
-        if CurEnd = nil then
-          Exit;
-        repeat
-          opnd := CurStart;
-          while opnd < CurEnd do
-          begin
-            if (scan >= fInputEnd) or
-              ((scan^ <> opnd^) and (scan^ <> InvertCase(opnd^))) then
-              Exit;
-            Inc(scan);
-            Inc(opnd);
-          end;
-          Inc(Result);
-          regInput := scan;
-        until Result >= AMax;
       end;
 
     OP_ANYDIGIT:
