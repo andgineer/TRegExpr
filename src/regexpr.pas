@@ -213,7 +213,7 @@ const
 
 const
   // Increment/keep-capacity for the size of arrays holding 'Group' related data
-  // e.g., GrpBounds, GrpIndexes, GrpOpCodes and GrpNames
+  // e.g., GrpBounds, GrpOpCodes and GrpNames
   RegexGroupCountIncrement = 50;
 
   // Max possible amount of groups.
@@ -342,7 +342,6 @@ type
     fRaiseForRuntimeError: Boolean;
     GrpBounds: TRegExprBoundsArray;
     CurrentGrpBounds: TRegExprBoundsPtr;
-    GrpIndexes: array of Integer; // map global group index to _capturing_ group index
     GrpNames: TRegExprGroupNameList; // names of groups, if non-empty
     GrpBacktrackingAsAtom: array of Boolean; // close of group[i] has set IsBacktrackingGroupAsAtom
     IsBacktrackingGroupAsAtom: Boolean;  // Backtracking an entire atomic group that had matched.
@@ -2082,8 +2081,6 @@ end;
 function TRegExpr.GetSubExprCount: Integer;
 begin
   Result := -1;
-  if Length(GrpIndexes) = 0 then
-    Exit;
   // if nothing found, we must return -1 per TRegExpr docs
   if (GrpBounds[0].GrpStart[0] <> nil) then
     Result := GrpCount;
@@ -2092,11 +2089,8 @@ end;
 function TRegExpr.GetMatchPos(Idx: Integer): PtrInt;
 begin
   Result := -1;
-  if Length(GrpIndexes) = 0 then
+  if (Idx < 0) or (Idx >= Length(GrpBounds[0].GrpStart)) then
     Exit;
-  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
-    Exit;
-  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
     Result := GrpBounds[0].GrpStart[Idx] - fInputStart + 1;
 end;
@@ -2104,11 +2098,8 @@ end;
 function TRegExpr.GetMatchLen(Idx: Integer): PtrInt;
 begin
   Result := -1;
-  if Length(GrpIndexes) = 0 then
+  if (Idx < 0) or (Idx >= Length(GrpBounds[0].GrpStart)) then
     Exit;
-  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
-    Exit;
-  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) then
     Result := GrpBounds[0].GrpEnd[Idx] - GrpBounds[0].GrpStart[Idx];
 end;
@@ -2116,11 +2107,8 @@ end;
 function TRegExpr.GetMatch(Idx: Integer): RegExprString;
 begin
   Result := '';
-  if Length(GrpIndexes) = 0 then
+  if (Idx < 0) or (Idx >= Length(GrpBounds[0].GrpStart)) then
     Exit;
-  if (Idx < 0) or (Idx >= Length(GrpIndexes)) then
-    Exit;
-  Idx := GrpIndexes[Idx];
   if (Idx >= 0) and (GrpBounds[0].GrpStart[Idx] <> nil) and
      (GrpBounds[0].GrpEnd[Idx] > GrpBounds[0].GrpStart[Idx])
   then
@@ -2137,8 +2125,6 @@ var
   Idx: Integer;
 begin
   Result := '';
-  if Length(GrpIndexes) = 0 then
-    Exit;
   Idx := GrpNames.MatchIndexFromName(AName);
   if Idx >= 0 then
     Result := GetMatch(Idx)
@@ -4583,11 +4569,7 @@ begin
               // must take first pass (we need GrpNames filled)
               if (GrpKind = gkNormalGroup) then begin
                 Inc(ParsedGrpCount);
-                if fSecondPass then begin
-                  GrpIndexes[ParsedGrpCount] := regNumBrackets;
-                end
-                else
-                if (GrpName <> '') then
+                if (not fSecondPass) and (GrpName <> '') then
                 begin
                   // first pass
                   if GrpNames.MatchIndexFromName(GrpName) >= 0 then
@@ -5737,7 +5719,6 @@ begin
       OP_BSUBEXP:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          no := GrpIndexes[no];
           if no < 0 then
             Exit;
           opnd := CurrentGrpBounds.GrpStart[no];
@@ -5765,7 +5746,6 @@ begin
       OP_BSUBEXP_CI:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          no := GrpIndexes[no];
           if no < 0 then
             Exit;
           opnd := CurrentGrpBounds.GrpStart[no];
@@ -6471,7 +6451,6 @@ begin
         begin
           // call subroutine
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          no := GrpIndexes[no];
           if no < 0 then Exit;
           save := GrpOpCodes[no];
           if save = nil then Exit;
@@ -6636,11 +6615,6 @@ begin
       GrpBounds[i].GrpEnd := nil;
     end;
   end;
-
-  SetLength(GrpIndexes, GroupDataArraySize(regNumBrackets, Length(GrpIndexes)));
-  for i := 1 to regNumBrackets - 1 do
-    GrpIndexes[i] := -1;
-  GrpIndexes[0] := 0;
 
   SetLength(GrpOpCodes, GroupDataArraySize(regNumBrackets, Length(GrpOpCodes)));
   SetLength(GrpBacktrackingAsAtom, GroupDataArraySize(regNumAtomicBrackets, Length(GrpBacktrackingAsAtom)));
@@ -6920,9 +6894,7 @@ var
   begin
     Idx := ParseVarName(p);
     NumberFound := Idx >= 0;
-    if NumberFound and (Idx <= High(GrpIndexes)) then
-      Idx := GrpIndexes[Idx]
-    else
+    if NumberFound and (Idx > GrpCount) then
       Idx := -1;
   end;
 
