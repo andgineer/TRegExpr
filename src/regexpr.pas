@@ -113,6 +113,7 @@ interface
 // Define 'InlineFuncs' options, to use inline keyword (do not edit this definitions).
 {$IFDEF D8} {$DEFINE InlineFuncs} {$ENDIF}
 {$IFDEF FPC} {$DEFINE InlineFuncs} {$ENDIF}
+{$PointerMath on}
 
 {$IFDEF RegExpWithStackOverflowCheck} // Define the stack checking algorithm for the current platform/CPU
   {$IF defined(Linux) or defined(Windows)}{$IF defined(CPU386) or defined(CPUX86_64)}
@@ -287,6 +288,14 @@ type
   {$ENDIF}
 
 
+  PPRegExprChar = ^PRegExprChar;
+  TRegExprBoundsPtr = record
+    TmpStart: PPRegExprChar; // pointer start of not yet finished group start in InputString
+                                     // OP_CLOSE not yet reached
+                                     // does not need to be cleared
+    GrpStart: PPRegExprChar; // pointer to group start in InputString
+    GrpEnd: PPRegExprChar; // pointer to group end in InputString
+  end;
   TRegExprBounds = record
     TmpStart: array of PRegExprChar; // pointer start of not yet finished group start in InputString
                                      // OP_CLOSE not yet reached
@@ -332,6 +341,7 @@ type
     FMatchesCleared: Boolean;
     fRaiseForRuntimeError: Boolean;
     GrpBounds: TRegExprBoundsArray;
+    CurrentGrpBounds: TRegExprBoundsPtr;
     GrpIndexes: array of Integer; // map global group index to _capturing_ group index
     GrpNames: TRegExprGroupNameList; // names of groups, if non-empty
     GrpBacktrackingAsAtom: array of Boolean; // close of group[i] has set IsBacktrackingGroupAsAtom
@@ -5726,10 +5736,10 @@ begin
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
-          opnd := GrpBounds[regRecursion].GrpStart[no];
+          opnd := CurrentGrpBounds.GrpStart[no];
           if opnd = nil then
             Exit;
-          save := GrpBounds[regRecursion].GrpEnd[no];
+          save := CurrentGrpBounds.GrpEnd[no];
           if save = nil then
             Exit;
           no := save - opnd;
@@ -5754,10 +5764,10 @@ begin
           no := GrpIndexes[no];
           if no < 0 then
             Exit;
-          opnd := GrpBounds[regRecursion].GrpStart[no];
+          opnd := CurrentGrpBounds.GrpStart[no];
           if opnd = nil then
             Exit;
-          save := GrpBounds[regRecursion].GrpEnd[no];
+          save := CurrentGrpBounds.GrpEnd[no];
           if save = nil then
             Exit;
           no := save - opnd;
@@ -5834,20 +5844,20 @@ begin
       OP_OPEN:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          save := GrpBounds[regRecursion].TmpStart[no];
-          GrpBounds[regRecursion].TmpStart[no] := regInput;
+          save := CurrentGrpBounds.TmpStart[no];
+          CurrentGrpBounds.TmpStart[no] := regInput;
           Result := MatchPrim(next);
-          GrpBounds[regRecursion].TmpStart[no] := save;
+          CurrentGrpBounds.TmpStart[no] := save;
           exit;
         end;
 
       OP_OPEN_ATOMIC:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          save := GrpBounds[regRecursion].TmpStart[no];
-          GrpBounds[regRecursion].TmpStart[no] := regInput;
+          save := CurrentGrpBounds.TmpStart[no];
+          CurrentGrpBounds.TmpStart[no] := regInput;
           Result := MatchPrim(next);
-          GrpBounds[regRecursion].TmpStart[no] := save;
+          CurrentGrpBounds.TmpStart[no] := save;
           if GrpBacktrackingAsAtom[no] then
             IsBacktrackingGroupAsAtom := False;
           GrpBacktrackingAsAtom[no] := False;
@@ -5857,10 +5867,10 @@ begin
       OP_CLOSE:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          save := GrpBounds[regRecursion].GrpStart[no];
-          opnd := GrpBounds[regRecursion].GrpEnd[no]; // save2
-          GrpBounds[regRecursion].GrpStart[no] := GrpBounds[regRecursion].TmpStart[no];
-          GrpBounds[regRecursion].GrpEnd[no] := regInput;
+          save := CurrentGrpBounds.GrpStart[no];
+          opnd := CurrentGrpBounds.GrpEnd[no]; // save2
+          CurrentGrpBounds.GrpStart[no] := CurrentGrpBounds.TmpStart[no];
+          CurrentGrpBounds.GrpEnd[no] := regInput;
 
           // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
           // in OP_CLOSE, without going to next opcode
@@ -5872,8 +5882,8 @@ begin
 
           Result := MatchPrim(next);
           if not Result then begin
-            GrpBounds[regRecursion].GrpStart[no] := save;
-            GrpBounds[regRecursion].GrpEnd[no] := opnd;
+            CurrentGrpBounds.GrpStart[no] := save;
+            CurrentGrpBounds.GrpEnd[no] := opnd;
           end;
 
           Exit;
@@ -5884,15 +5894,15 @@ begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
-          save := GrpBounds[regRecursion].GrpStart[no];
-          opnd := GrpBounds[regRecursion].GrpEnd[no]; // save2
-          GrpBounds[regRecursion].GrpStart[no] := GrpBounds[regRecursion].TmpStart[no];
-          GrpBounds[regRecursion].GrpEnd[no] := regInput;
+          save := CurrentGrpBounds.GrpStart[no];
+          opnd := CurrentGrpBounds.GrpEnd[no]; // save2
+          CurrentGrpBounds.GrpStart[no] := CurrentGrpBounds.TmpStart[no];
+          CurrentGrpBounds.GrpEnd[no] := regInput;
 
           Result := MatchPrim(next);
           if not Result then begin
-            GrpBounds[regRecursion].GrpStart[no] := save;
-            GrpBounds[regRecursion].GrpEnd[no] := opnd;
+            CurrentGrpBounds.GrpStart[no] := save;
+            CurrentGrpBounds.GrpEnd[no] := opnd;
             if not IsBacktrackingGroupAsAtom then begin
               GrpBacktrackingAsAtom[no] := True;
               IsBacktrackingGroupAsAtom := True;
@@ -6443,9 +6453,19 @@ begin
           if regRecursion < RegexMaxRecursion then
           begin
             Inc(regRecursion);
-            FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
+            if regNumBrackets > 0 then begin
+              CurrentGrpBounds.TmpStart := @GrpBounds[regRecursion].TmpStart[0];
+              CurrentGrpBounds.GrpStart := @GrpBounds[regRecursion].GrpStart[0];
+              CurrentGrpBounds.GrpEnd   := @GrpBounds[regRecursion].GrpEnd[0];
+              FillChar(CurrentGrpBounds.GrpStart[0], SizeOf(CurrentGrpBounds.GrpStart[0])*regNumBrackets, 0);
+            end;
             Result := MatchPrim(regCodeWork);
             Dec(regRecursion);
+            if regNumBrackets > 0 then begin
+              CurrentGrpBounds.TmpStart := @GrpBounds[regRecursion].TmpStart[0];
+              CurrentGrpBounds.GrpStart := @GrpBounds[regRecursion].GrpStart[0];
+              CurrentGrpBounds.GrpEnd   := @GrpBounds[regRecursion].GrpEnd[0];
+            end;
             if not Result then Exit;
             Result := False;
           end
@@ -6466,9 +6486,19 @@ begin
             Local.savedCurrentSubCalled := CurrentSubCalled;
             CurrentSubCalled := no;
             Inc(regRecursion);
-            FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
+            if regNumBrackets > 0 then begin
+              CurrentGrpBounds.TmpStart := @GrpBounds[regRecursion].TmpStart[0];
+              CurrentGrpBounds.GrpStart := @GrpBounds[regRecursion].GrpStart[0];
+              CurrentGrpBounds.GrpEnd   := @GrpBounds[regRecursion].GrpEnd[0];
+              FillChar(CurrentGrpBounds.GrpStart[0], SizeOf(CurrentGrpBounds.GrpStart[0])*regNumBrackets, 0);
+            end;
             Result := MatchPrim(save);
             Dec(regRecursion);
+            if regNumBrackets > 0 then begin
+              CurrentGrpBounds.TmpStart := @GrpBounds[regRecursion].TmpStart[0];
+              CurrentGrpBounds.GrpStart := @GrpBounds[regRecursion].GrpStart[0];
+              CurrentGrpBounds.GrpEnd   := @GrpBounds[regRecursion].GrpEnd[0];
+            end;
             CurrentSubCalled := Local.savedCurrentSubCalled;
             if not Result then Exit;
             Result := False;
@@ -6582,6 +6612,11 @@ begin
   LookAroundInfoList := nil;
   CurrentSubCalled := -1;
   regRecursion := 0;
+  if regNumBrackets > 0 then begin
+    CurrentGrpBounds.TmpStart := @GrpBounds[0].TmpStart[0];
+    CurrentGrpBounds.GrpStart := @GrpBounds[0].GrpStart[0];
+    CurrentGrpBounds.GrpEnd   := @GrpBounds[0].GrpEnd[0];
+  end;
 end;
 
 procedure TRegExpr.InitInternalGroupData;
