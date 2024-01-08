@@ -4509,7 +4509,6 @@ begin
             'a'..'z', '-':
               begin
                 // modifiers string like (?mxr)
-                FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
                 GrpKind := gkModifierString;
                 Inc(regParse);
               end;
@@ -4696,6 +4695,7 @@ begin
               begin
                 Inc(regParse); // skip ')'
                 ret := EmitNode(OP_COMMENT); // comment
+                FlagParse := FlagParse or FLAG_NOT_QUANTIFIABLE;
               end
               else
               begin
