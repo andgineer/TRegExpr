@@ -397,6 +397,7 @@ type
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
     regNumBrackets: Integer; // count of () brackets
+    regNumAtomicBrackets: Integer; // count of (?>) brackets
     regDummy: array [0..8 div SizeOf(REChar)] of REChar; // dummy pointer, used to detect 1st/2nd pass of Compile
                       // if p=@regDummy, it is pass-1: opcode memory is not yet allocated
     programm: PRegExprChar; // pointer to opcode, =nil in pass-1
@@ -565,7 +566,7 @@ type
 
     // regular expression, i.e. main body or parenthesized thing
     function ParseReg(InBrackets: Boolean; var FlagParse: Integer): PRegExprChar;
-    function DoParseReg(InBrackets, IndexBrackets: Boolean; var FlagParse: Integer; BeginGroupOp, EndGroupOP: TReOp): PRegExprChar;
+    function DoParseReg(InBrackets: Boolean; BracketCounter: PInteger; var FlagParse: Integer; BeginGroupOp, EndGroupOP: TReOp): PRegExprChar;
 
     // one alternative of an | operator
     function ParseBranch(var FlagParse: Integer): PRegExprChar;
@@ -3194,6 +3195,7 @@ begin
     fCompModifiers := fModifiers;
     regParse := ARegExp;
     regNumBrackets := 1;
+    regNumAtomicBrackets := 0;
     regCodeSize := 0;
     regCode := @regDummy;
     regCodeWork := nil;
@@ -3201,6 +3203,7 @@ begin
     EmitC(OP_MAGIC);
     if ParseReg(False, FlagTemp) = nil then begin
       regNumBrackets := 0; // Not calling InitInternalGroupData => array sizes not adjusted for FillChar
+      regNumAtomicBrackets := 0;
       Exit;
     end;
 
@@ -3213,6 +3216,7 @@ begin
     fCompModifiers := fModifiers;
     regParse := ARegExp;
     regNumBrackets := 1;
+    regNumAtomicBrackets := 0;
     GrpCount := ParsedGrpCount;
     ParsedGrpCount := 0;
     regCode := programm;
@@ -3314,10 +3318,10 @@ end; { of function TRegExpr.CompileRegExpr
 
 function TRegExpr.ParseReg(InBrackets: Boolean; var FlagParse: Integer): PRegExprChar;
 begin
-  Result := DoParseReg(InBrackets, True, FlagParse, OP_OPEN, OP_CLOSE);
+  Result := DoParseReg(InBrackets, @regNumBrackets, FlagParse, OP_OPEN, OP_CLOSE);
 end;
 
-function TRegExpr.DoParseReg(InBrackets, IndexBrackets: Boolean;
+function TRegExpr.DoParseReg(InBrackets: Boolean; BracketCounter: PInteger;
   var FlagParse: Integer; BeginGroupOp, EndGroupOP: TReOp): PRegExprChar;
 // regular expression, i.e. main body or parenthesized thing
 // Caller must absorb opening parenthesis.
@@ -3341,17 +3345,17 @@ begin
   ret := nil;
   if InBrackets then
   begin
-    if IndexBrackets then begin
-      if regNumBrackets >= RegexMaxMaxGroups then
+    if BracketCounter <> nil then begin
+      if BracketCounter^ >= RegexMaxMaxGroups then
       begin
         Error(reeCompParseRegTooManyBrackets);
         Exit;
       end;
-      NBrackets := regNumBrackets;
-      Inc(regNumBrackets);
+      NBrackets := BracketCounter^;
+      Inc(BracketCounter^);
       if BeginGroupOp <> OP_NONE then
         ret := EmitNodeWithGroupIndex(BeginGroupOp, NBrackets);
-      if fSecondPass then
+      if fSecondPass and (BracketCounter = @regNumBrackets) then
         GrpOpCodes[NBrackets] := ret;
     end
     else
@@ -3404,7 +3408,7 @@ begin
 
   // Make a closing node, and hook it on the end.
   if InBrackets and (EndGroupOP <> OP_NONE) then begin
-    if IndexBrackets then
+    if BracketCounter <> nil then
       ender := EmitNodeWithGroupIndex(EndGroupOP, NBrackets)
     else
       ender := EmitNode(EndGroupOP);
@@ -4564,7 +4568,7 @@ begin
         case GrpKind of
           gkNonCapturingGroup:
             begin
-              ret := DoParseReg(True, False, FlagTemp, OP_NONE, OP_NONE);
+              ret := DoParseReg(True, nil, FlagTemp, OP_NONE, OP_NONE);
               if ret = nil then
               begin
                 Result := nil;
@@ -4594,7 +4598,7 @@ begin
               end;
 
               if GrpKind = gkAtomicGroup then
-                ret := DoParseReg(True, True, FlagTemp, OP_OPEN_ATOMIC, OP_CLOSE_ATOMIC)
+                ret := DoParseReg(True, @regNumAtomicBrackets, FlagTemp, OP_OPEN_ATOMIC, OP_CLOSE_ATOMIC)
               else
                 ret := ParseReg(True, FlagTemp);
               if ret = nil then
@@ -4613,7 +4617,7 @@ begin
                 gkLookaheadNeg: ret := EmitNode(OP_LOOKAHEAD_NEG);
               end;
 
-              Result := DoParseReg(True, False, FlagTemp, OP_NONE, OP_LOOKAHEAD_END);
+              Result := DoParseReg(True, nil, FlagTemp, OP_NONE, OP_LOOKAHEAD_END);
               if Result = nil then
                 Exit;
 
@@ -4635,7 +4639,7 @@ begin
                 Inc(regCodeSize, ReOpLookBehindOptionsSz);
 
               RegGrpCountBefore := ParsedGrpCount;
-              Result := DoParseReg(True, False, FlagTemp, OP_NONE, OP_LOOKBEHIND_END);
+              Result := DoParseReg(True, nil, FlagTemp, OP_NONE, OP_LOOKBEHIND_END);
               if Result = nil then
                 Exit;
 
@@ -5854,10 +5858,7 @@ begin
       OP_OPEN_ATOMIC:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
-          save := CurrentGrpBounds.TmpStart[no];
-          CurrentGrpBounds.TmpStart[no] := regInput;
           Result := MatchPrim(next);
-          CurrentGrpBounds.TmpStart[no] := save;
           if GrpBacktrackingAsAtom[no] then
             IsBacktrackingGroupAsAtom := False;
           GrpBacktrackingAsAtom[no] := False;
@@ -5894,15 +5895,8 @@ begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           // handle atomic group, mark it as "done"
           // (we are here because some OP_BRANCH is matched)
-          save := CurrentGrpBounds.GrpStart[no];
-          opnd := CurrentGrpBounds.GrpEnd[no]; // save2
-          CurrentGrpBounds.GrpStart[no] := CurrentGrpBounds.TmpStart[no];
-          CurrentGrpBounds.GrpEnd[no] := regInput;
-
           Result := MatchPrim(next);
           if not Result then begin
-            CurrentGrpBounds.GrpStart[no] := save;
-            CurrentGrpBounds.GrpEnd[no] := opnd;
             if not IsBacktrackingGroupAsAtom then begin
               GrpBacktrackingAsAtom[no] := True;
               IsBacktrackingGroupAsAtom := True;
@@ -6603,7 +6597,8 @@ end;
 procedure TRegExpr.ClearInternalExecData;
 begin
   fLastError := reeOk;
-  FillChar(GrpBacktrackingAsAtom[0], SizeOf(GrpBacktrackingAsAtom[0])*regNumBrackets, 0);
+  if Length(GrpBacktrackingAsAtom) > 0 then
+    FillChar(GrpBacktrackingAsAtom[0], SizeOf(GrpBacktrackingAsAtom[0])*regNumAtomicBrackets, 0);
   IsBacktrackingGroupAsAtom := False;
   {$IFDEF ComplexBraces}
   // no loops started
@@ -6648,7 +6643,7 @@ begin
   GrpIndexes[0] := 0;
 
   SetLength(GrpOpCodes, GroupDataArraySize(regNumBrackets, Length(GrpOpCodes)));
-  SetLength(GrpBacktrackingAsAtom, GroupDataArraySize(regNumBrackets, Length(GrpBacktrackingAsAtom)));
+  SetLength(GrpBacktrackingAsAtom, GroupDataArraySize(regNumAtomicBrackets, Length(GrpBacktrackingAsAtom)));
 
   GrpOpCodes[0] := nil;
 end;
