@@ -11,6 +11,7 @@
      (?=.(capt).)?.*\1 optional look-around was handled incorrectly if it contained code that was later referred.
      (?=...)?+ possessive modifiers on look-around were not handled at all.
  -=- (^) Tiny optimization for speed. 
+ -=- (-) Fix back-refs, if the are nested in the group to which they refer.
   By Martin Friebe.
 
  v. 1.182 2023.11.26

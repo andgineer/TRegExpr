@@ -1212,6 +1212,13 @@ begin
   IsMatching('NESTED 2: Atomic backtrace until match is found ',
              'a(?>((?>b.*?cx..8))|.)',
              '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
+
+  IsNotMatching('Recursive atomic', '^(?''A''(?>...?)(?:x|(?&A)))', 'aaaaaaaax');
+  IsMatching('Recursive atomic',    '^(?''A''(?>...?)(?:x|(?&A)))', 'aaaaaaaaax',  [1,10,  1,10]);
+
+  IsNotMatching('Recursive atomic', '^(?''A''(?>b[^b]+(?&A)?x+))', 'baaabaaaaaxx');
+  IsNotMatching('atomic in loop', '^(?:(?>b[^b]+?)+x+)', 'baaabaaaaaxx');
+  IsMatching('loop in atomic', '^(?>(?:b[^b]+?)+x+)', 'baaabaaaaaxx', [1,12]);
 end;
 
 procedure TTestRegexpr.TestQuesitonMark;
@@ -1800,6 +1807,21 @@ begin
   RE.SetInputSubString('abcxabc', 1,6);
   IsFalse('Does NOT match on short string', RE.Exec);
 
+  (* ECMA does have diff results - as it can match \1 when the first capture had not yet been executed *)
+
+  IsMatching('nested ref', '(?i)^(.(?:(\1)|(.)))*',  'aAaaAa',  [1,5,  3,3, 4,2, 2,1]);
+  IsMatching('nested ref', '^.*(.(?:(\1)|(.))){2,2}x(\2)',  'aaaaaxaa',  [1,8,  3,3, 4,2, 2,1, 7,2]);
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2))+',  'aaaaaxaaaaaaxa',   [1,8 ,  3,3, 4,2, 2,1, 7,2]);
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2)){2,2}',  'aaaaaxaaaaaaaaxaaaa',
+             [1,18 ,  13,2, 10,3, 14,1, 16,3]);
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2))+',  'aaaaaxaaaaaaaaxaaaa',
+             [1,18 ,  13,2, 10,3, 14,1, 16,3]);
+
+  IsMatching('loop ref', '^(?:a*(a+x)\1+)',  'aaaaaxaaaxaaaxaaaxaa',  [1,18,  3,4]);
+  IsMatching('loop ref', '^(?:a*(a+x)\1)+',  'aaaaaxaaaxaaaxaaaxaa',  [1,18,  11,4]);
+
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2))+',  'aaaaaxaaaaaaxaa',  [1,15,  11,2,  4,2, 12,1, 14,2]);
+  IsMatching('nested ref', '^(?:(.(?:(\1)|(.))){2,2}x(\2))+',  'aaaaaxaaaaaaaxaa', [1,16,  11,3, 12,2, 10,1, 15,2]);
 end;
 
 procedure TTestRegexpr.TestSubCall;
@@ -1992,6 +2014,9 @@ begin
              'aABBcAXBc',  [2,3,  -1,-1,  3,1,  -1,-1]);
 
 
+  IsMatching('Recursive', '^(?''A''(?:...?)(?:x|(?&A)))', 'aaaaaaaax',   [1,9,   1,9]);
+  IsMatching('Recursive', '^(?''A''(?:...?)(?:x|(?&A)))', 'aaaaaaaaax',  [1,10,  1,10]);
+  //IsMatching('Recursive', '^(?''A''(?:b[^b]+(?&A)?x+))', 'baaabaaaaaxx', [1,12,  1,12]);
 end;
 
 procedure TTestRegexpr.TestIsFixedLength;
