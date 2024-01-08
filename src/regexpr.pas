@@ -382,6 +382,7 @@ type
     fRegexStart: PRegExprChar; // pointer to first char of regex
     fRegexEnd: PRegExprChar; // pointer after last char of regex
     regRecursion: Integer; // current level of recursion (?R) (?1); always 0 if no recursion is used
+    hasRecursion: Boolean;
 
     // work variables for compiler's routines
     regParse: PRegExprChar; // pointer to currently handling char of regex
@@ -3160,6 +3161,7 @@ begin
   GrpNames.Clear;
   fLastError := reeOk;
   fLastErrorOpcode := TREOp(0);
+  hasRecursion := False;
 
   try
     if programm <> nil then
@@ -4706,6 +4708,7 @@ begin
               // set FLAG_HASWIDTH to allow compiling of such regex: b(?:m|(?R))*e
               FlagParse := FlagParse or FLAG_HASWIDTH;
               ret := EmitNode(OP_RECUR);
+              hasRecursion := True;
             end;
 
           gkSubCall:
@@ -4713,6 +4716,7 @@ begin
               // set FLAG_HASWIDTH like for (?R)
               FlagParse := FlagParse or FLAG_HASWIDTH;
               ret := EmitNodeWithGroupIndex(OP_SUBCALL, GrpIndex);
+              hasRecursion := True;
             end;
         end; // case GrpKind of
       end;
@@ -4839,6 +4843,7 @@ begin
                       Error(reeNamedGroupBadRef);
                     ret := EmitNodeWithGroupIndex(OP_SUBCALL, GrpIndex);
                     FlagParse := FlagParse or FLAG_HASWIDTH;
+                    hasRecursion := True;
                   end;
                 '{':
                   begin
@@ -6584,10 +6589,22 @@ var
   BndLen, i: Integer;
 begin
   BndLen := GroupDataArraySize(regNumBrackets, Length(GrpBounds[0].GrpStart));
-  for i := low(GrpBounds) to high(GrpBounds) do begin
-    SetLength(GrpBounds[i].TmpStart, BndLen);
-    SetLength(GrpBounds[i].GrpStart, BndLen);
-    SetLength(GrpBounds[i].GrpEnd, BndLen);
+  if hasRecursion then begin
+    for i := low(GrpBounds) to high(GrpBounds) do begin
+      SetLength(GrpBounds[i].TmpStart, BndLen);
+      SetLength(GrpBounds[i].GrpStart, BndLen);
+      SetLength(GrpBounds[i].GrpEnd, BndLen);
+    end;
+  end
+  else begin
+    SetLength(GrpBounds[0].TmpStart, BndLen);
+    SetLength(GrpBounds[0].GrpStart, BndLen);
+    SetLength(GrpBounds[0].GrpEnd, BndLen);
+    for i := low(GrpBounds) + 1 to high(GrpBounds) do begin
+      GrpBounds[i].TmpStart := nil;
+      GrpBounds[i].GrpStart := nil;
+      GrpBounds[i].GrpEnd := nil;
+    end;
   end;
 
   SetLength(GrpIndexes, GroupDataArraySize(regNumBrackets, Length(GrpIndexes)));
