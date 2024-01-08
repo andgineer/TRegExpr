@@ -5407,7 +5407,6 @@ type
       );
       {$ENDIF}
       OP_LOOKAHEAD, OP_LOOKBEHIND: (
-        IsNegativeLook: Boolean;
         IsGreedy: REChar;
         LookAroundInfo: TRegExprLookAroundInfo;
         InpStart: PRegExprChar; // only OP_LOOKBEHIND
@@ -5417,6 +5416,9 @@ type
       );
       OP_SUBCALL: (
         savedCurrentSubCalled: Integer;
+      );
+      OP_STAR: (
+        nextch: REChar;
       );
   end;
 
@@ -5430,16 +5432,11 @@ function TRegExpr.MatchPrim(prog: PRegExprChar): Boolean;
 // by recursion.
 
 var
-  scan: PRegExprChar; // current node
+  scan: PRegExprChar;
   next: PRegExprChar; // next node
-  Len: PtrInt;
-  opnd, opGrpEnd: PRegExprChar;
+  opnd, save: PRegExprChar;
   no: Integer;
-  save: PRegExprChar;
-  nextch: REChar;
-  BracesMin, BracesMax: Integer;
-  // we use integer instead of TREBracesArg to better support */+
-  bound1, bound2: Boolean;
+  LoopCnt: Integer;
   Local: TRegExprMatchPrimLocals;
 begin
   Result := False;
@@ -5467,17 +5464,19 @@ begin
     case scan^ of
       OP_BOUND:
         begin
-          bound1 := (regInput = fInputStart) or not IsWordChar((regInput - 1)^);
-          bound2 := (regInput >= fInputEnd) or not IsWordChar(regInput^);
-          if bound1 = bound2 then
+          if ( (regInput = fInputStart) or not IsWordChar((regInput - 1)^) )
+             =
+             ( (regInput >= fInputEnd)  or not IsWordChar(regInput^) )
+          then
             Exit;
         end;
 
       OP_NOTBOUND:
         begin
-          bound1 := (regInput = fInputStart) or not IsWordChar((regInput - 1)^);
-          bound2 := (regInput >= fInputEnd) or not IsWordChar(regInput^);
-          if bound1 <> bound2 then
+          if ( (regInput = fInputStart) or not IsWordChar((regInput - 1)^) )
+             <>
+             ( (regInput >= fInputEnd)  or not IsWordChar(regInput^) )
+          then
             Exit;
         end;
 
@@ -5670,15 +5669,15 @@ begin
       OP_EXACTLY_CI:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
-          Len := PLongInt(opnd)^;
-          if (regInput + Len > fInputCurrentEnd) then
+          no := PLongInt(opnd)^;
+          if (regInput + no > fInputCurrentEnd) then
             Exit;
           Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
           if (opnd^ <> regInput^) and (_LowerCase(opnd^) <> regInput^) then
             Exit;
-          no := Len;
           save := regInput;
+          Inc(regInput, no);
           while no > 1 do
           begin
             Inc(save);
@@ -5687,21 +5686,20 @@ begin
               Exit;
             Dec(no);
           end;
-          Inc(regInput, Len);
         end;
 
       OP_EXACTLY:
         begin
           opnd := scan + REOpSz + RENextOffSz; // OPERAND
-          Len := PLongInt(opnd)^;
-          if (regInput + Len > fInputCurrentEnd) then
+          no := PLongInt(opnd)^;
+          if (regInput + no > fInputCurrentEnd) then
             Exit;
           Inc(opnd, RENumberSz);
           // Inline the first character, for speed.
           if opnd^ <> regInput^ then
             Exit;
-          no := Len;
           save := regInput;
+          Inc(regInput, no);
           while no > 1 do
           begin
             Inc(save);
@@ -5710,7 +5708,6 @@ begin
               Exit;
             Dec(no);
           end;
-          Inc(regInput, Len);
         end;
 
       OP_BSUBEXP:
@@ -5722,16 +5719,21 @@ begin
           opnd := GrpBounds[regRecursion].GrpStart[no];
           if opnd = nil then
             Exit;
-          opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
-          if opGrpEnd = nil then
+          save := GrpBounds[regRecursion].GrpEnd[no];
+          if save = nil then
             Exit;
+          no := save - opnd;
           save := regInput;
-          while opnd < opGrpEnd do
+          if save + no - 1 >= fInputCurrentEnd then
+            Exit;
+
+          while no > 0 do
           begin
-            if (save >= fInputCurrentEnd) or (save^ <> opnd^) then
+            if (save^ <> opnd^) then
               Exit;
             Inc(save);
             Inc(opnd);
+            Dec(no);
           end;
           regInput := save;
         end;
@@ -5745,17 +5747,21 @@ begin
           opnd := GrpBounds[regRecursion].GrpStart[no];
           if opnd = nil then
             Exit;
-          opGrpEnd := GrpBounds[regRecursion].GrpEnd[no];
-          if opGrpEnd = nil then
+          save := GrpBounds[regRecursion].GrpEnd[no];
+          if save = nil then
             Exit;
+          no := save - opnd;
           save := regInput;
-          while opnd < opGrpEnd do
+          if save + no - 1 >= fInputCurrentEnd then
+            Exit;
+
+          while no > 0 do
           begin
-            if (save >= fInputCurrentEnd) or
-              ((save^ <> opnd^) and (save^ <> InvertCase(opnd^))) then
+            if ((save^ <> opnd^) and (save^ <> InvertCase(opnd^))) then
               Exit;
             Inc(save);
             Inc(opnd);
+            Dec(no);
           end;
           regInput := save;
         end;
@@ -5867,10 +5873,8 @@ begin
 
       OP_LOOKAHEAD, OP_LOOKAHEAD_NEG:
         begin
-          Local.IsNegativeLook := (scan^ = OP_LOOKAHEAD_NEG);
-
           Local.LookAroundInfo.InputPos := regInput;
-          Local.LookAroundInfo.IsNegative := Local.IsNegativeLook;
+          Local.LookAroundInfo.IsNegative := (scan^ = OP_LOOKAHEAD_NEG);
           Local.LookAroundInfo.HasMatchedToEnd := False;
           Local.LookAroundInfo.IsBackTracking := False;
           Local.LookAroundInfo.OuterInfo := LookAroundInfoList;
@@ -5886,8 +5890,7 @@ begin
           LookAroundInfoList := Local.LookAroundInfo.OuterInfo;
           fInputCurrentEnd := Local.LookAroundInfo.savedInputCurrentEnd;
 
-          opnd := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz; // Successor of OP_LOOKAHEAD_END;
-          if Local.IsNegativeLook then begin
+          if Local.LookAroundInfo.IsNegative then begin
             Result := (not Local.LookAroundInfo.HasMatchedToEnd);
             if Result then begin
               next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
@@ -5898,25 +5901,22 @@ begin
             end;
           end;
 
-          if not Result then
-            regInput := Local.LookAroundInfo.InputPos;
-
           Exit;
         end;
 
       OP_LOOKBEHIND, OP_LOOKBEHIND_NEG:
         begin
-          Local.IsNegativeLook := (scan^ = OP_LOOKBEHIND_NEG);
-          scan := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
-          Local.IsGreedy := PReOpLookBehindOptions(scan)^.IsGreedy;
-
           Local.LookAroundInfo.InputPos := regInput;
-          Local.LookAroundInfo.IsNegative := Local.IsNegativeLook;
+          Local.LookAroundInfo.IsNegative := (scan^ = OP_LOOKBEHIND_NEG);
           Local.LookAroundInfo.HasMatchedToEnd := False;
           Local.LookAroundInfo.IsBackTracking := False;
           Local.LookAroundInfo.OuterInfo := LookAroundInfoList;
           Local.LookAroundInfo.savedInputCurrentEnd := fInputCurrentEnd;
           LookAroundInfoList := @Local.LookAroundInfo;
+
+          scan := PRegExprChar(AlignToPtr(scan + 1)) + RENextOffSz;
+          Local.IsGreedy := PReOpLookBehindOptions(scan)^.IsGreedy;
+
           fInputCurrentEnd := regInput;
 
           Result := regInput - fInputStart >= PReOpLookBehindOptions(scan)^.MatchLenMin;
@@ -5960,8 +5960,7 @@ begin
           LookAroundInfoList := Local.LookAroundInfo.OuterInfo;
           fInputCurrentEnd := Local.LookAroundInfo.savedInputCurrentEnd;
 
-          opnd := PRegExprChar(AlignToPtr(next + 1)) + RENextOffSz; // Successor of OP_LOOKAHEAD_END;
-          if Local.IsNegativeLook then begin
+          if Local.LookAroundInfo.IsNegative then begin
             Result := not Local.LookAroundInfo.HasMatchedToEnd;
             if Result then begin
               next := regNextQuick(next);                             // Next-Pointer of OP_LOOKAHEAD_END
@@ -5972,8 +5971,6 @@ begin
             end;
           end;
 
-          if not Result then
-            regInput := Local.LookAroundInfo.InputPos;
           Exit;
         end;
 
@@ -6107,163 +6104,153 @@ begin
           Exit;
         end;
 
-      OP_LOOP, OP_LOOP_NG, OP_LOOP_POSS:
+      OP_LOOP, OP_LOOP_POSS:
         begin
           if CurrentLoopInfoListPtr = nil then begin
             Error(reeLoopWithoutEntry);
             Exit;
           end;
-          opnd := scan + PRENextOff(AlignToPtr(scan + REOpSz + RENextOffSz + 2 * REBracesArgSz))^;
-          BracesMin := PREBracesArg(AlignToInt(scan + REOpSz + RENextOffSz))^;
-          BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
-          save := regInput;
+          opnd := AlignToPtr(scan + REOpSz + RENextOffSz);
           Local.LoopInfoListPtr := CurrentLoopInfoListPtr;
-          if Local.LoopInfoListPtr^.Count >= BracesMin then
+          if Local.LoopInfoListPtr^.Count >= PREBracesArg(opnd)^ then  // Min-Count
           begin // Min alredy matched - we can work
-            Result := (BracesMax = MaxBracesArg) and // * or +
+            LoopCnt := PREBracesArg(opnd + REBracesArgSz)^;  // Max-Count
+            Result := (LoopCnt = MaxBracesArg) and // * or +
                       (Local.LoopInfoListPtr^.CurrentRegInput = regInput);
             if Result then begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
-              if not Result then begin
-                regInput := save;
-                if (scan^ = OP_LOOP_POSS) then begin
-                  Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
-                  IsBacktrackingGroupAsAtom := True;
-                end;
+              if (not Result) and (scan^ = OP_LOOP_POSS) then begin
+                Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
+                IsBacktrackingGroupAsAtom := True;
               end;
               exit;
             end;
 
-            Local.LoopInfoListPtr^.CurrentRegInput := regInput;
-            if not (scan^ = OP_LOOP_NG) then
+            // greedy way - first try to max deep of greed ;)
+            if Local.LoopInfoListPtr^.Count < LoopCnt then
             begin
-              // greedy way - first try to max deep of greed ;)
-              if Local.LoopInfoListPtr^.Count < BracesMax then
-              begin
-                Inc(Local.LoopInfoListPtr^.Count);
-                Result := MatchPrim(opnd);
-                if Result then
-                  Exit;
-                if IsBacktrackingGroupAsAtom then
-                  Exit;
-                Dec(Local.LoopInfoListPtr^.Count);
-                regInput := save;
-              end;
-              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
-              Result := MatchPrim(next);
-              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+              save := regInput;
+              Local.LoopInfoListPtr^.CurrentRegInput := save;
+              Inc(Local.LoopInfoListPtr^.Count);
+              Result := MatchPrim(scan + PRENextOff(opnd + 2 * REBracesArgSz)^);
+              if Result or IsBacktrackingGroupAsAtom then
+                Exit;
+              Dec(Local.LoopInfoListPtr^.Count);
+              regInput := save;
+            end;
+            CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
+            Result := MatchPrim(next);
+            CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
 
-              if IsBacktrackingGroupAsAtom then
-                Exit;
-              if (scan^ = OP_LOOP_POSS) and (not Result) then begin
-                Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
-                IsBacktrackingGroupAsAtom := True;
-                exit;
-              end;
-              if not Result then
-                regInput := save;
+            if Result or IsBacktrackingGroupAsAtom then
               Exit;
-            end
-            else
-            begin
-              // non-greedy - try just now
-              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
-              Result := MatchPrim(next);
-              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
-              if Result then
-                Exit;
-              if IsBacktrackingGroupAsAtom then
-                Exit;
-              regInput := save; // failed - move next and try again
-              if Local.LoopInfoListPtr^.Count < BracesMax then
-              begin
-                Inc(Local.LoopInfoListPtr^.Count);
-                Result := MatchPrim(opnd);
-                if Result then
-                  Exit;
-                if IsBacktrackingGroupAsAtom then
-                  Exit;
-                Dec(Local.LoopInfoListPtr^.Count);
-                regInput := save;
-              end;
-              Exit;
-            end
+            if (scan^ = OP_LOOP_POSS) then begin
+              Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
+              IsBacktrackingGroupAsAtom := True;
+            end;
+            Exit;
           end
           else
           begin // first match a min_cnt times
             Inc(Local.LoopInfoListPtr^.Count);
             Local.LoopInfoListPtr^.CurrentRegInput := regInput;
-            Result := MatchPrim(opnd);
-            if Result then
-              Exit;
-            if IsBacktrackingGroupAsAtom then
+            Result := MatchPrim(scan + PRENextOff(opnd + 2 * REBracesArgSz)^);
+            if Result or IsBacktrackingGroupAsAtom then
               Exit;
             Dec(Local.LoopInfoListPtr^.Count);
-            regInput := save;
+            Exit;
+          end;
+        end;
+
+      OP_LOOP_NG:
+        begin
+          if CurrentLoopInfoListPtr = nil then begin
+            Error(reeLoopWithoutEntry);
+            Exit;
+          end;
+          opnd := AlignToPtr(scan + REOpSz + RENextOffSz);
+          Local.LoopInfoListPtr := CurrentLoopInfoListPtr;
+          if Local.LoopInfoListPtr^.Count >= PREBracesArg(opnd)^ then // Min-Count
+          begin // Min alredy matched - we can work
+            LoopCnt := PREBracesArg(opnd + REBracesArgSz)^;  // Max-Count
+            Result := (LoopCnt = MaxBracesArg) and // * or +
+                      (Local.LoopInfoListPtr^.CurrentRegInput = regInput);
+            if Result then begin
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
+              Result := MatchPrim(next);
+              CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+              exit;
+            end;
+
+            save := regInput;
+            Local.LoopInfoListPtr^.CurrentRegInput := save;
+            // non-greedy - try just now
+            CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
+            Result := MatchPrim(next);
+            CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
+            if Result or IsBacktrackingGroupAsAtom then
+              Exit;
+            if Local.LoopInfoListPtr^.Count < LoopCnt then
+            begin
+              regInput := save; // failed - move next and try again
+              Inc(Local.LoopInfoListPtr^.Count);
+              Result := MatchPrim(scan + PRENextOff(opnd + 2 * REBracesArgSz)^);
+              if Result or IsBacktrackingGroupAsAtom then
+                Exit;
+              Dec(Local.LoopInfoListPtr^.Count);
+            end;
+            Exit;
+          end
+          else
+          begin // first match a min_cnt times
+            Inc(Local.LoopInfoListPtr^.Count);
+            Local.LoopInfoListPtr^.CurrentRegInput := regInput;
+            Result := MatchPrim(scan + PRENextOff(opnd + 2 * REBracesArgSz)^);
+            if Result or IsBacktrackingGroupAsAtom then
+              Exit;
+            Dec(Local.LoopInfoListPtr^.Count);
             Exit;
           end;
         end;
       {$ENDIF}
 
-      OP_STAR, OP_PLUS, OP_BRACES, OP_STAR_NG, OP_PLUS_NG, OP_BRACES_NG:
+      OP_STAR, OP_PLUS, OP_BRACES:
         begin
-          // Lookahead to avoid useless match attempts when we know
-          // what character comes next.
-          nextch := #0;
-          if next^ = OP_EXACTLY then
-            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
-          BracesMax := MaxInt; // infinite loop for * and +
-          if (scan^ = OP_STAR) or (scan^ = OP_STAR_NG) then
-            BracesMin := 0 // star
-          else if (scan^ = OP_PLUS) or (scan^ = OP_PLUS_NG) then
-            BracesMin := 1 // plus
-          else
-          begin // braces
-            BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-            BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
-          end;
-          save := regInput;
           opnd := scan + REOpSz + RENextOffSz;
-          if (scan^ = OP_BRACES) or (scan^ = OP_BRACES_NG) then
-            Inc(opnd, 2 * REBracesArgSz);
-
-          if (scan^ = OP_PLUS_NG) or (scan^ = OP_STAR_NG) or (scan^ = OP_BRACES_NG) then
-          begin
-            // non-greedy mode
-            BracesMax := FindRepeated(opnd, BracesMax);
-            // don't repeat more than BracesMax
-            // Now we know real Max limit to move forward (for recursion 'back up')
-            // In some cases it can be faster to check only Min positions first,
-            // but after that we have to check every position separtely instead
-            // of fast scannig in loop.
-            no := BracesMin;
-            while no <= BracesMax do
-            begin
-              regInput := save + no;
-              // If it could work, try it.
-              if (nextch = #0) or (regInput^ = nextch) then
+          save := regInput;
+          case scan^ of
+            OP_STAR:
               begin
-                if MatchPrim(next) then
-                begin
-                  Result := True;
+                no := FindRepeated(opnd, MaxInt);
+                LoopCnt := 0 // star
+              end;
+            OP_PLUS:
+              begin
+                no := FindRepeated(opnd, MaxInt);
+                if no < 1 then
                   Exit;
-                end;
-                if IsBacktrackingGroupAsAtom then
+                LoopCnt := 1 // star
+              end;
+            else
+              begin // braces
+                opnd := AlignToPtr(opnd);
+                no := FindRepeated(opnd + 2 * REBracesArgSz, PREBracesArg(opnd + REBracesArgSz)^);
+                LoopCnt := PREBracesArg(opnd)^;
+                if no < LoopCnt then
                   Exit;
               end;
-              Inc(no); // Couldn't or didn't - move forward.
-            end; { of while }
-            Exit;
-          end
-          else
-          begin // greedy mode
-            no := FindRepeated(opnd, BracesMax); // don't repeat more than max_cnt
-            while no >= BracesMin do
+          end;
+
+          if next^ = OP_EXACTLY then begin
+            // Lookahead to avoid useless match attempts when we know
+            // what character comes next.
+            Local.nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
+            while no >= LoopCnt do
             begin
               // If it could work, try it.
-              if (nextch = #0) or (regInput^ = nextch) then
+              if (Local.nextch = #0) or (regInput^ = Local.nextch) then
               begin
                 if MatchPrim(next) then
                 begin
@@ -6276,43 +6263,118 @@ begin
               Dec(no); // Couldn't or didn't - back up.
               regInput := save + no;
             end; { of while }
-            Exit;
+          end
+          else begin
+            while no >= LoopCnt do
+            begin
+              if MatchPrim(next) then
+              begin
+                Result := True;
+                Exit;
+              end;
+              if IsBacktrackingGroupAsAtom then
+                Exit;
+              Dec(no); // Couldn't or didn't - back up.
+              regInput := save + no;
+            end; { of while }
           end;
+          Exit;
+        end;
+
+      OP_STAR_NG, OP_PLUS_NG, OP_BRACES_NG:
+        begin
+          opnd := scan + REOpSz + RENextOffSz;
+          save := regInput;
+          case scan^ of
+            OP_STAR_NG:
+              begin
+                no := FindRepeated(opnd, MaxInt);
+                LoopCnt := 0 // star
+              end;
+            OP_PLUS_NG:
+              begin
+                no := FindRepeated(opnd, MaxInt);
+                if no < 1 then
+                  Exit;
+                LoopCnt := 1 // star
+              end;
+            else
+              begin // braces
+                opnd := AlignToPtr(opnd);
+                no := FindRepeated(opnd + 2 * REBracesArgSz, PREBracesArg(opnd + REBracesArgSz)^);
+                LoopCnt := PREBracesArg(opnd)^;
+                if no < LoopCnt then
+                  Exit;
+              end;
+          end;
+
+
+          // non-greedy mode
+          // don't repeat more than "no" times
+          // Now we know real Max limit to move forward (for recursion 'back up')
+          // In some cases it can be faster to check only Min positions first,
+          // but after that we have to check every position separtely instead
+          // of fast scannig in loop.
+          if next^ = OP_EXACTLY then begin
+            // Lookahead to avoid useless match attempts when we know
+            // what character comes next.
+            Local.nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
+            while LoopCnt <= no do
+            begin
+              regInput := save + LoopCnt;
+              // If it could work, try it.
+              if (Local.nextch = #0) or (regInput^ = Local.nextch) then
+              begin
+                if MatchPrim(next) then
+                begin
+                  Result := True;
+                  Exit;
+                end;
+                if IsBacktrackingGroupAsAtom then
+                  Exit;
+              end;
+              Inc(LoopCnt); // Couldn't or didn't - move forward.
+            end; { of while }
+          end
+          else begin
+            while LoopCnt <= no do
+            begin
+              regInput := save + LoopCnt;
+              if MatchPrim(next) then
+              begin
+                Result := True;
+                Exit;
+              end;
+              if IsBacktrackingGroupAsAtom then
+                Exit;
+              Inc(LoopCnt); // Couldn't or didn't - move forward.
+            end; { of while }
+          end;
+          Exit;
         end;
 
       OP_STAR_POSS, OP_PLUS_POSS, OP_BRACES_POSS:
         begin
-          // Lookahead to avoid useless match attempts when we know
-          // what character comes next.
-          nextch := #0;
-          if next^ = OP_EXACTLY then
-            nextch := (next + REOpSz + RENextOffSz + RENumberSz)^;
           opnd := scan + REOpSz + RENextOffSz;
           case scan^ of
             OP_STAR_POSS:
               begin
-                BracesMin := 0;
-                BracesMax := MaxInt;
+                FindRepeated(opnd, MaxInt);
               end;
             OP_PLUS_POSS:
               begin
-                BracesMin := 1;
-                BracesMax := MaxInt;
+                if FindRepeated(opnd, MaxInt) < 1 then
+                  Exit;
               end;
             else
               begin // braces
-                BracesMin := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz))^;
-                BracesMax := PREBracesArg(AlignToPtr(scan + REOpSz + RENextOffSz + REBracesArgSz))^;
-                Inc(opnd, 2 * REBracesArgSz);
+                opnd := AlignToPtr(opnd);
+                if FindRepeated(opnd + 2 * REBracesArgSz, PREBracesArg(opnd + REBracesArgSz)^)
+                   < PREBracesArg(opnd)^
+                then
+                  Exit;
               end;
           end;
-          no := FindRepeated(opnd, BracesMax);
-          if no >= BracesMin then
-            if (nextch = #0) or (regInput^ = nextch) then begin
-              scan := next;
-              continue;
-            end;
-          Exit;
         end;
 
       OP_EEND:
@@ -6352,12 +6414,13 @@ begin
           begin
             Inc(regRecursion);
             FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
-            bound1 := MatchPrim(regCodeWork);
+            Result := MatchPrim(regCodeWork);
             Dec(regRecursion);
+            if not Result then Exit;
+            Result := False;
           end
           else
-            bound1 := False;
-          if not bound1 then Exit;
+            Exit;
         end;
 
       OP_SUBCALL:
@@ -6374,22 +6437,26 @@ begin
             CurrentSubCalled := no;
             Inc(regRecursion);
             FillChar(GrpBounds[regRecursion].GrpStart[0], SizeOf(GrpBounds[regRecursion].GrpStart[0])*regNumBrackets, 0);
-            bound1 := MatchPrim(save);
+            Result := MatchPrim(save);
             Dec(regRecursion);
             CurrentSubCalled := Local.savedCurrentSubCalled;
+            if not Result then Exit;
+            Result := False;
           end
           else
-            bound1 := False;
-          if not bound1 then Exit;
+            Exit;
         end;
 
       OP_ANYLINEBREAK:
         begin
           if (regInput >= fInputCurrentEnd) or not IsAnyLineBreak(regInput^) then
             Exit;
-          nextch := regInput^;
-          Inc(regInput);
-          if (nextch = #13) and (regInput < fInputCurrentEnd) and (regInput^ = #10) then
+          if regInput^ = #13 then begin
+            Inc(regInput);
+            if (regInput < fInputCurrentEnd) and (regInput^ = #10) then
+              Inc(regInput);
+          end
+          else
             Inc(regInput);
         end;
 
@@ -7359,6 +7426,7 @@ begin
           Include(FirstCharSet, Byte($0B));
           Include(FirstCharSet, Byte($0C));
           Include(FirstCharSet, Byte($85));
+          Exit;
         end;
 
     else

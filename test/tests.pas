@@ -72,6 +72,7 @@ type
     procedure TestBads;
     procedure TestModifiers;
     procedure TestContinueAnchor;
+    procedure TestLineBreak;
     procedure TestRegMustExist;
     procedure TestAtomic;
     procedure TestQuesitonMark;
@@ -1144,6 +1145,22 @@ begin
   AssertMatch('(?<=^.\GA...)(X)  _A123X3 offset 2 ', 6, 1);
 end;
 
+procedure TTestRegexpr.TestLineBreak;
+begin
+  IsNotMatching('no linebreak (stand alone)', '\R', 'abcd');
+  IsMatching('no linebreak (stand alone / loop)', '\R*', 'abcd', [1,0]);
+
+  IsMatching('no loop linebreak', 'a\Rb', 'a'#13'b',      [1,3] );
+  IsMatching('no loop linebreak', 'a\Rb', 'a'#10'b',      [1,3] );
+  IsMatching('no loop linebreak', 'a\Rb', 'a'#13#10'b',   [1,4] );
+  IsMatching('loop linebreak', 'a\R*b', 'a'#13'b',      [1,3] );
+  IsMatching('loop linebreak', 'a\R*b', 'a'#10'b',      [1,3] );
+  IsMatching('loop linebreak', 'a\R*b', 'a'#13#10'b',   [1,4] );
+
+  IsNotMatching('no loop linebreak', 'a\R\Rb', 'a'#13#10'b');
+//  IsNotMatching('   loop linebreak', 'a\R+\Rb', 'a'#13#10'b');
+end;
+
 procedure TTestRegexpr.TestRegMustExist;
 begin
   CompileRE('\w*abcd');
@@ -1772,6 +1789,17 @@ begin
 
   IsMatching('ref in branch', '((A)|B|C\2)*',  'AACACB',  [1,4,  3,2, 2,1]);
   IsMatching('ref in call', '[^A]*((A)|B|C\2)*',  'DAACACBE',  [1,5,  4,2, 3,1]);
+
+
+  IsMatching('ref in branch', '(...).\1',  'abcxabc',  [1,7,  1,3]);
+  IsNotMatching('ref in branch', '(...).\1',  'abcxab');
+  CompileRE('(...).\1');
+  RE.SetInputSubString('abcxabc', 1,7);
+  IsTrue('Matches on full string', RE.Exec);
+  CompileRE('(...).\1');
+  RE.SetInputSubString('abcxabc', 1,6);
+  IsFalse('Does NOT match on short string', RE.Exec);
+
 end;
 
 procedure TTestRegexpr.TestSubCall;
