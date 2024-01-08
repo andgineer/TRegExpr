@@ -5360,22 +5360,24 @@ begin
 end;
 
 function TRegExpr.regNextQuick(p: PRegExprChar): PRegExprChar; {$IFDEF FPC}inline;{$ENDIF}
+{$IFDEF WITH_REGEX_ASSERT}
 var
   offset: TRENextOff;
+{$ENDIF}
 begin
   // The inlined version is never called in the first pass.
   Assert(fSecondPass); // fSecondPass will also be true in MatchPrim.
-  offset := PRENextOff(AlignToPtr(p + REOpSz))^;
   {$IFDEF WITH_REGEX_ASSERT}
+  offset := PRENextOff(AlignToPtr(p + REOpSz))^;
   if offset = 0 then
     Result := nil
   else
   begin
-  {$ENDIF}
     Result := p + offset;
-  {$IFDEF WITH_REGEX_ASSERT}
     assert((Result >= programm) and (Result < programm + regCodeSize * SizeOf(REChar)));
   end;
+  {$ELSE}
+    Result := p + PRENextOff(AlignToPtr(p + REOpSz))^;
   {$ENDIF}
 end;
 
