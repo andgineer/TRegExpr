@@ -1212,6 +1212,13 @@ begin
   IsMatching('NESTED 2: Atomic backtrace until match is found ',
              'a(?>((?>b.*?cx..8))|.)',
              '1ab__cx__9cx__8_...56Yb', [2,14,  3,13]);
+
+  IsNotMatching('Recursive atomic', '^(?''A''(?>...?)(?:x|(?&A)))', 'aaaaaaaax');
+  IsMatching('Recursive atomic',    '^(?''A''(?>...?)(?:x|(?&A)))', 'aaaaaaaaax',  [1,10,  1,10]);
+
+  IsNotMatching('Recursive atomic', '^(?''A''(?>b[^b]+(?&A)?x+))', 'baaabaaaaaxx');
+  IsNotMatching('atomic in loop', '^(?:(?>b[^b]+?)+x+)', 'baaabaaaaaxx');
+  IsMatching('loop in atomic', '^(?>(?:b[^b]+?)+x+)', 'baaabaaaaaxx', [1,12]);
 end;
 
 procedure TTestRegexpr.TestQuesitonMark;
@@ -1992,6 +1999,9 @@ begin
              'aABBcAXBc',  [2,3,  -1,-1,  3,1,  -1,-1]);
 
 
+  IsMatching('Recursive', '^(?''A''(?:...?)(?:x|(?&A)))', 'aaaaaaaax',   [1,9,   1,9]);
+  IsMatching('Recursive', '^(?''A''(?:...?)(?:x|(?&A)))', 'aaaaaaaaax',  [1,10,  1,10]);
+  //IsMatching('Recursive', '^(?''A''(?:b[^b]+(?&A)?x+))', 'baaabaaaaaxx', [1,12,  1,12]);
 end;
 
 procedure TTestRegexpr.TestIsFixedLength;
