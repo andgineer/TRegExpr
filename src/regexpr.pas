@@ -267,7 +267,6 @@ type
   );
 
   TRegExprFindFixedLengthFlag = (
-    flfForceToStopAt,
     flfReturnAtNextNil,
     flfSkipLookAround
   );
@@ -4626,10 +4625,10 @@ begin
 
               Tail(ret, regLast(Result));
 
-              ret2 := Result;
               if (regCode <> @regDummy) then begin
                 ALen := 0;
-                if IsPartFixedLength(ret2, op, ALen, AMaxLen, OP_LOOKBEHIND_END, nil, [flfSkipLookAround]) then
+                ret2 := Result;
+                if IsPartFixedLength(ret2, op, ALen, AMaxLen, OP_LOOKBEHIND_END, regCode, [flfSkipLookAround]) then
                   PReOpLookBehindOptions(regLookBehindOption)^.IsGreedy := OPT_LOOKBEHIND_FIXED
                 else
                 if (ParsedGrpCount > RegGrpCountBefore) and (not FAllowUnsafeLookBehind) then
@@ -8113,6 +8112,12 @@ function TRegExpr.IsPartFixedLength(var prog: PRegExprChar; var op: TREOp;
       AVal := AVal + AInc;
   end;
 
+  function MaxStopOrNext(next: PRegExprChar): PRegExprChar;
+  begin
+    Result := next;
+    if (Result = nil) or ( (StopMaxProg <> nil) and (Result > StopMaxProg) ) then
+      Result := StopMaxProg;
+  end;
 
 var
   s, next: PRegExprChar;
@@ -8150,7 +8155,7 @@ begin
     Inc(s, REOpSz + RENextOffSz);
 
     case op of
-      OP_EEND:
+      OP_EEND, OP_BACK:
         begin
           AMaxLen := FndMaxLen;
           op := FirstVarLenOp;
@@ -8162,26 +8167,22 @@ begin
       OP_BRANCH, OP_GBRANCH, OP_GBRANCH_EX, OP_GBRANCH_EX_CI:
         begin
           s := s + REBranchArgSz;
-          if not IsPartFixedLength(s, op, ABranchLen, ABranchMaxLen, OP_EEND, next, []) then
+          if not IsPartFixedLength(s, op, ABranchLen, ABranchMaxLen, OP_EEND, MaxStopOrNext(next), Flags * [flfReturnAtNextNil, flfSkipLookAround]) then
           begin
             if not NotFixedLen then
               FirstVarLenOp := op;
             NotFixedLen := True;
-            if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
-              exit;
           end;
           s := next;
           repeat
             next := regNext(s);
             s := s + REBranchArgSz;
             Inc(s, REOpSz + RENextOffSz);
-            if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, next, []) then
+            if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, MaxStopOrNext(next), Flags * [flfReturnAtNextNil, flfSkipLookAround]) then
             begin
               if not NotFixedLen then
                 FirstVarLenOp := op;
               NotFixedLen := True;
-              if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
-                exit;
             end;
             s := next;
             if (ASubLen <> ABranchLen) then
@@ -8199,13 +8200,11 @@ begin
       OP_OPEN:
         begin
           Inc(s, ReGroupIndexSz);
-          if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_CLOSE, nil, [flfForceToStopAt]) then
+          if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_CLOSE, StopMaxProg, Flags * [flfReturnAtNextNil, flfSkipLookAround]) then
           begin
             if not NotFixedLen then
               FirstVarLenOp := op;
             NotFixedLen := True;
-            if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
-              exit;
           end;
           assert(s^=OP_CLOSE);
           AMinLen := AMinLen + ASubLen;
@@ -8217,13 +8216,11 @@ begin
       OP_OPEN_ATOMIC:
         begin
           Inc(s, ReGroupIndexSz);
-          if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_CLOSE_ATOMIC, nil, [flfForceToStopAt]) then
+          if not IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_CLOSE_ATOMIC, StopMaxProg, Flags * [flfReturnAtNextNil, flfSkipLookAround]) then
           begin
             if not NotFixedLen then
               FirstVarLenOp := op;
             NotFixedLen := True;
-            if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
-              exit;
           end;
           assert(s^=OP_CLOSE_ATOMIC);
           AMinLen := AMinLen + ASubLen;
@@ -8240,7 +8237,7 @@ begin
 
       OP_LOOKAHEAD, OP_LOOKAHEAD_NEG:
         begin
-          r := IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_LOOKAHEAD_END, next, [flfSkipLookAround, flfForceToStopAt]);
+          r := IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_LOOKAHEAD_END, MaxStopOrNext(next), [flfSkipLookAround] + Flags * [flfReturnAtNextNil]);
           s := next;
           Inc(s, REOpSz + RENextOffSz); // skip the OP_LOOKAHEAD_END
           if not (flfSkipLookAround in Flags) then
@@ -8253,14 +8250,11 @@ begin
       OP_LOOKBEHIND, OP_LOOKBEHIND_NEG:
         begin
           Inc(s, ReOpLookBehindOptionsSz);
-          r := IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_LOOKBEHIND_END, next, [flfSkipLookAround, flfForceToStopAt]);
+          r := IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_LOOKBEHIND_END, MaxStopOrNext(next), [flfSkipLookAround] + Flags * [flfReturnAtNextNil]);
           s := next;
           Inc(s, REOpSz + RENextOffSz); // skip the OP_LOOKBEHIND_END
           if not (flfSkipLookAround in Flags) then
-            //if flfForceToStopAt in Flags then
               NotFixedLen := True
-            //else
-            //  Exit;
         end;
 
       OP_LOOKAHEAD_END, OP_LOOKBEHIND_END:
@@ -8367,13 +8361,11 @@ begin
           N := PREBracesArg(AlignToInt(s))^;
           N2 := PREBracesArg(AlignToInt(s + REBracesArgSz))^;
           Inc(s, REBracesArgSz * 2);
-          r := IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, next, [flfSkipLookAround, flfReturnAtNextNil, flfForceToStopAt]);
+          r := IsPartFixedLength(s, op, ASubLen, ASubMaxLen, OP_EEND, MaxStopOrNext(next), [flfSkipLookAround, flfReturnAtNextNil]);
           if not r then
           begin
             if not NotFixedLen then
               FirstVarLenOp := op;
-            if (ABranchMaxLen = high(ABranchMaxLen)) and not(flfForceToStopAt in Flags) then
-              exit;
           end;
 
           Inc(AMinLen, MultiplyLen(ASubLen, N));
@@ -8390,15 +8382,20 @@ begin
           FndMaxLen := high(FndMaxLen);
         end;
 
-    else
-      begin
-        s := next;
-        FndMaxLen := high(FndMaxLen);
-        if flfForceToStopAt in Flags then
+      OP_PLUS, OP_PLUS_NG, OP_PLUS_POSS:
+        begin
+          s := next;
+          Inc(AMinLen, 1);
+          FndMaxLen := high(FndMaxLen);
           NotFixedLen := True
-        else
-          Exit;
-      end;
+        end;
+
+      else // OP_STAR...
+        begin
+          s := next;
+          FndMaxLen := high(FndMaxLen);
+            NotFixedLen := True
+        end;
     end;
   until False;
 end;
