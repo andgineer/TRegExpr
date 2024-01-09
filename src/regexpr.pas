@@ -487,8 +487,8 @@ type
     function DumpCheckerIndex(N: Byte): RegExprString;
     function DumpCategoryChars(ch, ch2: REChar; Positive: Boolean): RegExprString;
 
-    procedure ClearMatches;
-    procedure ClearInternalExecData;
+    procedure ClearMatches; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    procedure ClearInternalExecData; {$IFDEF InlineFuncs}inline;{$ENDIF}
     procedure InitInternalGroupData;
     function FindInCharClass(ABuffer: PRegExprChar; AChar: REChar): Boolean;
     procedure GetCharSetFromCharClass(ABuffer: PRegExprChar; AIgnoreCase: Boolean; var ARes: TRegExprCharset);
@@ -6516,13 +6516,21 @@ function TRegExpr.Exec: Boolean;
 var
   SlowChecks: Boolean;
 begin
-  SlowChecks := fInputEnd - fInputStart < fSlowChecksSizeMax;
+  SlowChecks := (fInputEnd - fInputStart < fSlowChecksSizeMax) and (regMustString <> '');
   Result := ExecPrim(1, SlowChecks, False, 0);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
 
 function TRegExpr.Exec(AOffset: Integer): Boolean;
 begin
+  // Check that the start position is not negative
+  if AOffset < 1 then
+  begin
+    ClearMatches;
+    Error(reeOffsetMustBePositive);
+    Result := False;
+    Exit;
+  end;
   Result := ExecPrim(AOffset, False, False, 0);
 end; { of function TRegExpr.Exec
   -------------------------------------------------------------- }
@@ -6530,6 +6538,14 @@ end; { of function TRegExpr.Exec
 
 function TRegExpr.ExecPos(AOffset: Integer {$IFDEF DefParam} = 1{$ENDIF}): Boolean;
 begin
+  // Check that the start position is not negative
+  if AOffset < 1 then
+  begin
+    ClearMatches;
+    Error(reeOffsetMustBePositive);
+    Result := False;
+    Exit;
+  end;
   Result := ExecPrim(AOffset, False, False, 0);
 end; { of function TRegExpr.ExecPos
   -------------------------------------------------------------- }
@@ -6537,6 +6553,14 @@ end; { of function TRegExpr.ExecPos
 {$IFDEF OverMeth}
 function TRegExpr.ExecPos(AOffset: Integer; ATryOnce, ABackward: Boolean): Boolean;
 begin
+  // Check that the start position is not negative
+  if AOffset < 1 then
+  begin
+    ClearMatches;
+    Error(reeOffsetMustBePositive);
+    Result := False;
+    Exit;
+  end;
   if ATryOnce then
     Result := ExecPrim(AOffset, False, ABackward, AOffset + 1)
   else
@@ -6545,6 +6569,19 @@ end;
 
 function TRegExpr.ExecPos(AOffset, ATryMatchOnlyStartingBefore: Integer): Boolean;
 begin
+  // Check that the start position is not negative
+  if AOffset < 1 then
+  begin
+    ClearMatches;
+    Error(reeOffsetMustBePositive);
+    Result := False;
+    Exit;
+  end;
+  if (ATryMatchOnlyStartingBefore > 0) and (AOffset >= ATryMatchOnlyStartingBefore) then begin
+    ClearMatches;
+    Result := False;
+    Exit;
+  end;
   Result := ExecPrim(AOffset, False, False, ATryMatchOnlyStartingBefore);
 end;
 {$ENDIF}
@@ -6653,6 +6690,7 @@ function TRegExpr.ExecPrimProtected(AOffset: Integer; ASlowChecks,
   ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 var
   Ptr, SearchEnd: PRegExprChar;
+  Len: PtrInt;
 begin
   Result := False;
 
@@ -6669,27 +6707,13 @@ begin
       Exit;
   end;
 
-  if fInputEnd = fInputStart then
-  begin
-    // Empty string can match e.g. '^$'
-    if regMustLen > 0 then
+  Len := fInputEnd - fInputStart;
+  if FMinMatchLen > Len then
       Exit;
-  end;
-
-  // Check that the start position is not negative
-  if AOffset < 1 then
-  begin
-    Error(reeOffsetMustBePositive);
-    Exit;
-  end;
-  if (ATryMatchOnlyStartingBefore > 0) and (AOffset >= ATryMatchOnlyStartingBefore) then
-    Exit;
 
   // Check that the start position is not longer than the line
-  if (AOffset - 1) > (fInputEnd - fInputStart) then
+  if (AOffset - 1) > Len - FMinMatchLen then
     Exit;
-
-  ClearInternalExecData;
 
   Ptr := fInputStart + AOffset - 1;
   fInputContinue := Ptr;
@@ -6697,8 +6721,10 @@ begin
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
     if regMustString <> '' then
-      if StrLPos(fInputStart, PRegExprChar(regMustString), fInputEnd - fInputStart, length(regMustString)) = nil then
+      if StrLPos(fInputStart, PRegExprChar(regMustString), Len, length(regMustString)) = nil then
         exit;
+
+  ClearInternalExecData;
 
   {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
   StackLimit := StackBottom;
@@ -8441,6 +8467,14 @@ end; { of procedure TRegExpr.Error
 {$IFDEF Compat} // APIs needed only for users of old FPC 3.0
 function TRegExpr.ExecPos(AOffset: Integer; ATryOnce: Boolean): Boolean; overload;
 begin
+  // Check that the start position is not negative
+  if AOffset < 1 then
+  begin
+    ClearMatches;
+    Error(reeOffsetMustBePositive);
+    Result := False;
+    Exit;
+  end;
   if ATryOnce then
     Result := ExecPrim(AOffset, False, False, AOffset + 1)
   else
