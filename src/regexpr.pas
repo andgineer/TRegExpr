@@ -6682,11 +6682,10 @@ begin
       except
         on E: ERegExpr do begin
           Result := False;
-          raise;
         end;
         else begin
+          Result := False;
           fLastError := reeUnknown;
-          Error(reeUnknown);
         end;
       end;
     end;
@@ -6727,15 +6726,13 @@ begin
       on E: EStackOverflow do begin
         Result := False;
         fLastError := reeLoopStackExceeded;
-        Error(reeLoopStackExceeded);
       end;
       on E: ERegExpr do begin
         Result := False;
-        raise;
       end;
       else begin
+        Result := False;
         fLastError := reeUnknown;
-        Error(reeUnknown);
       end;
     end;
   end;
