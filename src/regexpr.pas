@@ -608,8 +608,8 @@ type
     function MatchAtOnePos(APos: PRegExprChar): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     // Exec for stored InputString
-    function ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
-    function ExecPrimProtected(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
+    function ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
+    function ExecPrimProtected(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     function GetSubExprCount: Integer;
     function GetMatchPos(Idx: Integer): PtrInt;
@@ -6660,7 +6660,63 @@ end;
 
 function TRegExpr.ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean;
   ATryMatchOnlyStartingBefore: Integer): Boolean;
+var
+  Len: Ptrint;
 begin
+  Result := False;
+
+  // Ensure that Match cleared either if optimization tricks or some error
+  // will lead to leaving ExecPrim without actual search. That is
+  // important for ExecNext logic and so on.
+  ClearMatches;
+
+  // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
+  if programm = nil then
+  begin
+    if fRaiseForRuntimeError then begin
+        Compile;
+    end
+    else begin
+      try
+          Compile;
+      except
+        on E: ERegExpr do begin
+          Result := False;
+          raise;
+        end;
+        else begin
+          fLastError := reeUnknown;
+          Error(reeUnknown);
+        end;
+      end;
+    end;
+    if programm = nil then
+      Exit;
+  end;
+
+  Len := fInputEnd - fInputStart;
+  if FMinMatchLen > Len then
+      Exit;
+
+  // Check that the start position is not longer than the line
+  if (AOffset - 1) > Len - FMinMatchLen then
+    Exit;
+
+
+  // If there is a "must appear" string, look for it.
+  if ASlowChecks then
+    if regMustString <> '' then
+      if StrLPos(fInputStart, PRegExprChar(regMustString), Len, length(regMustString)) = nil then
+        exit;
+
+  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
+  StackLimit := StackBottom;
+  if StackLimit <> nil then
+    StackLimit := StackLimit + 36000; // Add for any calls within the current MatchPrim // FPC has "STACK_MARGIN = 16384;", but we need to call Error, ..., raise
+  {$ENDIF}
+
+  ClearInternalExecData;
+
   if fRaiseForRuntimeError then begin
     Result := ExecPrimProtected(AOffset, ASlowChecks, ABackward, ATryMatchOnlyStartingBefore);
   end
@@ -6689,48 +6745,10 @@ function TRegExpr.ExecPrimProtected(AOffset: Integer; ASlowChecks,
   ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 var
   Ptr, SearchEnd: PRegExprChar;
-  Len: PtrInt;
 begin
   Result := False;
-
-  // Ensure that Match cleared either if optimization tricks or some error
-  // will lead to leaving ExecPrim without actual search. That is
-  // important for ExecNext logic and so on.
-  ClearMatches;
-
-  // Don't check IsProgrammOk here! it causes big slowdown in test_benchmark!
-  if programm = nil then
-  begin
-    Compile;
-    if programm = nil then
-      Exit;
-  end;
-
-  Len := fInputEnd - fInputStart;
-  if FMinMatchLen > Len then
-      Exit;
-
-  // Check that the start position is not longer than the line
-  if (AOffset - 1) > Len - FMinMatchLen then
-    Exit;
-
   Ptr := fInputStart + AOffset - 1;
   fInputContinue := Ptr;
-
-  // If there is a "must appear" string, look for it.
-  if ASlowChecks then
-    if regMustString <> '' then
-      if StrLPos(fInputStart, PRegExprChar(regMustString), Len, length(regMustString)) = nil then
-        exit;
-
-  ClearInternalExecData;
-
-  {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
-  StackLimit := StackBottom;
-  if StackLimit <> nil then
-    StackLimit := StackLimit + 36000; // Add for any calls within the current MatchPrim // FPC has "STACK_MARGIN = 16384;", but we need to call Error, ..., raise
-  {$ENDIF}
-
   FMatchesCleared := False;
   // ATryOnce or anchored match (it needs to be tried only once).
   if (ATryMatchOnlyStartingBefore = AOffset + 1) or (regAnchored in [raBOL, raOnlyOnce, raContinue]) then
