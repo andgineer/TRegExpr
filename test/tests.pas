@@ -2262,6 +2262,14 @@ begin
   end;
 
 
+  CompileRE('$');
+  RE.SetInputSubString('abcxabc', 1,7);
+  IsTrue('Matches on full string', RE.Exec);
+
+  CompileRE('$');
+  RE.SetInputSubString('abcxabc', 2,3);
+  IsTrue('Matches on sub-string', RE.Exec);
+
 end;
 
 procedure TTestRegexpr.TestRegLookAhead;

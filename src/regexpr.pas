@@ -6796,7 +6796,7 @@ begin
     repeat
       Inc(Ptr);
       if Ptr > SearchEnd then
-        Exit;
+        Break;
 
       {$IFDEF UseFirstCharSet}
       {$IFDEF UnicodeRE}
@@ -6811,6 +6811,11 @@ begin
       if Result then
         Exit;
     until False;
+
+    {$IFDEF UseFirstCharSet}
+      if FirstCharArray[0] and (fInputEnd^ <> #0) then
+        Result := MatchAtOnePos(fInputEnd);
+    {$ENDIF}
   end;
 end; { of function TRegExpr.ExecPrim
   -------------------------------------------------------------- }
