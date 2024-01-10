@@ -1026,6 +1026,9 @@ begin
   IsMatching   ('CaseSens On/Off (?i:B)',   '(?i)A(?-i:B)C',     '1aBc',     [2,3]);
   IsNotMatching('CaseSens On/Off (?i:B)',   '(?i)A(?-i:B)C',     '1abc');
 
+
+  IsMatching   ('CaseSens On/Off (?i:B)+',   '(?i)A(?-i:B)+C',     '1aBBBc',     [2,5]);
+  IsNotMatching   ('CaseSens On/Off (?i:B)+',   '(?i)A(?-i:B)+C',     '1aBbBc');
 end;
 
 procedure TTestRegexpr.TestContinueAnchor;
@@ -2258,6 +2261,14 @@ begin
     end;
   end;
 
+
+  CompileRE('$');
+  RE.SetInputSubString('abcxabc', 1,7);
+  IsTrue('Matches on full string', RE.Exec);
+
+  CompileRE('$');
+  RE.SetInputSubString('abcxabc', 2,3);
+  IsTrue('Matches on sub-string', RE.Exec);
 
 end;
 
