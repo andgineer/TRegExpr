@@ -6,12 +6,12 @@
                                      (-) - bugfix
                                      (^) - improvement
 
- v. 1.184 2024.01.07
+ v. 1.186 2024.01.10
  -=- (^) Fixes and improvements for look-around:
      (?=.(capt).)?.*\1 optional look-around was handled incorrectly if it contained code that was later referred.
      (?=...)?+ possessive modifiers on look-around were not handled at all.
- -=- (^) Tiny optimization for speed. 
- -=- (-) Fix back-refs, if the are nested in the group to which they refer.
+ -=- (^) Tiny optimization for speed.
+ -=- (-) Fix back-refs if they are nested in the group to which they refer (e.g. \1 in group 1).
   By Martin Friebe.
 
  v. 1.182 2023.11.26
