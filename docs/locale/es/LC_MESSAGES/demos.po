@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: TRegExpr 0.952\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-15 20:39+0300\n"
-"PO-Revision-Date: 2019-10-30 19:03+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2024-03-09 14:01+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/tregexpr/demos/"
 "es/>\n"
 "Language: es\n"
@@ -19,43 +19,38 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.10-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 "Generated-By: Babel 2.3.4\n"
 
 # 54bd071b6b824a54b9ac5c35fbfa06bf
 #: ../../demos.rst:6
 msgid "English"
-msgstr ""
+msgstr "Inglés"
 
 # 1e981c1fd2a743f1b2bfa307b6562f8b
 #: ../../demos.rst:7
-#, fuzzy
 msgid "`Русский <https://regex.sorokin.engineer/ru/latest/demos.html>`__"
-msgstr "`Русский <https://regex.sorokin.engineer/ru/latest/index.html>`__"
+msgstr "`Ruso <https://regex.sorokin.engineer/ru/latest/demos.html>`__"
 
 # 959cf23b9f86427f9643550f26b816be
 #: ../../demos.rst:8
-#, fuzzy
 msgid "`Deutsch <https://regex.sorokin.engineer/de/latest/demos.html>`__"
-msgstr "`Deutsch <https://regex.sorokin.engineer/de/latest/index.html>`__"
+msgstr "`Alemán <https://regex.sorokin.engineer/de/latest/demos.html>`__"
 
 # 9a388b794d4d4d85b042be34566891a6
 #: ../../demos.rst:9
-#, fuzzy
 msgid "`Български <https://regex.sorokin.engineer/bg/latest/demos.html>`__"
-msgstr "`Български <https://regex.sorokin.engineer/bg/latest/index.html>`__"
+msgstr "`Búlgaro <https://regex.sorokin.engineer/bg/latest/demos.html>`__"
 
 # 397812a6c3e4474b9d73b7b403041015
 #: ../../demos.rst:10
-#, fuzzy
 msgid "`Français <https://regex.sorokin.engineer/fr/latest/demos.html>`__"
-msgstr "`Français <https://regex.sorokin.engineer/fr/latest/index.html>`__"
+msgstr "`Francés <https://regex.sorokin.engineer/fr/latest/demos.html>`__"
 
 # bf3c1985d6cb4bb7b8e93a78e85aa43c
 #: ../../demos.rst:11
-#, fuzzy
 msgid "`Español <https://regex.sorokin.engineer/es/latest/demos.html>`__"
-msgstr "`Español <https://regex.sorokin.engineer/es/latest/index.html>`__"
+msgstr "`Español <https://regex.sorokin.engineer/es/latest/demos.html>`__"
 
 # 3123f93a15554569abef24250ec73e62
 #: ../../demos.rst:14
@@ -242,15 +237,14 @@ msgstr ""
 
 # 8a9151bca867444096cb6fd675d91897
 #: ../../demos.rst:74
-#, fuzzy
 msgid ""
 "For example, if `AFlags` is ``[durlAddr]`` then hyper link "
 "``www.masterAndrey.com/contacts.htm`` will be decorated as ``<a "
 "href=\"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com</a>``."
 msgstr ""
-"Por ejemplo, si `AFlags` es` `[durlAddr]` `entonces el hipervínculo` "
-"`www.masterAndrey.com/contacts.htm`` se decorará como <a href=\""
-"www.masterAndrey.com/contacts.htm\">www.masterAndrey.com`</a>``."
+"Por ejemplo, si `AFlags` es ``[durlAddr]`` entonces el hipervínculo ``www."
+"masterAndrey.com/contacts.htm`` se decorará como ``<a href=\"www.masterAndrey"
+".com/contacts.htm\">www.masterAndrey.com</a>``."
 
 # 19e04c2855034e2da0d032ce97d8daef
 #: ../../demos.rst:79
