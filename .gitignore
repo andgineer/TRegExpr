@@ -20,3 +20,7 @@ test_speed
 make_unidata
 project1
 test1
+**/venv/
+site/
+docs/_mkdocs.yml
+

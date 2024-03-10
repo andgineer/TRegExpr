@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+site_name: TRegExpr
+site_url: https://andgineer.github.io/TRegExpr
+site_author: Andrey Sorokin
+
+# Repository
+repo_name: TRegExpr
+repo_url: https://github.com/andgineer/TRegExpr
+edit_uri: edit/master/docs
+docs_dir: 'LANG_PLACEHOLDER'
+site_dir: '../site/LANG_PLACEHOLDER'
+
+plugins:
+  - awesome-pages
+  - search:
+      lang: LANG_PLACEHOLDER
+
+markdown_extensions:
+  - abbr
+  - attr_list
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: 'docs'
+
+theme:
+  name: material
+  features:
+    - toc.integrate
+    - navigation.tracking
+    - content.code.copy
+
+extra:
+  alternate:
+    - name: Bulgarian
+      link: /TRegExpr/bg/
+      lang: bg
+    - name: German
+      link: /TRegExpr/de/
+      lang: de
+    - name: English
+      link: /TRegExpr/en/
+      lang: en
+    - name: Spanish
+      link: /TRegExpr/es/
+      lang: es
+    - name: French
+      link: /TRegExpr/fr/
+      lang: fr
+    - name: Russian
+      link: /TRegExpr/ru/
+      lang: ru

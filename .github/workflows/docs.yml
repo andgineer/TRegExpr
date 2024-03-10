@@ -1,0 +1,34 @@
+# build docs from docstrings and markdown-file in folder docs
+# publish them as github pages
+#
+#note for myself
+#
+# Do not forget to set git branch `gh-pages` as source for github pages.
+# This branch auto-updated by `mkdocs gh-deploy`
+#
+name: docs
+on:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    env:
+      PRIMARY_PYTHON_VERSION: '3.12'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PRIMARY_PYTHON_VERSION  }}
+      - run: |
+          pip install uv
+          uv pip install ghp-import -r docs/requirements.txt --python=${{ env.PRIMARY_PYTHON_VERSION }}
+      - run: ./scripts/build-docs.sh
+      - run: |
+          ghp-import --no-jekyll --push --force site

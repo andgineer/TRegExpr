@@ -1,0 +1,6 @@
+polib
+mkdocs
+lazydocs
+mkdocs-material
+pymdown-extensions
+mkdocs-awesome-pages-plugin

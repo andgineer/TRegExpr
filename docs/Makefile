@@ -1,20 +1,24 @@
-# Minimal makefile for Sphinx documentation
-#
+#!make
 
-# You can set these variables from the command line.
-SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = tregexpr
-SOURCEDIR     = .
-BUILDDIR      = _build
+.PHONY: en # mark as phony so it always runs even we have a docs folder
+.HELP: en  ## Docs preview English
+en:
+# 	docstrings.sh
+	open -a "Google Chrome" http://127.0.0.1:8000/TRegExpr/
+	sed "s/LANG_PLACEHOLDER/en/g" mkdocs.yml > _mkdocs.yml
+	mkdocs serve -f _mkdocs.yml
 
-# Put it first so that "make" without argument is like "make help".
+.PHONY: ru # mark as phony so it always runs even we have a docs folder
+.HELP: ru  ## Docs preview Russian
+ru:
+# 	docstrings.sh
+	open -a "Google Chrome" http://127.0.0.1:8000/TRegExpr/
+	sed "s/LANG_PLACEHOLDER/en/g" mkdocs.yml > _mkdocs.yml
+	mkdocs serve -f _mkdocs.yml
+
+.HELP: help  ## Display this message
 help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
-.PHONY: help Makefile
-
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@grep -E \
+		'^.HELP: .*?## .*$$' $(MAKEFILE_LIST) | \
+		sort | \
+		awk 'BEGIN {FS = ".HELP: |## "}; {printf "\033[36m%-19s\033[0m %s\n", $$2, $$3}'
