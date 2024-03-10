@@ -29,6 +29,6 @@ jobs:
       - run: |
           pip install uv
           uv pip install ghp-import -r docs/requirements.txt --python=${{ env.PRIMARY_PYTHON_VERSION }}
-      - run: ./scripts/build-docs.sh
+      - run: ./docs/build-docs.sh
       - run: |
           ghp-import --no-jekyll --push --force site
