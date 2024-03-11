@@ -10,4 +10,7 @@ lazydocs \
     --src-base-url="https://github.com/andgineer/opensearch-log/blob/master/" \
     src/opensearch_log
 
-cp -r ./docs/en/api-reference ./docs/ru/api-reference
+# I did not find more intelligent way have API Docs for all languages
+for lang in bg de es fr ru; do
+  cp -r ./docs/en/api-reference ./docs/$lang/api-reference
+done

@@ -5,7 +5,7 @@
 en:
 # 	docstrings.sh
 	open -a "Google Chrome" http://127.0.0.1:8000/TRegExpr/
-	sed "s/LANG_PLACEHOLDER/en/g" mkdocs.yml > _mkdocs.yml
+	./docs-render-config.sh en
 	mkdocs serve -f _mkdocs.yml
 
 .PHONY: ru # mark as phony so it always runs even we have a docs folder
@@ -13,7 +13,7 @@ en:
 ru:
 # 	docstrings.sh
 	open -a "Google Chrome" http://127.0.0.1:8000/TRegExpr/
-	sed "s/LANG_PLACEHOLDER/en/g" mkdocs.yml > _mkdocs.yml
+	./docs-render-config.sh ru
 	mkdocs serve -f _mkdocs.yml
 
 .HELP: help  ## Display this message

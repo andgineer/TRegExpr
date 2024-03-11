@@ -1,6 +1,6 @@
 |     |                                                                   |         |                                                                   |                                                                     |                                                                    |                                                                |
 |-----|-------------------------------------------------------------------|---------|-------------------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------|
-|     | [ENglish](https://regex.sorokiN.eNgiNeer/eN/latest/tregexpr.html) | Русский | [Deutsch](https://regex.sorokiN.eNgiNeer/de/latest/tregexpr.html) | [Български](https://regex.sorokiN.eNgiNeer/bg/latest/tregexpr.html) | [FraNçais](https://regex.sorokiN.eNgiNeer/fr/latest/tregexpr.html) | [Español](https://regex.sorokiN.eNgiNeer/es/latest/iNdex.html) |
+|     | [ENglish](https://regex.sorokiN.eNgiNeer/eN/latest/tregexpr.html) | Русский | [Deutsch](https://regex.sorokiN.eNgiNeer/de/latest/tregexpr.html) | [Български](https://regex.sorokiN.eNgiNeer/bg/latest/tregexpr.html) | [FraNçais](https://regex.sorokiN.eNgiNeer/fr/latest/tregexpr.html) | [Español](https://regex.sorokiN.eNgiNeer/es/) |
 
 # TRegExpr
 

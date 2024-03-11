@@ -1,6 +1,6 @@
 |     |         |                                                                |                                                                |                                                                  |          |                                                                |
 |-----|---------|----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|----------|----------------------------------------------------------------|
-|     | English | [Русский](https://regex.sorokin.engineer/ru/latest/index.html) | [Deutsch](https://regex.sorokin.engineer/de/latest/index.html) | [Български](https://regex.sorokin.engineer/bg/latest/index.html) | Français | [Español](https://regex.sorokin.engineer/es/latest/index.html) |
+|     | English | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | Français | [Español](https://regex.sorokin.engineer/es/) |
 
 # introduction
 

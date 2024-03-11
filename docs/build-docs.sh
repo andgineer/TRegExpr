@@ -3,16 +3,14 @@
 # Create docs in docs/
 #
 
-rm -rf ../site
+SITE_FOLDER="../site"  # `site_dir` in mkdocs.yml
+
+rm -rf ${SITE_FOLDER}
+
 #./scripts/docstrings.sh
+
 for lang in bg de en es fr ru; do
-    sed "s/LANG_PLACEHOLDER/$lang/g" mkdocs.yml > _mkdocs.yml
-
-    if [ -d "../site" ]; then
-        mkdocs build --dirty --config-file _mkdocs.yml
-    else
-        mkdocs build --config-file _mkdocs.yml
-    fi
-
+    scripts/docs-render-config.sh $lang
+    mkdocs build --dirty --config-file _mkdocs.yml
     rm _mkdocs.yml
 done

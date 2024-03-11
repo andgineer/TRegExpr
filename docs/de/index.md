@@ -1,6 +1,6 @@
 |     |                                                                |                                                                |         |                                                                  |                                                                 |                                                                |
 |-----|----------------------------------------------------------------|----------------------------------------------------------------|---------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/en/latest/index.html) | [Русский](https://regex.sorokin.engineer/ru/latest/index.html) | Deutsch | [Български](https://regex.sorokin.engineer/bg/latest/index.html) | [Français](https://regex.sorokin.engineer/fr/latest/index.html) | [Español](https://regex.sorokin.engineer/es/latest/index.html) |
+|     | [English](https://regex.sorokin.engineer/en/) | [Русский](https://regex.sorokin.engineer/ru/) | Deutsch | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | [Español](https://regex.sorokin.engineer/es/) |
 
 # Einführung
 
@@ -66,7 +66,7 @@ regular_expressions tregexpr faq demos
 # Übersetzungen
 
 The documentation is available in
-[English](https://regex.sorokin.engineer/en/latest/index.html) and
+[English](https://regex.sorokin.engineer/en/) and
 [Russian](https://regexpr.sorokin.engineer/ru/latest/).
 
 There are also old translations to German, Bulgarian, French and
