@@ -1,11 +1,11 @@
-|     |                                                                |                                                                |         |                                                                  |                                                                 |                                                                |
-|-----|----------------------------------------------------------------|----------------------------------------------------------------|---------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/en/) | [Русский](https://regex.sorokin.engineer/ru/) | Deutsch | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | [Español](https://regex.sorokin.engineer/es/) |
+|     |                                                             |                                                                |         |                                                                  |                                                                 |                                                                |
+|-----|-------------------------------------------------------------|----------------------------------------------------------------|---------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
+|     | [English](https://regex.sorokin.engineer/) | [Русский](https://regex.sorokin.engineer/ru/) | Deutsch | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | [Español](https://regex.sorokin.engineer/es/) |
 
 # Einführung
 
 TRegExpr library implements [regular
-expressions](../regular_expressions/).
+expressions](regular_expressions/).
 
 Regular expressions are easy to use and powerful tool for sophisticated
 search and substitution and for template based text check.
@@ -33,7 +33,7 @@ bei den Anwendern.
 
 To use the library just add [the
 sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](../tregexpr/).
+to you project and use the class [TRegExpr](tregexpr/).
 
 In den [FAQ](faq/) können Sie aus den Problemen anderer Nutzer
 lernen.
@@ -66,7 +66,7 @@ regular_expressions tregexpr faq demos
 # Übersetzungen
 
 The documentation is available in
-[English](https://regex.sorokin.engineer/en/) and
+[English](https://regex.sorokin.engineer/) and
 [Russian](https://regexpr.sorokin.engineer/ru/).
 
 There are also old translations to German, Bulgarian, French and

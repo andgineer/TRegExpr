@@ -603,7 +603,7 @@ others.
 
 Big and small Russian characters are in separated ranges, this is the
 same as with
-[English](https://regex.sorokin.engineer/en/regular_expressions/)
+[English](https://regex.sorokin.engineer/regular_expressions/)
 characters but nevertheless I wanted some short form.
 
 With this modifier instead of `[а-яА-ЯёЁ]` you can write `[а-Я]` if you

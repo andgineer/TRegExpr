@@ -1,11 +1,11 @@
 |     |         |                                                                |                                                                |                                                                  |                                                                 |         |
 |-----|---------|----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|---------|
-|     | [English](https://regex.sorokin.engineer/en/) | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | Español |
+|     | [English](https://regex.sorokin.engineer/) | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | Español |
 
 # Introducción
 
 TRegExpr library implements [regular
-expressions](../regular_expressions/).
+expressions](regular_expressions/).
 
 Regular expressions are easy to use and powerful tool for sophisticated
 search and substitution and for template based text check.
@@ -32,7 +32,7 @@ Que buena fue la biblioteca
 
 To use the library just add [the
 sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](../tregexpr/).
+to you project and use the class [TRegExpr](tregexpr/).
 
 En el [FAQ](faq/) puedes aprender de los problemas de otros
 usuarios.

@@ -1,11 +1,11 @@
 |     |         |                                                                |                                                                |           |                                                                |                                                                |
 |-----|---------|----------------------------------------------------------------|----------------------------------------------------------------|-----------|----------------------------------------------------------------|----------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/en/) | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | Български | [Френски](https://regex.sorokin.engineer/fr/) | [Español](https://regex.sorokin.engineer/es/) |
+|     | [English](https://regex.sorokin.engineer/) | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | Български | [Френски](https://regex.sorokin.engineer/fr/) | [Español](https://regex.sorokin.engineer/es/) |
 
 # Въведение
 
 TRegExpr library implements [regular
-expressions](../regular_expressions/).
+expressions](regular_expressions/).
 
 Regular expressions are easy to use and powerful tool for sophisticated
 search and substitution and for template based text check.
@@ -32,7 +32,7 @@ C++ Builder 3-6.
 
 To use the library just add [the
 sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](../tregexpr/).
+to you project and use the class [TRegExpr](tregexpr/).
 
 В [Често задавани въпроси](faq/) можете да научите от проблемите на
 другите потребители.

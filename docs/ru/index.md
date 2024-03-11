@@ -1,6 +1,6 @@
-|     |                                                                |         |                                                                |                                                                  |                                                                 |                                                                |
-|-----|----------------------------------------------------------------|---------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/en/) | Русский | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | [Español](https://regex.sorokin.engineer/es/) |
+|     |                                                             |         |                                                                |                                                                  |                                                                 |                                                                |
+|-----|-------------------------------------------------------------|---------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
+|     | [English](https://regex.sorokin.engineer/) | Русский | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | [Español](https://regex.sorokin.engineer/es/) |
 
 # Вступление
 
@@ -24,7 +24,7 @@ TRegExpr реализован на чистом Pascal. Он включен в �
 
 To use the library just add [the
 sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](../tregexpr/).
+to you project and use the class [TRegExpr](tregexpr/).
 
 Благодаря [FAQ](faq/) вы можете учиться на чужих ошибках.
 
@@ -56,7 +56,7 @@ regular_expressions tregexpr faq demos
 # Переводы
 
 The documentation is available in
-[English](https://regex.sorokin.engineer/en/) and
+[English](https://regex.sorokin.engineer/) and
 [Russian](https://regexpr.sorokin.engineer/ru/).
 
 There are also old translations to German, Bulgarian, French and
