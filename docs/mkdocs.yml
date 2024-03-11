@@ -19,12 +19,12 @@ plugins:
       lang: LANG_PLACEHOLDER
   - redirects:
       redirect_maps:
-        LANG_PLACEHOLDER/latest.md: index.md
-        LANG_PLACEHOLDER/latest/index.md: index.md
-        LANG_PLACEHOLDER/latest/regular_expressions.md: regular_expressions.md
-        LANG_PLACEHOLDER/latest/tregexpr.md: tregexpr.md
-        LANG_PLACEHOLDER/latest/demos.md: demos.md
-        LANG_PLACEHOLDER/latest/faq.md: faq.md
+        latest.md: index.md
+        latest/index.md: index.md
+        latest/regular_expressions.md: regular_expressions.md
+        latest/tregexpr.md: tregexpr.md
+        latest/demos.md: demos.md
+        latest/faq.md: faq.md
 
 markdown_extensions:
   - abbr
