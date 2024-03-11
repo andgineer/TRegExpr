@@ -9,10 +9,10 @@ for lang in en bg de es fr ru; do  # en should be the first language as it clear
     ./docs-render-config.sh $lang
     mkdocs build --config-file _mkdocs.yml
     if [ $lang = "en" ]; then
-        python fix_folder_redirects.py ../site/latest
-    else
-        python fix_folder_redirects.py ../site/$lang/latest
+      mkdir -p ../site/en
+      cp -r ../site/latest ../site/en/latest
     fi
+    python fix_folder_redirects.py ../site/$lang/latest
     rm _mkdocs.yml
     rm -rf $lang/_css
 done
