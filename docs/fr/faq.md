@@ -1,6 +1,6 @@
 |     |         |                                                              |                                                              |                                                                |                                                               |                                                              |
 |-----|---------|--------------------------------------------------------------|--------------------------------------------------------------|----------------------------------------------------------------|---------------------------------------------------------------|--------------------------------------------------------------|
-|     | English | [Русский](https://regex.sorokin.engineer/ru/latest/faq.html) | [Deutsch](https://regex.sorokin.engineer/de/latest/faq.html) | [Български](https://regex.sorokin.engineer/bg/latest/faq.html) | [Français](https://regex.sorokin.engineer/fr/latest/faq.html) | [Español](https://regex.sorokin.engineer/es/latest/faq.html) |
+|     | [English](https://regex.sorokin.engineer/faq/) | [Русский](https://regex.sorokin.engineer/ru/faq/) | [Deutsch](https://regex.sorokin.engineer/de/faq/) | [Български](https://regex.sorokin.engineer/bg/faq/) | [Français](https://regex.sorokin.engineer/fr/faq/) | [Español](https://regex.sorokin.engineer/es/faq/) |
 
 # FAQ
 
@@ -25,13 +25,13 @@ r: = TRegExpr.Create.
 
 Look ahead is not implemented in the TRegExpr. But in many cases you can
 easily [replace it with simple
-subexpressions](regular_expressions.html#lookahead).
+subexpressions](../regular_expressions/#lookahead).
 
 ## Est-ce qu&#39;il prend en charge Unicode?
 
 **Réponse**
 
-[Comment utiliser Unicode](tregexpr.html#unicode)
+[Comment utiliser Unicode](../tregexpr/#unicode)
 
 ## Pourquoi TRegExpr renvoie-t-il plus d&#39;une ligne?
 
@@ -41,10 +41,10 @@ of the file including last `</html>`.
 **Réponse**
 
 For backward compatibility, [modifier
-/s](regular_expressions.html#modifier_s) is `On` by default.
+/s](../regular_expressions/#modifier_s) is `On` by default.
 
 Switch it Off and `.` will match any but [Line
-separators](regular_expressions.html#syntax_line_separators) - exactly
+separators](../regular_expressions/#syntax_line_separators) - exactly
 as you wish.
 
 BTW, je suggère &quot;\` \<font (\[^n\>\] \*)&gt; &quot;, dans&quot;
@@ -91,7 +91,7 @@ Vous pouvez itérer des correspondances avec la méthode ExecNext.
 
 If you want some example, please take a look at `TRegExpr.Replace`
 method implementation or at the examples for
-[HyperLinksDecorator](demos.html)
+[HyperLinksDecorator](../demos/)
 
 ## Je vérifie les entrées de l&#39;utilisateur. Pourquoi TRegExpr renvoie-t-il `True` pour les chaînes d&#39;entrée incorrectes?
 
@@ -148,7 +148,7 @@ n&#39;est disponible.
 - N&#39;oubliez pas d&#39;ajouter «#include« RegExpr.hpp »\` \`si
   nécessaire.
 - Don't forget to replace all `\` in regular expressions with `\\` or
-  redefined [EscChar](tregexpr.html#escchar) const.
+  redefined [EscChar](../tregexpr/#escchar) const.
 
 ## Pourquoi beaucoup de solutions (y compris de l&#39;aide et de la démonstration TRegExpr) fonctionnent-elles mal dans Borland C ++ Builder?
 

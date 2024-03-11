@@ -5,7 +5,7 @@
 # Einführung
 
 TRegExpr library implements [regular
-expressions](regular_expressions.html).
+expressions](../regular_expressions/).
 
 Regular expressions are easy to use and powerful tool for sophisticated
 search and substitution and for template based text check.
@@ -33,9 +33,9 @@ bei den Anwendern.
 
 To use the library just add [the
 sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](tregexpr.html).
+to you project and use the class [TRegExpr](../tregexpr/).
 
-In den [FAQ](faq.html) können Sie aus den Problemen anderer Nutzer
+In den [FAQ](faq/) können Sie aus den Problemen anderer Nutzer
 lernen.
 
 Ready to run Windows application
@@ -67,7 +67,7 @@ regular_expressions tregexpr faq demos
 
 The documentation is available in
 [English](https://regex.sorokin.engineer/en/) and
-[Russian](https://regexpr.sorokin.engineer/ru/latest/).
+[Russian](https://regexpr.sorokin.engineer/ru/).
 
 There are also old translations to German, Bulgarian, French and
 Spanish. If you want to help to update this old translations please

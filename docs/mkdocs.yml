@@ -17,6 +17,10 @@ plugins:
   - redirects:
       redirect_maps:
         latest/index.html: /
+        regular_expressions.html: regular_expressions/
+        tregexpr.html: tregexpr/
+        demos.html: demos/
+        faq.html: faq/
 
 markdown_extensions:
   - abbr

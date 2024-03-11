@@ -1,6 +1,6 @@
-|     |                                                                              |         |                                                                              |                                                                                |                                                                               |                                                                              |
-|-----|------------------------------------------------------------------------------|---------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|-------------------------------------------------------------------------------|------------------------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/en/latest/regular_expressions.html) | Русский | [Deutsch](https://regex.sorokin.engineer/de/latest/regular_expressions.html) | [Български](https://regex.sorokin.engineer/bg/latest/regular_expressions.html) | [Français](https://regex.sorokin.engineer/fr/latest/regular_expressions.html) | [Español](https://regex.sorokin.engineer/es/latest/regular_expressions.html) |
+|     |                                                                           |         |                                                                              |                                                                                |                                                                               |                                                                              |
+|-----|---------------------------------------------------------------------------|---------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|-------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+|     | [English](https://regex.sorokin.engineer/regular_expressions/) | Русский | [Deutsch](https://regex.sorokin.engineer/de/regular_expressions/) | [Български](https://regex.sorokin.engineer/bg/regular_expressions/) | [Français](https://regex.sorokin.engineer/fr/regular_expressions/) | [Español](https://regex.sorokin.engineer/es/regular_expressions/) |
 
 # Регулярные выражения (RegEx)
 
@@ -218,10 +218,10 @@ character classes](#user-классы-символов).
 | `foob[\w\s]r` | `foobar`, `foob r`, `foobbr` и т. д., но не `foob1r`, `foob=r` и т. д. |
 
 > [!NOTE]
-> [TRegExpr](tregexpr.html)
+> [TRegExpr](../tregexpr/)
 >
-> Properties [SpaceChars](tregexpr.html#spacechars) and
-> [WordChars](tregexpr.html#wordchars) define character classes `\w`,
+> Properties [SpaceChars](../tregexpr/#spacechars) and
+> [WordChars](../tregexpr/#wordchars) define character classes `\w`,
 > `\W`, `\s`, `\S`.
 >
 > Таким образом, вы можете переопределить эти классы.
@@ -259,9 +259,9 @@ text.
 строки.
 
 > [!NOTE]
-> [TRegExpr](tregexpr.html)
+> [TRegExpr](../tregexpr/)
 >
-> If you are using [Unicode version](tregexpr.html#unicode), then
+> If you are using [Unicode version](../tregexpr/#unicode), then
 > `^`/`$` also matches `\x2028`, `\x2029`, `\x0B`, `\x0C` or `\x85`.
 
 Метасимвол `\A` matches zero-length position at the very beginning of
@@ -276,11 +276,11 @@ within the sequence `\x0A\x0D` because this is 2 line-breaks in the
 wrong order.
 
 > [!NOTE]
-> [TRegExpr](tregexpr.html)
+> [TRegExpr](../tregexpr/)
 >
 > Multi-line processing can be tuned by properties
-> [LineSeparators](tregexpr.html#lineseparators) and
-> [UseLinePairedBreak](tregexpr.html#linepairedseparator).
+> [LineSeparators](../tregexpr/#lineseparators) and
+> [UseLinePairedBreak](../tregexpr/#linepairedseparator).
 >
 > So you can use Unix style separators `\n` or DOS/Windows style `\r\n`
 > or mix them together (as in described above default behaviour).
@@ -419,13 +419,13 @@ brackets, so if you write `[fee|fie|foe]` you’re really only matching
 (подвыражений) регулярного выражения.
 
 > [!NOTE]
-> [TRegExpr](tregexpr.html)
+> [TRegExpr](../tregexpr/)
 >
 > Группы (подвыражения) positions, lengths and actual values will be in
-> [MatchPos](tregexpr.html#matchpos), [MatchLen](tregexpr.html#matchlen)
-> and [Match](tregexpr.html#match).
+> [MatchPos](../tregexpr/#matchpos), [MatchLen](../tregexpr/#matchlen)
+> and [Match](../tregexpr/#match).
 >
-> You can substitute them with [Substitute](tregexpr.html#substitute).
+> You can substitute them with [Substitute](../tregexpr/#substitute).
 
 Группы (подвыражения) are numbered from left to right by their opening
 parenthesis (including nested groups). First group has index 1. The
@@ -511,14 +511,14 @@ You can set modifiers globally in your system or change inside the
 regular expression using the [(?imsxr-imsxr)](#inlinemodifiers).
 
 > [!NOTE]
-> [TRegExpr](tregexpr.html)
+> [TRegExpr](../tregexpr/)
 >
-> To change modifiers use [ModifierStr](tregexpr.html#modifierstr) or
+> To change modifiers use [ModifierStr](../tregexpr/#modifierstr) or
 > appropriate `TRegExpr` properties
-> [Modifier\*](tregexpr.html#modifieri).
+> [Modifier\*](../tregexpr/#modifieri).
 >
 > The default values are defined in [global
-> variables](tregexpr.html#global-constants). For example global
+> variables](../tregexpr/#global-constants). For example global
 > variable `RegExprModifierX` defines default value for `ModifierX`
 > property.
 
@@ -527,7 +527,7 @@ regular expression using the [(?imsxr-imsxr)](#inlinemodifiers).
 ### i, без учета регистра
 
 Case-insensitive. Use installed in you system locale settings, see also
-[InvertCase](tregexpr.html#invertcase).
+[InvertCase](../tregexpr/#invertcase).
 
 <a name="m"></a>
 
@@ -553,7 +553,7 @@ not match.
 ### г, жадность
 
 > [!NOTE]
-> Специфичный для [TRegExpr](tregexpr.html) модификатор.
+> Специфичный для [TRegExpr](../tregexpr/) модификатор.
 
 Switching it `Off` you’ll switch [quantifiers](#iterator) into
 [non-greedy](#greedy) mode.
@@ -596,14 +596,14 @@ hex escapes.
 ### г, русские диапазоны
 
 > [!NOTE]
-> Специфичный для [TRegExpr](tregexpr.html) модификатор.
+> Специфичный для [TRegExpr](../tregexpr/) модификатор.
 
 In Russian ASCII table characters `ё`/`Ё` are placed separately from
 others.
 
 Big and small Russian characters are in separated ranges, this is the
 same as with
-[English](https://regex.sorokin.engineer/en/latest/regular_expressions.html)
+[English](https://regex.sorokin.engineer/en/regular_expressions/)
 characters but nevertheless I wanted some short form.
 
 With this modifier instead of `[а-яА-ЯёЁ]` you can write `[а-Я]` if you

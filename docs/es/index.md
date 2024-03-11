@@ -1,11 +1,11 @@
 |     |         |                                                                |                                                                |                                                                  |                                                                 |         |
 |-----|---------|----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|---------|
-|     | English | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | Español |
+|     | [English](https://regex.sorokin.engineer/en/) | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | Español |
 
 # Introducción
 
 TRegExpr library implements [regular
-expressions](regular_expressions.html).
+expressions](../regular_expressions/).
 
 Regular expressions are easy to use and powerful tool for sophisticated
 search and substitution and for template based text check.
@@ -32,9 +32,9 @@ Que buena fue la biblioteca
 
 To use the library just add [the
 sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](tregexpr.html).
+to you project and use the class [TRegExpr](../tregexpr/).
 
-En el [FAQ](faq.html) puedes aprender de los problemas de otros
+En el [FAQ](faq/) puedes aprender de los problemas de otros
 usuarios.
 
 Ready to run Windows application
@@ -65,7 +65,7 @@ regular_expressions tregexpr faq demos
 # Traducciones
 
 The documentation is available in English and
-[Russian](https://regexpr.sorokin.engineer/ru/latest/).
+[Russian](https://regexpr.sorokin.engineer/ru/).
 
 There are also old translations to German, Bulgarian, French and
 Spanish. If you want to help to update this old translations please

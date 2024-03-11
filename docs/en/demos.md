@@ -1,17 +1,17 @@
 |     |         |                                                                |                                                                |                                                                  |                                                                 |                                                                |
 |-----|---------|----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
-|     | English | [Русский](https://regex.sorokin.engineer/ru/latest/demos.html) | [Deutsch](https://regex.sorokin.engineer/de/latest/demos.html) | [Български](https://regex.sorokin.engineer/bg/latest/demos.html) | [Français](https://regex.sorokin.engineer/fr/latest/demos.html) | [Español](https://regex.sorokin.engineer/es/latest/demos.html) |
+|     | English | [Русский](https://regex.sorokin.engineer/ru/demos/) | [Deutsch](https://regex.sorokin.engineer/de/demos/) | [Български](https://regex.sorokin.engineer/bg/demos/) | [Français](https://regex.sorokin.engineer/fr/demos/) | [Español](https://regex.sorokin.engineer/es/demos/) |
 
 # Demos
 
-Demo code for [TRegExpr](index.html)
+Demo code for [TRegExpr](../tregexpr/)
 
 ## Introduction
 
 If you don't familiar with regular expression, please, take a look at
-the [r.e.syntax](regular_expressions.html).
+the [r.e.syntax](../regular_expressions/).
 
-TRegExpr interface described in [TRegExpr interface](tregexpr.html).
+TRegExpr interface described in [TRegExpr interface](../tregexpr/).
 
 ## Text2HTML
 
@@ -25,8 +25,8 @@ Uses unit
 that is based on TRegExpr.   This unit contains functions to decorate
 hyper-links.
 
-For example, replaces `www.masterAndrey.com` with
-`<a href="http://www.masterAndrey.com">www.masterAndrey.com</a>` or
+For example, replaces `www.sorokin.engineer` with
+`<a href="http://www.sorokin.engineer">www.sorokin.engineer</a>` or
 `filbert@yandex.ru` with
 `<a href="mailto:filbert@yandex.ru">filbert@yandex.ru</a>`.   ..
 code-block:: pascal
@@ -47,7 +47,7 @@ code-block:: pascal
 | Value      | Meaning                                              |
 |------------|------------------------------------------------------|
 | durlProto  | Protocol (like `ftp://` or `http://`)                |
-| durlAddr   | TCP address or domain name (like `masterAndrey.com`) |
+| durlAddr   | TCP address or domain name (like `sorokin.engineer`) |
 | durlPort   | Port number if specified (like `:8080`)              |
 | durlPath   | Path to document (like `index.html`)                 |
 | durlBMark  | Book mark (like `#mark`)                             |
@@ -59,8 +59,8 @@ Returns input text `AText` with decorated hyper links.
 visible part of the link.
 
 For example, if <span class="title-ref">AFlags</span> is `[durlAddr]`
-then hyper link `www.masterAndrey.com/contacts.htm` will be decorated as
-`<a href="www.masterAndrey.com/contacts.htm">www.masterAndrey.com</a>`.
+then hyper link `www.sorokin.engineer/contacts.htm` will be decorated as
+`<a href="www.sorokin.engineer/contacts.htm">www.sorokin.engineer</a>`.
 
 ## [TRegExprRoutines](https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprRoutines)
 

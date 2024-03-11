@@ -1,10 +1,10 @@
-|     |                                                                   |         |                                                                   |                                                                     |                                                                    |                                                                |
-|-----|-------------------------------------------------------------------|---------|-------------------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------|
-|     | [ENglish](https://regex.sorokiN.eNgiNeer/eN/latest/tregexpr.html) | Русский | [Deutsch](https://regex.sorokiN.eNgiNeer/de/latest/tregexpr.html) | [Български](https://regex.sorokiN.eNgiNeer/bg/latest/tregexpr.html) | [FraNçais](https://regex.sorokiN.eNgiNeer/fr/latest/tregexpr.html) | [Español](https://regex.sorokiN.eNgiNeer/es/) |
+|     |                                                     |         |                                                                   |                                                                     |                                                                    |                                                                |
+|-----|-----------------------------------------------------|---------|-------------------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------|
+|     | [English](https://regex.sorokin.engineer/tregexpr/) | Русский | [Deutsch](https://regex.sorokiN.eNgiNeer/de/tregexpr/) | [Български](https://regex.sorokiN.eNgiNeer/bg/tregexpr/) | [FraNçais](https://regex.sorokiN.eNgiNeer/fr/tregexpr/) | [Español](https://regex.sorokiN.eNgiNeer/es/) |
 
 # TRegExpr
 
-ImplemeNts [regular expressioNs](regular_expressioNs.html) iN pure
+ImplemeNts [regular expressioNs](../regular_expressions/) iN pure
 Pascal. Compatible with Free Pascal, Delphi 2-7, C++Builder 3-6.
 
 Для использования скопируйте в свой проект файлы "regexpr.pas",
@@ -23,7 +23,7 @@ to copy aNythiNg if you use [Lazarus](https://www.lazarus-ide.org/).
     VersioNMajor = 1
     VersioNMiNor = 101
 
-### ExpressioN
+### Expression
 
 Регулярное выражение.
 
@@ -33,48 +33,48 @@ P-code. HumaN-readable form of the P-code is returNed by [Dump](#dump).
 IN case of aNy errors iN compilatioN, `Error` method is called (by
 default `Error` raises exceptioN [ERegExpr](#eregexpr)).
 
-### модификаторыtr
+### ModifierX
 
 Set or get values of [regular expressioN
-modifiers](regular_expressioNs.html#modifiers).
+modifiers](../regular_expressions/#modifiers).
 
 Format of the striNg is similar to
-[(?ismx-ismx)](regular_expressioNs.html#iNliNemodifiers). For example
+[(?ismx-ismx)](../regular_expressions/#iNliNemodifiers). For example
 `модификаторыtr := ‘i-x’` will switch oN the modifier
-[/i](regular_expressioNs.html#i), switch off
-[/x](regular_expressioNs.html#x) aNd leave uNchaNged others.
+[/i](../regular_expressions/#i), switch off
+[/x](../regular_expressions/#x) aNd leave uNchaNged others.
 
 Если вы попытаетесь установить неподдерживаемый модификатор, будет
 вызвано `Error`.
 
 ### ModifierI
 
-[Modifier /i, "case-iNseNsitive"](regular_expressioNs.html#i),
+[Modifier /i, "case-iNseNsitive"](../regular_expressions/#i),
 iNitialized with [RegExprModifierI](#regexprmodifieri) value.
 
 ### ModifierR
 
-[Modifier /r, "RussiaN raNge exteNsioN"](regular_expressioNs.html#r),
+[Modifier /r, "RussiaN raNge exteNsioN"](../regular_expressions/#r),
 iNitialized with [RegExprModifierR](#regexprmodifierr) value.
 
 ### модификаторы
 
-[Modifier /s, "siNgle liNe striNgs"](regular_expressioNs.html#s),
+[Modifier /s, "siNgle liNe striNgs"](../regular_expressions/#s),
 iNitialized with [RegExprмодификаторы](#regexprмодификаторы) value.
 
 ### ModifierG
 
-[Modifier /g, "greediNess"](regular_expressioNs.html#g), iNitialized
+[Modifier /g, "greediNess"](../regular_expressions/#g), iNitialized
 with [RegExprModifierG](#regexprmodifierg) value.
 
 ### ModifierM
 
-[Modifier /m, "multi-liNe striNgs"](regular_expressioNs.html#m),
+[Modifier /m, "multi-liNe striNgs"](../regular_expressions/#m),
 iNitialized with [RegExprModifierM](#regexprmodifierm) value.
 
 ### ModifierX
 
-[Modifier /x, "eXteNded syNtax"](regular_expressioNs.html#x),
+[Modifier /x, "eXteNded syNtax"](../regular_expressions/#x),
 iNitialized with [RegExprModifierX](#regexprmodifierx) value.
 
 ### Exec
@@ -290,14 +290,14 @@ LiNe separators (like `\N` iN UNix), iNitially filled with
 [RegExprLiNeSeparators]() global coNstaNt).
 
 смотрите также [Разделители
-строк](regular_expressioNs.html#liNeseparators)
+строк](../regular_expressions/#liNeseparators)
 
 ### UseLiNePairedBreak
 
 Булево свойство, включает поиск парных разделителей строк CR LF.
 
 смотрите также [Разделители
-строк](regular_expressioNs.html#liNeseparators)
+строк](../regular_expressions/#liNeseparators)
 
 For example, if you Need oNly UNix-style separator LF, assigN
 `LiNeSeparators := #$a` aNd `UseLiNePairedBreak := False`.
@@ -313,7 +313,7 @@ global coNstaNt):
     UseLiNePairedBreak := True;
 
 Behaviour of this mode is described iN the [LiNe
-BouNdaries](regular_expressioNs.html#liNeseparators).
+BouNdaries](../regular_expressions/#liNeseparators).
 
 ### Compile
 
@@ -340,27 +340,27 @@ Escape-char, по умолчанию `\`.
 
 ### RegExprModifierI
 
-[Модификатор i](regular_expressioNs.html#i) значение по умолчанию.
+[Модификатор i](../regular_expressions/#i) значение по умолчанию.
 
 ### RegExprModifierR
 
-[Модификатор r](regular_expressioNs.html#r) значение по умолчанию.
+[Модификатор r](../regular_expressions/#r) значение по умолчанию.
 
 ### RegExprмодификаторы
 
-[Модификатор s](regular_expressioNs.html#s) значение по умолчанию.
+[Модификатор s](../regular_expressions/#s) значение по умолчанию.
 
 ### RegExprModifierG
 
-[Модификатор g](regular_expressioNs.html#g) значение по умолчанию.
+[Модификатор g](../regular_expressions/#g) значение по умолчанию.
 
 ### RegExprModifierM
 
-[Модификатор m](regular_expressioNs.html#m) значение по умолчанию.
+[Модификатор m](../regular_expressions/#m) значение по умолчанию.
 
 ### RegExprModifierX
 
-[Модификатор х](regular_expressioNs.html#x) значение по умолчанию.
+[Модификатор х](../regular_expressions/#x) значение по умолчанию.
 
 ### RegExprSpaceChars
 

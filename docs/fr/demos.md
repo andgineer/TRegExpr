@@ -1,17 +1,17 @@
-|     |         |                                                                |                                                                 |                                                                  |                                                                 |                                                                 |
-|-----|---------|----------------------------------------------------------------|-----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|-----------------------------------------------------------------|
-|     | Anglais | [Русский](https://regex.sorokin.engineer/ru/) | [Allemand](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | [Espagnol](https://regex.sorokin.engineer/es/) |
+|     |                                                  |                                                                |                                                                 |                                                                  |                                                                 |                                                                 |
+|-----|--------------------------------------------------|----------------------------------------------------------------|-----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|-----------------------------------------------------------------|
+|     | [Anglais](https://regex.sorokin.engineer/demos/) | [Русский](https://regex.sorokin.engineer/ru/) | [Allemand](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | [Espagnol](https://regex.sorokin.engineer/es/) |
 
 # Démos
 
-Code de démonstration pour [TRegExpr](index.html)
+Code de démonstration pour [TRegExpr](../tregexpr/)
 
 ## introduction
 
 If you don't familiar with regular expression, please, take a look at
-the [r.e.syntax](regular_expressions.html).
+the [r.e.syntax](../regular_expressions/).
 
-TRegExpr interface described in [TRegExpr interface](tregexpr.html).
+TRegExpr interface described in [TRegExpr interface](../tregexpr/).
 
 ## Text2HTML
 
@@ -25,8 +25,8 @@ Uses unit
 that is based on TRegExpr.   Cette unité contient des fonctions pour
 décorer des hyperliens.
 
-For example, replaces `www.masterAndrey.com` with
-`<a href="http://www.masterAndrey.com">www.masterAndrey.com</a>` or
+For example, replaces `www.sorokin.engineer` with
+`<a href="http://www.sorokin.engineer">www.sorokin.engineer</a>` or
 `filbert@yandex.ru` with
 `<a href="mailto:filbert@yandex.ru">filbert@yandex.ru</a>`.   ..
 code-block:: pascal
@@ -47,7 +47,7 @@ code-block:: pascal
 | Valeur     | Sens                                                     |
 |------------|----------------------------------------------------------|
 | durlProto  | Protocole (comme `ftp: //` ou `http: //`)                |
-| durlAddr   | Adresse TCP ou nom de domaine (comme `masterAndrey.com`) |
+| durlAddr   | Adresse TCP ou nom de domaine (comme `sorokin.engineer`) |
 | durlPort   | Numéro de port si spécifié (comme `: 8080`)              |
 | durlPath   | Chemin du document (comme `index.html`)                  |
 | durlBMark  | Marque-page (comme `# mark`)                             |
@@ -59,8 +59,8 @@ Retourne le texte saisi `AText` avec des hyperliens décorés.
 visible part of the link.
 
 For example, if <span class="title-ref">AFlags</span> is `[durlAddr]`
-then hyper link `www.masterAndrey.com/contacts.htm` will be decorated as
-`<a href="www.masterAndrey.com/contacts.htm">www.masterAndrey.com</a>`.
+then hyper link `www.sorokin.engineer/contacts.htm` will be decorated as
+`<a href="www.sorokin.engineer/contacts.htm">www.sorokin.engineer</a>`.
 
 ## [TRegExprRoutines](https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprRoutines)
 

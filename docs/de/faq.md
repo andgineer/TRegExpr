@@ -1,6 +1,6 @@
-|     |          |                                                              |                                                              |                                                                |                                                               |                                                              |
-|-----|----------|--------------------------------------------------------------|--------------------------------------------------------------|----------------------------------------------------------------|---------------------------------------------------------------|--------------------------------------------------------------|
-|     | Englisch | [Русский](https://regex.sorokin.engineer/ru/latest/faq.html) | [Deutsch](https://regex.sorokin.engineer/de/latest/faq.html) | [Български](https://regex.sorokin.engineer/bg/latest/faq.html) | [Français](https://regex.sorokin.engineer/fr/latest/faq.html) | [Español](https://regex.sorokin.engineer/es/latest/faq.html) |
+|     |                                                     |                                                              |                                                              |                                                                |                                                               |                                                              |
+|-----|-----------------------------------------------------|--------------------------------------------------------------|--------------------------------------------------------------|----------------------------------------------------------------|---------------------------------------------------------------|--------------------------------------------------------------|
+|     | [Englisch](https://regex.sorokin.engineer/faq/) | [Русский](https://regex.sorokin.engineer/ru/faq/) | [Deutsch](https://regex.sorokin.engineer/de/faq/) | [Български](https://regex.sorokin.engineer/bg/faq/) | [Français](https://regex.sorokin.engineer/fr/faq/) | [Español](https://regex.sorokin.engineer/es/faq/) |
 
 # FAQ
 
@@ -25,13 +25,13 @@ r: = TRegExpr.Create.
 
 Look ahead is not implemented in the TRegExpr. But in many cases you can
 easily [replace it with simple
-subexpressions](regular_expressions.html#lookahead).
+subexpressions](../regular_expressions/#lookahead).
 
 ## Unterstützt es Unicode?
 
 **Antworten**
 
-\`Wie verwende ich Unicode? \<tregexpr.html#unicode\> \_\_
+\`Wie verwende ich Unicode? \<tregexpr/#unicode\> \_\_
 
 ## Warum gibt TRegExpr mehr als eine Zeile zurück?
 
@@ -41,10 +41,10 @@ of the file including last `</html>`.
 **Antworten**
 
 For backward compatibility, [modifier
-/s](regular_expressions.html#modifier_s) is `On` by default.
+/s](../regular_expressions/#modifier_s) is `On` by default.
 
 Switch it Off and `.` will match any but [Line
-separators](regular_expressions.html#syntax_line_separators) - exactly
+separators](../regular_expressions/#syntax_line_separators) - exactly
 as you wish.
 
 Übrigens empfehle ich `<font ([^\n>] *)&gt;`, in `Match [1]` wird die
@@ -91,7 +91,7 @@ Sie können Übereinstimmungen mit der ExecNext-Methode wiederholen.
 
 If you want some example, please take a look at `TRegExpr.Replace`
 method implementation or at the examples for
-[HyperLinksDecorator](demos.html)
+[HyperLinksDecorator](../demos/)
 
 ## Ich überprüfe die Benutzereingaben. Warum gibt TRegExpr für falsche Eingabezeichenfolgen &quot;True&quot; zurück?
 
@@ -148,7 +148,7 @@ ist.
 - Jetzt können Sie Code schreiben, der die `RegExpr`-Einheit verwendet.
 - Vergessen Sie nicht, `#include “RegExpr.hpp”` bei Bedarf hinzuzufügen.
 - Don't forget to replace all `\` in regular expressions with `\\` or
-  redefined [EscChar](tregexpr.html#escchar) const.
+  redefined [EscChar](../tregexpr/#escchar) const.
 
 ## Warum arbeiten viele (einschließlich TRegExpr-Hilfe und -Demo) in Borland C ++ Builder falsch?
 

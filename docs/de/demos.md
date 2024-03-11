@@ -1,17 +1,17 @@
 |     |                                                                |                                                                |         |                                                                  |                                                                 |                                                                |
 |-----|----------------------------------------------------------------|----------------------------------------------------------------|---------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/en/latest/demos.html) | [Русский](https://regex.sorokin.engineer/ru/latest/demos.html) | Deutsch | [Български](https://regex.sorokin.engineer/bg/latest/demos.html) | [Français](https://regex.sorokin.engineer/fr/latest/demos.html) | [Español](https://regex.sorokin.engineer/es/latest/demos.html) |
+|     | [English](https://regex.sorokin.engineer/demos/) | [Русский](https://regex.sorokin.engineer/ru/demos/) | Deutsch | [Български](https://regex.sorokin.engineer/bg/demos/) | [Français](https://regex.sorokin.engineer/fr/demos/) | [Español](https://regex.sorokin.engineer/es/demos/) |
 
 # Demos
 
-Demo-Code für \`TRegExpr \<index.html\> \_\_
+Demo-Code für [TRegExpr](../tregexpr/)
 
 ## Einführung
 
 If you don't familiar with regular expression, please, take a look at
-the [r.e.syntax](regular_expressions.html).
+the [r.e.syntax](../regular_expressions/).
 
-TRegExpr interface described in [TRegExpr interface](tregexpr.html).
+TRegExpr interface described in [TRegExpr interface](../tregexpr/).
 
 ## Text2HTML
 
@@ -26,8 +26,8 @@ Uses unit
 that is based on TRegExpr.   Diese Einheit enthält Funktionen zum
 Verzieren von Hyperlinks.
 
-For example, replaces `www.masterAndrey.com` with
-`<a href="http://www.masterAndrey.com">www.masterAndrey.com</a>` or
+For example, replaces `www.sorokin.engineer` with
+`<a href="http://www.sorokin.engineer">www.sorokin.engineer</a>` or
 `filbert@yandex.ru` with
 `<a href="mailto:filbert@yandex.ru">filbert@yandex.ru</a>`.   ..
 code-block:: pascal
@@ -48,7 +48,7 @@ code-block:: pascal
 | Wert B     | edeutung                                                                                                    |
 |------------|-------------------------------------------------------------------------------------------------------------|
 | durlProto  | Protokoll (wie \`<span class="title-ref"> ftp: // \`oder</span> <span class="title-ref">http: //</span> \`) |
-| durlAddr   | TCP-Adresse oder Domänenname (wie `masterAndrey.com`)                                                       |
+| durlAddr   | TCP-Adresse oder Domänenname (wie `sorokin.engineer`)                                                       |
 | durlPort   | Portnummer, falls angegeben (wie `: 8080`)                                                                  |
 | DurlPath   | Pfad zum Dokument (wie `index.html`)                                                                        |
 | durlBMark  | Buchmarke (wie `#mark`)                                                                                     |
@@ -61,8 +61,8 @@ zurück.
 visible part of the link.
 
 For example, if <span class="title-ref">AFlags</span> is `[durlAddr]`
-then hyper link `www.masterAndrey.com/contacts.htm` will be decorated as
-`<a href="www.masterAndrey.com/contacts.htm">www.masterAndrey.com</a>`.
+then hyper link `www.sorokin.engineer/contacts.htm` will be decorated as
+`<a href="www.sorokin.engineer/contacts.htm">www.sorokin.engineer</a>`.
 
 ## \`TRegExprRoutines \<<https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprRoutines>\> \_
 

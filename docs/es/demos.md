@@ -1,17 +1,17 @@
-|     |        |                                                             |                                                               |                                                                |                                                                |                                                                |
-|-----|--------|-------------------------------------------------------------|---------------------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------|
-|     | Inglés | [Ruso](https://regex.sorokin.engineer/ru/latest/demos.html) | [Alemán](https://regex.sorokin.engineer/de/latest/demos.html) | [Búlgaro](https://regex.sorokin.engineer/bg/latest/demos.html) | [Francés](https://regex.sorokin.engineer/fr/latest/demos.html) | [Español](https://regex.sorokin.engineer/es/latest/demos.html) |
+|     |                                                 |                                                             |                                                               |                                                                |                                                                |                                                                |
+|-----|-------------------------------------------------|-------------------------------------------------------------|---------------------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------|
+|     | [Inglés](https://regex.sorokin.engineer/demos/) | [Ruso](https://regex.sorokin.engineer/ru/demos/) | [Alemán](https://regex.sorokin.engineer/de/demos/) | [Búlgaro](https://regex.sorokin.engineer/bg/demos/) | [Francés](https://regex.sorokin.engineer/fr/demos/) | [Español](https://regex.sorokin.engineer/es/demos/) |
 
 # Población
 
-Código de demostración para [TRegExpr](index.html)
+Código de demostración para [TRegExpr](../tregexpr/)
 
 ## Introducción
 
 If you don't familiar with regular expression, please, take a look at
-the [r.e.syntax](regular_expressions.html).
+the [r.e.syntax](../regular_expressions/).
 
-TRegExpr interface described in [TRegExpr interface](tregexpr.html).
+TRegExpr interface described in [TRegExpr interface](../tregexpr/).
 
 ## Text2HTML
 
@@ -25,8 +25,8 @@ Uses unit
 that is based on TRegExpr.   Esta unidad contiene funciones para decorar
 hipervínculos.
 
-For example, replaces `www.masterAndrey.com` with
-`<a href="http://www.masterAndrey.com">www.masterAndrey.com</a>` or
+For example, replaces `www.sorokin.engineer` with
+`<a href="http://www.sorokin.engineer">www.sorokin.engineer</a>` or
 `filbert@yandex.ru` with
 `<a href="mailto:filbert@yandex.ru">filbert@yandex.ru</a>`.   ..
 code-block:: pascal
@@ -47,7 +47,7 @@ code-block:: pascal
 | Valor      | Sentido                                                     |
 |------------|-------------------------------------------------------------|
 | durlProto  | Protocolo (como `ftp: //` o `http: //`)                     |
-| durlAddr   | Dirección TCP o nombre de dominio (como `masterAndrey.com`) |
+| durlAddr   | Dirección TCP o nombre de dominio (como `sorokin.engineer`) |
 | durlPort   | Número de puerto si se especifica (como `: 8080`)           |
 | durlPath   | Ruta al documento (como `index.html`)                       |
 | durlBMark  | Marca de libro (como `# mark`)                              |
@@ -59,8 +59,8 @@ Devuelve el texto de entrada `AText` con hipervínculos decorados.
 visible part of the link.
 
 For example, if <span class="title-ref">AFlags</span> is `[durlAddr]`
-then hyper link `www.masterAndrey.com/contacts.htm` will be decorated as
-`<a href="www.masterAndrey.com/contacts.htm">www.masterAndrey.com</a>`.
+then hyper link `www.sorokin.engineer/contacts.htm` will be decorated as
+`<a href="www.sorokin.engineer/contacts.htm">www.sorokin.engineer</a>`.
 
 ## [TRegExprRoutines](https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprRoutines)
 

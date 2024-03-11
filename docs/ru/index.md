@@ -4,24 +4,16 @@
 
 # Вступление
 
-TRegExpr library implements [regular
-expressions](regular_expressions.html).
+Библиотека TRegExpr реализует [регулярные выражения](regular_expressions/).
 
-Regular expressions are easy to use and powerful tool for sophisticated
-search and substitution and for template based text check.
+Регулярные выражения легко использовать и являются мощным инструментом для сложного поиска и замены, а также для проверки текста на основе шаблонов.
 
-It is especially useful for user input validation in input forms - to
-validate e-mail addresses and so on.
+Они особенно полезны для проверки пользовательского ввода в формах - для проверки электронных адресов и так далее.
 
-Also you can extract phone numbers, ZIP-codes etc from web-pages or
-documents, search for complex patterns in log files and all you can
-imagine. Rules (templates) can be changed without your program
-recompilation.
+Также вы можете извлекать номера телефонов, почтовые индексы и т.д. из веб-страниц или документов, искать сложные паттерны в лог-файлах и всё, что можете себе представить. Правила (шаблоны) могут быть изменены без перекомпиляции вашей программы.
 
-TRegExpr is implemented in pure Pascal. It's included into [Lazarus
-(Free Pascal)](http://wiki.freepascal.org/Regexpr) project. But also it
-exists as separate library and can be compiled by Delphi 2-7, Borland
-C++ Builder 3-6.
+TRegExpr реализован на чистом Pascal. Он включен в проект [Lazarus (Free Pascal)](http://wiki.freepascal.org/Regexpr). Но также существует как отдельная библиотека и может быть скомпилирован с помощью Delphi 2-7, Borland C++ Builder 3-6.
+
 
 # Отзывы
 
@@ -32,9 +24,9 @@ C++ Builder 3-6.
 
 To use the library just add [the
 sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](tregexpr.html).
+to you project and use the class [TRegExpr](../tregexpr/).
 
-Благодаря [FAQ](faq.html) вы можете учиться на чужих ошибках.
+Благодаря [FAQ](faq/) вы можете учиться на чужих ошибках.
 
 Ready to run Windows application
 [REStudio](https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip)
@@ -65,7 +57,7 @@ regular_expressions tregexpr faq demos
 
 The documentation is available in
 [English](https://regex.sorokin.engineer/en/) and
-[Russian](https://regexpr.sorokin.engineer/ru/latest/).
+[Russian](https://regexpr.sorokin.engineer/ru/).
 
 There are also old translations to German, Bulgarian, French and
 Spanish. If you want to help to update this old translations please

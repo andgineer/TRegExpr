@@ -1,17 +1,17 @@
-|     |                                                                |         |                                                                |                                                                  |                                                                 |                                                                |
-|-----|----------------------------------------------------------------|---------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/en/latest/demos.html) | Русский | [Deutsch](https://regex.sorokin.engineer/de/latest/demos.html) | [Български](https://regex.sorokin.engineer/bg/latest/demos.html) | [Français](https://regex.sorokin.engineer/fr/latest/demos.html) | [Español](https://regex.sorokin.engineer/es/latest/demos.html) |
+|     |                                                             |         |                                                                |                                                                  |                                                                 |                                                                |
+|-----|-------------------------------------------------------------|---------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
+|     | [English](https://regex.sorokin.engineer/demos/) | Русский | [Deutsch](https://regex.sorokin.engineer/de/demos/) | [Български](https://regex.sorokin.engineer/bg/demos/) | [Français](https://regex.sorokin.engineer/fr/demos/) | [Español](https://regex.sorokin.engineer/es/demos/) |
 
 # Demos
 
-Демо-код для [TRegExpr](index.html)
+Демо-код для [TRegExpr](../tregexpr/)
 
 ## Вступление
 
 If you don't familiar with regular expression, please, take a look at
-the [r.e.syntax](regular_expressions.html).
+the [r.e.syntax](../regular_expressions/).
 
-TRegExpr interface described in [TRegExpr interface](tregexpr.html).
+TRegExpr interface described in [TRegExpr interface](../tregexpr/).
 
 ## Text2HTML
 
@@ -25,8 +25,8 @@ Uses unit
 that is based on TRegExpr.   Этот блок содержит функции для оформления
 гиперссылок.
 
-For example, replaces `www.masterAndrey.com` with
-`<a href="http://www.masterAndrey.com">www.masterAndrey.com</a>` or
+For example, replaces `www.sorokin.engineer` with
+`<a href="http://www.sorokin.engineer">www.sorokin.engineer</a>` or
 `filbert@yandex.ru` with
 `<a href="mailto:filbert@yandex.ru">filbert@yandex.ru</a>`.   ..
 code-block:: pascal
@@ -47,7 +47,7 @@ code-block:: pascal
 | Значение   | Имея в виду                                               |
 |------------|-----------------------------------------------------------|
 | durlProto  | Протокол (например, `ftp://` или `http://`)               |
-| durlAddr   | TCP-адрес или доменное имя (например, `masterAndrey.com`) |
+| durlAddr   | TCP-адрес или доменное имя (например, `sorokin.engineer`) |
 | durlPort   | Номер порта, если указан (например, `: 8080`)             |
 | durlPath   | Путь к документу (например, `index.html`)                 |
 | durlBMark  | Закладка (например, `# mark`)                             |
@@ -59,8 +59,8 @@ code-block:: pascal
 visible part of the link.
 
 For example, if <span class="title-ref">AFlags</span> is `[durlAddr]`
-then hyper link `www.masterAndrey.com/contacts.htm` will be decorated as
-`<a href="www.masterAndrey.com/contacts.htm">www.masterAndrey.com</a>`.
+then hyper link `www.sorokin.engineer/contacts.htm` will be decorated as
+`<a href="www.sorokin.engineer/contacts.htm">www.sorokin.engineer</a>`.
 
 ## [TRegExprRoutines](https://github.com/andgineer/TRegExpr/tree/master/examples/TRegExprRoutines)
 
