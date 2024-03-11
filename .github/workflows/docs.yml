@@ -33,4 +33,4 @@ jobs:
           cd docs
           ./build-docs.sh
       - run: |
-          ghp-import --no-jekyll --push --force site
+          ghp-import --no-jekyll --push --force site --cname="regex.sorokin.engineer"
