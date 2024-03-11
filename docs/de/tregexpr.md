@@ -4,9 +4,6 @@
 
 # TRegExpr
 
-Implements [regular expressions](../regular_expressions/) in pure
-Pascal. Compatible with Free Pascal, Delphi 2-7, C++Builder 3-6.
-
 To use it, copy files "regexpr.pas", "regexpr_unicodedata.pas",
 "regexpr_compilers.inc", to your project folder.
 
@@ -36,45 +33,45 @@ default `Error` raises exception [ERegExpr](#eregexpr)).
 ### ModifierStr
 
 Set or get values of [regular expression
-modifiers](../regular_expressions/#modifiers).
+modifiers](regular_expressions.md#modifiers).
 
 Format of the string is similar to
-[(?ismx-ismx)](../regular_expressions/#inlinemodifiers). For example
+[(?ismx-ismx)](regular_expressions.md#inlinemodifiers). For example
 `ModifierStr := ‘i-x’` will switch on the modifier
-[/i](../regular_expressions/#i), switch off
-[/x](../regular_expressions/#x) and leave unchanged others.
+[/i](regular_expressions.md#i), switch off
+[/x](regular_expressions.md#x) and leave unchanged others.
 
 Wenn Sie versuchen, einen nicht unterstützten Modifikator einzustellen,
 wird `Error` aufgerufen.
 
 ### ModifierI
 
-[Modifier /i, "case-insensitive"](../regular_expressions/#i),
+[Modifier /i, "case-insensitive"](regular_expressions.md#i),
 initialized with [RegExprModifierI](#regexprmodifieri) value.
 
 ### ModifierR
 
-[Modifier /r, "Russian range extension"](../regular_expressions/#r),
+[Modifier /r, "Russian range extension"](regular_expressions.md#r),
 initialized with [RegExprModifierR](#regexprmodifierr) value.
 
 ### ModifierS
 
-[Modifier /s, "single line strings"](../regular_expressions/#s),
+[Modifier /s, "single line strings"](regular_expressions.md#s),
 initialized with [RegExprModifierS](#regexprmodifiers) value.
 
 ### ModifierG
 
-[Modifier /g, "greediness"](../regular_expressions/#g), initialized
+[Modifier /g, "greediness"](regular_expressions.md#g), initialized
 with [RegExprModifierG](#regexprmodifierg) value.
 
 ### ModifierM
 
-[Modifier /m, "multi-line strings"](../regular_expressions/#m),
+[Modifier /m, "multi-line strings"](regular_expressions.md#m),
 initialized with [RegExprModifierM](#regexprmodifierm) value.
 
 ### ModifierX
 
-[Modifier /x, "eXtended syntax"](../regular_expressions/#x),
+[Modifier /x, "eXtended syntax"](regular_expressions.md#x),
 initialized with [RegExprModifierX](#regexprmodifierx) value.
 
 ### Exec
@@ -291,13 +288,13 @@ Contains chars, treated as `\w` (initially filled with
 Line separators (like `\n` in Unix), initially filled with
 [RegExprLineSeparators]() global constant).
 
-See also [Line Boundaries](../regular_expressions/#lineseparators)
+See also [Line Boundaries](regular_expressions.md#lineseparators)
 
 ### UseLinePairedBreak
 
 Boolean property, enables to detect paired line separator CR LF.
 
-See also [Line Boundaries](../regular_expressions/#lineseparators)
+See also [Line Boundaries](regular_expressions.md#lineseparators)
 
 For example, if you need only Unix-style separator LF, assign
 `LineSeparators := #$a` and `UseLinePairedBreak := False`.
@@ -313,7 +310,7 @@ global constant):
     UseLinePairedBreak := True;
 
 Behaviour of this mode is described in the [Line
-Boundaries](../regular_expressions/#lineseparators).
+Boundaries](regular_expressions.md#lineseparators).
 
 ### Kompilieren
 
@@ -339,27 +336,27 @@ default `'$'`.
 
 ### RegExprModifierI
 
-[Modifier i](../regular_expressions/#i) default value.
+[Modifier i](regular_expressions.md#i) default value.
 
 ### RegExprModifierR
 
-[Modifier r](../regular_expressions/#r) default value.
+[Modifier r](regular_expressions.md#r) default value.
 
 ### RegExprModifierS
 
-[Modifier s](../regular_expressions/#s) default value.
+[Modifier s](regular_expressions.md#s) default value.
 
 ### RegExprModifierG
 
-[Modifier g](../regular_expressions/#g) default value.
+[Modifier g](regular_expressions.md#g) default value.
 
 ### RegExprModifierM
 
-[Modifier m](../regular_expressions/#m) default value.
+[Modifier m](regular_expressions.md#m) default value.
 
 ### RegExprModifierX
 
-[Modifier x](../regular_expressions/#x) default value.
+[Modifier x](regular_expressions.md#x) default value.
 
 ### RegExprSpaceChars
 

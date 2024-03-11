@@ -1,7 +1,3 @@
-|     |         |                                                              |                                                              |                                                                |                                                               |                                                              |
-|-----|---------|--------------------------------------------------------------|--------------------------------------------------------------|----------------------------------------------------------------|---------------------------------------------------------------|--------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/faq/) | [Русский](https://regex.sorokin.engineer/ru/faq/) | [Deutsch](https://regex.sorokin.engineer/de/faq/) | [Български](https://regex.sorokin.engineer/bg/faq/) | [Français](https://regex.sorokin.engineer/fr/faq/) | [Español](https://regex.sorokin.engineer/es/faq/) |
-
 # ЧЗВ
 
 ## Намерих ужасна грешка: TRegExpr повдига изключението за нарушение на достъп!
@@ -25,13 +21,13 @@ r: = TRegExpr.Създайте.
 
 Look ahead is not implemented in the TRegExpr. But in many cases you can
 easily [replace it with simple
-subexpressions](../regular_expressions/#lookahead).
+subexpressions](regular_expressions.md#lookahead).
 
 ## Поддържа ли Unicode?
 
 **Отговор**
 
-[Как да използваме Unicode](../tregexpr/#unicode)
+[Как да използваме Unicode](tregexpr.md#unicode)
 
 ## Защо TRegExpr връща повече от един ред?
 
@@ -41,10 +37,10 @@ of the file including last `</html>`.
 **Отговор**
 
 For backward compatibility, [modifier
-/s](../regular_expressions/#modifier_s) is `On` by default.
+/s](regular_expressions.md#modifier_s) is `On` by default.
 
 Switch it Off and `.` will match any but [Line
-separators](../regular_expressions/#syntax_line_separators) - exactly
+separators](regular_expressions.md#syntax_line_separators) - exactly
 as you wish.
 
 BTW Предлагам `<font ([^\n>] *)&gt;`, в `Match [1]` ще бъде URL
@@ -91,7 +87,7 @@ optimization search that can take a lot of time.
 
 If you want some example, please take a look at `TRegExpr.Replace`
 method implementation or at the examples for
-[HyperLinksDecorator](../demos/)
+[HyperLinksDecorator](demos.md)
 
 ## Проверявам въвеждането от потребителя. Защо TRegExpr връща &quot;True&quot; за погрешни низове?
 
@@ -148,7 +144,7 @@ there is no way to say it's more or less good match.
 - Не забравяйте да добавите `#include &#39;RegExpr.hpp&#39;` където е
   необходимо.
 - Don't forget to replace all `\` in regular expressions with `\\` or
-  redefined [EscChar](../tregexpr/#escchar) const.
+  redefined [EscChar](tregexpr.md#escchar) const.
 
 ## Защо много от тях (включително re от TRegExpr помощ и демо) работят погрешно в Borland C ++ Builder?
 

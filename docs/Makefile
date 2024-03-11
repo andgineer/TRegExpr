@@ -4,7 +4,7 @@
 .HELP: en  ## Docs preview English
 en:
 # 	docstrings.sh
-	open -a "Google Chrome" http://127.0.0.1:8000/TRegExpr/
+	open -a "Google Chrome" http://127.0.0.1:8000/
 	./docs-render-config.sh en
 	mkdocs serve -f _mkdocs.yml
 
@@ -12,7 +12,7 @@ en:
 .HELP: ru  ## Docs preview Russian
 ru:
 # 	docstrings.sh
-	open -a "Google Chrome" http://127.0.0.1:8000/TRegExpr/
+	open -a "Google Chrome" http://127.0.0.1:8000/
 	./docs-render-config.sh ru
 	mkdocs serve -f _mkdocs.yml
 

@@ -10,17 +10,21 @@ edit_uri: edit/master/docs
 docs_dir: 'LANG_PLACEHOLDER'
 site_dir: '../site/SITE_PLACEHOLDER'
 
+extra_css:
+  - _css/extra.css
+
 plugins:
   - awesome-pages
   - search:
       lang: LANG_PLACEHOLDER
   - redirects:
       redirect_maps:
-        latest/index.html: /
-        regular_expressions.html: regular_expressions/
-        tregexpr.html: tregexpr/
-        demos.html: demos/
-        faq.html: faq/
+        LANG_PLACEHOLDER/latest.md: index.md
+        LANG_PLACEHOLDER/latest/index.md: index.md
+        LANG_PLACEHOLDER/latest/regular_expressions.md: regular_expressions.md
+        LANG_PLACEHOLDER/latest/tregexpr.md: tregexpr.md
+        LANG_PLACEHOLDER/latest/demos.md: demos.md
+        LANG_PLACEHOLDER/latest/faq.md: faq.md
 
 markdown_extensions:
   - abbr

@@ -1,7 +1,3 @@
-|     |         |                                                              |                                                              |                                                                |                                                               |                                                              |
-|-----|---------|--------------------------------------------------------------|--------------------------------------------------------------|----------------------------------------------------------------|---------------------------------------------------------------|--------------------------------------------------------------|
-|     | English | [Русский](https://regex.sorokin.engineer/ru/faq/) | [Deutsch](https://regex.sorokin.engineer/de/faq/) | [Български](https://regex.sorokin.engineer/bg/faq/) | [Français](https://regex.sorokin.engineer/fr/faq/) | [Español](https://regex.sorokin.engineer/es/faq/) |
-
 # FAQ
 
 ## I found a terrible bug: TRegExpr raises Access Violation exception!
@@ -25,13 +21,13 @@ r := TRegExpr.Create.
 
 Look ahead is not implemented in the TRegExpr. But in many cases you can
 easily [replace it with simple
-subexpressions](../regular_expressions/#lookahead).
+subexpressions](regular_expressions.md#lookahead).
 
 ## Does it support Unicode?
 
 **Answer**
 
-[How to use Unicode](../tregexpr/#unicode)
+[How to use Unicode](tregexpr.md#unicode)
 
 ## Why does TRegExpr return more then one line?
 
@@ -41,10 +37,10 @@ of the file including last `</html>`.
 **Answer**
 
 For backward compatibility, [modifier
-/s](../regular_expressions/#modifier_s) is `On` by default.
+/s](regular_expressions.md#modifier_s) is `On` by default.
 
 Switch it Off and `.` will match any but [Line
-separators](../regular_expressions/#syntax_line_separators) - exactly
+separators](regular_expressions.md#syntax_line_separators) - exactly
 as you wish.
 
 BTW I suggest `<font ([^\n>]*)>`, in `Match[1]` will be the URL.
@@ -90,7 +86,7 @@ You can iterate matches with ExecNext method.
 
 If you want some example, please take a look at `TRegExpr.Replace`
 method implementation or at the examples for
-[HyperLinksDecorator](../demos/)
+[HyperLinksDecorator](demos.md)
 
 ## I am checking user input. Why does TRegExpr return `True` for wrong input strings?
 
@@ -145,7 +141,7 @@ I have a problem since no header file (`.h` or `.hpp`) is available.
 - Now you can write code which uses the `RegExpr` unit.
 - Don't forget to add  `#include “RegExpr.hpp”` where needed.
 - Don't forget to replace all `\` in regular expressions with `\\` or
-  redefined [EscChar](../tregexpr/#escchar) const.
+  redefined [EscChar](tregexpr.md#escchar) const.
 
 ## Why many r.e. (including r.e. from TRegExpr help and demo) work wrong in Borland C++ Builder?
 

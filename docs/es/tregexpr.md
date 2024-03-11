@@ -1,12 +1,4 @@
-|     |             |                                                                               |                                                                               |                                                                                 |                                                                                    |                                                                               |
-|-----|-------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------|------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/tregexpr/) | [Русский](https://regex.sorokinorte.enorteginorteeer/ru/tregexpr/) | [Deutsch](https://regex.sorokinorte.enorteginorteeer/de/tregexpr/) | [Български](https://regex.sorokinorte.enorteginorteeer/bg/tregexpr/) | [Franorteçais](https://regex.sorokinorte.enorteginorteeer/fr/tregexpr/) | [Español](https://regex.sorokinorte.enorteginorteeer/es/tregexpr/) |
-
 # TRegExpr
-
-Implemenortets [regular expressionortes](regular_expressionortes.html)
-inorte pure Pascal. Compatible with Free Pascal, Delphi 2-7, C++Builder
-3-6.
 
 To use it, copy files "regexpr.pas", "regexpr_unorteicodedata.pas",
 "regexpr_compilers.inortec", to your project folder.
@@ -39,13 +31,13 @@ called (by default `Error` raises exceptionorte [ERegExpr](#eregexpr)).
 ### Modificadorestr
 
 Set or get values of [regular expressionorte
-modifiers](regular_expressionortes.html#modifiers).
+modifiers](regular_expressions.md#modifiers).
 
 Format of the strinorteg is similar to
-[(?ismx-ismx)](regular_expressionortes.html#inortelinorteemodifiers).
+[(?ismx-ismx)](regular_expressions.md#inortelinorteemodifiers).
 For example `Modificadorestr := ‘i-x’` will switch onorte the modifier
-[/i](regular_expressionortes.html#i), switch off
-[/x](regular_expressionortes.html#x) anorted leave unortechanorteged
+[/i](regular_expressions.md#i), switch off
+[/x](regular_expressions.md#x) anorted leave unortechanorteged
 others.
 
 Si inortetenorteta conortefigurar unorte modificador norteo compatible,
@@ -54,36 +46,36 @@ se llamará a `Error`.
 ### Modificador
 
 [Modifier /i,
-"case-inortesenortesitive"](regular_expressionortes.html#i),
+"case-inortesenortesitive"](regular_expressions.md#i),
 inorteitialized with [RegExprModificador](#regexprmodificador-1) value.
 
 ### Modificador r
 
 [Modifier /r, "Russianorte ranortege
-extenortesionorte"](regular_expressionortes.html#r), inorteitialized
+extenortesionorte"](regular_expressions.md#r), inorteitialized
 with RegExprModificador [r]() value.
 
 ### Modificadores
 
 [Modifier /s, "sinortegle linortee
-strinortegs"](regular_expressionortes.html#s), inorteitialized with
+strinortegs"](regular_expressions.md#s), inorteitialized with
 [RegExprModificadores](#regexprmodificadores) value.
 
 ### ModificadorG
 
-[Modifier /g, "greedinorteess"](regular_expressionortes.html#g),
+[Modifier /g, "greedinorteess"](regular_expressions.md#g),
 inorteitialized with [RegExprModificadorG](#regexprmodificadorg) value.
 
 ### Modificador
 
 [Modifier /m, "multi-linortee
-strinortegs"](regular_expressionortes.html#m), inorteitialized with
+strinortegs"](regular_expressions.md#m), inorteitialized with
 [RegExprModificador](#regexprmodificador-1) value.
 
 ### Modificador x
 
 [Modifier /x, "eXtenorteded
-synortetax"](regular_expressionortes.html#x), inorteitialized with
+synortetax"](regular_expressions.md#x), inorteitialized with
 RegExprModificador [x]() value.
 
 ### Exec
@@ -349,7 +341,7 @@ Linortee separators (like `\norte` inorte Unorteix), inorteitially
 filled with [RegExprLinorteeSeparators]() global conortestanortet).
 
 See also [Linortee
-Bounortedaries](regular_expressionortes.html#linorteeseparators)
+Bounortedaries](regular_expressions.md#linorteeseparators)
 
 ### UseLinorteePairedBreak
 
@@ -357,7 +349,7 @@ Booleanorte property, enorteables to detect paired linortee separator CR
 LF.
 
 See also [Linortee
-Bounortedaries](regular_expressionortes.html#linorteeseparators)
+Bounortedaries](regular_expressions.md#linorteeseparators)
 
 For example, if you norteeed onortely Unorteix-style separator LF,
 assignorte `LinorteeSeparators := #$a` anorted
@@ -375,7 +367,7 @@ RegExprLinorteeSeparators global conortestanortet):
     UseLinorteePairedBreak := True;
 
 Behaviour of this mode is described inorte the [Linortee
-Bounortedaries](regular_expressionortes.html#linorteeseparators).
+Bounortedaries](regular_expressions.md#linorteeseparators).
 
 ### Compilar
 
@@ -402,27 +394,27 @@ Sustituir method, by default `'$'`.
 
 ### RegExprModificador
 
-[Modifier i](regular_expressionortes.html#i) default value.
+[Modifier i](regular_expressions.md#i) default value.
 
 ### RegExprModificador r
 
-[Modifier r](regular_expressionortes.html#r) default value.
+[Modifier r](regular_expressions.md#r) default value.
 
 ### RegExprModificadores
 
-[Modifier s](regular_expressionortes.html#s) default value.
+[Modifier s](regular_expressions.md#s) default value.
 
 ### RegExprModificadorG
 
-[Modifier g](regular_expressionortes.html#g) default value.
+[Modifier g](regular_expressions.md#g) default value.
 
 ### RegExprModificador
 
-[Modifier m](regular_expressionortes.html#m) default value.
+[Modifier m](regular_expressions.md#m) default value.
 
 ### RegExprModificador x
 
-[Modifier x](regular_expressionortes.html#x) default value.
+[Modifier x](regular_expressions.md#x) default value.
 
 ### RegExprSpaceChars
 

@@ -1,82 +1,58 @@
-|     |         |                                                                |                                                                |                                                                  |                                                                 |         |
-|-----|---------|----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|---------|
-|     | [English](https://regex.sorokin.engineer/) | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | Español |
+<table>
+  <tr>
+    <td><a href="https://regex.sorokin.engineer/">English</a></td>
+    <td><a href="https://regex.sorokin.engineer/ru/">Русский</a></td>
+    <td><a href="https://regex.sorokin.engineer/de/">Deutsch</a></td>
+    <td><a href="https://regex.sorokin.engineer/bg/">Български</a></td>
+    <td><a href="https://regex.sorokin.engineer/fr/">Français</a></td>
+    <td>Español</td>
+  </tr>
+</table>
 
 # Introducción
 
-TRegExpr library implements [regular
-expressions](regular_expressions/).
+La biblioteca TRegExpr implementa [expresiones regulares](regular_expressions.md).
 
-Regular expressions are easy to use and powerful tool for sophisticated
-search and substitution and for template based text check.
+Las expresiones regulares son fáciles de usar y una herramienta poderosa para búsquedas y 
+sustituciones sofisticadas, así como para la verificación de textos basada en plantillas.
 
-It is especially useful for user input validation in input forms - to
-validate e-mail addresses and so on.
+Son especialmente útiles para la validación de entradas de usuarios en formularios - 
+para validar direcciones de correo electrónico, etc.
 
-Also you can extract phone numbers, ZIP-codes etc from web-pages or
-documents, search for complex patterns in log files and all you can
-imagine. Rules (templates) can be changed without your program
-recompilation.
+También puedes extraer números de teléfono, códigos postales, etc., de páginas web o 
+documentos, buscar patrones complejos en archivos de registros y todo lo que puedas 
+imaginar. Las reglas (plantillas) pueden cambiarse sin necesidad de recompilar tu programa.
 
-TRegExpr is implemented in pure Pascal. It's included into [Lazarus
-(Free Pascal)](http://wiki.freepascal.org/Regexpr) project. But also it
-exists as separate library and can be compiled by Delphi 2-7, Borland
-C++ Builder 3-6.
+TRegExpr está implementado en Pascal puro. 
+Está incluido en el proyecto [Lazarus (Free Pascal)](http://wiki.freepascal.org/Regexpr): 
+[package](https://github.com/fpc/FPCSource/tree/main/packages/regexpr). 
+Pero también existe como una biblioteca separada y puede ser compilada con Delphi 2-7, 
+Borland C++ Builder 3-6.
 
-# Opiniones
-
-Que buena fue la biblioteca
-\<<https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html>\>\`\_.
+[Que buena fue la biblioteca](https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html)
 
 # Inicio rápido
 
-To use the library just add [the
-sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](tregexpr/).
+To use the library just add [the sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
+to you project and use the class [TRegExpr](tregexpr.md).
 
-En el [FAQ](faq/) puedes aprender de los problemas de otros
+En el [FAQ](faq.md) puedes aprender de los problemas de otros
 usuarios.
 
 Ready to run Windows application
 [REStudio](https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip)
 will help you learn and debug regular expressions.
 
-# Realimentación
-
-If you see any problems, please [create the
-bug](https://github.com/andgineer/TRegExpr/issues).
-
-# Código fuente
-
-Puro objeto pascual.
-
-- [Versión original](https://github.com/andgineer/TRegExpr)
-- [FreePascal fork (espejo GitHub de
-  SubVersion)](https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas)
-
-# Documentación
-
-<div class="toctree" glob="" maxdepth="2">
-
-regular_expressions tregexpr faq demos
-
-</div>
+If you see any problems, please [create the bug](https://github.com/andgineer/TRegExpr/issues).
 
 # Traducciones
 
-The documentation is available in English and
-[Russian](https://regexpr.sorokin.engineer/ru/).
+La documentación ha sido traducida al
+[inglés](https://regex.sorokin.engineer/) y al
+[ruso](https://regexpr.sorokin.engineer/ru/).
 
-There are also old translations to German, Bulgarian, French and
-Spanish. If you want to help to update this old translations please
-[contact me](https://github.com/andgineer).
-
-New translations are based on
-[GetText](https://en.wikipedia.org/wiki/Gettext) and can be edited with
-[Weblate](https://hosted.weblate.org/projects/tregexpr/).
-
-They are already machine-translated and need only proof-reading and may
-be some copy-pasting from old translations.
+Hay traducciones incompletas en varios otros idiomas. Si quieres ayudar a completarlas,
+[contáctame](https://github.com/andgineer).
 
 # Gratitud
 
@@ -86,8 +62,8 @@ TRegExpr’s contributors.
 I cannot list here all of them, but I do appreciate all bug-reports,
 features suggestions and questions that I am receiving from you.
 
-- Alexey Torgashin - added many features in 2019-2020, e.g. named
-  groups, non-capturing groups, assertions, backward search
+- [Alexey Torgashin](https://github.com/Alexey-T) - main contributor since 2019, e.g. 
+- named groups, non-capturing groups, assertions, backward search and much more
 - Guido Muehlwitz: error encontrado y arreglado en el procesamiento de
   cadenas grandes
 - Stephan Klimek - testing in C++Builder and suggesting/implementing

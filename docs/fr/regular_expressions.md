@@ -1,7 +1,3 @@
-|     |         |                                                                              |                                                                              |                                                                                |                                                                               |                                                                              |
-|-----|---------|------------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|-------------------------------------------------------------------------------|------------------------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/regular_expressions/) | [Русский](https://regex.sorokin.engineer/ru/regular_expressions/) | [Deutsch](https://regex.sorokin.engineer/de/regular_expressions/) | [Български](https://regex.sorokin.engineer/bg/regular_expressions/) | [Français](https://regex.sorokin.engineer/fr/regular_expressions/) | [Español](https://regex.sorokin.engineer/es/regular_expressions/) |
-
 # Expressions régulières (RegEx)
 
 ## introduction
@@ -291,10 +287,10 @@ and so on</td>
 </table>
 
 > [!NOTE]
-> [TRegExpr](../tregexpr/)
+> [TRegExpr](tregexpr.md)
 >
-> Properties [SpaceChars](../tregexpr/#spacechars) and
-> [WordChars](../tregexpr/#wordchars) define character classes `\w`,
+> Properties [SpaceChars](tregexpr.md#spacechars) and
+> [WordChars](tregexpr.md#wordchars) define character classes `\w`,
 > `\W`, `\s`, `\ S`.
 >
 > So you can redefine these classes.
@@ -390,9 +386,9 @@ Notez qu&#39;il n&#39;y a pas de ligne vide dans la séquence
 `\ \ x0D \ x0A`.
 
 > [!NOTE]
-> [TRegExpr](../tregexpr/)
+> [TRegExpr](tregexpr.md)
 >
-> If you are using [Unicode version](../tregexpr/#unicode), then
+> If you are using [Unicode version](tregexpr.md#unicode), then
 > `^`/`$` also matches `\x2028`, `\x2029`, `\x0B`, `\x0C` or `\x85`.
 
 Meta-char `\ A` matches zero-length position at the very beginning of
@@ -407,11 +403,11 @@ within the sequence `\x0A\x0D` because this is 2 line-breaks in the
 wrong order.
 
 > [!NOTE]
-> [TRegExpr](../tregexpr/)
+> [TRegExpr](tregexpr.md)
 >
 > Multi-line processing can be tuned by properties
-> [LineSeparators](../tregexpr/#lineseparators) and
-> [UseLinePairedBreak](../tregexpr/#linepairedseparator).
+> [LineSeparators](tregexpr.md#lineseparators) and
+> [UseLinePairedBreak](tregexpr.md#linepairedseparator).
 >
 > So you can use Unix style separators `\n` or DOS/Windows style `\r\n`
 > or mix them together (as in described above default behaviour).
@@ -669,13 +665,13 @@ brackets, so if you write `[fee|fie|foe]` you’re really only matching
 The brackets `()` are used to define groups (ie subexpressions).
 
 > [!NOTE]
-> [TRegExpr](../tregexpr/)
+> [TRegExpr](tregexpr.md)
 >
 > Group positions, lengths and actual values will be in
-> [MatchPos](../tregexpr/#matchpos), [MatchLen](../tregexpr/#matchlen)
-> and [Match](../tregexpr/#match).
+> [MatchPos](tregexpr.md#matchpos), [MatchLen](tregexpr.md#matchlen)
+> and [Match](tregexpr.md#match).
 >
-> You can substitute them with [Substitute](../tregexpr/#substitute).
+> You can substitute them with [Substitute](tregexpr.md#substitute).
 
 Groups are numbered from left to right by their opening parenthesis
 (including nested groups). First group has index 1. The entire regex has
@@ -761,14 +757,14 @@ You can set modifiers globally in your system or change inside the
 regular expression using the [(?imsxr-imsxr)](#inlinemodifiers).
 
 > [!NOTE]
-> [TRegExpr](../tregexpr/)
+> [TRegExpr](tregexpr.md)
 >
-> To change modifiers use [ModifierStr](../tregexpr/#modifierstr) or
+> To change modifiers use [ModifierStr](tregexpr.md#modifierstr) or
 > appropriate `TRegExpr` properties
-> [Modifier\*](../tregexpr/#modifieri).
+> [Modifier\*](tregexpr.md#modifieri).
 >
 > The default values are defined in [global
-> variables](../tregexpr/#global-constants). For example global
+> variables](tregexpr.md#global-constants). For example global
 > variable `RegExprModifierX` defines default value for `ModifierX`
 > property.
 
@@ -777,7 +773,7 @@ regular expression using the [(?imsxr-imsxr)](#inlinemodifiers).
 ### je, insensible à la casse
 
 Case-insensitive. Use installed in you system locale settings, see also
-[InvertCase](../tregexpr/#invertcase).
+[InvertCase](tregexpr.md#invertcase).
 
 <a name="m"></a>
 
@@ -803,7 +799,7 @@ match.
 ### g, la gourmandise
 
 > [!NOTE]
-> [TRegExpr](../tregexpr/) seul modificateur.
+> [TRegExpr](tregexpr.md) seul modificateur.
 
 Switching it `Off` you’ll switch [quantifiers](#iterator) into
 [non-greedy](#greedy) mode.
@@ -846,7 +842,7 @@ hex escapes.
 ### r, gammes russes
 
 > [!NOTE]
-> [TRegExpr](../tregexpr/) seul modificateur.
+> [TRegExpr](tregexpr.md) seul modificateur.
 
 In Russian ASCII table characters `ё`/`Ё` are placed separately from
 others.

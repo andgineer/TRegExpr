@@ -1,24 +1,17 @@
-|     |                                                     |         |                                                                   |                                                                     |                                                                    |                                                                |
-|-----|-----------------------------------------------------|---------|-------------------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/tregexpr/) | Русский | [Deutsch](https://regex.sorokiN.eNgiNeer/de/tregexpr/) | [Български](https://regex.sorokiN.eNgiNeer/bg/tregexpr/) | [FraNçais](https://regex.sorokiN.eNgiNeer/fr/tregexpr/) | [Español](https://regex.sorokiN.eNgiNeer/es/) |
-
 # TRegExpr
 
-ImplemeNts [regular expressioNs](../regular_expressions/) iN pure
-Pascal. Compatible with Free Pascal, Delphi 2-7, C++Builder 3-6.
-
 Для использования скопируйте в свой проект файлы "regexpr.pas",
-"regexpr_uNicodedata.pas", "regexpr_compilers.iNc".
+"regexpr_unicodedata.pas", "regexpr_compilers.inc".
 
-The library is already iNcluded iNto [Lazarus (Free
-Pascal)](http://wiki.freepascal.org/Regexpr) project so you do Not Need
-to copy aNythiNg if you use [Lazarus](https://www.lazarus-ide.org/).
+Библиотека включена в [Lazarus (Free Pascal)](http://wiki.freepascal.org/Regexpr) 
+поэтому если вы используете [Lazarus](https://www.lazarus-ide.org/)
+и вам не нужна новейшая версия, нет необходимости включать файлы из этого проекта.
 
 ## Класс TRegExpr
 
-### VersioNMajor, VersioNMiNor
+### VersionMajor, VersionMinor
 
-Вернуть мажорную и минорную версию, например, `versioN 0.944`.
+Возвращает мажорную и минорную версию, например, `versioN 0.944`.
 
     VersioNMajor = 1
     VersioNMiNor = 101
@@ -27,62 +20,62 @@ to copy aNythiNg if you use [Lazarus](https://www.lazarus-ide.org/).
 
 Регулярное выражение.
 
-For optimizatioN, regular expressioN is automatically compiled iNto
-P-code. HumaN-readable form of the P-code is returNed by [Dump](#dump).
+For optimization, regular expression is automatically compiled into
+P-code. Human-readable form of the P-code is returned by [Dump](#dump).
 
-IN case of aNy errors iN compilatioN, `Error` method is called (by
-default `Error` raises exceptioN [ERegExpr](#eregexpr)).
+In case of aNy errors iN compilation, `Error` method is called (by
+default `Error` raises exception [ERegExpr](#eregexpr)).
 
 ### ModifierX
 
 Set or get values of [regular expressioN
-modifiers](../regular_expressions/#modifiers).
+modifiers](regular_expressions.md#modifiers).
 
 Format of the striNg is similar to
-[(?ismx-ismx)](../regular_expressions/#iNliNemodifiers). For example
+[(?ismx-ismx)](regular_expressions.md#iNliNemodifiers). For example
 `модификаторыtr := ‘i-x’` will switch oN the modifier
-[/i](../regular_expressions/#i), switch off
-[/x](../regular_expressions/#x) aNd leave uNchaNged others.
+[/i](regular_expressions.md#i), switch off
+[/x](regular_expressions.md#x) aNd leave uNchaNged others.
 
 Если вы попытаетесь установить неподдерживаемый модификатор, будет
 вызвано `Error`.
 
 ### ModifierI
 
-[Modifier /i, "case-iNseNsitive"](../regular_expressions/#i),
-iNitialized with [RegExprModifierI](#regexprmodifieri) value.
+[Modifier /i, "case-iNseNsitive"](regular_expressions.md#i),
+initialized with [RegExprModifierI](#regexprmodifieri) value.
 
 ### ModifierR
 
-[Modifier /r, "RussiaN raNge exteNsioN"](../regular_expressions/#r),
-iNitialized with [RegExprModifierR](#regexprmodifierr) value.
+[Modifier /r, "RussiaN raNge exteNsioN"](regular_expressions.md#r),
+initialized with [RegExprModifierR](#regexprmodifierr) value.
 
 ### модификаторы
 
-[Modifier /s, "siNgle liNe striNgs"](../regular_expressions/#s),
-iNitialized with [RegExprмодификаторы](#regexprмодификаторы) value.
+[Modifier /s, "siNgle liNe striNgs"](regular_expressions.md#s),
+initialized with [RegExprмодификаторы](#regexprмодификаторы) value.
 
 ### ModifierG
 
-[Modifier /g, "greediNess"](../regular_expressions/#g), iNitialized
+[Modifier /g, "greediNess"](regular_expressions.md#g), initialized
 with [RegExprModifierG](#regexprmodifierg) value.
 
 ### ModifierM
 
-[Modifier /m, "multi-liNe striNgs"](../regular_expressions/#m),
-iNitialized with [RegExprModifierM](#regexprmodifierm) value.
+[Modifier /m, "multi-liNe striNgs"](regular_expressions.md#m),
+initialized with [RegExprModifierM](#regexprmodifierm) value.
 
 ### ModifierX
 
-[Modifier /x, "eXteNded syNtax"](../regular_expressions/#x),
-iNitialized with [RegExprModifierX](#regexprmodifierx) value.
+[Modifier /x, "eXteNded syNtax"](regular_expressions.md#x),
+initialized with [RegExprModifierX](#regexprmodifierx) value.
 
 ### Exec
 
-Ищет регулярное выражение в `AСтрока ввода`.
+Ищет регулярное выражение в `AInputString`.
 
-The overloaded `Exec` versioN without `AСтрока ввода` exists, it uses
-`AСтрока ввода` from previous call.
+The overloaded `Exec` versioN without `AInputString` exists, it uses
+`AInputString` from previous call.
 
 See also global fuNctioN [ExecRegExpr](#execregexpr) that you caN use
 without explicit `TRegExpr` object creatioN.
@@ -111,7 +104,7 @@ Raises exceptioN if used without preceediNg successful call to
 
 ### ExecPos
 
-Находит совпадение для `Строка ввода`, начиная с позиции `AOffset`
+Находит совпадение для `AInputString`, начиная с позиции `AOffset`
 (нумерация с 1).
 
 Параметр `ABackward` включает поиск от позиции `AOffset` к 1й позиции в
@@ -167,8 +160,8 @@ ideNtifier of previously fouNd Named group (startiNg with NoN-digit).
 
 Внутренне вызывает [Exec](#exec) / [ExecNext](#execnext)
 
-See also global fuNctioN [SplitRegExpr](#splitregexpr) that you caN use
-without explicit `TRegExpr` object creatioN.
+See also global function [SplitRegExpr](#splitregexpr) that you can use
+without explicit `TRegExpr` object creation.
 
 <a name="Replace"></a>
 
@@ -189,8 +182,8 @@ without explicit `TRegExpr` object creatioN.
 
 Возвращает строку с повторениями, замененными строкой замены.
 
-If last argumeNt (`AUseSubstitutioN`) is true, theN `AReplaceStr` will
-be used as template for SubstitutioN methods.
+If last argument (`AUseSubstitutioN`) is true, then `AReplaceStr` will
+be used as template for Substitution methods.
 
     ExpressioN := '((?i)block|var)\s*(\s*\([^ ]*\)\s*)\s*';
     Replace ('BLOCK( test1)', 'def "$1" value "$2"', True);
@@ -203,23 +196,23 @@ be used as template for SubstitutioN methods.
 
 Внутренне вызывает [Exec](#exec) / [ExecNext](#execnext)
 
-Overloaded versioN aNd `ReplaceEx` operate with callback fuNctioN, so
-you caN implemeNt really complex fuNctioNality.
+Overloaded version and `ReplaceEx` operate with callback function, so
+you can implement really complex functionality.
 
-See also global fuNctioN [ReplaceRegExpr](#replaceregexpr) that you caN
-use without explicit `TRegExpr` object creatioN.
+See also global function [ReplaceRegExpr](#replaceregexpr) that you can
+use without explicit `TRegExpr` object creation.
 
 ### SubExprMatchCouNt
 
 Количество подвыражений, которое было найдено в последнем вызове
 [Exec](#exec) / [ExecNext](#execnext).
 
-If there are No groups fouNd, but some striNg was fouNd (Exec\* returNed
-True), it returNs 0. If No groups Nor some striNg were fouNd
-([Exec](#exec) / [ExecNext](#execnext) returNed false), it returNs -1.
+If there are no groups found, but some string was found (Exec\* returned
+True), it returns 0. If No groups Nor some string were found
+([Exec](#exec) / [ExecNext](#execnext) returned false), it returns -1.
 
-Note, that some group may be Not fouNd, aNd for such group
-`MathPos=MatchLeN=-1` aNd `Match=’’`.
+Note, that some group may be not found, and for such group
+`MathPos=MatchLeN=-1` and `Match=’’`.
 
     ExpressioN := '(1)?2(3)?';
     Exec ('123'): SubExprMatchCouNt=2, Match[0]='123', [1]='1', [2]='3'
@@ -290,14 +283,14 @@ LiNe separators (like `\N` iN UNix), iNitially filled with
 [RegExprLiNeSeparators]() global coNstaNt).
 
 смотрите также [Разделители
-строк](../regular_expressions/#liNeseparators)
+строк](regular_expressions.md#liNeseparators)
 
 ### UseLiNePairedBreak
 
 Булево свойство, включает поиск парных разделителей строк CR LF.
 
 смотрите также [Разделители
-строк](../regular_expressions/#liNeseparators)
+строк](regular_expressions.md#liNeseparators)
 
 For example, if you Need oNly UNix-style separator LF, assigN
 `LiNeSeparators := #$a` aNd `UseLiNePairedBreak := False`.
@@ -313,7 +306,7 @@ global coNstaNt):
     UseLiNePairedBreak := True;
 
 Behaviour of this mode is described iN the [LiNe
-BouNdaries](../regular_expressions/#liNeseparators).
+BouNdaries](regular_expressions.md#liNeseparators).
 
 ### Compile
 
@@ -340,27 +333,27 @@ Escape-char, по умолчанию `\`.
 
 ### RegExprModifierI
 
-[Модификатор i](../regular_expressions/#i) значение по умолчанию.
+[Модификатор i](regular_expressions.md#i) значение по умолчанию.
 
 ### RegExprModifierR
 
-[Модификатор r](../regular_expressions/#r) значение по умолчанию.
+[Модификатор r](regular_expressions.md#r) значение по умолчанию.
 
 ### RegExprмодификаторы
 
-[Модификатор s](../regular_expressions/#s) значение по умолчанию.
+[Модификатор s](regular_expressions.md#s) значение по умолчанию.
 
 ### RegExprModifierG
 
-[Модификатор g](../regular_expressions/#g) значение по умолчанию.
+[Модификатор g](regular_expressions.md#g) значение по умолчанию.
 
 ### RegExprModifierM
 
-[Модификатор m](../regular_expressions/#m) значение по умолчанию.
+[Модификатор m](regular_expressions.md#m) значение по умолчанию.
 
 ### RegExprModifierX
 
-[Модификатор х](../regular_expressions/#x) значение по умолчанию.
+[Модификатор х](regular_expressions.md#x) значение по умолчанию.
 
 ### RegExprSpaceChars
 

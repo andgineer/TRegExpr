@@ -1,7 +1,3 @@
-|     |                                                   |                                                           |                                                             |                                                              |                                                              |                                                              |
-|-----|---------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------|--------------------------------------------------------------|--------------------------------------------------------------|--------------------------------------------------------------|
-|     | [Inglés](https://regex.sorokin.engineer/faq/) | [Ruso](https://regex.sorokin.engineer/ru/faq/) | [Alemán](https://regex.sorokin.engineer/de/faq/) | [Búlgaro](https://regex.sorokin.engineer/bg/faq/) | [Francés](https://regex.sorokin.engineer/fr/faq/) | [Español](https://regex.sorokin.engineer/es/faq/) |
-
 # Preguntas más frecuentes
 
 ## Encontré un error grave: ¡TRegExpr genera la excepción de violación de acceso!
@@ -25,13 +21,13 @@ r: = TRegExpr.Create.
 
 Look ahead is not implemented in the TRegExpr. But in many cases you can
 easily [replace it with simple
-subexpressions](../regular_expressions/#lookahead).
+subexpressions](regular_expressions.md#lookahead).
 
 ## ¿Es compatible con Unicode?
 
 **Responder**
 
-[Cómo usar Unicode](../tregexpr/#unicode)
+[Cómo usar Unicode](tregexpr.md#unicode)
 
 ## ¿Por qué TRegExpr devuelve más de una línea?
 
@@ -41,10 +37,10 @@ of the file including last `</html>`.
 **Responder**
 
 For backward compatibility, [modifier
-/s](../regular_expressions/#modifier_s) is `On` by default.
+/s](regular_expressions.md#modifier_s) is `On` by default.
 
 Switch it Off and `.` will match any but [Line
-separators](../regular_expressions/#syntax_line_separators) - exactly
+separators](regular_expressions.md#syntax_line_separators) - exactly
 as you wish.
 
 Por cierto, recomiendo `<font ([^\n>] *)>`, en `Match [1]` se convierte
@@ -91,7 +87,7 @@ Puede iterar coincidencias con el método ExecNext.
 
 If you want some example, please take a look at `TRegExpr.Replace`
 method implementation or at the examples for
-[HyperLinksDecorator](../demos/)
+[HyperLinksDecorator](demos.md)
 
 ## Estoy comprobando la entrada del usuario. ¿Por qué TRegExpr devuelve `True` para las cadenas de entrada incorrectas?
 
@@ -147,7 +143,7 @@ Tengo un problema porque no hay ningún archivo de encabezado (`.h` o
 - Ahora puede escribir código que usa la unidad `RegExpr`.
 - No olvide agregar `#include “RegExpr.hpp”` donde sea necesario.
 - Don't forget to replace all `\` in regular expressions with `\\` or
-  redefined [EscChar](../tregexpr/#escchar) const.
+  redefined [EscChar](tregexpr.md#escchar) const.
 
 ## ¿Por qué muchos re (incluyendo re desde TRegExpr help y demo) funcionan mal en Borland C ++ Builder?
 

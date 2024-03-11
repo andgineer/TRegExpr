@@ -13,3 +13,4 @@ if [ $lang = "en" ]; then
 else
     sed -i'' -e "s/SITE_PLACEHOLDER/$lang/g" _mkdocs.yml
 fi
+cp -r css $lang/_css/  # mkdocs expects css to be in the root of the docs folder

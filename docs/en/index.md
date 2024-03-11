@@ -1,11 +1,18 @@
-|     |         |                                                                |                                                                |                                                                  |                                                                 |                                                                |
-|-----|---------|----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
-|     | English | [Русский](https://regex.sorokin.engineer/ru/) | [Deutsch](https://regex.sorokin.engineer/de/) | [Български](https://regex.sorokin.engineer/bg/) | [Français](https://regex.sorokin.engineer/fr/) | [Español](https://regex.sorokin.engineer/es/) |
+<table>
+  <tr>
+    <td>English</td>
+    <td><a href="https://regex.sorokin.engineer/ru/">Русский</a></td>
+    <td><a href="https://regex.sorokin.engineer/de/">Deutsch</a></td>
+    <td><a href="https://regex.sorokin.engineer/bg/">Български</a></td>
+    <td><a href="https://regex.sorokin.engineer/fr/">Français</a></td>
+    <td><a href="https://regex.sorokin.engineer/es/">Español</a></td>
+  </tr>
+</table>
 
 # Introduction
 
 TRegExpr library implements [regular
-expressions](../regular_expressions/).
+expressions](regular_expressions.md).
 
 Regular expressions are easy to use and powerful tool for sophisticated
 search and substitution and for template based text check.
@@ -19,63 +26,36 @@ imagine. Rules (templates) can be changed without your program
 recompilation.
 
 TRegExpr is implemented in pure Pascal. It's included into [Lazarus
-(Free Pascal)](http://wiki.freepascal.org/Regexpr) project. But also it
+(Free Pascal)](http://wiki.freepascal.org/Regexpr): 
+[package](https://github.com/fpc/FPCSource/tree/main/packages/regexpr). 
+But also it
 exists as separate library and can be compiled by Delphi 2-7, Borland
 C++ Builder 3-6.
 
-# Reviews
-
-[How good the library was
-met](https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html).
+[How good the library was met](https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html).
 
 # Quick start
 
-To use the library just add [the
-sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](../tregexpr/).
+To use the library just add [the sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
+to you project and use the class [TRegExpr](tregexpr.md).
 
-In the [FAQ](faq/) you can learn from others users problems.
+In the [FAQ](faq.md) you can learn from others users problems.
 
 Ready to run Windows application
 [REStudio](https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip)
 will help you learn and debug regular expressions.
 
-# Feedback
-
-If you see any problems, please [create the
-bug](https://github.com/andgineer/TRegExpr/issues).
-
-# Source code
-
-Pure Object Pascal.
-
-- [Original version](https://github.com/andgineer/TRegExpr)
-- [FreePascal fork (GitHub mirror of the
-  SubVersion)](https://github.com/graemeg/freepascal/blob/master/packages/regexpr/src/regexpr.pas)
-
-# Documentation
-
-<div class="toctree" glob="" maxdepth="2">
-
-regular_expressions tregexpr faq demos
-
-</div>
+If you see any problems, please [create the bug](https://github.com/andgineer/TRegExpr/issues).
 
 # Translations
 
-The documentation is available in English and
+The documentation has been translated into
+[English](https://regex.sorokin.engineer/) and
 [Russian](https://regexpr.sorokin.engineer/ru/).
 
-There are also old translations to German, Bulgarian, French and
-Spanish. If you want to help to update this old translations please
+There are incomplete translations into several other languages. 
+If you want to help complete them,
 [contact me](https://github.com/andgineer).
-
-New translations are based on
-[GetText](https://en.wikipedia.org/wiki/Gettext) and can be edited with
-[Weblate](https://hosted.weblate.org/projects/tregexpr/).
-
-They are already machine-translated and need only proof-reading and may
-be some copy-pasting from old translations.
 
 # Gratitude
 
@@ -85,8 +65,8 @@ TRegExpr’s contributors.
 I cannot list here all of them, but I do appreciate all bug-reports,
 features suggestions and questions that I am receiving from you.
 
-- Alexey Torgashin - added many features in 2019-2020, e.g. named
-  groups, non-capturing groups, assertions, backward search
+- [Alexey Torgashin](https://github.com/Alexey-T) - main contributor since 2019, e.g. 
+- named groups, non-capturing groups, assertions, backward search and much more
 - Guido Muehlwitz - found and fixed ugly bug in big string processing
 - Stephan Klimek - testing in C++Builder and suggesting/implementing
   many features

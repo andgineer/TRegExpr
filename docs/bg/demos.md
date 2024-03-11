@@ -1,17 +1,13 @@
-|     |         |                                                                |                                                                |                                                                  |                                                                 |                                                                |
-|-----|---------|----------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
-|     | [English](https://regex.sorokin.engineer/demos/) | [Русский](https://regex.sorokin.engineer/ru/demos/) | [Deutsch](https://regex.sorokin.engineer/de/demos/) | [Български](https://regex.sorokin.engineer/bg/demos/) | [Français](https://regex.sorokin.engineer/fr/demos/) | [Español](https://regex.sorokin.engineer/es/demos/) |
-
 # Демонстрации
 
-Демо код за [TRegExpr](../tregexpr/)
+Демо код за [TRegExpr](tregexpr.md)
 
 ## Въведение
 
 If you don't familiar with regular expression, please, take a look at
-the [r.e.syntax](../regular_expressions/).
+the [r.e.syntax](regular_expressions.md).
 
-TRegExpr interface described in [TRegExpr interface](../tregexpr/).
+TRegExpr interface described in [TRegExpr interface](tregexpr.md).
 
 ## Text2HTML
 

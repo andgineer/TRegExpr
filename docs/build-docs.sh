@@ -3,14 +3,11 @@
 # Create docs in docs/
 #
 
-SITE_FOLDER="../site"  # `site_dir` in mkdocs.yml
-
-rm -rf ${SITE_FOLDER}
-
 #./scripts/docstrings.sh
 
-for lang in bg de en es fr ru; do
+for lang in en bg de es fr ru; do  # en should be the first language as it clears the root of the site
     ./docs-render-config.sh $lang
-    mkdocs build --dirty --config-file _mkdocs.yml
+    mkdocs build --config-file _mkdocs.yml
     rm _mkdocs.yml
+    rm -rf $lang/_css
 done
