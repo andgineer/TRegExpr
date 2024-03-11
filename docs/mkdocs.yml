@@ -25,6 +25,12 @@ plugins:
         latest/tregexpr.md: tregexpr.md
         latest/demos.md: demos.md
         latest/faq.md: faq.md
+        stable.md: index.md
+        stable/index.md: index.md
+        stable/regular_expressions.md: regular_expressions.md
+        stable/tregexpr.md: tregexpr.md
+        stable/demos.md: demos.md
+        stable/faq.md: faq.md
 
 markdown_extensions:
   - abbr
