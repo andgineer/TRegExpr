@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 #
-# Create docs in docs/
+# Render site/ from docs/src/
 #
-
-#./scripts/docstrings.sh
 
 for lang in en bg de es fr ru; do  # en should be the first language as it clears the root of the site
     ./docs-render-config.sh $lang
     mkdocs build --config-file _mkdocs.yml
+
+    # Additional redirects that is impossible to create with `mkdocs-redirects`
     if [ $lang = "en" ]; then
       mkdir -p ../site/en
       cp -r ../site/latest ../site/en/latest

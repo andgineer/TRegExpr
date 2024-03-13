@@ -7,7 +7,7 @@ site_author: Andrey Sorokin
 repo_name: TRegExpr
 repo_url: https://github.com/andgineer/TRegExpr
 edit_uri: edit/master/docs
-docs_dir: 'LANG_PLACEHOLDER'
+docs_dir: 'src/LANG_PLACEHOLDER'
 site_dir: '../site/SITE_PLACEHOLDER'
 
 extra_css:

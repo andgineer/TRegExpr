@@ -1,6 +1,7 @@
-"""Adjust RST before conversion to markdown.
+"""Adjust RST for Markdown conversion.
 
-Fix the headers and anchors in the RST file to make it compatible with the pandoc conversion.
+Fix headers and anchors for pandoc compatibility.
+Used for migration from Sphinx & gettext to MkDocs
 """
 import re
 import sys

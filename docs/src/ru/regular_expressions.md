@@ -2,11 +2,8 @@
 
 ## Вступление
 
-Regular expressions are a handy way to specify patterns of text.
-
-With regular expressions you can validate user input, search for some
-patterns like emails of phone numbers on web pages or in some documents
-and so on.
+Регулярные выражения являются простым и мощным инструментом для сложного 
+поиска и замены, а также для проверки текста на основе шаблонов.
 
 Ниже приведена исчерпывающая шпаргалка по регулярных выражениям всего на
 одной странице.

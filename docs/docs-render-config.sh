@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
-# Substitute language and site in mkdocs.yml in _mkdocs.yml
-# language should be passed as an argument
+# Copy mkdocs.yml to _mkdocs.yml with substitute language and site.
+# the language should be passed as an argument
+# Place CSS to appropriate docs/src/ folder.
 #
 
 lang=$1
@@ -13,4 +14,4 @@ if [ $lang = "en" ]; then
 else
     sed -i'' -e "s/SITE_PLACEHOLDER/$lang/g" _mkdocs.yml
 fi
-cp -r css $lang/_css/  # mkdocs expects css to be in the root of the docs folder
+cp -r css src/$lang/_css/  # mkdocs expects css to be in the root of the docs folder

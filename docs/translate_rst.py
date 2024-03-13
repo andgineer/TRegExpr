@@ -1,15 +1,6 @@
-"""Translate the RST files using the PO files from GetText.
+"""Translate the .rst files using the .po files (GetText).
 
-I decided no longer fight with over-complicated WebLate translations and 
-make a big leap of faith to get rid of GetText translation.
-
-After all it's not intended to be used for RST files and it's a pain to maintain.
-
-Good reasoning here
-https://github.com/natcap/invest.users-guide/issues/54
- 
-I will use this script to apply translations to the RST files and from that point
-no .po files, just rst files for each translation.
+Used for migration from Spinx/rst & gettext to plain rst-files.
 """
 import polib
 import os

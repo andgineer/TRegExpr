@@ -1,3 +1,12 @@
+"""File redirects instead of directory ones.
+
+`mkdocs-redirects` respects option `use_directory_urls`, which is set to True for more readable URLs,
+hence it generates folder URLs for both redirect sources and targets.
+
+However, our old site utilized file URLs, necessitating redirects from these old file URLs to the new folder URLs.
+
+This script generates file redirect sources for all the folder redirects created by mkdocs-redirects.
+"""
 import os
 import shutil
 import argparse
