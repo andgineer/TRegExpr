@@ -12,19 +12,19 @@
 
 ### Простые совпадения
 
-Any single character (except special regex characters) matches itself. A
-series of (not special) characters matches that series of characters in
-the input string.
+Любой отдельный символ (кроме специальных символов регулярных выражений) 
+совпадает сам с собой. 
+Последовательность символов (не специальных) совпадает с такой же последовательностью 
+символов во входной строке.
 
 | RegEx    | Находит  |
 |----------|----------|
 | `foobar` | `foobar` |
 
-### Non-Printable Символы (escape-codes)
-
-To specify character by its Unicode code, use the prefix `\x` followed
-by the hex code. For 3-4 digits code (after U+00FF), enclose the code
-into braces.
+### Непечатаемые символы (escape-коды)
+Чтобы указать символ по его Unicode коду, используйте префикс `\x`, за которым следует 
+шестнадцатеричный код. 
+Для кода из 3-4 цифр (после U+00FF) заключите код в фигурные скобки.
 
 | RegEx        | Находит                                             |
 |--------------|-----------------------------------------------------|
@@ -32,8 +32,7 @@ into braces.
 | `\x{AB20}`   | символ с 1-4 значным шестнадцатеричным кодом `AB20` |
 | `foo\x20bar` | `foo bar` (обратите внимание на пробел в середине)  |
 
-There are a number of predefined escape-codes for non-printable
-characters, like in C language:
+Существует ряд предопределённых escape-кодов для непечатаемых символов, как в языке C:
 
 <table>
 <thead>
@@ -78,10 +77,11 @@ characters, like in C language:
 
 <a name="escape"></a>
 
-### Эскейпинг
+### Экранирование(escaping
 
-To represent special regex character (one of `.+*?|\()[]{}^$`), prefix
-it with a backslash `\`. The literal backslash must be escaped too.
+Чтобы представить специальный символ регулярного выражения (один из `.+*?|\()[]{}^$`), 
+поставьте перед ним обратный слэш `\`. 
+Сам обратный слэш также должен быть экранирован.
 
 | RegEx         | Находит                                                             |
 |---------------|---------------------------------------------------------------------|
@@ -94,29 +94,29 @@ it with a backslash `\`. The literal backslash must be escaped too.
 
 ### User Классы символов
 
-Character class is a list of characters inside square brackets `[]`. The
-class matches any **single** character listed in this class.
+Класс символов - это список символов внутри квадратных скобок `[]`. 
+Класс совпадает с любым **одиночным** символом, указанным в этом классе.
 
 | RegEx            | Находит                                                      |
 |------------------|--------------------------------------------------------------|
 | `foob[aeiou]r`   | `foobar`, `foober` и т. д., но не `foobbr`, `foobcr` и т. д. |
 
-You can "invert" the class - if the first character after the `[` is
-`^`, then the class matches any character **except** the characters
-listed in the class.
+Вы можете "инвертировать" класс - если первым символом после `[` является `^`, 
+тогда класс совпадает с любым символом, **кроме** символов, перечисленных в классе.
 
 | RegEx           | Находит                                                      |
 |-----------------|--------------------------------------------------------------|
 | `foob[^aeiou]r` | `foobbr`, `foobcr` и т. д., но не `foobar`, `foober` и т. д. |
 
-Within a list, the dash `-` character is used to specify a range, so
-that `a-z` represents all characters between `a` and `z`, inclusive.
+Внутри списка символ тире `-` используется для указания диапазона, так что `a-z` 
+представляет все символы между `a` и `z`, включая их.
 
-If you want the dash `-` itself to be a member of a class, put it at the
-start or end of the list, or [escape](#escape) it with a backslash.
+Если вы хотите, чтобы само тире `-` было элементом класса, поместите его в начало или в 
+конец списка, или [экранируйте](#escape) его обратным слэшем.
 
-If you want `]` as part of the class you may place it at the start of
-list or [escape](#escape) it with a backslash.
+Если вам нужен символ `]` в качестве части класса, вы можете разместить его в начале 
+списка или [экранируйте](#escape) его обратным слэшем.
+
 
 | RegEx       | Находит                   |
 |-------------|---------------------------|
@@ -126,19 +126,20 @@ list or [escape](#escape) it with a backslash.
 | `[a-z]`     | символы от `a` до `z`     |
 | `[\n-\x0D]` | символы от `#10` до `#13` |
 
-### Dot Meta-Char
+### Метасимвол `.` (точка)
 
-Метасимвол `.` (dot) by default matches any character. But if you turn
-**off** the [modifier /s](#s), then it won't match line-break
-characters.
+Метасимвол `.` (точка) по умолчанию совпадает с любым символом. 
+Но если вы **выключите** [модификатор /s](#s), тогда он не будет совпадать с символами 
+переноса строки.
 
-The `.` does not act as meta-class inside [user character
-classes](#user-классы-символов). `[.]` means a literal ".".
+Символ `.` не действует как мета-класс внутри 
+[пользовательских классов символов](#user-классы-символов). 
+`[.]` означает буквальную точку.
 
 ### Метаклассы
 
-There are a number of predefined character classes that keeps regular
-expressions more compact, "meta-classes":
+Существует ряд предопределённых классов символов, которые делают регулярные 
+выражения более компактными, "мета-классы":
 
 <table>
 <thead>
@@ -202,8 +203,9 @@ FF (form feed), VT (vertical tab), U+0085, U+2028, U+2029</div></td>
 </tbody>
 </table>
 
-You may use all meta-classes, mentioned in the table above, within [user
-character classes](#user-классы-символов).
+Вы можете использовать все мета-классы, упомянутые в таблице выше, внутри 
+[пользовательских классов символов](#user-классы-символов).
+
 
 | RegEx         | Находит                                                                |
 |---------------|------------------------------------------------------------------------|
@@ -223,7 +225,7 @@ character classes](#user-классы-символов).
 
 <a name="lineseparators"></a>
 
-### Line Разделители
+### Разделители строк
 
 | Метасимвол | Находит                                                                               |
 |------------|---------------------------------------------------------------------------------------|
@@ -232,7 +234,7 @@ character classes](#user-классы-символов).
 | `\A`       | совпадение нулевой длины в начале строки                                              |
 | `\z`       | совпадение нулевой длины в конце строки                                               |
 | `\Z`       | похож на `\z` но совпадает перед разделителем строки, а не сразу после него, как `\z` |
-| `\G`       | zero-length match at the end pos of the previous match                                |
+| `\G`       | совпадение нулевой длины в конечной позиции предыдущего совпадения                    |
 
 Примеры:
 
@@ -243,10 +245,9 @@ character classes](#user-классы-символов).
 | `^foobar$` | `foobar` только если это единственная строка в строке |
 | `foob.r`   | `foobar`, `foobbr`, `foob1r` и так далее              |
 
-Метасимвол `^` matches zero-length position at the beginning of the
-input string. `$` - at the ending. If [modifier /m](#m) is **on**, they
-also match at the beginning/ending of individual lines in the multi-line
-text.
+Метасимвол `^` совпадает с позицией нулевой длины в начале входной строки. `$` - в конце. 
+Если [модификатор /m](#m) **включен**, они также совпадают с началом/концом отдельных 
+строк в многострочном тексте.
 
 Обратите внимание, что в последовательности `\x0D\x0A` нет пустой
 строки.
@@ -254,42 +255,43 @@ text.
 > [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> If you are using [Unicode version](tregexpr.md#unicode), then
-> `^`/`$` also matches `\x2028`, `\x2029`, `\x0B`, `\x0C` or `\x85`.
+> Если вы используете [версию Unicode](tregexpr.md#unicode), то
+> `^`/`$` также совпадают с `\x2028`, `\x2029`, `\x0B`, `\x0C` или `\x85`.
 
-Метасимвол `\A` matches zero-length position at the very beginning of
-the input string, `\z` - at the very ending. They ignore [modifier
-/m](#m). `\Z` is похож на `\z` но совпадает перед разделителем строки, а
-не сразу после него, как `\z` (LF and CR LF). Behaviour of `\A`, `\z`,
-`\Z` is made like in most of major regex engines (Perl, PCRE, etc).
+Метасимвол `\A` совпадает с позицией нулевой длины в самом начале входной строки, 
+`\z` - в самом конце. 
+Они игнорируют [модификатор /m](#m). `\Z` похож на `\z`, но совпадает перед 
+разделителем строки, а не сразу после него, как `\z` (LF и CR LF). 
+Поведение `\A`, `\z`, `\Z` реализовано подобно большинству движков regex
+(Perl, PCRE и т.д.).
 
-Note that `^.*$` does not match a string between `\x0D\x0A`, because
-this is unbreakable line separator. But it matches the пустую строку
-within the sequence `\x0A\x0D` because this is 2 line-breaks in the
-wrong order.
+Отметим, что `^.*$` не совпадает со строкой между `\x0D\x0A`, потому что это 
+неразрывный разделитель строк. 
+Но оно совпадает с пустой строкой в последовательности `\x0A\x0D`, потому что это 
+2 перевода строки в неправильном порядке.
 
 > [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> Multi-line processing can be tuned by properties
-> [LineSeparators](tregexpr.md#lineseparators) and
+> Обработка многострочного текста может быть настроена с помощью свойств
+> [LineSeparators](tregexpr.md#lineseparators) и
 > [UseLinePairedBreak](tregexpr.md#linepairedseparator).
 >
-> So you can use Unix style separators `\n` or DOS/Windows style `\r\n`
-> or mix them together (as in described above default behaviour).
+> Таким образом, вы можете использовать разделители в стиле Unix `\n` или DOS/Windows `\r\n`
+> или смешивать их вместе (как в описанном выше поведении по умолчанию).
 
-If you prefer mathematically correct description you can find it on
+Если вы предпочитаете математически точное описание, вы можете найти его на
 [www.unicode.org](http://www.unicode.org/unicode/reports/tr18/).
 
-### Word Разделители
+### Разделители слов
 
 | RegEx | Находит                     |
 |-------|-----------------------------|
 | `\b`  | разделитель слов            |
 | `\B`  | разделитель с **не**-словом |
 
-A word boundary `\b` is a spot between two characters that has a `\w` on
-one side of it and a `\W` on the other side of it (in either order).
+Граница слова `\b` - это место между двумя символами, где с одной стороны находится 
+`\w`, а с другой - `\W` (в любом порядке).
 
 <a name="iterator"></a>
 
@@ -297,8 +299,8 @@ one side of it and a `\W` on the other side of it (in either order).
 
 ### Повтор
 
-Any item of a regular expression may be followed by quantifier.
-Quantifier specifies number of repetitions of the item.
+Любой элемент регулярного выражения может быть снабжён квантификатором. 
+Квантификатор указывает количество повторений элемента.
 
 | RegEx    | Находит                                                  |
 |----------|----------------------------------------------------------|
@@ -310,22 +312,20 @@ Quantifier specifies number of repetitions of the item.
 | `+`      | один или несколько, похожие на `{1,}`                    |
 | `?`      | ноль или единица, похожая на `{0,1}`                     |
 
-So, digits in curly brackets `{n,m}`, specify the minimum number of
-times to match `n` and the maximum `m`.
+Так, цифры в фигурных скобках `{n,m}` указывают минимальное количество совпадений 
+`n` и максимальное `m`.
 
-The `{n}` is equivalent to `{n,n}` and matches ровно `n` раз. The `{n,}`
-matches `n` or more times.
+`{n}` эквивалентен `{n,n}` и совпадает ровно `n` раз. `{n,}` совпадает `n` или более раз.
 
-The variant `{,m}` is only supported if the property
-AllowBraceWithoutMin is set.
+Вариант `{,m}` поддерживается только если установлено свойство AllowBraceWithoutMin.
 
 Теоретически значение n и m не ограничены (можно использовать
 максимальное значение для 32-х битного числа).
 
-Using `{` without a correct range will give an error. This behaviour can
-be changed by setting the property AllowLiteralBraceWithoutRange, which
-will accept `{` as a literal char, if not followed by a range. A range
-with a low value bigger than the high value will always give an error.
+Использование `{` без указания корректного диапазона приведет к ошибке. 
+Это поведение может быть изменено установкой свойства AllowLiteralBraceWithoutRange, 
+которое позволит принять `{` как буквальный символ, если за ним не следует диапазон. 
+Диапазон, в котором нижнее значение больше верхнего, всегда приведет к ошибке.
 
 | RegEx            | Находит                                                                                                                                                                                           |
 |------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -341,11 +341,11 @@ with a low value bigger than the high value will always give an error.
 
 ### Жадность
 
-[Повтор](#iterator) in "greedy" mode takes as many as possible, in
-"lazy" mode - as few as possible.
+[Повтор](#iterator) в "жадном" режиме берет столько, сколько возможно, в
+"ленивом" режиме - как можно меньше.
 
-By default all quantifiers are "greedy". Append the character `?` to
-make any quantifier "lazy".
+По умолчанию все квантификаторы "жадные". 
+Добавьте символ `?`, чтобы сделать любой квантификатор "ленивым".
 
 Для строки `abbbbc`:
 
@@ -357,8 +357,9 @@ make any quantifier "lazy".
 | `b{2,3}?` | `bb`          |
 | `b{2,3}`  | `bbb`         |
 
-You can switch all quantifiers into "lazy" mode ([modifier /g](#g),
-below we use [in-line modifier change](#inlinemodifiers)).
+Вы можете переключить все квантификаторы в "ленивый" режим 
+([модификатор /g](#g), ниже мы используем 
+[изменение модификатора в строке](#inlinemodifiers)).
 
 | RegEx     | Находит |
 |-----------|---------|
@@ -366,39 +367,36 @@ below we use [in-line modifier change](#inlinemodifiers)).
 
 ### Сверхжадные повторы (Possessive Quantifier)
 
-The syntax is: `a++`, `a*+`, `a?+`, `a{2,4}+`. Currently it's supported
-only for simple braces, but not for braces after group like
-`(foo|bar){3,5}+`.
+Синтаксис следующий: `a++`, `a*+`, `a?+`, `a{2,4}+`. 
+В настоящее время это поддерживается только для простых скобок, но не для скобок 
+после группы, как в `(foo|bar){3,5}+`.
 
-This regex feature is [described
-here.](https://regular-expressions.mobi/possessive.html?wlr=1) In short,
-possessive quantifier speeds up matching in complex cases.
+Эта функция регулярных выражений 
+[описана здесь](https://regular-expressions.mobi/possessive.html?wlr=1). 
+Коротко говоря, владеющий квантификатор ускоряет совпадение в сложных случаях.
 
 ## Альтернативы
 
 Выражения в списке альтернатив разделяются `|`.
 
-So `fee|fie|foe` will match any of `fee`, `fie`, or `foe` in the target
-string (as would `f(e|i|o)e`).
+Таким образом, `fee|fie|foe` совпадет с любым из `fee`, `fie` или `foe` в 
+целевой строке (как и `f(e|i|o)e`).
 
-The first expression includes everything from the last pattern delimiter
-(`(`, `[`, or the beginning of the pattern) up to the first `|`, and the
-last expression contains everything from the last `|` to the next
-pattern delimiter.
+Первое выражение включает все, начиная от последнего разделителя шаблона (`(`, `[` 
+или начала шаблона) до первого `|`, а последнее выражение содержит все от последнего `|` 
+до следующего разделителя шаблона.
 
-Sounds a little complicated, so it’s common practice to include the
-choice in parentheses, to minimize confusion about where it starts and
-ends.
+Звучит немного сложно, поэтому обычно выбор заключают в скобки, чтобы минимизировать 
+путаницу относительно его начала и конца.
 
-Expressions in the choice are tried from left to right, so the first
-expression that matches, is the one that is chosen.
+Выражения в выборе пробуются слева направо, поэтому выбирается первое совпадающее 
+выражение.
 
-For example, regular expression `foo|foot` in string `barefoot` will
-match `foo`. Just a first expression that matches.
+Например, регулярное выражение `foo|foot` в строке `barefoot` совпадет с `foo`. 
+Просто с первым совпадающим выражением.
 
-Also remember that `|` is interpreted as a literal within square
-brackets, so if you write `[fee|fie|foe]` you’re really only matching
-`[feio|]`.
+Также помните, что `|` интерпретируется как буквальный символ в квадратных скобках, 
+так что если вы напишете `[fee|fie|foe]`, на самом деле вы совпадете только с `[feio|]`.
 
 | RegEx          | Находит               |
 |----------------|-----------------------|
