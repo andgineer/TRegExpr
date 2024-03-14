@@ -610,7 +610,7 @@ When the modifier is `On`:
 
 The modifier is set <span class="title-ref">On</span> by default.
 
-## Assertions
+## Assertions (lookahead, lookahead)
 
 <a name="assertions"></a>
 

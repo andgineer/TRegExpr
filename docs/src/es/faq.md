@@ -1,156 +1,109 @@
-# Preguntas más frecuentes
+# Preguntas Frecuentes
 
-## Encontré un error grave: ¡TRegExpr genera la excepción de violación de acceso!
+## Encontré un error terrible: ¡TRegExpr provoca una excepción de violación de acceso!
 
-**Responder**
+**Respuesta**
 
-You must create the object before usage. So, after you declared
-something like:
-
-``` pascal
-r: TRegExpr
-```
-
-No te olvides de crear la instancia de objeto:
+Debe crear el objeto antes de usarlo. Por lo tanto, después de haber declarado algo como:
 
 ``` pascal
-r: = TRegExpr.Create. 
+r : TRegExpr
 ```
 
-## Las expresiones regulares con (? = ...) no funcionan
+no olvide crear la instancia del objeto:
 
-Look ahead is not implemented in the TRegExpr. But in many cases you can
-easily [replace it with simple
-subexpressions](regular_expressions.md#lookahead).
+``` pascal
+r := TRegExpr.Create.
+```
 
-## ¿Es compatible con Unicode?
+## ¿Soporta Unicode?
 
-**Responder**
+**Respuesta**
 
 [Cómo usar Unicode](tregexpr.md#unicode)
 
 ## ¿Por qué TRegExpr devuelve más de una línea?
 
-For example, r.e. `<font .\*>` returns the first `<font`, then the rest
-of the file including last `</html>`.
+Por ejemplo, r.e. `<font .\*>` devuelve el primer `<font`, luego el resto del archivo incluyendo el último `</html>`.
 
-**Responder**
+**Respuesta**
 
-For backward compatibility, [modifier
-/s](regular_expressions.md#modifier_s) is `On` by default.
+Por compatibilidad hacia atrás, [el modificador /s](regular_expressions.md#s) está `Activado` por defecto.
 
-Switch it Off and `.` will match any but [Line
-separators](regular_expressions.md#syntax_line_separators) - exactly
-as you wish.
+Desactívalo y `.` coincidirá con cualquier cosa excepto [separadores de línea](regular_expressions.md#lineseparators) - exactamente como deseas.
 
-Por cierto, recomiendo `<font ([^\n>] *)>`, en `Match [1]` se convierte
-en la URL.\</font\>.
+Por cierto, sugiero `<font ([^\n>]*)>`, en `Match[1]` estará la URL.
 
-## ¿Por qué TRegExpr regresa más de lo que esperaba?
+## ¿Por qué TRegExpr devuelve más de lo que espero?
 
-For example r.e. `<p>(.+)</p>` applyed to string `<p>a</p><p>b</p>`
-returns `a</p><p>b` but not `a` as I expected.
+Por ejemplo, r.e. `<p>(.+)</p>` aplicado a la cadena `<p>a</p><p>b</p>` devuelve `a</p><p>b` pero no `a` como esperaba.
 
-**Responder**
+**Respuesta**
 
-By default all operators works in `greedy` mode, so they match as more
-as it possible.
+Por defecto, todos los operadores trabajan en modo `voraz`, por lo que coinciden tanto como sea posible.
 
-If you want `non-greedy` mode you can use `non-greedy` operators like
-`+?` and so on or switch all operators into `non-greedy` mode with help
-of modifier `g` (use appropriate TRegExpr properties or operator `?(-g)`
-in r.e.).
+Si deseas un modo `no voraz` puedes usar operadores no voraces como `+?` y demás o cambiar todos los operadores a modo no voraz con la ayuda del modificador `g` (usa las propiedades apropiadas de TRegExpr o el operador `?(-g)` en r.e.).
 
-## Cómo analizar fuentes como HTML con la ayuda de TRegExpr?
+## ¿Cómo analizar fuentes como HTML con la ayuda de TRegExpr?
 
-**Responder**
+**Respuesta**
 
-Lo siento amigos, pero es casi imposible!
+Lo siento, gente, pero es casi imposible!
 
-Of course, you can easily use TRegExpr for extracting some information
-from HTML, as shown in my examples, but if you want accurate parsing you
-have to use real parser, not r.e.
+Por supuesto, puedes usar fácilmente TRegExpr para extraer alguna información de HTML, como se muestra en mis ejemplos, pero si quieres un análisis preciso tienes que usar un verdadero analizador, no r.e.
 
-You can read full explanation in Tom Christiansen and Nathan Torkington
-`Perl Cookbook`, for example.
+Puedes leer la explicación completa en el `Perl Cookbook` de Tom Christiansen y Nathan Torkington, por ejemplo.
 
-In short - there are many structures that can be easy parsed by real
-parser but cannot at all by r.e., and real parser is much faster to do
-the parsing, because r.e. doesn't simply scan input stream, it performs
-optimization search that can take a lot of time.
+En resumen - hay muchas estructuras que pueden ser fácilmente analizadas por un verdadero analizador pero de ninguna manera por r.e., y el verdadero analizador es mucho más rápido para hacer el análisis, porque r.e. no simplemente escanea la corriente de entrada, realiza una búsqueda de optimización que puede llevar mucho tiempo.
 
-## ¿Hay alguna forma de obtener varias coincidencias de un patrón en TRegExpr?
+## ¿Hay alguna manera de obtener múltiples coincidencias de un patrón en TRegExpr?
 
-**Responder**
+**Respuesta**
 
-Puede iterar coincidencias con el método ExecNext.
+Puedes iterar coincidencias con el método ExecNext.
 
-If you want some example, please take a look at `TRegExpr.Replace`
-method implementation or at the examples for
-[HyperLinksDecorator](demos.md)
+Si deseas algún ejemplo, por favor, echa un vistazo a la implementación del método `TRegExpr.Replace` o a los ejemplos para [HyperLinksDecorator](demos.md)
 
-## Estoy comprobando la entrada del usuario. ¿Por qué TRegExpr devuelve `True` para las cadenas de entrada incorrectas?
+## Estoy comprobando la entrada del usuario. ¿Por qué TRegExpr devuelve `True` para cadenas de entrada incorrectas?
 
-**Responder**
+**Respuesta**
 
-In many cases TRegExpr users forget that regular expression is for
-**search** in input string.
+En muchos casos, los usuarios de TRegExpr olvidan que la expresión regular es para **buscar** en la cadena de entrada.
 
-So, for example if you use `\d{4,4}` expression, you will get success
-for wrong user inputs like `12345` or `any letters 1234`.
+Así que, por ejemplo, si usas la expresión `\d{4,4}`, tendrás éxito para entradas de usuario incorrectas como `12345` o `cualquier letra 1234`.
 
-You have to check from line start to line end to ensure there are no
-anything else around: `^\d{4,4}$`.
+Tienes que verificar desde el inicio hasta el final de la línea para asegurarte de que no haya nada más alrededor: `^\d{4,4}$`.
 
-<a name="nongreedyoptimization"></a>
+## ¿Por qué los iteradores no voraces a veces trabajan como en modo voraz?
 
-## ¿Por qué los iteradores no codiciosos a veces funcionan como en modo codicioso?
+Por ejemplo, el r.e. `a+?,b+?` aplicado a la cadena `aaa,bbb` coincide con `aaa,b`, pero ¿no debería coincidir con `a,b` debido a la no voracidad del primer iterador?
 
-For example, the r.e. `a+?,b+?` applied to string `aaa,bbb` matches
-`aaa,b`, but should it not match `a,b` because of non-greediness of
-first iterator?
+**Respuesta**
 
-**Responder**
+Esto se debe a la forma de trabajar de TRegExpr. De hecho, muchos otros motores de r.e. trabajan exactamente igual: solo realizan una `simple` optimización de búsqueda, y no intentan hacer la mejor optimización.
 
-This is because of TRegExpr way to work. In fact many others r.e.
-engines work exactly the same: they performe only `simple` search
-optimization, and do not try to do the best optimization.
+En algunos casos es malo, pero en general es más una ventaja que una limitación, por razones de rendimiento y previsibilidad.
 
-In some cases it's bad, but in common it's rather advantage then
-limitation, because of performance and predictability reasons.
+La regla principal - r.e. primero intenta coincidir desde el lugar actual y solo si eso es completamente imposible avanza un carácter e intenta de nuevo desde la siguiente posición en el texto.
 
-The main rule - r.e. first of all try to match from current place and
-only if that's completely impossible move forward by one char and try
-again from next position in the text.
+Así que, si usas `a,b+?` coincidirá con `a,b`. En el caso de `a+?,b+?` ahora no se recomienda (añadimos modificador no voraz) pero aún es posible coincidir con más de una `a`, así que TRegExpr lo hará.
 
-So, if you use `a,b+?` it'll match `a,b`. In case of `a+?,b+?` it's now
-not recommended (we add non-greedy modifyer) but still possible to match
-more then one `a`, so TRegExpr will do it.
+TRegExpr como los r.e. de Perl o Unix no intentan avanzar y verificar - sería una "mejor" coincidencia. En primer lugar, simplemente porque no hay forma de decir que una coincidencia es mejor o peor.
 
-TRegExpr like Perl's or Unix's r.e. doesn't attempt to move forward and
-check - would it will be "better" match. Fisrt of all, just because
-there is no way to say it's more or less good match.
+## ¿Cómo puedo usar TRegExpr con Borland C++ Builder?
 
-## ¿Cómo puedo usar TRegExpr con Borland C ++ Builder?
+Tengo un problema ya que no hay disponible un archivo de cabecera (`.h` o `.hpp`).
 
-Tengo un problema porque no hay ningún archivo de encabezado (`.h` o
-`.hpp`) disponible.
+**Respuesta**
 
-**Responder**
+- Agrega `RegExpr.pas` al proyecto `bcb`.
+- Compila el proyecto. Esto genera el archivo de cabecera `RegExpr.hpp`.
+- Ahora puedes escribir código que use la unidad `RegExpr`.
+- No olvides añadir `#include “RegExpr.hpp”` donde sea necesario.
+- No olvides reemplazar todos los `\` en las expresiones regulares con `\\` o redefinir la constante [EscChar](tregexpr.md#escchar).
 
-- Agregue `RegExpr.pas` al proyecto `bcb`.
-- Compilar proyecto. Esto genera el archivo de encabezado `RegExpr.hpp`.
-- Ahora puede escribir código que usa la unidad `RegExpr`.
-- No olvide agregar `#include “RegExpr.hpp”` donde sea necesario.
-- Don't forget to replace all `\` in regular expressions with `\\` or
-  redefined [EscChar](tregexpr.md#escchar) const.
+## ¿Por qué muchos r.e. (incluyendo r.e. de la ayuda y demo de TRegExpr) funcionan mal en Borland C++ Builder?
 
-## ¿Por qué muchos re (incluyendo re desde TRegExpr help y demo) funcionan mal en Borland C ++ Builder?
+**Respuesta**
 
-**Responder**
-
-The hint is in the previous question ;) Symbol `\` has special meaning
-in `C++`, so you have to `escape` it (as described in previous answer).
-But if you don't like r.e. like `\\w+\\\\w+\\.\\w+` you can redefine the
-constant `EscChar` (in `RegExpr.pas`). For example `EscChar = "/"`. Then
-you can write `/w+/w+/./w+`, looks unusual but more readable.
+La pista está en la pregunta anterior ;) El símbolo `\` tiene un significado especial en `C++`, por lo que tienes que `escaparlo` (como se describió en la respuesta anterior). Pero si no te gustan los r.e. como `\\w+\\w+\\.\\w+` puedes redefinir la constante `EscChar` (en `RegExpr.pas`). Por ejemplo `EscChar = "/"`. Entonces puedes escribir `/w+/w+/./w+`, parece inusual pero es más legible.

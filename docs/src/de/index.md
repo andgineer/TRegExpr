@@ -13,41 +13,38 @@
 
 Die TRegExpr-Bibliothek implementiert [reguläre Ausdrücke](regular_expressions.md).
 
-Reguläre Ausdrücke sind einfach zu verwenden und ein leistungsstarkes Werkzeug für 
-anspruchsvolle Such- und Ersetzungsvorgänge sowie für die Überprüfung von Texten auf
-Basis von Vorlagen.
+Reguläre Ausdrücke sind ein einfach zu benutzendes und leistungsfähiges Werkzeug für komplexe
+Such- und Ersetzungsoperationen sowie für die Überprüfung von Texten anhand von Vorlagen.
 
-Sie sind besonders nützlich für die Validierung von Benutzereingaben in 
-Eingabeformularen - zum Validieren von E-Mail-Adressen und so weiter.
+Sie sind besonders nützlich für die Validierung von Benutzereingaben in Formularen - zum
+Validieren von E-Mail-Adressen und so weiter.
 
-Außerdem können Sie Telefonnummern, Postleitzahlen usw. von Webseiten oder Dokumenten 
-extrahieren, nach komplexen Mustern in Protokolldateien suchen und alles, was Sie 
-sich vorstellen können. Regeln (Vorlagen) können geändert werden, ohne Ihr Programm 
+Außerdem können Sie Telefonnummern, Postleitzahlen usw. von Webseiten oder
+Dokumenten extrahieren, nach komplexen Mustern in Logdateien suchen und alles, was Sie sich
+vorstellen können. Regeln (Vorlagen) können geändert werden, ohne Ihr Programm
 neu kompilieren zu müssen.
 
-TRegExpr ist in reinem Pascal implementiert. 
-Es ist in das [Lazarus (Free Pascal)](http://wiki.freepascal.org/Regexpr): 
-[package](https://github.com/fpc/FPCSource/tree/main/packages/regexpr)
-Es existiert aber auch als separate Bibliothek und kann mit Delphi 2-7, Borland C++ 
-Builder 3-6 kompiliert werden.
+TRegExpr ist in reinem Pascal implementiert. Es ist in [Lazarus
+(Free Pascal)](http://wiki.freepascal.org/Regexpr) enthalten: 
+[Paket](https://github.com/fpc/FPCSource/tree/main/packages/regexpr). 
+Aber es
+existiert auch als separate Bibliothek und kann mit Delphi 2-7, Borland
+C++ Builder 3-6 kompiliert werden.
 
-Machen Sie sich ein Bild von der
-[Resonanz](https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html)
-bei den Anwendern.
+[Wie gut die Bibliothek aufgenommen wurde](https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html).
 
 # Schnellstart
 
-To use the library just add [the sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](tregexpr.md).
+Um die Bibliothek zu verwenden, fügen Sie einfach [die Quellen](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
+zu Ihrem Projekt hinzu und verwenden Sie die Klasse [TRegExpr](tregexpr.md).
 
-In den [FAQ](faq.md) können Sie aus den Problemen anderer Nutzer
-lernen.
+Im [FAQ](faq.md) können Sie von den Problemen anderer Benutzer lernen.
 
-Ready to run Windows application
+Die sofort einsatzbereite Windows-Anwendung
 [REStudio](https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip)
-will help you learn and debug regular expressions.
+hilft Ihnen, reguläre Ausdrücke zu lernen und zu debuggen.
 
-If you see any problems, please [create the bug](https://github.com/andgineer/TRegExpr/issues).
+Wenn Sie Probleme sehen, bitte [erstellen Sie ein Ticket](https://github.com/andgineer/TRegExpr/issues).
 
 # Übersetzungen
 
@@ -55,33 +52,32 @@ Die Dokumentation wurde ins
 [Englische](https://regex.sorokin.engineer/) und
 [Russische](https://regexpr.sorokin.engineer/ru/) übersetzt.
 
-Es gibt unvollständige Übersetzungen in einige andere Sprachen. 
-Wenn Sie helfen möchten, diese zu vervollständigen,
+Es gibt unvollständige Übersetzungen in mehrere andere Sprachen.
+Wenn Sie helfen möchten, sie zu vervollständigen,
 [kontaktieren Sie mich](https://github.com/andgineer).
 
 # Dankbarkeit
 
-Many features suggested and a lot of bugs founded (and even fixed) by
-TRegExpr’s contributors.
+Viele Funktionen wurden vorgeschlagen und viele Fehler gefunden (und sogar behoben) von
+den Beitragenden von TRegExpr.
 
-I cannot list here all of them, but I do appreciate all bug-reports,
-features suggestions and questions that I am receiving from you.
+Ich kann hier nicht alle auflisten, aber ich schätze alle Fehlerberichte,
+Funktionsvorschläge und Fragen, die ich von Ihnen erhalte.
 
-- [Alexey Torgashin](https://github.com/Alexey-T) - main contributor since 2019, e.g. 
-- named groups, non-capturing groups, assertions, backward search and much more
-- Guido Muehlwitz - hässlicher Fehler in der Verarbeitung großer Seiten
-  gefunden und behoben
-- Stephan Klimek - testing in C++Builder and suggesting/implementing
-  many features
-- Steve Mudford - Offset-Parameter implementiert
-- Martin Baur ([www.mindpower.com](http://www.mindpower.com)) -German
-  translation, usefull suggestions
-- Yury Finkel - implemented Unicode support, found and fixed some bugs
-- Ralf Junker - implemented some features, many optimization suggestions
+- [Alexey Torgashin](https://github.com/Alexey-T) - Hauptbeitragender seit 2019, z.B.
+- benannte Gruppen, nicht erfassende Gruppen, Behauptungen, rückwärtige Suche und vieles mehr
+- Guido Muehlwitz - fand und korrigierte einen schweren Fehler bei der Verarbeitung großer Zeichenketten
+- Stephan Klimek - Testen in C++Builder und Vorschlagen/Implementieren
+  vieler Funktionen
+- Steve Mudford - implementierte den Offset-Parameter
+- Martin Baur ([www.mindpower.com](http://www.mindpower.com)) - deutsche
+  Übersetzung, nützliche Vorschläge
+- Yury Finkel - implementierte Unicode-Unterstützung, fand und korrigierte einige Fehler
+- Ralf Junker - implementierte einige Funktionen, viele Optimierungsvorschläge
 - Simeon Lilov - Bulgarische Übersetzung
-- Filip Jirsбk and Matthew Winter - help in implementation non-greedy
-  mode
-- Kit Eason - many examples for introduction help section
-- Jürgen Schroth - Käferjagd und nützliche Vorschläge
-- Martin Ledoux - französische Übersetzung
-- Diego Calp, Argentinien - spanische Übersetzung
+- Filip Jirsбk und Matthew Winter - Hilfe bei der Implementierung des nicht gierigen
+  Modus
+- Kit Eason - viele Beispiele für den Einführungshilfeabschnitt
+- Juergen Schroth - Fehlersuche und nützliche Vorschläge
+- Martin Ledoux - Französische Übersetzung
+- Diego Calp, Argentinien - Spanische Übersetzung

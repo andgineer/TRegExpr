@@ -322,6 +322,8 @@ Shows P-code (compiled regular expression) as human-readable string.
 
 ### EscChar
 
+<a name="escchar"></a>
+
 Escape character, by default backslash `'\'`.
 
 ### SubstituteGroupChar
@@ -493,6 +495,8 @@ ones.
      end;
 
 ## Unicode
+
+<a name="unicode"></a>
 
 In Unicode mode, all strings (InputString, Expression, internal strings)
 are of type UnicodeString/WideString, instead of simple "string".

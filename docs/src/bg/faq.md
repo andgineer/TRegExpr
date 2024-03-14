@@ -1,157 +1,109 @@
 # ЧЗВ
 
-## Намерих ужасна грешка: TRegExpr повдига изключението за нарушение на достъп!
+## Открих ужасен бъг: TRegExpr предизвиква изключение за нарушение на достъпа!
 
 **Отговор**
 
-You must create the object before usage. So, after you declared
-something like:
+Трябва да създадете обекта преди употреба. Така че, след като декларирате нещо като:
 
 ``` pascal
-r: TRegExpr
+r : TRegExpr
 ```
 
-не забравяйте да създадете екземпляр на обекта:
+не забравяйте да създадете инстанция на обекта:
 
 ``` pascal
-r: = TRegExpr.Създайте. 
+r := TRegExpr.Create.
 ```
-
-## Регулярните изрази с (? = ...) не работят
-
-Look ahead is not implemented in the TRegExpr. But in many cases you can
-easily [replace it with simple
-subexpressions](regular_expressions.md#lookahead).
 
 ## Поддържа ли Unicode?
 
 **Отговор**
 
-[Как да използваме Unicode](tregexpr.md#unicode)
+[Как да използвате Unicode](tregexpr.md#unicode)
 
 ## Защо TRegExpr връща повече от един ред?
 
-For example, r.e. `<font .\*>` returns the first `<font`, then the rest
-of the file including last `</html>`.
+Например, р.и. `<font .*>` връща първия `<font`, а след това останалата част от файла, включително последният `</html>`.
 
 **Отговор**
 
-For backward compatibility, [modifier
-/s](regular_expressions.md#modifier_s) is `On` by default.
+За обратна съвместимост, [модификаторът /s](regular_expressions.md#s) по подразбиране е включен.
 
-Switch it Off and `.` will match any but [Line
-separators](regular_expressions.md#syntax_line_separators) - exactly
-as you wish.
+Изключете го и `.` ще съответства на всеки символ, освен [разделители на редове](regular_expressions.md#lineseparators) - точно както искате.
 
-BTW Предлагам `<font ([^\n>] *)&gt;`, в `Match [1]` ще бъде URL
-адресът.\</font\>
+Между другото, предлагам `<font ([^\n>]*)>`, в `Match[1]` ще бъде URL.
 
-## Защо TRegExpr се връща повече, отколкото очаквам?
+## Защо TRegExpr връща повече, отколкото очаквам?
 
-For example r.e. `<p>(.+)</p>` applyed to string `<p>a</p><p>b</p>`
-returns `a</p><p>b` but not `a` as I expected.
+Например, р.и. `<p>(.+)</p>`, приложен към низ `<p>a</p><p>b</p>`, връща `a</p><p>b`, а не `a`, както очаквах.
 
 **Отговор**
 
-By default all operators works in `greedy` mode, so they match as more
-as it possible.
+По подразбиране всички оператори работят в „алчен“ режим, така че те съответстват на възможно най-много.
 
-If you want `non-greedy` mode you can use `non-greedy` operators like
-`+?` and so on or switch all operators into `non-greedy` mode with help
-of modifier `g` (use appropriate TRegExpr properties or operator `?(-g)`
-in r.e.).
+Ако искате режим „неалчен“, можете да използвате оператори като `+?` и така нататък или да превключите всички оператори в режим „неалчен“ с помощта на модификатор `g` (използвайте подходящите свойства на TRegExpr или оператор `?(-g)` в р.и.).
 
-## Как да анализираме източници като HTML с помощта на TRegExpr?
+## Как да анализирам източници като HTML с помощта на TRegExpr?
 
 **Отговор**
 
-За съжаление, хора, но е почти невъзможно!
+Съжалявам, хора, но това е почти невъзможно!
 
-Of course, you can easily use TRegExpr for extracting some information
-from HTML, as shown in my examples, but if you want accurate parsing you
-have to use real parser, not r.e.
+Разбира се, лесно можете да използвате TRegExpr за извличане на някоя информация от HTML, както е показано в моите примери, но ако искате точен анализ, трябва да използвате истински парсер, а не р.и.
 
-You can read full explanation in Tom Christiansen and Nathan Torkington
-`Perl Cookbook`, for example.
+Можете да прочетете пълното обяснение, например, в `Perl Cookbook` на Том Кристиансен и Нейтън Торкингтън.
 
-In short - there are many structures that can be easy parsed by real
-parser but cannot at all by r.e., and real parser is much faster to do
-the parsing, because r.e. doesn't simply scan input stream, it performs
-optimization search that can take a lot of time.
+Накратко - има много структури, които могат лесно да бъдат анализирани от истински парсер, но изобщо не могат да бъдат от р.и., и истинският парсер много по-бързо извършва анализа, защото р.и. не просто сканира входния поток, той извършва оптимизационно търсене, което може да отнеме много време.
 
-## Има ли начин да получите множество съвпадения на модел в TRegExpr?
+## Има ли начин да получа множество съвпадения на модел в TRegExpr?
 
 **Отговор**
 
-Можете да повторите съвпадения с метода ExecNext.
+Можете да итерирате съвпаденията с метода ExecNext.
 
-If you want some example, please take a look at `TRegExpr.Replace`
-method implementation or at the examples for
-[HyperLinksDecorator](demos.md)
+Ако искате някакъв пример, моля, разгледайте имплементацията на метода `TRegExpr.Replace` или примерите за [HyperLinksDecorator](demos.md)
 
-## Проверявам въвеждането от потребителя. Защо TRegExpr връща &quot;True&quot; за погрешни низове?
+## Проверявам потребителски вход. Защо TRegExpr връща `True` за грешни входни низове?
 
 **Отговор**
 
-In many cases TRegExpr users forget that regular expression is for
-**search** in input string.
+В много случаи потребителите на TRegExpr забравят, че регулярното изражение е за **търсене** във входния низ.
 
-So, for example if you use `\d{4,4}` expression, you will get success
-for wrong user inputs like `12345` or `any letters 1234`.
+Така че, например, ако използвате израза `\d{4,4}`, ще получите успех за грешни потребителски входове като `12345` или `всякакви букви 1234`.
 
-You have to check from line start to line end to ensure there are no
-anything else around: `^\d{4,4}$`.
+Трябва да проверите от началото до края на реда, за да сте сигурни, че около него няма нищо друго: `^\d{4,4}$`.
 
-<a name="nongreedyoptimization"></a>
+## Защо понякога неалчните итератори работят като в алчен режим?
 
-## Защо понякога алчните итератори работят както в алчен режим?
-
-For example, the r.e. `a+?,b+?` applied to string `aaa,bbb` matches
-`aaa,b`, but should it not match `a,b` because of non-greediness of
-first iterator?
+Например, р.и. `a+?,b+?`, приложен към низ `aaa,bbb`, съответства на `aaa,b`, но не би ли трябвало да съответства на `a,b` поради неалчността на първия итератор?
 
 **Отговор**
 
-This is because of TRegExpr way to work. In fact many others r.e.
-engines work exactly the same: they performe only `simple` search
-optimization, and do not try to do the best optimization.
+Това е поради начина на работа на TRegExpr. Фактически много други двигатели за р.и. работят точно по същия начин: те извършват само `проста` оптимизация на търсенето и не се опитват да направят най-добрата оптимизация.
 
-In some cases it's bad, but in common it's rather advantage then
-limitation, because of performance and predictability reasons.
+В някои случаи това е лошо, но като цяло това е по-скоро предимство, отколкото ограничение, поради причини за производителност и предвидимост.
 
-The main rule - r.e. first of all try to match from current place and
-only if that's completely impossible move forward by one char and try
-again from next position in the text.
+Основното правило - р.и. първо опитва да намери съвпадение от текущото място и само ако това е напълно невъзможно, се движи напред с един знак и опитва отново от следващата позиция в текста.
 
-So, if you use `a,b+?` it'll match `a,b`. In case of `a+?,b+?` it's now
-not recommended (we add non-greedy modifyer) but still possible to match
-more then one `a`, so TRegExpr will do it.
+Така че, ако използвате `a,b+?`, то ще съответства на `a,b`. В случай на `a+?,b+?` вече не се препоръчва (добавихме модификатор за неалчност), но все още е възможно да съответства на повече от едно `a`, така че TRegExpr ще го направи.
 
-TRegExpr like Perl's or Unix's r.e. doesn't attempt to move forward and
-check - would it will be "better" match. Fisrt of all, just because
-there is no way to say it's more or less good match.
+TRegExpr като Perl или Unix r.e. не се опитва да се движи напред и да проверява - ще бъде ли "по-добро" съвпадение. Първо и най-важно, просто защото няма начин да се каже, че съвпадението е по-добро или по-лошо.
 
-## Как мога да използвам TRegExpr с Borland C ++ Builder?
+## Как мога да използвам TRegExpr с Borland C++ Builder?
 
-Имам проблем, тъй като не е наличен заглавен файл (&quot;.h&quot; или
-&quot;.hpp&quot;).
+Имам проблем, тъй като не е наличен файл за заглавие (`.h` или `.hpp`).
 
 **Отговор**
 
 - Добавете `RegExpr.pas` към проекта `bcb`.
-- Съставете проект. Това генерира заглавния файл `RegExpr.hpp`.
-- Сега можете да напишете код, който използва модула `RegExpr`.
-- Не забравяйте да добавите `#include &#39;RegExpr.hpp&#39;` където е
-  необходимо.
-- Don't forget to replace all `\` in regular expressions with `\\` or
-  redefined [EscChar](tregexpr.md#escchar) const.
+- Компилирайте проекта. Това генерира файлът за заглавие `RegExpr.hpp`.
+- Сега можете да пишете код, който използва единицата `RegExpr`.
+- Не забравяйте да добавите `#include “RegExpr.hpp”`, където е необходимо.
+- Не забравяйте да замените всички `\` в регулярните изрази с `\\` или да преопределите константата [EscChar](tregexpr.md#escchar).
 
-## Защо много от тях (включително re от TRegExpr помощ и демо) работят погрешно в Borland C ++ Builder?
+## Защо много р.и. (включително р.и. от помощта и демото на TRegExpr) работят грешно в Borland C++ Builder?
 
 **Отговор**
 
-The hint is in the previous question ;) Symbol `\` has special meaning
-in `C++`, so you have to `escape` it (as described in previous answer).
-But if you don't like r.e. like `\\w+\\\\w+\\.\\w+` you can redefine the
-constant `EscChar` (in `RegExpr.pas`). For example `EscChar = "/"`. Then
-you can write `/w+/w+/./w+`, looks unusual but more readable.
+Подсказката е в предишния въпрос ;) Символът `\` има специално значение в `C++`, така че трябва да го `екранирате` (както е описано в предишния отговор). Но ако не ви харесват р.и. като `\\w+\\w+\\.\\w+`, можете да преопределите константата `EscChar` (в `RegExpr.pas`). Например `EscChar = "/"`. Тогава можете да пишете `/w+/w+/./w+`, изглежда необичайно, но е по-четимо.

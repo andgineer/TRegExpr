@@ -11,73 +11,51 @@
 
 # Въведение
 
-Библиотеката TRegExpr имплементира [регулярни изрази](regular_expressions.md).
+Библиотеката TRegExpr реализира [регулярни изрази](regular_expressions.md).
 
-Регулярните изрази са лесни за използване и мощен инструмент за сложно 
-търсене и замяна, както и за проверка на текст на базата на шаблони.
+Регулярните изрази са лесни за използване и мощен инструмент за сложно търсене и замяна, както и за проверка на текст по шаблон.
 
-Те са особено полезни за валидация на потребителски вход във форми - за валидиране 
-на електронни адреси и така нататък.
+Те са особено полезни за валидиране на потребителски вход във формуляри - за валидиране на електронни адреси и т.н.
 
-Също така можете да извличате телефонни номера, пощенски кодове и др. от уеб страници 
-или документи, да търсите сложни модели в лог файлове и всичко, което можете да си 
-представите. Правилата (шаблоните) могат да бъдат променяни без да е необходима 
-рекомпилация на вашата програма.
+Също така можете да извлечете телефонни номера, пощенски кодове и др. от уеб страници или документи, да търсите сложни модели в лог файлове и всичко, което можете да си представите. Правилата (шаблоните) могат да бъдат променяни без да е необходимо да прекомпилирате вашата програма.
 
-TRegExpr е имплементиран на чист Pascal. Включен е в проекта 
-[Lazarus (Free Pascal)](http://wiki.freepascal.org/Regexpr): 
-[package](https://github.com/fpc/FPCSource/tree/main/packages/regexpr). 
-Но също така съществува като отделна библиотека и може да бъде компилиран с Delphi 2-7, 
-Borland C++ Builder 3-6.
+TRegExpr е реализирана изцяло на Pascal. Включена е в [Lazarus (Free Pascal)](http://wiki.freepascal.org/Regexpr): [пакет](https://github.com/fpc/FPCSource/tree/main/packages/regexpr). Но съществува и като отделна библиотека и може да бъде компилирана с Delphi 2-7, Borland C++ Builder 3-6.
 
-[Колко хубава беше библиотеката](https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html)
+[Как библиотеката беше посрещната](https://sorokin.engineer/posts/en/regexpstudio_site_is_lunched.html).
 
 # Бърз старт
 
-To use the library just add [the sources](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas)
-to you project and use the class [TRegExpr](tregexpr.md).
+За да използвате библиотеката, просто добавете [изходния код](https://github.com/andgineer/TRegExpr/blob/master/src/regexpr.pas) към вашия проект и използвайте класа [TRegExpr](tregexpr.md).
 
-В [Често задавани въпроси](faq.md) можете да научите от проблемите на
-другите потребители.
+В [често задаваните въпроси (FAQ)](faq.md) можете да научите за проблемите на други потребители.
 
-Ready to run Windows application
-[REStudio](https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip)
-will help you learn and debug regular expressions.
+Готовата за използване Windows приложение [REStudio](https://github.com/andgineer/TRegExpr/releases/download/0.952b/restudio.zip) ще ви помогне да научите и отстраните грешки в регулярните изрази.
 
-If you see any problems, please [create the bug](https://github.com/andgineer/TRegExpr/issues).
+Ако видите някакви проблеми, моля [създайте бъг](https://github.com/andgineer/TRegExpr/issues).
 
 # Преводи
 
-Документацията е преведена на
-[английски](https://regex.sorokin.engineer/) и
-[руски](https://regexpr.sorokin.engineer/ru/).
+Документацията е преведена на [английски](https://regex.sorokin.engineer/) и [руски](https://regexpr.sorokin.engineer/ru/).
 
-Има незавършени преводи на няколко други езика. Ако искате да помогнете да ги завършите,
-[свържете се с мен](https://github.com/andgineer).
+Има незавършени преводи на няколко други езика. Ако искате да помогнете да ги довършите, [свържете се с мен](https://github.com/andgineer).
 
-# благодарност
+# Благодарности
 
-Many features suggested and a lot of bugs founded (and even fixed) by
-TRegExpr’s contributors.
+Много функции бяха предложени и много грешки бяха открити (и дори поправени) от допринасящите към TRegExpr.
 
-I cannot list here all of them, but I do appreciate all bug-reports,
-features suggestions and questions that I am receiving from you.
+Не мога да ги изброя всички тук, но оценявам всички съобщения за грешки, предложения за функции и въпроси, които получавам от вас.
 
-- [Alexey Torgashin](https://github.com/Alexey-T) - main contributor since 2019, e.g. 
-- named groups, non-capturing groups, assertions, backward search and much more
-- Guido Muehlwitz - открил и фиксирал грозна грешка при обработката на
-  големи низове
-- Stephan Klimek - testing in C++Builder and suggesting/implementing
-  many features
-- Стив Мъдфорд - внедрен параметър Offset
-- Martin Baur ([www.mindpower.com](http://www.mindpower.com)) -German
-  translation, usefull suggestions
-- Yury Finkel - implemented Unicode support, found and fixed some bugs
-- Ralf Junker - implemented some features, many optimization suggestions
-- Симеон Лилов - превод на български език
-- Filip Jirsбk and Matthew Winter - help in implementation non-greedy
-  mode
-- Kit Eason - many examples for introduction help section
-- Юрген Шрот - лов на бъгове и полезни предложения
-- Мартин Леду - превод на френски
-- Diego Calp, Аржентина - превод на испански
+- [Алексей Торгашин](https://github.com/Alexey-T) - основен сътрудник от 2019 г., например
+- именувани групи, групи без захващане, твърдения, обратно търсене и много други
+- Гуидо Мюлвиц - откри и поправи грозен бъг при обработката на големи низове
+- Стефан Климек - тестване в C++Builder и предлагане/имплементиране на много функции
+- Стив Мъдфорд - имплементирал параметъра Offset
+- Мартин Баур ([www.mindpower.com](http://www.mindpower.com)) - германски превод, полезни предложения
+- Юрий Финкел - имплементирал поддръжка на Unicode, открил и поправил някои грешки
+- Ралф Юнкер - имплементирал някои функции, много предложения за оптимизация
+- Симеон Лилов - български превод
+- Филип Йирсак и Матю Уинтър - помощ при имплементирането на неалчния режим
+- Кит Ийсън - много примери за секцията за помощ при въведението
+- Юрген Шрьот - лов на бъгове и полезни предложения
+- Мартин Леду - френски превод
+- Диего Калп, Аржентина - испански превод

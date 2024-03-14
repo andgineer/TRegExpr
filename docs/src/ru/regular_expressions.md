@@ -77,7 +77,7 @@
 
 <a name="escape"></a>
 
-### Экранирование(escaping
+### Экранирование(escaping)
 
 Чтобы представить специальный символ регулярного выражения (один из `.+*?|\()[]{}^$`), 
 поставьте перед ним обратный слэш `\`. 
@@ -196,8 +196,7 @@ category)</div></td>
 </tr>
 <tr class="odd">
 <td><p><code>\R</code></p></td>
-<td><div class="line-block">unicode line break: LF, pair CR LF,
-CR,<br />
+<td><div class="line-block">Юникод разрыв строки: LF, пара CR LF, CR.<br />
 FF (form feed), VT (vertical tab), U+0085, U+2028, U+2029</div></td>
 </tr>
 </tbody>
@@ -215,8 +214,8 @@ FF (form feed), VT (vertical tab), U+0085, U+2028, U+2029</div></td>
 > [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> Properties [SpaceChars](tregexpr.md#spacechars) and
-> [WordChars](tregexpr.md#wordchars) define character classes `\w`,
+> Свойства [SpaceChars](tregexpr.md#spacechars) и
+> [WordChars](tregexpr.md#wordchars) определяют классы символов `\w`,
 > `\W`, `\s`, `\S`.
 >
 > Таким образом, вы можете переопределить эти классы.
@@ -412,15 +411,16 @@ FF (form feed), VT (vertical tab), U+0085, U+2028, U+2029</div></td>
 > [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> Группы (подвыражения) positions, lengths and actual values will be in
+> Группы (подвыражения) позиции, длины и подвыражения будут в
 > [MatchPos](tregexpr.md#matchpos), [MatchLen](tregexpr.md#matchlen)
-> and [Match](tregexpr.md#match).
+> и [Match](tregexpr.md#match).
 >
-> You can substitute them with [Substitute](tregexpr.md#substitute).
+> Их можно заменить с помощью [Substitute](tregexpr.md#substitute).
 
-Группы (подвыражения) are numbered from left to right by their opening
-parenthesis (including nested groups). First group has index 1. The
-entire regex has index 0.
+Группы (подвыражения) нумеруются слева направо по их открывающей
+скобке (включая вложенные группы). Первая группа имеет индекс 1.
+Весь регулярное выражение имеет индекс 0.
+
 
 > | Группы | (подвыражения) значение |
 > |--------|-------------------------|
@@ -430,13 +430,13 @@ entire regex has index 0.
 
 ## Ссылки на группы (Backreferences)
 
-Метасимволs `\1` through `\9` are interpreted as backreferences to
-capture groups. They match the previously found group with the specified
-index.
+Метасимволы `\1` до `\9` интерпретируются как обратные ссылки (backreference) на
+группы захвата. Они соответствуют ранее найденной группе с указанным
+индексом.
 
-The meta char `\g` followed by a number is also interpreted as
-backreferences to capture groups. It can be followed by a multi-digit
-number.
+Метасимвол `\g`, за которым следует число, также интерпретируется как
+обратная ссылка на группы захвата. За ним может следовать число из нескольких цифр.
+
 
 | RegEx      | Находит                 |
 |------------|-------------------------|
@@ -444,100 +444,100 @@ number.
 | `(.+)\1+`  | также `abab` и `123123` |
 | `(.)\g1+`  | `aaaa` и `cc`           |
 
-RegEx `(['"]?)(\d+)\1` matches `"13"` (in double quotes), or `'4'` (in
-single quotes) or `77` (without quotes) etc.
+RegEx `(['"]?)(\d+)\1` соответствует `"13"` (в двойных кавычках), или `'4'` (в
+одинарных кавычках) или `77` (без кавычек) и т. д.
 
-## Named Группы (подвыражения) and Ссылки на группы (Backreferences)
+## Именованные группы (подвыражения) and Ссылки на группы (Backreferences)
 
 Чтобы присвоить имя группе используйте `(?P<name>expr)` или
-`(?'name'expr)`. And further: `(?<name>expr)`
+`(?'name'expr)`. Далее: `(?<name>expr)`
 
 Имя группы должно начинаться с буквы или `_`, далее следуют буквы, цифры
 или `_`. Именованные и не именованные группы имеют общую нумерацию от
 `1` до `9`.
 
-Ссылки на группы (Backreferences) to named groups are `(?P=name)`, the
-numbers `\1` to `\9` can also be used. As well as the example `\g` and
-`\k` in the table below.
+Ссылки на именованные группы (Backreferences) обозначаются как `(?P=name)`, также можно использовать числа от `\1` до `\9`. Примеры использования `\g` и
+`\k` приведены в таблице ниже.
 
-# Supported syntax are
+# Поддерживаемый синтаксис
 
 `(?P=name)` `\g{name}` `\k{name}` `\k<name>` `\k'name'` ============
 
-Example
+Пример
+
 
 | RegEx                    | Находит             |
 |--------------------------|---------------------|
 | `(?P<qq>['"])\w+(?P=qq)` | `"word"` и `'word'` |
 
-## Matched Result
+## Результат соответствия (match)
 
-The begin of the reported match can be set using `\K`.
+Начало сообщаемого соответствия можно установить с помощью `\K`.
 
-By default the entire text covered by a pattern is considered matched.
-However it is possible to set explicitly what will be reported.
+По умолчанию весь текст, покрываемый шаблоном, считается соответствующим.
+Однако можно явно указать, что будет сообщено.
 
-The pattern `a\Kb` will require the text to contain "ab". But only the
-"b" will be reported as having been matched. Their can be several `\K`
-in a pattern, The last one will set the match-start position. Only `\K`
-in active parts of the pattern are considered. E.g. `a(\Kb)?` will not
-consider `\K` if there is no "b". Captures can exist outside the match
-set by `\K`.
+Шаблон `a\Kb` требует, чтобы текст содержал "ab". Но только "b" будет
+сообщено как соответствующее. В шаблоне может быть несколько `\K`.
+Последний установит позицию начала соответствия. Рассматриваются только `\K`
+в активных частях шаблона. Например, `a(\Kb)?` не будет учитывать `\K`, если
+нет "b". Захваты могут существовать вне соответствия, установленного через `\K`.
 
-If used in other constructs that can apply outside the reported match
-(like look-ahead), then the position marked by `\K` must be before or at
-the reported end of the match. If the position is marked later, the
-match is considered failed.
+Если используется в других конструкциях, которые могут применяться вне сообщаемого соответствия
+(например, в просмотре вперед), то позиция, отмеченная `\K`, должна быть до или в
+конце сообщаемого соответствия. Если позиция отмечена позже, соответствие считается неудачным.
 
-`\K` is somewhat similar to a look-behind. Unlike a look-behind the part
-of the pattern before the `\K` must be after the start position of the
-matching, if the pattern is applied from an offset position within the
-text.
+`\K` несколько похож на просмотр назад. В отличие от просмотра назад, часть
+шаблона перед `\K` должна находиться после начальной позиции соответствия, если шаблон применяется
+со смещенной позиции внутри текста.
+
 
 ## Модификаторы
 
-Модификаторы are for changing behaviour of regular expressions.
+Модификаторы используются для изменения поведения регулярных выражений.
 
-You can set modifiers globally in your system or change inside the
-regular expression using the [(?imsxr-imsxr)](#inlinemodifiers).
+Вы можете установить модификаторы глобально в вашей системе или изменить внутри
+регулярного выражения, используя [(?imsxr-imsxr)](#inlinemodifiers).
 
 > [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> To change modifiers use [ModifierStr](tregexpr.md#modifierstr) or
-> appropriate `TRegExpr` properties
+> Для изменения модификаторов используйте [ModifierStr](tregexpr.md#modifierstr) или
+> соответствующие свойства `TRegExpr`
 > [Modifier\*](tregexpr.md#modifieri).
 >
-> The default values are defined in [global
-> variables](tregexpr.md#global-constants). For example global
-> variable `RegExprModifierX` defines default value for `ModifierX`
-> property.
+> Значения по умолчанию определены в [глобальных
+> переменных](tregexpr.md#global-constants). Например, глобальная
+> переменная `RegExprModifierX` определяет значение по умолчанию для свойства `ModifierX`.
+
 
 <a name="i"></a>
 
 ### i, без учета регистра
 
-Case-insensitive. Use installed in you system locale settings, see also
+Без учета регистра. Использует настройки локали, установленные в вашей системе, 
+см. также
 [InvertCase](tregexpr.md#invertcase).
 
 <a name="m"></a>
 
 ### m, многострочные строки
 
-Treat string as multiple lines. So `^` and `$` matches the start or end
-of any line anywhere within the string.
+Рассматривать строку как несколько строк. Таким образом, `^` и `$` соответствуют началу или концу
+любой строки где угодно внутри строки.
 
-See also [Line Разделители](#lineseparators).
+См. также [Разделители строк](#lineseparators).
+
 
 <a name="s"></a>
 
 ### s, одиночные строки
 
-Treat string as single line. So `.` matches any character whatsoever,
-even a line separators.
+Рассматривать строку как одну строку. Таким образом, `.` соответствует любому символу, 
+включая разделители строк.
 
-See also [Line Разделители](#lineseparators), which it normally would
-not match.
+См. также [Разделители строк](#lineseparators), которым обычно не соответствовал бы.
+
 
 <a name="g"></a>
 
@@ -546,11 +546,12 @@ not match.
 > [!NOTE]
 > Специфичный для [TRegExpr](tregexpr.md) модификатор.
 
-Switching it `Off` you’ll switch [quantifiers](#iterator) into
-[non-greedy](#greedy) mode.
+Выключив его, вы переключите [квантификаторы](#iterator) в
+[нежадный](#greedy) режим.
 
-So, if modifier `/g` is `Off` then `+` works as `+?`, `*` as `*?` and so
-on.
+Так что, если модификатор `/g` выключен, то `+` работает как `+?`, `*` как `*?` и так
+далее.
+
 
 По умолчанию этот модификатор имеет значение `Выкл`.
 
@@ -558,16 +559,17 @@ on.
 
 ### x, расширенный синтаксис
 
-Allows to comment regular expression and break them up into multiple
-lines.
+Позволяет комментировать регулярное выражение и разбивать его на несколько
+строк.
 
-If the modifier is `On` we ignore all whitespaces that is neither
-backslashed nor within a character class.
+Если модификатор включен, мы игнорируем все пробелы, которые не являются
+экранированными или находятся внутри класса символов.
 
 Также символ `#` отделяет комментарии.
 
-Notice that you can use empty lines to format regular expression for
-better readability:
+Обратите внимание, что вы можете использовать пустые строки для форматирования регулярного выражения для
+лучшей читаемости:
+
 
 ``` text
 (
@@ -577,10 +579,11 @@ better readability:
 )
 ```
 
-This also means that if you want real whitespace or `#` characters in
-the pattern (outside a character class, where they are unaffected by
-`/x`), you’ll either have to escape them or encode them using octal or
-hex escapes.
+Это также означает, что если вам нужны настоящие пробелы или символы `#` в
+шаблоне (вне класса символов, где они не подвержены влиянию `/x`), вам придется либо 
+экранировать(escape) их, либо кодировать с помощью октальных или шестнадцатеричных 
+escape-последовательностей.
+
 
 <a name="r"></a>
 
@@ -589,16 +592,16 @@ hex escapes.
 > [!NOTE]
 > Специфичный для [TRegExpr](tregexpr.md) модификатор.
 
-In Russian ASCII table characters `ё`/`Ё` are placed separately from
-others.
+В русской таблице ASCII символы `ё`/`Ё` расположены отдельно от
+остальных.
 
-Big and small Russian characters are in separated ranges, this is the
-same as with
-[English](https://regex.sorokin.engineer/regular_expressions/)
-characters but nevertheless I wanted some short form.
+Большие и маленькие русские буквы находятся в разных диапазонах, это
+так же, как и с
+[английскими](https://regex.sorokin.engineer/regular_expressions/)
+буквами, но тем не менее мне хотелось бы краткой формы.
 
-With this modifier instead of `[а-яА-ЯёЁ]` you can write `[а-Я]` if you
-need all Russian characters.
+С этим модификатором вместо `[а-яА-ЯёЁ]` вы можете написать `[а-Я]`, если вам
+нужны все русские символы.
 
 Когда модификатор включен:
 
@@ -610,7 +613,7 @@ need all Russian characters.
 
 Модификатор по умолчанию установлен на `Вкл`.
 
-## Проверки или заглядывания вперед и назад (Assertions)
+## Проверки или заглядывания вперед и назад (assertions: lookahead, lookahead)
 
 <a name="assertions"></a>
 
@@ -631,37 +634,38 @@ need all Russian characters.
 
 Ограничения:
 
-- Variable length lookbehind are not allowed to contain capture groups.
-  This can be allowed by setting the property `AllowUnsafeLookBehind`.
-  If this is enabled and there is more than one match in the text that
-  the group might capture, then the wrong match may be captured. This
-  does not affect the correctness of the overall assertion. (I.e., the
-  lookbehind will correctly return if the text before matched the
-  pattern).
-- Variable length lookbehind may be slow to execute, if they do not
-  match.
+- Переменная длина lookbehind не допускает содержание групп захвата.
+  Это можно разрешить, установив свойство `AllowUnsafeLookBehind`.
+  Если это включено и в тексте есть более одного соответствия, которое
+  группа может захватить, то может быть захвачено неправильное соответствие. Это
+  не влияет на правильность общего утверждения. (Т.е., lookbehind корректно вернет,
+  если текст перед ним соответствует шаблону).
+- Переменная длина lookbehind может быть медленной в исполнении, если они не
+  соответствуют.
 
-## Non-capturing Группы (подвыражения)
+
+## Не захватывающие группы (подвыражения)
 
 Синтаксис: `(?:subexpression)`.
 
-Such groups do not have the "index" and are invisible for
-backreferences. Non-capturing groups are used when you want to group a
-subexpression, but you do not want to save it as a matched/captured
-portion of the string. So this is just a way to organize your regex into
-subexpressions without overhead of capturing result:
+Такие группы не имеют "индекса" и невидимы для обратных ссылок. 
+Незахватывающие группы используются, когда вы хотите сгруппировать подвыражение, 
+но не хотите сохранять его как совпавшую/захваченную часть строки. 
+Таким образом, это просто способ организовать ваше регулярное выражение в 
+подвыражения без накладных расходов на захват результата:
 
 | RegEx                          | Находит                                                              |
 |--------------------------------|----------------------------------------------------------------------|
 | `(https?|ftp)://([^/\r\n]+)`   | in `https://sorokin.engineer` matches `https` and `sorokin.engineer` |
 | `(?:https?|ftp)://([^/\r\n]+)` | in `https://sorokin.engineer` matches only `sorokin.engineer`        |
 
-## Atomic Группы (подвыражения)
+## Атомарные группы (подвыражения)
 
 Синтаксис: `(?>expr|expr|...)`.
 
-Atomic groups are special case of non-capturing groups. [Description of
-them.](https://regular-expressions.mobi/atomic.html?wlr=1)
+Атомарные группы — это особый случай незахватывающих групп. 
+[Описание их.](https://regular-expressions.mobi/atomic.html?wlr=1)
+
 
 ## Inline Модификаторы
 
@@ -671,18 +675,21 @@ them.](https://regular-expressions.mobi/atomic.html?wlr=1)
 чтобы выключить. Для большого числа модификаторов используется
 синтаксис: `(?msgxr-imsgxr)`.
 
-You may use it inside regular expression for modifying modifiers
-on-the-fly. This can be especially handy because it has local scope in a
-regular expression. It affects only that part of regular expression that
-follows `(?imsgxr-imsgxr)` operator.
+Вы можете использовать это внутри регулярного выражения для изменения модификаторов 
+на лету. 
+Это может быть особенно удобно, потому что оно имеет локальную область видимости в 
+регулярном выражении. 
+Оно влияет только на ту часть регулярного выражения, которая следует за оператором 
+`(?imsgxr-imsgxr)`.
 
-And if it's inside group, it will affect only this group - specifically
-the part of the group that follows the modifiers. So in
-`((?i)Saint)-Petersburg` it affects only group `((?i)Saint)` so it will
-match `saint-Petersburg` but not `saint-petersburg`.
+И если это внутри группы, это будет влиять только на эту группу - конкретно на часть 
+группы, которая следует за модификаторами. 
+Так в `((?i)Saint)-Petersburg` это влияет только на группу `((?i)Saint)`, 
+поэтому оно будет соответствовать `saint-Petersburg`, но не `saint-petersburg`.
 
-Inline modifiers can also be given as part of a non-capturing group:
+Встроенные модификаторы также могут быть заданы как часть незахватывающей группы: 
 `(?i:pattern)`.
+
 
 | RegEx                        | Находит                                      |
 |------------------------------|----------------------------------------------|
@@ -695,8 +702,8 @@ Inline modifiers can also be given as part of a non-capturing group:
 
 Синтаксис: `(?#text)`. Все, что внутри скобок, игнорируется.
 
-Note that the comment is closed by the nearest `)`, so there is no way
-to put a literal `)` in the comment.
+Обратите внимание, что комментарий закрывается ближайшей `)`, 
+поэтому нет способа поместить литеральную `)` в комментарий.
 
 ## Рекурсия
 
@@ -742,7 +749,7 @@ category). Категория обозначается одной буквой, 
 - Ll - Буква нижнего регистра
 - Lm - Буква-модификатор
 - Lo - Прочие буквы
-- Lt - Titlecase Letter
+- Lt - Буква в начальном регистре
 - Lu - Буква в верхнем регистре
 - Mc - Разделитель
 - Me - Закрывающий знак (Enclosing Mark)
@@ -752,19 +759,19 @@ category). Категория обозначается одной буквой, 
   (Letter Number)
 - No - Другие цифры
 - Pc - Connector Punctuation
-- Pd - Dash Punctuation
-- Pe - Close Punctuation
-- Pf - Final Punctuation
-- Pi - Initial Punctuation
-- Po - Other Punctuation
-- Ps - Open Punctuation
-- Sc - Currency Symbol
-- Sk - Modifier Symbol
+- Pd - Тире
+- Pe - Закрывающая пунктуация
+- Pf - Конечная пунктуация
+- Pi - Начальная пунктуация
+- Po - Прочая пунктуация
+- Ps - Открывающая пунктуация
+- Sc - Символ валюты
+- Sk - Символ-модификатор
 - Sm - Математический символ
 - So - Прочие символы
 - Zl - Разделитель строк
-- Zp - Разделитель параграфов
-- Zs - Space Separator
+- Zp - Разделитель абзацев
+- Zs - Разделитель пробелов
 
 Метасимволacter `\p` denotes one Unicode char of specified category.
 Syntax: `\pL` and `\p{L}` for 1-letter name, `\p{Lu}` for 2-letter
@@ -773,10 +780,11 @@ names.
 Метасимволacter `\P` is inverted, it denotes one Unicode char **not** in
 the specified category.
 
-These meta-characters are supported within character classes too.
+Эти мета-символы также поддерживаются внутри классов символов.
 
 ## Послесловие
 
-In this [ancient blog post from previous
-century](https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html)
-I illustrate some usages of regular expressions.
+В этом [древнем блог-посте из прошлого
+века](https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html)
+я иллюстрирую некоторые способы использования регулярных выражений.
+

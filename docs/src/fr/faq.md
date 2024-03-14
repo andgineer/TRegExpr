@@ -1,157 +1,115 @@
 # FAQ
 
-## J&#39;ai trouvé un bug terrible: TRegExpr déclenche une exception de violation d&#39;accès!
+## J'ai trouvé un bug terrible : TRegExpr provoque une exception de violation d'accès !
 
 **Réponse**
 
-You must create the object before usage. So, after you declared
-something like:
+Vous devez créer l'objet avant de l'utiliser. Ainsi, après avoir déclaré quelque chose comme :
 
 ``` pascal
-r: TRegExpr
+r : TRegExpr
 ```
 
-n&#39;oubliez pas de créer l&#39;instance d&#39;objet:
+n'oubliez pas de créer l'instance de l'objet :
 
 ``` pascal
-r: = TRegExpr.Create. 
+r := TRegExpr.Create.
 ```
 
-## Les expressions régulières avec (? = ...) ne fonctionnent pas
-
-Look ahead is not implemented in the TRegExpr. But in many cases you can
-easily [replace it with simple
-subexpressions](regular_expressions.md#lookahead).
-
-## Est-ce qu&#39;il prend en charge Unicode?
+## Est-ce qu'il supporte l'Unicode ?
 
 **Réponse**
 
-[Comment utiliser Unicode](tregexpr.md#unicode)
+[Comment utiliser l'Unicode](tregexpr.md#unicode)
 
-## Pourquoi TRegExpr renvoie-t-il plus d&#39;une ligne?
+## Pourquoi TRegExpr retourne plus d'une ligne ?
 
-For example, r.e. `<font .\*>` returns the first `<font`, then the rest
-of the file including last `</html>`.
-
-**Réponse**
-
-For backward compatibility, [modifier
-/s](regular_expressions.md#modifier_s) is `On` by default.
-
-Switch it Off and `.` will match any but [Line
-separators](regular_expressions.md#syntax_line_separators) - exactly
-as you wish.
-
-BTW, je suggère &quot;\` \<font (\[^n\>\] \*)&gt; &quot;, dans&quot;
-Match \[1\] &quot;sera l&#39;URL.\</font\>
-
-## Pourquoi TRegExpr renvoie-t-il plus que ce à quoi je m&#39;attendais?
-
-For example r.e. `<p>(.+)</p>` applyed to string `<p>a</p><p>b</p>`
-returns `a</p><p>b` but not `a` as I expected.
+Par exemple, r.e. `<font .\*>` retourne le premier `<font`, puis le reste du fichier incluant le dernier `</html>`.
 
 **Réponse**
 
-By default all operators works in `greedy` mode, so they match as more
-as it possible.
+Pour la compatibilité ascendante, le [modificateur /s](regular_expressions.md#s) est `Activé` par défaut.
 
-If you want `non-greedy` mode you can use `non-greedy` operators like
-`+?` and so on or switch all operators into `non-greedy` mode with help
-of modifier `g` (use appropriate TRegExpr properties or operator `?(-g)`
-in r.e.).
+Désactivez-le et `.` correspondra à tout sauf aux [séparateurs de ligne](regular_expressions.md#lineseparators) - exactement comme vous le souhaitez.
 
-## Comment analyser des sources comme HTML avec l&#39;aide de TRegExpr?
+D'ailleurs, je suggère `<font ([^\n>]*)>`, dans `Match[1]` sera l'URL.
 
-**Réponse**
+## Pourquoi TRegExpr retourne plus que ce que j'attends ?
 
-Désolé les gars, mais c&#39;est presque impossible!
-
-Of course, you can easily use TRegExpr for extracting some information
-from HTML, as shown in my examples, but if you want accurate parsing you
-have to use real parser, not r.e.
-
-You can read full explanation in Tom Christiansen and Nathan Torkington
-`Perl Cookbook`, for example.
-
-In short - there are many structures that can be easy parsed by real
-parser but cannot at all by r.e., and real parser is much faster to do
-the parsing, because r.e. doesn't simply scan input stream, it performs
-optimization search that can take a lot of time.
-
-## Existe-t-il un moyen d&#39;obtenir plusieurs correspondances d&#39;un modèle sur TRegExpr?
+Par exemple, r.e. `<p>(.+)</p>` appliqué à la chaîne `<p>a</p><p>b</p>` retourne `a</p><p>b` mais pas `a` comme je l'attendais.
 
 **Réponse**
 
-Vous pouvez itérer des correspondances avec la méthode ExecNext.
+Par défaut, tous les opérateurs fonctionnent en mode `gourmand`, donc ils correspondent autant que possible.
 
-If you want some example, please take a look at `TRegExpr.Replace`
-method implementation or at the examples for
-[HyperLinksDecorator](demos.md)
+Si vous voulez un mode `non gourmand`, vous pouvez utiliser des opérateurs non gourmands comme `+?` etc. ou passer tous les opérateurs en mode non gourmand avec l'aide du modificateur `g` (utilisez les propriétés appropriées de TRegExpr ou l'opérateur `?(-g)` dans r.e.).
 
-## Je vérifie les entrées de l&#39;utilisateur. Pourquoi TRegExpr renvoie-t-il `True` pour les chaînes d&#39;entrée incorrectes?
+## Comment parser des sources comme HTML avec l'aide de TRegExpr ?
 
 **Réponse**
 
-In many cases TRegExpr users forget that regular expression is for
-**search** in input string.
+Désolé, mais c'est presque impossible !
 
-So, for example if you use `\d{4,4}` expression, you will get success
-for wrong user inputs like `12345` or `any letters 1234`.
+Bien sûr, vous pouvez facilement utiliser TRegExpr pour extraire certaines informations de HTML, comme montré dans mes exemples, mais si vous voulez un parsing précis, vous devez utiliser un vrai parseur, pas r.e.
 
-You have to check from line start to line end to ensure there are no
-anything else around: `^\d{4,4}$`.
+Vous pouvez lire l'explication complète dans le `Perl Cookbook` de Tom Christiansen et Nathan Torkington, par exemple.
 
-<a name="nongreedyoptimization"></a>
+En bref - il y a de nombreuses structures qui peuvent être facilement parsées par un vrai parseur mais pas du tout par r.e., et le vrai parseur est beaucoup plus rapide pour faire le parsing, car r.e. ne se contente pas de scanner le flux d'entrée, il effectue une recherche d'optimisation qui peut prendre beaucoup de temps.
 
-## Pourquoi les itérateurs non-gourmands fonctionnent-ils parfois comme en mode gourmand?
-
-For example, the r.e. `a+?,b+?` applied to string `aaa,bbb` matches
-`aaa,b`, but should it not match `a,b` because of non-greediness of
-first iterator?
+## Y a-t-il un moyen d'obtenir plusieurs correspondances d'un motif sur TRegExpr ?
 
 **Réponse**
 
-This is because of TRegExpr way to work. In fact many others r.e.
-engines work exactly the same: they performe only `simple` search
-optimization, and do not try to do the best optimization.
+Vous pouvez itérer les correspondances avec la méthode ExecNext.
 
-In some cases it's bad, but in common it's rather advantage then
-limitation, because of performance and predictability reasons.
+Si vous voulez un exemple, veuillez consulter l'implémentation de la méthode `TRegExpr.Replace` ou les exemples pour [HyperLinksDecorator](demos.md)
 
-The main rule - r.e. first of all try to match from current place and
-only if that's completely impossible move forward by one char and try
-again from next position in the text.
+## Je vérifie l'entrée de l'utilisateur. Pourquoi TRegExpr retourne `Vrai` pour des chaînes d'entrée incorrectes ?
 
-So, if you use `a,b+?` it'll match `a,b`. In case of `a+?,b+?` it's now
-not recommended (we add non-greedy modifyer) but still possible to match
-more then one `a`, so TRegExpr will do it.
+**Réponse**
 
-TRegExpr like Perl's or Unix's r.e. doesn't attempt to move forward and
-check - would it will be "better" match. Fisrt of all, just because
-there is no way to say it's more or less good match.
+Dans de nombreux cas, les utilisateurs de TRegExpr oublient que l'expression régulière est destinée à **rechercher** dans la chaîne d'entrée.
 
-## Comment utiliser TRegExpr avec Borland C ++ Builder?
+Donc, par exemple, si vous utilisez l'expression `\d{4,4}`, vous aurez du succès pour des entrées utilisateur incorrectes comme `12345` ou `n'importe quelles lettres 1234`.
 
-J&#39;ai un problème car aucun fichier d&#39;en-tête (`.h` ou `.hpp`)
-n&#39;est disponible.
+Vous devez vérifier du début à la fin de la ligne pour vous assurer qu'il n'y a rien d'autre autour : `^\d{4,4}$`.
+
+## Pourquoi les itérateurs non gourmands fonctionnent parfois en mode gourmand ?
+
+Par exemple, le r.e. `a+?,b+?` appliqué à la chaîne `aaa,bbb` correspond à `aaa,b`, mais ne devrait-il pas correspondre à `a,b` en raison de la non-gourmandise du premier itérateur ?
+
+**Réponse**
+
+Cela est dû à la manière de fonctionner de TRegExpr. En fait, beaucoup d'autres moteurs r.e. fonctionnent exactement de la même manière : ils n'effectuent qu'une `simple` optimisation de recherche, et n'essaient pas de faire la meilleure optimisation.
+
+Dans certains cas, c'est mauvais, mais en général, c'est plutôt un avantage qu'une limitation, pour des raisons de performance et de prévisibilité.
+
+La règle principale - r.e. essaie d'abord de correspondre à partir de l'endroit actuel et seulement si cela est complètement impossible, il avance d'un caractère et essaie à nouveau à partir de la position suivante dans le texte.
+
+Ainsi, si vous utilisez `a,b+?` cela correspondra à `a,b`. Dans le cas de `a+?,b+?` c'est maintenant déconseillé (nous ajoutons le modificateur non gourmand) mais il est toujours possible de correspondre à plus d'un `a`, donc TRegExpr le fera.
+
+TRegExpr comme les r.e. de Perl ou d'Unix n'essaient pas d'avancer et de vérifier - serait-ce une meilleure correspondance. Tout d'abord, simplement parce qu'il n'y a aucun moyen de dire qu'une correspondance est meilleure ou pire.
+
+## Comment puis-je utiliser TRegExpr avec Borland C++ Builder ?
+
+J'ai un problème car aucun fichier d'en-tête (`.h` ou `.hpp`) n'est disponible.
 
 **Réponse**
 
 - Ajoutez `RegExpr.pas` au projet `bcb`.
-- Compiler le projet. Cela génère le fichier d’en-tête `RegExpr.hpp`.
-- Vous pouvez maintenant écrire du code utilisant l’unité `RegExpr`.
-- N&#39;oubliez pas d&#39;ajouter «#include« RegExpr.hpp »\` \`si
-  nécessaire.
-- Don't forget to replace all `\` in regular expressions with `\\` or
-  redefined [EscChar](tregexpr.md#escchar) const.
+- Compilez le projet. Cela génère le fichier d'en-tête `RegExpr.hpp`.
+- Maintenant, vous pouvez écrire du code qui utilise l'unité `RegExpr`.
+- N'oubliez pas d'ajouter `#include “RegExpr.hpp”` là où c'est nécessaire.
+- N'oubliez pas de remplacer tous les `\` dans les expressions régulières par `\\` ou de redéfinir la constante [EscChar](tregexpr.md#escchar).
 
-## Pourquoi beaucoup de solutions (y compris de l&#39;aide et de la démonstration TRegExpr) fonctionnent-elles mal dans Borland C ++ Builder?
+## Pourquoi de nombreux r.e. (y compris les r.e. de l'aide et de la démo de TRegExpr) fonctionnent mal dans Borland C++ Builder ?
 
 **Réponse**
 
-The hint is in the previous question ;) Symbol `\` has special meaning
-in `C++`, so you have to `escape` it (as described in previous answer).
-But if you don't like r.e. like `\\w+\\\\w+\\.\\w+` you can redefine the
-constant `EscChar` (in `RegExpr.pas`). For example `EscChar = "/"`. Then
-you can write `/w+/w+/./w+`, looks unusual but more readable.
+L'astuce est dans la question précédente ;) Le symbole `\` a une signification 
+spéciale en `C++`, donc vous devez l'`échapper` (comme décrit dans la réponse précédente). 
+Mais si vous n'aimez pas les r.e. comme `\\w+\\w+\\.\\w+` vous pouvez redéfinir la 
+constante `EscChar` (dans `RegExpr.pas`). 
+
+Par exemple `EscChar = "/"`. 
+Alors vous pouvez écrire `/w+/w+/./w+`, cela semble inhabituel mais est plus lisible.

@@ -17,12 +17,6 @@ do not forget to create the object instance:
 r := TRegExpr.Create. 
 ```
 
-## Regular expressions with (?=...) do not work
-
-Look ahead is not implemented in the TRegExpr. But in many cases you can
-easily [replace it with simple
-subexpressions](regular_expressions.md#lookahead).
-
 ## Does it support Unicode?
 
 **Answer**
@@ -37,10 +31,10 @@ of the file including last `</html>`.
 **Answer**
 
 For backward compatibility, [modifier
-/s](regular_expressions.md#modifier_s) is `On` by default.
+/s](regular_expressions.md#s) is `On` by default.
 
 Switch it Off and `.` will match any but [Line
-separators](regular_expressions.md#syntax_line_separators) - exactly
+separators](regular_expressions.md#lineseparators) - exactly
 as you wish.
 
 BTW I suggest `<font ([^\n>]*)>`, in `Match[1]` will be the URL.
@@ -88,7 +82,7 @@ If you want some example, please take a look at `TRegExpr.Replace`
 method implementation or at the examples for
 [HyperLinksDecorator](demos.md)
 
-## I am checking user input. Why does TRegExpr return `True` for wrong input strings?
+## I am checking user [faq.md](faq.md)input. Why does TRegExpr return `True` for wrong input strings?
 
 **Answer**
 
@@ -100,8 +94,6 @@ for wrong user inputs like `12345` or `any letters 1234`.
 
 You have to check from line start to line end to ensure there are no
 anything else around: `^\d{4,4}$`.
-
-<a name="nongreedyoptimization"></a>
 
 ## Why does non-greedy iterators sometimes work as in greedy mode?
 
@@ -149,6 +141,6 @@ I have a problem since no header file (`.h` or `.hpp`) is available.
 
 The hint is in the previous question ;) Symbol `\` has special meaning
 in `C++`, so you have to `escape` it (as described in previous answer).
-But if you don't like r.e. like `\\w+\\\\w+\\.\\w+` you can redefine the
+But if you don't like r.e. like `\\w+\\w+\\.\\w+` you can redefine the
 constant `EscChar` (in `RegExpr.pas`). For example `EscChar = "/"`. Then
 you can write `/w+/w+/./w+`, looks unusual but more readable.
