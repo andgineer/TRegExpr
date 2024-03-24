@@ -601,10 +601,6 @@ durch den Code begrenzt).
 Syntax für den Aufruf von benannten Gruppen: `(?P>name)`. Auch die Perl-Syntax wird
 unterstützt: `(?&name)`, `\g<name>` und `\g'name'`.
 
-# Unterstützte Syntax sind
-
-`(?number)` `(?P>name)` `(?&name)` `\g<name>` `\g'name'` ============
-
 Dies ähnelt der Rekursion, ruft aber nur den Code der Erfassungsgruppe mit
 dem angegebenen Index auf.
 

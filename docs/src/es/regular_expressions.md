@@ -589,10 +589,6 @@ limitado por el código).
 
 Sintaxis para llamar a grupos nombrados: `(?P>nombre)`. También se soporta la sintaxis `(?&name)`, `\g<name>` and `\g'name'`.
 
-# Sintaxis soportadas
-
-`(?number)` `(?P>nombre)` `(?&nombre)` `\g<nombre>` `\g'nombre'` ============
-
 Esto es como la recursión pero solo llama al código del grupo de captura con
 el índice especificado.
 

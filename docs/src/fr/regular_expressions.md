@@ -581,10 +581,6 @@ limité par le code).
 Syntaxe pour l'appel aux groupes nommés : `(?P>name)`. La syntaxe Perl est également
 prise en charge: `(?&name)`, `\g<name>` and `\g'name'`
 
-# Syntaxe prise en charge
-
-`(?number)` `(?P>name)` `(?&name)` `\g<name>` `\g'name'` ============
-
 C'est comme la récursion, mais appelle seulement le code du groupe de capture avec
 l'indice spécifié.
 
