@@ -1,19 +1,18 @@
 #!make
 
-.PHONY: en # mark as phony so it always runs even we have a docs folder
-.HELP: en  ## Docs preview English
-en:
-# 	docstrings.sh
-	open -a "Google Chrome" http://127.0.0.1:8000/
-	./docs-render-config.sh en
-	mkdocs serve -f _mkdocs.yml
+# If the first argument is "docs" treat additional "targets" as parameters
+ifeq (docs,$(firstword $(MAKECMDGOALS)))
+  DOCS_LANGUAGE := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  # turn the parameters into do-nothing targets
+  $(eval $(RUN_ARGS):;@:)
+endif
 
-.PHONY: ru # mark as phony so it always runs even we have a docs folder
-.HELP: ru  ## Docs preview Russian
-ru:
+.PHONY: docs # mark as phony so it always runs even we have a docs folder
+.HELP: docs  ## Docs preview for the language specified (bg de en es fr ru)
+docs:
 # 	docstrings.sh
 	open -a "Google Chrome" http://127.0.0.1:8000/
-	./docs-render-config.sh ru
+	./docs-render-config.sh $(DOCS_LANGUAGE)
 	mkdocs serve -f _mkdocs.yml
 
 .HELP: help  ## Display this message

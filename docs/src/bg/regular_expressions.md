@@ -1,1052 +1,525 @@
-# Редовни изрази (регулярен израз)
+# Регулярни изрази (RegEx)
 
 ## Въведение
 
-Regular expressions are a handy way to specify patterns of text.
+Регулярните изрази са удобен начин за описване на модели на текст.
 
-With regular expressions you can validate user input, search for some
-patterns like emails of phone numbers on web pages or in some documents
-and so on.
+С регулярни изрази можете да проверявате входа от потребителя, да търсите определени модели като имейли или телефонни номера на уеб страници или в документи и така нататък.
 
-Below is the complete regular expressions cheat sheet.
+По-долу е пълният списък със справки за регулярни изрази.
 
-## Герои
+## Символи
 
-### Обикновено съвпадение
+### Прости съвпадения
 
-Any single character (except special regex characters) matches itself. A
-series of (not special) characters matches that series of characters in
-the input string.
+Всеки единичен символ (с изключение на специалните символи за регулярни изрази) съвпада със себе си. Поредица от символи (които не са специални) съвпада с тази поредица от символи във входния низ.
 
-| регулярен и | зраз кибрит |
-|-------------|-------------|
-| `foobar`    | `foobar`    |
+| RegEx    | Съвпадения |
+|----------|------------|
+| `foobar` | `foobar`   |
 
-### Non-Printable Герои (escape-codes)
+### Непечатаеми символи (кодове за избягване)
 
-To specify character by its Unicode code, use the prefix `\x` followed
-by the hex code. For 3-4 digits code (after U+00FF), enclose the code
-into braces.
+За да посочите символ по неговия Unicode код, използвайте префикса `\x`, последван от хексадецималния код. За 3-4 цифрен код (след U+00FF), поставете кода в скоби.
 
-| регулярен израз                             | кибрит                                                                                                |
-|---------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| `\xAB`                                      | character with 2-digit hex code `AB`                                                                  |
-| `\x{AB20}`                                  | character with 1..4-digit hex code `AB20`                                                             |
-| \`<span class="title-ref"> Фу x20bar</span> | <span class="title-ref"> </span><span class="title-ref">foo bar</span>\` (забележете място в средата) |
+| RegEx        | Съвпадения                                         |
+|--------------|-----------------------------------------------------|
+| `\xAB`       | символ с 2-цифрен хекс код `AB`                    |
+| `\x{AB20}`   | символ с 1..4-цифрен хекс код `AB20`               |
+| `foo\x20bar` | `foo bar` (обърнете внимание на интервала в средата)|
 
-There are a number of predefined escape-codes for non-printable
-characters, like in C language:
+Има редица предварително дефинирани кодове за избягване за непечатаеми символи, подобно на езика C:
 
-<table>
-<thead>
-<tr class="header">
-<th>регулярен израз</th>
-<th>кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>\t</code>  </td>
-<td>tab (HT/TAB), същото като <code>\x09</code></td>
-</tr>
-<tr class="even">
-<td><code>\n</code>  </td>
-<td>line feed (LF), same as <code>\x0a</code></td>
-</tr>
-<tr class="odd">
-<td><code>\r</code>  </td>
-<td>carriage return (CR), same as <code>\x0d</code></td>
-</tr>
-<tr class="even">
-<td><code>\f</code>  </td>
-<td>form feed (FF), същата като <code>\x0c</code></td>
-</tr>
-<tr class="odd">
-<td><code>\a</code>  </td>
-<td>alarm (BEL), същата като <code>\x07</code></td>
-</tr>
-<tr class="even">
-<td><code>\e</code>  </td>
-<td>escape (ESC), същото като <code>\x1b</code></td>
-</tr>
-<tr class="odd">
-<td><p><code>\cA</code> ... <code>\cZ</code></p></td>
-<td><div class="line-block">chr(0) to chr(25).<br />
-For example, <code>\cI</code> matches the tab-char.<br />
-Lower-case letters "a"..."z" are also supported.</div></td>
-</tr>
-</tbody>
-</table>
+| RegEx | Съвпадения                                          |
+|-------|-----------------------------------------------------|
+| `\t`  | табулация (HT/TAB), същото като `\x09`              |
+| `\n`  | нов ред (LF), същото като `\x0a`                    |
+| `\r`  | връщане назад (CR), същото като `\x0d`              |
+| `\f`  | форматиране на страница (FF), същото като `\x0c`    |
+| `\a`  | аларма (BEL), същото като `\x07`                    |
+| `\e`  | избягване (ESC), същото като `\x1b`                 |
+| `\cA` ... `\cZ` | chr(0) до chr(25). Например, `\cI` съвпада с таб-символа. Малките букви "a"..."z" също са поддържани. |
 
-<a name="escape"></a>
+### Избягване
 
-### Escaping
+За да представите специален символ за регулярни изрази (един от `.+*?|\()[]{}^$`), поставете пред него обратна наклонена черта `\`. Буквалната обратна наклонена черта също трябва да бъде ескейпната.
 
-To represent special regex character (one of `.+*?|\()[]{}^$`), prefix
-it with a backslash `\`. The literal backslash must be escaped too.
+| RegEx         | Съвпадения                                                                  |
+|---------------|------------------------------------------------------------------------------|
+| `\^FooBarPtr` | `^FooBarPtr`, това е `^` и не [начало на линия](#lineseparators)             |
+| `\[a\]`       | `[a]`, това не е [клас от символи](#userclass)                               |
 
-| регулярен израз | кибрит                                                              |
-|-----------------|---------------------------------------------------------------------|
-| `\^FooBarPtr`   | `^FooBarPtr`, this is `` ^ and not [start of line](#lineseparators) |
-| `\[a\]`         | `[a]`, this is not [character class](#userclass)                    |
+## Класове символи
 
-## Класове на знаците
+### Потребителски класове символи
 
-<a name="userclass"></a>
+Класът символи е списък от символи в квадратни скоби `[]`. Класът съвпада с всякакъв **единичен** символ, изброен в този клас.
 
-### User Класове на знаците
+| RegEx          | Съвпадения                                             |
+|----------------|---------------------------------------------------------|
+| `foob[aeiou]r` | `foobar`, `foober` и т.н., но не `foobbr`, `foobcr` и т.н. |
 
-Character class is a list of characters inside square brackets `[]`. The
-class matches any **single** character listed in this class.
+Можете да "инвертирате" класа - ако първият символ след `[` е `^`, тогава класът съвпада с всеки символ **освен** символите, изброени в класа.
 
-| регулярен израз                                    | кибрит                                                                                                   |
-|----------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-| \`<span class="title-ref"> foob \[аеиоу\] r</span> | \`  &quot;foobar&quot;, &quot;foober&quot; и т.н., но не и &quot;foobbr&quot;, &quot;foobcr&quot; и т.н. |
+| RegEx         | Съвпадения                                               |
+|---------------|-----------------------------------------------------------|
+| `foob[^aeiou]r` | `foobbr`, `foobcr` и т.н., но не `foobar`, `foober` и т.н. |
 
-You can "invert" the class - if the first character after the `[` is ``
-^, then the class matches any character **except** the characters listed
-in the class.
+В списъка, символът тире `-` се използва за посочване на диапазон, така че `a-z` представлява всички символи между `a` и `z`, включително.
 
-| регулярен израз       | кибрит                                                                                                   |
-|-----------------------|----------------------------------------------------------------------------------------------------------|
-| \`\` Foob \[^ аеиоу\] | r\`\` &quot;foobbr&quot;, &quot;foobcr&quot; и т.н., но не &quot;foobar&quot;, &quot;foober&quot; и т.н. |
+Ако искате самото тире `-` да бъде член на класа, поставете го в началото или края на списъка, или го [избегнете](#escape) с обратна наклонена черта.
 
-Within a list, the dash `-` character is used to specify a range, so
-that `a-z` represents all characters between `a` and `z`, inclusive.
+Ако искате `]` като част от класа, може да го поставите в началото на списъка или да го [избегнете](#escape) с обратна наклонена черта.
 
-If you want the dash `-` itself to be a member of a class, put it at the
-start or end of the list, or [escape](#escape) it with a backslash.
+| RegEx       | Съвпадения                            |
+|-------------|----------------------------------------|
+| `[-az]`     | `a`, `z` и `-`                         |
+| `[az-]`     | `a`, `z` и `-`                         |
+| `[a\-z]`    | `a`, `z` и `-`                         |
+| `[a-z]`     | символи от `a` до `z`                  |
+| `[\n-\x0D]` | символи от chr(10) до chr(13)          |
 
-If you want `]` as part of the class you may place it at the start of
-list or [escape](#escape) it with a backslash.
+### Мета-Символ Точка
 
-<table>
-<thead>
-<tr class="header">
-<th>регулярен изра</th>
-<th>з кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>[-az]</code>    </td>
-<td>&amp;quot;а&amp;quot;, &amp;quot;z&amp;quot; и
-&amp;quot;-`&amp;quot;</td>
-</tr>
-<tr class="even">
-<td><code>[az-]</code>    </td>
-<td>&amp;quot;а&amp;quot;, &amp;quot;z&amp;quot; и
-&amp;quot;-`&amp;quot;</td>
-</tr>
-<tr class="odd">
-<td><code>[А \ -Z]</code></td>
-<td><blockquote>
-<p>  &amp;quot;а&amp;quot;, &amp;quot;z&amp;quot; и
-&amp;quot;-`&amp;quot;</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>[a-z]</code>    </td>
-<td>символи от <code>а</code> до <code></code></td>
-</tr>
-<tr class="odd">
-<td><code>[\n-\x0D]</code></td>
-<td>characters from chr(10) to chr(13)</td>
-</tr>
-</tbody>
-</table>
+Мета-символът `.` (точка) по подразбиране съвпада с всеки символ. Но ако изключите [модификатора /s](#s), той няма да съвпада със символите за нов ред.
 
-### Dot Meta-Char
+`.` не действа като мета-клас вътре [в потребителските класове символи](#user-character-classes). `[.]` означава буквален ".".
 
-Meta-char `.` (dot) by default matches any character. But if you turn
-**off** the [modifier /s](#s), then it won't match line-break
-characters.
+### Мета-Класове
 
-The `.` does not act as meta-class inside [user character
-classes](#user-класове-на-знаците). `[.]` means a literal ".".
+Има редица предварително дефинирани класове символи, които правят регулярните изрази по-компактни, "мета-класове":
 
-### Meta-Classes
+| RegEx | Съвпадения                                               |
+|-------|----------------------------------------------------------|
+| `\w`  | буквено-цифров символ, включително `_`                    |
+| `\W`  | не-буквено-цифров символ                                  |
+| `\d`  | цифров символ (същото като `[0-9]`)                       |
+| `\D`  | не-цифров символ                                          |
+| `\s`  | всякакво пространство (същото като `[ \t\n\r\f]`)         |
+| `\S`  | не-пространствен символ                                   |
+| `\h`  | хоризонтално пространство: табулацията и всички символи в категорията "разделител на пространство" от Unicode      |
+| `\H`  | не е хоризонтално пространство                            |
+| `\v`  | вертикално пространство: всички символи, третирани като нови редове в стандарта Unicode                             |
+| `\V`  | не е вертикално пространство                              |
+| `\R`  | прекъсване на реда в Unicode: LF, двойка CR LF, CR, FF (форматиране на страница), VT (вертикална табулация), U+0085, U+2028, U+2029 |
 
-There are a number of predefined character classes that keeps regular
-expressions more compact, "meta-classes":
+Можете да използвате всички мета-класове, посочени в таблицата по-горе, вътре [в потребителските класове символи](#user-character-classes).
 
-<table>
-<thead>
-<tr class="header">
-<th>регулярен и</th>
-<th>зраз кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>\W</code>    </td>
-<td>an alphanumeric character, including <code>_</code></td>
-</tr>
-<tr class="even">
-<td><code>\W</code>    </td>
-<td>a non-alphanumeric</td>
-</tr>
-<tr class="odd">
-<td><code>\ D</code>  </td>
-<td>  a numeric character (same as <code>[0-9]</code>)</td>
-</tr>
-<tr class="even">
-<td><code>\ D</code>  </td>
-<td>  не-цифров</td>
-</tr>
-<tr class="odd">
-<td><code>\ S</code>  </td>
-<td>  всяко пространство (същото като `` [t</td>
-</tr>
-<tr class="even">
-<td><code>\ S</code>  </td>
-<td>  a non-space</td>
-</tr>
-<tr class="odd">
-<td><p><code>\h</code></p></td>
-<td><div class="line-block">horizontal whitespace: the tab and all
-characters<br />
-in the "space separator" Unicode category</div></td>
-</tr>
-<tr class="even">
-<td><code>\H</code></td>
-<td>not a horizontal whitespace</td>
-</tr>
-<tr class="odd">
-<td><p><code>\v</code></p></td>
-<td><div class="line-block">vertical whitespace: all characters treated
-as<br />
-line-breaks in the Unicode standard</div></td>
-</tr>
-<tr class="even">
-<td><code>\V</code></td>
-<td>not a vertical whitespace</td>
-</tr>
-<tr class="odd">
-<td><p><code>\R</code></p></td>
-<td><div class="line-block">unicode line break: LF, pair CR LF,
-CR,<br />
-FF (form feed), VT (vertical tab), U+0085, U+2028, U+2029</div></td>
-</tr>
-</tbody>
-</table>
+| RegEx         | Съвпадения                                                                      |
+|---------------|----------------------------------------------------------------------------------|
+| `foob\dr`     | `foob1r`, `foob6r` и т.н., но не `foobar`, `foobbr` и т.н.                        |
+| `foob[\w\s]r` | `foobar`, `foob r`, `foobbr` и т.н., но не `foob1r`, `foob=r` и т.н.               |
 
-You may use all meta-classes, mentioned in the table above, within [user
-character classes](#user-класове-на-знаците).
-
-| регулярен израз | кибрит                                                                          |
-|-----------------|---------------------------------------------------------------------------------|
-| `foob\dr`       | `foob1r`, `foob6r` and so on, but not `foobar`, `foobbr` and so on              |
-| \`\` Foob \[т S | \] r``foobar`,`foob r`,`foobbr`and so on, but not`foob1r`,`foob=r\`\` and so on |
-
-> [!NOTE]
-> [Tрегулярен изразpr](tregexpr.md)
+> [TRegExpr](tregexpr.md)
 >
-> Properties [SpaceChars](tregexpr.md#spacechars) and
-> [WordChars](tregexpr.md#wordchars) define character classes `\W`,
-> `\W`, `\ S`, `\ S`.
+> Свойствата [SpaceChars](tregexpr.md#spacechars) и
+> [WordChars](tregexpr.md#wordchars) определят класовете на символите `\w`,
+> `\W`, `\s`, `\S`.
 >
-> So you can redefine these classes.
+> Така можете да преопределите тези класове.
 
-## граници
+## Граници
 
-<a name="lineseparators"></a>
+### Граници на линията
 
-### Line граници
+| Мета-символ | Съвпадения                                            |
+|-------------|-------------------------------------------------------|
+| `^`         | съвпадение с нулева дължина в началото на линията     |
+| `$`         | съвпадение с нулева дължина в края на линията         |
+| `\A`        | съвпадение с нулева дължина в самото начало           |
+| `\z`        | съвпадение с нулева дължина в самия край              |
+| `\Z`        | като `\z`, но също така съвпада преди последния нов ред|
+| `\G`        | съвпадение с нулева дължина в края на предишното съвпадение |
 
-<table>
-<thead>
-<tr class="header">
-<th>Meta-char</th>
-<th>кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code></code> ^ </td>
-<td><blockquote>
-<p>zero-length match at start of line</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code></code> $ </td>
-<td><blockquote>
-<p>zero-length match at end of line</p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>\ A</code></td>
-<td><blockquote>
-<p>zero-length match at the very beginning</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>\z</code></td>
-<td>zero-length match at the very end</td>
-</tr>
-<tr class="odd">
-<td><code>\ Z</code></td>
-<td><blockquote>
-<p>like <code>\z</code> but also matches before the final line-break</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>\G</code></td>
-<td>zero-length match at the end pos of the previous match</td>
-</tr>
-</tbody>
-</table>
+Примери:
 
-Examples:
+| RegEx      | Съвпадения                                            |
+|------------|-------------------------------------------------------|
+| `^foobar`  | `foobar` само ако е в началото на линията             |
+| `foobar$`  | `foobar` само ако е в края на линията                 |
+| `^foobar$` | `foobar` само ако е единственият низ в линията         |
+| `foob.r`   | `foobar`, `foobbr`, `foob1r` и т.н.                    |
 
-<table>
-<thead>
-<tr class="header">
-<th>регулярен изра</th>
-<th>з кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>^ Foobar</code></td>
-<td><blockquote>
-<p>&amp;quot;foobar&amp;quot; само ако е в началото на линията</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code></code> Foobar $</td>
-<td><blockquote>
-<p>&amp;quot;foobar&amp;quot;, само ако е в края на реда</p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>^foobar$</code></td>
-<td><code>foobar</code> само ако е единственият низ в ред</td>
-</tr>
-<tr class="even">
-<td><code>Foob.r</code>  </td>
-<td><blockquote>
-<p>&amp;quot;foobar&amp;quot;, &amp;quot;foobbr&amp;quot;,
-&amp;quot;foob1r&amp;quot; и т.н.</p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+Мета-символът `^` съвпада с позиция с нулева дължина в началото на входния низ. `$` - в края. Ако [модификаторът /m](#m) е **включен**, те също така съвпадат в началото/края на отделни линии в многостраничен текст.
 
-Meta-char `` ^ matches zero-length position at the beginning of the
-input string. `` \$ - at the ending. If [modifier /m](#m) is **on**,
-they also match at the beginning/ending of individual lines in the
-multi-line text.
+Обърнете внимание, че няма празна линия в последователността `\x0D\x0A`.
 
-Забележете, че няма празна линия в последователността &quot;x0D0A&quot;.
-
-> [!NOTE]
-> [Tрегулярен изразpr](tregexpr.md)
+> [TRegExpr](tregexpr.md)
 >
-> If you are using [Unicode version](tregexpr.md#unicode), then ``
-> ^/`` \$ also matches `\x2028`, `\x2029`, `\x0B`, `\x0C` or `\x85`.
+> Ако използвате [Unicode версия](tregexpr.md#unicode), тогава
+> `^`/`$` също съвпада с `\x2028`, `\x2029`, `\x0B`, `\x0C` или `\x85`.
 
-Meta-char `\ A` matches zero-length position at the very beginning of
-the input string, `\z` - at the very ending. They ignore [modifier
-/m](#m). `\ Z` is like `\z` but also matches before the final line-break
-(LF and CR LF). Behaviour of `\ A`, `\z`, `\ Z` is made like in most of
-major regex engines (Perl, PCRE, etc).
+Мета-символът `\A` съвпада с позицията с нулева дължина в самото начало на
+входния низ, `\z` - в самия край. Те игнорират [модификатора /m](#m).
+`\Z` е като `\z`, но също така съвпада преди последния разделител на редове (LF и
+CR LF). Поведението на `\A`, `\z`, `\Z` е направено както в повечето основни
+регулярни двигатели (Perl, PCRE и др.).
 
-Note that `^.*$` does not match a string between `\x0D\x0A`, because
-this is unbreakable line separator. But it matches the празен низ within
-the sequence `\x0A\x0D` because this is 2 line-breaks in the wrong
-order.
+Обърнете внимание, че `^.*$` не съвпада с низ между `\x0D\x0A`, защото
+това е неразделим разделител на редове. Но той съвпада с празния низ
+в последователността `\x0A\x0D`, защото това са 2 разделителя на редове в
+грешен ред.
 
-> [!NOTE]
-> [Tрегулярен изразpr](tregexpr.md)
+> [TRegExpr](tregexpr.md)
 >
-> Multi-line processing can be tuned by properties
-> [LineSeparators](tregexpr.md#lineseparators) and
+> Обработката на многоредов текст може да бъде настроена с помощта на свойствата
+> [LineSeparators](tregexpr.md#lineseparators) и
 > [UseLinePairedBreak](tregexpr.md#linepairedseparator).
 >
-> So you can use Unix style separators `\n` or DOS/Windows style `\r\n`
-> or mix them together (as in described above default behaviour).
+> Така можете да използвате разделители в Unix стил `\n` или в стил DOS/Windows `\r\n`
+> или да ги смесите заедно (както е описано по-горе в поведението по подразбиране).
 
-If you prefer mathematically correct description you can find it on
+Ако предпочитате математически коректно описание, можете да го намерите на
 [www.unicode.org](http://www.unicode.org/unicode/reports/tr18/).
 
-### Word граници
+### Граници на думи
 
-<table>
-<thead>
-<tr class="header">
-<th>регуляр</th>
-<th>ен израз кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>\b</code>`</td>
-<td><blockquote>
-<p>граница на думата</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>\B</code> </td>
-<td>граница без думи</td>
-</tr>
-</tbody>
-</table>
+| RegEx | Съвпадения               |
+|-------|--------------------------|
+| `\b`  | граница на дума          |
+| `\B`  | не е граница на дума     |
 
-A word boundary `\b`<span class="title-ref"> is a spot between two
-characters that has a
-</span><span class="title-ref">W</span><span class="title-ref"> on one
-side of it and a </span><span class="title-ref">W</span>\` on the other
-side of it (in either order).
+Границата на дума `\b` е мястото между два символа, което има `\w` от едната страна и `\W` от другата страна (във всяка посока).
 
-<a name="iterator"></a>
+## Квантификация
 
-## количествено определяне
+### Квантификатори
 
-### Quantifiers
+Всеки елемент от регулярен израз може да бъде последван от квантификатор.
+Квантификаторът определя броя на повторенията на елемента.
 
-Any item of a regular expression may be followed by quantifier.
-Quantifier specifies number of repetitions of the item.
+| RegEx    | Съвпадения                                             |
+|----------|---------------------------------------------------------|
+| `{n}`    | точно `n` пъти                                         |
+| `{n,}`   | поне `n` пъти                                           |
+| `{,m}`   | не повече от `m` пъти (само с AllowBraceWithoutMin)     |
+| `{n,m}`  | поне `n`, но не повече от `m` пъти                      |
+| `*`      | нула или повече, подобно на `{0,}`                      |
+| `+`      | един или повече, подобно на `{1,}`                       |
+| `?`      | нула или един, подобно на `{0,1}`                        |
 
-<table>
-<thead>
-<tr class="header">
-<th>регулярен и</th>
-<th>зраз кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>{N}</code>  </td>
-<td><blockquote>
-<p>точно <code>n</code> пъти</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>{П}</code>  </td>
-<td><blockquote>
-<p>поне <code>n</code> пъти</p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>{,m}</code>  </td>
-<td>not more than <code>m</code> times (only with
-AllowBraceWithoutMin)</td>
-</tr>
-<tr class="even">
-<td>`<span class="title-ref"> {П, т} </span></td>
-<td><span class="title-ref"> най-малко </span><span
-class="title-ref">n</span><span class="title-ref">, но не повече от
-</span><span class="title-ref">m</span>` пъти</td>
-</tr>
-<tr class="odd">
-<td><code>*</code>    </td>
-<td>нула или повече, подобно на <code>{0,}</code></td>
-</tr>
-<tr class="even">
-<td><code>+</code>  </td>
-<td>една или повече, подобни на <code>{1,}</code></td>
-</tr>
-<tr class="odd">
-<td><code>?</code>  </td>
-<td>нула или едно, подобно на <code>{0,1}</code></td>
-</tr>
-</tbody>
-</table>
+Така цифрите в къдравите скоби `{n,m}`, определят минималния брой пъти `n` и максималния `m`.
 
-So, digits in curly brackets `{П, т}`, specify the minimum number of
-times to match `n` and the maximum `m`.
+`{n}` е еквивалентно на `{n,n}` и съвпада точно `n` пъти. `{n,}` съвпада `n` или повече пъти.
 
-The `{N}` is equivalent to `{n,n}` and matches точно `n` пъти. The `{П}`
-matches `n` or more times.
+Вариантът `{,m}` се поддържа само ако свойството AllowBraceWithoutMin е зададено.
 
-The variant `{,m}` is only supported if the property
-AllowBraceWithoutMin is set.
+Няма практически лимит за стойностите n и m (лимитът е максималната стойност на 32-битово цяло число със знак).
 
-There is no practical limit to the values n and m (limit is maximal
-signed 32-bit value).
+Използването на `{` без правилен диапазон ще доведе до грешка. Това поведение може да бъде променено чрез задаване на свойството AllowLiteralBraceWithoutRange, което ще приеме `{` като буквален символ, ако не е последван от диапазон. Диапазон с ниска стойност, по-голяма от високата, винаги ще доведе до грешка.
 
-Using `{` without a correct range will give an error. This behaviour can
-be changed by setting the property AllowLiteralBraceWithoutRange, which
-will accept `{` as a literal char, if not followed by a range. A range
-with a low value bigger than the high value will always give an error.
-
-<table>
-<thead>
-<tr class="header">
-<th>регулярен израз</th>
-<th>кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>foob.*r</code>    </td>
-<td>&amp;quot;foobar&amp;quot;, &amp;quot;foobalkjdflkj9r&amp;quot; и
-&amp;quot;foobr&amp;quot;</td>
-</tr>
-<tr class="even">
-<td><code>foob.+r</code>    </td>
-<td><code>foobar</code>, <code>foobalkjdflkj9r</code>, но не
-<code>foobr</code></td>
-</tr>
-<tr class="odd">
-<td><code>foob.?r</code>    </td>
-<td><code>foobar</code>, <code>foobbr</code> и <code>foobr</code>, но не
-<code>foobalkj9r</code></td>
-</tr>
-<tr class="even">
-<td><code>fooba{2}r</code>  </td>
-<td><code>foobaar</code></td>
-</tr>
-<tr class="odd">
-<td><code>fooba{2}r</code> `</td>
-<td><span class="title-ref">foobaar</span><span class="title-ref">,
-</span><span class="title-ref">foobaaar</span><span class="title-ref">,
-</span><span class="title-ref">foobaaaar</span>` и т.н.</td>
-</tr>
-<tr class="even">
-<td><code>Fooba {2,3} r</code></td>
-<td><blockquote>
-<p>&amp;quot;foobaar&amp;quot;, или &amp;quot;foobaaar&amp;quot;, но не
-и &amp;quot;foobaaaar&amp;quot;</p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td>`` (Foobar) {} 8,10</td>
-<td><blockquote>
-<p><code>8...10 instances of</code>foobar<code>(</code>()`<span
-class="title-ref"> is `group &lt;#subexpression&gt;</span>__)</p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+| RegEx            | Съвпадения                                                            |
+|------------------|------------------------------------------------------------------------|
+| `foob.*r`        | `foobar`, `foobalkjdflkj9r` и `foobr`                                 |
+| `foob.+r`        | `foobar`, `foobalkjdflkj9r` но не `foobr`                             |
+| `foob.?r`        | `foobar`, `foobbr` и `foobr` но не `foobalkj9r`                       |
+| `fooba{2}r`      | `foobaar`                                                             |
+| `fooba{2,}r`     | `foobaar'`, `foobaaar`, `foobaaaar` и т.н.                            |
+| `fooba{2,3}r`    | `foobaar` или `foobaaar` но не `foobaaaar`                            |
+| `(foobar){8,10}` | 8...10 инстанции на `foobar` (`()` е [група](#subexpression))         |
 
 <a name="greedy"></a>
 
-### лакомия
+### Жадност
 
-[Quantifiers](#iterator) in "greedy" mode takes as many as possible, in
-"lazy" mode - as few as possible.
+[Квантификаторите](#iterator) в "жаден" режим вземат възможно най-много, в "мързелив" режим - възможно най-малко.
 
-By default all quantifiers are "greedy". Append the character `?` to
-make any quantifier "lazy".
+По подразбиране всички квантификатори са "жадни". Добавете символа `?` за да направите всеки квантификатор "мързелив".
 
 За низ `abbbbc`:
 
-<table>
-<thead>
-<tr class="header">
-<th>регулярен из</th>
-<th>раз кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>Б +</code></td>
-<td><blockquote>
-<p><code>bbbb</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>Б +?</code></td>
-<td><blockquote>
-<p><code>b</code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>В *?</code></td>
-<td><blockquote>
-<p>празен низ</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td>`` б {2,3}?</td>
-<td><code></code>bb``</td>
-</tr>
-<tr class="odd">
-<td>`<span class="title-ref"> Б {2,3} </span></td>
-<td><span class="title-ref"> </span><span
-class="title-ref">bbb</span>`</td>
-</tr>
-</tbody>
-</table>
+| RegEx     | Съвпадения      |
+|-----------|-----------------|
+| `b+`      | `bbbb`          |
+| `b+?`     | `b`             |
+| `b*?`     | празен низ      |
+| `b{2,3}?` | `bb`            |
+| `b{2,3}`  | `bbb`           |
 
-You can switch all quantifiers into "lazy" mode ([modifier /g](#g),
-below we use [in-line modifier change](#inlinemodifiers)).
+Можете да превключите всички квантификатори в "мързелив" режим ([модификатор /g](#g), по-долу използваме [промяна на модификатора в линия](#inlinemodifiers)).
 
-<table>
-<thead>
-<tr class="header">
-<th>регулярен изр</th>
-<th>аз кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>`` (? -G) б +</td>
-<td><blockquote>
-<p><code></code>b``</p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+| RegEx     | Съвпадения |
+|-----------|------------|
+| `(?-g)b+` | `b`        |
 
-### Possessive Quantifier
+### Притежателен Квантификатор
 
-The syntax is: `a++`, `a*+`, `a?+`, `a{2,4}+`. Currently it's supported
-only for simple braces, but not for braces after group like
-`(foo|bar){3,5}+`.
+Синтаксисът е: `a++`, `a*+`, `a?+`, `a{2,4}+`. В момента това се поддържа само за прости скоби, но не и за скоби след група като `(foo|bar){3,5}+`.
 
-This regex feature is [described
-here.](https://regular-expressions.mobi/possessive.html?wlr=1) In short,
-possessive quantifier speeds up matching in complex cases.
+Този регекс функционал е [описан тук.](https://regular-expressions.mobi/possessive.html?wlr=1) Накратко, притежателният квантификатор ускорява съвпадението в сложни случаи.
 
-## Choice
+## Избор
 
-Expressions in the choice are separated by vertical bar `|`.
+Изразите в избора се разделят с вертикална черта `|`.
 
-So `fee|fie|foe` will match any of `fee`, `fie`, or `foe` in the target
-string (as would `f(e|i|o)e`).
+Така `fee|fie|foe` ще съвпадне с който и да е от `fee`, `fie` или `foe` в целевия низ (както и `f(e|i|o)e`).
 
-The first expression includes everything from the last pattern delimiter
-(`(`, `[`, or the beginning of the pattern) up to the first `|`, and the
-last expression contains everything from the last `|` to the next
-pattern delimiter.
+Първият израз включва всичко от последния разделител на модела (`(`, `[` или началото на модела) до първия `|`, а последният израз съдържа всичко от последния `|` до следващия разделител на модела.
 
-Sounds a little complicated, so it’s common practice to include the
-choice in parentheses, to minimize confusion about where it starts and
-ends.
+Това звучи малко сложно, така че е общоприета практика да включите избора в скоби, за да намалите объркването относно къде започва и къде свършва.
 
-Expressions in the choice are tried from left to right, so the first
-expression that matches, is the one that is chosen.
+Изразите в избора се опитват отляво надясно, така че първият израз, който съвпада, е този, който е избран.
 
-For example, regular expression `foo|foot` in string `barefoot` will
-match `foo`. Just a first expression that matches.
+Например, регулярният израз `foo|foot` в низ `barefoot` ще съвпадне с `foo`. Просто първият израз, който съвпада.
 
-Also remember that `|` is interpreted as a literal within square
-brackets, so if you write `[fee|fie|foe]` you’re really only matching
-`[feio|]`.
+Също така помнете, че `|` се тълкува като буквален символ в квадратни скоби, така че ако напишете `[fee|fie|foe]` наистина съвпадате само с `[feio|]`.
 
-| регулярен израз      | кибрит                                           |
-|----------------------|--------------------------------------------------|
-| \`\` Foo (бар \| Foo | ) \`\` &quot;foobar&quot; или &quot;foofoo&quot; |
+| RegEx          | Съвпадения              |
+|----------------|--------------------------|
+| `foo(bar|foo)` | `foobar` или `foofoo`    |
 
-<a name="subexpression"></a>
+## Групи
 
-## Groups
+Скобите `()` се използват за дефиниране на групи (т.е. подизрази).
 
-The brackets `()` are used to define groups (ie subexpressions).
+Групите се номерират от ляво на дясно по тяхната отваряща скоба (включително вложените групи). Първата група има индекс 1. Целият регекс има индекс 0.
 
-> [!NOTE]
-> [Tрегулярен изразpr](tregexpr.md)
->
-> Group positions, lengths and actual values will be in
-> [MatchPos](tregexpr.md#matchpos), [MatchLen](tregexpr.md#matchlen)
-> and [Match](tregexpr.md#match).
->
-> You can substitute them with [Substitute](tregexpr.md#substitute).
+## Обратни препратки
 
-Groups are numbered from left to right by their opening parenthesis
-(including nested groups). First group has index 1. The entire regex has
-index 0.
+Мета-символите `\1` до `\9` се тълкуват като обратни препратки към групи. Те съвпадат с предварително намерената група с посочения индекс.
 
-> | Group | Value    |
-> |-------|----------|
-> | 0     | `foobar` |
-> | 1     | `foobar` |
-> | 2     | `bar`    |
+Мета символът `\g` последван от число също се тълкува като обратни препратки към групи. Може да бъде последван от многоцифрено число.
 
-## Backreferences
+| RegEx      | Съвпадения                  |
+|------------|------------------------------|
+| `(.)\1+`   | `aaaa` и `cc`                |
+| `(.+)\1+`  | също `abab` и `123123`       |
+| `(.)\g1+`  | `aaaa` и `cc`                |
 
-Meta-chars `\1` through `\9` are interpreted as backreferences to
-capture groups. They match the previously found group with the specified
-index.
+RegEx `(['"]?)(\d+)\1` съвпада с `"13"` (в двойни кавички), или `'4'` (в единични кавички) или `77` (без кавички) и т.н.
 
-The meta char `\g` followed by a number is also interpreted as
-backreferences to capture groups. It can be followed by a multi-digit
-number.
+## Именувани Групи и Обратни Препратки
 
-| регулярен из | раз кибрит                                         |
-|--------------|----------------------------------------------------|
-| `(.)\1+`     | &quot;aaaa&quot; и &quot;cc&quot;                  |
-| \`\`. (+) 1  | \+ \`\` също &quot;abab&quot; и &quot;123123&quot; |
-| `(.)\g1+`    | &quot;aaaa&quot; и &quot;cc&quot;                  |
+Именуваните групи в регулярните изрази ви позволяват да етикетирате част от вашия модел. 
+Това прави вашите модели по-лесни за разбиране и актуализиране.
 
-регулярен израз `(['"]?)(\d+)\1` matches `"13"` (in double quotes), or
-`'4'` (in single quotes) or `77` (without quotes) etc.
+За създаване на именувана група, използвайте `(?<name>pattern)` или `(?'name'pattern)`, където `name` е името на групата
+и `pattern` е регулярният израз, който искате да уловите.
 
-## Named Groups and Backreferences
+Обратните връзки ви позволяват да съвпадате същия текст, както група е съвпадала преди.
+Именуваните обратни връзки използват `\k<name>`, където `name` е името на групата, която искате отново да съвпадне.
 
-To make some group named, use this syntax: `(?P<name>expr)`. Also Perl
-syntax is supported: `(?'name'expr)`. And further: `(?<name>expr)`
+TRegExpr поддържа също версията на Perl: `(?P<name>pattern)` за дефиниране на именувана група и `(?P=name)`
+за обратни връзки.
 
-Name of group must be valid identifier: first char is letter or "\_",
-other chars are alphanumeric or "\_". All named groups are also usual
-groups and share the same numbers 1 to 9.
+Пример
 
-Backreferences to named groups are `(?P=name)`, the numbers `\1` to `\9`
-can also be used. As well as the example `\g` and `\k` in the table
-below.
+| RegEx                    | Съвпадения               |
+|--------------------------|--------------------------|
+| `(?P<qq>['"])\w+(?P=qq)` | `"word"` и `'word'`      |
 
-# Supported syntax are
+## Съвпадащ Резултат
 
-`(?P=name)` `\g{name}` `\k{name}` `\k<name>` `\k'name'` ============
+Началото на съобщения за съвпадение може да бъде зададено с `\K`.
 
-Example
+По подразбиране целият текст, покрит от модел, се счита за съвпадащ. Въпреки това е възможно изрично да се зададе какво ще бъде съобщено.
 
-| регулярен израз          | кибрит                |
-|--------------------------|-----------------------|
-| `(?P<qq>['"])\w+(?P=qq)` | `"word"` and `'word'` |
+Моделът `a\Kb` ще изисква текстът да съдържа "ab". Но само "b" ще бъде съобщено като съвпадение. Може да има няколко `\K` в модел, последният ще зададе позицията на началото на съвпадението. Само `\K` в активни части на модела се вземат предвид. Напр. `a(\Kb)?` няма да вземе предвид `\K`, ако няма "b". Залавянията могат да съществуват извън съвпадението, зададено от `\K`.
 
-## Matched Result
+Ако се използва в други конструкции, които могат да се прилагат извън съобщеното съвпадение (като гледане напред), тогава позицията, маркирана от `\K`, трябва да бъде преди или в края на съобщеното съвпадение. Ако позицията е маркирана по-късно, съвпадението се счита за неуспешно.
 
-The begin of the reported match can be set using `\K`.
-
-By default the entire text covered by a pattern is considered matched.
-However it is possible to set explicitly what will be reported.
-
-The pattern `a\Kb` will require the text to contain "ab". But only the
-"b" will be reported as having been matched. Their can be several `\K`
-in a pattern, The last one will set the match-start position. Only `\K`
-in active parts of the pattern are considered. E.g. `a(\Kb)?` will not
-consider `\K` if there is no "b". Captures can exist outside the match
-set by `\K`.
-
-If used in other constructs that can apply outside the reported match
-(like look-ahead), then the position marked by `\K` must be before or at
-the reported end of the match. If the position is marked later, the
-match is considered failed.
-
-`\K` is somewhat similar to a look-behind. Unlike a look-behind the part
-of the pattern before the `\K` must be after the start position of the
-matching, if the pattern is applied from an offset position within the
-text.
+`\K` е до известна степен подобно на гледане назад. За разлика от гледането назад, частта от модела преди `\K` трябва да бъде след началната позиция на съвпадението, ако моделът се прилага от смещена позиция в текста.
 
 ## Модификатори
 
-Модификатори are for changing behaviour of regular expressions.
+Модификаторите са за промяна на поведението на регулярните изрази.
 
-You can set modifiers globally in your system or change inside the
-regular expression using the [(?imsxr-imsxr)](#inlinemodifiers).
+Можете да зададете модификаторите глобално във вашата система или да ги промените вътре в регулярния израз, използвайки [(?imsxr-imsxr)](#inlinemodifiers).
 
-> [!NOTE]
-> [Tрегулярен изразpr](tregexpr.md)
->
-> To change modifiers use [ModifierStr](tregexpr.md#modifierstr) or
-> appropriate `Tрегулярен изразpr` properties
-> [Modifier\*](tregexpr.md#modifieri).
->
-> The default values are defined in [global
-> variables](tregexpr.md#global-constants). For example global
-> variable `регулярен изразprModifierX` defines default value for
-> `ModifierX` property.
+[TRegExpr](tregexpr.md)
 
-<a name="i"></a>
+За промяна на модификаторите използвайте [ModifierStr](tregexpr.md#modifierstr) или
+съответните свойства на `TRegExpr`
+[Modifier\*](tregexpr.md#modifieri).
 
-### i, без чувствителност
+Стойностите по подразбиране са дефинирани в [глобалнипроменливи](tregexpr.md#global-constants). Например, глобалната
+променлива `RegExprModifierX` дефинира стойността по подразбиране за свойството `ModifierX`.
 
-Case-insensitive. Use installed in you system locale settings, see also
-[InvertCase](tregexpr.md#invertcase).
 
-<a name="m"></a>
+### i, без учет на регистъра
 
-### м, многолинейни низове
+Без учет на регистъра. Използвайте инсталираните във вашата система настройки за локализация, вижте също така [InvertCase](tregexpr.md#invertcase).
 
-Treat string as multiple lines. So `` ^ and `` \$ matches the start or
-end of any line anywhere within the string.
+### m, многостранични низове
 
-See also [Line граници](#lineseparators).
+Третирайте низа като множество линии. Така `^` и `$` съвпадат с началото или края на всяка линия навсякъде в низа.
 
-<a name="s"></a>
+Вижте също [Граници на линията](#lineseparators).
 
-### s, единични низове
+### s, единични линии низове
 
-Treat string as single line. So `.` matches any character whatsoever,
-even a line separators.
+Третирайте низа като единична линия. Така `.` съвпада с всеки символ, включително и с разделители на линии, които обикновено не би съвпадал.
 
-See also [Line граници](#lineseparators), which it normally would not
-match.
+Вижте също [Граници на линията](#lineseparators), които обикновено не би съвпадал.
 
-<a name="g"></a>
+### g, жадност
 
-### g, алчност
+Превключването му `Изкл` ще превключи [квантификаторите](#iterator) в [нежаден](#greedy) режим.
 
-> [!NOTE]
-> [Tрегулярен изразpr](tregexpr.md) only modifier.
+Така, ако модификаторът `/g` е `Изкл`, тогава `+` работи като `+?`, `*` като `*?` и така нататък.
 
-Switching it `Off` you’ll switch [quantifiers](#iterator) into
-[non-greedy](#greedy) mode.
+По подразбиране този модификатор е `Вкл`.
 
-So, if modifier `/g` is `Off` then `+` works as `+?`, `*` as `*?` and so
-on.
+### x, Разширен синтаксис
 
-По подразбиране този модификатор е `On`.
+Позволява коментиране на регулярен израз и разделянето му на множество линии.
 
-<a name="x"></a>
+Ако модификаторът е `Вкл`, игнорираме всички интервали, които не са с обратна наклонена черта или в клас от символи.
 
-### x, разширен синтаксис
+И символът `#` разделя коментарите.
 
-Allows to comment regular expression and break them up into multiple
-lines.
-
-If the modifier is `On` we ignore all whitespaces that is neither
-backslashed nor within a character class.
-
-А символът `#` отделя коментарите.
-
-Notice that you can use empty lines to format regular expression for
-better readability:
+Забележете, че можете да използвате празни линии за форматиране на регулярен израз за по-добра четимост:
 
 ``` text
 (
-(abc) # comment 1
+(abc) # коментар 1
 #
-(efg) # comment 2
+(efg) # коментар 2
 )
 ```
 
-This also means that if you want real whitespace or `#` characters in
-the pattern (outside a character class, where they are unaffected by
-`/x`), you’ll either have to escape them or encode them using octal or
-hex escapes.
+Това също означава, че ако искате истински интервали или символи `#` в модела (извън клас от символи, където те не са засегнати от `/x`), ще трябва да ги ескейпнете или да ги кодирате чрез октални или хексадецимални ескейпи.
 
-<a name="r"></a>
+### r, Руски диапазони
 
-### r, руски диапазони
+> [TRegExpr](tregexpr.md) единствен модификатор.
 
-> [!NOTE]
-> [Tрегулярен изразpr](tregexpr.md) only modifier.
+В руската ASCII таблица символите `ё`/`Ё` са поставени отделно от другите.
 
-In Russian ASCII table characters `ё`/`Ё` are placed separately from
-others.
+Големите и малките руски символи са в отделни диапазони, което е същото като при английските символи, но въпреки това исках някаква кратка форма.
 
-Big and small Russian characters are in separated ranges, this is the
-same as with English characters but nevertheless I wanted some short
-form.
+С този модификатор вместо `[а-яА-ЯёЁ]` можете да напишете `[а-Я]`, ако имате нужда от всички руски символи.
 
-With this modifier instead of `[а-яА-ЯёЁ]` you can write `[а-Я]` if you
-need all Russian characters.
+Когато модификаторът е `Вкл`:
 
-Когато модификаторът е `On`:
+| RegEx | Съвпадения                        |
+|-------|-----------------------------------|
+| `а-я` | символи от `а` до `я` и `ё`       |
+| `А-Я` | символи от `А` до `Я` и `Ё`       |
+| `а-Я` | всички руски символи              |
 
-<table>
-<thead>
-<tr class="header">
-<th>регуляре</th>
-<th>н израз кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>А-я</code></td>
-<td><blockquote>
-<p>символи от <code>а</code> до <code>я</code> и <code></code>`</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>А-Я</code></td>
-<td><blockquote>
-<p>символи от <code>А</code> до <code>Я</code> и <code>Ё</code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>А-Я</code></td>
-<td><blockquote>
-<p>всички руски символи</p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+Модификаторът е зададен на `Вкл` по подразбиране.
 
-Модификаторът е зададен по подразбиране &quot;On&quot;.
+## Твърдения (гледане напред, гледане назад)
 
-## Assertions
+Положително твърдение за гледане напред: `foo(?=bar)` съвпада с "foo" само преди "bar", и "bar" е изключен от съвпадението.
 
-<a name="assertions"></a>
+Отрицателно твърдение за гледане напред: `foo(?!bar)` съвпада с "foo" само ако не е последвано от "bar".
 
-Positive lookahead assertion: `foo(?=bar)` matches "foo" only before
-"bar", and "bar" is excluded from the match.
+Положително твърдение за гледане назад: `(?<=foo)bar` съвпада с "bar" само след "foo", и "foo" е изключен от съвпадението.
 
-Negative lookahead assertion: `foo(?!bar)` matches "foo" only if it's
-not followed by "bar".
+Отрицателно твърдение за гледане назад: `(?<!foo)bar` съвпада с "bar" само ако не е предшествано от "foo".
 
-Positive lookbehind assertion: `(?<=foo)bar` matches "bar" only after
-"foo", and "foo" is excluded from the match.
+Ограничения:
 
-Negative lookbehind assertion: `(?<!foo)bar` matches "bar" only if it's
-not prefixed with "foo".
+- Променлива дължина на гледане назад не е разрешена да съдържа групи за залавяне. Това може да бъде разрешено чрез задаване на свойството `AllowUnsafeLookBehind`. Ако това е активирано и има повече от едно съвпадение в текста, което групата може да залови, тогава може да бъде заловено грешно съвпадение. Това не засяга правилността на общото твърдение. (Т.е., гледането назад ще върне правилно, ако текстът преди съвпада с модела).
+- Променлива дължина на гледане назад може да бъде бавна за изпълнение, ако не съвпада.
 
-Limitations:
+## Незалавящи Групи
 
-- Variable length lookbehind are not allowed to contain capture groups.
-  This can be allowed by setting the property `AllowUnsafeLookBehind`.
-  If this is enabled and there is more than one match in the text that
-  the group might capture, then the wrong match may be captured. This
-  does not affect the correctness of the overall assertion. (I.e., the
-  lookbehind will correctly return if the text before matched the
-  pattern).
-- Variable length lookbehind may be slow to execute, if they do not
-  match.
+Синтаксисът е такъв: `(?:expr)`.
 
-## Non-capturing Groups
+Такива групи нямат "индекс" и са невидими за обратните препратки. Незалавящите групи се използват, когато искате да групирате подизраз, но не искате да го запазите като съвпадаща/заловена част от низа. Така че това е просто начин да организирате вашия регекс в подизрази без допълнителни разходи за залавяне на резултат:
 
-Syntax is like this: `(?:expr)`.
+| RegEx                          | Съвпадения                                                              |
+|--------------------------------|------------------------------------------------------------------------|
+| `(https?|ftp)://([^/\r\n]+)`   | в `https://sorokin.engineer` съвпада `https` и `sorokin.engineer`      |
+| `(?:https?|ftp)://([^/\r\n]+)` | в `https://sorokin.engineer` съвпада само `sorokin.engineer`           |
 
-Such groups do not have the "index" and are invisible for
-backreferences. Non-capturing groups are used when you want to group a
-subexpression, but you do not want to save it as a matched/captured
-portion of the string. So this is just a way to organize your regex into
-subexpressions without overhead of capturing result:
+## Атомни Групи
 
-| регулярен израз                | кибрит                                                               |
-|--------------------------------|----------------------------------------------------------------------|
-| `(https?|ftp)://([^/\r\n]+)`   | in `https://sorokin.engineer` matches `https` and `sorokin.engineer` |
-| `(?:https?|ftp)://([^/\r\n]+)` | in `https://sorokin.engineer` matches only `sorokin.engineer`        |
+Синтаксисът е такъв: `(?>expr|expr|...)`.
 
-## Atomic Groups
+Атомните групи са специален случай на незалавящи групи. [Описание на тях.](https://regular-expressions.mobi/atomic.html?wlr=1)
 
-Syntax is like this: `(?>expr|expr|...)`.
+## Вградени Модификатори
 
-Atomic groups are special case of non-capturing groups. [Description of
-them.](https://regular-expressions.mobi/atomic.html?wlr=1)
+Синтаксис за един модификатор: `(?i)` за включване, и `(?-i)` за изключване. Много модификатори са позволени така: `(?msgxr-imsgxr)`.
 
-## Inline Модификатори
+Можете да го използвате вътре в регулярен израз за модифициране на модификаторите на лету. Това може да бъде особено удобно, защото има локален обхват в регулярен израз. То засяга само тази част от регулярния израз, която следва `(?imsgxr-imsgxr)` оператора.
 
-<a name="inlinemodifiers"></a>
+И ако е вътре в група, то ще засегне само тази група - конкретно частта от групата, която следва модификаторите. Така в `((?i)Saint)-Petersburg` то засяга само групата `((?i)Saint)`, така че ще съвпадне с `saint-Petersburg`, но не и с `saint-petersburg`.
 
-Syntax for one modifier: `(?i)` to turn on, and `(?-i)` to turn off.
-Many modifiers are allowed like this: `(?msgxr-imsgxr)`.
+Вградените модификатори могат също така да бъдат дадени като част от незалавяща група: `(?i:pattern)`.
 
-You may use it inside regular expression for modifying modifiers
-on-the-fly. This can be especially handy because it has local scope in a
-regular expression. It affects only that part of regular expression that
-follows `(?imsgxr-imsgxr)` operator.
+| RegEx                        | Съвпадения                                        |
+|------------------------------|---------------------------------------------------|
+| `(?i)Saint-Petersburg`       | `Saint-petersburg` и `Saint-Petersburg`           |
+| `(?i)Saint-(?-i)Petersburg`  | `Saint-Petersburg`, но не `Saint-petersburg`      |
+| `(?i)(Saint-)?Petersburg`    | `Saint-petersburg` и `saint-petersburg`           |
+| `((?i)Saint-)?Petersburg`    | `saint-Petersburg`, но не `saint-petersburg`      |
 
-And if it's inside group, it will affect only this group - specifically
-the part of the group that follows the modifiers. So in
-`((?i)Saint)-Petersburg` it affects only group `((?i)Saint)` so it will
-match `saint-Petersburg` but not `saint-petersburg`.
+## Коментари
 
-Inline modifiers can also be given as part of a non-capturing group:
-`(?i:pattern)`.
+Синтаксисът е такъв: `(?#text)`. Текстът в скобите се игнорира.
 
-<table>
-<thead>
-<tr class="header">
-<th>регулярен израз</th>
-<th>кибрит</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>(? I) Saint-Petersburg</code>  </td>
-<td>   <code>Saint-petersburg</code> и <code>Санкт Петербург</code></td>
-</tr>
-<tr class="even">
-<td>`` Свети (К) - (- и) Petersbur</td>
-<td>g`` &amp;quot;Санкт Петербург&amp;quot;, но не и
-&amp;quot;Санкт-Петербург&amp;quot;</td>
-</tr>
-<tr class="odd">
-<td><code>(Saint -) (К)? Petersburg</code></td>
-<td><blockquote>
-<p>  <code>Saint-petersburg</code> и <code>saint-petersburg</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td>`<span class="title-ref"> (? (И) Saint -) Petersburg</span></td>
-<td><span class="title-ref">?   </span><span class="title-ref"> Санкт
-Петербург</span><span class="title-ref">, но не </span><span
-class="title-ref">saint-petersburg</span>`</td>
-</tr>
-</tbody>
-</table>
+Обърнете внимание, че коментарът се затваря от най-близката `)`, така че няма начин да поставите буквален `)` в коментара.
 
-## Comments
+## Рекурсия
 
-Syntax is like this: `(?#text)`. Text inside brackets is ignored.
+Синтаксисът е `(?R)`, псевдонимът е `(?0)`.
 
-Note that the comment is closed by the nearest `)`, so there is no way
-to put a literal `)` in the comment.
+Регексът `a(?R)?z` съвпада с една или повече букви "a", последвани от точно същия брой букви "z".
 
-## Recursion
+Основната цел на рекурсията е да съвпадне с балансирани конструкции или вложени конструкции. Общият регекс е `b(?:m|(?R))*e` където "b" е това, което започва конструкцията, "m" е това, което може да се случи в средата на конструкцията, и "e" е това, което се случва в края на конструкцията.
 
-Syntax is `(?R)`, the alias is `(?0)`.
+Ако това, което може да се появи в средата на балансираната конструкция, може също така да се появи самостоятелно без началните и крайните части, тогава общият регекс е `b(?R)*e|m`.
 
-The regex `a(?R)?z` matches one or more letters "a" followed by exactly
-the same number of letters "z".
+## Подизвиквания на подпрограми
 
-The main purpose of recursion is to match balanced constructs or nested
-constructs. The generic regex is `b(?:m|(?R))*e` where "b" is what
-begins the construct, "m" is what can occur in the middle of the
-construct, and "e" is what occurs at the end of the construct.
+Синтаксисът за извикване на номерирани групи: `(?1)` ... `(?90)` (максималният индекс е ограничен от кода).
 
-If what may appear in the middle of the balanced construct may also
-appear on its own without the beginning and ending parts then the
-generic regex is `b(?R)*e|m`.
-
-## Subroutine calls
-
-Syntax for call to numbered groups: `(?1)` ... `(?90)` (maximal index is
-limited by code).
-
-Syntax for call to named groups: `(?P>name)`. Also Perl syntax is
-supported: `(?&name)`.
-
-# Supported syntax are
+Синтаксисът за извикване на именувани групи: `(?P>name)`. Също така се поддържа синтаксисът `(?&name)`, `\g<name>` и `\g'name'`
+# Поддържани синтаксиси са
 
 `(?number)` `(?P>name)` `(?&name)` `\g<name>` `\g'name'` ============
 
-This is like recursion but calls only code of capturing group with
-specified index.
+Това е като рекурсия, но извиква само кода на група за залавяне с посочения индекс.
 
-## Unicode Categories
+## Категории на Unicode
 
-Unicode standard has names for character categories. These are 2-letter
-strings. For example "Lu" is uppercase letters, "Ll" is lowercase
-letters. And 1-letter bigger category "L" is all letters.
+Стандартът на Unicode има имена за категории на символи. Това са 2-буквени низове. Например "Lu" е главни букви, "Ll" е малки букви. И 1-буквена по-голяма категория "L" е всички букви.
 
-- Cc - Control
-- Cf - Format
-- Co - Private Use
-- Cs - Surrrogate
-- Ll - Lowercase Letter
-- Lm - Modifier Letter
-- Lo - Other Letter
-- Lt - Titlecase Letter
-- Lu - Uppercase Letter
-- Mc - Spacing Mark
-- Me - Enclosing Mark
-- Mn - Nonspacing Mark
-- Nd - Decimal Number
-- Nl - Letter Number
-- No - Other Number
-- Pc - Connector Punctuation
-- Pd - Dash Punctuation
-- Pe - Close Punctuation
-- Pf - Final Punctuation
-- Pi - Initial Punctuation
-- Po - Other Punctuation
-- Ps - Open Punctuation
-- Sc - Currency Symbol
-- Sk - Modifier Symbol
-- Sm - Math Symbol
-- So - Other Symbol
-- Zl - Line Separator
-- Zp - Paragraph Separator
-- Zs - Space Separator
+- Cc - Контрол
+- Cf - Формат
+- Co - Лична употреба
+- Cs - Заместник
+- Ll - Малка буква
+- Lm - Модифицираща буква
+- Lo - Друга буква
+- Lt - Буква с начална главна
+- Lu - Главна буква
+- Mc - Разделител за маркиране
+- Me - Затварящ маркер
+- Mn - Маркер без интервал
+- Nd - Десетичен номер
+- Nl - Буквен номер
+- No - Друг номер
+- Pc - Свързваща пунктуация
+- Pd - Тире пунктуация
+- Pe - Затваряща пунктуация
+- Pf - Крайна пунктуация
+- Pi - Начална пунк
+- Po - Друга пунктуация
+- Ps - Отваряща пунктуация
+- Sc - Символ на валута
+- Sk - Модифициращ символ
+- Sm - Математически символ
+- So - Друг символ
+- Zl - Разделител на линии
+- Zp - Разделител на параграфи
+- Zs - Разделител на пространство
 
-Meta-character `\p` denotes one Unicode char of specified category.
-Syntax: `\pL` and `\p{L}` for 1-letter name, `\p{Lu}` for 2-letter
-names.
+Мета-символът `\p` означава един Unicode символ от определена категория.
+Синтаксис: `\pL` и `\p{L}` за имена с 1 буква, `\p{Lu}` за имена с 2 букви.
 
-Meta-character `\P` is inverted, it denotes one Unicode char **not** in
-the specified category.
+Мета-символът `\P` е инвертиран, той означава един Unicode символ **не** в
+специфицираната категория.
 
-These meta-characters are supported within character classes too.
+Тези мета-символи се поддържат и в класовете на символите.
 
-## послеслов
+## Следдума
 
-In this [ancient blog post from previous
-century](https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html)
-I illustrate some usages of regular expressions.
+В този [древен блог пост от предишния
+век](https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html)
+илустрирам някои употреби на регулярни изрази.

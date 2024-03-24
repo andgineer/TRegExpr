@@ -1,1055 +1,636 @@
 # Expressions régulières (RegEx)
 
-## introduction
+## Introduction
 
-Regular expressions are a handy way to specify patterns of text.
+Les expressions régulières sont un moyen pratique de spécifier des modèles de texte.
 
-With regular expressions you can validate user input, search for some
-patterns like emails of phone numbers on web pages or in some documents
-and so on.
+Avec les expressions régulières, vous pouvez valider des entrées utilisateur, rechercher certains motifs comme des emails ou des numéros de téléphone sur des pages web ou dans des documents, etc.
 
-Below is the complete regular expressions cheat sheet.
+Ci-dessous se trouve la feuille de triche complète pour les expressions régulières.
 
-## Personnages
+## Caractères
 
-### Matchs simples
+### Correspondances simples
 
-Any single character (except special regex characters) matches itself. A
-series of (not special) characters matches that series of characters in
-the input string.
+Tout caractère unique (à l'exception des caractères spéciaux de regex) correspond à lui-même. Une série de caractères (non spéciaux) correspond à cette série de caractères dans la chaîne d'entrée.
 
-| RegEx    | Allumettes |
-|----------|------------|
-| `foobar` | `foobar`   |
+| RegEx    | Correspondances |
+|----------|-----------------|
+| `foobar` | `foobar`        |
 
-### Non-Printable Personnages (escape-codes)
+### Caractères non imprimables (codes d'échappement)
 
-To specify character by its Unicode code, use the prefix `\x` followed
-by the hex code. For 3-4 digits code (after U+00FF), enclose the code
-into braces.
+Pour spécifier un caractère par son code Unicode, utilisez le préfixe `\x` suivi du code hexadécimal. Pour un code de 3-4 chiffres (après U+00FF), encadrez le code entre accolades.
 
-| RegEx           | Allumettes                                   |
-|-----------------|----------------------------------------------|
-| `\xAB`          | character with 2-digit hex code `AB`         |
-| `\x{AB20}`      | character with 1..4-digit hex code `AB20`    |
-| \`\` foo x20bar | ``foo bar\`\` (notez l&#39;espace au milieu) |
+| RegEx        | Correspondances                               |
+|--------------|-----------------------------------------------|
+| `\xAB`       | caractère avec le code hexadécimal `AB` de 2 chiffres |
+| `\x{AB20}`   | caractère avec le code hexadécimal `AB20` de 1..4 chiffres |
+| `foo\x20bar` | `foo bar` (notez l'espace au milieu)          |
 
-There are a number of predefined escape-codes for non-printable
-characters, like in C language:
+Il existe un certain nombre de codes d'échappement prédéfinis pour les caractères non imprimables, comme dans le langage C :
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>\ t</code>  </td>
-<td><blockquote>
-<p>onglet (HT / TAB), identique à <code>\x09</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>\n</code>  </td>
-<td>line feed (LF), same as <code>\x0a</code></td>
-</tr>
-<tr class="odd">
-<td><code>\ r</code>  </td>
-<td><blockquote>
-<p>carriage return (CR), same as <code>\x0d</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>\ f</code>  </td>
-<td><blockquote>
-<p>Form Feed (FF), identique à <code>\ x0c</code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>\ a</code>  </td>
-<td><blockquote>
-<p>alarme (BEL), identique à <code>\ x07</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>\ e</code>  </td>
-<td><blockquote>
-<p>échappement (ESC), identique à <code>\ x1b</code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><p><code>\cA</code> ... <code>\cZ</code></p></td>
-<td><div class="line-block">chr(0) to chr(25).<br />
-For example, <code>\cI</code> matches the tab-char.<br />
-Lower-case letters "a"..."z" are also supported.</div></td>
-</tr>
-</tbody>
-</table>
+| RegEx       | Correspondances                                 |
+|-------------|-------------------------------------------------|
+| `\t`        | tabulation (HT/TAB), équivalent à `\x09`        |
+| `\n`        | saut de ligne (LF), équivalent à `\x0a`         |
+| `\r`        | retour chariot (CR), équivalent à `\x0d`        |
+| `\f`        | alimentation en formulaire (FF), équivalent à `\x0c` |
+| `\a`        | alarme (BEL), équivalent à `\x07`               |
+| `\e`        | échappement (ESC), équivalent à `\x1b`          |
+| `\cA` ... `\cZ` | chr(0) à chr(25). Par exemple, `\cI` correspond au caractère de tabulation. Les lettres minuscules "a"..."z" sont également prises en charge. |
 
-<a name="escape"></a>
+### Échappement
 
-### S&#39;échapper
+Pour représenter un caractère spécial de regex (un de `.+*?|\()[]{}^$`), préfixez-le avec un antislash `\`. L'antislash littéral doit également être échappé.
 
-To represent special regex character (one of `.+*?|\()[]{}^$`), prefix
-it with a backslash `\`. The literal backslash must be escaped too.
+| RegEx         | Correspondances                                                     |
+|---------------|---------------------------------------------------------------------|
+| `\^FooBarPtr` | `^FooBarPtr`, ceci est `^` et non le [début de ligne](#lineseparators) |
+| `\[a\]`       | `[a]`, ceci n'est pas une [classe de caractère](#userclass)        |
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>\^FooBarPtr</code></td>
-<td><code>^FooBarPtr</code>, this is <code>^</code> and not <a
-href="#lineseparators">start of line</a></td>
-</tr>
-<tr class="even">
-<td><code>\ [a \]</code></td>
-<td><blockquote>
-<p><code>[a]</code>, this is not <a href="#userclass">character
-class</a></p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+## Classes de caractères
 
-## Classes de personnages
+### Classes de caractères utilisateur
 
-<a name="userclass"></a>
+Une classe de caractères est une liste de caractères à l'intérieur des crochets `[]`. La classe correspond à tout **caractère unique** listé dans cette classe.
 
-### User Classes de personnages
+| RegEx            | Correspondances                                     |
+|------------------|-----------------------------------------------------|
+| `foob[aeiou]r`   | `foobar`, `foober`, etc. mais pas `foobbr`, `foobcr` |
 
-Character class is a list of characters inside square brackets `[]`. The
-class matches any **single** character listed in this class.
+Vous pouvez "inverser" la classe - si le premier caractère après le `[` est `^`, alors la classe correspond à tout caractère **sauf** les caractères listés dans la classe.
 
-| RegEx                                              | Allumettes                                                                                                                                                                                                                                                                                                 |
-|----------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| \`<span class="title-ref"> foob \[aeiou\] r</span> | <span class="title-ref">  </span><span class="title-ref">foobar</span><span class="title-ref">, </span><span class="title-ref">foober</span><span class="title-ref"> etc mais pas </span><span class="title-ref">foobbr</span><span class="title-ref">, </span><span class="title-ref">foobcr</span>\` etc |
+| RegEx           | Correspondances                                     |
+|-----------------|-----------------------------------------------------|
+| `foob[^aeiou]r` | `foobbr`, `foobcr`, etc. mais pas `foobar`, `foober` |
 
-You can "invert" the class - if the first character after the `[` is
-`^`, then the class matches any character **except** the characters
-listed in the class.
+Dans une liste, le caractère tiret `-` est utilisé pour spécifier une plage, de sorte que `a-z` représente tous les caractères entre `a` et `z`, inclus.
 
-| RegEx                 | Allumettes                                              |
-|-----------------------|---------------------------------------------------------|
-| \`\` foob \[^ aeiou\] | r``foobbr`,`foobcr`etc mais pas`foobar`,`foober\`\` etc |
+Si vous voulez que le tiret `-` lui-même soit membre d'une classe, placez-le au début ou à la fin de la liste, ou [échappez](#escape) le avec un antislash.
 
-Within a list, the dash `-` character is used to specify a range, so
-that `a-z` represents all characters between `a` and `z`, inclusive.
+Si vous voulez que `]` fasse partie de la classe, vous pouvez le placer au début de la liste ou [l'échapper](#escape) avec un antislash.
 
-If you want the dash `-` itself to be a member of a class, put it at the
-start or end of the list, or [escape](#escape) it with a backslash.
+| RegEx       | Correspondances                      |
+|-------------|--------------------------------------|
+| `[-az]`     | `a`, `z` et `-`                      |
+| `[az-]`     | `a`, `z` et `-`                      |
+| `[a\-z]`    | `a`, `z` et `-`                      |
+| `[a-z]`     | caractères de `a` à `z`              |
+| `[\n-\x0D]` | caractères de chr(10) à chr(13)      |
 
-If you want `]` as part of the class you may place it at the start of
-list or [escape](#escape) it with a backslash.
+### Méta-caractère point
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>[-az]</code>    </td>
-<td><code>a</code>, <code>z</code> et <code>-</code></td>
-</tr>
-<tr class="even">
-<td><code>[az-]</code>    </td>
-<td><code>a</code>, <code>z</code> et <code>-</code></td>
-</tr>
-<tr class="odd">
-<td><code>[a \ -z]</code></td>
-<td><blockquote>
-<p>  <code>a</code>, <code>z</code> et <code>-</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>[az]</code>    </td>
-<td><blockquote>
-<p>caractères de <code>a</code> à <code>z</code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td>`` [n- x0D</td>
-<td>] `` characters from chr(10) to chr(13)</td>
-</tr>
-</tbody>
-</table>
+Le méta-caractère `.` (point) correspond par défaut à tout caractère. Mais si vous désactivez le [modificateur /s](#s), alors il ne correspondra pas aux caractères de saut de ligne.
 
-### Dot Meta-Char
+Le `.` ne fonctionne pas comme méta-classe à l'intérieur des [classes de caractères utilisateur](#user-character-classes). `[.]` signifie un "." littéral.
 
-Meta-char `.` (dot) by default matches any character. But if you turn
-**off** the [modifier /s](#s), then it won't match line-break
-characters.
+### Méta-classes
 
-The `.` does not act as meta-class inside [user character
-classes](#user-classes-de-personnages). `[.]` means a literal ".".
+Il existe un certain nombre de classes de caractères prédéfinies qui rendent les expressions régulières plus compactes, "méta-classes" :
 
-### Meta-Classes
+| RegEx | Correspondances                                   |
+|-------|---------------------------------------------------|
+| `\w`  | un caractère alphanumérique, y compris `_`        |
+| `\W`  | un non-alphanumérique                             |
+| `\d`  | un caractère numérique (comme `[0-9]`)            |
+| `\D`  | un non-numérique                                  |
+| `\s`  | un espace (comme `[ \t\n\r\f]`)                   |
+| `\S`  | un non-espace                                     |
+| `\h`  | espace horizontal : la tabulation et tous les caractères dans la catégorie "séparateur d'espace" de Unicode |
+| `\H`  | pas un espace horizontal                          |
+| `\v`  | espace vertical : tous les caractères traités comme des sauts de ligne dans la norme Unicode |
+| `\V`  | pas un espace vertical                            |
+| `\R`  | saut de ligne Unicode : LF, paire CR LF, CR, FF (saut de page), VT (tabulation verticale), U+0085, U+2028, U+2029 |
 
-There are a number of predefined character classes that keeps regular
-expressions more compact, "meta-classes":
+Vous pouvez utiliser toutes les méta-classes mentionnées dans le tableau ci-dessus dans les [classes de caractères utilisateur](#user-character-classes).
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>\w</code>    </td>
-<td>an alphanumeric character, including <code>_</code></td>
-</tr>
-<tr class="even">
-<td><code>\W</code>    </td>
-<td>a non-alphanumeric</td>
-</tr>
-<tr class="odd">
-<td><code>\ d</code>  </td>
-<td>  a numeric character (same as <code>[0-9]</code>)</td>
-</tr>
-<tr class="even">
-<td><code>\ D</code>  </td>
-<td>  un non numérique</td>
-</tr>
-<tr class="odd">
-<td><code>\s</code>    </td>
-<td>N&amp;#39;importe quel espace (identique à
-<code>[\t\n\r\f]</code>)</td>
-</tr>
-<tr class="even">
-<td><code>\ S</code>  </td>
-<td>  a non-space</td>
-</tr>
-<tr class="odd">
-<td><p><code>\h</code></p></td>
-<td><div class="line-block">horizontal whitespace: the tab and all
-characters<br />
-in the "space separator" Unicode category</div></td>
-</tr>
-<tr class="even">
-<td><code>\H</code></td>
-<td>not a horizontal whitespace</td>
-</tr>
-<tr class="odd">
-<td><p><code>\v</code></p></td>
-<td><div class="line-block">vertical whitespace: all characters treated
-as<br />
-line-breaks in the Unicode standard</div></td>
-</tr>
-<tr class="even">
-<td><code>\V</code></td>
-<td>not a vertical whitespace</td>
-</tr>
-<tr class="odd">
-<td><p><code>\R</code></p></td>
-<td><div class="line-block">unicode line break: LF, pair CR LF,
-CR,<br />
-FF (form feed), VT (vertical tab), U+0085, U+2028, U+2029</div></td>
-</tr>
-</tbody>
-</table>
+| RegEx         | Correspondances                                                    |
+|---------------|--------------------------------------------------------------------|
+| `foob\dr`     | `foob1r`, `foob6r`, etc. mais pas `foobar`, `foobbr`, etc.         |
+| `foob[\w\s]r` | `foobar`, `foob r`, `foobbr`, etc. mais pas `foob1r`, `foob=r`, etc. |
 
-You may use all meta-classes, mentioned in the table above, within [user
-character classes](#user-classes-de-personnages).
-
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>foob \ dr</code>  </td>
-<td><blockquote>
-<p>  <code>foob1r</code>, <code>foob6r</code> and so on, but not
-<code>foobar</code>, <code>foobbr</code> and so on</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td>`` foob [w s</td>
-<td>] r<code></code>foobar<code>,</code>foob
-r<code>,</code>foobbr<code>and so on, but not</code>foob1r<code>,</code>foob=r``
-and so on</td>
-</tr>
-</tbody>
-</table>
-
-> [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> Properties [SpaceChars](tregexpr.md#spacechars) and
-> [WordChars](tregexpr.md#wordchars) define character classes `\w`,
-> `\W`, `\s`, `\ S`.
+> Les propriétés [SpaceChars](tregexpr.md#spacechars) et
+> [WordChars](tregexpr.md#wordchars) définissent les classes de caractères `\w`,
+> `\W`, `\s`, `\S`.
 >
-> So you can redefine these classes.
+> Vous pouvez donc redéfinir ces classes.
 
 ## Limites
 
-<a name="lineseparators"></a>
+### Limites de ligne
 
-### Line Limites
+| Méta-caractère | Correspondances                                        |
+|----------------|--------------------------------------------------------|
+| `^`            | correspondance de longueur zéro au début de ligne      |
+| `$`            | correspondance de longueur zéro à la fin de ligne      |
+| `\A`           | correspondance de longueur zéro tout au début          |
+| `\z`           | correspondance de longueur zéro tout à la fin          |
+| `\Z`           | comme `\z` mais correspond aussi avant le dernier saut de ligne |
+| `\G`           | correspondance de longueur zéro à la position de fin de la correspondance précédente |
 
-<table>
-<thead>
-<tr class="header">
-<th>Meta-char</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>^</code> </td>
-<td>zero-length match at start of line</td>
-</tr>
-<tr class="even">
-<td><code>$</code> </td>
-<td>zero-length match at end of line</td>
-</tr>
-<tr class="odd">
-<td><code>\ A</code></td>
-<td><blockquote>
-<p>zero-length match at the very beginning</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>\z</code></td>
-<td>zero-length match at the very end</td>
-</tr>
-<tr class="odd">
-<td><code>\ Z</code></td>
-<td><blockquote>
-<p>like <code>\z</code> but also matches before the final line-break</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>\G</code></td>
-<td>zero-length match at the end pos of the previous match</td>
-</tr>
-</tbody>
-</table>
+Exemples :
 
-Examples:
+| RegEx      | Correspondances                                    |
+|------------|----------------------------------------------------|
+| `^foobar`  | `foobar` seulement s'il est au début de ligne      |
+| `foobar$`  | `foobar` seulement s'il est à la fin de ligne      |
+| `^foobar$` | `foobar` seulement s'il est la seule chaîne en ligne |
+| `foob.r`   | `foobar`, `foobbr`, `foob1r`, etc.                 |
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>^ foobar</code></td>
-<td><blockquote>
-<p><code>foobar</code> seulement si c&amp;#39;est en début de ligne</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>foobar $</code></td>
-<td><blockquote>
-<p><code>foobar</code> seulement si c&amp;#39;est en fin de ligne</p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td>`` ^ foobar $</td>
-<td><code></code>foobar`` seulement s&amp;#39;il s&amp;#39;agit de la
-seule chaîne en ligne</td>
-</tr>
-<tr class="even">
-<td><code>foob.r</code>  </td>
-<td><blockquote>
-<p><code>foobar</code>, <code>foobbr</code>, <code>foob1r</code> et
-ainsi de suite</p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+Le méta-caractère `^` correspond à une position de longueur zéro au début de la chaîne d'entrée. `$` - à la fin. Si le [modificateur /m](#m) est **activé**, ils correspondent également au début/à la fin de lignes individuelles dans le texte multiligne.
 
-Meta-char `^` matches zero-length position at the beginning of the input
-string. `$` - at the ending. If [modifier /m](#m) is **on**, they also
-match at the beginning/ending of individual lines in the multi-line
-text.
+Notez qu'il n'y a pas de ligne vide dans la séquence `\x0D\x0A`.
 
-Notez qu&#39;il n&#39;y a pas de ligne vide dans la séquence
-`\ \ x0D \ x0A`.
-
-> [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> If you are using [Unicode version](tregexpr.md#unicode), then
-> `^`/`$` also matches `\x2028`, `\x2029`, `\x0B`, `\x0C` or `\x85`.
+> Si vous utilisez la [version Unicode](tregexpr.md#unicode), alors
+> `^`/`$` correspondent également à `\x2028`, `\x2029`, `\x0B`, `\x0C` ou `\x85`.
 
-Meta-char `\ A` matches zero-length position at the very beginning of
-the input string, `\z` - at the very ending. They ignore [modifier
-/m](#m). `\ Z` is like `\z` but also matches before the final line-break
-(LF and CR LF). Behaviour of `\ A`, `\z`, `\ Z` is made like in most of
-major regex engines (Perl, PCRE, etc).
+Le méta-caractère `\A` correspond à la position de longueur zéro tout au début de
+la chaîne d'entrée, `\z` - à tout à la fin. Ils ignorent le [modificateur /m](#m).
+`\Z` est comme `\z`, mais correspond aussi avant le dernier saut de ligne (LF et
+CR LF). Le comportement de `\A`, `\z`, `\Z` est conçu comme dans la plupart des grands
+moteurs de regex (Perl, PCRE, etc).
 
-Note that `^.*$` does not match a string between `\x0D\x0A`, because
-this is unbreakable line separator. But it matches the chaîne vide
-within the sequence `\x0A\x0D` because this is 2 line-breaks in the
-wrong order.
+Notez que `^.*$` ne correspond pas à une chaîne entre `\x0D\x0A`, car
+c'est un séparateur de ligne ininterrompable. Mais il correspond à la chaîne vide
+dans la séquence `\x0A\x0D` parce que c'est 2 sauts de ligne dans le
+mauvais ordre.
 
-> [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> Multi-line processing can be tuned by properties
-> [LineSeparators](tregexpr.md#lineseparators) and
+> Le traitement multi-ligne peut être ajusté par les propriétés
+> [LineSeparators](tregexpr.md#lineseparators) et
 > [UseLinePairedBreak](tregexpr.md#linepairedseparator).
 >
-> So you can use Unix style separators `\n` or DOS/Windows style `\r\n`
-> or mix them together (as in described above default behaviour).
+> Ainsi, vous pouvez utiliser des séparateurs de style Unix `\n` ou de style DOS/Windows `\r\n`
+> ou les mélanger ensemble (comme dans le comportement par défaut décrit ci-dessus).
 
-If you prefer mathematically correct description you can find it on
+Si vous préférez une description mathématiquement correcte, vous pouvez la trouver sur
 [www.unicode.org](http://www.unicode.org/unicode/reports/tr18/).
 
-### Word Limites
+### Limites de mots
 
-| RegEx | Allumettes            |
+| RegEx | Correspondances       |
 |-------|-----------------------|
 | `\b`  | une limite de mot     |
-| `\B`  | une limite de non-mot |
+| `\B`  | une non-limite de mot |
 
-A word boundary `\b` is a spot between two characters that has a `\w` on
-one side of it and a `\W` on the other side of it (in either order).
-
-<a name="iterator"></a>
+Une limite de mot `\b` est un point entre deux caractères qui a un `\w` d'un côté et un `\W` de l'autre côté (dans un ordre quelconque).
 
 ## Quantification
 
-### Quantifiers
+### Quantificateurs
 
-Any item of a regular expression may be followed by quantifier.
-Quantifier specifies number of repetitions of the item.
+Tout élément d'une expression régulière peut être suivi d'un quantificateur. Le quantificateur spécifie le nombre de répétitions de l'élément.
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>{n}</code>  </td>
-<td><blockquote>
-<p>exactement <code>n</code> fois</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>{n,}</code></td>
-<td>  au moins <code>n</code> fois</td>
-</tr>
-<tr class="odd">
-<td><code>{,m}</code>  </td>
-<td>not more than <code>m</code> times (only with
-AllowBraceWithoutMin)</td>
-</tr>
-<tr class="even">
-<td>`<span class="title-ref"> {n, m} </span></td>
-<td><span class="title-ref"> au moins </span><span
-class="title-ref">n</span><span class="title-ref"> mais pas plus de
-</span><span class="title-ref">m</span>` fois</td>
-</tr>
-<tr class="odd">
-<td><code>*</code>    </td>
-<td>zéro ou plus, semblable à <code>{0,}</code></td>
-</tr>
-<tr class="even">
-<td><code>+</code>  </td>
-<td>un ou plusieurs, similaire à <code>{1,}</code></td>
-</tr>
-<tr class="odd">
-<td><code>?</code>  </td>
-<td>zéro ou un, similaire à <code>{0,1}</code></td>
-</tr>
-</tbody>
-</table>
+| RegEx    | Correspondances                                                  |
+|----------|------------------------------------------------------------------|
+| `{n}`    | exactement `n` fois                                             |
+| `{n,}`   | au moins `n` fois                                                |
+| `{,m}`   | pas plus de `m` fois (seulement avec AllowBraceWithoutMin)       |
+| `{n,m}`  | au moins `n` mais pas plus de `m` fois                           |
+| `*`      | zéro ou plus, similaire à `{0,}`                                 |
+| `+`      | un ou plus, similaire à `{1,}`                                   |
+| `?`      | zéro ou un, similaire à `{0,1}`                                  |
 
-So, digits in curly brackets `{n, m}`, specify the minimum number of
-times to match `n` and the maximum `m`.
+Les chiffres entre accolades `{n,m}` spécifient le nombre minimum de fois à correspondre `n` et le maximum `m`.
 
-The `{n}` is equivalent to `{n,n}` and matches exactement `n` fois. The
-`{n,}` matches `n` or more times.
+`{n}` est équivalent à `{n,n}` et correspond exactement `n` fois. `{n,}` correspond `n` fois ou plus.
 
-The variant `{,m}` is only supported if the property
-AllowBraceWithoutMin is set.
+La variante `{,m}` n'est prise en charge que si la propriété AllowBraceWithoutMin est définie.
 
-There is no practical limit to the values n and m (limit is maximal
-signed 32-bit value).
+Il n'y a pas de limite pratique aux valeurs de n et m (la limite est la valeur maximale entière signée de 32 bits).
 
-Using `{` without a correct range will give an error. This behaviour can
-be changed by setting the property AllowLiteralBraceWithoutRange, which
-will accept `{` as a literal char, if not followed by a range. A range
-with a low value bigger than the high value will always give an error.
+Utiliser `{` sans une plage correcte donnera une erreur. Ce comportement peut être modifié en définissant la propriété AllowLiteralBraceWithoutRange, qui acceptera `{` comme un caractère littéral, s'il n'est pas suivi d'une plage. Une plage avec une valeur basse plus grande que la valeur haute donnera toujours une erreur.
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>foob. * r</code>    </td>
-<td><blockquote>
-<p><code>foobar</code>, <code>foobalkjdflkj9r</code> et
-<code>foobr</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>foob. + r</code>    </td>
-<td><blockquote>
-<p><code>foobar</code>, <code>foobalkjdflkj9r</code> mais pas
-<code>foobr</code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>foob.? r</code>    </td>
-<td><blockquote>
-<p><code>foobar</code>, <code>foobbr</code> et <code>foobr</code> mais
-pas <code>foobalkj9r</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>fooba {2} r</code>  </td>
-<td><blockquote>
-<p><code>foobaar</code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>fooba {2,} r</code></td>
-<td><blockquote>
-<p><code>foobaar</code>, <code>foobaaar</code>, <code>foobaaaar</code>
-etc.</p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>fooba {2,3} r</code></td>
-<td><blockquote>
-<p><code>foobaar</code>, ou <code>foobaaar</code> mais pas
-<code>foobaaaar</code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td>`` (foobar) {8,10}</td>
-<td><code>8...10 instances of</code>foobar<code>(</code>()`<span
-class="title-ref"> is `group &lt;#subexpression&gt;</span>__)</td>
-</tr>
-</tbody>
-</table>
+| RegEx            | Correspondances                                                      |
+|------------------|----------------------------------------------------------------------|
+| `foob.*r`        | `foobar`,  `foobalkjdflkj9r` et `foobr`                              |
+| `foob.+r`        | `foobar`, `foobalkjdflkj9r` mais pas `foobr`                         |
+| `foob.?r`        | `foobar`, `foobbr` et `foobr` mais pas `foobalkj9r`                  |
+| `fooba{2}r`      | `foobaar`                                                            |
+| `fooba{2,}r`     | `foobaar'`, `foobaaar`, `foobaaaar`, etc.                            |
+| `fooba{2,3}r`    | `foobaar`, ou `foobaaar`  mais pas `foobaaaar`                       |
+| `(foobar){8,10}` | 8...10 instances de `foobar` (`()` est un [groupe](#subexpression)) |
 
 <a name="greedy"></a>
 
-### Cupidité
+### Gourmandise
 
-[Quantifiers](#iterator) in "greedy" mode takes as many as possible, in
-"lazy" mode - as few as possible.
+Les [Quantificateurs](#iterator) en mode "gourmand" prennent autant que possible, en
+mode "paresseux" - le moins possible.
 
-By default all quantifiers are "greedy". Append the character `?` to
-make any quantifier "lazy".
+Par défaut, tous les quantificateurs sont "gourmands". Ajoutez le caractère `?` pour
+rendre tout quantificateur "paresseux".
 
-Pour la chaîne `abbbbc`:
+Pour la chaîne `abbbbc` :
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>b +</code></td>
-<td><blockquote>
-<p><code>bbbb</code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>b+?</code></td>
-<td><code>b</code></td>
-</tr>
-<tr class="odd">
-<td><code>b*?</code></td>
-<td>chaîne vide</td>
-</tr>
-<tr class="even">
-<td>`` b {2,3}?</td>
-<td><code></code> bb``</td>
-</tr>
-<tr class="odd">
-<td>`<span class="title-ref"> b {2,3} </span></td>
-<td><span class="title-ref"> </span><span class="title-ref">
-bbb</span>`</td>
-</tr>
-</tbody>
-</table>
+| RegEx     | Correspondances |
+|-----------|-----------------|
+| `b+`      | `bbbb`          |
+| `b+?`     | `b`             |
+| `b*?`     | chaîne vide     |
+| `b{2,3}?` | `bb`            |
+| `b{2,3}`  | `bbb`           |
 
-You can switch all quantifiers into "lazy" mode ([modifier /g](#g),
-below we use [in-line modifier change](#inlinemodifiers)).
+Vous pouvez passer tous les quantificateurs en mode "paresseux" ([modificateur /g](#g),
+ci-dessous nous utilisons [changement de modificateur en ligne](#inlinemodifiers)).
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>`` (? -g) b +</td>
-<td><blockquote>
-<p><code></code>b``</p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+| RegEx     | Correspondances |
+|-----------|-----------------|
+| `(?-g)b+` | `b`             |
 
-### Possessive Quantifier
+### Quantificateur Possessif
 
-The syntax is: `a++`, `a*+`, `a?+`, `a{2,4}+`. Currently it's supported
-only for simple braces, but not for braces after group like
+La syntaxe est : `a++`, `a*+`, `a?+`, `a{2,4}+`. Actuellement, elle est prise en charge
+seulement pour les accolades simples, mais pas pour les accolades après un groupe comme
 `(foo|bar){3,5}+`.
 
-This regex feature is [described
-here.](https://regular-expressions.mobi/possessive.html?wlr=1) In short,
-possessive quantifier speeds up matching in complex cases.
+Cette fonctionnalité regex est [décrite
+ici.](https://regular-expressions.mobi/possessive.html?wlr=1) En bref,
+le quantificateur possessif accélère la correspondance dans les cas complexes.
 
-## Choice
+## Choix
 
-Expressions in the choice are separated by vertical bar `|`.
+Les expressions dans le choix sont séparées par une barre verticale `|`.
 
-So `fee|fie|foe` will match any of `fee`, `fie`, or `foe` in the target
-string (as would `f(e|i|o)e`).
+Ainsi `fee|fie|foe` correspondra à l'une des `fee`, `fie`, ou `foe` dans la chaîne cible
+(comme le ferait `f(e|i|o)e`).
 
-The first expression includes everything from the last pattern delimiter
-(`(`, `[`, or the beginning of the pattern) up to the first `|`, and the
-last expression contains everything from the last `|` to the next
-pattern delimiter.
+La première expression inclut tout depuis le dernier délimiteur de motif
+(`(`, `[`, ou le début du motif) jusqu'au premier `|`, et la
+dernière expression contient tout depuis le dernier `|` jusqu'au prochain
+délimiteur de motif.
 
-Sounds a little complicated, so it’s common practice to include the
-choice in parentheses, to minimize confusion about where it starts and
-ends.
+Cela semble un peu compliqué, il est donc courant d'inclure le
+choix entre parenthèses, pour minimiser la confusion sur son début et sa fin.
 
-Expressions in the choice are tried from left to right, so the first
-expression that matches, is the one that is chosen.
+Les expressions dans le choix sont testées de gauche à droite, donc la première
+expression qui correspond, est celle qui est choisie.
 
-For example, regular expression `foo|foot` in string `barefoot` will
-match `foo`. Just a first expression that matches.
+Par exemple, l'expression régulière `foo|foot` dans la chaîne `barefoot` correspondra
+à `foo`. Juste la première expression qui correspond.
 
-Also remember that `|` is interpreted as a literal within square
-brackets, so if you write `[fee|fie|foe]` you’re really only matching
+Rappelez-vous aussi que `|` est interprété comme un littéral à l'intérieur des crochets carrés, donc si vous écrivez `[fee|fie|foe]` vous ne faites vraiment correspondre que
 `[feio|]`.
 
-| RegEx                | Allumettes               |
-|----------------------|--------------------------|
-| \`\` foo (bar \| foo | ) ``foobar`ou`foofoo\`\` |
+| RegEx          | Correspondances       |
+|----------------|-----------------------|
+| `foo(bar|foo)` | `foobar` ou `foofoo`  |
 
 <a name="subexpression"></a>
 
-## Groups
+## Groupes
 
-The brackets `()` are used to define groups (ie subexpressions).
+Les crochets `()` sont utilisés pour définir des groupes (c'est-à-dire des sous-expressions).
 
 > [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> Group positions, lengths and actual values will be in
+> Les positions des groupes, les longueurs et les valeurs réelles seront dans
 > [MatchPos](tregexpr.md#matchpos), [MatchLen](tregexpr.md#matchlen)
-> and [Match](tregexpr.md#match).
+> et [Match](tregexpr.md#match).
 >
-> You can substitute them with [Substitute](tregexpr.md#substitute).
+> Vous pouvez les remplacer par [Substitute](tregexpr.md#substitute).
 
-Groups are numbered from left to right by their opening parenthesis
-(including nested groups). First group has index 1. The entire regex has
-index 0.
+Les groupes sont numérotés de gauche à droite par leur parenthèse ouvrante
+(y compris les groupes imbriqués). Le premier groupe a l'indice 1. Le regex entier a
+l'indice 0.
 
-> | Group | Value    |
-> |-------|----------|
-> | 0     | `foobar` |
-> | 1     | `foobar` |
-> | 2     | `bar`    |
+> | Groupe | Valeur    |
+> |--------|-----------|
+> | 0      | `foobar`  |
+> | 1      | `foobar`  |
+> | 2      | `bar`     |
 
-## Références arrières
+## Références Arrière
 
-Meta-chars `\1` through `\9` are interpreted as backreferences to
-capture groups. They match the previously found group with the specified
-index.
+Les métacaractères `\1` à `\9` sont interprétés comme des références arrière aux
+groupes de capture. Ils correspondent au groupe trouvé précédemment avec l'indice spécifié.
 
-The meta char `\g` followed by a number is also interpreted as
-backreferences to capture groups. It can be followed by a multi-digit
-number.
+Le métacaractère `\g` suivi d'un nombre est également interprété comme
+des références arrière aux groupes de capture. Il peut être suivi d'un nombre à plusieurs chiffres.
 
-| RegEx      | Allumettes               |
-|------------|--------------------------|
-| `(.)\1+`   | `aaaa` et `cc`           |
-| `(.+)\1+`  | aussi `abab` et `123123` |
-| `(.)\g1+`  | `aaaa` et `cc`           |
+| RegEx      | Correspondances           |
+|------------|---------------------------|
+| `(.)\1+`   | `aaaa` et `cc`            |
+| `(.+)\1+`  | également `abab` et `123123` |
+| `(.)\g1+`  | `aaaa` et `cc`            |
 
-RegEx `(['"]?)(\d+)\1` matches `"13"` (in double quotes), or `'4'` (in
-single quotes) or `77` (without quotes) etc.
+RegEx `(['"]?)(\d+)\1` correspond à `"13"` (entre guillemets doubles), ou `'4'` (entre
+guillemets simples) ou `77` (sans guillemets), etc.
 
-## Named Groups and Références arrières
+## Groupes Només et Références Arrière
 
-To make some group named, use this syntax: `(?P<name>expr)`. Also Perl
-syntax is supported: `(?'name'expr)`. And further: `(?<name>expr)`
+Les groupes nommés dans les expressions régulières vous permettent d'étiqueter une partie de votre motif. 
+Cela rend vos motifs plus faciles à comprendre et à mettre à jour.
 
-Name of group must be valid identifier: first char is letter or "\_",
-other chars are alphanumeric or "\_". All named groups are also usual
-groups and share the same numbers 1 to 9.
+Pour créer un groupe nommé, utilisez `(?<name>pattern)` ou `(?'name'pattern)`, 
+où `name` est le nom du groupe et `pattern` est le motif regex que vous souhaitez capturer.
 
-Références arrières to named groups are `(?P=name)`, the numbers `\1` to
-`\9` can also be used. As well as the example `\g` and `\k` in the table
-below.
+Les références arrière vous permettent de faire correspondre le même texte qu'un groupe a capturé précédemment. 
+Les références arrière nommées utilisent `\k<name>`, où `name` est le nom du groupe que vous souhaitez faire correspondre à nouveau.
 
-# Supported syntax are
+TRegExpr prend également en charge la version Perl : `(?P<name>pattern)` pour définir un groupe nommé et `(?P=name)` 
+pour les références arrière.
 
-`(?P=name)` `\g{name}` `\k{name}` `\k<name>` `\k'name'` ============
 
-Example
+Exemple
 
-| RegEx                    | Allumettes            |
-|--------------------------|-----------------------|
-| `(?P<qq>['"])\w+(?P=qq)` | `"word"` and `'word'` |
+| RegEx                    | Correspondances        |
+|--------------------------|------------------------|
+| `(?P<qq>['"])\w+(?P=qq)` | `"mot"` et `'mot'`     |
 
-## Matched Result
+## Résultat Correspondant
 
-The begin of the reported match can be set using `\K`.
+Le début de la correspondance signalée peut être défini en utilisant `\K`.
 
-By default the entire text covered by a pattern is considered matched.
-However it is possible to set explicitly what will be reported.
+Par défaut, l'ensemble du texte couvert par un motif est considéré comme correspondant.
+Cependant, il est possible de définir explicitement ce qui sera signalé.
 
-The pattern `a\Kb` will require the text to contain "ab". But only the
-"b" will be reported as having been matched. Their can be several `\K`
-in a pattern, The last one will set the match-start position. Only `\K`
-in active parts of the pattern are considered. E.g. `a(\Kb)?` will not
-consider `\K` if there is no "b". Captures can exist outside the match
-set by `\K`.
+Le motif `a\Kb` nécessitera que le texte contienne "ab". Mais seulement le
+"b" sera signalé comme ayant correspondu. Il peut y avoir plusieurs `\K`
+dans un motif, Le dernier définira la position de début de correspondance. Seuls les `\K`
+dans les parties actives du motif sont considérés. Par ex. `a(\Kb)?` ne
+considérera pas `\K` s'il n'y a pas de "b". Les captures peuvent exister en dehors de la correspondance
+définie par `\K`.
 
-If used in other constructs that can apply outside the reported match
-(like look-ahead), then the position marked by `\K` must be before or at
-the reported end of the match. If the position is marked later, the
-match is considered failed.
+Si utilisé dans d'autres constructions qui peuvent s'appliquer en dehors de la correspondance signalée
+(comme l'anticipation positive), alors la position marquée par `\K` doit être avant ou à
+la fin signalée de la correspondance. Si la position est marquée plus tard, la
+correspondance est considérée comme échouée.
 
-`\K` is somewhat similar to a look-behind. Unlike a look-behind the part
-of the pattern before the `\K` must be after the start position of the
-matching, if the pattern is applied from an offset position within the
-text.
+`\K` est quelque peu similaire à un regard en arrière. Contrairement à un regard en arrière, la partie
+du motif avant le `\K` doit être après la position de début de la
+correspondance, si le motif est appliqué à partir d'une position décalée dans le
+texte.
 
 ## Modificateurs
 
-Modificateurs are for changing behaviour of regular expressions.
+Les modificateurs servent à changer le comportement des expressions régulières.
 
-You can set modifiers globally in your system or change inside the
-regular expression using the [(?imsxr-imsxr)](#inlinemodifiers).
+Vous pouvez définir des modificateurs globalement dans votre système ou les changer à l'intérieur de
+l'expression régulière en utilisant [(?imsxr-imsxr)](#inlinemodifiers).
 
-> [!NOTE]
 > [TRegExpr](tregexpr.md)
 >
-> To change modifiers use [ModifierStr](tregexpr.md#modifierstr) or
-> appropriate `TRegExpr` properties
+> Pour changer les modificateurs, utilisez [ModifierStr](tregexpr.md#modifierstr) ou
+> les propriétés appropriées de `TRegExpr`
 > [Modifier\*](tregexpr.md#modifieri).
 >
-> The default values are defined in [global
-> variables](tregexpr.md#global-constants). For example global
-> variable `RegExprModifierX` defines default value for `ModifierX`
-> property.
+> Les valeurs par défaut sont définies dans [variables
+> globales](tregexpr.md#global-constants). Par exemple, la variable globale `RegExprModifierX` définit la valeur par défaut pour la propriété `ModifierX`.
 
 <a name="i"></a>
 
-### je, insensible à la casse
+### i, insensible à la casse
 
-Case-insensitive. Use installed in you system locale settings, see also
+Insensible à la casse. Utilisez les paramètres de locale installés dans votre système, voir aussi
 [InvertCase](tregexpr.md#invertcase).
 
 <a name="m"></a>
 
-### m, chaînes multi-lignes
+### m, chaînes multilignes
 
-Treat string as multiple lines. So `^` and `$` matches the start or end
-of any line anywhere within the string.
+Traitez la chaîne comme plusieurs lignes. Ainsi `^` et `$` correspondent au début ou à la fin
+de n'importe quelle ligne n'importe où dans la chaîne.
 
-See also [Line Limites](#lineseparators).
+Voir aussi [Limites de Ligne](#lineseparators).
 
 <a name="s"></a>
 
-### s, chaînes simples
+### s, chaînes sur une seule ligne
 
-Treat string as single line. So `.` matches any character whatsoever,
-even a line separators.
+Traitez la chaîne comme une seule ligne. Ainsi `.` correspond à n'importe quel caractère,
+même un séparateur de lignes.
 
-See also [Line Limites](#lineseparators), which it normally would not
-match.
+Voir aussi [Limites de Ligne](#lineseparators), auxquels il ne correspondrait normalement pas.
 
 <a name="g"></a>
 
-### g, la gourmandise
+### g, gourmandise
 
-> [!NOTE]
-> [TRegExpr](tregexpr.md) seul modificateur.
+> [TRegExpr](tregexpr.md) seulement modificateur.
 
-Switching it `Off` you’ll switch [quantifiers](#iterator) into
-[non-greedy](#greedy) mode.
+En le désactivant, vous passerez [quantificateurs](#iterator) en mode
+[non-gourmand](#greedy).
 
-So, if modifier `/g` is `Off` then `+` works as `+?`, `*` as `*?` and so
-on.
+Ainsi, si le modificateur `/g` est `Off`, alors `+` fonctionne comme `+?`, `*` comme `*?` et ainsi
+de suite.
 
 Par défaut, ce modificateur est `On`.
 
 <a name="x"></a>
 
-### x, syntaxe eXtended
+### x, syntaxe étendue
 
-Allows to comment regular expression and break them up into multiple
-lines.
+Permet de commenter l'expression régulière et de la diviser en plusieurs
+lignes.
 
-If the modifier is `On` we ignore all whitespaces that is neither
-backslashed nor within a character class.
+Si le modificateur est `On`, nous ignorons tous les espaces blancs qui ne sont ni
+échappés ni dans une classe de caractères.
 
 Et le caractère `#` sépare les commentaires.
 
-Notice that you can use empty lines to format regular expression for
-better readability:
+Notez que vous pouvez utiliser des lignes vides pour formater l'expression régulière pour
+une meilleure lisibilité :
 
 ``` text
 (
-(abc) # comment 1
+(abc) # commentaire 1
 #
-(efg) # comment 2
+(efg) # commentaire 2
 )
 ```
 
-This also means that if you want real whitespace or `#` characters in
-the pattern (outside a character class, where they are unaffected by
-`/x`), you’ll either have to escape them or encode them using octal or
-hex escapes.
+Cela signifie également que si vous voulez de vrais espaces blancs ou des caractères `#` dans
+le motif (en dehors d'une classe de caractères, où ils ne sont pas affectés par
+`/x`), vous devrez soit les échapper soit les encoder en utilisant des échappements octaux ou
+hexadécimaux.
 
 <a name="r"></a>
 
 ### r, gammes russes
 
-> [!NOTE]
 > [TRegExpr](tregexpr.md) seul modificateur.
 
-In Russian ASCII table characters `ё`/`Ё` are placed separately from
-others.
+Dans la table ASCII russe, les caractères `ё`/`Ё` sont placés séparément des
+autres.
 
-Big and small Russian characters are in separated ranges, this is the
-same as with English characters but nevertheless I wanted some short
-form.
+Les caractères russes grands et petits sont dans des plages séparées, c'est le
+même que pour les caractères anglais mais néanmoins je voulais une forme courte.
 
-With this modifier instead of `[а-яА-ЯёЁ]` you can write `[а-Я]` if you
-need all Russian characters.
+Avec ce modificateur au lieu de `[а-яА-ЯёЁ]` vous pouvez écrire `[а-Я]` si vous
+avez besoin de tous les caractères russes.
 
-Lorsque le modificateur est `On`:
+Lorsque le modificateur est `On` :
 
-<table>
-<thead>
-<tr class="header">
-<th>RegEx</th>
-<th>Allumettes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>а-я</code></td>
-<td><blockquote>
-<p>caractères de <code>а</code> à <code>я</code> et <code></code></p>
-</blockquote></td>
-</tr>
-<tr class="even">
-<td><code>А-Я</code></td>
-<td><blockquote>
-<p>caractères de <code>А</code> à <code>Я</code> et <code></code></p>
-</blockquote></td>
-</tr>
-<tr class="odd">
-<td><code>а-Я</code></td>
-<td><blockquote>
-<p>tous les symboles russes</p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+| RegEx | Correspondances                |
+|-------|--------------------------------|
+| `а-я` | caractères de `а` à `я` et `ё` |
+| `А-Я` | caractères de `А` à `Я` et `Ё` |
+| `а-Я` | tous les symboles russes       |
 
-Le modificateur est défini par défaut sur
-<span class="title-ref">On</span>.
+Le modificateur est réglé sur <span class="title-ref">On</span> par défaut.
 
-## Assertions
+## Assertions (anticipation positive, anticipation négative)
 
 <a name="assertions"></a>
 
-Positive lookahead assertion: `foo(?=bar)` matches "foo" only before
-"bar", and "bar" is excluded from the match.
+Assertion d'anticipation positive : `foo(?=bar)` correspond à "foo" seulement avant
+"bar", et "bar" est exclu de la correspondance.
 
-Negative lookahead assertion: `foo(?!bar)` matches "foo" only if it's
-not followed by "bar".
+Assertion d'anticipation négative : `foo(?!bar)` correspond à "foo" seulement s'il n'est pas suivi par "bar".
 
-Positive lookbehind assertion: `(?<=foo)bar` matches "bar" only after
-"foo", and "foo" is excluded from the match.
+Assertion de rétrospection positive : `(?<=foo)bar` correspond à "bar" seulement après
+"foo", et "foo" est exclu de la correspondance.
 
-Negative lookbehind assertion: `(?<!foo)bar` matches "bar" only if it's
-not prefixed with "foo".
+Assertion de rétrospection négative : `(?<!foo)bar` correspond à "bar" seulement s'il n'est pas précédé de "foo".
 
-Limitations:
+Limitations :
 
-- Variable length lookbehind are not allowed to contain capture groups.
-  This can be allowed by setting the property `AllowUnsafeLookBehind`.
-  If this is enabled and there is more than one match in the text that
-  the group might capture, then the wrong match may be captured. This
-  does not affect the correctness of the overall assertion. (I.e., the
-  lookbehind will correctly return if the text before matched the
-  pattern).
-- Variable length lookbehind may be slow to execute, if they do not
-  match.
+- Les rétrospections de longueur variable ne sont pas autorisées à contenir des groupes de capture.
+  Cela peut être autorisé en définissant la propriété `AllowUnsafeLookBehind`.
+  Si cela est activé et qu'il y a plus d'une correspondance dans le texte que
+  le groupe pourrait capturer, alors la mauvaise correspondance peut être capturée. Cela
+  n'affecte pas la justesse de l'assertion globale. (C'est-à-dire, la
+  rétrospection retournera correctement si le texte avant correspondait au
+  motif).
+- Les rétrospections de longueur variable peuvent être lentes à exécuter, si elles ne
+  correspondent pas.
 
-## Non-capturing Groups
+## Groupes non capturants
 
-Syntax is like this: `(?:expr)`.
+La syntaxe est comme ceci : `(?:expr)`.
 
-Such groups do not have the "index" and are invisible for
-backreferences. Non-capturing groups are used when you want to group a
-subexpression, but you do not want to save it as a matched/captured
-portion of the string. So this is just a way to organize your regex into
-subexpressions without overhead of capturing result:
+De tels groupes n'ont pas d'"index" et sont invisibles pour
+les références arrière. Les groupes non capturants sont utilisés lorsque vous voulez grouper une
+sous-expression, mais vous ne voulez pas la sauvegarder comme une partie correspondante/capturée de la chaîne. C'est donc juste une façon d'organiser votre regex en
+sous-expressions sans surcharge de capturer le résultat :
 
-| RegEx                          | Allumettes                                                           |
-|--------------------------------|----------------------------------------------------------------------|
-| `(https?|ftp)://([^/\r\n]+)`   | in `https://sorokin.engineer` matches `https` and `sorokin.engineer` |
-| `(?:https?|ftp)://([^/\r\n]+)` | in `https://sorokin.engineer` matches only `sorokin.engineer`        |
+| RegEx                          | Correspondances                                                     |
+|--------------------------------|---------------------------------------------------------------------|
+| `(https?|ftp)://([^/\r\n]+)`   | dans `https://sorokin.engineer` correspond à `https` et `sorokin.engineer` |
+| `(?:https?|ftp)://([^/\r\n]+)` | dans `https://sorokin.engineer` correspond seulement à `sorokin.engineer` |
 
-## Atomic Groups
+## Groupes atomiques
 
-Syntax is like this: `(?>expr|expr|...)`.
+La syntaxe est comme ceci : `(?>expr|expr|...)`.
 
-Atomic groups are special case of non-capturing groups. [Description of
-them.](https://regular-expressions.mobi/atomic.html?wlr=1)
+Les groupes atomiques sont un cas spécial de groupes non capturants. [Description de
+eux.](https://regular-expressions.mobi/atomic.html?wlr=1)
 
-## Inline Modificateurs
+## Modificateurs en ligne
 
 <a name="inlinemodifiers"></a>
 
-Syntax for one modifier: `(?i)` to turn on, and `(?-i)` to turn off.
-Many modifiers are allowed like this: `(?msgxr-imsgxr)`.
+Syntaxe pour un modificateur : `(?i)` pour activer, et `(?-i)` pour désactiver.
+Plusieurs modificateurs sont autorisés comme ceci : `(?msgxr-imsgxr)`.
 
-You may use it inside regular expression for modifying modifiers
-on-the-fly. This can be especially handy because it has local scope in a
-regular expression. It affects only that part of regular expression that
-follows `(?imsgxr-imsgxr)` operator.
+Vous pouvez l'utiliser à l'intérieur de l'expression régulière pour modifier les modificateurs
+à la volée. Cela peut être particulièrement pratique car cela a une portée locale dans une
+expression régulière. Cela n'affecte que cette partie de l'expression régulière qui
+suit l'opérateur `(?imsgxr-imsgxr)`.
 
-And if it's inside group, it will affect only this group - specifically
-the part of the group that follows the modifiers. So in
-`((?i)Saint)-Petersburg` it affects only group `((?i)Saint)` so it will
-match `saint-Petersburg` but not `saint-petersburg`.
+Et s'il est à l'intérieur d'un groupe, cela n'affectera que ce groupe - spécifiquement
+la partie du groupe qui suit les modificateurs. Ainsi dans
+`((?i)Saint)-Petersburg` cela n'affecte que le groupe `((?i)Saint)` donc cela correspondra
+à `saint-Petersburg` mais pas à `saint-petersburg`.
 
-Inline modifiers can also be given as part of a non-capturing group:
-`(?i:pattern)`.
+Les modificateurs en ligne peuvent également être donnés dans le cadre d'un groupe non capturant :
+`(?i:modèle)`.
 
-| RegEx                            | Allumettes                                              |
-|----------------------------------|---------------------------------------------------------|
-| `(? i) Saint-Petersburg`         |    «Saint-Pétersbourg» et «Saint-Pétersbourg»           |
-| \`\` (? i) Saint - (? - i) Peter | sburg`` Saint-Petersburg`mais pas` Saint-petersburg\`\` |
-| \`\` (? i) (Saint -)? Petersburg | ` ` Saint-petersburg`et`saint-petersburg\`\`            |
-| \`\` ((? i) Saint -)? Petersburg | ` `saint-Petersburg`, mais pas`saint-petersburg\`\`     |
+| RegEx                        | Correspondances                                   |
+|------------------------------|---------------------------------------------------|
+| `(?i)Saint-Petersburg`       | `Saint-petersburg` et `Saint-Petersburg`          |
+| `(?i)Saint-(?-i)Petersburg`  | `Saint-Petersburg` mais pas `Saint-petersburg`    |
+| `(?i)(Saint-)?Petersburg`    | `Saint-petersburg` et `saint-petersburg`          |
+| `((?i)Saint-)?Petersburg`    | `saint-Petersburg`, mais pas `saint-petersburg`   |
 
-## Comments
+## Commentaires
 
-Syntax is like this: `(?#text)`. Text inside brackets is ignored.
+La syntaxe est comme ceci : `(?#texte)`. Le texte à l'intérieur des crochets est ignoré.
 
-Note that the comment is closed by the nearest `)`, so there is no way
-to put a literal `)` in the comment.
+Notez que le commentaire est fermé par le `)` le plus proche, donc il n'y a aucun moyen
+de mettre un `)` littéral dans le commentaire.
 
-## Recursion
+## Récursion
 
-Syntax is `(?R)`, the alias is `(?0)`.
+La syntaxe est `(?R)`, l'alias est `(?0)`.
 
-The regex `a(?R)?z` matches one or more letters "a" followed by exactly
-the same number of letters "z".
+Le regex `a(?R)?z` correspond à une ou plusieurs lettres "a" suivies par exactement
+le même nombre de lettres "z".
 
-The main purpose of recursion is to match balanced constructs or nested
-constructs. The generic regex is `b(?:m|(?R))*e` where "b" is what
-begins the construct, "m" is what can occur in the middle of the
-construct, and "e" is what occurs at the end of the construct.
+Le principal objectif de la récursion est de correspondre à des constructions équilibrées ou imbriquées. Le regex générique est `b(?:m|(?R))*e` où "b" est ce qui
+commence la construction, "m" est ce qui peut se produire au milieu de la
+construction, et "e" est ce qui se produit à la fin de la construction.
 
-If what may appear in the middle of the balanced construct may also
-appear on its own without the beginning and ending parts then the
-generic regex is `b(?R)*e|m`.
+Si ce qui peut apparaître au milieu de la construction équilibrée peut également
+apparaître seul sans les parties de début et de fin, alors le regex
+générique est `b(?R)*e|m`.
 
-## Subroutine calls
+## Appels de sous-routine
 
-Syntax for call to numbered groups: `(?1)` ... `(?90)` (maximal index is
-limited by code).
+Syntaxe pour l'appel aux groupes numérotés : `(?1)` ... `(?90)` (l'indice maximal est
+limité par le code).
 
-Syntax for call to named groups: `(?P>name)`. Also Perl syntax is
-supported: `(?&name)`.
+Syntaxe pour l'appel aux groupes nommés : `(?P>name)`. La syntaxe Perl est également
+prise en charge: `(?&name)`, `\g<name>` and `\g'name'`
 
-# Supported syntax are
+# Syntaxe prise en charge
 
 `(?number)` `(?P>name)` `(?&name)` `\g<name>` `\g'name'` ============
 
-This is like recursion but calls only code of capturing group with
-specified index.
+C'est comme la récursion, mais appelle seulement le code du groupe de capture avec
+l'indice spécifié.
 
-## Unicode Categories
+## Catégories Unicode
 
-Unicode standard has names for character categories. These are 2-letter
-strings. For example "Lu" is uppercase letters, "Ll" is lowercase
-letters. And 1-letter bigger category "L" is all letters.
+La norme Unicode a des noms pour les catégories de caractères. Ce sont des chaînes de 2 lettres. Par exemple, "Lu" est pour les lettres majuscules, "Ll" est pour les lettres minuscules. Et la catégorie plus grande d'une lettre "L" est pour toutes les lettres.
 
-- Cc - Control
+- Cc - Contrôle
 - Cf - Format
-- Co - Private Use
-- Cs - Surrrogate
-- Ll - Lowercase Letter
-- Lm - Modifier Letter
-- Lo - Other Letter
-- Lt - Titlecase Letter
-- Lu - Uppercase Letter
-- Mc - Spacing Mark
-- Me - Enclosing Mark
-- Mn - Nonspacing Mark
-- Nd - Decimal Number
-- Nl - Letter Number
-- No - Other Number
-- Pc - Connector Punctuation
-- Pd - Dash Punctuation
-- Pe - Close Punctuation
-- Pf - Final Punctuation
-- Pi - Initial Punctuation
-- Po - Other Punctuation
-- Ps - Open Punctuation
-- Sc - Currency Symbol
-- Sk - Modifier Symbol
-- Sm - Math Symbol
-- So - Other Symbol
-- Zl - Line Separator
-- Zp - Paragraph Separator
-- Zs - Space Separator
+- Co - Utilisation Privée
+- Cs - Surrogat
+- Ll - Lettre Minuscule
+- Lm - Lettre Modificatrice
+- Lo - Autre Lettre
+- Lt - Lettre Majuscule et Minuscule
+- Lu - Lettre Majuscule
+- Mc - Marque d'Espacement
+- Me - Marque d'Encadrement
+- Mn - Marque Non-espacée
+- Nd - Nombre Décimal
+- Nl - Nombre de Lettre
+- No - Autre Nombre
+- Pc - Ponctuation de Connexion
+- Pd - Ponctuation Tiret
+- Pe - Ponctuation Fermante
+- Pf - Ponctuation Finale
+- Pi - Ponctuation Initiale
+- Po - Autre Ponctuation
+- Ps - Ponctuation Ouvrante
+- Sc - Symbole Monétaire
+- Sk - Symbole Modificateur
+- Sm - Symbole Mathématique
+- So - Autre Symbole
+- Zl - Séparateur de Ligne
+- Zp - Séparateur de Paragraphe
+- Zs - Séparateur d'Espace
 
-Meta-character `\p` denotes one Unicode char of specified category.
-Syntax: `\pL` and `\p{L}` for 1-letter name, `\p{Lu}` for 2-letter
-names.
+Le métacaractère `\p` désigne un caractère Unicode de la catégorie spécifiée.
+Syntaxe : `\pL` et `\p{L}` pour un nom à 1 lettre, `\p{Lu}` pour les noms à 2 lettres.
 
-Meta-character `\P` is inverted, it denotes one Unicode char **not** in
-the specified category.
+Le métacaractère `\P` est inversé, il désigne un caractère Unicode **non** dans
+la catégorie spécifiée.
 
-These meta-characters are supported within character classes too.
+Ces métacaractères sont également pris en charge dans les classes de caractères.
 
-## Épilogue
+## Postface
 
-In this [ancient blog post from previous
-century](https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html)
-I illustrate some usages of regular expressions.
+Dans cet [ancien article de blog du siècle précédent](https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html)
+j'illustre quelques utilisations des expressions régulières.
