@@ -1,4 +1,4 @@
-![Test](https://github.com/andgineer/TRegExpr/actions/workflows/ci.yml/badge.svg)
+[![Test](https://github.com/andgineer/TRegExpr/actions/workflows/ci.yml/badge.svg)](https://github.com/andgineer/TRegExpr/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### TRegExpr: library for regular expressions
