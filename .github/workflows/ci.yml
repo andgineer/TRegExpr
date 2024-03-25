@@ -1,0 +1,47 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    paths-ignore: [ "README.md" ]
+    branches: [ "master", "main" ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        lazarus-versions: [dist, stable]
+        build-modes: [ "Default", "Unicode", "UnicodeAndChars" ]
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    - name: Install Lazarus
+      uses: gcarreno/setup-lazarus@v3.2.17
+      with:
+        lazarus-version: ${{ matrix.lazarus-versions }}
+        with-cache: false
+
+    - name: Run tests (Windows)
+      if: ${{ matrix.operating-system == 'windows-latest' }}
+      run: |
+        lazbuild -B --bm=${{ matrix.build-modes }} "test/test_fpc.lpi"
+        test/test_fpc.exe
+
+    - name: Run tests (Ubuntu)
+      if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+      run: |
+        lazbuild -B --bm=${{ matrix.build-modes }} "test/test_fpc.lpi"
+        test/test_fpc
+
+    - name: Run tests (macOS)
+      if: ${{ matrix.operating-system == 'macos-latest' }}
+      run: |
+        lazbuild -B --bm=${{ matrix.build-modes }} --ws=cocoa "test/test_fpc.lpi"
+        ls
+        ls test
+        test/test_fpc
