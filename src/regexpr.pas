@@ -113,12 +113,19 @@ interface
 // Define 'InlineFuncs' options, to use inline keyword (do not edit this definitions).
 {$IFDEF D8} {$DEFINE InlineFuncs} {$ENDIF}
 {$IFDEF FPC} {$DEFINE InlineFuncs} {$ENDIF}
+
+{$IFDEF D8}
 {$PointerMath on}
+{$LEGACYIFEND ON}
+{$DEFINE HASPOINTERARRAYACCESS}
+{$ELSE}
+{$UNDEF HASPOINTERARRAYACCESS}
+{$ENDIF}
 
 {$IFDEF RegExpWithStackOverflowCheck} // Define the stack checking algorithm for the current platform/CPU
   {$IF defined(Linux) or defined(Windows)}{$IF defined(CPU386) or defined(CPUX86_64)}
     {$DEFINE RegExpWithStackOverflowCheck_DecStack_Frame} // Stack-pointer decrements // use getframe over Sptr()
-  {$ENDIF}{$ENDIF}
+  {$IFEND}{$IFEND}
 {$ENDIF}
 uses
   SysUtils, // Exception
@@ -2063,6 +2070,7 @@ begin
     FreeMem(programm);
     programm := nil;
   end;
+  inherited;
 end;
 
 procedure TRegExpr.SetExpression(const AStr: RegExprString);
@@ -5427,6 +5435,20 @@ type
       );
   end;
 
+{$IFNDEF HASPOINTERARRAYACCESS}
+function PRegExprCharArrayAccess(const anArray: PPRegExprChar; const anIdx: Integer): PRegExprChar;
+begin
+  result:= PPRegExprChar(Integer(anArray) + (anIdx * SizeOf(PRegExprChar)))^;
+end;
+
+procedure AssignPRegExprCharArray(const anArray: PPRegExprChar; const anIdx: Integer; const aValue: PRegExprChar);
+var ArrayMember: PPRegExprChar;
+begin
+  ArrayMember:= PPRegExprChar(Integer(anArray) + (anIdx * SizeOf(PRegExprChar)));
+  ArrayMember^:= aValue;
+end;
+{$ENDIF}
+
 function TRegExpr.MatchPrim(prog: PRegExprChar): Boolean;
 // recursively matching routine
 // Conceptually the strategy is simple:  check to see whether the current
@@ -5720,10 +5742,18 @@ begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           if no < 0 then
             Exit;
+          {$IFDEF HASPOINTERARRAYACCESS}
           opnd := CurrentGrpBounds.GrpStart[no];
+          {$ELSE}
+          opnd := PRegExprCharArrayAccess(CurrentGrpBounds.GrpStart, no);
+          {$ENDIF}
           if opnd = nil then
             Exit;
+          {$IFDEF HASPOINTERARRAYACCESS}
           save := CurrentGrpBounds.GrpEnd[no];
+          {$ELSE}
+          save := PRegExprCharArrayAccess(CurrentGrpBounds.GrpEnd, no);
+          {$ENDIF}
           if save = nil then
             Exit;
           no := save - opnd;
@@ -5747,10 +5777,18 @@ begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
           if no < 0 then
             Exit;
+          {$IFDEF HASPOINTERARRAYACCESS}
           opnd := CurrentGrpBounds.GrpStart[no];
+          {$ELSE}
+          opnd := PRegExprCharArrayAccess(CurrentGrpBounds.GrpStart, no);
+          {$ENDIF}
           if opnd = nil then
             Exit;
+          {$IFDEF HASPOINTERARRAYACCESS}  
           save := CurrentGrpBounds.GrpEnd[no];
+          {$ELSE}
+          save := PRegExprCharArrayAccess(CurrentGrpBounds.GrpEnd, no);
+          {$ENDIF}
           if save = nil then
             Exit;
           no := save - opnd;
@@ -5827,10 +5865,19 @@ begin
       OP_OPEN:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
+          {$IFDEF HASPOINTERARRAYACCESS}
           save := CurrentGrpBounds.TmpStart[no];
           CurrentGrpBounds.TmpStart[no] := regInput;
+          {$ELSE}
+          save := PRegExprCharArrayAccess(CurrentGrpBounds.TmpStart, no);
+          AssignPRegExprCharArray(CurrentGrpBounds.TmpStart, no, regInput);
+          {$ENDIF}
           Result := MatchPrim(next);
+          {$IFDEF HASPOINTERARRAYACCESS}
           CurrentGrpBounds.TmpStart[no] := save;
+          {$ELSE}
+          AssignPRegExprCharArray(CurrentGrpBounds.TmpStart, no, save);
+          {$ENDIF}
           exit;
         end;
 
@@ -5847,11 +5894,17 @@ begin
       OP_CLOSE:
         begin
           no := PReGroupIndex((scan + REOpSz + RENextOffSz))^;
+          {$IFDEF HASPOINTERARRAYACCESS}
           save := CurrentGrpBounds.GrpStart[no];
           opnd := CurrentGrpBounds.GrpEnd[no]; // save2
           CurrentGrpBounds.GrpStart[no] := CurrentGrpBounds.TmpStart[no];
           CurrentGrpBounds.GrpEnd[no] := regInput;
-
+          {$ELSE}
+          save := PRegExprCharArrayAccess(CurrentGrpBounds.GrpStart, no);
+          opnd := PRegExprCharArrayAccess(CurrentGrpBounds.GrpEnd, no); // save2
+          AssignPRegExprCharArray(CurrentGrpBounds.GrpStart, no, PRegExprCharArrayAccess(CurrentGrpBounds.TmpStart, no));
+          AssignPRegExprCharArray(CurrentGrpBounds.GrpEnd, no, regInput);
+          {$ENDIF}
           // if we are in OP_SUBCALL* call, it called OP_OPEN*, so we must return
           // in OP_CLOSE, without going to next opcode
           if CurrentSubCalled = no then
@@ -5862,8 +5915,13 @@ begin
 
           Result := MatchPrim(next);
           if not Result then begin
+            {$IFDEF HASPOINTERARRAYACCESS}
             CurrentGrpBounds.GrpStart[no] := save;
             CurrentGrpBounds.GrpEnd[no] := opnd;
+            {$ELSE}
+            AssignPRegExprCharArray(CurrentGrpBounds.GrpStart, no, save);
+            AssignPRegExprCharArray(CurrentGrpBounds.GrpEnd, no, opnd);
+            {$ENDIF}
           end;
 
           Exit;
@@ -6430,7 +6488,11 @@ begin
               CurrentGrpBounds.TmpStart := @GrpBounds[regRecursion].TmpStart[0];
               CurrentGrpBounds.GrpStart := @GrpBounds[regRecursion].GrpStart[0];
               CurrentGrpBounds.GrpEnd   := @GrpBounds[regRecursion].GrpEnd[0];
+              {$IFDEF HASPOINTERARRAYACCESS}
               FillChar(CurrentGrpBounds.GrpStart[0], SizeOf(CurrentGrpBounds.GrpStart[0])*regNumBrackets, 0);
+              {$ELSE}
+              FillChar(CurrentGrpBounds.GrpStart^, SizeOf(CurrentGrpBounds.GrpStart^)*regNumBrackets, 0);
+              {$ENDIF}
             end;
             Result := MatchPrim(regCodeWork);
             Dec(regRecursion);
@@ -6462,7 +6524,11 @@ begin
               CurrentGrpBounds.TmpStart := @GrpBounds[regRecursion].TmpStart[0];
               CurrentGrpBounds.GrpStart := @GrpBounds[regRecursion].GrpStart[0];
               CurrentGrpBounds.GrpEnd   := @GrpBounds[regRecursion].GrpEnd[0];
+              {$IFDEF HASPOINTERARRAYACCESS}
               FillChar(CurrentGrpBounds.GrpStart[0], SizeOf(CurrentGrpBounds.GrpStart[0])*regNumBrackets, 0);
+              {$ELSE}
+              FillChar(CurrentGrpBounds.GrpStart^, SizeOf(CurrentGrpBounds.GrpStart^)*regNumBrackets, 0);
+              {$ENDIF}
             end;
             Result := MatchPrim(save);
             Dec(regRecursion);
@@ -6645,11 +6711,19 @@ begin
     SetLength(GrpBounds[0].TmpStart, BndLen);
     SetLength(GrpBounds[0].GrpStart, BndLen);
     SetLength(GrpBounds[0].GrpEnd, BndLen);
+    {$IFNDEF D8}
+    for i := low(GrpBounds) + 1 to high(GrpBounds) do begin
+      SetLength(GrpBounds[i].TmpStart, 0);
+      SetLength(GrpBounds[i].GrpStart, 0);
+      SetLength(GrpBounds[i].GrpEnd, 0);
+    end;
+    {$ELSE}
     for i := low(GrpBounds) + 1 to high(GrpBounds) do begin
       GrpBounds[i].TmpStart := nil;
       GrpBounds[i].GrpStart := nil;
       GrpBounds[i].GrpEnd := nil;
     end;
+    {$ENDIF}
   end;
 
   SetLength(GrpOpCodes, GroupDataArraySize(regNumBrackets, Length(GrpOpCodes)));
