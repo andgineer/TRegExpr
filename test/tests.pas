@@ -1046,8 +1046,8 @@ procedure TTestRegexpr.TestContinueAnchor;
   procedure AssertMatch(AName: String; AStart, ALen: Integer);
   begin
     AreEqual(AName + ' MatchCount', 1, RE.SubExprMatchCount);
-    AreEqual(AName + ' MatchPos[1]', AStart, RE.MatchPos {$IFNDEF D8}[1]{$ELSE}[1]{$ENDIF});
-    AreEqual(AName + ' MatchLen[1]', ALen, RE.MatchLen{$IFNDEF D8}[1]{$ELSE}[1]{$ENDIF});
+    AreEqual(AName + ' MatchPos[1]', AStart, RE.MatchPos[1]);
+    AreEqual(AName + ' MatchLen[1]', ALen, RE.MatchLen[1]);
   end;
 begin
   // Without \G MatchNext will skip
@@ -3429,14 +3429,11 @@ begin
 end;
 
 procedure TTestRegexpr.CompileRE(const AExpression: RegExprString);
-{$IFNDEF D8}
+{$IF NOT DEFINED(LineEnding)}
 const LineEnding = #13#10;
-{$ENDIF}
+{$IFEND}
 begin
   FErrorInfo := LineEnding + AExpression;
-  {$IFNDEF D8}
- // FreeAndNil(RE);
-  {$ENDIF}
   if (RE = Nil) then
   begin
     RE := TTestableRegExpr.Create;
