@@ -114,13 +114,12 @@ interface
 {$IFDEF D8} {$DEFINE InlineFuncs} {$ENDIF}
 {$IFDEF FPC} {$DEFINE InlineFuncs} {$ENDIF}
 
-{$IFDEF D8}
+{$IF DEFINED(D8) OR DEFINED(FPC)}
 {$PointerMath on}
-{$LEGACYIFEND ON}
 {$DEFINE HASPOINTERARRAYACCESS}
 {$ELSE}
 {$UNDEF HASPOINTERARRAYACCESS}
-{$ENDIF}
+{$IFEND}
 
 {$IFDEF RegExpWithStackOverflowCheck} // Define the stack checking algorithm for the current platform/CPU
   {$IF defined(Linux) or defined(Windows)}{$IF defined(CPU386) or defined(CPUX86_64)}
@@ -5438,14 +5437,14 @@ type
 {$IFNDEF HASPOINTERARRAYACCESS}
 function PRegExprCharArrayAccess(const anArray: PPRegExprChar; const anIdx: Integer): PRegExprChar;
 begin
-  result:= PPRegExprChar(Integer(anArray) + (anIdx * SizeOf(PRegExprChar)))^;
+  result := PPRegExprChar(Integer(anArray) + (anIdx * SizeOf(PRegExprChar)))^;
 end;
 
 procedure AssignPRegExprCharArray(const anArray: PPRegExprChar; const anIdx: Integer; const aValue: PRegExprChar);
 var ArrayMember: PPRegExprChar;
 begin
-  ArrayMember:= PPRegExprChar(Integer(anArray) + (anIdx * SizeOf(PRegExprChar)));
-  ArrayMember^:= aValue;
+  ArrayMember := PPRegExprChar(Integer(anArray) + (anIdx * SizeOf(PRegExprChar)));
+  ArrayMember^ := aValue;
 end;
 {$ENDIF}
 
@@ -6711,7 +6710,7 @@ begin
     SetLength(GrpBounds[0].TmpStart, BndLen);
     SetLength(GrpBounds[0].GrpStart, BndLen);
     SetLength(GrpBounds[0].GrpEnd, BndLen);
-    {$IFNDEF D8}
+    {$IF NOT DEFINED(D8) AND NOT DEFINED(FPC)}
     for i := low(GrpBounds) + 1 to high(GrpBounds) do begin
       SetLength(GrpBounds[i].TmpStart, 0);
       SetLength(GrpBounds[i].GrpStart, 0);
@@ -6723,7 +6722,7 @@ begin
       GrpBounds[i].GrpStart := nil;
       GrpBounds[i].GrpEnd := nil;
     end;
-    {$ENDIF}
+    {$IFEND}
   end;
 
   SetLength(GrpOpCodes, GroupDataArraySize(regNumBrackets, Length(GrpOpCodes)));
@@ -7469,7 +7468,7 @@ begin
 
       OP_LOOKAHEAD:
         begin
-          opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
+          // opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz; // Unused result - no side affects
           Next := regNextQuick(Next);
 
           TempSet := FirstCharSet;
