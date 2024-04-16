@@ -7468,7 +7468,7 @@ begin
 
       OP_LOOKAHEAD:
         begin
-          // opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz; // Unused result - no side affects
+          opnd := PRegExprChar(AlignToPtr(Next + 1)) + RENextOffSz;
           Next := regNextQuick(Next);
 
           TempSet := FirstCharSet;
