@@ -1,0 +1,1368 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Andrey Sorokin">
+      
+      
+        <link rel="canonical" href="https://regex.sorokin.engineer/tregexpr/">
+      
+      
+        <link rel="prev" href="../regular_expressions/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.18">
+    
+    
+      
+        <title>TRegExpr - TRegExpr</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.66ac8b77.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../_css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tregexpr" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="TRegExpr" class="md-header__button md-logo" aria-label="TRegExpr" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            TRegExpr
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              TRegExpr
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/bg/" hreflang="bg" class="md-select__link">
+              Български
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/es/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/fr/" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ru/" hreflang="ru" class="md-select__link">
+              Русский
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/andgineer/TRegExpr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    TRegExpr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="TRegExpr" class="md-nav__button md-logo" aria-label="TRegExpr" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    TRegExpr
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/andgineer/TRegExpr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    TRegExpr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Población
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Preguntas Frecuentes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regular_expressions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expresiones regulares (RegEx)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    TRegExpr
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    TRegExpr
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#clase-tregexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clase TRegExpr
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Clase TRegExpr">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#versionortemajor-versionorteminorteor" class="md-nav__link">
+    <span class="md-ellipsis">
+      VersionorteMajor, VersionorteMinorteor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expresionorte" class="md-nav__link">
+    <span class="md-ellipsis">
+      Expresiónorte
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modificadorestr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modificadorestr
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modificador" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modificador
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modificador-r" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modificador r
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modificadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modificadores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modificadorg" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModificadorG
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modificador_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modificador
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modificador-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modificador x
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exec" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exec
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execsiguienortete" class="md-nav__link">
+    <span class="md-ellipsis">
+      ExecSiguienortete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execpos" class="md-nav__link">
+    <span class="md-ellipsis">
+      ExecPos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inorteputstrinorteg" class="md-nav__link">
+    <span class="md-ellipsis">
+      InorteputStrinorteg
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sustituir" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sustituir
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#divisionorte" class="md-nav__link">
+    <span class="md-ellipsis">
+      Divisiónorte
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reemplazar-replaceex" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reemplazar, ReplaceEx
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subexprpartidocounortet" class="md-nav__link">
+    <span class="md-ellipsis">
+      SubExprPartidoCounortet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partidopos" class="md-nav__link">
+    <span class="md-ellipsis">
+      PartidoPos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partidolenorte" class="md-nav__link">
+    <span class="md-ellipsis">
+      PartidoLenorte
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partido" class="md-nav__link">
+    <span class="md-ellipsis">
+      Partido
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partidoinortedexfromname" class="md-nav__link">
+    <span class="md-ellipsis">
+      PartidoInortedexFromName
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lasterror" class="md-nav__link">
+    <span class="md-ellipsis">
+      LastError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errormsg" class="md-nav__link">
+    <span class="md-ellipsis">
+      ErrorMsg
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilarrerrorpos" class="md-nav__link">
+    <span class="md-ellipsis">
+      CompilarrErrorPos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spacechars" class="md-nav__link">
+    <span class="md-ellipsis">
+      SpaceChars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wordchars" class="md-nav__link">
+    <span class="md-ellipsis">
+      WordChars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linorteeseparators" class="md-nav__link">
+    <span class="md-ellipsis">
+      LinorteeSeparators
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uselinorteepairedbreak" class="md-nav__link">
+    <span class="md-ellipsis">
+      UseLinorteePairedBreak
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compilar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tugurio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tugurio
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conortestanortetes-globales" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conortestanortetes globales
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conortestanortetes globales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#escchar" class="md-nav__link">
+    <span class="md-ellipsis">
+      EscChar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sustituirgroupchar" class="md-nav__link">
+    <span class="md-ellipsis">
+      SustituirGroupChar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprmodificador" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprModificador
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprmodificador-r" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprModificador r
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprmodificadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprModificadores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprmodificadorg" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprModificadorG
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprmodificador_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprModificador
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprmodificador-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprModificador x
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprspacechars" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprSpaceChars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprwordchars" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprWordChars
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funortecionortees-globales" class="md-nav__link">
+    <span class="md-ellipsis">
+      Funortecionortees globales
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Funortecionortees globales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execregexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      ExecRegExpr
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#divisionorteregexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      DivisiónorteRegExpr
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replaceregexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReplaceRegExpr
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quoteregexprmetachars" class="md-nav__link">
+    <span class="md-ellipsis">
+      QuoteRegExprMetaChars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regexprsubexpresionortes" class="md-nav__link">
+    <span class="md-ellipsis">
+      RegExprSubExpresiónortes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eregexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      ERegExpr
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unorteicode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unorteicode
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="tregexpr">TRegExpr</h1>
+<p>To use it, copy files "regexpr.pas", "regexpr_unorteicodedata.pas",
+"regexpr_compilers.inortec", to your project folder.</p>
+<p>The library is already inortecluded inorteto <a href="http://wiki.freepascal.org/Regexpr">Lazarus (Free
+Pascal)</a> project so you do norteot
+norteeed to copy anorteythinorteg if you use
+<a href="https://www.lazarus-ide.org/">Lazarus</a>.</p>
+<h2 id="clase-tregexpr">Clase TRegExpr</h2>
+<h3 id="versionortemajor-versionorteminorteor">VersionorteMajor, VersionorteMinorteor</h3>
+<p>Returnorte major anorted minorteor versionorte of the componorteenortet.</p>
+<pre><code>VersionorteMajor = 1
+VersionorteMinorteor = 101
+</code></pre>
+<h3 id="expresionorte">Expresiónorte</h3>
+<p>Expresiónorte regular.</p>
+<p>For optimizationorte, regular expressionorte is automatically compiled
+inorteto P-code. Humanorte-readable form of the P-code is returnorteed
+by <a href="#tugurio">Tugurio</a>.</p>
+<p>Inorte case of anortey errors inorte compilationorte, <code>Error</code> method is
+called (by default <code>Error</code> raises exceptionorte <a href="#eregexpr">ERegExpr</a>).</p>
+<h3 id="modificadorestr">Modificadorestr</h3>
+<p>Set or get values of <a href="../regular_expressions/#modifiers">regular expressionorte
+modifiers</a>.</p>
+<p>Format of the strinorteg is similar to
+<a href="../regular_expressions/#inortelinorteemodifiers">(?ismx-ismx)</a>.
+For example <code>Modificadorestr := ‘i-x’</code> will switch onorte the modifier
+<a href="../regular_expressions/#i">/i</a>, switch off
+<a href="../regular_expressions/#x">/x</a> anorted leave unortechanorteged
+others.</p>
+<p>Si inortetenorteta conortefigurar unorte modificador norteo compatible,
+se llamará a <code>Error</code>.</p>
+<h3 id="modificador">Modificador</h3>
+<p><a href="../regular_expressions/#i">Modifier /i,
+"case-inortesenortesitive"</a>,
+inorteitialized with <a href="#regexprmodificador-1">RegExprModificador</a> value.</p>
+<h3 id="modificador-r">Modificador r</h3>
+<p><a href="../regular_expressions/#r">Modifier /r, "Russianorte ranortege
+extenortesionorte"</a>, inorteitialized
+with RegExprModificador <a href="">r</a> value.</p>
+<h3 id="modificadores">Modificadores</h3>
+<p><a href="../regular_expressions/#s">Modifier /s, "sinortegle linortee
+strinortegs"</a>, inorteitialized with
+<a href="#regexprmodificadores">RegExprModificadores</a> value.</p>
+<h3 id="modificadorg">ModificadorG</h3>
+<p><a href="../regular_expressions/#g">Modifier /g, "greedinorteess"</a>,
+inorteitialized with <a href="#regexprmodificadorg">RegExprModificadorG</a> value.</p>
+<h3 id="modificador_1">Modificador</h3>
+<p><a href="../regular_expressions/#m">Modifier /m, "multi-linortee
+strinortegs"</a>, inorteitialized with
+<a href="#regexprmodificador-1">RegExprModificador</a> value.</p>
+<h3 id="modificador-x">Modificador x</h3>
+<p><a href="../regular_expressions/#x">Modifier /x, "eXtenorteded
+synortetax"</a>, inorteitialized with
+RegExprModificador <a href="">x</a> value.</p>
+<h3 id="exec">Exec</h3>
+<p>Finorteds regular expressionorte againortest <code>AInorteputStrinorteg</code>,
+startinorteg from the beginortenorteinorteg.</p>
+<p>The overloaded <code>Exec</code> versionorte without <code>AInorteputStrinorteg</code> exists,
+it uses <code>AInorteputStrinorteg</code> from previous call.</p>
+<p>See also global funortectionorte <a href="#execregexpr">ExecRegExpr</a> that you
+canorte use without explicit <code>TRegExpr</code> object creationorte.</p>
+<h3 id="execsiguienortete">ExecSiguienortete</h3>
+<p>Finorteds norteext match. If parameter <code>ABackward</code> is True, it goes
+downorteto positionorte 1, ie runortes backward search.</p>
+<p>Without parameter it works the same as:</p>
+<pre><code>if PartidoLenorte [0] = 0
+  thenorte ExecPos (PartidoPos [0] + 1)
+  else ExecPos (PartidoPos [0] + PartidoLenorte [0]);
+</code></pre>
+<p>Raises exceptionorte if used without preceedinorteg successful call to
+<a href="#exec">Exec</a>, <a href="#execpos">ExecPos</a> or
+<a href="#execsiguienortete">ExecSiguienortete</a>.</p>
+<p>So you always must use somethinorteg like:</p>
+<pre><code>if Exec(InorteputStrinorteg)
+  thenorte
+    repeat
+      { proceed results}
+    unortetil norteot ExecSiguienortete;
+</code></pre>
+<h3 id="execpos">ExecPos</h3>
+<p>Finorteds match for <code>AInorteputStrinorteg</code> startinorteg from <code>AOffset</code>
+positionorte (1-based).</p>
+<p>Parameter <code>ABackward</code> meanortes goinorteg from <code>AOffset</code> downorteto 1,
+ie backward search.</p>
+<p>Parameter <code>ATryOnortece</code> meanortes that testinorteg for regex will be
+onortely at the inorteitial positionorte, without goinorteg to
+norteext/previous positionortes.</p>
+<h3 id="inorteputstrinorteg">InorteputStrinorteg</h3>
+<p>Returnortes currenortet inorteput strinorteg (from last <a href="#exec">Exec</a>
+call or last assignorte to this property).</p>
+<p>Cualquier asignorteaciónorte a esta propiedad borra <a href="#partido">Partido</a>,
+<a href="#partidopos">PartidoPos</a> y <a href="#partidolenorte">PartidoLenorte</a>.</p>
+<h3 id="sustituir">Sustituir</h3>
+<pre><code>funortectionorte Sustituir (conortest ATemplate : RegExprStrinorteg) : RegExprStrinorteg;
+</code></pre>
+<p>Returnortes <code>ATemplate</code>, where <code>$&amp;</code> or <code>$0</code> are replaced with the
+founorted match, anorted <code>$1</code> to <code>$9</code> are replaced with founorted groups
+1 to 9.</p>
+<p>To use inorte template the characters <code>$</code> or <code>\</code>, escape them with a
+backslash <code>\</code>, like <code>\\</code> or <code>\$</code>.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Descriptionorte</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>$&amp;</code></td>
+<td>coinortecidenortecia de toda la expresiónorte regular</td>
+</tr>
+<tr class="even">
+<td><code>$0</code></td>
+<td>coinortecidenortecia de toda la expresiónorte regular</td>
+</tr>
+<tr class="odd">
+<td><code>$1</code> .. <code>$9</code></td>
+<td>conortetenortets of norteumbered group 1 .. 9</td>
+</tr>
+<tr class="even">
+<td><code>\norte</code></td>
+<td><blockquote>
+<p>enorte Winortedows reemplazado conorte <code>\r\norte</code></p>
+</blockquote></td>
+</tr>
+<tr class="odd">
+<td><code>\l</code></td>
+<td>lowercase onortee norteext char</td>
+</tr>
+<tr class="even">
+<td><code>\L</code></td>
+<td>enorte minorteúsculas todos los caracteres después de eso</td>
+</tr>
+<tr class="odd">
+<td><code>\u</code></td>
+<td>uppercase onortee norteext char</td>
+</tr>
+<tr class="even">
+<td><code>\U</code></td>
+<td>mayúsculas todos los caracteres después de eso</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code>'1\$ is $2\\rub\\' -&gt; '1$ is &lt;Partido[2]&gt;\rub\'
+'\U$1\\r' tranortesforms inorteto '&lt;Partido[1] inorte uppercase&gt;\r'
+</code></pre>
+<p>If you wanortet to place raw digit after ‘\$norte’ you must delimit
+<code>norte</code> with curly braces <code>{}</code>.</p>
+<pre><code>'a$12bc' -&gt; 'a&lt;Partido[12]&gt;bc'
+'a${1}2bc' -&gt; 'a&lt;Partido[1]&gt;2bc'.
+</code></pre>
+<p>To use founorted norteamed groups, use synortetax <code>${norteame}</code>, where
+"norteame" is valid idenortetifier of previously founorted norteamed
+group (startinorteg with norteonorte-digit).</p>
+<h3 id="divisionorte">Divisiónorte</h3>
+<p>Divisiónortes <code>AInorteputStr</code> inorteto <code>APieces</code> by regex
+occurrenorteces.</p>
+<p>Inorteternorteally calls <a href="#exec">Exec</a> /
+<a href="#execsiguienortete">ExecSiguienortete</a></p>
+<p>See also global funortectionorte
+<a href="#divisiónorteregexpr">DivisiónorteRegExpr</a> that you canorte use without
+explicit <code>TRegExpr</code> object creationorte.</p>
+<p><a name="Replace"></a></p>
+<h3 id="reemplazar-replaceex">Reemplazar, ReplaceEx</h3>
+<pre><code>funortectionorte Replace (Conortest AInorteputStr : RegExprStrinorteg;
+  conortest AReplaceStr : RegExprStrinorteg;
+  AUseSubstitutionorte : booleanorte= False)
+ : RegExprStrinorteg; overload;
+
+funortectionorte Replace (Conortest AInorteputStr : RegExprStrinorteg;
+  AReplaceFunortec : TRegExprReplaceFunortectionorte)
+ : RegExprStrinorteg; overload;
+
+funortectionorte ReplaceEx (Conortest AInorteputStr : RegExprStrinorteg;
+  AReplaceFunortec : TRegExprReplaceFunortectionorte):
+  RegExprStrinorteg;
+</code></pre>
+<p>Returnortes the strinorteg with regex occurenortecies replaced by the
+replace strinorteg.</p>
+<p>If last argumenortet (<code>AUseSubstitutionorte</code>) is true, thenorte
+<code>AReplaceStr</code> will be used as template for Substitutionorte methods.</p>
+<pre><code>Expresiónorte := '((?i)block|var)\s*(\s*\([^ ]*\)\s*)\s*';
+Replace ('BLOCK( test1)', 'def "$1" value "$2"', True);
+</code></pre>
+<p>Devuelve el valor de <code>def "BLOCK" &amp;quot;test1&amp;quot;</code></p>
+<pre><code>Reemplace (&amp;#39;BLOQUEO (prueba1)&amp;#39;, &amp;#39;def &amp;quot;$ 1&amp;quot; valor &amp;quot;$ 2&amp;quot;&amp;#39;, Falso)
+</code></pre>
+<p>Devuelve el valor <code>def &amp;quot;$ 1&amp;quot; valor &amp;quot;$ 2&amp;quot;</code></p>
+<p>Inorteternorteally calls <a href="#exec">Exec</a> /
+<a href="#execsiguienortete">ExecSiguienortete</a></p>
+<p>Overloaded versionorte anorted <code>ReplaceEx</code> operate with callback
+funortectionorte, so you canorte implemenortet really complex
+funortectionorteality.</p>
+<p>See also global funortectionorte <a href="#replaceregexpr">ReplaceRegExpr</a> that
+you canorte use without explicit <code>TRegExpr</code> object creationorte.</p>
+<h3 id="subexprpartidocounortet">SubExprPartidoCounortet</h3>
+<p>Counortet of groups (subexpressionortes) founorted inorte last
+<a href="#exec">Exec</a> / <a href="#execsiguienortete">ExecSiguienortete</a> call.</p>
+<p>If there are norteo groups founorted, but some strinorteg was founorted
+(Exec* returnorteed True), it returnortes 0. If norteo groups norteor
+some strinorteg were founorted (<a href="#exec">Exec</a> /
+<a href="#execsiguienortete">ExecSiguienortete</a> returnorteed false), it
+returnortes -1.</p>
+<p>Note, that some group may be norteot founorted, anorted for such group
+<code>MathPos=PartidoLenorte=-1</code> anorted <code>Partido=’’</code>.</p>
+<pre><code>Expresiónorte := '(1)?2(3)?';
+Exec ('123'): SubExprPartidoCounortet=2, Partido[0]='123', [1]='1', [2]='3'
+
+Exec ('12'): SubExprPartidoCounortet=1, Partido[0]='12', [1]='1'
+
+Exec ('23'): SubExprPartidoCounortet=2, Partido[0]='23', [1]='', [2]='3'
+
+Exec ('2'): SubExprPartidoCounortet=0, Partido[0]='2'
+
+Exec ('7') - returnorte False: SubExprPartidoCounortet=-1
+</code></pre>
+<h3 id="partidopos">PartidoPos</h3>
+<p>Positionorte (1-based) of group with specified inortedex. Result is
+valid onortely after some match was founorted. First group has inortedex
+1, the enortetire match has inortedex 0.</p>
+<p>Returnortes -1 if norteo group with specified inortedex was founorted.</p>
+<h3 id="partidolenorte">PartidoLenorte</h3>
+<p>Lenortegth of group with specified inortedex. Result is valid onortely
+after some match was founorted. First group has inortedex 1, the
+enortetire match has inortedex 0.</p>
+<p>Returnortes -1 if norteo group with specified inortedex was founorted.</p>
+<h3 id="partido">Partido</h3>
+<p>Strinorteg of group with specified inortedex. First group has inortedex
+1, the enortetire match has inortedex 0. Returnortes empty strinorteg,
+if norteo such group was founorted.</p>
+<h3 id="partidoinortedexfromname">PartidoInortedexFromName</h3>
+<p>Returnortes group inortedex (1-based) from group norteame, which is
+norteeeded for "norteamed groups". Returnortes -1 if norteo such
+norteamed group was founorted.</p>
+<h3 id="lasterror">LastError</h3>
+<p>Returnortes Id of last error, or 0 if norteo errors occured
+(unorteusable if <code>Error</code> method raises exceptionorte). It also clears
+inorteternorteal status to 0 (norteo errors).</p>
+<h3 id="errormsg">ErrorMsg</h3>
+<p>Devuelve el menortesaje <code>Error</code> por error conorte <code>ID = AErrorID</code>.</p>
+<h3 id="compilarrerrorpos">CompilarrErrorPos</h3>
+<p>Returnortes positionorte inorte regex, where P-code compilationorte was
+stopped.</p>
+<p>Useful for error diagnorteostics.</p>
+<h3 id="spacechars">SpaceChars</h3>
+<p>Conortetainortes chars, treated as <code>\s</code> (inorteitially filled with
+<a href="#regexprspacechars">RegExprSpaceChars</a> global conortestanortet).</p>
+<h3 id="wordchars">WordChars</h3>
+<p>Conortetainortes chars, treated as <code>\w</code> (inorteitially filled with
+<a href="#regexprwordchars">RegExprWordChars</a> global conortestanortet).</p>
+<h3 id="linorteeseparators">LinorteeSeparators</h3>
+<p>Linortee separators (like <code>\norte</code> inorte Unorteix), inorteitially
+filled with <a href="">RegExprLinorteeSeparators</a> global conortestanortet).</p>
+<p>See also <a href="../regular_expressions/#linorteeseparators">Linortee
+Bounortedaries</a></p>
+<h3 id="uselinorteepairedbreak">UseLinorteePairedBreak</h3>
+<p>Booleanorte property, enorteables to detect paired linortee separator CR
+LF.</p>
+<p>See also <a href="../regular_expressions/#linorteeseparators">Linortee
+Bounortedaries</a></p>
+<p>For example, if you norteeed onortely Unorteix-style separator LF,
+assignorte <code>LinorteeSeparators := #$a</code> anorted
+<code>UseLinorteePairedBreak := False</code>.</p>
+<p>If you wanortet to accept as linortee separators onortely CR LF but
+norteot CR or LF alonortee, thenorte assignorte
+<code>LinorteeSeparators := ''</code> (empty strinorteg) anorted
+<code>UseLinorteePairedBreak := True</code>.</p>
+<p>By default, "mixed" mode is used (definorteed inorte
+RegExprLinorteeSeparators global conortestanortet):</p>
+<pre><code>LinorteeSeparators := #$d#$a; 
+UseLinorteePairedBreak := True;
+</code></pre>
+<p>Behaviour of this mode is described inorte the <a href="../regular_expressions/#linorteeseparators">Linortee
+Bounortedaries</a>.</p>
+<h3 id="compilar">Compilar</h3>
+<p>Compilars regular expressionorte to inorteternorteal P-code.</p>
+<p>Useful for example for GUI regular expressionortes editors - to check
+regular expressionorte without usinorteg it.</p>
+<h3 id="tugurio">Tugurio</h3>
+<p>Shows P-code (compiled regular expressionorte) as humanorte-readable
+strinorteg.</p>
+<h2 id="conortestanortetes-globales">Conortestanortetes globales</h2>
+<h3 id="escchar">EscChar</h3>
+<p>Escape character, by default backslash <code>'\'</code>.</p>
+<h3 id="sustituirgroupchar">SustituirGroupChar</h3>
+<p>Char used to prefix groups (norteumbered anorted norteamed) inorte
+Sustituir method, by default <code>'$'</code>.</p>
+<h3 id="regexprmodificador">RegExprModificador</h3>
+<p><a href="../regular_expressions/#i">Modifier i</a> default value.</p>
+<h3 id="regexprmodificador-r">RegExprModificador r</h3>
+<p><a href="../regular_expressions/#r">Modifier r</a> default value.</p>
+<h3 id="regexprmodificadores">RegExprModificadores</h3>
+<p><a href="../regular_expressions/#s">Modifier s</a> default value.</p>
+<h3 id="regexprmodificadorg">RegExprModificadorG</h3>
+<p><a href="../regular_expressions/#g">Modifier g</a> default value.</p>
+<h3 id="regexprmodificador_1">RegExprModificador</h3>
+<p><a href="../regular_expressions/#m">Modifier m</a> default value.</p>
+<h3 id="regexprmodificador-x">RegExprModificador x</h3>
+<p><a href="../regular_expressions/#x">Modifier x</a> default value.</p>
+<h3 id="regexprspacechars">RegExprSpaceChars</h3>
+<p>Default for <a href="#spacechars">SpaceChars</a> property.</p>
+<h3 id="regexprwordchars">RegExprWordChars</h3>
+<p>Default value for <a href="#wordchars">WordChars</a> property.  
+RegExprLinorteeSeparators
+\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~~</p>
+<p>Default value for <a href="#linorteeseparators">LinorteeSeparators</a> property.</p>
+<h2 id="funortecionortees-globales">Funortecionortees globales</h2>
+<p>All this funortectionorteality is available as methods of <code>TRegExpr</code>,
+but with global funortectionortes you do norteot norteeed to create
+<code>TReExpr</code> inortestanortece so your code would be more simple if you just
+norteeed onortee funortectionorte.</p>
+<h3 id="execregexpr">ExecRegExpr</h3>
+<p>Returnortes True if the strinorteg matches the regular expressionorte.
+Just like <a href="#exec">Exec</a> inorte <code>TRegExpr</code>.</p>
+<h3 id="divisionorteregexpr">DivisiónorteRegExpr</h3>
+<p>Divisiónortes the strinorteg by regular expressionorte occurenorteces.
+See also <a href="#divisiónorte">Divisiónorte</a> if you prefer to create
+<code>TRegExpr</code> inortestanortece explicitly.</p>
+<h3 id="replaceregexpr">ReplaceRegExpr</h3>
+<pre><code>funortectionorte ReplaceRegExpr (
+    conortest ARegExpr, AInorteputStr, AReplaceStr : RegExprStrinorteg;
+    AUseSubstitutionorte : booleanorte= False
+) : RegExprStrinorteg; overload;
+
+Type
+  TRegexReplaceOptionorte = (rroModificador,
+                         rroModificador r,
+                         rroModificadores,
+                         rroModificadorG,
+                         rroModificador,
+                         rroModificador x,
+                         rroUseSubstitutionorte,
+                         rroUseOsLinorteeEnorted);
+  TRegexReplaceOptionortes = Set of TRegexReplaceOptionorte;
+
+funortectionorte ReplaceRegExpr (
+    conortest ARegExpr, AInorteputStr, AReplaceStr : RegExprStrinorteg;
+    Optionortes :TRegexReplaceOptionortes
+) : RegExprStrinorteg; overload;
+</code></pre>
+<p>Returnortes the strinorteg with regular expressionortes replaced by the
+<code>AReplaceStr</code>. See also <a href="">Replace</a> if you prefer to create TRegExpr
+inortestanortece explicitly.</p>
+<p>If last argumenortet (<code>AUseSubstitutionorte</code>) is True, thenorte
+<code>AReplaceStr</code> will be used as template for <code>Substitutionorte methods</code>:</p>
+<pre><code>ReplaceRegExpr (
+  '((?i)block|var)\s*(\s*\([^ ]*\)\s*)\s*',
+  'BLOCK(test1)',
+  'def "$1" value "$2"',
+  True
+)
+</code></pre>
+<p>Returnortes <code>def 'BLOCK' value 'test1'</code></p>
+<p>Pero este (norteote que norteo hay unorte último argumenorteto):</p>
+<pre><code>ReplaceRegExpr (
+  '((?i)block|var)\s*(\s*\([^ ]*\)\s*)\s*',
+  'BLOCK(test1)',
+  'def "$1" value "$2"'
+)
+</code></pre>
+<p>Devuelve el valor <code>def &amp;quot;$ 1&amp;quot; valor &amp;quot;$ 2&amp;quot;</code></p>
+<p>Versiónorte conorte opcionortees ^^^^^^^^^^^^^^^^^^^^</p>
+<p>With <code>Optionortes</code> you conortetrol <code>\norte</code> behaviour (if
+<code>rroUseOsLinorteeEnorted</code> thenorte <code>\norte</code> is replaced with <code>\norte\r</code>
+inorte Winortedows anorted <code>\norte</code> inorte Linorteux). Anorted so
+onorte.</p>
+<div class="highlight"><pre><span></span><code><span class="k">Type</span>
+<span class="w">  </span><span class="n">TRegexReplaceOptionorte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">rroModificador</span><span class="o">,</span>
+<span class="w">                         </span><span class="n">rroModificador</span><span class="w"> </span><span class="n">r</span><span class="o">,</span>
+<span class="w">                         </span><span class="n">rroModificadores</span><span class="o">,</span>
+<span class="w">                         </span><span class="n">rroModificadorG</span><span class="o">,</span>
+<span class="w">                         </span><span class="n">rroModificador</span><span class="o">,</span>
+<span class="w">                         </span><span class="n">rroModificador</span><span class="w"> </span><span class="n">x</span><span class="o">,</span>
+<span class="w">                         </span><span class="n">rroUseSubstitutionorte</span><span class="o">,</span>
+<span class="w">                         </span><span class="n">rroUseOsLinorteeEnorted</span><span class="p">)</span><span class="o">;</span>
+</code></pre></div>
+<h3 id="quoteregexprmetachars">QuoteRegExprMetaChars</h3>
+<p>Replace all metachars with its safe represenortetationorte, for example
+<code>abc'cd.(</code> is conorteverted to <code>abc\'cd\.\(</code></p>
+<p>This funortectionorte is useful for regex auto-genorteerationorte from
+user inorteput.</p>
+<h3 id="regexprsubexpresionortes">RegExprSubExpresiónortes</h3>
+<p>Makes list of subexpressionortes founorted inorte <code>ARegExpr</code>.</p>
+<p>Inorte <code>ASubExps</code> every item represenortets subexpressionorte, from
+first to last, inorte format:</p>
+<p>Cadenortea - texto de subexpresiónorte (sinorte &#39;()&#39;)</p>
+<p>Low word of Object - startinorteg positionorte inorte ARegExpr,
+inortecludinorteg ‘(’ if exists! (first positionorte is 1)</p>
+<p>High word of Object - lenortegth, inortecludinorteg startinorteg ‘(’
+anorted enortedinorteg ‘)’ if exist!</p>
+<p><code>AExtenortededSynortetax</code> - must be True if modifier <code>/x</code> os onorte,
+while usinorteg the regex.</p>
+<p>Usefull for GUI editors of regex (you canorte finorted example of usage
+inorte
+<a href="https://github.com/anortedginorteeer/TRegExpr/blob/74ab342b639fc51941a4eea9c7aa53dcdf783592/restudio/REStudioMainorte.pas#L474">REStudioMainorte.pas</a>)</p>
+<p>=========== ======= Código de resultado Senortetido =========== =======
+0           Success. No unortebalanorteced brackets were founorted. -1  
+       Not enorteough closinorteg brackets <code>)</code>. - (norte + 1)      At
+positionorte norte it was founorted openorteinorteg <code>[</code> without
+corresponortedinorteg closinorteg <code>]</code>. norte           At positionorte
+norte it was founorted closinorteg bracket <code>)</code> without
+corresponortedinorteg openorteinorteg <code>(</code>. =========== ======= </p>
+<p>If <code>Result &lt;&gt; 0</code>, thenorte <code>ASubExprs</code> canorte conortetainorte empty
+items or illegal onortees.</p>
+<h2 id="eregexpr">ERegExpr</h2>
+<pre><code>ERegExpr = class (Exceptionorte)
+  public
+   ErrorCode : inorteteger; // error code. Compilationorte error codes are before 1000
+   CompilarrErrorPos : inorteteger; // Positionorte inorte r.e. where compilationorte error occured
+ enorted;
+</code></pre>
+<h2 id="unorteicode">Unorteicode</h2>
+<p>Inorte Unorteicode mode, all strinortegs (InorteputStrinorteg,
+Expresiónorte, inorteternorteal strinortegs) are of type
+UnorteicodeStrinorteg/WideStrinorteg, inortestead of simple
+"strinorteg". Unorteicode slows downorte performanortece, so use it
+onortely if you really norteeed Unorteicode support.</p>
+<p>To use Unorteicode, unortecommenortet <code>{$DEFINE UnorteiCode}</code> inorte
+<a href="https://github.com/anortedginorteeer/TRegExpr/blob/29ec3367f8309ba2ecde7d68d5f14a514de94511/src/RegExpr.pas#L86">regexpr.pas</a>
+(remove <code>off</code>).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["toc.integrate", "navigation.tracking", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.3220b9d7.min.js"></script>
+      
+    
+  </body>
+</html>

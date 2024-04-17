@@ -1,0 +1,1789 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Andrey Sorokin">
+      
+      
+        <link rel="canonical" href="https://regex.sorokin.engineer/regular_expressions/">
+      
+      
+        <link rel="prev" href="../faq/">
+      
+      
+        <link rel="next" href="../tregexpr/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.18">
+    
+    
+      
+        <title>Регулярные выражения (RegEx) - TRegExpr</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.66ac8b77.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../_css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#regex" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="TRegExpr" class="md-header__button md-logo" aria-label="TRegExpr" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            TRegExpr
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Регулярные выражения (RegEx)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/bg/" hreflang="bg" class="md-select__link">
+              Български
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/es/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/fr/" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ru/" hreflang="ru" class="md-select__link">
+              Русский
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/andgineer/TRegExpr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    TRegExpr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="TRegExpr" class="md-nav__button md-logo" aria-label="TRegExpr" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    TRegExpr
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/andgineer/TRegExpr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    TRegExpr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Часто задаваемые вопросы
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Регулярные выражения (RegEx)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Регулярные выражения (RegEx)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Вступление
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Символы
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Символы">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Простые совпадения
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#escape-" class="md-nav__link">
+    <span class="md-ellipsis">
+      Непечатаемые символы (escape-коды)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#escaping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Экранирование(escaping)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Классы символов
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Классы символов">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Классы символов
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Метасимвол . (точка)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Метаклассы
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Разделители
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Разделители">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Разделители строк
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Разделители слов
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Повторы
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Повторы">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Повтор
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Жадность
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#possessive-quantifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Сверхжадные повторы (Possessive Quantifier)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Альтернативы
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Группы (подвыражения)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backreferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ссылки на группы (Backreferences)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#and-backreferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Именованные группы (подвыражения) and Ссылки на группы (Backreferences)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match" class="md-nav__link">
+    <span class="md-ellipsis">
+      Результат соответствия (match)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Модификаторы
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Модификаторы">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#i" class="md-nav__link">
+    <span class="md-ellipsis">
+      i, без учета регистра
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m" class="md-nav__link">
+    <span class="md-ellipsis">
+      m, многострочные строки
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s" class="md-nav__link">
+    <span class="md-ellipsis">
+      s, одиночные строки
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      г, жадность
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#x" class="md-nav__link">
+    <span class="md-ellipsis">
+      x, расширенный синтаксис
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      г, русские диапазоны
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assertions-lookahead-lookahead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Проверки или заглядывания вперед и назад (assertions: lookahead, lookahead)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Не захватывающие группы (подвыражения)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Атомарные группы (подвыражения)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inline Модификаторы
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Комментарии
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Рекурсия
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Вызовы подвыражений
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unicode-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unicode категории (category)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      Послесловие
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tregexpr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TRegExpr
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="regex">Регулярные выражения (RegEx)</h1>
+<h2 id="_1">Вступление</h2>
+<p>Регулярные выражения являются простым и мощным инструментом для сложного 
+поиска и замены, а также для проверки текста на основе шаблонов.</p>
+<p>Ниже приведена исчерпывающая шпаргалка по регулярных выражениям всего на
+одной странице.</p>
+<h2 id="_2">Символы</h2>
+<h3 id="_3">Простые совпадения</h3>
+<p>Любой отдельный символ (кроме специальных символов регулярных выражений) 
+совпадает сам с собой. 
+Последовательность символов (не специальных) совпадает с такой же последовательностью 
+символов во входной строке.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>foobar</code></td>
+<td><code>foobar</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="escape-">Непечатаемые символы (escape-коды)</h3>
+<p>Чтобы указать символ по его Unicode коду, используйте префикс <code>\x</code>, за которым следует 
+шестнадцатеричный код. 
+Для кода из 3-4 цифр (после U+00FF) заключите код в фигурные скобки.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\xAB</code>    </td>
+<td>символ с 2-значным шестнадцатеричным кодом <code>AB</code></td>
+</tr>
+<tr>
+<td><code>\x{AB20}</code></td>
+<td>символ с 1-4 значным шестнадцатеричным кодом <code>AB20</code></td>
+</tr>
+<tr>
+<td><code>foo\x20bar</code></td>
+<td><code>foo bar</code> (обратите внимание на пробел в середине)</td>
+</tr>
+</tbody>
+</table>
+<p>Существует ряд предопределённых escape-кодов для непечатаемых символов, как в языке C:</p>
+<table>
+<thead>
+<tr class="header">
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>\t</code>  </td>
+<td>tab (HT/TAB), тоже что <code>\x09</code></td>
+</tr>
+<tr class="even">
+<td><code>\n</code>  </td>
+<td>символ новой строки (LF), то же что <code>\x0a</code></td>
+</tr>
+<tr class="odd">
+<td><code>\r</code>  </td>
+<td>возврат каретки (CR), тоже что <code>\x0d</code></td>
+</tr>
+<tr class="even">
+<td><code>\f</code>  </td>
+<td>form feed (FF), то же что <code>\x0c</code></td>
+</tr>
+<tr class="odd">
+<td><code>\a</code>  </td>
+<td>звонок (BEL), тоже что <code>\x07</code></td>
+</tr>
+<tr class="even">
+<td><code>\e</code>  </td>
+<td>escape (ESC), то же что <code>\x1b</code></td>
+</tr>
+<tr class="odd">
+<td><p><code>\cA</code> ... <code>\cZ</code></p></td>
+<td><div class="line-block">chr(0) по chr(25).<br />
+Например <code>\cI</code> соответствует табуляции.<br />
+Также поддерживаются буквы в нижнем регистре "a"..."z".</div></td>
+</tr>
+</tbody>
+</table>
+
+<p><a name="escape"></a></p>
+<h3 id="escaping">Экранирование(escaping)</h3>
+<p>Чтобы представить специальный символ регулярного выражения (один из <code>.+*?|\()[]{}^$</code>), 
+поставьте перед ним обратный слэш <code>\</code>. 
+Сам обратный слэш также должен быть экранирован.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\^FooBarPtr</code></td>
+<td><code>^FooBarPtr</code> здесь <code>^</code> не означает <a href="#lineseparators">начало строки</a></td>
+</tr>
+<tr>
+<td><code>\[a\]</code></td>
+<td><code>[a]</code> это не <a href="#userclass">класс символов</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">Классы символов</h2>
+<p><a name="userclass"></a></p>
+<h3 id="user">User Классы символов</h3>
+<p>Класс символов - это список символов внутри квадратных скобок <code>[]</code>. 
+Класс совпадает с любым <strong>одиночным</strong> символом, указанным в этом классе.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>foob[aeiou]r</code>  </td>
+<td><code>foobar</code>, <code>foober</code> и т. д., но не <code>foobbr</code>, <code>foobcr</code> и т. д.</td>
+</tr>
+</tbody>
+</table>
+<p>Вы можете "инвертировать" класс - если первым символом после <code>[</code> является <code>^</code>, 
+тогда класс совпадает с любым символом, <strong>кроме</strong> символов, перечисленных в классе.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>foob[^aeiou]r</code></td>
+<td><code>foobbr</code>, <code>foobcr</code> и т. д., но не <code>foobar</code>, <code>foober</code> и т. д.</td>
+</tr>
+</tbody>
+</table>
+<p>Внутри списка символ тире <code>-</code> используется для указания диапазона, так что <code>a-z</code> 
+представляет все символы между <code>a</code> и <code>z</code>, включая их.</p>
+<p>Если вы хотите, чтобы само тире <code>-</code> было элементом класса, поместите его в начало или в 
+конец списка, или <a href="#escape">экранируйте</a> его обратным слэшем.</p>
+<p>Если вам нужен символ <code>]</code> в качестве части класса, вы можете разместить его в начале 
+списка или <a href="#escape">экранируйте</a> его обратным слэшем.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[-az]</code>    </td>
+<td><code>a</code>, <code>z</code> и <code>-</code></td>
+</tr>
+<tr>
+<td><code>[az-]</code>    </td>
+<td><code>a</code>, <code>z</code> и <code>-</code></td>
+</tr>
+<tr>
+<td><code>[А\-z]</code>  </td>
+<td><code>a</code>, <code>z</code> и <code>-</code></td>
+</tr>
+<tr>
+<td><code>[a-z]</code>    </td>
+<td>символы от <code>a</code> до <code>z</code></td>
+</tr>
+<tr>
+<td><code>[\n-\x0D]</code></td>
+<td>символы от <code>#10</code> до <code>#13</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">Метасимвол <code>.</code> (точка)</h3>
+<p>Метасимвол <code>.</code> (точка) по умолчанию совпадает с любым символом. 
+Но если вы <strong>выключите</strong> <a href="#s">модификатор /s</a>, тогда он не будет совпадать с символами 
+переноса строки.</p>
+<p>Символ <code>.</code> не действует как мета-класс внутри 
+<a href="#user-классы-символов">пользовательских классов символов</a>. 
+<code>[.]</code> означает буквальную точку.</p>
+<h3 id="_6">Метаклассы</h3>
+<p>Существует ряд предопределённых классов символов, которые делают регулярные 
+выражения более компактными, "мета-классы":</p>
+<table>
+<thead>
+<tr class="header">
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>\w</code>    </td>
+<td>буквенно-цифровой символ (включая <code>_</code>)</td>
+</tr>
+<tr class="even">
+<td><code>\W</code>    </td>
+<td>не буквенно-цифровой</td>
+</tr>
+<tr class="odd">
+<td><code>\d</code>    </td>
+<td>числовой символ (тоже, что <code>[0-9]</code>)</td>
+</tr>
+<tr class="even">
+<td><code>\D</code>    </td>
+<td>нечисловой</td>
+</tr>
+<tr class="odd">
+<td><code>\s</code>    </td>
+<td>любой пробел (такой же как <code>[\t\n\r\f]</code>)</td>
+</tr>
+<tr class="even">
+<td><code>\S</code>    </td>
+<td>не пробел</td>
+</tr>
+<tr class="odd">
+<td><p><code>\h</code></p></td>
+<td><div class="line-block">горизонтальный разделитель. Табуляция,
+пробел и все символы<br />
+в Unicode категории "разделители" (space separator Unicode
+category)</div></td>
+</tr>
+<tr class="even">
+<td><code>\H</code></td>
+<td>не горизонтальный разделитель</td>
+</tr>
+<tr class="odd">
+<td><p><code>\v</code></p></td>
+<td><div class="line-block">вертикальные разделители. новая строка и все
+символы<br />
+"разделители строк" в Unicode</div></td>
+</tr>
+<tr class="even">
+<td><code>\V</code></td>
+<td>не вертикальный разделитель</td>
+</tr>
+<tr class="odd">
+<td><p><code>\R</code></p></td>
+<td><div class="line-block">Юникод разрыв строки: LF, пара CR LF, CR.<br />
+FF (form feed), VT (vertical tab), U+0085, U+2028, U+2029</div></td>
+</tr>
+</tbody>
+</table>
+
+<p>Вы можете использовать все мета-классы, упомянутые в таблице выше, внутри 
+<a href="#user-классы-символов">пользовательских классов символов</a>.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>foob\dr</code>    </td>
+<td><code>foob1r</code>, <code>foob6r</code> и т. д., но не <code>foobar</code>, <code>foobbr</code> и т. д.</td>
+</tr>
+<tr>
+<td><code>foob[\w\s]r</code></td>
+<td><code>foobar</code>, <code>foob r</code>, <code>foobbr</code> и т. д., но не <code>foob1r</code>, <code>foob=r</code> и т. д.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><a href="../tregexpr/">TRegExpr</a></p>
+<p>Свойства <a href="../tregexpr/#spacechars">SpaceChars</a> и
+<a href="../tregexpr/#wordchars">WordChars</a> определяют классы символов <code>\w</code>,
+<code>\W</code>, <code>\s</code>, <code>\S</code>.</p>
+<p>Таким образом, вы можете переопределить эти классы.</p>
+</blockquote>
+<h2 id="_7">Разделители</h2>
+<p><a name="lineseparators"></a></p>
+<h3 id="_8">Разделители строк</h3>
+<table>
+<thead>
+<tr>
+<th>Метасимвол</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>^</code> </td>
+<td>совпадение нулевой длины в начале строки</td>
+</tr>
+<tr>
+<td><code>$</code> </td>
+<td>совпадение нулевой длины в конце строки</td>
+</tr>
+<tr>
+<td><code>\A</code></td>
+<td>совпадение нулевой длины в начале строки</td>
+</tr>
+<tr>
+<td><code>\z</code></td>
+<td>совпадение нулевой длины в конце строки</td>
+</tr>
+<tr>
+<td><code>\Z</code></td>
+<td>похож на <code>\z</code> но совпадает перед разделителем строки, а не сразу после него, как <code>\z</code></td>
+</tr>
+<tr>
+<td><code>\G</code></td>
+<td>совпадение нулевой длины в конечной позиции предыдущего совпадения</td>
+</tr>
+</tbody>
+</table>
+<p>Примеры:</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>^foobar</code></td>
+<td><code>foobar</code> только если он находится в начале строки</td>
+</tr>
+<tr>
+<td><code>foobar$</code></td>
+<td><code>foobar</code>, только если он в конце строки</td>
+</tr>
+<tr>
+<td><code>^foobar$</code></td>
+<td><code>foobar</code> только если это единственная строка в строке</td>
+</tr>
+<tr>
+<td><code>foob.r</code>  </td>
+<td><code>foobar</code>, <code>foobbr</code>, <code>foob1r</code> и так далее</td>
+</tr>
+</tbody>
+</table>
+<p>Метасимвол <code>^</code> совпадает с позицией нулевой длины в начале входной строки. <code>$</code> - в конце. 
+Если <a href="#m">модификатор /m</a> <strong>включен</strong>, они также совпадают с началом/концом отдельных 
+строк в многострочном тексте.</p>
+<p>Обратите внимание, что в последовательности <code>\x0D\x0A</code> нет пустой
+строки.</p>
+<blockquote>
+<p><a href="../tregexpr/">TRegExpr</a></p>
+<p>Если вы используете <a href="../tregexpr/#unicode">версию Unicode</a>, то
+<code>^</code>/<code>$</code> также совпадают с <code>\x2028</code>, <code>\x2029</code>, <code>\x0B</code>, <code>\x0C</code> или <code>\x85</code>.</p>
+</blockquote>
+<p>Метасимвол <code>\A</code> совпадает с позицией нулевой длины в самом начале входной строки, 
+<code>\z</code> - в самом конце. 
+Они игнорируют <a href="#m">модификатор /m</a>. <code>\Z</code> похож на <code>\z</code>, но совпадает перед 
+разделителем строки, а не сразу после него, как <code>\z</code> (LF и CR LF). 
+Поведение <code>\A</code>, <code>\z</code>, <code>\Z</code> реализовано подобно большинству движков regex
+(Perl, PCRE и т.д.).</p>
+<p>Отметим, что <code>^.*$</code> не совпадает со строкой между <code>\x0D\x0A</code>, потому что это 
+неразрывный разделитель строк. 
+Но оно совпадает с пустой строкой в последовательности <code>\x0A\x0D</code>, потому что это 
+2 перевода строки в неправильном порядке.</p>
+<blockquote>
+<p><a href="../tregexpr/">TRegExpr</a></p>
+<p>Обработка многострочного текста может быть настроена с помощью свойств
+<a href="../tregexpr/#lineseparators">LineSeparators</a> и
+<a href="../tregexpr/#linepairedseparator">UseLinePairedBreak</a>.</p>
+<p>Таким образом, вы можете использовать разделители в стиле Unix <code>\n</code> или DOS/Windows <code>\r\n</code>
+или смешивать их вместе (как в описанном выше поведении по умолчанию).</p>
+</blockquote>
+<p>Если вы предпочитаете математически точное описание, вы можете найти его на
+<a href="http://www.unicode.org/unicode/reports/tr18/">www.unicode.org</a>.</p>
+<h3 id="_9">Разделители слов</h3>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\b</code></td>
+<td>разделитель слов</td>
+</tr>
+<tr>
+<td><code>\B</code> </td>
+<td>разделитель с <strong>не</strong>-словом</td>
+</tr>
+</tbody>
+</table>
+<p>Граница слова <code>\b</code> - это место между двумя символами, где с одной стороны находится 
+<code>\w</code>, а с другой - <code>\W</code> (в любом порядке).</p>
+<p><a name="iterator"></a></p>
+<h2 id="_10">Повторы</h2>
+<h3 id="_11">Повтор</h3>
+<p>Любой элемент регулярного выражения может быть снабжён квантификатором. 
+Квантификатор указывает количество повторений элемента.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{n}</code>  </td>
+<td>ровно <code>n</code> раз</td>
+</tr>
+<tr>
+<td><code>{n,}</code>  </td>
+<td>по крайней мере <code>n</code> раз</td>
+</tr>
+<tr>
+<td><code>{,m}</code>  </td>
+<td>not more than <code>m</code> times (only with AllowBraceWithoutMin)</td>
+</tr>
+<tr>
+<td><code>{n,m}</code></td>
+<td>по крайней мере <code>n</code>, но не более чем <code>m</code> раз</td>
+</tr>
+<tr>
+<td><code>*</code>    </td>
+<td>ноль или более, аналогично <code>{0,}</code></td>
+</tr>
+<tr>
+<td><code>+</code>  </td>
+<td>один или несколько, похожие на <code>{1,}</code></td>
+</tr>
+<tr>
+<td><code>?</code>  </td>
+<td>ноль или единица, похожая на <code>{0,1}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Так, цифры в фигурных скобках <code>{n,m}</code> указывают минимальное количество совпадений 
+<code>n</code> и максимальное <code>m</code>.</p>
+<p><code>{n}</code> эквивалентен <code>{n,n}</code> и совпадает ровно <code>n</code> раз. <code>{n,}</code> совпадает <code>n</code> или более раз.</p>
+<p>Вариант <code>{,m}</code> поддерживается только если установлено свойство AllowBraceWithoutMin.</p>
+<p>Теоретически значение n и m не ограничены (можно использовать
+максимальное значение для 32-х битного числа).</p>
+<p>Использование <code>{</code> без указания корректного диапазона приведет к ошибке. 
+Это поведение может быть изменено установкой свойства AllowLiteralBraceWithoutRange, 
+которое позволит принять <code>{</code> как буквальный символ, если за ним не следует диапазон. 
+Диапазон, в котором нижнее значение больше верхнего, всегда приведет к ошибке.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>foob.*r</code>    </td>
+<td><code>foobar</code>, <code>foobalkjdflkj9r</code> и <code>foobr</code></td>
+</tr>
+<tr>
+<td><code>foob.+r</code>    </td>
+<td><code>foobar</code>, <code>foobalkjdflkj9r</code>, но не <code>foobr</code></td>
+</tr>
+<tr>
+<td><code>foob.?r</code>    </td>
+<td><code>foobar</code>, <code>foobbr</code> и <code>foobr</code>, но не <code>foobalkj9r</code></td>
+</tr>
+<tr>
+<td><code>fooba{2}r</code>  </td>
+<td><code>foobaar</code></td>
+</tr>
+<tr>
+<td><code>fooba{2}r</code> `</td>
+<td><span class="title-ref">foobaar</span><span class="title-ref">, </span><span class="title-ref">foobaaar</span><span class="title-ref">, </span><span class="title-ref">foobaaaar</span>` и т. д.</td>
+</tr>
+<tr>
+<td><code>fooba{2,3}r</code></td>
+<td><code>foobaar</code>, или <code>foobaaar</code>, но не <code>foobaaaar</code></td>
+</tr>
+<tr>
+<td><code>(foobar){8,10}</code></td>
+<td><code>8</code>, <code>9</code> или <code>10</code> экземпляров <code>foobar</code> (<code>()</code> это <a href="#subexpression">Группа</a>)</td>
+</tr>
+</tbody>
+</table>
+<p><a name="greedy"></a></p>
+<h3 id="_12">Жадность</h3>
+<p><a href="#iterator">Повтор</a> в "жадном" режиме берет столько, сколько возможно, в
+"ленивом" режиме - как можно меньше.</p>
+<p>По умолчанию все квантификаторы "жадные". 
+Добавьте символ <code>?</code>, чтобы сделать любой квантификатор "ленивым".</p>
+<p>Для строки <code>abbbbc</code>:</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>b+</code></td>
+<td><code>bbbb</code></td>
+</tr>
+<tr>
+<td><code>Ь+?</code></td>
+<td><code>b</code></td>
+</tr>
+<tr>
+<td><code>b*?</code></td>
+<td>пустую строку</td>
+</tr>
+<tr>
+<td><code>b{2,3}?</code></td>
+<td><code>bb</code></td>
+</tr>
+<tr>
+<td><code>b{2,3}</code></td>
+<td><code>bbb</code></td>
+</tr>
+</tbody>
+</table>
+<p>Вы можете переключить все квантификаторы в "ленивый" режим 
+(<a href="#g">модификатор /g</a>, ниже мы используем 
+<a href="#inlinemodifiers">изменение модификатора в строке</a>).</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(?-g)Ь+</code></td>
+<td><code>b</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="possessive-quantifier">Сверхжадные повторы (Possessive Quantifier)</h3>
+<p>Синтаксис следующий: <code>a++</code>, <code>a*+</code>, <code>a?+</code>, <code>a{2,4}+</code>. 
+В настоящее время это поддерживается только для простых скобок, но не для скобок 
+после группы, как в <code>(foo|bar){3,5}+</code>.</p>
+<p>Эта функция регулярных выражений 
+<a href="https://regular-expressions.mobi/possessive.html?wlr=1">описана здесь</a>. 
+Коротко говоря, владеющий квантификатор ускоряет совпадение в сложных случаях.</p>
+<h2 id="_13">Альтернативы</h2>
+<p>Выражения в списке альтернатив разделяются <code>|</code>.</p>
+<p>Таким образом, <code>fee|fie|foe</code> совпадет с любым из <code>fee</code>, <code>fie</code> или <code>foe</code> в 
+целевой строке (как и <code>f(e|i|o)e</code>).</p>
+<p>Первое выражение включает все, начиная от последнего разделителя шаблона (<code>(</code>, <code>[</code> 
+или начала шаблона) до первого <code>|</code>, а последнее выражение содержит все от последнего <code>|</code> 
+до следующего разделителя шаблона.</p>
+<p>Звучит немного сложно, поэтому обычно выбор заключают в скобки, чтобы минимизировать 
+путаницу относительно его начала и конца.</p>
+<p>Выражения в выборе пробуются слева направо, поэтому выбирается первое совпадающее 
+выражение.</p>
+<p>Например, регулярное выражение <code>foo|foot</code> в строке <code>barefoot</code> совпадет с <code>foo</code>. 
+Просто с первым совпадающим выражением.</p>
+<p>Также помните, что <code>|</code> интерпретируется как буквальный символ в квадратных скобках, 
+так что если вы напишете <code>[fee|fie|foe]</code>, на самом деле вы совпадете только с <code>[feio|]</code>.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>foo(bar|foo)</code></td>
+<td><code>foobar</code> или <code>foofoo</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="subexpression"></a></p>
+<h2 id="_14">Группы (подвыражения)</h2>
+<p>Скобки <code>(...)</code> также могут использоваться для определения групп
+(подвыражений) регулярного выражения.</p>
+<blockquote>
+<p>[!NOTE]
+<a href="../tregexpr/">TRegExpr</a></p>
+<p>Группы (подвыражения) позиции, длины и подвыражения будут в
+<a href="../tregexpr/#matchpos">MatchPos</a>, <a href="../tregexpr/#matchlen">MatchLen</a>
+и <a href="../tregexpr/#match">Match</a>.</p>
+<p>Их можно заменить с помощью <a href="../tregexpr/#substitute">Substitute</a>.</p>
+</blockquote>
+<p>Группы (подвыражения) нумеруются слева направо по их открывающей
+скобке (включая вложенные группы). Первая группа имеет индекс 1.
+Весь регулярное выражение имеет индекс 0.</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>Группы</th>
+<th>(подвыражения) значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>foobar</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>foobar</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>bar</code></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h2 id="backreferences">Ссылки на группы (Backreferences)</h2>
+<p>Метасимволы <code>\1</code> до <code>\9</code> интерпретируются как обратные ссылки (backreference) на
+группы захвата. Они соответствуют ранее найденной группе с указанным
+индексом.</p>
+<p>Метасимвол <code>\g</code>, за которым следует число, также интерпретируется как
+обратная ссылка на группы захвата. За ним может следовать число из нескольких цифр.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(.)\1+</code>  </td>
+<td><code>aaaa</code> и <code>cc</code></td>
+</tr>
+<tr>
+<td><code>(.+)\1+</code></td>
+<td>также <code>abab</code> и <code>123123</code></td>
+</tr>
+<tr>
+<td><code>(.)\g1+</code> </td>
+<td><code>aaaa</code> и <code>cc</code></td>
+</tr>
+</tbody>
+</table>
+<p>RegEx <code>(['"]?)(\d+)\1</code> соответствует <code>"13"</code> (в двойных кавычках), или <code>'4'</code> (в
+одинарных кавычках) или <code>77</code> (без кавычек) и т. д.</p>
+<h2 id="and-backreferences">Именованные группы (подвыражения) and Ссылки на группы (Backreferences)</h2>
+<p>Чтобы присвоить имя группе <code>expr</code> используйте <code>(?P&lt;name&gt;expr)</code> или <code>(?&lt;name&gt;expr)</code> или
+<code>(?'name'expr)</code>.</p>
+<p>Имя группы должно начинаться с буквы или <code>_</code>, далее следуют буквы, цифры
+или <code>_</code>. Именованные и не именованные группы имеют общую нумерацию от
+<code>1</code> до <code>9</code>.</p>
+<p>Ссылки на именованные группы (Backreferences) обозначаются как <code>(?P=name)</code>, 
+также можно использовать числа от <code>\1</code> до <code>\9</code>. Также можно использовать <code>(?P=name)</code>.</p>
+<p>Пример</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(?P&lt;qq&gt;['"])\w+(?P=qq)</code></td>
+<td><code>"word"</code> и <code>'word'</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="match">Результат соответствия (match)</h2>
+<p>Начало сообщаемого соответствия можно установить с помощью <code>\K</code>.</p>
+<p>По умолчанию весь текст, покрываемый шаблоном, считается соответствующим.
+Однако можно явно указать, что будет сообщено.</p>
+<p>Шаблон <code>a\Kb</code> требует, чтобы текст содержал "ab". Но только "b" будет
+сообщено как соответствующее. В шаблоне может быть несколько <code>\K</code>.
+Последний установит позицию начала соответствия. Рассматриваются только <code>\K</code>
+в активных частях шаблона. Например, <code>a(\Kb)?</code> не будет учитывать <code>\K</code>, если
+нет "b". Захваты могут существовать вне соответствия, установленного через <code>\K</code>.</p>
+<p>Если используется в других конструкциях, которые могут применяться вне сообщаемого соответствия
+(например, в просмотре вперед), то позиция, отмеченная <code>\K</code>, должна быть до или в
+конце сообщаемого соответствия. Если позиция отмечена позже, соответствие считается неудачным.</p>
+<p><code>\K</code> несколько похож на просмотр назад. В отличие от просмотра назад, часть
+шаблона перед <code>\K</code> должна находиться после начальной позиции соответствия, если шаблон применяется
+со смещенной позиции внутри текста.</p>
+<h2 id="_15">Модификаторы</h2>
+<p>Модификаторы используются для изменения поведения регулярных выражений.</p>
+<p>Вы можете установить модификаторы глобально в вашей системе или изменить внутри
+регулярного выражения, используя <a href="#inlinemodifiers">(?imsxr-imsxr)</a>.</p>
+<blockquote>
+<p><a href="../tregexpr/">TRegExpr</a></p>
+<p>Для изменения модификаторов используйте <a href="../tregexpr/#modifierstr">ModifierStr</a> или
+соответствующие свойства <code>TRegExpr</code>
+<a href="../tregexpr/#modifieri">Modifier*</a>.</p>
+<p>Значения по умолчанию определены в <a href="../tregexpr/#global-constants">глобальных
+переменных</a>. Например, глобальная
+переменная <code>RegExprModifierX</code> определяет значение по умолчанию для свойства <code>ModifierX</code>.</p>
+</blockquote>
+<p><a name="i"></a></p>
+<h3 id="i">i, без учета регистра</h3>
+<p>Без учета регистра. Использует настройки локали, установленные в вашей системе, 
+см. также
+<a href="../tregexpr/#invertcase">InvertCase</a>.</p>
+<p><a name="m"></a></p>
+<h3 id="m">m, многострочные строки</h3>
+<p>Рассматривать строку как несколько строк. Таким образом, <code>^</code> и <code>$</code> соответствуют началу или концу
+любой строки где угодно внутри строки.</p>
+<p>См. также <a href="#lineseparators">Разделители строк</a>.</p>
+<p><a name="s"></a></p>
+<h3 id="s">s, одиночные строки</h3>
+<p>Рассматривать строку как одну строку. Таким образом, <code>.</code> соответствует любому символу, 
+включая разделители строк.</p>
+<p>См. также <a href="#lineseparators">Разделители строк</a>, которым обычно не соответствовал бы.</p>
+<p><a name="g"></a></p>
+<h3 id="_16">г, жадность</h3>
+<blockquote>
+<p>Специфичный для <a href="../tregexpr/">TRegExpr</a> модификатор.</p>
+</blockquote>
+<p>Выключив его, вы переключите <a href="#iterator">квантификаторы</a> в
+<a href="#greedy">нежадный</a> режим.</p>
+<p>Так что, если модификатор <code>/g</code> выключен, то <code>+</code> работает как <code>+?</code>, <code>*</code> как <code>*?</code> и так
+далее.</p>
+<p>По умолчанию этот модификатор имеет значение <code>Выкл</code>.</p>
+<p><a name="x"></a></p>
+<h3 id="x">x, расширенный синтаксис</h3>
+<p>Позволяет комментировать регулярное выражение и разбивать его на несколько
+строк.</p>
+<p>Если модификатор включен, мы игнорируем все пробелы, которые не являются
+экранированными или находятся внутри класса символов.</p>
+<p>Также символ <code>#</code> отделяет комментарии.</p>
+<p>Обратите внимание, что вы можете использовать пустые строки для форматирования регулярного выражения для
+лучшей читаемости:</p>
+<div class="highlight"><pre><span></span><code>(
+(abc) # comment 1
+#
+(efg) # comment 2
+)
+</code></pre></div>
+<p>Это также означает, что если вам нужны настоящие пробелы или символы <code>#</code> в
+шаблоне (вне класса символов, где они не подвержены влиянию <code>/x</code>), вам придется либо 
+экранировать(escape) их, либо кодировать с помощью октальных или шестнадцатеричных 
+escape-последовательностей.</p>
+<p><a name="r"></a></p>
+<h3 id="_17">г, русские диапазоны</h3>
+<blockquote>
+<p>Специфичный для <a href="../tregexpr/">TRegExpr</a> модификатор.</p>
+</blockquote>
+<p>В русской таблице ASCII символы <code>ё</code>/<code>Ё</code> расположены отдельно от
+остальных.</p>
+<p>Большие и маленькие русские буквы находятся в разных диапазонах, это
+так же, как и с
+<a href="https://regex.sorokin.engineer/regular_expressions/">английскими</a>
+буквами, но тем не менее мне хотелось бы краткой формы.</p>
+<p>С этим модификатором вместо <code>[а-яА-ЯёЁ]</code> вы можете написать <code>[а-Я]</code>, если вам
+нужны все русские символы.</p>
+<p>Когда модификатор включен:</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>а-я</code></td>
+<td>символы от <code>а</code> до <code>я</code> и <code>ё</code></td>
+</tr>
+<tr>
+<td><code>А-Я</code></td>
+<td>символы от <code>А</code> до <code>Я</code> и <code>Ё</code></td>
+</tr>
+<tr>
+<td><code>а-Я</code></td>
+<td>все русские символы</td>
+</tr>
+</tbody>
+</table>
+<p>Модификатор по умолчанию установлен на <code>Вкл</code>.</p>
+<h2 id="assertions-lookahead-lookahead">Проверки или заглядывания вперед и назад (assertions: lookahead, lookahead)</h2>
+<p><a name="assertions"></a></p>
+<p>Заглядывание вперед (lookahead assertion) <code>foo(?=bar)</code> совпадает "foo"
+только перед "bar", при этом сама строка "bar" не войдет в найденный
+текст.</p>
+<p>Отрицательное заглядывание вперед (negative lookahead assertion):
+<code>foo(?!bar)</code> совпадает "foo" только если после этой строки не следует
+"bar".</p>
+<p>Ретроспективная проверка (lookbehind assertion): <code>(?&lt;=foo)bar</code> совпадает
+"bar" только после "foo", при этом сама строка "foo" не войдет в
+найденный текст.</p>
+<p>Отрицательное заглядывание назад (negative lookbehind assertion):
+<code>foo(?!bar)</code> совпадает "bar" только если перед этой строкой нет "foo".</p>
+<p>Ограничения:</p>
+<ul>
+<li>Переменная длина lookbehind не допускает содержание групп захвата.
+  Это можно разрешить, установив свойство <code>AllowUnsafeLookBehind</code>.
+  Если это включено и в тексте есть более одного соответствия, которое
+  группа может захватить, то может быть захвачено неправильное соответствие. Это
+  не влияет на правильность общего утверждения. (Т.е., lookbehind корректно вернет,
+  если текст перед ним соответствует шаблону).</li>
+<li>Переменная длина lookbehind может быть медленной в исполнении, если они не
+  соответствуют.</li>
+</ul>
+<h2 id="_18">Не захватывающие группы (подвыражения)</h2>
+<p>Синтаксис: <code>(?:subexpression)</code>.</p>
+<p>Такие группы не имеют "индекса" и невидимы для обратных ссылок. 
+Незахватывающие группы используются, когда вы хотите сгруппировать подвыражение, 
+но не хотите сохранять его как совпавшую/захваченную часть строки. 
+Таким образом, это просто способ организовать ваше регулярное выражение в 
+подвыражения без накладных расходов на захват результата:</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(https?|ftp)://([^/\r\n]+)</code></td>
+<td>in <code>https://sorokin.engineer</code> matches <code>https</code> and <code>sorokin.engineer</code></td>
+</tr>
+<tr>
+<td><code>(?:https?|ftp)://([^/\r\n]+)</code></td>
+<td>in <code>https://sorokin.engineer</code> matches only <code>sorokin.engineer</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_19">Атомарные группы (подвыражения)</h2>
+<p>Синтаксис: <code>(?&gt;expr|expr|...)</code>.</p>
+<p>Атомарные группы — это особый случай незахватывающих групп. 
+<a href="https://regular-expressions.mobi/atomic.html?wlr=1">Описание их.</a></p>
+<h2 id="inline">Inline Модификаторы</h2>
+<p><a name="inlinemodifiers"></a></p>
+<p>Синтаксис для одного модификатора: <code>(?i)</code> чтобы включить, и <code>(?-i)</code>
+чтобы выключить. Для большого числа модификаторов используется
+синтаксис: <code>(?msgxr-imsgxr)</code>.</p>
+<p>Вы можете использовать это внутри регулярного выражения для изменения модификаторов 
+на лету. 
+Это может быть особенно удобно, потому что оно имеет локальную область видимости в 
+регулярном выражении. 
+Оно влияет только на ту часть регулярного выражения, которая следует за оператором 
+<code>(?imsgxr-imsgxr)</code>.</p>
+<p>И если это внутри группы, это будет влиять только на эту группу - конкретно на часть 
+группы, которая следует за модификаторами. 
+Так в <code>((?i)Saint)-Petersburg</code> это влияет только на группу <code>((?i)Saint)</code>, 
+поэтому оно будет соответствовать <code>saint-Petersburg</code>, но не <code>saint-petersburg</code>.</p>
+<p>Встроенные модификаторы также могут быть заданы как часть незахватывающей группы: 
+<code>(?i:pattern)</code>.</p>
+<table>
+<thead>
+<tr>
+<th>RegEx</th>
+<th>Находит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(?i)Saint-Petersburg</code>      </td>
+<td><code>Saint-petersburg</code> и <code>Saint-Petersburg</code></td>
+</tr>
+<tr>
+<td><code>(?i)Saint-(?-i)Petersburg</code></td>
+<td><code>Saint-Petersburg</code>, но не <code>Saint-petersburg</code></td>
+</tr>
+<tr>
+<td><code>(?i)(Saint-)?Petersburg</code>  </td>
+<td><code>Saint-petersburg</code> и <code>saint-petersburg</code></td>
+</tr>
+<tr>
+<td><code>((?i)Saint-)?Petersburg</code>  </td>
+<td><code>saint-Petersburg</code>, но не <code>saint-petersburg</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_20">Комментарии</h2>
+<p>Синтаксис: <code>(?#text)</code>. Все, что внутри скобок, игнорируется.</p>
+<p>Обратите внимание, что комментарий закрывается ближайшей <code>)</code>, 
+поэтому нет способа поместить литеральную <code>)</code> в комментарий.</p>
+<h2 id="_21">Рекурсия</h2>
+<p>Синтаксис <code>(?R)</code>, синоним <code>(?0)</code>.</p>
+<p>Выражение <code>a(?R)?z</code> совпадает с одним или более символом "a" за которым
+следует точно такое же число символов "z".</p>
+<p>Основное назначение рекурсии - сбалансировать обрамление вложенного
+текста. Общий вид <code>b(?:m|(?R))*e</code> где "b" это то что начинает
+обрамляемый текст, "m" это собственно текст, и "e" это то, что завершает
+обрамление.</p>
+<p>Если же обрамляемый текст также может встречаться без обрамления то
+выражение будет <code>b(?R)*e|m</code>.</p>
+<h2 id="_22">Вызовы подвыражений</h2>
+<p>Нумерованные группы (подвыражения) обозначают <code>(?1)</code> ... <code>(?90)</code>
+(максимальное число групп определяется константой в TRegExpr).</p>
+<p>Синтаксис для именованных групп : <code>(?P&gt;name)</code>. Поддерживается также: <code>(?&amp;name)</code>, <code>\g&lt;name&gt;</code> и <code>\g'name'</code>.</p>
+<p>Это похоже на рекурсию, но повторяет только указанную группу
+(подвыражение).</p>
+<h2 id="unicode-category">Unicode категории (category)</h2>
+<p>В стандарте Unicode есть именованные категории символов (Unicode
+category). Категория обозначается одной буквой, и еще одна добавляется,
+чтобы указать подкатегорию. Например "L" это буква в любом регистре,
+"Lu" - буквы в верхнем регистре, "Ll" - в нижнем.</p>
+<ul>
+<li>Cc - Control</li>
+<li>Cf - Формат</li>
+<li>Co - Частное использование</li>
+<li>Cs - Заменитель (Surrrogate)</li>
+<li>Ll - Буква нижнего регистра</li>
+<li>Lm - Буква-модификатор</li>
+<li>Lo - Прочие буквы</li>
+<li>Lt - Буква в начальном регистре</li>
+<li>Lu - Буква в верхнем регистре</li>
+<li>Mc - Разделитель</li>
+<li>Me - Закрывающий знак (Enclosing Mark)</li>
+<li>Mn - Несамостоятельный символ, как умляут над буквой (Nonspacing Mark)</li>
+<li>Nd - Десятичная цифра</li>
+<li>Nl - Буквенная цифра - например, китайская, римская, руническая и т.д.
+  (Letter Number)</li>
+<li>No - Другие цифры</li>
+<li>Pc - Connector Punctuation</li>
+<li>Pd - Тире</li>
+<li>Pe - Закрывающая пунктуация</li>
+<li>Pf - Конечная пунктуация</li>
+<li>Pi - Начальная пунктуация</li>
+<li>Po - Прочая пунктуация</li>
+<li>Ps - Открывающая пунктуация</li>
+<li>Sc - Символ валюты</li>
+<li>Sk - Символ-модификатор</li>
+<li>Sm - Математический символ</li>
+<li>So - Прочие символы</li>
+<li>Zl - Разделитель строк</li>
+<li>Zp - Разделитель абзацев</li>
+<li>Zs - Разделитель пробелов</li>
+</ul>
+<p>Метасимволacter <code>\p</code> denotes one Unicode char of specified category.
+Syntax: <code>\pL</code> and <code>\p{L}</code> for 1-letter name, <code>\p{Lu}</code> for 2-letter
+names.</p>
+<p>Метасимволacter <code>\P</code> is inverted, it denotes one Unicode char <strong>not</strong> in
+the specified category.</p>
+<p>Эти мета-символы также поддерживаются внутри классов символов.</p>
+<h2 id="_23">Послесловие</h2>
+<p>В этом <a href="https://sorokin.engineer/posts/en/text_processing_from_birds_eye_view.html">древнем блог-посте из прошлого
+века</a>
+я иллюстрирую некоторые способы использования регулярных выражений.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["toc.integrate", "navigation.tracking", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.3220b9d7.min.js"></script>
+      
+    
+  </body>
+</html>

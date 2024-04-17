@@ -1,0 +1,629 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Andrey Sorokin">
+      
+      
+        <link rel="canonical" href="https://regex.sorokin.engineer/faq/">
+      
+      
+        <link rel="prev" href="../demos/">
+      
+      
+        <link rel="next" href="../regular_expressions/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.18">
+    
+    
+      
+        <title>FAQ - TRegExpr</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.66ac8b77.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../_css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#faq" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="TRegExpr" class="md-header__button md-logo" aria-label="TRegExpr" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            TRegExpr
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FAQ
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/bg/" hreflang="bg" class="md-select__link">
+              Български
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/es/" hreflang="es" class="md-select__link">
+              Español
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/fr/" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ru/" hreflang="ru" class="md-select__link">
+              Русский
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/andgineer/TRegExpr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    TRegExpr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="TRegExpr" class="md-nav__button md-logo" aria-label="TRegExpr" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    TRegExpr
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/andgineer/TRegExpr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    TRegExpr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ich-habe-einen-schrecklichen-fehler-gefunden-tregexpr-verursacht-eine-zugriffsverletzungs-ausnahme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ich habe einen schrecklichen Fehler gefunden: TRegExpr verursacht eine Zugriffsverletzungs-Ausnahme!
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unterstutzt-es-unicode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unterstützt es Unicode?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warum-gibt-tregexpr-mehr-als-eine-zeile-zuruck" class="md-nav__link">
+    <span class="md-ellipsis">
+      Warum gibt TRegExpr mehr als eine Zeile zurück?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warum-gibt-tregexpr-mehr-zuruck-als-ich-erwarte" class="md-nav__link">
+    <span class="md-ellipsis">
+      Warum gibt TRegExpr mehr zurück, als ich erwarte?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wie-kann-man-quellen-wie-html-mit-hilfe-von-tregexpr-parsen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wie kann man Quellen wie HTML mit Hilfe von TRegExpr parsen?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gibt-es-eine-moglichkeit-mehrere-ubereinstimmungen-eines-musters-bei-tregexpr-zu-erhalten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gibt es eine Möglichkeit, mehrere Übereinstimmungen eines Musters bei TRegExpr zu erhalten?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ich-uberprufe-benutzereingaben-warum-gibt-tregexpr-true-fur-falsche-eingabestrings-zuruck" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ich überprüfe Benutzereingaben. Warum gibt TRegExpr True für falsche Eingabestrings zurück?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warum-funktionieren-nicht-gierige-iteratoren-manchmal-wie-im-gierigen-modus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Warum funktionieren nicht-gierige Iteratoren manchmal wie im gierigen Modus?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wie-kann-ich-tregexpr-mit-borland-c-builder-verwenden" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wie kann ich TRegExpr mit Borland C++ Builder verwenden?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warum-funktionieren-viele-re-einschlielich-re-aus-der-hilfe-und-demo-von-tregexpr-falsch-in-borland-c-builder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Warum funktionieren viele r.e. (einschließlich r.e. aus der Hilfe und Demo von TRegExpr) falsch in Borland C++ Builder?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regular_expressions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reguläre Ausdrücke (RegEx)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tregexpr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tregexpr
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="faq">FAQ</h1>
+<h2 id="ich-habe-einen-schrecklichen-fehler-gefunden-tregexpr-verursacht-eine-zugriffsverletzungs-ausnahme">Ich habe einen schrecklichen Fehler gefunden: TRegExpr verursacht eine Zugriffsverletzungs-Ausnahme!</h2>
+<p><strong>Antwort</strong></p>
+<p>Sie müssen das Objekt vor der Verwendung erstellen. Also, nachdem Sie etwas wie folgt deklariert haben:</p>
+<div class="highlight"><pre><span></span><code><span class="n">r</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TRegExpr</span>
+</code></pre></div>
+<p>vergessen Sie nicht, die Objektinstanz zu erstellen:</p>
+<div class="highlight"><pre><span></span><code><span class="n">r</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">TRegExpr</span><span class="o">.</span><span class="n">Create</span><span class="o">.</span>
+</code></pre></div>
+<h2 id="unterstutzt-es-unicode">Unterstützt es Unicode?</h2>
+<p><strong>Antwort</strong></p>
+<p><a href="../tregexpr/#unicode">Wie man Unicode verwendet</a></p>
+<h2 id="warum-gibt-tregexpr-mehr-als-eine-zeile-zuruck">Warum gibt TRegExpr mehr als eine Zeile zurück?</h2>
+<p>Zum Beispiel gibt das r.e. <code>&lt;font .\*&gt;</code> den ersten <code>&lt;font</code> zurück, dann den Rest der Datei einschließlich des letzten <code>&lt;/html&gt;</code>.</p>
+<p><strong>Antwort</strong></p>
+<p>Aus Gründen der Abwärtskompatibilität ist der <a href="../regular_expressions/#s">Modifikator /s</a> standardmäßig eingeschaltet.</p>
+<p>Schalten Sie ihn aus und <code>.</code> wird alles außer <a href="../regular_expressions/#lineseparators">Zeilentrennern</a> entsprechen - genau wie Sie es wünschen.</p>
+<p>Übrigens schlage ich <code>&lt;font ([^\n&gt;]*)&gt;</code> vor, in <code>Match[1]</code> wird die URL sein.</p>
+<h2 id="warum-gibt-tregexpr-mehr-zuruck-als-ich-erwarte">Warum gibt TRegExpr mehr zurück, als ich erwarte?</h2>
+<p>Zum Beispiel gibt das r.e. <code>&lt;p&gt;(.+)&lt;/p&gt;</code> angewandt auf den String <code>&lt;p&gt;a&lt;/p&gt;&lt;p&gt;b&lt;/p&gt;</code> <code>a&lt;/p&gt;&lt;p&gt;b</code> zurück, aber nicht <code>a</code>, wie ich erwartet hätte.</p>
+<p><strong>Antwort</strong></p>
+<p>Standardmäßig arbeiten alle Operatoren im „gierigen“ Modus, sodass sie so viel wie möglich entsprechen.</p>
+<p>Wenn Sie den „nicht gierigen“ Modus möchten, können Sie „nicht gierige“ Operatoren wie <code>+?</code> usw. verwenden oder alle Operatoren mit Hilfe des Modifikators <code>g</code> in den „nicht gierigen“ Modus umschalten (verwenden Sie entsprechende TRegExpr-Eigenschaften oder den Operator <code>?(-g)</code> in r.e.).</p>
+<h2 id="wie-kann-man-quellen-wie-html-mit-hilfe-von-tregexpr-parsen">Wie kann man Quellen wie HTML mit Hilfe von TRegExpr parsen?</h2>
+<p><strong>Antwort</strong></p>
+<p>Entschuldigung, Leute, aber das ist nahezu unmöglich!</p>
+<p>Natürlich können Sie TRegExpr leicht verwenden, um einige Informationen aus HTML zu extrahieren, wie in meinen Beispielen gezeigt, aber wenn Sie ein genaues Parsing möchten, müssen Sie einen echten Parser verwenden, nicht r.e.</p>
+<p>Eine vollständige Erklärung können Sie zum Beispiel im <code>Perl Cookbook</code> von Tom Christiansen und Nathan Torkington nachlesen.</p>
+<p>Kurz gesagt - es gibt viele Strukturen, die leicht von einem echten Parser analysiert werden können, aber überhaupt nicht von r.e., und ein echter Parser ist viel schneller beim Parsen, weil r.e. nicht einfach den Eingabestrom scannt, sondern eine Optimierungssuche durchführt, die viel Zeit in Anspruch nehmen kann.</p>
+<h2 id="gibt-es-eine-moglichkeit-mehrere-ubereinstimmungen-eines-musters-bei-tregexpr-zu-erhalten">Gibt es eine Möglichkeit, mehrere Übereinstimmungen eines Musters bei TRegExpr zu erhalten?</h2>
+<p><strong>Antwort</strong></p>
+<p>Sie können Übereinstimmungen mit der Methode ExecNext iterieren.</p>
+<p>Wenn Sie ein Beispiel möchten, schauen Sie sich bitte die Implementierung der Methode <code>TRegExpr.Replace</code> an oder die Beispiele für <a href="../demos/">HyperLinksDecorator</a></p>
+<h2 id="ich-uberprufe-benutzereingaben-warum-gibt-tregexpr-true-fur-falsche-eingabestrings-zuruck">Ich überprüfe Benutzereingaben. Warum gibt TRegExpr <code>True</code> für falsche Eingabestrings zurück?</h2>
+<p><strong>Antwort</strong></p>
+<p>In vielen Fällen vergessen TRegExpr-Benutzer, dass der reguläre Ausdruck für die <strong>Suche</strong> im Eingabestring vorgesehen ist.</p>
+<p>Also, wenn Sie zum Beispiel den Ausdruck <code>\d{4,4}</code> verwenden, werden Sie Erfolg haben bei falschen Benutzereingaben wie <code>12345</code> oder <code>beliebige Buchstaben 1234</code>.</p>
+<p>Sie müssen vom Zeilenanfang bis zum Zeilenende prüfen, um sicherzustellen, dass nichts anderes drum herum ist: <code>^\d{4,4}$</code>.</p>
+<h2 id="warum-funktionieren-nicht-gierige-iteratoren-manchmal-wie-im-gierigen-modus">Warum funktionieren nicht-gierige Iteratoren manchmal wie im gierigen Modus?</h2>
+<p>Zum Beispiel entspricht das r.e. <code>a+?,b+?</code> angewandt auf den String <code>aaa,bbb</code> <code>aaa,b</code>, aber sollte es nicht <code>a,b</code> entsprechen wegen der Nicht-Gierigkeit des ersten Iterators?</p>
+<p><strong>Antwort</strong></p>
+<p>Dies liegt an der Arbeitsweise von TRegExpr. Tatsächlich arbeiten viele andere r.e. Engines genau gleich: Sie führen nur eine „einfache“ Suchoptimierung durch und versuchen nicht, die beste Optimierung zu finden.</p>
+<p>In einigen Fällen ist das schlecht, aber im Allgemeinen ist es eher ein Vorteil als eine Einschränkung, aus Gründen der Leistung und Vorhersagbarkeit.</p>
+<p>Die Hauptregel - r.e. versucht zuerst, vom aktuellen Ort aus zu entsprechen und nur, wenn das völlig unmöglich ist, bewegt es sich um ein Zeichen vorwärts und versucht es erneut von der nächsten Position im Text.</p>
+<p>Also, wenn Sie <code>a,b+?</code> verwenden, wird es <code>a,b</code> entsprechen. Im Falle von <code>a+?,b+?</code> ist es jetzt nicht empfohlen (wir haben den nicht-gierigen Modifikator hinzugefügt), aber es ist immer noch möglich, mehr als ein <code>a</code> zu entsprechen, also wird TRegExpr es tun.</p>
+<p>TRegExpr wie Perl oder Unix r.e. versucht nicht, vorwärts zu bewegen und zu prüfen - wäre es eine "bessere" Übereinstimmung. Vor allem, weil es keinen Weg gibt zu sagen, dass eine Übereinstimmung besser oder schlechter ist.</p>
+<h2 id="wie-kann-ich-tregexpr-mit-borland-c-builder-verwenden">Wie kann ich TRegExpr mit Borland C++ Builder verwenden?</h2>
+<p>Ich habe ein Problem, da keine Header-Datei (<code>.h</code> oder <code>.hpp</code>) verfügbar ist.</p>
+<p><strong>Antwort</strong></p>
+<ul>
+<li>Fügen Sie <code>RegExpr.pas</code> zum <code>bcb</code>-Projekt hinzu.</li>
+<li>Kompilieren Sie das Projekt. Dies generiert die Header-Datei <code>RegExpr.hpp</code>.</li>
+<li>Jetzt können Sie Code schreiben, der die Einheit <code>RegExpr</code> verwendet.</li>
+<li>Vergessen Sie nicht, <code>#include “RegExpr.hpp”</code> hinzuzufügen, wo es benötigt wird.</li>
+<li>Vergessen Sie nicht, alle <code>\</code> in regulären Ausdrücken mit <code>\\</code> zu ersetzen oder die Konstante <a href="../tregexpr/#escchar">EscChar</a> neu zu definieren.</li>
+</ul>
+<h2 id="warum-funktionieren-viele-re-einschlielich-re-aus-der-hilfe-und-demo-von-tregexpr-falsch-in-borland-c-builder">Warum funktionieren viele r.e. (einschließlich r.e. aus der Hilfe und Demo von TRegExpr) falsch in Borland C++ Builder?</h2>
+<p><strong>Antwort</strong></p>
+<p>Der Hinweis ist in der vorherigen Frage ;) Das Symbol <code>\</code> hat eine besondere Bedeutung in <code>C++</code>, daher müssen Sie es „escapen“ (wie in der vorherigen Antwort beschrieben). Aber wenn Sie r.e. wie <code>\\w+\\w+\\.\\w+</code> nicht mögen, können Sie die Konstante <code>EscChar</code> (in <code>RegExpr.pas</code>) neu definieren. Zum Beispiel <code>EscChar = "/"</code>. Dann können Sie <code>/w+/w+/./w+</code> schreiben, sieht ungewöhnlich aus, aber lesbarer.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["toc.integrate", "navigation.tracking", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.3220b9d7.min.js"></script>
+      
+    
+  </body>
+</html>
