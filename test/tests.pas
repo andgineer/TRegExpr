@@ -6,11 +6,23 @@ unit tests;
 
 { $DEFINE DUMPTESTS} //define this to dump results to console
 
-{$IFDEF VER130} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D5
-{$IFDEF VER140} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D6
-{$IFDEF VER150} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF VER130} {$DEFINE NOTUSINGDUNITX} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D5
+{$IFDEF VER140} {$DEFINE NOTUSINGDUNITX} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D6
+{$IFDEF VER150} {$DEFINE NOTUSINGDUNITX} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF VER160} {$DEFINE NOTUSINGDUNITX} {$DEFINE D8} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF VER170} {$DEFINE NOTUSINGDUNITX} {$DEFINE D2005} {$DEFINE D8} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF VER180} {$DEFINE NOTUSINGDUNITX} {$DEFINE D2006} {$DEFINE D2005} {$DEFINE D8} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF VER185} {$DEFINE NOTUSINGDUNITX} {$DEFINE D2006} {$DEFINE D2005} {$DEFINE D8} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF VER190} {$DEFINE NOTUSINGDUNITX} {$DEFINE D2007} {$DEFINE D2006} {$DEFINE D2005} {$DEFINE D8} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+{$IFDEF VER200} {$DEFINE NOTUSINGDUNITX} {$DEFINE D2009} {$DEFINE D2007} {$DEFINE D2006} {$DEFINE D2005} {$DEFINE D8} {$DEFINE D7} {$DEFINE D6} {$DEFINE D5} {$DEFINE D4} {$DEFINE D3} {$DEFINE D2} {$ENDIF} // D7
+
 {$IFDEF D5} {$DEFINE OverMeth} {$ENDIF}
 {$IFDEF FPC} {$DEFINE OverMeth} {$ENDIF}
+{$IFDEF D7}
+  {$UNDEF FastUnicodeData}
+{$ELSE}
+  {$DEFINE FastUnicodeData}
+{$ENDIF}
 
 {$DEFINE UnicodeRE}
 
@@ -147,9 +159,11 @@ type
     procedure RunTest50;
     procedure TestGroups;
     {$IFDEF UnicodeRE}
+    {$IFDEF FastUnicodeData}
     procedure RunTest51unicode;
     procedure RunTest52unicode;
     procedure RunTest70russian;
+    {$ENDIF}
     {$ENDIF}
     procedure RunTest53;
     procedure RunTest54;
@@ -865,7 +879,11 @@ procedure TTestRegexpr.IsMatching(AErrorMessage: String; ARegEx,
   AOffset: integer; AMustMatchBefore: integer);
 var
   i: Integer;
+  {$IF DEFINED(SizeInt)}
   L: SizeInt;
+  {$ELSE}
+  L: Integer;
+  {$IFEND}
 begin
   CompileRE(ARegEx);
   RE.InputString:= AInput;
@@ -953,7 +971,7 @@ var
 begin
   CompileRE('A\r(\n)'); // just to print compiled re - it will be recompiled below
   act:=ReplaceRegExpr('A\r(\n)', 'a'#$d#$a, '\n', [rroModifierI, rroUseSubstitution]);
-  AssertEquals('Replace failed', PrintableString(#$a), PrintableString(Act))
+  AreEqual('Replace failed', PrintableString(#$a), PrintableString(Act))
 end;
 {$ENDIF}
 
@@ -1034,9 +1052,9 @@ end;
 procedure TTestRegexpr.TestContinueAnchor;
   procedure AssertMatch(AName: String; AStart, ALen: Integer);
   begin
-    AreEqual(AName + 'MatchCount', 1, RE.SubExprMatchCount);
-    AreEqual(AName + 'MatchPos[1]', AStart, RE.MatchPos[1]);
-    AreEqual(AName + 'MatchLen[1]', ALen, RE.MatchLen[1]);
+    AreEqual(AName + ' MatchCount', 1, RE.SubExprMatchCount);
+    AreEqual(AName + ' MatchPos[1]', AStart, RE.MatchPos[1]);
+    AreEqual(AName + ' MatchLen[1]', ALen, RE.MatchLen[1]);
   end;
 begin
   // Without \G MatchNext will skip
@@ -2154,7 +2172,9 @@ begin
   HasVarLenLookBehind('', '()A(?<=.(?<=(?1)))');
   HasVarLenLookBehind('', '()()()()A(?<=.(?<=(?4)))');
   HasVarLenLookBehind('', '()A(?<=.(?<=(?R)))');
+  {$IFDEF FastUnicodeData}
   HasFixedLookBehind ('', '()A(?<=.(?<=\p{Lu}))');
+  {$ENDIF}
   HasFixedLookBehind ('', '()A(?<=.(?<=[a-x]))');
 
 end;
@@ -3259,6 +3279,7 @@ begin
 end;
 
 {$IFDEF UnicodeRE}
+{$IFDEF FastUnicodeData}
 procedure TTestRegexpr.RunTest51unicode;
 begin
   RunRETest(51);
@@ -3285,6 +3306,7 @@ begin
   AreEqual('Search position', T.MatchStart, RE.MatchPos[0]);
   AreEqual('Matched text', PrintableString(T.ExpectedResult), PrintableString(RE.Match[0]));
 end;
+{$ENDIF}
 {$ENDIF}
 
 procedure TTestRegexpr.RunTest53;
@@ -3414,6 +3436,9 @@ begin
 end;
 
 procedure TTestRegexpr.CompileRE(const AExpression: RegExprString);
+{$IF NOT DEFINED(LineEnding)}
+const LineEnding = #13#10;
+{$IFEND}
 begin
   FErrorInfo := LineEnding + AExpression;
   if (RE = Nil) then
@@ -3504,5 +3529,9 @@ initialization
 {$IFDEF FPC}
   RegisterTest(TTestRegexpr);
 {$ENDIF}
+{$IFDEF NOTUSINGDUNITX}
+  RegisterTest(TTestRegexpr.Suite);
+{$ENDIF}
+
 end.
 
