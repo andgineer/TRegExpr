@@ -6,6 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.187 2024.04.17
+ -=- (^) Return compatability with Delphi 7; add test for Delphi 7. By @ThomasKalten.
+
  v. 1.186 2024.01.10
  -=- (^) Fixes and improvements for look-around:
      (?=.(capt).)?.*\1 optional look-around was handled incorrectly if it contained code that was later referred.
