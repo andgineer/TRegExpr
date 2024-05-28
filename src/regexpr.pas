@@ -1135,9 +1135,9 @@ begin
 end;
 
 function StrLScan(P: PRegExprChar; C: REChar; len: PtrInt): PRegExprChar;
-Var
-   count: PtrInt;
-Begin
+var
+  count: PtrInt;
+begin
   count := 0;
   { Find first matching character of Ch in Str }
   while (count < len) do
@@ -1145,7 +1145,7 @@ Begin
     if C = P[count] then
      begin
        StrLScan := @(P[count]);
-       exit;
+       Exit;
      end;
     Inc(count);
   end;
@@ -1153,7 +1153,7 @@ Begin
   StrLScan := nil;
 end;
 
-function StrLComp(str1,str2 : PRegExprChar; len : PtrInt) : PtrInt;
+function StrLComp(str1, str2: PRegExprChar; len: PtrInt): PtrInt;
 var
   counter: PtrInt;
   c1, c2: REChar;
@@ -1161,34 +1161,34 @@ begin
   if len = 0 then
   begin
     StrLComp := 0;
-    exit;
+    Exit;
   end;
-  counter:=0;
+  counter := 0;
   repeat
-    c1:=str1[counter];
-    c2:=str2[counter];
-    inc(counter);
+    c1 := str1[counter];
+    c2 := str2[counter];
+    Inc(counter);
   until (c1<>c2) or (counter>=len) or (c1=#0) or (c2=#0);
-  StrLComp:=ord(c1)-ord(c2);
+  StrLComp := ord(c1)-ord(c2);
 end;
 
-function StrLPos(str1,str2 : PRegExprChar; len1, len2: PtrInt) : PRegExprChar;
+function StrLPos(str1, str2: PRegExprChar; len1, len2: PtrInt): PRegExprChar;
 var
-  p : PRegExprChar;
+  p: PRegExprChar;
 begin
   StrLPos := nil;
   if (str1 = nil) or (str2 = nil) then
-    exit;
+    Exit;
   len1 := len1 - len2 + 1;
   p := StrLScan(str1,str2^, len1);
   while p <> nil do
   begin
     if StrLComp(p, str2, len2)=0 then
     begin
-       StrLPos := p;
-       exit;
+      StrLPos := p;
+      Exit;
     end;
-    inc(p);
+    Inc(p);
     p := StrLScan(p, str2^, len1 - (p-str1));
   end;
 end;
@@ -2044,14 +2044,13 @@ begin
     SetLength(Names, RegexGroupCountIncrement);
 end;
 
-procedure TRegExprGroupNameList.Add(const AName: RegExprString; AnIndex: Integer
-  );
+procedure TRegExprGroupNameList.Add(const AName: RegExprString; AnIndex: Integer);
 begin
   if NameCount >= Length(Names) then
     SetLength(Names, Length(Names) + 1 + RegexGroupCountIncrement);
   Names[NameCount].Name := AName;
   Names[NameCount].Index := AnIndex;
-  inc(NameCount);
+  Inc(NameCount);
 end;
 
 {$IFDEF OverMeth}
@@ -2888,7 +2887,7 @@ begin
               Exit;
             end;
             Inc(ABuffer);
-            dec(n);
+            Dec(n);
           until n = 0;
         end;
 
@@ -3502,7 +3501,7 @@ var
   ch: REChar;
 begin
   if not fSecondPass then
-    exit;
+    Exit;
 
   opnd := piece + REOpSz + RENextOffSz + REBranchArgSz;
   while opnd <> nil do begin
@@ -3714,7 +3713,7 @@ var
   begin
     Result := False;
     if not FAllowLiteralBraceWithoutRange then
-      exit;
+      Exit;
     savedRegParse := regParse;
     Inc(regParse);
     Result := not DoParseBraceMinMax(dummyBracesMin, dummyBracesMax);
@@ -3745,7 +3744,7 @@ begin
       begin
         if (FlagTemp and FLAG_NOT_QUANTIFIABLE) <> 0 then begin
           Error(reeNotQuantifiable);
-          exit;
+          Exit;
         end;
         FlagParse := FLAG_WORST or FLAG_SPECSTART or FLAG_LOOP;
         nextch := (regParse + 1)^;
@@ -3800,7 +3799,7 @@ begin
       begin
         if (FlagTemp and FLAG_NOT_QUANTIFIABLE) <> 0 then begin
           Error(reeNotQuantifiable);
-          exit;
+          Exit;
         end;
         FlagParse := FLAG_WORST or FLAG_SPECSTART or (FlagTemp and FLAG_HASWIDTH) or FLAG_LOOP;
         nextch := (regParse + 1)^;
@@ -3899,7 +3898,7 @@ begin
         end;
         if (FlagTemp and FLAG_NOT_QUANTIFIABLE) <> 0 then begin
           Error(reeNotQuantifiable);
-          exit;
+          Exit;
         end;
         if BracesMin > 0 then
           FlagParse := FLAG_WORST or (FlagTemp and FLAG_HASWIDTH);
@@ -4068,9 +4067,9 @@ var
     while (AParsePos^ >= '0') and (AParsePos^ <= '9') do
     begin
       if ANumber > (High(ANumber)-10) div 10 then
-        exit;
+        Exit;
       ANumber := ANumber * 10 + (Ord(AParsePos^) - Ord('0'));
-      inc(AParsePos);
+      Inc(AParsePos);
     end;
     Result := True;
   end;
@@ -4859,12 +4858,12 @@ begin
                   end;
                 '0'..'9':
                   begin
-                    inc(regParse);
+                    Inc(regParse);
                     if not ParseNumber(regParse, GrpIndex) then begin
                       Error(reeBadReference);
                       Exit;
                     end;
-                    dec(regParse);
+                    Dec(regParse);
                     if GrpIndex = 0 then
                       Error(reeBadReference);
                     if fSecondPass and (GrpIndex > GrpCount) then
@@ -5466,13 +5465,13 @@ var
   Local: TRegExprMatchPrimLocals;
 begin
   Result := False;
+
   {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
   if get_frame < StackLimit then begin
-    error(reeLoopStackExceeded);
-    exit;
+    Error(reeLoopStackExceeded);
+    Exit;
   end;
   {$ENDIF}
-
 
   {
   // Alexey: not sure it's ok for long searches in big texts, so disabled
@@ -5525,7 +5524,7 @@ begin
           Result := MatchPrim(next);
           if not Result then
             GrpBounds[0].GrpStart[0] := save;
-          exit;
+          Exit;
         end;
 
       OP_EOL:
@@ -5877,7 +5876,7 @@ begin
           {$ELSE}
           AssignPRegExprCharArray(CurrentGrpBounds.TmpStart, no, save);
           {$ENDIF}
-          exit;
+          Exit;
         end;
 
       OP_OPEN_ATOMIC:
@@ -5993,7 +5992,7 @@ begin
           if Result then begin
             if Local.IsGreedy = OPT_LOOKBEHIND_FIXED then begin
               regInput := regInput - PReOpLookBehindOptions(scan)^.MatchLenMin;
-              inc(scan, ReOpLookBehindOptionsSz);
+              Inc(scan, ReOpLookBehindOptionsSz);
               Result := MatchPrim(scan)
             end
             else
@@ -6003,10 +6002,10 @@ begin
                 save := regInput - PReOpLookBehindOptions(scan)^.MatchLenMax
               else
                 save := fInputStart;
-              inc(scan, ReOpLookBehindOptionsSz);
+              Inc(scan, ReOpLookBehindOptionsSz);
               repeat
                 regInput := Local.InpStart;
-                dec(Local.InpStart);
+                Dec(Local.InpStart);
                 Result := MatchPrim(scan);
               until Local.LookAroundInfo.HasMatchedToEnd or (Local.InpStart < save);
             end
@@ -6016,10 +6015,10 @@ begin
               else
                 Local.InpStart := fInputStart;
               save := Local.LookAroundInfo.InputPos - PReOpLookBehindOptions(scan)^.MatchLenMin;
-              inc(scan, ReOpLookBehindOptionsSz);
+              Inc(scan, ReOpLookBehindOptionsSz);
               repeat
                 regInput := Local.InpStart;
-                inc(Local.InpStart);
+                Inc(Local.InpStart);
                 Result := MatchPrim(scan);
               until Local.LookAroundInfo.HasMatchedToEnd or (Local.InpStart > save);
             end;
@@ -6146,12 +6145,12 @@ begin
           case scan^ of
             OP_GBRANCH_EX:
               if (regInput^ <> (scan + REOpSz + RENextOffSz)^) then
-                exit;
+                Exit;
             OP_GBRANCH_EX_CI:
               if (regInput^ <> (scan + REOpSz + RENextOffSz)^) and
                  (regInput^ <> (scan + REOpSz + RENextOffSz + 1)^)
               then
-                exit;
+                Exit;
           end;
           next := scan + REOpSz + RENextOffSz + REBranchArgSz; // Avoid recursion
         end;
@@ -6195,7 +6194,7 @@ begin
                 Local.LoopInfoListPtr^.BackTrackingAsAtom := True;
                 IsBacktrackingGroupAsAtom := True;
               end;
-              exit;
+              Exit;
             end;
 
             // greedy way - first try to max deep of greed ;)
@@ -6251,7 +6250,7 @@ begin
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr^.OuterLoop;
               Result := MatchPrim(next);
               CurrentLoopInfoListPtr := Local.LoopInfoListPtr;
-              exit;
+              Exit;
             end;
 
             save := regInput;
@@ -6672,7 +6671,7 @@ end;
 procedure TRegExpr.ClearMatches;
 begin
   if FMatchesCleared then
-    exit;
+    Exit;
   FMatchesCleared := True;
   if Length(GrpBounds[0].GrpStart) > 0 then
     FillChar(GrpBounds[0].GrpStart[0], SizeOf(GrpBounds[0].GrpStart[0])*regNumBrackets, 0);
@@ -6783,7 +6782,7 @@ begin
   if ASlowChecks then
     if regMustString <> '' then
       if StrLPos(fInputStart, PRegExprChar(regMustString), Len, length(regMustString)) = nil then
-        exit;
+        Exit;
 
   {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
   StackLimit := StackBottom;
@@ -6914,8 +6913,8 @@ begin
     until False;
 
     {$IFDEF UseFirstCharSet}
-      if FirstCharArray[0] and (fInputEnd^ <> #0) then
-        Result := MatchAtOnePos(fInputEnd);
+    if FirstCharArray[0] and (fInputEnd^ <> #0) then
+      Result := MatchAtOnePos(fInputEnd);
     {$ENDIF}
   end;
 end; { of function TRegExpr.ExecPrim
@@ -7515,7 +7514,7 @@ begin
             FirstCharSet := TempSet + TmpFirstCharSet
           else
             FirstCharSet := TempSet + (FirstCharSet * TmpFirstCharSet);
-          exit;
+          Exit;
         end;
 
       OP_LOOKAHEAD_NEG,
@@ -7976,9 +7975,9 @@ begin
        ) and
        (CurIndent > 0)
     then
-      dec(CurIndent, Indent);
+      Dec(CurIndent, Indent);
     if s = BranchEnd then begin
-      dec(CurIndent, Indent);
+      Dec(CurIndent, Indent);
       BranchEnd := nil;
       if Length(BranchEndStack) > 0 then begin
         BranchEnd := BranchEndStack[Length(BranchEndStack)-1];
@@ -7991,9 +7990,9 @@ begin
     if (op = OP_OPEN) or (op = OP_OPEN_ATOMIC) or (op = OP_LOOPENTRY) or
        (op = OP_LOOKAHEAD) or (op = OP_LOOKAHEAD_NEG) or (op = OP_LOOKBEHIND) or (op = OP_LOOKBEHIND_NEG)
     then
-      inc(CurIndent, Indent);
+      Inc(CurIndent, Indent);
     if (op = OP_BRANCH) or (op = OP_GBRANCH) or (op = OP_GBRANCH_EX) or (op = OP_GBRANCH_EX_CI) then begin
-      inc(CurIndent, Indent);
+      Inc(CurIndent, Indent);
       if BranchEnd <> nil then begin
         SetLength(BranchEndStack, Length(BranchEndStack)+1);
         BranchEndStack[Length(BranchEndStack)-1] := BranchEnd;
