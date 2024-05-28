@@ -6,6 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.188 2024.05.28
+ -=- (-) Fix backward search issues (visible in CudaText app). By Alexey Torgashin.
+
  v. 1.187 2024.04.17
  -=- (^) Return compatability with Delphi 7; add test for Delphi 7. By @ThomasKalten.
 

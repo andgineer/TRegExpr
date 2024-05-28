@@ -952,7 +952,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 187;
+  REVersionMinor = 188;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -6626,7 +6626,11 @@ begin
     Exit;
   end;
   if ATryOnce then
-    Result := ExecPrim(AOffset, False, ABackward, AOffset + 1)
+  begin
+    if not ABackward then
+      Inc(AOffset);
+    Result := ExecPrim(AOffset, False, ABackward, AOffset)
+  end
   else
     Result := ExecPrim(AOffset, False, ABackward, 0);
 end;
@@ -6771,9 +6775,9 @@ begin
       Exit;
 
   // Check that the start position is not longer than the line
-  if (AOffset - 1) > Len - FMinMatchLen then
-    Exit;
-
+  if AOffset > Len - FMinMatchLen + 1 then
+    if not ABackward then
+      Exit;
 
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
@@ -6814,7 +6818,8 @@ end;
 function TRegExpr.ExecPrimProtected(AOffset: Integer; ASlowChecks,
   ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
 var
-  Ptr, SearchEnd: PRegExprChar;
+  Ptr, PtrPrev, SearchEnd: PRegExprChar;
+  TempMatchPos, TempMatchLen: Integer;
 begin
   Result := False;
   Ptr := fInputStart + AOffset - 1;
@@ -6841,7 +6846,7 @@ begin
 
   // Messy cases: unanchored match.
   if ABackward then begin
-    Inc(Ptr, 2);
+    Inc(Ptr);
     repeat
       Dec(Ptr);
       if Ptr < fInputStart then
@@ -6855,10 +6860,33 @@ begin
           Continue;
       {$ENDIF}
 
-      Result := MatchAtOnePos(Ptr);
-      // Exit on a match or after testing the end-of-string
-      if Result then
+      if MatchAtOnePos(Ptr) then begin
+        TempMatchPos := MatchPos[0];
+        TempMatchLen := MatchLen[0];
+        // don't accept match which equals to prev match
+        if (TempMatchPos - 1 = AOffset) {and (Ptr > fInputStart)} then
+          Continue;
+        // don't accept match which overlaps prev match
+        if (TempMatchPos + TempMatchLen - 1 > AOffset) then
+          Continue;
+
+        // do we have surrounding match at prev pos for regex 'w+'? take it.
+        PtrPrev := Ptr;
+        repeat
+          if (PtrPrev = fInputStart) then Break;
+          Dec(PtrPrev);
+          if MatchAtOnePos(PtrPrev) and (MatchPos[0] + MatchLen[0] = TempMatchPos + TempMatchLen) then
+            Ptr := PtrPrev
+          else
+          begin
+            MatchAtOnePos(Ptr); // to restore MatchPos[], MatchLen[]
+            Break;
+          end;
+        until False;
+
+        Result := True;
         Exit;
+      end;
     until False;
   end
   else begin
