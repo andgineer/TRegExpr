@@ -6870,12 +6870,12 @@ begin
         if (TempMatchPos + TempMatchLen - 1 > AOffset) then
           Continue;
 
-        // do we have surrounding match at prev pos for regex 'w+'? take it.
+        // if we have surrounding match at prev pos e.g. for regex '\w+', take it
         PtrPrev := Ptr;
         repeat
           if (PtrPrev = fInputStart) then Break;
           Dec(PtrPrev);
-          if MatchAtOnePos(PtrPrev) and (MatchPos[0] + MatchLen[0] = TempMatchPos + TempMatchLen) then
+          if MatchAtOnePos(PtrPrev) and (MatchPos[0] + MatchLen[0] >= TempMatchPos + TempMatchLen) then
             Ptr := PtrPrev
           else
           begin
