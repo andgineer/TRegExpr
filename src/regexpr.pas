@@ -6872,12 +6872,11 @@ begin
         // if we have surrounding match at prev pos e.g. for regex '\w+', take it
         PtrPrev := Ptr;
         repeat
-          if (PtrPrev = fInputStart) then Break;
+          if (PtrPrev <= fInputStart) then Break;
           Dec(PtrPrev);
           if MatchAtOnePos(PtrPrev) and (MatchPos[0] + MatchLen[0] >= TempMatchPos + TempMatchLen) then
             Ptr := PtrPrev
-          else
-          begin
+          else begin
             MatchAtOnePos(Ptr); // to restore MatchPos[], MatchLen[]
             Break;
           end;
