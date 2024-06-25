@@ -104,6 +104,7 @@ type
     procedure TestRegLookBehind;
     procedure TestRegLookAroundMixed;
     procedure TestResetMatchPos;
+    procedure TestMultiLine;
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
@@ -3025,6 +3026,168 @@ begin
   IsNotMatching('lookahead not possible',   '^(?=.*\K).*c',    'abcd');
   IsMatching('lookahead',   '^(?=.\K).*c',    'abcd',    [2,2]);
   IsMatching('lookbehind',  '(?<=\K.)c',    'abcd',    [2,2]);
+
+end;
+
+procedure TTestRegexpr.TestMultiLine;
+begin
+  IsMatching('dummy', '.',  '.',    [1,1]); // Make sure RE is created
+
+  RE.ModifierS := True;
+  IsMatching('S: char',        '.a',  'bbxabb',         [3,2]);
+  IsMatching('S: tab',         '.a',  'bb'#09'abb',     [3,2]); // tab
+  IsMatching('S: lf',          '.a',  'bb'#10'abb',     [3,2]); // line feed
+  IsMatching('S: vt',          '.a',  'bb'#11'abb',     [3,2]); // vertical tab
+  IsMatching('S: bp',          '.a',  'bb'#12'abb',     [3,2]); // page break
+  IsMatching('S: cr',          '.a',  'bb'#13'abb',     [3,2]); // carriage return
+  IsMatching('S: 14',          '.a',  'bb'#14'abb',     [3,2]);
+  IsMatching('S: crlf',        '.a',  'bb'#13#10'abb',  [4,2]);
+  IsMatching('S: lfcr',        '.a',  'bb'#10#13'abb',  [4,2]);
+
+  IsMatching('S: late -s: char',        '.(?-s)a',  'bbxabb',         [3,2]);
+  IsMatching('S: late -s: tab',         '.(?-s)a',  'bb'#09'abb',     [3,2]); // tab
+  IsMatching('S: late -s: lf',          '.(?-s)a',  'bb'#10'abb',     [3,2]); // line feed
+  IsMatching('S: late -s: vt',          '.(?-s)a',  'bb'#11'abb',     [3,2]); // vertical tab
+  IsMatching('S: late -s: bp',          '.(?-s)a',  'bb'#12'abb',     [3,2]); // page break
+  IsMatching('S: late -s: cr',          '.(?-s)a',  'bb'#13'abb',     [3,2]); // carriage return
+  IsMatching('S: late -s: 14',          '.(?-s)a',  'bb'#14'abb',     [3,2]);
+  IsMatching('S: late -s: crlf',        '.(?-s)a',  'bb'#13#10'abb',  [4,2]);
+  IsMatching('S: late -s: lfcr',        '.(?-s)a',  'bb'#10#13'abb',  [4,2]);
+
+  IsMatching('S: late -s: char',        '.(?-s:a)',  'bbxabb',         [3,2]);
+  IsMatching('S: late -s: tab',         '.(?-s:a)',  'bb'#09'abb',     [3,2]); // tab
+  IsMatching('S: late -s: lf',          '.(?-s:a)',  'bb'#10'abb',     [3,2]); // line feed
+  IsMatching('S: late -s: vt',          '.(?-s:a)',  'bb'#11'abb',     [3,2]); // vertical tab
+  IsMatching('S: late -s: bp',          '.(?-s:a)',  'bb'#12'abb',     [3,2]); // page break
+  IsMatching('S: late -s: cr',          '.(?-s:a)',  'bb'#13'abb',     [3,2]); // carriage return
+  IsMatching('S: late -s: 14',          '.(?-s:a)',  'bb'#14'abb',     [3,2]);
+  IsMatching('S: late -s: crlf',        '.(?-s:a)',  'bb'#13#10'abb',  [4,2]);
+  IsMatching('S: late -s: lfcr',        '.(?-s:a)',  'bb'#10#13'abb',  [4,2]);
+
+  IsMatching   ('S: -s char',         '(?-s).a',  'bbxabb',     [3,2]);
+  IsMatching   ('S: -s tab',          '(?-s).a',  'bb'#09'abb', [3,2]);
+  IsMatching   ('S: -s 14',           '(?-s).a',  'bb'#14'abb', [3,2]);
+  IsNotMatching('S: -s lf',           '(?-s).a',  'bb'#10'abb');
+  IsNotMatching('S: -s vt',           '(?-s).a',  'bb'#11'abb');
+  IsNotMatching('S: -s bp',           '(?-s).a',  'bb'#12'abb');
+  IsNotMatching('S: -s cr',           '(?-s).a',  'bb'#13'abb');
+  IsNotMatching('S: -s crlf',         '(?-s).a',  'bb'#13#10'abb');
+  IsNotMatching('S: -s lfcr',         '(?-s).a',  'bb'#10#13'abb');
+
+  IsMatching   ('S: -s char',         '(?-s:.)a',  'bbxabb',     [3,2]);
+  IsMatching   ('S: -s tab',          '(?-s:.)a',  'bb'#09'abb', [3,2]);
+  IsMatching   ('S: -s 14',           '(?-s:.)a',  'bb'#14'abb', [3,2]);
+  IsNotMatching('S: -s lf',           '(?-s:.)a',  'bb'#10'abb');
+  IsNotMatching('S: -s vt',           '(?-s:.)a',  'bb'#11'abb');
+  IsNotMatching('S: -s bp',           '(?-s:.)a',  'bb'#12'abb');
+  IsNotMatching('S: -s cr',           '(?-s:.)a',  'bb'#13'abb');
+  IsNotMatching('S: -s crlf',         '(?-s:.)a',  'bb'#13#10'abb');
+  IsNotMatching('S: -s lfcr',         '(?-s:.)a',  'bb'#10#13'abb');
+
+  IsMatching   ('S: two -s char',      '(?s)(?-s:.)a',  'bbxabb',     [3,2]);
+  IsMatching   ('S: two -s tab',       '(?s)(?-s:.)a',  'bb'#09'abb', [3,2]);
+  IsMatching   ('S: two -s 14',        '(?s)(?-s:.)a',  'bb'#14'abb', [3,2]);
+  IsNotMatching('S: two -s lf',        '(?s)(?-s:.)a',  'bb'#10'abb');
+  IsNotMatching('S: two -s vt',        '(?s)(?-s:.)a',  'bb'#11'abb');
+  IsNotMatching('S: two -s bp',        '(?s)(?-s:.)a',  'bb'#12'abb');
+  IsNotMatching('S: two -s cr',        '(?s)(?-s:.)a',  'bb'#13'abb');
+  IsNotMatching('S: two -s crlf',      '(?s)(?-s:.)a',  'bb'#13#10'abb');
+  IsNotMatching('S: two -s lfcr',      '(?s)(?-s:.)a',  'bb'#10#13'abb');
+
+  IsMatching('S: two -s char',      '(?-s)(?s:.)a',  'bbxabb',        [3,2]);
+  IsMatching('S: two -s tab',       '(?-s)(?s:.)a',  'bb'#09'abb',    [3,2]);
+  IsMatching('S: two -s 14',        '(?-s)(?s:.)a',  'bb'#14'abb',    [3,2]);
+  IsMatching('S: two -s lf',        '(?-s)(?s:.)a',  'bb'#10'abb',    [3,2]);
+  IsMatching('S: two -s vt',        '(?-s)(?s:.)a',  'bb'#11'abb',    [3,2]);
+  IsMatching('S: two -s bp',        '(?-s)(?s:.)a',  'bb'#12'abb',    [3,2]);
+  IsMatching('S: two -s cr',        '(?-s)(?s:.)a',  'bb'#13'abb',    [3,2]);
+  IsMatching('S: two -s crlf',      '(?-s)(?s:.)a',  'bb'#13#10'abb', [4,2]);
+  IsMatching('S: two -s lfcr',      '(?-s)(?s:.)a',  'bb'#10#13'abb', [4,2]);
+
+
+
+  RE.ModifierS := False;
+  IsMatching   ('M: char',         '.a',  'bbxabb',        [3,2]);
+  IsMatching   ('M: tab',          '.a',  'bb'#09'abb',    [3,2]);
+  IsMatching   ('M: 14',           '.a',  'bb'#14'abb',    [3,2]);
+  IsNotMatching('M: lf',           '.a',  'bb'#10'abb');
+  IsNotMatching('M: vt',           '.a',  'bb'#11'abb');
+  IsNotMatching('M: bp',           '.a',  'bb'#12'abb');
+  IsNotMatching('M: cr',           '.a',  'bb'#13'abb');
+  IsNotMatching('M: crlf',         '.a',  'bb'#13#10'abb');
+  IsNotMatching('M: lfcr',         '.a',  'bb'#10#13'abb');
+
+  IsMatching   ('M: late +s char',         '.(?s)a',  'bbxabb',        [3,2]);
+  IsMatching   ('M: late +s tab',          '.(?s)a',  'bb'#09'abb',    [3,2]);
+  IsMatching   ('M: late +s 14',           '.(?s)a',  'bb'#14'abb',    [3,2]);
+  IsNotMatching('M: late +s lf',           '.(?s)a',  'bb'#10'abb');
+  IsNotMatching('M: late +s vt',           '.(?s)a',  'bb'#11'abb');
+  IsNotMatching('M: late +s bp',           '.(?s)a',  'bb'#12'abb');
+  IsNotMatching('M: late +s cr',           '.(?s)a',  'bb'#13'abb');
+  IsNotMatching('M: late +s crlf',         '.(?s)a',  'bb'#13#10'abb');
+  IsNotMatching('M: late +s lfcr',         '.(?s)a',  'bb'#10#13'abb');
+
+  IsMatching('M: +s: char',        '(?s).a',  'bbxabb',         [3,2]);
+  IsMatching('M: +s: tab',         '(?s).a',  'bb'#09'abb',     [3,2]); // tab
+  IsMatching('M: +s: lf',          '(?s).a',  'bb'#10'abb',     [3,2]); // line feed
+  IsMatching('M: +s: vt',          '(?s).a',  'bb'#11'abb',     [3,2]); // vertical tab
+  IsMatching('M: +s: bp',          '(?s).a',  'bb'#12'abb',     [3,2]); // page break
+  IsMatching('M: +s: cr',          '(?s).a',  'bb'#13'abb',     [3,2]); // carriage return
+  IsMatching('M: +s: 14',          '(?s).a',  'bb'#14'abb',     [3,2]);
+  IsMatching('M: +s: crlf',        '(?s).a',  'bb'#13#10'abb',  [4,2]);
+  IsMatching('M: +s: lfcr',        '(?s).a',  'bb'#10#13'abb',  [4,2]);
+
+  IsMatching('M: +s: char',        '(?s:.a)',  'bbxabb',         [3,2]);
+  IsMatching('M: +s: tab',         '(?s:.a)',  'bb'#09'abb',     [3,2]); // tab
+  IsMatching('M: +s: lf',          '(?s:.a)',  'bb'#10'abb',     [3,2]); // line feed
+  IsMatching('M: +s: vt',          '(?s:.a)',  'bb'#11'abb',     [3,2]); // vertical tab
+  IsMatching('M: +s: bp',          '(?s:.a)',  'bb'#12'abb',     [3,2]); // page break
+  IsMatching('M: +s: cr',          '(?s:.a)',  'bb'#13'abb',     [3,2]); // carriage return
+  IsMatching('M: +s: 14',          '(?s:.a)',  'bb'#14'abb',     [3,2]);
+  IsMatching('M: +s: crlf',        '(?s:.a)',  'bb'#13#10'abb',  [4,2]);
+  IsMatching('M: +s: lfcr',        '(?s:.a)',  'bb'#10#13'abb',  [4,2]);
+
+
+  RE.ModifierS := True;
+  IsMatching   ('S:mixed tab',         '(?-s).(?s).a',  'bb'#09#09'abb',     [3,3]);
+  IsMatching   ('S:mixed tab',         '(?-s).(?s).a',  'bb'#09#10'abb',     [3,3]);
+  IsNotMatching('S:mixed tab',         '(?-s).(?s).a',  'bb'#10#09'abb');
+  IsNotMatching('S:mixed tab',         '(?-s).(?s).a',  'bb'#10#10'abb');
+
+  IsMatching   ('S:mixed tab',         '(?-s:.)(?s:.)a',  'bb'#09#09'abb',     [3,3]);
+  IsMatching   ('S:mixed tab',         '(?-s:.)(?s:.)a',  'bb'#09#10'abb',     [3,3]);
+  IsNotMatching('S:mixed tab',         '(?-s:.)(?s:.)a',  'bb'#10#09'abb');
+  IsNotMatching('S:mixed tab',         '(?-s:.)(?s:.)a',  'bb'#10#10'abb');
+
+  RE.ModifierS := False;
+  IsMatching   ('M:mixed tab',         '(?-s).(?s).a',  'bb'#09#09'abb',     [3,3]);
+  IsMatching   ('M:mixed tab',         '(?-s).(?s).a',  'bb'#09#10'abb',     [3,3]);
+  IsNotMatching('M:mixed tab',         '(?-s).(?s).a',  'bb'#10#09'abb');
+  IsNotMatching('M:mixed tab',         '(?-s).(?s).a',  'bb'#10#10'abb');
+
+  IsMatching   ('S:mixed tab',         '(?-s:.)(?s:.)a',  'bb'#09#09'abb',     [3,3]);
+  IsMatching   ('S:mixed tab',         '(?-s:.)(?s:.)a',  'bb'#09#10'abb',     [3,3]);
+  IsNotMatching('S:mixed tab',         '(?-s:.)(?s:.)a',  'bb'#10#09'abb');
+  IsNotMatching('S:mixed tab',         '(?-s:.)(?s:.)a',  'bb'#10#10'abb');
+
+  RE.ModifierS := True;
+  IsMatching   ('S:mixed tab',         '.*',  #09'bb'#09#09'abc',     [1,8]);
+
+  IsMatching   ('S:mixed tab',         '.+',  #09'bb'#09#09'abc',     [1,8]);
+  IsMatching   ('S:mixed tab',         '.+',  #10'bb'#10#10'abc',     [1,8]);
+
+  RE.ModifierS := False;
+  IsMatching   ('S:mixed tab',         '.*',  #10'bb'#10#10'abc',     [1,0]);
+
+  IsMatching   ('S:mixed tab',         '.+',  #09'bb'#09#09'abc',     [1,8]);
+  IsMatching   ('S:mixed tab',         '.+',  #10'bb'#10#10'abc',     [2,2]);
+  IsMatching   ('S:mixed tab',         '.+',  #13'bb'#13#13'abc',     [2,2]);
+  IsMatching   ('S:mixed tab',         '.+',  #13'bb'#10#13'abc',     [2,2]);
+  IsMatching   ('S:mixed tab',         '.+',  #13'bb'#13#10'abc',     [2,2]);
+
+  IsMatching   ('S:mixed tab',         '.{3,3}',  #13'bb'#10#13'abc',     [6,3]);
+  IsMatching   ('S:mixed tab',         '.{3,3}',  #13'bb'#13#10'abc',     [6,3]);
+  IsNotMatching   ('S:mixed tab',      '.{4,4}',  #13'bb'#13#10'abc');
 
 end;
 

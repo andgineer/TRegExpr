@@ -952,7 +952,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 188;
+  REVersionMinor = 189;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -4216,13 +4216,12 @@ begin
       if fCompModifiers.S then
       begin
         ret := EmitNode(OP_ANY);
-        FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
       end
       else
       begin // not /s, so emit [^:LineSeparators:]
         ret := EmitNode(OP_ANY_ML);
-        FlagParse := FlagParse or FLAG_HASWIDTH; // not so simple ;)
       end;
+      FlagParse := FlagParse or FLAG_HASWIDTH or FLAG_SIMPLE;
      end;
 
     '[':
@@ -5059,6 +5058,13 @@ begin
         {$ENDIF}
       end;
 
+    OP_ANY_ML:
+      while (Result < TheMax) and not IsCustomLineSeparator(scan^) do
+      begin
+        Inc(Result);
+        Inc(scan);
+      end;
+
     OP_EXACTLY:
       begin // in opnd can be only ONE char !!!
         {
@@ -5590,7 +5596,6 @@ begin
       OP_ANY_ML:
         begin
           if (regInput >= fInputCurrentEnd) or
-            IsPairedBreak(regInput) or
             IsCustomLineSeparator(regInput^)
           then
             Exit;
@@ -7348,10 +7353,16 @@ begin
       OP_NOTBOUND:
         ;
 
-      OP_ANY,
-      OP_ANY_ML:
-        begin // we can better define ANYML
+      OP_ANY:
+        begin
           FirstCharSet := RegExprAllSet;
+          Exit;
+        end;
+
+      OP_ANY_ML:
+        begin
+          // There are still some Unicode breaks that will wrongly be in FirstCharSet
+          FirstCharSet := RegExprAllSet - [10..13];
           Exit;
         end;
 
