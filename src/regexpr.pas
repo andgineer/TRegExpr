@@ -2087,15 +2087,13 @@ end;
 function TRegExpr.GetSubExprMatchCount: Integer;
 begin
   Result := -1;
-  if Length(GrpBounds[0].GrpStart) = 0 then begin
+  if Length(GrpBounds[0].GrpStart) = 0 then
     Exit;
-  end;
   // if nothing found, we must return -1 per TRegExpr docs
   if (GrpBounds[0].GrpStart[0] <> nil) then begin
     Result := Length(GrpBounds[0].GrpStart)-1;
-    while (GrpBounds[0].GrpStart[ Result ] = nil) do begin
-      Dec( Result );
-    end;
+    while (Result > 0) and (GrpBounds[0].GrpStart[ Result ] = nil) do
+      Dec(Result);
   end;
 end;
 
