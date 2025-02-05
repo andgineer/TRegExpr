@@ -2092,7 +2092,7 @@ begin
   // if nothing found, we must return -1 per TRegExpr docs
   if (GrpBounds[0].GrpStart[0] <> nil) then begin
     Result := Length(GrpBounds[0].GrpStart)-1;
-    while (Result > 0) and (GrpBounds[0].GrpStart[ Result ] = nil) do
+    while (Result > 0) and (GrpBounds[0].GrpStart[Result] = nil) do
       Dec(Result);
   end;
 end;
