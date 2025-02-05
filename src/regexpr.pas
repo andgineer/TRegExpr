@@ -114,7 +114,8 @@ interface
 {$IFDEF D8} {$DEFINE InlineFuncs} {$ENDIF}
 {$IFDEF FPC} {$DEFINE InlineFuncs} {$ENDIF}
 
-{$IF DEFINED(D8) OR DEFINED(FPC)}
+{.$IF DEFINED(D8) OR DEFINED(FPC)}
+{$IF DEFINED(D2009) OR DEFINED(FPC)}
 {$PointerMath on}
 {$DEFINE HASPOINTERARRAYACCESS}
 {$ELSE}
@@ -2086,12 +2087,12 @@ end;
 function TRegExpr.GetSubExprMatchCount: Integer;
 begin
   Result := -1;
-  if Length(GrpIndexes) = 0 then begin
+  if Length(GrpBounds[0].GrpStart) = 0 then begin
     Exit;
   end;
   // if nothing found, we must return -1 per TRegExpr docs
   if (GrpBounds[0].GrpStart[0] <> nil) then begin
-    Result := Length(GrpIndexes)-1;
+    Result := Length(GrpBounds[0].GrpStart)-1;
     while (GrpBounds[0].GrpStart[ Result ] = nil) do begin
       Dec( Result );
     end;
