@@ -108,6 +108,7 @@ type
     {$IFDEF OverMeth}
     procedure TestReplaceOverload;
     {$ENDIF}
+    procedure TestSubExprMatchCount;
     procedure RunTest1;
     procedure RunTest2;
     procedure RunTest3;
@@ -1866,6 +1867,55 @@ begin
   IsMatching('ref in branch', '((A)|B|C(?2))*',  'AACACB',  [1,4,  3,2, 2,1]);
   IsMatching('ref in branch', '[^A]*((A)|B|C(?2))*',  'DAACACBE',  [1,5,  4,2, 3,1]);
   IsMatching('ref in branch', '((A)|B|C(?2))+',  'AACB',  [1,2,  2,1, 2,1]);
+end;
+
+procedure TTestRegexpr.TestSubExprMatchCount;
+  procedure TestForSubExprMatchCount(const AErrorMessage, AExpr, AInput : string; ExpSubExprMatchCount : Integer; ExpMatching : Boolean);
+  var
+    ResMatching : Boolean;
+    ResSubExprMatchCount : Integer;
+  begin
+    RE.Expression := AExpr;
+    ResMatching   := RE.Exec(AInput);
+    ResSubExprMatchCount := RE.SubExprMatchCount;
+
+    if ExpMatching then
+      IsTrue(AErrorMessage, ResMatching)
+    else
+      IsFalse(AErrorMessage, ResMatching);
+
+    AreEqual(AErrorMessage, ExpSubExprMatchCount, ResSubExprMatchCount);
+  end;
+var
+  RegExpression : string;
+  Input         : string;
+begin
+  // from description property SubExprMatchCount:
+  // For example: Expression := '(1)?2(3)?';
+  RegExpression := '(1)?2(3)?';
+
+  // Exec ('123'): SubExprMatchCount=2, Match[0]='123', [1]='1', [2]='3'
+  Input := '123';
+  TestForSubExprMatchCount(RegExpression + ' with ' + Input, RegExpression, Input, 2, True);
+  // Exec ('12'): SubExprMatchCount=1, Match[0]='12', [1]='1'
+  Input := '12';
+  TestForSubExprMatchCount(RegExpression + ' with ' + Input, RegExpression, Input, 1, True);
+  // Exec ('23'): SubExprMatchCount=2, Match[0]='23', [1]='', [2]='3'
+  Input := '23';
+  TestForSubExprMatchCount(RegExpression + ' with ' + Input, RegExpression, Input, 2, True);
+  // Exec ('2'): SubExprMatchCount=0, Match[0]='2'
+  Input := '2';
+  TestForSubExprMatchCount(RegExpression + ' with ' + Input, RegExpression, Input, 0, True);
+  // Exec ('7') - return False: SubExprMatchCount=-1
+  Input := '7';
+  TestForSubExprMatchCount(RegExpression + ' with ' + Input, RegExpression, Input, -1, False);
+
+  // another test
+  // expression '(a)\w+(c)'
+  // Exec ('abc'): SubExprMatchCount=2
+  RegExpression := '(a)\w+(c)';
+  Input := 'abc';
+  TestForSubExprMatchCount(RegExpression + ' with ' + Input, RegExpression, Input, 2, True);
 end;
 
 procedure TTestRegexpr.TestNamedGroups;
