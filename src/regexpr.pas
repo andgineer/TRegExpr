@@ -2089,11 +2089,9 @@ begin
   if Length(GrpBounds[0].GrpStart) = 0 then
     Exit;
   // if nothing found, we must return -1 per TRegExpr docs
-  if (GrpBounds[0].GrpStart[0] <> nil) then begin
-    Result := GrpCount;
-    while (Result > 0) and (GrpBounds[0].GrpStart[Result] = nil) do
-      Dec(Result);
-  end;
+  Result := GrpCount;
+  while (Result >= 0) and (GrpBounds[0].GrpStart[ Result ] = nil) do
+    Dec( Result );
 end;
 
 function TRegExpr.GetMatchPos(Idx: Integer): PtrInt;
