@@ -891,7 +891,9 @@ begin
 
   IsTrue(AErrorMessage + ' Exec must give True', RE.ExecPos(AOffset, AMustMatchBefore));
 
-  L := Length(AExpectStartLenPairs) div 2;
+  L := Length(AExpectStartLenPairs);
+  while (L > 1) and (AExpectStartLenPairs[L-2] = -1) do dec(L,2);
+  L := L div 2;
   AreEqual(AErrorMessage + ': MatchCount', L - 1, RE.SubExprMatchCount);
   for i := 0 to L - 1 do begin
     AreEqual(AErrorMessage + ': MatchPos['+inttostr(i)+']', AExpectStartLenPairs[i*2], RE.MatchPos[i]);
