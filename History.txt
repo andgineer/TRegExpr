@@ -6,6 +6,10 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.190 2025.03.07
+ -=- (-) Change behaviour of GetSubExprMatchCount, it now returns only count of matched groups.
+  W/o this change, compatability was broken since v0.952. By @horst-p-w-neubauer.
+
  v. 1.189 2024.06.23
  -=- (-) Fix OP_ANY_ML does not need to check for paired-linebreaks. Allow it to
   be used in simple loops. By Martin Friebe
