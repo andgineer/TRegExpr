@@ -1,4 +1,4 @@
-unit regexpr;
+﻿unit regexpr;
 
 {
   TRegExpr class library
@@ -617,7 +617,7 @@ type
     function ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean;
     function ExecPrimProtected(AOffset: Integer; ASlowChecks, ABackward: Boolean; ATryMatchOnlyStartingBefore: Integer): Boolean; {$IFDEF InlineFuncs}inline;{$ENDIF}
 
-    function GetSubExprCount: Integer;
+    function GetSubExprMatchCount: Integer;
     function GetMatchPos(Idx: Integer): PtrInt;
     function GetMatchLen(Idx: Integer): PtrInt;
     function GetMatch(Idx: Integer): RegExprString;
@@ -799,7 +799,7 @@ type
     // Exec ('23'): SubExprMatchCount=2, Match[0]='23', [1]='', [2]='3'
     // Exec ('2'): SubExprMatchCount=0, Match[0]='2'
     // Exec ('7') - return False: SubExprMatchCount=-1
-    property SubExprMatchCount: Integer read GetSubExprCount;
+    property SubExprMatchCount: Integer read GetSubExprMatchCount;
 
     // pos of entrance subexpr. #Idx into tested in last Exec*
     // string. First subexpr. has Idx=1, last - MatchCount,
@@ -2083,12 +2083,15 @@ begin
   end;
 end;
 
-function TRegExpr.GetSubExprCount: Integer;
+function TRegExpr.GetSubExprMatchCount: Integer;
 begin
-  Result := -1;
   // if nothing found, we must return -1 per TRegExpr docs
-  if (GrpBounds[0].GrpStart[0] <> nil) then
-    Result := GrpCount;
+  Result := -1;
+  if Length(GrpBounds[0].GrpStart) = 0 then
+    Exit;
+  Result := GrpCount;
+  while (Result >= 0) and (GrpBounds[0].GrpStart[ Result ] = nil) do
+    Dec(Result);
 end;
 
 function TRegExpr.GetMatchPos(Idx: Integer): PtrInt;
