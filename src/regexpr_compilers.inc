@@ -1,34 +1,34 @@
 {$IFDEF VER90}
   {$DEFINE D2}
-{$ENDIF} // D2
+{$ENDIF} // Delphi 2
 
 {$IFDEF VER93}
   {$DEFINE D2}
-{$ENDIF} // CPPB 1
+{$ENDIF} // C++Builder 1
 
 {$IFDEF VER100}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D3
+{$ENDIF} // Delphi 3
 
 {$IFDEF VER110}
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // CPPB 3
+{$ENDIF} // C++Builder 3
 
 {$IFDEF VER120}
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D4
+{$ENDIF} // Delphi 4
 
 {$IFDEF VER130}
   {$DEFINE D5}
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D5
+{$ENDIF} // Delphi 5
 
 {$IFDEF VER140}
   {$DEFINE D6}
@@ -36,7 +36,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D6
+{$ENDIF} // Delphi 6
 
 {$IFDEF VER150}
   {$DEFINE D7}
@@ -45,7 +45,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D7
+{$ENDIF} // Delphi 7
 
 {$IFDEF VER160}
   {$DEFINE D8}
@@ -55,7 +55,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D8
+{$ENDIF} // Delphi 8
 
 {$IFDEF VER170}
   {$DEFINE D2005}
@@ -66,7 +66,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D2005
+{$ENDIF} // Delphi 2005
 
 {$IFDEF VER180}
   {$DEFINE D2006}
@@ -78,7 +78,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D2006
+{$ENDIF} // Delphi 2006
 
 {$IFDEF VER185}
   {$DEFINE D2007}
@@ -91,7 +91,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D2007
+{$ENDIF} // Delphi 2007
 
 {$IFDEF VER200}
   {$DEFINE D2009}
@@ -105,7 +105,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D2009
+{$ENDIF} // Delphi 2009
 
 {$IFDEF VER210}
   {$DEFINE D2010}
@@ -120,7 +120,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D2010
+{$ENDIF} // Delphi 2010
 
 {$IFDEF VER220}
   {$DEFINE D_XE}
@@ -136,7 +136,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D XE
+{$ENDIF} // Delphi XE
 
 {$IFDEF VER230}
   {$DEFINE D_XE2}
@@ -153,7 +153,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D XE2
+{$ENDIF} // Delphi XE2
 
 {$IFDEF VER240}
   {$DEFINE D_XE3}
@@ -171,7 +171,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D XE3
+{$ENDIF} // Delphi XE3
 
 {$IFDEF VER250}
   {$DEFINE D_XE4}
@@ -190,7 +190,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D XE4
+{$ENDIF} // Delphi XE4
 
 {$IFDEF VER260}
   {$DEFINE D_XE5}
@@ -210,7 +210,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D XE5
+{$ENDIF} // Delphi XE5
 
 {$IFDEF VER270}
   {$DEFINE D_XE6}
@@ -231,7 +231,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D XE6
+{$ENDIF} // Delphi XE6
 
 {$IFDEF VER280}
   {$DEFINE D_XE7}
@@ -253,7 +253,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D XE7
+{$ENDIF} // Delphi XE7
 
 {$IFDEF VER290}
   {$DEFINE D_XE8}
@@ -276,7 +276,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D XE8
+{$ENDIF} // Delphi XE8
 
 {$IFDEF VER300}
   {$DEFINE D_100}
@@ -300,7 +300,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 10
+{$ENDIF} // Delphi 10.0
 
 {$IFDEF VER310}
   {$DEFINE D_101}
@@ -325,7 +325,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 10.1
+{$ENDIF} // Delphi 10.1
 
 {$IFDEF VER320}
   {$DEFINE D_102}
@@ -351,7 +351,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 10.2
+{$ENDIF} // Delphi 10.2
 
 {$IFDEF VER330}
   {$DEFINE D_103}
@@ -378,7 +378,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 10.3
+{$ENDIF} // Delphi 10.3
 
 {$IFDEF VER340}
   {$DEFINE D_104}
@@ -406,7 +406,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 10.4
+{$ENDIF} // Delphi 10.4
 
 {$IFDEF VER350}
   {$DEFINE D_110}
@@ -435,7 +435,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 11.0
+{$ENDIF} // Delphi 11.0
 
 {$IFDEF VER360}
   {$DEFINE D_110}
@@ -464,7 +464,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 12.0
+{$ENDIF} // Delphi 12.0
 
 {$IFDEF VER370}
   {$DEFINE D_110}
@@ -493,7 +493,7 @@
   {$DEFINE D4}
   {$DEFINE D3}
   {$DEFINE D2}
-{$ENDIF} // D 37.0
+{$ENDIF} // Delphi 13.0
 
 {$IFDEF D6}
   {$WARN SYMBOL_PLATFORM OFF} // Suppress .Net warnings
