@@ -6638,15 +6638,17 @@ begin
     Result := False;
     Exit;
   end;
+
   if ATryOnce then
   begin
     NStartingBefore := AOffset;
     if not ABackward then
       Inc(NStartingBefore);
-    Result := ExecPrim(AOffset, False, ABackward, NStartingBefore)
   end
   else
-    Result := ExecPrim(AOffset, False, ABackward, 0);
+    NStartingBefore := 0; // ie ignore that parameter in ExecPrim
+
+  Result := ExecPrim(AOffset, False, ABackward, NStartingBefore);
 end;
 
 function TRegExpr.ExecPos(AOffset, ATryMatchOnlyStartingBefore: Integer): Boolean;
