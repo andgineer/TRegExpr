@@ -83,6 +83,7 @@ type
     procedure TestNotFound;
     procedure TestBads;
     procedure TestModifiers;
+    procedure TestTryOnce;
     procedure TestContinueAnchor;
     procedure TestLineBreak;
     procedure TestRegMustExist;
@@ -3595,6 +3596,27 @@ begin
     R.ExecPos(1);
     AreEqual('Group finder failed', 1, R.MatchPos[0]);
     AreEqual('Group counter failed', 3, R.SubExprMatchCount);
+  finally
+    FreeAndNil(R);
+  end;
+end;
+
+procedure TTestRegexpr.TestTryOnce;
+var
+  R: TTestableRegExpr;
+begin
+  R:= TTestableRegExpr.Create;
+  try
+    R.Expression:= '\w+';
+    R.InputString:= 'abcd xyz someth';
+    R.ExecPos(1, true, false);
+    AreEqual('ExecPos(ATryOnce=true) Pos failed', 1, R.MatchPos[0]);
+    AreEqual('ExecPos(ATryOnce=true) Len failed', 4, R.MatchLen[0]);
+
+    R.Expression:= '\w+';
+    R.InputString:= '=abc wall some';
+    R.ExecPos(1, true, false);
+    AreEqual('ExecPos(ATryOnce=true) not-found failed', -1, R.MatchPos[0]);
   finally
     FreeAndNil(R);
   end;

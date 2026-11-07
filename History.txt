@@ -6,6 +6,9 @@
                                      (-) - bugfix
                                      (^) - improvement
 
+ v. 1.195 2026.11.07
+ -=- (-) Fix regression: ExecPos(..., ATryOnce=True, ...) was broken. Reported by AI Z.ai.
+
  v. 1.194 2025.08.25
  -=- (-) Fix finding "Greek lowercase final sigma" with Plus-operator with case-insens.
  -=- (-) Fix finding "Greek lowercase final sigma" char with case-insens. By Alexey Torgashin.

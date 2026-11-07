@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="12"/>
+    <Version Value="13"/>
     <General>
       <Flags>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
         <MainUnitHasScaledStatement Value="False"/>
-        <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <Title Value="test_fpc"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
-    <BuildModes Count="5">
-      <Item1 Name="Default" Default="True"/>
-      <Item2 Name="Unicode">
+    <BuildModes>
+      <Item Name="Default" Default="True"/>
+      <Item Name="Unicode">
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
@@ -44,8 +43,8 @@
             </OtherDefines>
           </Other>
         </CompilerOptions>
-      </Item2>
-      <Item3 Name="UnicodeAndChars">
+      </Item>
+      <Item Name="UnicodeAndChars">
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
@@ -75,8 +74,8 @@
 -dUseSpaceChars"/>
           </Other>
         </CompilerOptions>
-      </Item3>
-      <Item4 Name="aarch64">
+      </Item>
+      <Item Name="aarch64">
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
@@ -109,8 +108,8 @@
             <LinkSmart Value="True"/>
           </Linking>
         </CompilerOptions>
-      </Item4>
-      <Item5 Name="solaris x64">
+      </Item>
+      <Item Name="solaris x64">
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
@@ -143,31 +142,31 @@
             <LinkSmart Value="True"/>
           </Linking>
         </CompilerOptions>
-      </Item5>
+      </Item>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
     </PublishOptions>
     <RunParams>
       <FormatVersion Value="2"/>
-      <Modes Count="1">
-        <Mode0 Name="default"/>
+      <Modes>
+        <Mode Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="1">
-      <Item1>
+    <RequiredPackages>
+      <Item>
         <PackageName Value="FCL"/>
-      </Item1>
+      </Item>
     </RequiredPackages>
-    <Units Count="2">
-      <Unit0>
+    <Units>
+      <Unit>
         <Filename Value="test_fpc.pp"/>
         <IsPartOfProject Value="True"/>
-      </Unit0>
-      <Unit1>
+      </Unit>
+      <Unit>
         <Filename Value="tests.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit1>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -201,16 +200,16 @@
     </Linking>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="3">
-      <Item1>
+    <Exceptions>
+      <Item>
         <Name Value="EAbort"/>
-      </Item1>
-      <Item2>
+      </Item>
+      <Item>
         <Name Value="ECodetoolError"/>
-      </Item2>
-      <Item3>
+      </Item>
+      <Item>
         <Name Value="EFOpenError"/>
-      </Item3>
+      </Item>
     </Exceptions>
   </Debugging>
 </CONFIG>

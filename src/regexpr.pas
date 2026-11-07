@@ -952,7 +952,7 @@ uses
 const
   // TRegExpr.VersionMajor/Minor return values of these constants:
   REVersionMajor = 1;
-  REVersionMinor = 194;
+  REVersionMinor = 195;
 
   OpKind_End = REChar(1);
   OpKind_MetaClass = REChar(2);
@@ -6627,6 +6627,8 @@ end; { of function TRegExpr.ExecPos
 
 {$IFDEF OverMeth}
 function TRegExpr.ExecPos(AOffset: Integer; ATryOnce, ABackward: Boolean): Boolean;
+var
+  NStartingBefore: Integer;
 begin
   // Check that the start position is not negative
   if AOffset < 0 then
@@ -6638,9 +6640,10 @@ begin
   end;
   if ATryOnce then
   begin
+    NStartingBefore := AOffset;
     if not ABackward then
-      Inc(AOffset);
-    Result := ExecPrim(AOffset, False, ABackward, AOffset)
+      Inc(NStartingBefore);
+    Result := ExecPrim(AOffset, False, ABackward, NStartingBefore)
   end
   else
     Result := ExecPrim(AOffset, False, ABackward, 0);
