@@ -6754,7 +6754,7 @@ end;
 function TRegExpr.ExecPrim(AOffset: Integer; ASlowChecks, ABackward: Boolean;
   ATryMatchOnlyStartingBefore: Integer): Boolean;
 var
-  Len: Ptrint;
+  Len: PtrInt;
 begin
   Result := False;
 
@@ -6767,7 +6767,7 @@ begin
   if programm = nil then
   begin
     if fRaiseForRuntimeError then begin
-        Compile;
+      Compile;
     end
     else begin
       try
@@ -6798,7 +6798,7 @@ begin
   // If there is a "must appear" string, look for it.
   if ASlowChecks then
     if regMustString <> '' then
-      if StrLPos(fInputStart, PRegExprChar(regMustString), Len, length(regMustString)) = nil then
+      if StrLPos(fInputStart, PRegExprChar(regMustString), Len, Length(regMustString)) = nil then
         Exit;
 
   {$IFDEF RegExpWithStackOverflowCheck_DecStack_Frame}
