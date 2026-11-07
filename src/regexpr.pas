@@ -658,28 +658,27 @@ type
     function Exec(AOffset: Integer): Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
     {$ENDIF}
 
-    // find next match:
-    // ExecNext;
-    // works the same as
-    // if MatchLen [0] = 0 then ExecPos (MatchPos [0] + 1)
-    // else ExecPos (MatchPos [0] + MatchLen [0]);
-    // but it's more simpler !
+    // ExecNext: find next match; works the same as
+    // if MatchLen[0]=0
+    //   then ExecPos(MatchPos[0]+1)
+    //   else ExecPos(MatchPos[0]+MatchLen[0]);
+    // but it's simpler.
     // Raises exception if used without preceeding SUCCESSFUL call to
-    // Exec* (Exec, ExecPos, ExecNext). So You always must use something like
-    // if Exec (InputString) then repeat { proceed results} until not ExecNext;
+    // Exec* (Exec, ExecPos, ExecNext). So you always must use something like
+    //   if Exec(InputString) then repeat { proceess results } until not ExecNext;
     function ExecNext(ABackward: Boolean {$IFDEF DefParam} = False{$ENDIF}): Boolean;
 
-    // find match for InputString starting from AOffset position
-    // (AOffset=1 - first char of InputString)
+    // find match for InputString starting from AOffset (1-based).
     function ExecPos(AOffset: Integer {$IFDEF DefParam} = 0{$ENDIF}): Boolean;
     {$IFDEF OverMeth}overload;{$endif} {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     {$IFDEF OverMeth}
-    // find match for InputString at AOffset.
-    // if ATryOnce=True then only match exactly at AOffset (like anchor \G)
-    // if ATryMatchOnlyStartingBefore then only when the match can start before
-    // that position: Result := MatchPos[0] < ATryMatchOnlyStartingBefore;
+    // find match for InputString, starting the scanning at AOffset (1-based).
+    // if ATryOnce=True then test only the match exactly at AOffset (like anchor \G).
+    // ATryOnce=True does not support backward search: ABackward=True.
     function ExecPos(AOffset: Integer; ATryOnce, ABackward: Boolean): Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
+    // if ATryMatchOnlyStartingBefore>0 then find only the match starting before AOffset:
+    //   Result := MatchPos[0] < ATryMatchOnlyStartingBefore;
     function ExecPos(AOffset, ATryMatchOnlyStartingBefore: Integer): Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
     {$ENDIF}
 
