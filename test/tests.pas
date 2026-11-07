@@ -3608,15 +3608,35 @@ begin
   R:= TTestableRegExpr.Create;
   try
     R.Expression:= '\w+';
+
+    //-----------
     R.InputString:= 'abcd xyz someth';
+
+    //pos of 1st word begin
     R.ExecPos(1, true, false);
     AreEqual('ExecPos(ATryOnce=true) Pos failed', 1, R.MatchPos[0]);
     AreEqual('ExecPos(ATryOnce=true) Len failed', 4, R.MatchLen[0]);
 
-    R.Expression:= '\w+';
-    R.InputString:= '=abc wall some';
+    //pos of ' '
+    R.ExecPos(5, true, false);
+    AreEqual('ExecPos(ATryOnce=true) not-found failed', -1, R.MatchPos[0]);
+
+    //pos of 2nd word begin
+    R.ExecPos(6, true, false);
+    AreEqual('ExecPos(ATryOnce=true) Pos failed', 6, R.MatchPos[0]);
+    AreEqual('ExecPos(ATryOnce=true) Len failed', 3, R.MatchLen[0]);
+
+    //-----------
+    R.InputString:= '=abc wall someth';
+
+    //pos of '='
     R.ExecPos(1, true, false);
     AreEqual('ExecPos(ATryOnce=true) not-found failed', -1, R.MatchPos[0]);
+
+    //pos of 'o' inside last word
+    R.ExecPos(12, true, false);
+    AreEqual('ExecPos(ATryOnce=true) Pos failed', 12, R.MatchPos[0]);
+    AreEqual('ExecPos(ATryOnce=true) Len failed', 5, R.MatchLen[0]);
   finally
     FreeAndNil(R);
   end;
