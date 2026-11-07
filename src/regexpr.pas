@@ -668,14 +668,14 @@ type
     //   if Exec(InputString) then repeat { proceess results } until not ExecNext;
     function ExecNext(ABackward: Boolean {$IFDEF DefParam} = False{$ENDIF}): Boolean;
 
-    // find match for InputString starting from AOffset (1-based).
+    // find match for InputString, starting the scanning from AOffset (1-based).
     function ExecPos(AOffset: Integer {$IFDEF DefParam} = 0{$ENDIF}): Boolean;
     {$IFDEF OverMeth}overload;{$endif} {$IFDEF InlineFuncs}inline;{$ENDIF}
 
     {$IFDEF OverMeth}
     // find match for InputString, starting the scanning at AOffset (1-based).
     // if ATryOnce=True then test only the match exactly at AOffset (like anchor \G).
-    // ATryOnce=True does not support backward search: ABackward=True.
+    // ATryOnce=True does not support backward search (ABackward=True).
     function ExecPos(AOffset: Integer; ATryOnce, ABackward: Boolean): Boolean; overload; {$IFDEF InlineFuncs}inline;{$ENDIF}
     // if ATryMatchOnlyStartingBefore>0 then find only the match starting before AOffset:
     //   Result := MatchPos[0] < ATryMatchOnlyStartingBefore;
